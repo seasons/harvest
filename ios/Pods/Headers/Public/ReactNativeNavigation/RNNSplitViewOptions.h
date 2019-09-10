@@ -1,0 +1,1 @@
+../../../ReactNativeNavigation/lib/ios/RNNSplitViewOptions.h

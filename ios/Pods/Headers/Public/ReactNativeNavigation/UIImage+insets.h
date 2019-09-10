@@ -1,0 +1,1 @@
+../../../ReactNativeNavigation/lib/ios/UIImage+insets.h

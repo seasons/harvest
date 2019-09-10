@@ -87,6 +87,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - ReactNativeNavigation (3.1.1):
+    - React
   - RNGestureHandler (1.3.0):
     - React
   - RNReanimated (1.1.0):
@@ -136,6 +138,7 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - ReactNativeNavigation (from `../node_modules/react-native-navigation/ReactNativeNavigation.podspec`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler/RNGestureHandler.podspec`)
   - RNReanimated (from `../node_modules/react-native-reanimated/RNReanimated.podspec`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
@@ -195,6 +198,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
+  ReactNativeNavigation:
+    :podspec: "../node_modules/react-native-navigation/ReactNativeNavigation.podspec"
   RNGestureHandler:
     :podspec: "../node_modules/react-native-gesture-handler/RNGestureHandler.podspec"
   RNReanimated:
@@ -240,7 +245,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
-  DoubleConversion: f667477bface883238976991f46105fcacc96d56
+  DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   EXAppLoaderProvider: 2638ca3d779c8baae37e63352c785e5e2dad70d5
   EXConstants: 6ad60de0802ba69068b6d7b63e4e82c06d6807a4
   EXFileSystem: 22a53ba7e31987166aca49778e53cce8181b1ad8
@@ -251,11 +256,12 @@ SPEC CHECKSUMS:
   EXPermissions: 332e6241b48d34a8363a78d87d90a20436a9eff9
   EXSQLite: 2c18c50ce378e047c902f50fd45f9097ae5ca14f
   EXWebBrowser: 80d1c7fc02cc459528b9e04863c8837f242bc3b4
-  Folly: 391015f9b49dcda4ab622abb43ee71ab77c96269
-  glog: 103925dc1e1722c8cda98f81885a182250ffee22
+  Folly: de497beb10f102453a1afa9edbf8cf8a251890de
+  glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   React: 1d605e098d69bdf08960787f3446f0a9dc2e2ccf
-  RNGestureHandler: 7ccf2f3f60458e084f9ada01fbaf610f6fef073c
-  RNReanimated: 45d9313b7a62318ed00d60a811937321e43e076e
+  ReactNativeNavigation: 20522060de61b1c293ec50681a6aa11488596286
+  RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
+  RNReanimated: 7a52c90473b5e81c13408d40d797b98387eaddde
   UMBarCodeScannerInterface: f623227f2f6e8fa5c45fef1cc2b5ae200dd14918
   UMCameraInterface: 2a22ae5a2d4f710d617e3fd2c5c0511019aea1c7
   UMConstantsInterface: 9884d2a4a4563b20d7efbafba421151698dd8991
@@ -270,6 +276,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 739ea05d5ee490f5befe35201fb683eb9a1fc4b8
   yoga: 128daf064cacaede0c3bb27424b6b4c71052e6cd
 
-PODFILE CHECKSUM: 75240263944cdbc98c311aec7211b6918d051490
+PODFILE CHECKSUM: 3ddb4794b974c2a0843d9392769fb46fcb50d707
 
 COCOAPODS: 1.6.0.beta.1
