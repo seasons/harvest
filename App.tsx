@@ -6,8 +6,10 @@ import { Palette } from "./screens/Palette"
 import styled from "styled-components/native"
 import getTheme from "./native-base-theme/components"
 import seasons from "./native-base-theme/variables/seasons"
+import { Bag } from "./Scenes/Bag"
+import { Profile } from "./Scenes/Profile"
 
-const theme = getTheme(seasons)
+// const theme = getTheme(seasons)
 
 // export default function App() {
 //   return (
@@ -19,6 +21,7 @@ const theme = getTheme(seasons)
 //           </Body>
 //         </Header>
 //         <Content>
+//           <Bag />
 //           <Section dark>
 //             <Box py={3}>
 //               <Box py={2}>
@@ -60,9 +63,10 @@ const theme = getTheme(seasons)
 
 export default function App() {
   return (
-    <StyleProvider style={theme}>
-      <Palette />
-    </StyleProvider>
+    <>
+      <Bag />
+      <Profile />
+    </>
   )
 }
 
