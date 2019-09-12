@@ -1,11 +1,13 @@
 import React from "react"
-import { Text } from "native-base"
+import { Sans } from "../../components/Typography"
 
 export class Bag extends React.Component {
   render() {
     return (
       <>
-        <Text large>Bag</Text>
+        <Sans size="0" color="lightGray">
+          Bag
+        </Sans>
       </>
     )
   }

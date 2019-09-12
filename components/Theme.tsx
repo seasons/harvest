@@ -1,6 +1,6 @@
 import React from "react"
-import { fontFamily } from "./platform/fonts"
-import { ThemeProvider } from "./platform/primitives"
+import { fontFamily } from "./Typography"
+import { ThemeProvider } from "styled-components/native"
 
 /**
  * A list of breakpoints accessible by key/value.
@@ -58,28 +58,25 @@ export const themeProps = {
   },
 
   typeSizes: {
-    /** Unica  */
-    sans: {
-      /** Equivalent to 14px size / 20px line-height  */
-      "0": {
-        fontSize: 14,
-        lineHeight: 20,
-      },
-      /** Equivalent to 16px size / 24px line-height  */
-      "1": {
-        fontSize: 16,
-        lineHeight: 24,
-      },
-      /** Equivalent to 18px size / 20px line-height  */
-      "2": {
-        fontSize: 18,
-        lineHeight: 20,
-      },
-      /** Equivalent to 24px size / 32px line-height  */
-      "3": {
-        fontSize: 24,
-        lineHeight: 32,
-      },
+    /** Equivalent to 14px size / 20px line-height  */
+    "0": {
+      fontSize: 14,
+      lineHeight: 20,
+    },
+    /** Equivalent to 16px size / 24px line-height  */
+    "1": {
+      fontSize: 16,
+      lineHeight: 24,
+    },
+    /** Equivalent to 18px size / 20px line-height  */
+    "2": {
+      fontSize: 18,
+      lineHeight: 20,
+    },
+    /** Equivalent to 24px size / 32px line-height  */
+    "3": {
+      fontSize: 24,
+      lineHeight: 32,
     },
   },
 }
@@ -98,4 +95,4 @@ export type Color = keyof typeof themeProps["colors"]
 /** All available type sizes */
 export type TypeSizes = typeof themeProps.typeSizes
 /** All available sizes for our sans font */
-export type SansSize = keyof TypeSizes["sans"] | Array<keyof TypeSizes["sans"]>
+export type SansSize = keyof TypeSizes | Array<keyof TypeSizes>
