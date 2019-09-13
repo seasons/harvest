@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "expo": "^34.0.1",
+    "lodash": "^4.17.15",
     "native-base": "^2.13.5",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
