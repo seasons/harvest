@@ -4,12 +4,12 @@ import { Flex, Box, Sans } from "../../components"
 interface Props {
   item: {
     title: string
-    link: string
+    link?: string
     icon: JSX.Element
   }
 }
 
-export class ProfileList extends React.Component<Props> {
+export class ProfileListItem extends React.Component<Props> {
   openURL = () => {
     // FIXME: Add href to list item view
   }
