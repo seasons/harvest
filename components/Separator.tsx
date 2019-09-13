@@ -11,7 +11,7 @@ export interface SeparatorProps extends SpaceProps, WidthProps {}
  * A horizontal divider whose width and spacing can be adjusted
  */
 export const Separator = styled.View<SeparatorProps>`
-  border: 1px solid ${color("darkGray")};
+  border: 1px solid ${color("lightGray")};
   border-bottom-width: 0;
   ${space};
   ${width};

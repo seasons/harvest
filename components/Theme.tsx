@@ -28,6 +28,7 @@ export const themeProps = {
     white: "#fff",
     black: "#000",
     lightGray: "#DFDFDF",
+    gray: "#7F7F7F",
     darkGray: "#303030",
   },
 
