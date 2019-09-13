@@ -1,7 +1,7 @@
 import React from "react"
 import Svg, { G, Path, SvgProps } from "react-native-svg"
 
-export const SaviedPiecesIcon = (props: SvgProps) => (
+export const SavedPiecesIcon = (props: SvgProps) => (
   <Svg width={20} height={36} {...props}>
     <G fill="#FFF" fillRule="evenodd">
       <Path d="M0 0h20v36H0z" />
