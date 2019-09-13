@@ -1,18 +1,25 @@
 import React from "react"
-import { Sans } from "../../components/Typography"
-import { Flex } from "../../components/Flex"
+import { Sans, Flex, Spacer, Box, Theme, Separator } from "../../components"
 
 export class Profile extends React.Component {
   render() {
     return (
-      <>
-        <Flex>
-          <Sans size="1" color="black">
-            Kieran Gillen
-          </Sans>
-          <Sans size="2">Brooklyn, NY</Sans>
-        </Flex>
-      </>
+      <Theme>
+        <Box style={{ margin: 20 }}>
+          <Flex>
+            <Box style={{ marginBottom: 40 }} />
+            <Sans size="3" color="black">
+              Kieran Gillen
+            </Sans>
+            <Sans size="2" color="gray">
+              Brooklyn, NY
+            </Sans>
+          </Flex>
+          <Box style={{ marginBottom: 20 }} />
+          <Separator />
+          <Box style={{ marginBottom: 20 }} />
+        </Box>
+      </Theme>
     )
   }
 }
