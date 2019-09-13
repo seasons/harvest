@@ -1,5 +1,6 @@
 import React from "react"
-import { Sans, Flex, Spacer, Box, Theme, Separator } from "../../components"
+import { Sans, Flex, Box, Theme, Separator } from "../../components"
+import { ProfileList } from "./ProfileList"
 
 export class Profile extends React.Component {
   render() {
@@ -18,6 +19,7 @@ export class Profile extends React.Component {
           <Box style={{ marginBottom: 20 }} />
           <Separator />
           <Box style={{ marginBottom: 20 }} />
+          <ProfileList />
         </Box>
       </Theme>
     )
