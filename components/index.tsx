@@ -1,4 +1,5 @@
 export { Box } from "./Box"
+export { Button } from "./Button"
 export { Flex } from "./Flex"
 export { Sans } from "./Typography"
 export { Separator } from "./Separator"
