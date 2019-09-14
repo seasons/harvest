@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react"
 import { TouchableWithoutFeedback } from "react-native"
-import styled, { css } from "styled-components/native"
+import styled from "styled-components/native"
 import { themeProps } from "./Theme"
 import { Box, BoxProps } from "./Box"
 import { Flex } from "./Flex"
@@ -155,18 +155,9 @@ export class Button extends Component<ButtonProps, ButtonState> {
     const { children, ...rest } = this.props
     const { px, size, height } = this.getSize()
     const variantColors = getColorsForVariant(this.props.variant)
-
     const { current, previous } = this.state
-
     const from = variantColors[previous]
     const to = variantColors[current]
-
-    console.log("this.props.variant", this.props.variant)
-    console.log("getColorsForVariant(this.props.variant)", getColorsForVariant(this.props.variant))
-    console.log("previous", previous)
-    console.log("current", current)
-    console.log("from", from)
-    console.log("to", to)
 
     return (
       <Spring native from={from} to={to}>

@@ -3,6 +3,9 @@ import { Sans, Button, Box, Theme, Separator, Spacer } from "../../components"
 import { SafeAreaView } from "react-native"
 
 export class MembershipInfo extends React.Component {
+  handlePauseMembership = () => {
+    // FIXME: Handle pause membership
+  }
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -37,7 +40,7 @@ export class MembershipInfo extends React.Component {
             <Spacer mb={3} />
             <Separator />
             <Spacer mb={3} />
-            <Button variant="secondaryDark" size="large">
+            <Button onPress={() => this.handlePauseMembership()} variant="secondaryDark" size="large">
               Pause membership
             </Button>
           </Box>

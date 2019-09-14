@@ -148,7 +148,7 @@ export interface SansProps extends Partial<TextProps> {
   italic?: boolean
   role?: string
   size: SansSize
-  color?: Color
+  color?: Color | string
   /**
    * Explicitly specify `null` to inherit weight from parent, otherwise default
    * to `regular`.
