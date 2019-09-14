@@ -163,7 +163,6 @@ export interface SansProps extends Partial<TextProps> {
 export const Sans: React.SFC<SansProps> = props => {
   const { size } = props
   const color = props.color ? colorHelper(props.color) : colorHelper("black")
-  console.log("color", color)
   return <Text {...props} fontFamily="ProximaNova-Semibold" {...determineFontSizes(size)} color={color} />
 }
 
