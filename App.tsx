@@ -8,6 +8,8 @@ import getTheme from "./native-base-theme/components"
 import seasons from "./native-base-theme/variables/seasons"
 import { Bag } from "./Scenes/Bag"
 import { Profile } from "./Scenes/Profile"
+import { registerScreens } from "./screens"
+import { Navigation } from "react-native-navigation"
 
 // const theme = getTheme(seasons)
 
@@ -68,6 +70,87 @@ export default function App() {
       <Profile />
     </>
   )
+}
+
+export function start() {
+  registerScreens()
+
+  Navigation.events().registerAppLaunchedListener(async () => {
+    Navigation.setDefaultOptions({
+      layout: {
+        componentBackgroundColor: '#fff',
+        orientation: ['portrait'],
+        direction: 'ltr'
+      },
+      bottomTabs: {
+        titleDisplayMode: 'alwaysShow'
+      },
+      bottomTab: {
+        selectedIconColor: '#000',
+        selectedTextColor: '#000'
+      },
+    });
+
+    Navigation.setRoot({
+      root: {
+        bottomTabs: {
+          children: [
+            {
+              stack: {
+                children: [
+                  {
+                    component: {
+                      name: 'Layouts'
+                    }
+                  }
+                ],
+                options: {
+                  bottomTab: {
+                    text: 'Layouts',
+                    icon: require('../img/layouts.png'),
+                    fontSize: 10,
+                  }
+                }
+              }
+            },
+            {
+              stack: {
+                children: [
+                  {
+                    component: {
+                      name: 'Options'
+                    }
+                  }
+                ],
+                options: {
+                  topBar: {
+                    title: {
+                      text: 'Default Title'
+                    }
+                  },
+                  bottomTab: {
+                    text: 'Options',
+                    icon: require('../img/options.png'),
+                  }
+                }
+              }
+            },
+            {
+              stack: {
+                children: [
+                  {
+                    component: {
+                      name: 'Navigation'
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    });
+  })
 }
 
 const Section = styled.View`
