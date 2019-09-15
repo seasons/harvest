@@ -4,13 +4,14 @@ import { themeProps } from "./Theme"
 import { fontFamily } from "./Typography"
 import { TextInput as RNTextInput } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
-import { color, space } from "../helpers"
+import { color } from "../helpers"
 
 export interface TextInputProps {
   /** The theme of the input */
   variant?: TextInputVariant
   placeholder?: string
   secureTextEntry?: boolean
+  onChangeText?: (text: string) => void
 }
 
 enum DisplayState {
@@ -57,16 +58,22 @@ export function getColorsForVariant(variant: TextInputVariant) {
   }
 }
 
-export const TextInput: React.SFC<TextInputProps> = ({ variant = defaultVariant, placeholder, secureTextEntry }) => {
-  const [value, onChangeText] = React.useState("")
+export const TextInput: React.SFC<TextInputProps> = ({
+  variant = defaultVariant,
+  placeholder,
+  secureTextEntry,
+  onChangeText,
+}) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
   const [current, setCurrent] = React.useState(DisplayState.Inactive)
+  const [value, setValue] = React.useState("")
   const variantColors = getColorsForVariant(variant)
 
   const from = variantColors[previous]
   const to = variantColors[current]
 
   const handleOnChangeText = text => {
+    setValue(text)
     if (text.length) {
       setCurrent(DisplayState.Active)
       setPrevious(DisplayState.Inactive)
@@ -74,7 +81,9 @@ export const TextInput: React.SFC<TextInputProps> = ({ variant = defaultVariant,
       setCurrent(DisplayState.Inactive)
       setPrevious(DisplayState.Active)
     }
-    onChangeText(text)
+    if (onChangeText) {
+      onChangeText(text)
+    }
   }
 
   return (
