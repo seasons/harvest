@@ -1,14 +1,14 @@
 import React from "react"
 import styled from "styled-components/native"
 import { Bag } from "./Scenes/Bag"
-import { Profile } from "./Scenes/Profile"
+import { Profile, PaymentAndShipping } from "./Scenes/Account"
 import { MembershipInfo } from "./Scenes/MembershipInfo"
 import { SignInOrApply, SignIn } from "./Scenes/SignIn"
 
 export default function App() {
   return (
     <>
-      <SignIn />
+      <PaymentAndShipping />
     </>
   )
 }
