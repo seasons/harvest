@@ -3,12 +3,12 @@ import styled from "styled-components/native"
 import { Bag } from "./Scenes/Bag"
 import { Profile } from "./Scenes/Profile"
 import { MembershipInfo } from "./Scenes/MembershipInfo"
-import { SignInOrApply } from "./Scenes/SignIn"
+import { SignInOrApply, SignIn } from "./Scenes/SignIn"
 
 export default function App() {
   return (
     <>
-      <SignInOrApply />
+      <SignIn />
     </>
   )
 }
