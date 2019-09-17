@@ -1,8 +1,10 @@
 import React from "react"
-import { Sans, Box, Theme, Spacer, Button } from "../../../components"
+import { Sans, Box, Theme, Spacer, Button, Flex } from "../../../components"
 import { SafeAreaView } from "react-native"
 import { DisplayView } from "./DisplayView"
 import { EditView } from "./EditView"
+import { space } from "../../../helpers"
+import styled from "styled-components/native"
 
 interface State {
   renderEditView: boolean
@@ -10,7 +12,7 @@ interface State {
 
 export class PaymentAndShipping extends React.Component<State> {
   state = {
-    renderEditView: false,
+    renderEditView: true,
   }
 
   toggleView = () => {
@@ -25,18 +27,21 @@ export class PaymentAndShipping extends React.Component<State> {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Theme>
-          <Box p={2} mt={6}>
-            <Sans size="3">Payment & shipping</Sans>
-            <Spacer mb={4} />
+          <Flex style={{ flex: 1 }}>
             {renderEditView ? <EditView /> : <DisplayView />}
-            <Box mt={1}>
+            <FixedButtonWrapper px={2}>
               <Button variant={renderEditView ? "primaryDark" : "secondaryDark"} onPress={() => this.toggleView()}>
                 {renderEditView ? "Done" : "Edit"}
               </Button>
-            </Box>
-          </Box>
+            </FixedButtonWrapper>
+          </Flex>
         </Theme>
       </SafeAreaView>
     )
   }
 }
+
+const FixedButtonWrapper = styled(Box)`
+  position: absolute;
+  bottom: ${space(1)};
+`
