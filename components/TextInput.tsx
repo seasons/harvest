@@ -2,12 +2,13 @@ import React from "react"
 import styled from "styled-components/native"
 import { themeProps } from "./Theme"
 import { fontFamily } from "./Typography"
-import { TextInput as RNTextInput } from "react-native"
+import { ViewStyle, TextInput as RNTextInput } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { color } from "../helpers"
 
 export interface TextInputProps {
   /** The theme of the input */
+  style?: ViewStyle
   variant?: TextInputVariant
   placeholder?: string
   secureTextEntry?: boolean
@@ -63,6 +64,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
   placeholder,
   secureTextEntry,
   onChangeText,
+  style,
 }) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
   const [current, setCurrent] = React.useState(DisplayState.Inactive)
@@ -92,7 +94,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
         <AnimatedTextInput
           secureTextEntry={secureTextEntry}
           placeholder={placeholder}
-          style={{ ...props }}
+          style={{ ...style, ...props }}
           placeholderTextColor={color("gray")}
           onChangeText={text => handleOnChangeText(text)}
           value={value}
@@ -109,6 +111,7 @@ const StyledTextInput = styled(RNTextInput)<TextInputProps>`
   font-size: 18;
   line-height: 20;
   padding-left: 15;
+  flex: 2;
   padding-right: 15;
   font-family: ${fontFamily.sans.regular};
 `
