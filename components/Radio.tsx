@@ -7,6 +7,7 @@ import { color, space } from "../helpers"
 import { BorderProps, borders, SizeProps, space as styledSpace, SpaceProps } from "styled-system"
 import { Box } from "./Box"
 import { Sans } from "."
+import { TouchableWithoutFeedback } from "react-native"
 
 /**
  * Spec: zpl.io/bAvnwlB
@@ -43,17 +44,13 @@ export const Radio: React.SFC<RadioProps> = props => {
 
   return (
     <Flex flexDirection="row" alignItems="center">
-      <Container
-        disabled={disabled}
-        alignItems="center"
-        selected={selected}
-        onPress={() => !disabled && onSelect && onSelect({ selected: !selected, value })}
-        {...others}
-      >
-        <RadioButton role="presentation" border={1} mr={1} selected={selected} disabled={disabled}>
-          {selected && <InnerCircle />}
-        </RadioButton>
-      </Container>
+      <TouchableWithoutFeedback onPress={() => !disabled && onSelect && onSelect({ selected: !selected, value })}>
+        <Container disabled={disabled} alignItems="center" selected={selected} {...others}>
+          <RadioButton role="presentation" border={1} mr={1} selected={selected} disabled={disabled}>
+            {selected && <InnerCircle />}
+          </RadioButton>
+        </Container>
+      </TouchableWithoutFeedback>
       {!!label && (
         <Flex flexDirection="row" alignItems="center" ml={1}>
           <Sans size="2" color="black">
@@ -102,29 +99,10 @@ const InnerCircle = styled(Box)`
   background-color: ${color("blue")};
 `
 
-interface RadioFeedbackState {
-  disabled?: boolean
-  selected?: boolean
-}
-
-const radioBackgroundColor = ({ disabled, selected }: RadioFeedbackState) => {
-  switch (true) {
-    case disabled:
-      return color("black")
-    case selected:
-      return color("black")
-    default:
-      return color("white")
-  }
-}
-
-const radioBorderColor = ({ disabled, selected }: RadioFeedbackState) =>
-  selected && !disabled ? color("gay") : color("black")
-
 const RadioButton = styled(Box)<RadioToggleProps>`
   ${borders};
   ${styledSpace};
-  background-color: ${radioBackgroundColor};
+  background-color: ${color("white")};
   border-color: ${color("gray")};
   border-width: 1;
   width: 24;

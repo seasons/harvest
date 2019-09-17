@@ -12,6 +12,8 @@ export interface TextInputProps {
   variant?: TextInputVariant
   placeholder?: string
   secureTextEntry?: boolean
+  autoCompleteType?: string
+  textContentType?: string
   onChangeText?: (text: string) => void
 }
 
