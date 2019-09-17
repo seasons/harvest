@@ -3,6 +3,16 @@ import { Sans, Box, Radio, Spacer, TextInput, Flex } from "../../../components"
 import { FlatList } from "react-native"
 
 export class EditView extends React.Component {
+  state = {
+    sameAsDeliveryRadioSelected: false,
+  }
+
+  handleSameAsDevilveryAddress = () => {
+    this.setState({
+      sameAsDeliveryRadioSelected: !this.state.sameAsDeliveryRadioSelected,
+    })
+  }
+
   sections = () => {
     const sections = ["Header", "Delivery address", "Billing address", "Payment information"]
 
@@ -22,18 +32,18 @@ export class EditView extends React.Component {
           <Box px={2}>
             <Sans size="2">Delivery address</Sans>
             <Spacer mb={1} />
-            <TextInput placeholder="Address" />
+            <TextInput placeholder="Address" textContentType="fullStreetAddress" key="deliveryAddress" />
             <Spacer mb={1} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput placeholder="Unit" />
+              <TextInput placeholder="Unit" textContentType="streetAddressLine2" />
               <Spacer ml={1} />
-              <TextInput placeholder="Zipcode" />
+              <TextInput placeholder="Zipcode" textContentType="postalCode" />
             </Flex>
             <Spacer mb={1} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput placeholder="City" />
+              <TextInput placeholder="City" textContentType="addressCity" />
               <Spacer ml={1} />
-              <TextInput placeholder="State" />
+              <TextInput placeholder="State" textContentType="addressState" />
             </Flex>
           </Box>
         )
@@ -42,21 +52,29 @@ export class EditView extends React.Component {
           <Box px={2}>
             <Sans size="2">Billing address</Sans>
             <Spacer mb={2} />
-            <Radio selected={false} onSelect={() => console.log("selected")} label="Same as Delivery Address" />
-            <Spacer mb={2} />
-            <TextInput placeholder="Address" />
-            <Spacer mb={1} />
-            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput placeholder="Unit" />
-              <Spacer ml={1} />
-              <TextInput placeholder="Zipcode" />
-            </Flex>
-            <Spacer mb={1} />
-            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput placeholder="City" />
-              <Spacer ml={1} />
-              <TextInput placeholder="State" />
-            </Flex>
+            <Radio
+              selected={this.state.sameAsDeliveryRadioSelected}
+              onSelect={() => this.handleSameAsDevilveryAddress()}
+              label="Same as Delivery Address"
+            />
+            {!this.state.sameAsDeliveryRadioSelected && (
+              <>
+                <Spacer mb={2} />
+                <TextInput placeholder="Address" textContentType="fullStreetAddress" />
+                <Spacer mb={1} />
+                <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
+                  <TextInput placeholder="Unit" textContentType="streetAddressLine2" />
+                  <Spacer ml={1} />
+                  <TextInput placeholder="Zipcode" textContentType="postalCode" />
+                </Flex>
+                <Spacer mb={1} />
+                <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
+                  <TextInput placeholder="City" textContentType="addressCity" />
+                  <Spacer ml={1} />
+                  <TextInput placeholder="State" textContentType="addressState" />
+                </Flex>
+              </>
+            )}
           </Box>
         )
       case "Payment information":
@@ -64,14 +82,14 @@ export class EditView extends React.Component {
           <Box px={2}>
             <Sans size="2">Payment information</Sans>
             <Spacer mb={1} />
-            <TextInput placeholder="Address" />
-            <Flex>
-              <TextInput placeholder="Unit" />
-              <TextInput placeholder="Zipcode" />
-            </Flex>
-            <Flex>
-              <TextInput placeholder="City" />
-              <TextInput placeholder="State" />
+            <TextInput placeholder="Full name" textContentType="name" />
+            <Spacer mb={1} />
+            <TextInput placeholder="Card number" textContentType="creditCardNumber" />
+            <Spacer mb={1} />
+            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
+              <TextInput placeholder="Expiration date" />
+              <Spacer ml={1} />
+              <TextInput placeholder="Zipcode" textContentType="postalCode" />
             </Flex>
           </Box>
         )
