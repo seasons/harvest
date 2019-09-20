@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
@@ -14,6 +13,8 @@
 		60FE4072A3F4CB06A6CB71FF /* libPods-seasons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 978CD87D57CA92C1AD151128 /* libPods-seasons.a */; };
 		7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0E1F500ACFA44888E6CB0C1 /* ProximaNova-Regular.ttf */; };
 		7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5AF8182310CACF00A9E513 /* ProximaNova-Semibold.ttf */; };
+		E48E9866ED8A424C835E1727 /* apercu-mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */; };
+		74F9F713671146F58215F0A3 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2D8D58AC5A9460AA4001F03 /* ProximaNova-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,8 @@
 		E0E1F500ACFA44888E6CB0C1 /* ProximaNova-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = file; name = "ProximaNova-Regular.ttf"; path = "../../assets/fonts/ProximaNova-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */ = {isa = PBXFileReference; name = "apercu-mono.ttf"; path = "../assets/fonts/apercu-mono.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E2D8D58AC5A9460AA4001F03 /* ProximaNova-Regular.ttf */ = {isa = PBXFileReference; name = "ProximaNova-Regular.ttf"; path = "../assets/fonts/ProximaNova-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +69,8 @@
 		15C6B801276048ABB7CFFF17 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */,
+				E2D8D58AC5A9460AA4001F03 /* ProximaNova-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -190,6 +195,8 @@
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */,
 				7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */,
+				E48E9866ED8A424C835E1727 /* apercu-mono.ttf in Resources */,
+				74F9F713671146F58215F0A3 /* ProximaNova-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
