@@ -7,7 +7,7 @@ export const fontFamily: FontFamily = {
   sans: {
     regular: "ProximaNova-Regular",
     italic: "Unica77LL-Italic",
-    medium: "Unica77LL-Medium",
+    medium: "ProximaNova-Semibold",
     mediumItalic: "Unica77LL-MediumItalic",
   },
   serif: {

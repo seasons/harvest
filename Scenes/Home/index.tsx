@@ -1,10 +1,11 @@
 import React from "react"
-import { Image, FlatList, ScrollView } from "react-native"
+import { FlatList } from "react-native"
 import { Container } from "../../components/Container"
 import { Box } from "../../components"
-import { Sans } from "../../components/Sans"
 import { Theme } from "../../components/Theme"
 import styled from "styled-components/native"
+import { CategoriesRail } from "./Components/CategoriesRail"
+import { JustAddedRail } from "./Components/JustAddedRail"
 
 export const Home = () => {
   const renderItem = ({ item }) => {
@@ -27,29 +28,10 @@ export const Home = () => {
         )
 
       case "categories":
-        return (
-          <Box my={2}>
-            <Sans>Categories</Sans>
-            <Box mt={2}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={{ flex: 1, width: "100%", height: 130 }}
-              >
-                {item.data.map(category => {
-                  return (
-                    <Box mr={1}>
-                      <CategoryContainer />
-                      <Sans size="small" style={{ textAlign: "center" }}>
-                        {category}
-                      </Sans>
-                    </Box>
-                  )
-                })}
-              </ScrollView>
-            </Box>
-          </Box>
-        )
+        return <CategoriesRail categories={item.data} />
+
+      case "just-added":
+        return <JustAddedRail items={item.data} />
     }
   }
 
@@ -68,6 +50,27 @@ export const Home = () => {
       type: "categories",
       data: ["Coats", "Jackets", "Sweatshirts", "Tees"],
     },
+    {
+      type: "just-added",
+      data: [
+        {
+          imageUrl:
+            "https://media.endclothing.com/media/catalog/product/2/0/20-07-2019_helmutlang_printsidetee_white_red_j06dm505_ja_m1.jpg",
+          colorway: "White & Red",
+          productName: "Print Side Tee",
+          brandName: "Helmut Lang",
+          price: "$189",
+        },
+        {
+          imageUrl:
+            "https://media.endclothing.com/media/catalog/product/1/1/11-09-2019_aimeleondore_distressedpopoverhoody_royaltypurple_ald-ch004-pr_th_m1.jpg",
+          productName: "Distressed Popover Hoodie",
+          brandName: "Aimé Leon",
+          colorway: "Royalty Purple",
+          price: "$255",
+        },
+      ],
+    },
   ]
 
   return (
@@ -78,19 +81,18 @@ export const Home = () => {
             <LogoText>SEASONS</LogoText>
           </Box>
           <Theme>
-            <FlatList data={sections} keyExtractor={item => item.type} renderItem={item => renderItem(item)} />
+            <FlatList
+              data={sections}
+              contentContainerStyle={{ paddingBottom: 150 }}
+              keyExtractor={item => item.type}
+              renderItem={item => renderItem(item)}
+            />
           </Theme>
         </Box>
       </Container>
     </Theme>
   )
 }
-
-const ImageContainer = styled.Image`
-  background: rgba(0, 0, 0, 0.3);
-  height: 360;
-  width: 240;
-`
 
 const LogoText = styled.Text`
   font-family: "Apercu-Mono";
@@ -99,11 +101,8 @@ const LogoText = styled.Text`
   line-height: 24;
   color: #101010;
 `
-
-const CategoryContainer = styled.View`
-  height: 92;
-  width: 92;
-  border-radius: 46;
-  background: rgba(0, 0, 0, 0.1);
-  /* background-color: red; */
+const ImageContainer = styled.Image`
+  background: rgba(0, 0, 0, 0.3);
+  height: 360;
+  width: 240;
 `
