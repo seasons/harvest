@@ -1,14 +1,17 @@
 import { Bag } from "./Scenes/Bag"
-import { Profile } from "./Scenes/Profile"
+import { Profile, PaymentAndShipping } from "./Scenes/Account"
 import { Home } from "./Scenes/Home"
 import { Browse } from "./Scenes/Browse"
 import { Navigation } from "react-native-navigation"
+import { EditView } from "./Scenes/Account/PaymentAndShipping/EditView"
 
 export function start() {
   Navigation.registerComponent("Home", () => Home)
   Navigation.registerComponent("Browse", () => Browse)
   Navigation.registerComponent("Bag", () => Bag)
-  Navigation.registerComponent("Profile", () => Profile)
+  Navigation.registerComponent("Account", () => Profile)
+  Navigation.registerComponent("Account.PaymentAndShipping", () => PaymentAndShipping)
+  Navigation.registerComponent("Account.EditView", () => EditView)
 
   Navigation.events().registerAppLaunchedListener(async () => {
     Navigation.setDefaultOptions({
@@ -23,7 +26,7 @@ export function start() {
         hideShadow: true,
       },
       bottomTab: {
-        iconColor: "#8a8a8a",
+        iconColor: "#4D4D4D",
         selectedIconColor: "#fff",
       },
       topBar: {
@@ -88,7 +91,7 @@ export function start() {
                 children: [
                   {
                     component: {
-                      name: "Profile",
+                      name: "Account",
                     },
                   },
                 ],
