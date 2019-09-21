@@ -1,11 +1,13 @@
 {
   "scripts": {
-    "android": "react-native run-android",
+    "android": "cd ./android && ./gradlew app:assembleDebug && ./gradlew installDebug",
     "ios": "react-native run-ios",
     "start": "react-native start && yarn start-packager",
     "test": "jest",
     "web": "expo start --web",
-    "start-packager": "env REACT_DEBUGGER=\"$([ -d '/Applications/React Native Debugger.app' ] && echo \"open 'rndebugger://set-debugger-loc?host=localhost&port=8081' --args\")\" node node_modules/react-native/local-cli/cli.js start"
+    "start-packager": "env REACT_DEBUGGER=\"$([ -d '/Applications/React Native Debugger.app' ] && echo \"open 'rndebugger://set-debugger-loc?host=localhost&port=8081' --args\")\" node node_modules/react-native/local-cli/cli.js start",
+    "fix-androidx": ".scripts/fix-androidx",
+    "postinstall": "./scripts/fix-androidx"
   },
   "dependencies": {
     "expo": "^34.0.1",
@@ -31,6 +33,7 @@
     "@types/styled-system": "^5.1.1",
     "babel-preset-expo": "^6.0.0",
     "jest-expo": "^34.0.0",
+    "jetifier": "^1.6.4",
     "typescript": "^3.4.5"
   },
   "jest": {

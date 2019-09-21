@@ -31,4 +31,6 @@ target 'seasons' do
   pod 'ReactNativeNavigation', :podspec => '../node_modules/react-native-navigation/ReactNativeNavigation.podspec'
 
   use_unimodules!
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
 end

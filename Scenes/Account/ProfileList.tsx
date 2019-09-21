@@ -9,18 +9,38 @@ import {
   ChevronIcon,
 } from "../../icons"
 import { TouchableWithoutFeedback } from "react-native"
+import { Navigation } from "react-native-navigation"
 
 const lists = [
   { title: "Membership info", icon: <MembershipInfoIcon />, link: "" },
   { title: "Personal preferences", icon: <PersonalPreferencesIcon />, link: "" },
-  { title: "Payment & shipping", icon: <PaymentShippingIcon />, link: "" },
+  { title: "Payment & shipping", icon: <PaymentShippingIcon />, link: "Account.PaymentAndShipping" },
   { title: "Saved pieces", icon: <SavedPiecesIcon />, link: "" },
   { title: "Order history", icon: <OrderHistoryIcon />, link: "" },
 ]
 
-export class ProfileList extends React.Component {
-  openURL = () => {
-    // FIXME: Add href to list item view
+export class ProfileList extends React.Component<any> {
+  openURL = item => {
+    if (item.link) {
+      Navigation.push(this.props.componentId, {
+        component: {
+          name: item.link,
+          passProps: {
+            user: "kierangillen",
+          },
+          options: {
+            topBar: {
+              visible: true,
+              leftButtons: [
+                {
+                  id: "back",
+                },
+              ],
+            },
+          },
+        },
+      })
+    }
   }
 
   render() {
@@ -28,7 +48,7 @@ export class ProfileList extends React.Component {
       <Box>
         {lists.map((item, index) => {
           return (
-            <TouchableWithoutFeedback key={item.title} onPress={this.openURL}>
+            <TouchableWithoutFeedback key={item.title} onPress={this.openURL.bind(this, item)}>
               <Box style={index !== lists.length - 1 ? { marginBottom: 50 } : null}>
                 <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" justifyContent="space-between">
                   <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
