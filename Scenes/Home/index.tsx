@@ -6,26 +6,13 @@ import { Theme } from "../../components/Theme"
 import styled from "styled-components/native"
 import { CategoriesRail } from "./Components/CategoriesRail"
 import { JustAddedRail } from "./Components/JustAddedRail"
+import { HeroRail } from "./Components/HeroRail"
 
 export const Home = () => {
   const renderItem = ({ item }) => {
     switch (item.type) {
       case "header":
-        return (
-          <FlatList
-            data={item.data}
-            renderItem={({ item }) => {
-              return (
-                <Box mr={2}>
-                  <ImageContainer source={{ uri: item.url }}></ImageContainer>
-                </Box>
-              )
-            }}
-            keyExtractor={({ id }) => id.toString()}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-          />
-        )
+        return <HeroRail items={item.data} />
 
       case "categories":
         return <CategoriesRail categories={item.data} />
@@ -100,9 +87,4 @@ const LogoText = styled.Text`
   letter-spacing: 2;
   line-height: 24;
   color: #101010;
-`
-const ImageContainer = styled.Image`
-  background: rgba(0, 0, 0, 0.3);
-  height: 360;
-  width: 240;
 `

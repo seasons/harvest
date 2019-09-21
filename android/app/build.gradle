@@ -102,6 +102,7 @@ android {
         applicationId "com.seasons"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        missingDimensionStrategy "RNN.reactNativeVersion", "reactNative57_5" // See note below!
         versionCode 1
         versionName "1.0"
     }
@@ -142,8 +143,9 @@ dependencies {
     implementation project(':react-native-svg')
     implementation project(':react-native-reanimated')
     implementation project(':react-native-gesture-handler')
+    implementation project(':react-native-navigation')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation "com.facebook.react:react-native:+"  // From node_modules
     addUnimodulesDependencies()
 }
