@@ -6,14 +6,18 @@
     "test": "jest",
     "web": "expo start --web",
     "start-packager": "env REACT_DEBUGGER=\"$([ -d '/Applications/React Native Debugger.app' ] && echo \"open 'rndebugger://set-debugger-loc?host=localhost&port=8081' --args\")\" node node_modules/react-native/local-cli/cli.js start",
-    "fix-androidx": ".scripts/fix-androidx",
-    "postinstall": "./scripts/fix-androidx"
+    "fix-androidx": "bash ./scripts/fix-androidx.sh",
+    "postinstall": "bash ./scripts/fix-androidx.sh"
   },
   "dependencies": {
+    "@apollo/react-hooks": "^3.1.1",
+    "apollo-boost": "^0.4.4",
     "expo": "^34.0.1",
+    "graphql": "^14.5.8",
     "lodash": "^4.17.15",
     "native-base": "^2.13.5",
     "react": "16.8.3",
+    "react-apollo": "^3.1.1",
     "react-dom": "^16.8.6",
     "react-native": "0.59.10",
     "react-native-gesture-handler": "~1.3.0",
