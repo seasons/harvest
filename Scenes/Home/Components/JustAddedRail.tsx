@@ -1,6 +1,6 @@
 import React from "react"
 import { Box, Sans } from "../../../components"
-import { ScrollView, FlatList } from "react-native"
+import { FlatList } from "react-native"
 import { styled } from "../../../components/platform/primitives"
 
 interface JustAddedRailProps {
