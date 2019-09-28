@@ -8,6 +8,8 @@ import { ApolloClient } from "apollo-client"
 import { ApolloProvider } from "@apollo/react-hooks"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { HttpLink } from "apollo-link-http"
+import { SignIn } from "./Scenes/SignIn"
+import { Initialising } from "./Scenes/SignIn"
 
 // Instantiate required constructor fields
 const cache = new InMemoryCache()
@@ -41,7 +43,9 @@ const Apollo = (Component: React.ComponentType) => {
 }
 
 export function start() {
+  Navigation.registerComponent("Initialising", () => Apollo(Initialising), () => Initialising)
   Navigation.registerComponent("Home", () => Apollo(Home), () => Home)
+  Navigation.registerComponent("SignIn", () => Apollo(SignIn), () => SignIn)
   Navigation.registerComponent("Browse", () => Apollo(Browse), () => Browse)
   Navigation.registerComponent("Bag", () => Apollo(Bag), () => Bag)
   Navigation.registerComponent("Account", () => Apollo(Profile), () => Profile)
@@ -70,73 +74,8 @@ export function start() {
 
     Navigation.setRoot({
       root: {
-        bottomTabs: {
-          children: [
-            {
-              stack: {
-                children: [
-                  {
-                    component: {
-                      name: "Home",
-                    },
-                  },
-                ],
-                options: {
-                  bottomTab: {
-                    icon: require("./assets/images/Home.png"),
-                  },
-                },
-              },
-            },
-            {
-              stack: {
-                children: [
-                  {
-                    component: {
-                      name: "Browse",
-                    },
-                  },
-                ],
-                options: {
-                  bottomTab: {
-                    icon: require("./assets/images/Browse.png"),
-                  },
-                },
-              },
-            },
-            {
-              stack: {
-                children: [
-                  {
-                    component: {
-                      name: "Bag",
-                    },
-                  },
-                ],
-                options: {
-                  bottomTab: {
-                    icon: require("./assets/images/Bag.png"),
-                  },
-                },
-              },
-            },
-            {
-              stack: {
-                children: [
-                  {
-                    component: {
-                      name: "Account",
-                    },
-                  },
-                ],
-                options: {
-                  bottomTab: {
-                    icon: require("./assets/images/Account.png"),
-                  },
-                },
-              },
-            },
-          ],
+        component: {
+          name: "Initialising",
         },
       },
     })

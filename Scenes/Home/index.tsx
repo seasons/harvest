@@ -75,8 +75,6 @@ export const Home = () => {
 
   const { loading, data } = useQuery(GET_PRODUCTS)
 
-  console.log("data", data)
-
   return (
     <Theme>
       <Container>

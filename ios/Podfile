@@ -33,4 +33,6 @@ target 'seasons' do
   use_unimodules!
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'A0Auth0', :path => '../node_modules/react-native-auth0'
+
 end
