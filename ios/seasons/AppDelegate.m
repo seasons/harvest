@@ -15,9 +15,20 @@
 #import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
 #import <ReactNativeNavigation/ReactNativeNavigation.h>
 
+#import <React/RCTLinkingManager.h>
+
+
 @implementation AppDelegate
 
 @synthesize window = _window;
+
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+  return [RCTLinkingManager application:application openURL:url
+                      sourceApplication:sourceApplication annotation:annotation];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

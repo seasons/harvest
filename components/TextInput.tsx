@@ -101,6 +101,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
             secureTextEntry={secureTextEntry}
             placeholder={placeholder}
             style={{ ...style, ...props }}
+            autoCapitalize="none"
             placeholderTextColor={color("gray")}
             onChangeText={text => handleOnChangeText(text)}
             value={value}

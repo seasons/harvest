@@ -5,7 +5,7 @@ import { Text } from "../../components/Typography"
 import { SafeAreaView, TouchableWithoutFeedback, AsyncStorage } from "react-native"
 import { color } from "../../helpers"
 
-const auth0 = new Auth0({ domain: "YOUR_DOMAIN", clientId: "YOUR_CLIENT_ID" })
+const auth0 = new Auth0({ domain: "seasons.auth0.com", clientId: "zSCYlUB8NNZi9vlxjAQQr2u3Y58jDZKV" })
 
 export class SignIn extends React.Component {
   state = {
@@ -22,19 +22,31 @@ export class SignIn extends React.Component {
     }
   }
 
-  handleApply = async () => {
-    const { email, password } = this.state
-    try {
-      // here place your signup logic
-      const user = await AsyncStorage.setItem("USER_KEY", email)
-      console.log("user successfully signed up!: ", user)
-    } catch (err) {
-      console.log("error signing up: ")
+  handleSignIn = () => {
+    const { email, password, emailComplete } = this.state
+    console.log("handling it", auth0.webAuth)
+    if (emailComplete && password.length) {
+      // auth0.webAuth
+      //   .login({
+      //     realm: "tests",
+      //     email,
+      //     password,
+      //   })
+      //   .then(
+      //     credentials => console.log(credentials)
+      //     // Successfully authenticated
+      //     // Store the accessToken
+      //   )
+      //   .catch(error => console.log(error))
     }
   }
 
   handleResetPassword = () => {
     //FIXME: Handle reset password
+  }
+
+  handleApply = () => {
+    //FIXME: Handle apply
   }
 
   render() {
@@ -77,7 +89,12 @@ export class SignIn extends React.Component {
                 </TouchableWithoutFeedback>
               </Text>
               <Spacer mb={4} />
-              <Button variant={emailComplete && password.length ? "primaryLight" : "secondaryLight"}>Sign in</Button>
+              <Button
+                onPress={this.handleSignIn}
+                variant={emailComplete && password.length ? "primaryLight" : "secondaryLight"}
+              >
+                Sign in
+              </Button>
             </Box>
             <Box p={2}>
               <Text style={{ textAlign: "center" }}>
