@@ -7,7 +7,7 @@ import {
   PaymentShippingIcon,
   OrderHistoryIcon,
   ChevronIcon,
-} from "../../icons"
+} from "../../assets/icons"
 import { TouchableWithoutFeedback } from "react-native"
 import { Navigation } from "react-native-navigation"
 

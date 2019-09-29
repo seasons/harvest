@@ -8,8 +8,7 @@ import { ApolloClient } from "apollo-client"
 import { ApolloProvider } from "@apollo/react-hooks"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { HttpLink } from "apollo-link-http"
-import { SignIn } from "./Scenes/SignIn"
-import { Initialising } from "./Scenes/SignIn"
+import { SignIn, Welcome, Initializing } from "./Scenes/SignIn"
 
 // Instantiate required constructor fields
 const cache = new InMemoryCache()
@@ -43,7 +42,8 @@ const Apollo = (Component: React.ComponentType) => {
 }
 
 export function start() {
-  Navigation.registerComponent("Initialising", () => Apollo(Initialising), () => Initialising)
+  Navigation.registerComponent("Initializing", () => Apollo(Initializing), () => Initializing)
+  Navigation.registerComponent("Welcome", () => Apollo(Welcome), () => Welcome)
   Navigation.registerComponent("Home", () => Apollo(Home), () => Home)
   Navigation.registerComponent("SignIn", () => Apollo(SignIn), () => SignIn)
   Navigation.registerComponent("Browse", () => Apollo(Browse), () => Browse)
@@ -75,7 +75,7 @@ export function start() {
     Navigation.setRoot({
       root: {
         component: {
-          name: "Initialising",
+          name: "Initializing",
         },
       },
     })

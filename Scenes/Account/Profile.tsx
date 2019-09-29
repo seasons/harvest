@@ -1,7 +1,7 @@
 import React from "react"
 import { Sans, Flex, Box, Theme, Separator, Spacer, Toggle } from "../../components"
 import { ProfileList } from "./ProfileList"
-import { SafeAreaView, ScrollView } from "react-native"
+import { ScrollView } from "react-native"
 import { Container } from "../../components/Container"
 
 export class Profile extends React.Component {

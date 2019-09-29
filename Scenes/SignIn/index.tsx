@@ -1,4 +1,5 @@
 export { SignIn } from "./SignIn"
 export { SignInOrApply } from "./SignInOrApply"
 export { AllowNotifications } from "./AllowNotifications"
-export { Initialising } from "./Initialising"
+export { Initializing } from "./Initializing"
+export { Welcome } from "./Welcome"
