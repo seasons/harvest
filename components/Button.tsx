@@ -8,8 +8,9 @@ import { Sans } from "./Typography"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 
 enum DisplayState {
-  Active = "active",
-  Inactive = "inactive",
+  Default = "default",
+  Pressed = "pressed",
+  Disabled = "disabled",
 }
 
 interface ButtonState {
@@ -25,7 +26,7 @@ export interface ButtonProps extends BoxProps {
   variant?: ButtonVariant
   /** React Native only, Callback on press, use instead of onClick */
   onPress?: (e) => void
-  active?: boolean
+  disabled?: boolean
 }
 
 export type ButtonVariant = "primaryLight" | "secondaryLight" | "primaryDark" | "secondaryOutline" | "secondaryDark"
@@ -47,12 +48,17 @@ export function getColorsForVariant(variant: ButtonVariant) {
   switch (variant) {
     case "primaryLight":
       return {
-        active: {
+        default: {
           backgroundColor: white,
           borderColor: white,
           color: black,
         },
-        inactive: {
+        pressed: {
+          backgroundColor: white,
+          borderColor: white,
+          color: black,
+        },
+        disabled: {
           backgroundColor: darkGray,
           borderColor: darkGray,
           color: gray,
@@ -60,12 +66,17 @@ export function getColorsForVariant(variant: ButtonVariant) {
       }
     case "secondaryLight":
       return {
-        active: {
+        default: {
           backgroundColor: black,
           borderColor: gray,
           color: white,
         },
-        inactive: {
+        pressed: {
+          backgroundColor: black,
+          borderColor: gray,
+          color: white,
+        },
+        disabled: {
           backgroundColor: black,
           borderColor: gray,
           color: white,
@@ -73,12 +84,17 @@ export function getColorsForVariant(variant: ButtonVariant) {
       }
     case "primaryDark":
       return {
-        active: {
+        default: {
           backgroundColor: black,
           borderColor: black,
           color: white,
         },
-        inactive: {
+        pressed: {
+          backgroundColor: black,
+          borderColor: black,
+          color: white,
+        },
+        disabled: {
           backgroundColor: lightGray,
           borderColor: lightGray,
           color: darkGray,
@@ -86,12 +102,17 @@ export function getColorsForVariant(variant: ButtonVariant) {
       }
     case "secondaryDark":
       return {
-        active: {
+        default: {
           backgroundColor: white,
           borderColor: black,
           color: black,
         },
-        inactive: {
+        pressed: {
+          backgroundColor: white,
+          borderColor: black,
+          color: black,
+        },
+        disabled: {
           backgroundColor: white,
           borderColor: black,
           color: black,
@@ -110,8 +131,8 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   state = {
-    previous: DisplayState.Active,
-    current: DisplayState.Active,
+    previous: DisplayState.Default,
+    current: DisplayState.Default,
   }
 
   getSize(): { height: number | string; size: "1" | "2"; px: number } {
@@ -130,22 +151,22 @@ export class Button extends Component<ButtonProps, ButtonState> {
       // Did someone tap really fast? Flick the highlighted state
       const { current } = this.state
 
-      if (this.state.current === DisplayState.Active) {
+      if (this.state.current === DisplayState.Default) {
         this.setState({
           previous: current,
-          current: DisplayState.Inactive,
+          current: DisplayState.Pressed,
         })
         setTimeout(
           () =>
             this.setState({
               previous: current,
-              current: DisplayState.Active,
+              current: DisplayState.Default,
             }),
           0.3
         )
       } else {
         // Was already selected
-        this.setState({ current: DisplayState.Active })
+        this.setState({ current: DisplayState.Default })
       }
 
       this.props.onPress(args)
@@ -153,12 +174,12 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   render() {
-    const { children, ...rest } = this.props
+    const { children, disabled, ...rest } = this.props
     const { px, size, height } = this.getSize()
     const variantColors = getColorsForVariant(this.props.variant)
     const { current, previous } = this.state
-    const from = variantColors[previous]
-    const to = variantColors[current]
+    const from = disabled ? variantColors[DisplayState.Disabled] : variantColors[previous]
+    const to = disabled ? variantColors[DisplayState.Disabled] : variantColors[current]
 
     return (
       <Spring native from={from} to={to}>
@@ -167,19 +188,20 @@ export class Button extends Component<ButtonProps, ButtonState> {
             onPress={this.onPress}
             onPressIn={() => {
               this.setState({
-                previous: DisplayState.Active,
-                current: DisplayState.Inactive,
+                previous: DisplayState.Default,
+                current: DisplayState.Pressed,
               })
             }}
             onPressOut={() => {
               this.setState({
-                previous: DisplayState.Inactive,
-                current: DisplayState.Active,
+                previous: DisplayState.Pressed,
+                current: DisplayState.Default,
               })
             }}
+            disabled={disabled}
           >
             <Flex flexDirection="row">
-              <AnimatedContainer {...rest} style={{ ...props, height }} px={px}>
+              <AnimatedContainer disabled={disabled} {...rest} style={{ ...props, height }} px={px}>
                 <Sans color={to.color} size={size}>
                   {children}
                 </Sans>

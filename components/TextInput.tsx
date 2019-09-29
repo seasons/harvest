@@ -121,7 +121,7 @@ const StyledTextInput = styled(RNTextInput)<TextInputProps>`
   padding-left: 15;
   flex: 2;
   padding-right: 15;
-  font-family: ${fontFamily.sans.regular};
+  font-family: ${fontFamily.sans.medium};
 `
 
 const AnimatedTextInput = animated(StyledTextInput)
