@@ -5,6 +5,7 @@ import { fontFamily } from "./Typography"
 import { ViewStyle, TextInput as RNTextInput } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { color } from "../helpers"
+import { Box } from "./"
 
 export interface TextInputProps {
   /** The theme of the input */
@@ -14,7 +15,8 @@ export interface TextInputProps {
   secureTextEntry?: boolean
   autoCompleteType?: string
   textContentType?: string
-  onChangeText?: (text: string) => void
+  inputKey: string
+  onChangeText?: (inputKey: string, text: string) => void
 }
 
 enum DisplayState {
@@ -67,6 +69,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
   secureTextEntry,
   onChangeText,
   style,
+  inputKey,
 }) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
   const [current, setCurrent] = React.useState(DisplayState.Inactive)
@@ -86,23 +89,26 @@ export const TextInput: React.SFC<TextInputProps> = ({
       setPrevious(DisplayState.Active)
     }
     if (onChangeText) {
-      onChangeText(text)
+      onChangeText(inputKey, text)
     }
   }
 
   return (
-    <Spring native from={from} to={to}>
-      {props => (
-        <AnimatedTextInput
-          secureTextEntry={secureTextEntry}
-          placeholder={placeholder}
-          style={{ ...style, ...props }}
-          placeholderTextColor={color("gray")}
-          onChangeText={text => handleOnChangeText(text)}
-          value={value}
-        />
-      )}
-    </Spring>
+    <Box style={{ height: 56 }}>
+      <Spring native from={from} to={to}>
+        {props => (
+          <AnimatedTextInput
+            secureTextEntry={secureTextEntry}
+            placeholder={placeholder}
+            style={{ ...style, ...props }}
+            autoCapitalize="none"
+            placeholderTextColor={color("gray")}
+            onChangeText={text => handleOnChangeText(text)}
+            value={value}
+          />
+        )}
+      </Spring>
+    </Box>
   )
 }
 
@@ -115,7 +121,7 @@ const StyledTextInput = styled(RNTextInput)<TextInputProps>`
   padding-left: 15;
   flex: 2;
   padding-right: 15;
-  font-family: ${fontFamily.sans.regular};
+  font-family: ${fontFamily.sans.medium};
 `
 
 const AnimatedTextInput = animated(StyledTextInput)
