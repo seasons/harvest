@@ -1,13 +1,24 @@
 import React from "react"
-import { View, Text, FlatList } from "react-native"
+import { FlatList, Dimensions, ImageStore } from "react-native"
 import { Container } from "../../components/Container"
 import gql from "graphql-tag"
 import { useQuery } from "@apollo/react-hooks"
-import { Box, Sans } from "../../components"
+import { Box, Sans, Flex } from "../../components"
 import styled from "styled-components/native"
+import { fontFamily } from "../../components/Typography"
 
 const GET_PRODUCTS = gql`
   {
+    allCategories {
+      edges {
+        node {
+          id
+          name
+          description
+        }
+      }
+    }
+
     allProducts {
       edges {
         node {
@@ -33,16 +44,21 @@ const GET_PRODUCTS = gql`
 `
 
 const renderItem = ({ item }) => {
+  const itemWidth = Dimensions.get("window").width / 2 - 10
   const product = item.node
   const image = product.images && product.images[0]
+  const thumbnail = (image && image.thumbnails && image.thumbnails.large) || { url: "https://via.placeholder.com/150" }
+
   return (
-    <Box mr={2} width={1 / 3}>
-      <ImageContainer source={{ uri: image.url }}></ImageContainer>
-      <Sans size="2" color="gray">
-        {product.brandByBrandId.name}
+    <Box m={1} mb={2} width={itemWidth}>
+      <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
+      <Sans size="0">{product.brandByBrandId.name}</Sans>
+      <Sans size="0" color="gray" numberOfLines={0} ellipsizeMode="tail">
+        {product.name}
       </Sans>
-      <Sans size="2">{product.name}</Sans>
-      <Sans size="2">${product.retailPrice}</Sans>
+      <Sans size="0" color="gray">
+        ${product.retailPrice}
+      </Sans>
     </Box>
   )
 }
@@ -50,25 +66,67 @@ const renderItem = ({ item }) => {
 export const Browse = () => {
   const { loading, data } = useQuery(GET_PRODUCTS)
 
-  if (loading) return null
+  if (loading) {
+    return null
+  }
 
-  console.log("data", data)
-  const products = data.allProducts.edges
+  const products = data && data.allProducts.edges
+  const categories = data && data.allCategories.edges
 
   return (
     <Container>
-      <FlatList
-        data={products}
-        contentContainerStyle={{ paddingBottom: 150 }}
-        keyExtractor={item => item.node.id}
-        renderItem={item => renderItem(item)}
-      />
+      <Flex flexDirection="column" pb="150">
+        <Box my={2} mx={4}>
+          <SearchBar placeholder="Search Seasons" />
+        </Box>
+        <Flex>
+          <FlatList
+            data={products}
+            keyExtractor={item => item.node.id}
+            renderItem={item => renderItem(item)}
+            numColumns={2}
+          />
+        </Flex>
+        <Box my={1} mx={0} height="70" backgroundColor="blue">
+          <CategoryPicker
+            data={categories}
+            renderItem={({ item }) => {
+              return (
+                <Box mr={2}>
+                  <Sans size="1">{item.node.name}</Sans>
+                </Box>
+              )
+            }}
+            keyExtractor={({ node }) => node.id.toString()}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+          />
+        </Box>
+      </Flex>
     </Container>
   )
 }
 
 const ImageContainer = styled.Image`
   background: rgba(0, 0, 0, 0.3);
-  height: 360;
-  width: 240;
+  width: 100%;
+  height: 240;
+`
+
+const SearchBar = styled.TextInput`
+  background-color: #f2f2f2;
+  border-radius: 21px;
+  height: 42px;
+  width: 100%;
+  font-family: ${fontFamily.sans.medium};
+  font-size: 16px;
+  text-align: center;
+`
+
+const CategoryPicker = styled.FlatList`
+  height: 70;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
 `

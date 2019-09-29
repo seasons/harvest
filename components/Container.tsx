@@ -6,7 +6,7 @@ export const Container = ({ children }) => {
   return (
     <Outer>
       <Content>
-        <SafeAreaView>{children}</SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>{children}</SafeAreaView>
       </Content>
     </Outer>
   )
@@ -18,7 +18,7 @@ const Outer = styled.View`
 `
 
 const Content = styled.View`
-  flex: 1;
+  height: 100%;
   background-color: white;
   border-bottom-left-radius: 30;
   border-bottom-right-radius: 30;

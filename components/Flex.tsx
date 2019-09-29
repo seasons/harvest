@@ -37,7 +37,6 @@ import {
   zIndex,
   ZIndexProps,
 } from "styled-system"
-import { ClassAttributes, HTMLAttributes } from "react"
 
 const flexGrow = style({
   prop: "flexGrow",

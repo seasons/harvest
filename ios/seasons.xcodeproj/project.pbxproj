@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
@@ -16,6 +15,9 @@
 		7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0E1F500ACFA44888E6CB0C1 /* ProximaNova-Regular.ttf */; };
 		7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5AF8182310CACF00A9E513 /* ProximaNova-Semibold.ttf */; };
 		E48E9866ED8A424C835E1727 /* apercu-mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */; };
+		353337DDECE045818531A967 /* ProximaNova-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */; };
+		61AEAAE2A041469D81CC3E09 /* ProximaNova-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */; };
+		5A4B65ED798E475A826CC2F0 /* ProximaNova-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,9 @@
 		E2D8D58AC5A9460AA4001F03 /* ProximaNova-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Regular.ttf"; path = "../assets/fonts/ProximaNova-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */ = {isa = PBXFileReference; name = "ProximaNova-Bold.otf"; path = "../assets/fonts/ProximaNova-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */ = {isa = PBXFileReference; name = "ProximaNova-Medium.otf"; path = "../assets/fonts/ProximaNova-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */ = {isa = PBXFileReference; name = "ProximaNova-Thin.otf"; path = "../assets/fonts/ProximaNova-Thin.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +77,9 @@
 			children = (
 				519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */,
 				E2D8D58AC5A9460AA4001F03 /* ProximaNova-Regular.ttf */,
+				9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */,
+				8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */,
+				A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -203,6 +211,9 @@
 				7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */,
 				E48E9866ED8A424C835E1727 /* apercu-mono.ttf in Resources */,
 				74F9F713671146F58215F0A3 /* ProximaNova-Regular.ttf in Resources */,
+				353337DDECE045818531A967 /* ProximaNova-Bold.otf in Resources */,
+				61AEAAE2A041469D81CC3E09 /* ProximaNova-Medium.otf in Resources */,
+				5A4B65ED798E475A826CC2F0 /* ProximaNova-Thin.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
