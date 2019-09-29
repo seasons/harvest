@@ -8,6 +8,7 @@ import { ApolloClient } from "apollo-client"
 import { ApolloProvider } from "@apollo/react-hooks"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { HttpLink } from "apollo-link-http"
+import analytics from "@segment/analytics-react-native"
 
 // Instantiate required constructor fields
 const cache = new InMemoryCache()
@@ -38,6 +39,15 @@ const Apollo = (Component: React.ComponentType) => {
       <Component {...props} />
     </ApolloProvider>
   )
+}
+
+const setupAnalytics = async () => {
+  await analytics.setup("6cdqrLXsben2gavsJ6oVIO9lWVKudY9m", {
+    // Record screen views automatically!
+    recordScreenViews: true,
+    // Record certain application events automatically!
+    trackAppLifecycleEvents: true,
+  })
 }
 
 export function start() {
@@ -141,4 +151,6 @@ export function start() {
       },
     })
   })
+
+  setupAnalytics()
 }

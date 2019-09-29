@@ -32,5 +32,6 @@ target 'seasons' do
 
   use_unimodules!
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
+  pod 'RNAnalytics', :path => '../node_modules/@segment/analytics-react-native'
 
 end

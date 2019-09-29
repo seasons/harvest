@@ -1126,6 +1126,11 @@
     xcode "^2.0.0"
     xmldoc "^0.4.0"
 
+"@segment/analytics-react-native@^1.1.0-beta.2":
+  version "1.1.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@segment/analytics-react-native/-/analytics-react-native-1.1.0-beta.2.tgz#30d8a41624193d5d54e7a65af81a3e8ac492aa16"
+  integrity sha512-HQNjGxBl7rJJbgcj0jjgAGWLHiViGBK72rqSfyBHBz9DpD1y57RtsRmshl4gScRvsuvy3Ig0TLUZRufSjpxM7w==
+
 "@styled-system/background@^5.1.1":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@styled-system/background/-/background-5.1.1.tgz#4cf128df4f7c1c3f9ac4efdc53869536bd2d70d9"
