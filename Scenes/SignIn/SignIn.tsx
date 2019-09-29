@@ -80,7 +80,7 @@ export class SignIn extends React.Component {
                 </Text>
                 <Spacer mb={4} />
                 <Button
-                  onPress={this.handleSignIn}
+                  onPress={() => this.handleSignIn()}
                   variant={emailComplete && password.length ? "primaryLight" : "secondaryLight"}
                 >
                   Sign in

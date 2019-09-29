@@ -33,8 +33,8 @@ export const ErrorPopUp = ({ title, note, show, buttonText, onClose }) => {
   }, [show])
 
   return (
-    <AnimatedOuterWrapper style={{ outerWrapperAnimation }}>
-      <AnimatedPopUp style={{ popUpAnimation }}>
+    <>
+      <AnimatedPopUp style={popUpAnimation}>
         <Box m={2}>
           <Spacer mt={2} />
           <Box>
@@ -63,7 +63,8 @@ export const ErrorPopUp = ({ title, note, show, buttonText, onClose }) => {
           </TouchableWithoutFeedback>
         </Box>
       </AnimatedPopUp>
-    </AnimatedOuterWrapper>
+      {show && <AnimatedOuterWrapper style={outerWrapperAnimation} />}
+    </>
   )
 }
 
@@ -72,10 +73,10 @@ const OuterWrapper = styled(Box)`
   flex: 1;
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   bottom: 0;
   left: 0;
+  z-index: 99;
 `
 
 const PopUp = styled(Box)`
@@ -87,6 +88,7 @@ const PopUp = styled(Box)`
   bottom: 0;
   left: 0;
   overflow: hidden;
+  z-index: 100;
 `
 
 const AnimatedPopUp = animated(PopUp)
