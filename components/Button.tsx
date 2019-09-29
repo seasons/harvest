@@ -25,6 +25,7 @@ export interface ButtonProps extends BoxProps {
   variant?: ButtonVariant
   /** React Native only, Callback on press, use instead of onClick */
   onPress?: (e) => void
+  active?: boolean
 }
 
 export type ButtonVariant = "primaryLight" | "secondaryLight" | "primaryDark" | "secondaryOutline" | "secondaryDark"

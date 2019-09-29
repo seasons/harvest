@@ -3,10 +3,10 @@ import { FlatList } from "react-native"
 import { Container } from "../../components/Container"
 import { Box } from "../../components"
 import { Theme } from "../../components/Theme"
-import styled from "styled-components/native"
 import { CategoriesRail } from "./Components/CategoriesRail"
 import { JustAddedRail } from "./Components/JustAddedRail"
 import { HeroRail } from "./Components/HeroRail"
+import { LogoText } from "../../components/Typography"
 
 export const Home = () => {
   const renderItem = ({ item }) => {
@@ -80,11 +80,3 @@ export const Home = () => {
     </Theme>
   )
 }
-
-const LogoText = styled.Text`
-  font-family: "Apercu-Mono";
-  font-size: 20;
-  letter-spacing: 2;
-  line-height: 24;
-  color: #101010;
-`

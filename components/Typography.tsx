@@ -186,3 +186,11 @@ export const Sans: React.SFC<SansProps> = props => {
 }
 
 Sans.displayName = "Sans"
+
+export const LogoText = styled.Text`
+  font-family: "Apercu-Mono";
+  font-size: 20;
+  letter-spacing: 2;
+  line-height: 24;
+  color: #101010;
+`

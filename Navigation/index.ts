@@ -1,23 +1,19 @@
 import { Navigation } from "react-native-navigation"
 
-export const goToAuth = () =>
+export const goToWelcome = () =>
   Navigation.setRoot({
     root: {
-      bottomTabs: {
-        id: "BottomTabsId",
-        children: [
-          {
-            component: {
-              name: "SignIn",
-              options: {
-                bottomTab: {
-                  fontSize: 12,
-                  text: "Sign In",
-                },
-              },
-            },
-          },
-        ],
+      component: {
+        name: "Welcome",
+      },
+    },
+  })
+
+export const goToSignIn = () =>
+  Navigation.setRoot({
+    root: {
+      component: {
+        name: "SignIn",
       },
     },
   })
