@@ -41,8 +41,12 @@ export type FontValue = string | FontDefinition
  */
 export interface FontFamilyProps {
   sans: {
-    regular: FontValue
+    thin: FontValue
     medium: FontValue
+    bold: FontValue
+  }
+  display: {
+    regular: FontValue
   }
 }
 
@@ -51,8 +55,12 @@ export interface FontFamilyProps {
  */
 export const fontFamily: FontFamilyProps = {
   sans: {
-    regular: "ProximaNova-Regular",
-    medium: "ProximaNova-Semibold",
+    thin: "ProximaNovaT-Thin",
+    medium: "ProximaNova-Medium",
+    bold: "ProximaNova-Bold",
+  },
+  display: {
+    regular: "Apercu-Mono",
   },
 }
 
@@ -97,6 +105,7 @@ export interface TextProps
     VerticalAlignProps {
   fontFamily?: string
   style?: CSSProperties
+  numberOfLines?: number
 }
 
 /** Base Text component for typography */
@@ -155,7 +164,7 @@ export interface SansProps extends Partial<TextProps> {
    * Explicitly specify `null` to inherit weight from parent, otherwise default
    * to `regular`.
    */
-  weight?: null | "regular" | "medium"
+  weight?: null | "thin" | "medium"
 }
 
 /**
@@ -163,10 +172,16 @@ export interface SansProps extends Partial<TextProps> {
  */
 
 export const Sans: React.SFC<SansProps> = props => {
-  const { size, weight } = props
+  const { size, weight, numberOfLines } = props
   const color = props.color ? colorHelper(props.color) : colorHelper("black")
   return (
-    <Text {...props} fontFamily={fontFamily.sans[weight || "regular"]} {...determineFontSizes(size)} color={color} />
+    <Text
+      {...props}
+      fontFamily={fontFamily.sans[weight || "medium"]}
+      {...determineFontSizes(size)}
+      color={color}
+      numberOfLines={numberOfLines}
+    />
   )
 }
 

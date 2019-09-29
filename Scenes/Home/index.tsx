@@ -7,8 +7,6 @@ import styled from "styled-components/native"
 import { CategoriesRail } from "./Components/CategoriesRail"
 import { JustAddedRail } from "./Components/JustAddedRail"
 import { HeroRail } from "./Components/HeroRail"
-import gql from "graphql-tag"
-import { useQuery } from "@apollo/react-hooks"
 
 export const Home = () => {
   const renderItem = ({ item }) => {
@@ -61,21 +59,6 @@ export const Home = () => {
       ],
     },
   ]
-
-  const GET_PRODUCTS = gql`
-    query products {
-      edges {
-        node {
-          id
-          title
-        }
-      }
-    }
-  `
-
-  const { loading, data } = useQuery(GET_PRODUCTS)
-
-  console.log("data", data)
 
   return (
     <Theme>
