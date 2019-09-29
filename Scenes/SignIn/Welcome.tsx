@@ -17,8 +17,6 @@ const image = {
 
 const handleApply = () => {}
 
-const handleSignIn = () => {}
-
 export const Welcome = () => {
   return (
     <Outer>
