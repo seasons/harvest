@@ -2,14 +2,11 @@ import React from "react"
 import { Theme, Sans, Box, Spacer, Button } from "../../components"
 import { SafeAreaView } from "react-native"
 import styled from "styled-components/native"
+import { goToSignIn } from "../../Navigation"
 
 export class Notifications extends React.Component {
   handleAllow = () => {
     //FIXME: Handle handleAllow
-  }
-
-  handleMaybeLater = () => {
-    //FIXME: Handle handleMaybeLater
   }
 
   render() {
@@ -36,7 +33,7 @@ export class Notifications extends React.Component {
                   Allow
                 </Button>
                 <Spacer mb={2} />
-                <Button onPress={() => this.handleMaybeLater()} variant="secondaryLight">
+                <Button onPress={() => goToSignIn()} variant="secondaryLight">
                   Maybe later
                 </Button>
               </Box>
