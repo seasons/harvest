@@ -5,15 +5,38 @@ import { SafeAreaView, TouchableWithoutFeedback } from "react-native"
 import { color } from "../../helpers"
 
 export class SignIn extends React.Component {
+  state = {
+    email: "",
+    password: "",
+    emailComplete: false,
+  }
+
+  onChangeText = (key, val) => {
+    this.setState({ [key]: val })
+    if (key === "email") {
+      const emailValidationRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+      this.setState({ emailComplete: emailValidationRegex.test(val) })
+    }
+  }
+
+  handleSignIn = () => {
+    const { email, password, emailComplete } = this.state
+    if (emailComplete && password.length) {
+      // Add mutation to sign in
+    }
+  }
+
   handleResetPassword = () => {
     //FIXME: Handle reset password
   }
 
   handleApply = () => {
-    //FIXME: handle apply link
+    //FIXME: Handle apply
   }
 
   render() {
+    const { emailComplete, password } = this.state
+
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: color("black") }}>
         <Theme>
@@ -23,9 +46,22 @@ export class SignIn extends React.Component {
                 Welcome
               </Sans>
               <Spacer mb={2} />
-              <TextInput placeholder="Email" variant="dark" />
+              <TextInput
+                placeholder="Email"
+                variant="dark"
+                textContentType="Email"
+                inputKey="email"
+                onChangeText={this.onChangeText}
+              />
               <Spacer mb={2} />
-              <TextInput secureTextEntry placeholder="Password" variant="dark" />
+              <TextInput
+                secureTextEntry
+                placeholder="Password"
+                variant="dark"
+                inputKey="password"
+                textContentType="Password"
+                onChangeText={this.onChangeText}
+              />
               <Spacer mb={2} />
               <Text>
                 <Sans size="2" color="gray">
@@ -38,7 +74,12 @@ export class SignIn extends React.Component {
                 </TouchableWithoutFeedback>
               </Text>
               <Spacer mb={4} />
-              <Button variant="primaryLight">Sign in</Button>
+              <Button
+                onPress={this.handleSignIn}
+                variant={emailComplete && password.length ? "primaryLight" : "secondaryLight"}
+              >
+                Sign in
+              </Button>
             </Box>
             <Box p={2}>
               <Text style={{ textAlign: "center" }}>
