@@ -73,7 +73,6 @@ const OuterWrapper = styled(Box)`
   flex: 1;
   height: 100%;
   width: 100%;
-  z-index: 1000;
   bottom: 0;
   left: 0;
   z-index: 99;
