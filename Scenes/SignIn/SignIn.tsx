@@ -37,6 +37,8 @@ export class SignIn extends React.Component {
   render() {
     const { emailComplete, password } = this.state
 
+    const disabled = !(emailComplete && password.length)
+
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: color("black") }}>
         <Theme>
@@ -74,10 +76,7 @@ export class SignIn extends React.Component {
                 </TouchableWithoutFeedback>
               </Text>
               <Spacer mb={4} />
-              <Button
-                onPress={this.handleSignIn}
-                variant={emailComplete && password.length ? "primaryLight" : "secondaryLight"}
-              >
+              <Button onPress={this.handleSignIn} disabled={disabled} variant="primaryLight">
                 Sign in
               </Button>
             </Box>

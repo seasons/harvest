@@ -4,7 +4,8 @@ export const goToWelcome = () =>
   Navigation.setRoot({
     root: {
       component: {
-        name: "Welcome",
+        // name: "Welcome",
+        name: "SignIn",
       },
     },
   })
