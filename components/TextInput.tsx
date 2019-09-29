@@ -56,7 +56,7 @@ export function getColorsForVariant(variant: TextInputVariant) {
         inactive: {
           backgroundColor: black,
           borderColor: gray,
-          color: gray,
+          color: white,
         },
       }
     default:

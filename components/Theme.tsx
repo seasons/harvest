@@ -27,6 +27,8 @@ export const themeProps = {
   colors: {
     white: "#fff",
     black: "#000",
+    green: "#44524A",
+    lightGreen: "#989F9B",
     lightGray: "#DFDFDF",
     gray: "#7F7F7F",
     darkGray: "#303030",
