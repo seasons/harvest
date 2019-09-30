@@ -1,14 +1,14 @@
 import React from "react"
-import { Bag } from "./Scenes/Bag"
-import { Profile, PaymentAndShipping } from "./Scenes/Account"
-import { Home } from "./Scenes/Home"
-import { Browse } from "./Scenes/Browse"
+import { Bag } from "Scenes/Bag"
+import { Profile, PaymentAndShipping } from "Scenes/Account"
+import { Home } from "Scenes/Home"
+import { Browse } from "Scenes/Browse"
 import { Navigation } from "react-native-navigation"
 import { ApolloClient } from "apollo-client"
 import { ApolloProvider } from "@apollo/react-hooks"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { HttpLink } from "apollo-link-http"
-import { SignIn, Welcome, Initializing } from "./Scenes/SignIn"
+import { SignIn, Welcome, Initializing } from "Scenes/SignIn"
 
 // Instantiate required constructor fields
 const cache = new InMemoryCache()

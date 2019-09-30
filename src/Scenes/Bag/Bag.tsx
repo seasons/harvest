@@ -1,6 +1,6 @@
 import React from "react"
-import { Container } from "../../components/Container"
-import { Sans } from "../../components/Typography"
+import { Container } from "Components/Container"
+import { Sans } from "Components/Typography"
 
 export class Bag extends React.Component {
   render() {

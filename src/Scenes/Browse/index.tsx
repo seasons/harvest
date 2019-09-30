@@ -1,11 +1,11 @@
 import React from "react"
-import { FlatList, Dimensions, ImageStore } from "react-native"
-import { Container } from "../../components/Container"
+import { FlatList, Dimensions } from "react-native"
+import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import { useQuery } from "@apollo/react-hooks"
-import { Box, Sans, Flex } from "../../components"
+import { Box, Sans, Flex } from "App/Components"
 import styled from "styled-components/native"
-import { fontFamily } from "../../components/Typography"
+import { fontFamily } from "Components/Typography"
 
 const GET_PRODUCTS = gql`
   {

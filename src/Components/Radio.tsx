@@ -2,7 +2,7 @@ import debounce from "lodash/debounce"
 import React from "react"
 import styled from "styled-components/native"
 import { Flex, FlexProps } from "./Flex"
-import { color, space } from "../helpers"
+import { color, space } from "App/Utils"
 
 import { BorderProps, borders, SizeProps, space as styledSpace, SpaceProps } from "styled-system"
 import { Box } from "./Box"

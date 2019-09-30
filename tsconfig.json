@@ -1,12 +1,19 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
     "jsx": "react-native",
     "lib": ["dom", "esnext"],
     "moduleResolution": "node",
     "noEmit": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "types": ["jest", "react", "react-native"]
+    "types": ["jest", "react", "react-native"],
+    "paths": {
+      "App/*": ["src/*"],
+      "Components/*": ["src/Components/*"],
+      "Scenes/*": ["src/Scenes/*"],
+      "Utils/*": ["src/utils/*"]
+    }
   }
 }
