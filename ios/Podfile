@@ -4,6 +4,8 @@ require_relative '../node_modules/react-native-unimodules/cocoapods'
 
 target 'seasons' do
   # Pods for seasons
+  use_unimodules!
+  
   pod 'React', :path => '../node_modules/react-native', :subspecs => [
     'Core',
     'CxxBridge',
@@ -29,8 +31,8 @@ target 'seasons' do
   pod 'RNGestureHandler', :podspec => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
   pod 'RNReanimated', :podspec => '../node_modules/react-native-reanimated/RNReanimated.podspec'
   pod 'ReactNativeNavigation', :podspec => '../node_modules/react-native-navigation/ReactNativeNavigation.podspec'
-
-  use_unimodules!
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
+  pod 'A0Auth0', :path => '../node_modules/react-native-auth0'
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
 end
