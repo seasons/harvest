@@ -1,5 +1,6 @@
+import { Box, Sans, Separator, Spacer } from "App/Components"
+
 import React from "react"
-import { Sans, Box, Separator, Spacer } from "../../../components"
 
 const sections = [
   { title: "Delivery address", textLines: ["138 Mulberry St", "New York, New York 1234"] },

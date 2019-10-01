@@ -1,5 +1,5 @@
 import React from "react"
-import { Sans, Button, Box, Theme, Separator, Spacer } from "../../components"
+import { Sans, Button, Box, Theme, Separator, Spacer } from "App/Components"
 import { SafeAreaView } from "react-native"
 
 export class MembershipInfo extends React.Component {

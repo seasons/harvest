@@ -1,12 +1,12 @@
-import React from "react"
-import { FlatList } from "react-native"
-import { Container } from "../../components/Container"
-import { Box } from "../../components"
-import { Theme } from "../../components/Theme"
+import { Box } from "App/Components"
 import { CategoriesRail } from "./Components/CategoriesRail"
-import { JustAddedRail } from "./Components/JustAddedRail"
+import { Container } from "Components/Container"
+import { FlatList } from "react-native"
 import { HeroRail } from "./Components/HeroRail"
-import { LogoText } from "../../components/Typography"
+import { JustAddedRail } from "./Components/JustAddedRail"
+import { LogoText } from "Components/Typography"
+import React from "react"
+import { Theme } from "Components/Theme"
 
 export const Home = () => {
   const renderItem = ({ item }) => {

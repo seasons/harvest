@@ -1,8 +1,8 @@
-import React from "react"
-import { Sans, Flex, Box, Theme, Separator, Spacer, Toggle } from "../../components"
+import { Box, Flex, Sans, Separator, Spacer, Theme, Toggle } from "App/Components"
+import { Container } from "Components/Container"
 import { ProfileList } from "./ProfileList"
+import React from "react"
 import { ScrollView } from "react-native"
-import { Container } from "../../components/Container"
 
 export class Profile extends React.Component {
   render() {

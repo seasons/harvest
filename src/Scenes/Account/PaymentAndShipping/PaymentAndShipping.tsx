@@ -1,9 +1,9 @@
-import React from "react"
-import { Sans, Box, Theme, Spacer, Button, Flex } from "../../../components"
-import { SafeAreaView } from "react-native"
+import { Box, Button, Flex, Spacer, Theme } from "App/Components"
 import { DisplayView } from "./DisplayView"
 import { EditView } from "./EditView"
-import { space } from "../../../helpers"
+import React from "react"
+import { SafeAreaView } from "react-native"
+import { space } from "App/Utils"
 import styled from "styled-components/native"
 
 interface State {

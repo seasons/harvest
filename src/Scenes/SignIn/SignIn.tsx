@@ -1,8 +1,8 @@
 import React from "react"
-import { Theme, Sans, TextInput, Box, Spacer, Button, Flex } from "../../components"
-import { Text } from "../../components/Typography"
+import { Theme, Sans, TextInput, Box, Spacer, Button, Flex } from "App/Components"
+import { Text } from "Components/Typography"
 import { Alert, AsyncStorage, SafeAreaView, TouchableWithoutFeedback } from "react-native"
-import { color } from "../../helpers"
+import { color } from "App/Utils"
 import Auth0 from "react-native-auth0"
 import { goHome } from "../../Navigation"
 

@@ -1,6 +1,7 @@
-import React from "react"
-import { Sans, Box, Radio, Spacer, TextInput, Flex } from "../../../components"
+import { Box, Flex, Radio, Sans, Spacer, TextInput } from "App/Components"
+
 import { FlatList } from "react-native"
+import React from "react"
 
 export class EditView extends React.Component {
   state = {

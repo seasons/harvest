@@ -11,6 +11,7 @@
     "types": ["jest", "react", "react-native"],
     "paths": {
       "App/*": ["src/*"],
+      "Assets/*": ["assets/*"],
       "Components/*": ["src/Components/*"],
       "Scenes/*": ["src/Scenes/*"],
       "Utils/*": ["src/utils/*"]

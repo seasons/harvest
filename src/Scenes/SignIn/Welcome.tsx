@@ -1,11 +1,11 @@
 import React from "react"
-import { Box, Spacer, Button } from "../../components"
-import { Theme } from "../../components/Theme"
-import { Sans } from "../../components/Typography"
+import { Box, Spacer, Button } from "App/Components"
+import { Theme } from "Components/Theme"
+import { Sans } from "Components/Typography"
 import { SafeAreaView } from "react-native"
 import styled from "styled-components/native"
-import { HalfLogoSVG, CurvedLineSVG } from "../../assets/svgs"
-import { color } from "../../helpers"
+import { HalfLogoSVG, CurvedLineSVG } from "Assets/svgs"
+import { color } from "App/Utils"
 import { goToSignIn } from "../../Navigation"
 
 const image = {

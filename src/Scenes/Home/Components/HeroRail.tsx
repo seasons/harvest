@@ -1,7 +1,7 @@
 import React from "react"
 import { FlatList } from "react-native"
-import { styled } from "../../../components/platform/primitives"
-import { Box } from "../../../components"
+import { styled } from "Components/platform/primitives"
+import { Box } from "App/Components"
 
 export const HeroRail = ({ items }) => {
   return (

@@ -1,7 +1,6 @@
-// @ts-ignore
 import React from "react"
 import styled from "styled-components/native"
-import { color } from "../helpers/color"
+import { color } from "App/Utils/color"
 
 import { space, SpaceProps, width, WidthProps } from "styled-system"
 

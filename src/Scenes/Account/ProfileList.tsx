@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Flex, Sans } from "../../components"
+import { Box, Flex, Sans } from "App/Components"
 import {
   SavedPiecesIcon,
   MembershipInfoIcon,
@@ -7,7 +7,7 @@ import {
   PaymentShippingIcon,
   OrderHistoryIcon,
   ChevronIcon,
-} from "../../assets/icons"
+} from "Assets/icons"
 import { TouchableWithoutFeedback } from "react-native"
 import { Navigation } from "react-native-navigation"
 

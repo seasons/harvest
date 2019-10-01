@@ -35,7 +35,7 @@ export const goHome = () =>
               ],
               options: {
                 bottomTab: {
-                  icon: require("../assets/images/Home.png"),
+                  icon: require("../../assets/images/Home.png"),
                 },
               },
             },
@@ -51,7 +51,7 @@ export const goHome = () =>
               ],
               options: {
                 bottomTab: {
-                  icon: require("../assets/images/Browse.png"),
+                  icon: require("../../assets/images/Browse.png"),
                 },
               },
             },
@@ -67,7 +67,7 @@ export const goHome = () =>
               ],
               options: {
                 bottomTab: {
-                  icon: require("../assets/images/Bag.png"),
+                  icon: require("../../assets/images/Bag.png"),
                 },
               },
             },
@@ -83,7 +83,7 @@ export const goHome = () =>
               ],
               options: {
                 bottomTab: {
-                  icon: require("../assets/images/Account.png"),
+                  icon: require("../../assets/images/Account.png"),
                 },
               },
             },
