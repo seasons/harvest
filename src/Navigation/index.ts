@@ -5,6 +5,7 @@ export const goToWelcome = () =>
     root: {
       component: {
         // name: "Welcome",
+        // name: "Notifications",
         name: "SignIn",
       },
     },

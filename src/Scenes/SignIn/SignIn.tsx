@@ -1,5 +1,5 @@
 import React from "react"
-import { Theme, Sans, TextInput, Box, Spacer, Button, Flex } from "App/Components"
+import { ErrorPopUp, Theme, Sans, TextInput, Box, Spacer, Button, Flex } from "App/Components"
 import { Text } from "Components/Typography"
 import { Alert, AsyncStorage, SafeAreaView, TouchableWithoutFeedback } from "react-native"
 import { color } from "App/Utils"
@@ -22,6 +22,7 @@ export class SignIn extends React.Component<SignInProps> {
     email: "",
     password: "",
     emailComplete: false,
+    showError: false,
   }
 
   onChangeText = (key, val) => {
@@ -34,6 +35,7 @@ export class SignIn extends React.Component<SignInProps> {
 
   handleSignIn = () => {
     const { email, password, emailComplete } = this.state
+    this.setState({ showError: true })
     if (emailComplete && password.length) {
       this.login(email, password)
     }
@@ -114,57 +116,69 @@ export class SignIn extends React.Component<SignInProps> {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: color("black") }}>
         <Theme>
-          <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-            <Box p={2} mt={6}>
-              <Sans color="white" size="3">
-                Welcome
-              </Sans>
-              <Spacer mb={2} />
-              <TextInput
-                placeholder="Email"
-                variant="dark"
-                textContentType="Email"
-                inputKey="email"
-                onChangeText={this.onChangeText}
-              />
-              <Spacer mb={2} />
-              <TextInput
-                secureTextEntry
-                placeholder="Password"
-                variant="dark"
-                inputKey="password"
-                textContentType="Password"
-                onChangeText={this.onChangeText}
-              />
-              <Spacer mb={2} />
-              <Text>
-                <Sans size="2" color="gray">
-                  Forget password?
-                </Sans>{" "}
-                <TouchableWithoutFeedback onPress={this.handleResetPassword}>
-                  <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
-                    Reset
-                  </Sans>
-                </TouchableWithoutFeedback>
-              </Text>
-              <Spacer mb={4} />
-              <Button onPress={this.handleSignIn} disabled={disabled} variant="primaryLight">
-                Sign in
-              </Button>
-            </Box>
-            <Box p={2}>
-              <Text style={{ textAlign: "center" }}>
-                <Sans size="2" color="gray">
-                  Not a member?
-                </Sans>{" "}
-                <TouchableWithoutFeedback onPress={this.handleApply}>
-                  <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
-                    Apply
-                  </Sans>
-                </TouchableWithoutFeedback>
-              </Text>
-            </Box>
-          </Flex>
+          <>
+            <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
+              <Box p={2} mt={6}>
+                <Sans color="white" size="3">
+                  Welcome
+                </Sans>
+                <Spacer mb={2} />
+                <TextInput
+                  placeholder="Email"
+                  variant="dark"
+                  textContentType="Email"
+                  inputKey="email"
+                  onChangeText={this.onChangeText}
+                />
+                <Spacer mb={2} />
+                <TextInput
+                  secureTextEntry
+                  placeholder="Password"
+                  variant="dark"
+                  inputKey="password"
+                  textContentType="Password"
+                  onChangeText={this.onChangeText}
+                />
+                <Spacer mb={2} />
+                <Text>
+                  <Sans size="2" color="gray">
+                    Forget password?
+                  </Sans>{" "}
+                  <TouchableWithoutFeedback onPress={this.handleResetPassword}>
+                    <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
+                      Reset
+                    </Sans>
+                  </TouchableWithoutFeedback>
+                </Text>
+                <Spacer mb={4} />
+                <Button
+                  onPress={() => this.handleSignIn()}
+                  variant={emailComplete && password.length ? "primaryLight" : "secondaryLight"}
+                >
+                  Sign in
+                </Button>
+              </Box>
+              <Box p={2}>
+                <Text style={{ textAlign: "center" }}>
+                  <Sans size="2" color="gray">
+                    Not a member?
+                  </Sans>{" "}
+                  <TouchableWithoutFeedback onPress={this.handleApply}>
+                    <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
+                      Apply
+                    </Sans>
+                  </TouchableWithoutFeedback>
+                </Text>
+              </Box>
+            </Flex>
+            <ErrorPopUp
+              buttonText="Got it"
+              note="Your email or password may be incorrect. Not a member? Apply for the waitlist."
+              title="Oops! Try again"
+              show={this.state.showError}
+              onClose={() => this.setState({ showError: false })}
+            />
+          </>
         </Theme>
       </SafeAreaView>
     )
