@@ -6,7 +6,8 @@ export const goToWelcome = () =>
       component: {
         // name: "Welcome",
         // name: "Notifications",
-        name: "SignIn",
+        // name: "SignIn",
+        name: "Product",
       },
     },
   })
