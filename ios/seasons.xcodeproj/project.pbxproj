@@ -5,19 +5,21 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		60FE4072A3F4CB06A6CB71FF /* libPods-seasons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 978CD87D57CA92C1AD151128 /* libPods-seasons.a */; };
+		353337DDECE045818531A967 /* ProximaNova-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */; };
+		5A4B65ED798E475A826CC2F0 /* ProximaNova-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */; };
+		5B556B687D19C4CB8CC7C606 /* Pods_seasons.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8619566322DEE4FBBFA21EF5 /* Pods_seasons.framework */; };
+		61AEAAE2A041469D81CC3E09 /* ProximaNova-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */; };
 		74F9F713671146F58215F0A3 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2D8D58AC5A9460AA4001F03 /* ProximaNova-Regular.ttf */; };
 		7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0E1F500ACFA44888E6CB0C1 /* ProximaNova-Regular.ttf */; };
 		7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5AF8182310CACF00A9E513 /* ProximaNova-Semibold.ttf */; };
+		816425C023453D8800D069F3 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816425BF23453D8800D069F3 /* File.swift */; };
 		E48E9866ED8A424C835E1727 /* apercu-mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */; };
-		353337DDECE045818531A967 /* ProximaNova-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */; };
-		61AEAAE2A041469D81CC3E09 /* ProximaNova-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */; };
-		5A4B65ED798E475A826CC2F0 /* ProximaNova-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,15 +36,17 @@
 		519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "apercu-mono.ttf"; path = "../assets/fonts/apercu-mono.ttf"; sourceTree = "<group>"; };
 		67317E5959E04BF38074190A /* ProximaNova-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Semibold.ttf"; path = "../assets/fonts/ProximaNova-Semibold.ttf"; sourceTree = "<group>"; };
 		7F5AF8182310CACF00A9E513 /* ProximaNova-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Semibold.ttf"; sourceTree = "<group>"; };
+		816425BE23453D8800D069F3 /* seasons-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "seasons-Bridging-Header.h"; sourceTree = "<group>"; };
+		816425BF23453D8800D069F3 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		8619566322DEE4FBBFA21EF5 /* Pods_seasons.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_seasons.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Medium.otf"; path = "../assets/fonts/ProximaNova-Medium.otf"; sourceTree = "<group>"; };
 		8F22EDD95844A43233B43461 /* Pods-seasons.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-seasons.release.xcconfig"; path = "Target Support Files/Pods-seasons/Pods-seasons.release.xcconfig"; sourceTree = "<group>"; };
-		978CD87D57CA92C1AD151128 /* libPods-seasons.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-seasons.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Bold.otf"; path = "../assets/fonts/ProximaNova-Bold.otf"; sourceTree = "<group>"; };
+		A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Thin.otf"; path = "../assets/fonts/ProximaNova-Thin.otf"; sourceTree = "<group>"; };
 		E0E1F500ACFA44888E6CB0C1 /* ProximaNova-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = file; name = "ProximaNova-Regular.ttf"; path = "../../assets/fonts/ProximaNova-Regular.ttf"; sourceTree = "<group>"; };
 		E2D8D58AC5A9460AA4001F03 /* ProximaNova-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Regular.ttf"; path = "../assets/fonts/ProximaNova-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */ = {isa = PBXFileReference; name = "ProximaNova-Bold.otf"; path = "../assets/fonts/ProximaNova-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */ = {isa = PBXFileReference; name = "ProximaNova-Medium.otf"; path = "../assets/fonts/ProximaNova-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */ = {isa = PBXFileReference; name = "ProximaNova-Thin.otf"; path = "../assets/fonts/ProximaNova-Thin.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,7 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60FE4072A3F4CB06A6CB71FF /* libPods-seasons.a in Frameworks */,
+				5B556B687D19C4CB8CC7C606 /* Pods_seasons.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,7 +94,7 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
-				978CD87D57CA92C1AD151128 /* libPods-seasons.a */,
+				8619566322DEE4FBBFA21EF5 /* Pods_seasons.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -124,12 +128,14 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				816425BF23453D8800D069F3 /* File.swift */,
 				13B07FAE1A68108700A75B9A /* seasons */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				3BD55FE360A62A070F8543E0 /* Pods */,
 				15C6B801276048ABB7CFFF17 /* Resources */,
+				816425BE23453D8800D069F3 /* seasons-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -157,6 +163,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				8C90A4BCA7932BA773D31E03 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -178,6 +185,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = T74H9G4334;
+						LastSwiftMigration = 1030;
 					};
 				};
 			};
@@ -234,6 +242,72 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
+		8C90A4BCA7932BA773D31E03 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-seasons/Pods-seasons-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/A0Auth0/A0Auth0.framework",
+				"${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework",
+				"${BUILT_PRODUCTS_DIR}/EXAppLoaderProvider/EXAppLoaderProvider.framework",
+				"${BUILT_PRODUCTS_DIR}/EXConstants/EXConstants.framework",
+				"${BUILT_PRODUCTS_DIR}/EXFileSystem/EXFileSystem.framework",
+				"${BUILT_PRODUCTS_DIR}/EXFont/EXFont.framework",
+				"${BUILT_PRODUCTS_DIR}/EXKeepAwake/EXKeepAwake.framework",
+				"${BUILT_PRODUCTS_DIR}/EXLinearGradient/EXLinearGradient.framework",
+				"${BUILT_PRODUCTS_DIR}/EXLocation/EXLocation.framework",
+				"${BUILT_PRODUCTS_DIR}/EXPermissions/EXPermissions.framework",
+				"${BUILT_PRODUCTS_DIR}/EXSQLite/EXSQLite.framework",
+				"${BUILT_PRODUCTS_DIR}/EXWebBrowser/EXWebBrowser.framework",
+				"${BUILT_PRODUCTS_DIR}/Folly/folly.framework",
+				"${BUILT_PRODUCTS_DIR}/RNCAsyncStorage/RNCAsyncStorage.framework",
+				"${BUILT_PRODUCTS_DIR}/RNGestureHandler/RNGestureHandler.framework",
+				"${BUILT_PRODUCTS_DIR}/RNReanimated/RNReanimated.framework",
+				"${BUILT_PRODUCTS_DIR}/RNSVG/RNSVG.framework",
+				"${BUILT_PRODUCTS_DIR}/React/React.framework",
+				"${BUILT_PRODUCTS_DIR}/ReactNativeNavigation/ReactNativeNavigation.framework",
+				"${BUILT_PRODUCTS_DIR}/UMCore/UMCore.framework",
+				"${BUILT_PRODUCTS_DIR}/UMReactNativeAdapter/UMReactNativeAdapter.framework",
+				"${BUILT_PRODUCTS_DIR}/glog/glog.framework",
+				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
+				"${BUILT_PRODUCTS_DIR}/lottie-react-native/lottie_react_native.framework",
+				"${BUILT_PRODUCTS_DIR}/yoga/yoga.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/A0Auth0.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DoubleConversion.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXAppLoaderProvider.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXConstants.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXFileSystem.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXFont.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXKeepAwake.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXLinearGradient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXLocation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXPermissions.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXSQLite.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXWebBrowser.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/folly.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCAsyncStorage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNGestureHandler.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNReanimated.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNSVG.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativeNavigation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UMCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UMReactNativeAdapter.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/lottie_react_native.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/yoga.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-seasons/Pods-seasons-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		B6436861F3CC265EB7711A0A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -283,6 +357,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				816425C023453D8800D069F3 /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,6 +382,7 @@
 			baseConfigurationReference = 373CF887D83AD215DBD3E5DC /* Pods-seasons.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = T74H9G4334;
@@ -319,6 +395,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = seasons;
+				SWIFT_OBJC_BRIDGING_HEADER = "seasons-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -328,6 +407,7 @@
 			baseConfigurationReference = 8F22EDD95844A43233B43461 /* Pods-seasons.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T74H9G4334;
 				INFOPLIST_FILE = seasons/Info.plist;
@@ -339,6 +419,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = seasons;
+				SWIFT_OBJC_BRIDGING_HEADER = "seasons-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

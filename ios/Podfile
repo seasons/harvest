@@ -5,6 +5,7 @@ require_relative '../node_modules/react-native-unimodules/cocoapods'
 target 'seasons' do
   # Pods for seasons
   use_unimodules!
+  use_frameworks!
   
   pod 'React', :path => '../node_modules/react-native', :subspecs => [
     'Core',
@@ -34,5 +35,7 @@ target 'seasons' do
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
   pod 'A0Auth0', :path => '../node_modules/react-native-auth0'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+  pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
+  pod 'lottie-ios', :path => '../node_modules/lottie-ios'
 
 end
