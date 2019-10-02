@@ -52,13 +52,15 @@ const renderItem = ({ item }) => {
   return (
     <Box m={1} mb={2} width={itemWidth}>
       <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
-      <Sans size="0">{product.brandByBrandId.name}</Sans>
-      <Sans size="0" color="gray" numberOfLines={0} ellipsizeMode="tail">
-        {product.name}
-      </Sans>
-      <Sans size="0" color="gray">
-        ${product.retailPrice}
-      </Sans>
+      <Box m={2}>
+        <Sans size="0">{product.brandByBrandId.name}</Sans>
+        <Sans size="0" color="gray">
+          {product.name}
+        </Sans>
+        <Sans size="0" color="gray">
+          ${product.retailPrice}
+        </Sans>
+      </Box>
     </Box>
   )
 }

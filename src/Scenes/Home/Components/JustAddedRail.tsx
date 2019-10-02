@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Sans } from "App/Components"
+import { Box, Sans, Button } from "App/Components"
 import { FlatList } from "react-native"
 import { styled } from "Components/platform/primitives"
 
@@ -9,7 +9,7 @@ interface JustAddedRailProps {
 
 export const JustAddedRail: React.FC<JustAddedRailProps> = ({ items }) => {
   return (
-    <Box my={2}>
+    <Box my={2} style={{ position: "relative" }}>
       <Sans size="2">Just Added</Sans>
       <Box mt={2}>
         <FlatList
@@ -18,11 +18,17 @@ export const JustAddedRail: React.FC<JustAddedRailProps> = ({ items }) => {
             return (
               <Box mr={2}>
                 <ImageContainer source={{ uri: item.imageUrl }}></ImageContainer>
-                <Sans size="2" color="gray">
-                  {item.brandName}
-                </Sans>
-                <Sans size="2">{item.productName}</Sans>
-                <Sans size="2">{item.price}</Sans>
+                <Box m={1}>
+                  <Sans size="1" mt={0.3}>
+                    {item.brandName}
+                  </Sans>
+                  <Sans size="1" color="gray" mt={0.3} numberOfLines={1} clipMode={"tail"}>
+                    {item.productName}
+                  </Sans>
+                  <Sans size="1" color="gray" mt={0.3}>
+                    {item.price}
+                  </Sans>
+                </Box>
               </Box>
             )
           }}
@@ -30,6 +36,11 @@ export const JustAddedRail: React.FC<JustAddedRailProps> = ({ items }) => {
           showsHorizontalScrollIndicator={false}
           horizontal
         />
+        <ReserveButtonContainer>
+          <Box m={1} my={2}>
+            <Button size="small">Reserve</Button>
+          </Box>
+        </ReserveButtonContainer>
       </Box>
     </Box>
   )
@@ -39,4 +50,17 @@ const ImageContainer = styled.Image`
   background: rgba(0, 0, 0, 0.3);
   height: 360;
   width: 240;
+`
+
+const ReserveButtonContainer = styled.View`
+  display: flex;
+  align-items: flex-end;
+  align-content: flex-end;
+  background-color: white;
+  position: absolute;
+  width: 150;
+  height: 100;
+  bottom: 0;
+  right: 0;
+  padding-right: 5;
 `
