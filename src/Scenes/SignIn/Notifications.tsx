@@ -1,8 +1,8 @@
 import React from "react"
-import { Theme, Sans, Box, Spacer, Button } from "../../components"
+import { Theme, Sans, Box, Spacer, Button } from "App/Components"
 import { SafeAreaView } from "react-native"
 import styled from "styled-components/native"
-import { goToSignIn } from "../../Navigation"
+import { goToSignIn } from "App/Navigation"
 
 export class Notifications extends React.Component {
   handleAllow = () => {
