@@ -8,11 +8,11 @@ export class Initializing extends React.Component {
       let userSession = await AsyncStorage.getItem("userSession")
       userSession = JSON.parse(userSession)
 
-      if (userSession && userSession.accessToken) {
-        goHome()
-      } else {
-        goToWelcome()
-      }
+      // if (userSession && userSession.accessToken) {
+      //   goHome()
+      // } else {
+      goToWelcome()
+      // }
     } catch (err) {
       console.log("error: ", err)
       goToWelcome()

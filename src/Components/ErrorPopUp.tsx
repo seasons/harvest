@@ -13,7 +13,7 @@ export interface Props {
   onClose: () => void
 }
 
-export const ErrorPopUp = ({ title, note, show, buttonText, onClose }) => {
+export const ErrorPopUp: React.FC<Props> = ({ title, note, show, buttonText, onClose }) => {
   const [outerWrapperAnimation, setOuterWrapperAnimation] = useState({
     backgroundColor: "rgba(0, 0, 0, 0)",
   })

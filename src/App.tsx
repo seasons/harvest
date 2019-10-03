@@ -2,6 +2,7 @@ import React from "react"
 import { Bag } from "Scenes/Bag"
 import { Profile, PaymentAndShipping } from "Scenes/Account"
 import { Home } from "Scenes/Home"
+import { Product } from "Scenes/Product"
 import { Browse } from "Scenes/Browse"
 import { Navigation } from "react-native-navigation"
 import { ApolloClient } from "apollo-client"
@@ -46,6 +47,7 @@ export function start() {
   Navigation.registerComponent("Welcome", () => Apollo(Welcome), () => Welcome)
   Navigation.registerComponent("Notifications", () => Apollo(Notifications), () => Notifications)
   Navigation.registerComponent("Home", () => Apollo(Home), () => Home)
+  Navigation.registerComponent("Product", () => Apollo(Product), () => Product)
   Navigation.registerComponent("SignIn", () => Apollo(SignIn), () => SignIn)
   Navigation.registerComponent("Browse", () => Apollo(Browse), () => Browse)
   Navigation.registerComponent("Bag", () => Apollo(Bag), () => Bag)
