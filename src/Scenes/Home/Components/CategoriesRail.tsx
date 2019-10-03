@@ -17,7 +17,7 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ categories }) =>
             return (
               <Box mr={1} key={category}>
                 <CategoryContainer />
-                <Sans size="1" style={{ textAlign: "center" }}>
+                <Sans size="0" color="gray" mt={1} textAlign="center">
                   {category}
                 </Sans>
               </Box>

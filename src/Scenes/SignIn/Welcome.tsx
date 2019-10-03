@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native"
 import styled from "styled-components/native"
 import { HalfLogoSVG, CurvedLineSVG } from "Assets/svgs"
 import { color } from "App/Utils"
-import { goToSignIn } from "../../Navigation"
+import { goToSignIn } from "App/Navigation"
 
 const image = {
   id: 1,

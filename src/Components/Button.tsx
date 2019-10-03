@@ -135,10 +135,10 @@ export class Button extends Component<ButtonProps, ButtonState> {
     current: DisplayState.Default,
   }
 
-  getSize(): { height: number | string; size: "1" | "2"; px: number } {
+  getSize(): { height: number | string; size: "0" | "1" | "2"; px: number } {
     switch (this.props.size) {
       case "small":
-        return { height: 40, size: "2", px: 3 }
+        return { height: 40, size: "0", px: 2 }
       case "medium":
         return { height: 55, size: "2", px: 5 }
       case "large":
