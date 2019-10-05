@@ -5,27 +5,27 @@ import { useQuery } from "@apollo/react-hooks"
 import { Theme, Button, Flex, Sans, Box, Radio, Separator, Spacer } from "App/Components"
 import { FlatList, SafeAreaView, Dimensions, TouchableWithoutFeedback, ScrollView } from "react-native"
 import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand } from "./Components"
-import { styled } from "App/Components/platform/primitives"
 import { color, space } from "App/Utils"
+import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
 
-// const GET_PRODUCT = gql`
-//   {
-//     productById(id: 1) {
-//       name
-//       id
-//       description
-//       retailPrice
-//       modelSize
-//       modelHeight
-//       brandByBrandId {
-//         name
-//       }
-//       images
-//     }
-//   }
-// `
+const GET_PRODUCT = gql`
+  {
+    productById(id: 1) {
+      name
+      id
+      description
+      retailPrice
+      modelSize
+      modelHeight
+      brandByBrandId {
+        name
+      }
+      images
+    }
+  }
+`
 
 const screenHeight = Math.round(Dimensions.get("window").height)
 
@@ -33,10 +33,7 @@ export const Product = () => {
   const [sizeSelection, setSizeSelection] = useState({ size: "", abbreviated: "X", id: null })
   const [showSizeSelection, toggleShowSizeSelection] = useState(false)
 
-  // const { loading, data } = useQuery(GET_PRODUCT)
-
-  const data = { productById: { images: [] } }
-  const loading = false
+  const { loading, data } = useQuery(GET_PRODUCT)
 
   const sizes = [
     { size: "small", abbreviated: "s", id: 1, stock: 0 },
@@ -151,11 +148,11 @@ export const Product = () => {
             </Flex>
             <TouchableWithoutFeedback onPress={() => toggleShowSizeSelection(!showSizeSelection)}>
               <SizeSelectionButton p={2}>
-                <Sans size="2" color="white">
+                <StyledSans size="2" color="white">
                   {sizeSelection.abbreviated.toUpperCase()}
-                </Sans>
+                </StyledSans>
                 <Spacer mr={3} />
-                <DownChevronIcon rotate={showSizeSelection} />
+                <StyledDownChevronIcon rotate={showSizeSelection} />
               </SizeSelectionButton>
             </TouchableWithoutFeedback>
             <Button variant="primaryLight" size="small" onPress={handleReserve}>
@@ -174,6 +171,18 @@ export const Product = () => {
     </Theme>
   )
 }
+
+const StyledDownChevronIcon = styled(DownChevronIcon)`
+  position: absolute;
+  right: 15;
+  top: 15;
+`
+
+const StyledSans = styled(Sans)`
+  position: absolute;
+  left: 15;
+  top: 8;
+`
 
 const Outer = styled.View`
   flex: 1;
@@ -205,13 +214,9 @@ const SizeSelectionButton = styled.View`
   border-radius: 30;
   width: 88;
   border: 1px solid ${color("gray")};
-  align-items: center;
-  justify-content: center;
   border-width: 1;
   border-radius: 28;
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
+  position: relative;
 `
 
 const Content = styled.View`

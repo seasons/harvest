@@ -7,10 +7,10 @@ interface Props extends SvgProps {
 }
 
 export const DownChevronIcon = (props: Props) => {
-  const style = props.rotate ? { transform: [{ rotate: "180deg" }] } : {}
+  const rotationStyle = props.rotate ? { transform: [{ rotate: "180deg" }] } : {}
   return (
-    <View style={style}>
-      <Svg width={9} height={6} {...props}>
+    <View {...props}>
+      <Svg width={9} height={6} style={rotationStyle}>
         <Path
           d="M1 5l3.5-4L8 5"
           stroke="#FFF"
