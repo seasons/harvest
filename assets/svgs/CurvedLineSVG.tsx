@@ -1,8 +1,8 @@
 import React from "react"
-import Svg, { Path } from "react-native-svg"
+import Svg, { Path, SvgProps } from "react-native-svg"
 import { View } from "react-native"
 
-export const CurvedLineSVG = props => (
+export const CurvedLineSVG = (props: SvgProps) => (
   <View style={{ aspectRatio: 305 / 261 }}>
     <Svg width="100%" height="100%" {...props} viewBox="0 0 305 261">
       <Path
