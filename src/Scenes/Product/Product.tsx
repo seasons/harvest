@@ -5,9 +5,10 @@ import { useQuery } from "@apollo/react-hooks"
 import { Theme, Button, Flex, Sans, Box, Radio, Separator, Spacer } from "App/Components"
 import { FlatList, SafeAreaView, Dimensions, TouchableWithoutFeedback, ScrollView } from "react-native"
 import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand } from "./Components"
-import { styled } from "App/Components/platform/primitives"
 import { color, space } from "App/Utils"
+import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
+import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
 
 const GET_PRODUCT = gql`
   {
@@ -54,6 +55,14 @@ export const Product = () => {
     // FIXME: Handle reserve product
   }
 
+  const handleBackButton = () => {
+    // FIXME: Handle handleBackButton
+  }
+
+  const handleSaveButton = () => {
+    // FIXME: Handle handleSaveButton
+  }
+
   if (loading) {
     return null
   }
@@ -61,13 +70,14 @@ export const Product = () => {
   const { productById } = data
 
   const renderItem = ({ item: section }) => {
+    const images = productById && productById.images
     switch (section) {
       case "imageRail":
-        return <ImageRail images={productById.images} />
+        return <ImageRail images={images} />
       case "productDetails":
         return <ProductDetails product={productById} />
       case "moreLikeThis":
-        return <MoreLikeThis products={productById.images} />
+        return <MoreLikeThis products={images} />
       case "aboutTheBrand":
         return <AboutTheBrand product={productById} />
       default:
@@ -118,6 +128,7 @@ export const Product = () => {
         >
           {props => (
             <AnimatedContent style={props}>
+              {showSizeSelection && <AnimatedOverlay style={props} />}
               <SafeAreaView style={{ flex: 1 }}>
                 <FlatList data={sections()} keyExtractor={item => item} renderItem={item => renderItem(item)} />
               </SafeAreaView>
@@ -126,14 +137,22 @@ export const Product = () => {
         </Spring>
         <FooterNav>
           <Flex p={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
-            <Box style={{ width: 114, backgroundColor: "red" }}></Box>
+            <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
+              <TouchableWithoutFeedback onPress={() => handleBackButton()}>
+                <BackArrowIcon />
+              </TouchableWithoutFeedback>
+              <Spacer mr={4} />
+              <TouchableWithoutFeedback onPress={() => handleSaveButton()}>
+                <SaveIcon />
+              </TouchableWithoutFeedback>
+            </Flex>
             <TouchableWithoutFeedback onPress={() => toggleShowSizeSelection(!showSizeSelection)}>
               <SizeSelectionButton p={2}>
-                <Flex flexDirection="row">
-                  <Sans size="2" color="white">
-                    {sizeSelection.abbreviated.toUpperCase()}
-                  </Sans>
-                </Flex>
+                <StyledSans size="2" color="white">
+                  {sizeSelection.abbreviated.toUpperCase()}
+                </StyledSans>
+                <Spacer mr={3} />
+                <StyledDownChevronIcon rotate={showSizeSelection} />
               </SizeSelectionButton>
             </TouchableWithoutFeedback>
             <Button variant="primaryLight" size="small" onPress={handleReserve}>
@@ -153,6 +172,18 @@ export const Product = () => {
   )
 }
 
+const StyledDownChevronIcon = styled(DownChevronIcon)`
+  position: absolute;
+  right: 15;
+  top: 15;
+`
+
+const StyledSans = styled(Sans)`
+  position: absolute;
+  left: 15;
+  top: 8;
+`
+
 const Outer = styled.View`
   flex: 1;
   background-color: black;
@@ -165,6 +196,16 @@ const Selection = styled.View`
   padding-bottom: ${space(2)}px;
 `
 
+const Overlay = styled.View`
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  flex: 1;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100;
+`
+
 const FooterNav = styled.View`
   background-color: black;
 `
@@ -173,11 +214,9 @@ const SizeSelectionButton = styled.View`
   border-radius: 30;
   width: 88;
   border: 1px solid ${color("gray")};
-  align-items: center;
-  justify-content: center;
-  position: relative;
   border-width: 1;
   border-radius: 28;
+  position: relative;
 `
 
 const Content = styled.View`
@@ -189,3 +228,4 @@ const Content = styled.View`
 `
 
 const AnimatedContent = animated(Content)
+const AnimatedOverlay = animated(Overlay)
