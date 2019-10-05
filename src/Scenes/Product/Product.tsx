@@ -8,23 +8,24 @@ import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand } from "./Compon
 import { styled } from "App/Components/platform/primitives"
 import { color, space } from "App/Utils"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
+import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
 
-const GET_PRODUCT = gql`
-  {
-    productById(id: 1) {
-      name
-      id
-      description
-      retailPrice
-      modelSize
-      modelHeight
-      brandByBrandId {
-        name
-      }
-      images
-    }
-  }
-`
+// const GET_PRODUCT = gql`
+//   {
+//     productById(id: 1) {
+//       name
+//       id
+//       description
+//       retailPrice
+//       modelSize
+//       modelHeight
+//       brandByBrandId {
+//         name
+//       }
+//       images
+//     }
+//   }
+// `
 
 const screenHeight = Math.round(Dimensions.get("window").height)
 
@@ -32,7 +33,10 @@ export const Product = () => {
   const [sizeSelection, setSizeSelection] = useState({ size: "", abbreviated: "X", id: null })
   const [showSizeSelection, toggleShowSizeSelection] = useState(false)
 
-  const { loading, data } = useQuery(GET_PRODUCT)
+  // const { loading, data } = useQuery(GET_PRODUCT)
+
+  const data = { productById: { images: [] } }
+  const loading = false
 
   const sizes = [
     { size: "small", abbreviated: "s", id: 1, stock: 0 },
@@ -54,6 +58,14 @@ export const Product = () => {
     // FIXME: Handle reserve product
   }
 
+  const handleBackButton = () => {
+    // FIXME: Handle handleBackButton
+  }
+
+  const handleSaveButton = () => {
+    // FIXME: Handle handleSaveButton
+  }
+
   if (loading) {
     return null
   }
@@ -61,13 +73,14 @@ export const Product = () => {
   const { productById } = data
 
   const renderItem = ({ item: section }) => {
+    const images = productById && productById.images
     switch (section) {
       case "imageRail":
-        return <ImageRail images={productById.images} />
+        return <ImageRail images={images} />
       case "productDetails":
         return <ProductDetails product={productById} />
       case "moreLikeThis":
-        return <MoreLikeThis products={productById.images} />
+        return <MoreLikeThis products={images} />
       case "aboutTheBrand":
         return <AboutTheBrand product={productById} />
       default:
@@ -117,8 +130,8 @@ export const Product = () => {
           to={{ height: showSizeSelection ? screenHeight - 436 : screenHeight - 106 }}
         >
           {props => (
-            <AnimatedContent style={props.height}>
-              {showSizeSelection && <Overlay />}
+            <AnimatedContent style={props}>
+              {showSizeSelection && <AnimatedOverlay style={props} />}
               <SafeAreaView style={{ flex: 1 }}>
                 <FlatList data={sections()} keyExtractor={item => item} renderItem={item => renderItem(item)} />
               </SafeAreaView>
@@ -127,14 +140,22 @@ export const Product = () => {
         </Spring>
         <FooterNav>
           <Flex p={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
-            <Box style={{ width: 114, backgroundColor: "red" }}></Box>
+            <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
+              <TouchableWithoutFeedback onPress={() => handleBackButton()}>
+                <BackArrowIcon />
+              </TouchableWithoutFeedback>
+              <Spacer mr={4} />
+              <TouchableWithoutFeedback onPress={() => handleSaveButton()}>
+                <SaveIcon />
+              </TouchableWithoutFeedback>
+            </Flex>
             <TouchableWithoutFeedback onPress={() => toggleShowSizeSelection(!showSizeSelection)}>
               <SizeSelectionButton p={2}>
-                <Flex flexDirection="row">
-                  <Sans size="2" color="white">
-                    {sizeSelection.abbreviated.toUpperCase()}
-                  </Sans>
-                </Flex>
+                <Sans size="2" color="white">
+                  {sizeSelection.abbreviated.toUpperCase()}
+                </Sans>
+                <Spacer mr={3} />
+                <DownChevronIcon rotate={showSizeSelection} />
               </SizeSelectionButton>
             </TouchableWithoutFeedback>
             <Button variant="primaryLight" size="small" onPress={handleReserve}>
@@ -186,9 +207,11 @@ const SizeSelectionButton = styled.View`
   border: 1px solid ${color("gray")};
   align-items: center;
   justify-content: center;
-  position: relative;
   border-width: 1;
   border-radius: 28;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
 `
 
 const Content = styled.View`
@@ -200,3 +223,4 @@ const Content = styled.View`
 `
 
 const AnimatedContent = animated(Content)
+const AnimatedOverlay = animated(Overlay)
