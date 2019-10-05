@@ -117,7 +117,8 @@ export const Product = () => {
           to={{ height: showSizeSelection ? screenHeight - 436 : screenHeight - 106 }}
         >
           {props => (
-            <AnimatedContent style={props}>
+            <AnimatedContent style={props.height}>
+              {showSizeSelection && <Overlay />}
               <SafeAreaView style={{ flex: 1 }}>
                 <FlatList data={sections()} keyExtractor={item => item} renderItem={item => renderItem(item)} />
               </SafeAreaView>
@@ -163,6 +164,16 @@ const Selection = styled.View`
   padding-right: ${space(2)}px;
   flex: 1;
   padding-bottom: ${space(2)}px;
+`
+
+const Overlay = styled.View`
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  flex: 1;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100;
 `
 
 const FooterNav = styled.View`
