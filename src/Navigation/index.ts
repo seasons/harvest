@@ -1,4 +1,5 @@
 import { Navigation } from "react-native-navigation"
+import { bottomTabs } from "./tabs"
 
 export const goToWelcome = () =>
   Navigation.setRoot({
@@ -7,7 +8,7 @@ export const goToWelcome = () =>
         // name: "Welcome",
         // name: "Notifications",
         // name: "SignIn",
-        name: "Product",
+        name: "Welcome",
       },
     },
   })
@@ -21,76 +22,32 @@ export const goToSignIn = () =>
     },
   })
 
+export const goToBrowse = () =>
+  Navigation.setRoot({
+    root: {
+      bottomTabs: bottomTabs,
+      component: {
+        name: "SignIn",
+      },
+    },
+  })
+
 export const goHome = () =>
   Navigation.setRoot({
     root: {
-      bottomTabs: {
-        children: [
-          {
-            stack: {
-              children: [
-                {
-                  component: {
-                    name: "Home",
-                  },
-                },
-              ],
-              options: {
-                bottomTab: {
-                  icon: require("../../assets/images/Home.png"),
-                },
-              },
-            },
-          },
-          {
-            stack: {
-              children: [
-                {
-                  component: {
-                    name: "Browse",
-                  },
-                },
-              ],
-              options: {
-                bottomTab: {
-                  icon: require("../../assets/images/Browse.png"),
-                },
-              },
-            },
-          },
-          {
-            stack: {
-              children: [
-                {
-                  component: {
-                    name: "Bag",
-                  },
-                },
-              ],
-              options: {
-                bottomTab: {
-                  icon: require("../../assets/images/Bag.png"),
-                },
-              },
-            },
-          },
-          {
-            stack: {
-              children: [
-                {
-                  component: {
-                    name: "Account",
-                  },
-                },
-              ],
-              options: {
-                bottomTab: {
-                  icon: require("../../assets/images/Account.png"),
-                },
-              },
-            },
-          },
-        ],
+      bottomTabs: bottomTabs,
+      component: {
+        name: "Home",
+      },
+    },
+  })
+
+export const goToBag = () =>
+  Navigation.setRoot({
+    root: {
+      bottomTabs: bottomTabs,
+      component: {
+        name: "Home",
       },
     },
   })
