@@ -9,7 +9,7 @@ import { fontFamily } from "Components/Typography"
 
 const GET_PRODUCTS = gql`
   {
-    allCategories {
+    categories {
       edges {
         node {
           id
@@ -18,8 +18,7 @@ const GET_PRODUCTS = gql`
         }
       }
     }
-
-    allProducts {
+    products {
       edges {
         node {
           id
@@ -34,7 +33,7 @@ const GET_PRODUCTS = gql`
           createdAt
           updatedAt
 
-          brandByBrandId {
+          brand {
             name
           }
         }
@@ -53,7 +52,7 @@ const renderItem = ({ item }) => {
     <Box m={1} mb={2} width={itemWidth}>
       <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
       <Box m={2}>
-        <Sans size="0">{product.brandByBrandId.name}</Sans>
+        <Sans size="0">{product.brand.name}</Sans>
         <Sans size="0" color="gray">
           {product.name}
         </Sans>
@@ -72,8 +71,8 @@ export const Browse = () => {
     return null
   }
 
-  const products = data && data.allProducts.edges
-  const categories = data && data.allCategories.edges
+  const products = data && data.products.edges
+  const categories = data && data.categories.edges
 
   return (
     <Container>
