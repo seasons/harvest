@@ -32,7 +32,7 @@ export const themeProps = {
     lightGray: "#DFDFDF",
     gray: "#7F7F7F",
     darkGray: "#303030",
-    blue: "#2C52E5",
+    blue: "#2B50DF",
   },
 
   fontFamily,
