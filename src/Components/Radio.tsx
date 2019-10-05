@@ -92,7 +92,7 @@ const Container = styled(Flex)<ContainerProps>`
 const InnerCircle = styled(Box)`
   width: 14;
   height: 14;
-  border-radius: 4;
+  border-radius: 100;
   position: relative;
   left: 4;
   top: 4;
@@ -102,12 +102,11 @@ const InnerCircle = styled(Box)`
 const RadioButton = styled(Box)<RadioToggleProps>`
   ${borders};
   ${styledSpace};
-  background-color: ${color("white")};
   border-color: ${color("gray")};
   border-width: 1;
   width: 24;
   height: 24;
-  border-radius: 8;
+  border-radius: 100;
   min-width: 24;
   min-height: 24;
 `
