@@ -4,7 +4,7 @@ import { capitalize } from "lodash"
 import { useQuery } from "@apollo/react-hooks"
 import { Theme, Button, Flex, Sans, Box, Radio, Separator, Spacer } from "App/Components"
 import { FlatList, SafeAreaView, Dimensions, TouchableWithoutFeedback, ScrollView } from "react-native"
-import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand } from "./Components"
+import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand, ReserveButton } from "./Components"
 import { color, space } from "App/Utils"
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
@@ -12,14 +12,14 @@ import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
 
 const GET_PRODUCT = gql`
   {
-    productById(id: 1) {
+    product(where: { id: "ck1do0t6g00xr07546zzbai6a" }) {
       name
       id
       description
       retailPrice
       modelSize
       modelHeight
-      brandByBrandId {
+      brand {
         name
       }
       images
@@ -32,7 +32,6 @@ const screenHeight = Math.round(Dimensions.get("window").height)
 export const Product = () => {
   const [sizeSelection, setSizeSelection] = useState({ size: "", abbreviated: "X", id: null })
   const [showSizeSelection, toggleShowSizeSelection] = useState(false)
-
   const { loading, data } = useQuery(GET_PRODUCT)
 
   const sizes = [
@@ -51,10 +50,6 @@ export const Product = () => {
     setSizeSelection(firstInStock)
   }, [])
 
-  const handleReserve = () => {
-    // FIXME: Handle reserve product
-  }
-
   const handleBackButton = () => {
     // FIXME: Handle handleBackButton
   }
@@ -63,23 +58,23 @@ export const Product = () => {
     // FIXME: Handle handleSaveButton
   }
 
-  if (loading) {
+  if (loading || !data) {
     return null
   }
 
-  const { productById } = data
+  const product = data && data.product
 
   const renderItem = ({ item: section }) => {
-    const images = productById && productById.images
+    const images = product && product.images
     switch (section) {
       case "imageRail":
         return <ImageRail images={images} />
       case "productDetails":
-        return <ProductDetails product={productById} />
+        return <ProductDetails product={product} />
       case "moreLikeThis":
         return <MoreLikeThis products={images} />
       case "aboutTheBrand":
-        return <AboutTheBrand product={productById} />
+        return <AboutTheBrand product={product} />
       default:
         return null
     }
@@ -155,9 +150,7 @@ export const Product = () => {
                 <StyledDownChevronIcon rotate={showSizeSelection} />
               </SizeSelectionButton>
             </TouchableWithoutFeedback>
-            <Button variant="primaryLight" size="small" onPress={handleReserve}>
-              Reserve
-            </Button>
+            <ReserveButton product={product}></ReserveButton>
           </Flex>
         </FooterNav>
         <Selection m={2}>

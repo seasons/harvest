@@ -8,7 +8,7 @@ export const goToWelcome = () =>
         // name: "Welcome",
         // name: "Notifications",
         // name: "SignIn",
-        name: "Welcome",
+        name: "Bag",
       },
     },
   })
