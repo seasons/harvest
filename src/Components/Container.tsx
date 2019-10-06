@@ -23,5 +23,5 @@ const Content = styled.View`
   border-bottom-left-radius: 30;
   border-bottom-right-radius: 30;
   overflow: hidden;
-  margin-bottom: 10;
+  margin-bottom: 15;
 `
