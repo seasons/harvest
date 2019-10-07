@@ -10,15 +10,10 @@ import { fontFamily } from "Components/Typography"
 const GET_PRODUCTS = gql`
   {
     categories {
-      edges {
-        node {
-          id
-          name
-          description
-        }
-      }
+      name
+      id
     }
-    products {
+    products(first: 30, categoryName: "Puffer") {
       edges {
         node {
           id

@@ -1,7 +1,8 @@
 import React from "react"
 import { ErrorPopUp, Theme, Sans, TextInput, Box, Spacer, Button, Flex } from "App/Components"
 import { Text } from "Components/Typography"
-import { Alert, AsyncStorage, SafeAreaView, TouchableWithoutFeedback } from "react-native"
+import { SafeAreaView, TouchableWithoutFeedback } from "react-native"
+import AsyncStorage from "@react-native-community/async-storage"
 import { color } from "App/Utils"
 import Auth0 from "react-native-auth0"
 import { goHome } from "../../Navigation"
@@ -35,7 +36,6 @@ export class SignIn extends React.Component<SignInProps> {
 
   handleSignIn = () => {
     const { email, password, emailComplete } = this.state
-    this.setState({ showError: true })
     if (emailComplete && password.length) {
       this.login(email, password)
     }
@@ -66,7 +66,6 @@ export class SignIn extends React.Component<SignInProps> {
         realm: "Username-Password-Authentication",
       })
       .then(success => {
-        console.log(success)
         AsyncStorage.setItem("userSession", JSON.stringify(success))
         goHome()
       })
@@ -105,7 +104,7 @@ export class SignIn extends React.Component<SignInProps> {
   }
 
   alert(title, message) {
-    Alert.alert(title, message, [{ text: "OK", onPress: () => console.log("OK Pressed") }], { cancelable: false })
+    this.setState({ showError: true })
   }
 
   render() {
