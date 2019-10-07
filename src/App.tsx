@@ -17,7 +17,10 @@ const cache = new InMemoryCache()
 // LocalState data in cache
 cache.writeData({
   data: {
-    bag: { items: [{ id: "1213", __typename: "Product" }] },
+    bag: {
+      __typename: "Bag",
+      items: [],
+    },
   },
 })
 

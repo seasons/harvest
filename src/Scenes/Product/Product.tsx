@@ -9,10 +9,11 @@ import { color, space } from "App/Utils"
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
+import { Navigation } from "react-native-navigation"
 
 const GET_PRODUCT = gql`
-  {
-    product(where: { id: "ck1do0t6g00xr07546zzbai6a" }) {
+  query GetProduct($productId: ID!) {
+    product(where: { id: $productId }) {
       name
       id
       description
@@ -29,10 +30,14 @@ const GET_PRODUCT = gql`
 
 const screenHeight = Math.round(Dimensions.get("window").height)
 
-export const Product = () => {
+export const Product = props => {
   const [sizeSelection, setSizeSelection] = useState({ size: "", abbreviated: "X", id: null })
   const [showSizeSelection, toggleShowSizeSelection] = useState(false)
-  const { loading, data } = useQuery(GET_PRODUCT)
+  const { loading, error, data } = useQuery(GET_PRODUCT, {
+    variables: {
+      productId: props.id,
+    },
+  })
 
   const sizes = [
     { size: "small", abbreviated: "s", id: 1, stock: 0 },
@@ -51,7 +56,7 @@ export const Product = () => {
   }, [])
 
   const handleBackButton = () => {
-    // FIXME: Handle handleBackButton
+    Navigation.pop(props.componentId)
   }
 
   const handleSaveButton = () => {
@@ -60,6 +65,9 @@ export const Product = () => {
 
   if (loading || !data) {
     return null
+  }
+  if (error) {
+    console.error("error: ", error)
   }
 
   const product = data && data.product

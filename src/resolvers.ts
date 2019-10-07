@@ -11,23 +11,31 @@ export const typeDefs = gql`
   }
 `
 
+const GET_BAG = gql`
+  query GetBag {
+    bag @client {
+      items {
+        id
+        name
+      }
+    }
+  }
+`
+
 export const resolvers = {
   Mutation: {
-    addItemToBag: (_root, variables, { cache }) => {
-      const query = gql`
-        query GetBag {
-          bag @client {
-            items {
-              id
-            }
-          }
-        }
-      `
-      console.log("qeury!!!!", query)
-      const bag = cache.readQuery({ query })
-      console.log("bag????", bag)
-      const data = { ...bag, items: bag.items.push(variables.item) }
-      cache.writeData({ data })
+    addItemToBag: (_root, { item }, { cache }) => {
+      const data = cache.readQuery({ query: GET_BAG })
+      const items = data.bag.items || []
+      items.push(item.id)
+
+      const updatedData = {
+        bag: {
+          ...data.bag,
+          items,
+        },
+      }
+      cache.writeData({ data: updatedData })
       return null
     },
     removeItemFromBag: (_root, variables, { cache }) => {
@@ -45,5 +53,16 @@ export const resolvers = {
       cache.writeData({ data })
       return null
     },
+  },
+  Query: {
+    bag: (root, _args, { cache }) => {
+      const bag = cache.readQuery({
+        query: GET_BAG,
+      })
+      return bag
+    },
+  },
+  Bag: {
+    items: () => [],
   },
 }
