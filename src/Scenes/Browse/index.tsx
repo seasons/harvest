@@ -1,11 +1,12 @@
 import React from "react"
-import { FlatList, Dimensions } from "react-native"
+import { FlatList, Dimensions, TouchableWithoutFeedback } from "react-native"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import { useQuery } from "@apollo/react-hooks"
 import { Box, Sans, Flex } from "App/Components"
 import styled from "styled-components/native"
 import { fontFamily } from "Components/Typography"
+import { Navigation } from "react-native-navigation"
 
 const GET_PRODUCTS = gql`
   {
@@ -37,29 +38,46 @@ const GET_PRODUCTS = gql`
   }
 `
 
-const renderItem = ({ item }) => {
+const renderItem = ({ item }, componentId) => {
   const itemWidth = Dimensions.get("window").width / 2 - 10
   const product = item.node
   const image = product.images && product.images[0]
   const thumbnail = (image && image.thumbnails && image.thumbnails.large) || { url: "https://via.placeholder.com/150" }
 
+  const goToProduct = () =>
+    Navigation.push(componentId, {
+      component: {
+        name: "Product",
+        passProps: {
+          id: product.id,
+        },
+        options: {
+          bottomTabs: {
+            visible: false,
+          },
+        },
+      },
+    })
+
   return (
-    <Box m={1} mb={2} width={itemWidth}>
-      <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
-      <Box m={2}>
-        <Sans size="0">{product.brand.name}</Sans>
-        <Sans size="0" color="gray">
-          {product.name}
-        </Sans>
-        <Sans size="0" color="gray">
-          ${product.retailPrice}
-        </Sans>
+    <TouchableWithoutFeedback onPress={goToProduct}>
+      <Box m={1} mb={2} width={itemWidth}>
+        <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
+        <Box m={2}>
+          <Sans size="0">{product.brand.name}</Sans>
+          <Sans size="0" color="gray">
+            {product.name}
+          </Sans>
+          <Sans size="0" color="gray">
+            ${product.retailPrice}
+          </Sans>
+        </Box>
       </Box>
-    </Box>
+    </TouchableWithoutFeedback>
   )
 }
 
-export const Browse = () => {
+export const Browse = (props: any) => {
   const { loading, data } = useQuery(GET_PRODUCTS)
 
   if (loading) {
@@ -79,7 +97,7 @@ export const Browse = () => {
           <FlatList
             data={products}
             keyExtractor={item => item.node.id}
-            renderItem={item => renderItem(item)}
+            renderItem={item => renderItem(item, props.componentId)}
             numColumns={2}
           />
         </Flex>

@@ -5,10 +5,10 @@ export const goToWelcome = () =>
   Navigation.setRoot({
     root: {
       component: {
-        // name: "Welcome",
+        name: "Welcome",
         // name: "Notifications",
         // name: "SignIn",
-        name: "Welcome",
+        // name: "Bag",
       },
     },
   })

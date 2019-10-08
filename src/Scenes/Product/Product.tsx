@@ -4,22 +4,23 @@ import { capitalize } from "lodash"
 import { useQuery } from "@apollo/react-hooks"
 import { Theme, Button, Flex, Sans, Box, Radio, Separator, Spacer } from "App/Components"
 import { FlatList, SafeAreaView, Dimensions, TouchableWithoutFeedback, ScrollView } from "react-native"
-import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand } from "./Components"
+import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand, ReserveButton } from "./Components"
 import { color, space } from "App/Utils"
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
+import { Navigation } from "react-native-navigation"
 
 const GET_PRODUCT = gql`
-  {
-    productById(id: 1) {
+  query GetProduct($productId: ID!) {
+    product(where: { id: $productId }) {
       name
       id
       description
       retailPrice
       modelSize
       modelHeight
-      brandByBrandId {
+      brand {
         name
       }
       images
@@ -29,11 +30,14 @@ const GET_PRODUCT = gql`
 
 const screenHeight = Math.round(Dimensions.get("window").height)
 
-export const Product = () => {
+export const Product = props => {
   const [sizeSelection, setSizeSelection] = useState({ size: "", abbreviated: "X", id: null })
   const [showSizeSelection, toggleShowSizeSelection] = useState(false)
-
-  const { loading, data } = useQuery(GET_PRODUCT)
+  const { loading, error, data } = useQuery(GET_PRODUCT, {
+    variables: {
+      productId: props.id,
+    },
+  })
 
   const sizes = [
     { size: "small", abbreviated: "s", id: 1, stock: 0 },
@@ -51,35 +55,34 @@ export const Product = () => {
     setSizeSelection(firstInStock)
   }, [])
 
-  const handleReserve = () => {
-    // FIXME: Handle reserve product
-  }
-
   const handleBackButton = () => {
-    // FIXME: Handle handleBackButton
+    Navigation.pop(props.componentId)
   }
 
   const handleSaveButton = () => {
     // FIXME: Handle handleSaveButton
   }
 
-  if (loading) {
+  if (loading || !data) {
     return null
   }
+  if (error) {
+    console.error("error: ", error)
+  }
 
-  const { productById } = data
+  const product = data && data.product
 
   const renderItem = ({ item: section }) => {
-    const images = productById && productById.images
+    const images = product && product.images
     switch (section) {
       case "imageRail":
         return <ImageRail images={images} />
       case "productDetails":
-        return <ProductDetails product={productById} />
+        return <ProductDetails product={product} />
       case "moreLikeThis":
         return <MoreLikeThis products={images} />
       case "aboutTheBrand":
-        return <AboutTheBrand product={productById} />
+        return <AboutTheBrand product={product} />
       default:
         return null
     }
@@ -155,9 +158,7 @@ export const Product = () => {
                 <StyledDownChevronIcon rotate={showSizeSelection} />
               </SizeSelectionButton>
             </TouchableWithoutFeedback>
-            <Button variant="primaryLight" size="small" onPress={handleReserve}>
-              Reserve
-            </Button>
+            <ReserveButton product={product}></ReserveButton>
           </Flex>
         </FooterNav>
         <Selection m={2}>
