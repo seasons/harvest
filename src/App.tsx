@@ -10,7 +10,7 @@ import { ApolloProvider } from "@apollo/react-hooks"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { HttpLink } from "apollo-link-http"
 import { SignIn, Welcome, Initializing, Notifications } from "Scenes/SignIn"
-import { resolvers, typeDefs } from "./resolvers"
+import { StateProvider } from "App/helpers/StateProvider"
 
 // Instantiate required constructor fields
 const cache = new InMemoryCache()
@@ -32,8 +32,6 @@ const client = new ApolloClient({
   // Provide required constructor fields
   cache,
   link,
-  typeDefs,
-  resolvers,
   // Provide some optional constructor fields
   name: "react-web-client",
   version: "1.3",
@@ -46,25 +44,53 @@ const client = new ApolloClient({
 })
 
 // Create the client as outlined in the setup guide
-const Apollo = (Component: React.ComponentType) => {
+const App = (Component: React.ComponentType) => {
+  const initialState = {
+    bag: { items: [] },
+  }
+
+  const reducer = (state, action) => {
+    const items = state.bag.items || []
+    switch (action.type) {
+      case "addItemToBag":
+        console.log("adding item", action.item)
+        items.push(action.item)
+        const newBag = {
+          ...state,
+          bag: { ...state.bag, items },
+        }
+        console.log("newBag", newBag)
+      case "removeItemFromBag":
+        items.push(action.item)
+        return {
+          ...state,
+          bag: { ...state.bag, items: items.filter(bagItem => bagItem.id === action.item.id) },
+        }
+      default:
+        return state
+    }
+  }
+
   return props => (
     <ApolloProvider client={client}>
-      <Component {...props} />
+      <StateProvider initialState={initialState} reducer={reducer}>
+        <Component {...props} />
+      </StateProvider>
     </ApolloProvider>
   )
 }
 
 export function start() {
-  Navigation.registerComponent("Initializing", () => Apollo(Initializing), () => Initializing)
-  Navigation.registerComponent("Welcome", () => Apollo(Welcome), () => Welcome)
-  Navigation.registerComponent("Notifications", () => Apollo(Notifications), () => Notifications)
-  Navigation.registerComponent("Home", () => Apollo(Home), () => Home)
-  Navigation.registerComponent("Product", () => Apollo(Product), () => Product)
-  Navigation.registerComponent("SignIn", () => Apollo(SignIn), () => SignIn)
-  Navigation.registerComponent("Browse", () => Apollo(Browse), () => Browse)
-  Navigation.registerComponent("Bag", () => Apollo(Bag), () => Bag)
-  Navigation.registerComponent("Account", () => Apollo(Profile), () => Profile)
-  Navigation.registerComponent("Account.PaymentAndShipping", () => Apollo(PaymentAndShipping), () => PaymentAndShipping)
+  Navigation.registerComponent("Initializing", () => App(Initializing), () => Initializing)
+  Navigation.registerComponent("Welcome", () => App(Welcome), () => Welcome)
+  Navigation.registerComponent("Notifications", () => App(Notifications), () => Notifications)
+  Navigation.registerComponent("Home", () => App(Home), () => Home)
+  Navigation.registerComponent("Product", () => App(Product), () => Product)
+  Navigation.registerComponent("SignIn", () => App(SignIn), () => SignIn)
+  Navigation.registerComponent("Browse", () => App(Browse), () => Browse)
+  Navigation.registerComponent("Bag", () => App(Bag), () => Bag)
+  Navigation.registerComponent("Account", () => App(Profile), () => Profile)
+  Navigation.registerComponent("Account.PaymentAndShipping", () => App(PaymentAndShipping), () => PaymentAndShipping)
 
   Navigation.events().registerAppLaunchedListener(async () => {
     Navigation.setDefaultOptions({
