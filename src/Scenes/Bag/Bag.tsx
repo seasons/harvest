@@ -3,24 +3,15 @@ import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
 import { EmptyState } from "./Components.tsx"
 import { Theme, Spacer, Flex, Box } from "App/Components"
-import gql from "graphql-tag"
-import { useQuery } from "@apollo/react-hooks"
 
-const GET_BAG = gql`
-  {
-    bag @client {
-      items {
-        id
-      }
-    }
-  }
-`
+import { useStateValue } from "App/helpers/StateProvider"
 
 export const Bag = () => {
-  const { data } = useQuery(GET_BAG)
-  console.log("data?????", data)
-  const bagIsEmpty = !data || !data.products || data.products.length === 0
+  const [{ bag }] = useStateValue()
+  console.log("bag", bag)
+  const bagIsEmpty = !bag || !bag.items || bag.items.length === 0
   const remainingPieces = 3
+
   return (
     <Theme>
       <Container>

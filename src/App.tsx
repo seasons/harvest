@@ -10,7 +10,7 @@ import { ApolloProvider } from "@apollo/react-hooks"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { HttpLink } from "apollo-link-http"
 import { SignIn, Welcome, Initializing, Notifications } from "Scenes/SignIn"
-import { resolvers, typeDefs } from "./resolvers"
+import { GlobalStateProvider } from "./Components"
 
 // Instantiate required constructor fields
 const cache = new InMemoryCache()
@@ -32,8 +32,6 @@ const client = new ApolloClient({
   // Provide required constructor fields
   cache,
   link,
-  typeDefs,
-  resolvers,
   // Provide some optional constructor fields
   name: "react-web-client",
   version: "1.3",
@@ -49,7 +47,9 @@ const client = new ApolloClient({
 const Apollo = (Component: React.ComponentType) => {
   return props => (
     <ApolloProvider client={client}>
-      <Component {...props} />
+      <GlobalStateProvider>
+        <Component {...props} />
+      </GlobalStateProvider>
     </ApolloProvider>
   )
 }

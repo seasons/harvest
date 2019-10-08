@@ -5,10 +5,9 @@ export const goToWelcome = () =>
   Navigation.setRoot({
     root: {
       component: {
-        name: "Welcome",
         // name: "Notifications",
         // name: "SignIn",
-        // name: "Bag",
+        name: "Bag",
       },
     },
   })
@@ -27,7 +26,7 @@ export const goToBrowse = () =>
     root: {
       bottomTabs: bottomTabs,
       component: {
-        name: "SignIn",
+        name: "Bag",
       },
     },
   })
@@ -37,7 +36,7 @@ export const goHome = () =>
     root: {
       bottomTabs: bottomTabs,
       component: {
-        name: "Home",
+        name: "Bag",
       },
     },
   })
@@ -47,7 +46,7 @@ export const goToBag = () =>
     root: {
       bottomTabs: bottomTabs,
       component: {
-        name: "Home",
+        name: "Bag",
       },
     },
   })
