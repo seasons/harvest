@@ -12,8 +12,8 @@ import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
 import { Navigation } from "react-native-navigation"
 
 const GET_PRODUCT = gql`
-  query GetProduct {
-    product(where: { id: "ck1do0t6g00xr07546zzbai6a" }) {
+  query GetProduct($productId: ID!) {
+    product(where: { id: $productId }) {
       name
       id
       description
