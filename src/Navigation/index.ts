@@ -7,7 +7,7 @@ export const goToWelcome = () =>
       component: {
         // name: "Notifications",
         // name: "SignIn",
-        name: "Bag",
+        name: "Home",
       },
     },
   })
@@ -26,7 +26,7 @@ export const goToBrowse = () =>
     root: {
       bottomTabs: bottomTabs,
       component: {
-        name: "Bag",
+        name: "Browse",
       },
     },
   })
@@ -36,7 +36,7 @@ export const goHome = () =>
     root: {
       bottomTabs: bottomTabs,
       component: {
-        name: "Bag",
+        name: "Home",
       },
     },
   })

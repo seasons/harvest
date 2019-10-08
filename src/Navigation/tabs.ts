@@ -1,12 +1,11 @@
 export const bottomTabs = {
-  currentTabIndex: 2,
   children: [
     {
       stack: {
         children: [
           {
             component: {
-              name: "Bag",
+              name: "Home",
             },
           },
         ],
