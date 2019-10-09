@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/react-hooks"
 import { Box, Sans, Flex } from "App/Components"
 import styled from "styled-components/native"
 import { fontFamily } from "Components/Typography"
-import { Navigation } from "react-native-navigation"
+import { goToProduct } from "App/Navigation"
 
 const GET_PRODUCTS = gql`
   {
@@ -44,23 +44,8 @@ const renderItem = ({ item }, componentId) => {
   const image = product.images && product.images[0]
   const thumbnail = (image && image.thumbnails && image.thumbnails.large) || { url: "https://via.placeholder.com/150" }
 
-  const goToProduct = () =>
-    Navigation.push(componentId, {
-      component: {
-        name: "Product",
-        passProps: {
-          id: product.id,
-        },
-        options: {
-          bottomTabs: {
-            visible: false,
-          },
-        },
-      },
-    })
-
   return (
-    <TouchableWithoutFeedback onPress={goToProduct}>
+    <TouchableWithoutFeedback onPress={() => goToProduct(componentId, item.id)}>
       <Box m={1} mb={2} width={itemWidth}>
         <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
         <Box m={2}>

@@ -8,7 +8,7 @@ import { LogoText } from "Components/Typography"
 import React from "react"
 import { Theme } from "Components/Theme"
 
-export const Home = () => {
+export const Home = (props: any) => {
   const renderItem = ({ item }) => {
     switch (item.type) {
       case "header":
@@ -18,7 +18,7 @@ export const Home = () => {
         return <CategoriesRail categories={item.data} />
 
       case "just-added":
-        return <JustAddedRail items={item.data} />
+        return <JustAddedRail componentId={props.componentId} items={item.data} />
     }
   }
 
@@ -47,6 +47,7 @@ export const Home = () => {
           productName: "Print Side Tee",
           brandName: "Helmut Lang",
           price: "$189",
+          id: "ck1do0t6g00xr07546zzbai6a",
         },
         {
           imageUrl:
@@ -55,6 +56,7 @@ export const Home = () => {
           brandName: "Aimé Leon",
           colorway: "Royalty Purple",
           price: "$255",
+          id: "ck1do0tft00y20754vnf7l9cb",
         },
       ],
     },

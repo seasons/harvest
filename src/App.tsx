@@ -11,18 +11,10 @@ import { InMemoryCache } from "apollo-cache-inmemory"
 import { HttpLink } from "apollo-link-http"
 import { SignIn, Welcome, Initializing, Notifications } from "Scenes/SignIn"
 import { StateProvider } from "App/helpers/StateProvider"
+import { storeAsyncStorageData, getAsyncStorageData } from "./helpers/asyncStorage"
 
 // Instantiate required constructor fields
 const cache = new InMemoryCache()
-// LocalState data in cache
-cache.writeData({
-  data: {
-    bag: {
-      __typename: "Bag",
-      items: [],
-    },
-  },
-})
 
 const link = new HttpLink({
   uri: "https://monsoon-staging.herokuapp.com",
@@ -44,28 +36,28 @@ const client = new ApolloClient({
 })
 
 // Create the client as outlined in the setup guide
-const App = (Component: React.ComponentType) => {
-  const initialState = {
-    bag: { items: [] },
-  }
+const App = (Component: React.ComponentType, cacheData) => {
+  const initialState = cacheData
+  console.log("initialState???", initialState)
 
   const reducer = (state, action) => {
     const items = state.bag.items || []
     switch (action.type) {
       case "addItemToBag":
-        console.log("adding item", action.item)
         items.push(action.item)
-        const newBag = {
+        const bagWithItem = {
           ...state,
           bag: { ...state.bag, items },
         }
-        console.log("newBag", newBag)
+        storeAsyncStorageData(bagWithItem)
+        return bagWithItem
       case "removeItemFromBag":
-        items.push(action.item)
-        return {
+        const bagWithoutItem = {
           ...state,
           bag: { ...state.bag, items: items.filter(bagItem => bagItem.id === action.item.id) },
         }
+        storeAsyncStorageData(bagWithoutItem)
+        return bagWithoutItem
       default:
         return state
     }
@@ -80,17 +72,21 @@ const App = (Component: React.ComponentType) => {
   )
 }
 
-export function start() {
-  Navigation.registerComponent("Initializing", () => App(Initializing), () => Initializing)
-  Navigation.registerComponent("Welcome", () => App(Welcome), () => Welcome)
-  Navigation.registerComponent("Notifications", () => App(Notifications), () => Notifications)
-  Navigation.registerComponent("Home", () => App(Home), () => Home)
-  Navigation.registerComponent("Product", () => App(Product), () => Product)
-  Navigation.registerComponent("SignIn", () => App(SignIn), () => SignIn)
-  Navigation.registerComponent("Browse", () => App(Browse), () => Browse)
-  Navigation.registerComponent("Bag", () => App(Bag), () => Bag)
-  Navigation.registerComponent("Account", () => App(Profile), () => Profile)
-  Navigation.registerComponent("Account.PaymentAndShipping", () => App(PaymentAndShipping), () => PaymentAndShipping)
+const registerNavigation = cacheData => {
+  Navigation.registerComponent("Initializing", () => App(Initializing, cacheData), () => Initializing)
+  Navigation.registerComponent("Welcome", () => App(Welcome, cacheData), () => Welcome)
+  Navigation.registerComponent("Notifications", () => App(Notifications, cacheData), () => Notifications)
+  Navigation.registerComponent("Home", () => App(Home, cacheData), () => Home)
+  Navigation.registerComponent("Product", () => App(Product, cacheData), () => Product)
+  Navigation.registerComponent("SignIn", () => App(SignIn, cacheData), () => SignIn)
+  Navigation.registerComponent("Browse", () => App(Browse, cacheData), () => Browse)
+  Navigation.registerComponent("Bag", () => App(Bag, cacheData), () => Bag)
+  Navigation.registerComponent("Account", () => App(Profile, cacheData), () => Profile)
+  Navigation.registerComponent(
+    "Account.PaymentAndShipping",
+    () => App(PaymentAndShipping, cacheData),
+    () => PaymentAndShipping
+  )
 
   Navigation.events().registerAppLaunchedListener(async () => {
     Navigation.setDefaultOptions({
@@ -121,4 +117,8 @@ export function start() {
       },
     })
   })
+}
+
+export function start() {
+  getAsyncStorageData().then(data => registerNavigation(data))
 }

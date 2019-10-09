@@ -55,10 +55,6 @@ export const Product = props => {
     setSizeSelection(firstInStock)
   }, [])
 
-  const handleBackButton = () => {
-    Navigation.pop(props.componentId)
-  }
-
   const handleSaveButton = () => {
     // FIXME: Handle handleSaveButton
   }
@@ -141,7 +137,7 @@ export const Product = props => {
         <FooterNav>
           <Flex p={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
             <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
-              <TouchableWithoutFeedback onPress={() => handleBackButton()}>
+              <TouchableWithoutFeedback onPress={() => Navigation.pop(props.componentId)}>
                 <BackArrowIcon />
               </TouchableWithoutFeedback>
               <Spacer mr={4} />

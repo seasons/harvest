@@ -5,9 +5,22 @@ export const goToWelcome = () =>
   Navigation.setRoot({
     root: {
       component: {
-        // name: "Notifications",
-        // name: "SignIn",
         name: "Home",
+      },
+    },
+  })
+
+export const goToProduct = (componentId, id) =>
+  Navigation.push(componentId, {
+    component: {
+      name: "Product",
+      passProps: {
+        id,
+      },
+      options: {
+        bottomTabs: {
+          visible: false,
+        },
       },
     },
   })

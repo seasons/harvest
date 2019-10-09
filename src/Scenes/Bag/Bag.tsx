@@ -8,8 +8,11 @@ import { useStateValue } from "App/helpers/StateProvider"
 
 export const Bag = () => {
   const [{ bag }] = useStateValue()
-  console.log("bag", bag)
-  const bagIsEmpty = !bag || !bag.items || bag.items.length === 0
+  console.log("bag??????", bag)
+  if (!bag || !bag.items) {
+    return null
+  }
+  const bagIsEmpty = bag.items.length === 0
   const remainingPieces = 3
 
   return (
@@ -23,10 +26,12 @@ export const Bag = () => {
           <Sans size="2" color="gray">
             You have {remainingPieces} pieces remaining
           </Sans>
-          {bagIsEmpty && (
+          {bagIsEmpty ? (
             <Flex flex={1} flexDirection="column" justifyContent="center" alignContent="center">
               <EmptyState />
             </Flex>
+          ) : (
+            <></>
           )}
         </Box>
       </Container>
