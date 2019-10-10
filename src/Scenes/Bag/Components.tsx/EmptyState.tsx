@@ -4,10 +4,18 @@ import { color } from "App/Utils"
 import { goToBrowse } from "../../../Navigation"
 import { BagPlaceHolderSVG } from "../../../../assets/svgs/BagPlaceHolder"
 
-export const EmptyState = () => {
+export const EmptyState = ({ remainingPieces }) => {
   return (
     <Theme>
-      <Box>
+      <Box p={2} style={{ flex: 1 }}>
+        <Box>
+          <Sans size="3" color="black">
+            My bag
+          </Sans>
+          <Sans size="2" color="gray">
+            You have {remainingPieces} pieces remaining
+          </Sans>
+        </Box>
         <Flex justifyContent="center" flexDirection="row">
           <BagPlaceHolderSVG />
         </Flex>

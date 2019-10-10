@@ -1,13 +1,15 @@
 import React from "react"
 import { Box, Sans, Button } from "App/Components"
-import { FlatList } from "react-native"
+import { FlatList, TouchableWithoutFeedback } from "react-native"
 import { styled } from "Components/platform/primitives"
+import { goToProduct } from "App/Navigation"
 
 interface JustAddedRailProps {
   items: any
+  componentId: string
 }
 
-export const JustAddedRail: React.FC<JustAddedRailProps> = ({ items }) => {
+export const JustAddedRail: React.FC<JustAddedRailProps> = ({ items, componentId }) => {
   return (
     <Box my={2} style={{ position: "relative" }}>
       <Sans size="2">Just Added</Sans>
@@ -16,20 +18,22 @@ export const JustAddedRail: React.FC<JustAddedRailProps> = ({ items }) => {
           data={items}
           renderItem={({ item }) => {
             return (
-              <Box mr={2}>
-                <ImageContainer source={{ uri: item.imageUrl }}></ImageContainer>
-                <Box m={1}>
-                  <Sans size="1" mt={0.3}>
-                    {item.brandName}
-                  </Sans>
-                  <Sans size="1" color="gray" mt={0.3} numberOfLines={1} clipMode={"tail"}>
-                    {item.productName}
-                  </Sans>
-                  <Sans size="1" color="gray" mt={0.3}>
-                    {item.price}
-                  </Sans>
+              <TouchableWithoutFeedback onPress={() => goToProduct(componentId, item.id)}>
+                <Box mr={2}>
+                  <ImageContainer source={{ uri: item.imageUrl }}></ImageContainer>
+                  <Box m={1}>
+                    <Sans size="1" mt={0.3}>
+                      {item.brandName}
+                    </Sans>
+                    <Sans size="1" color="gray" mt={0.3} numberOfLines={1} clipMode={"tail"}>
+                      {item.productName}
+                    </Sans>
+                    <Sans size="1" color="gray" mt={0.3}>
+                      {item.price}
+                    </Sans>
+                  </Box>
                 </Box>
-              </Box>
+              </TouchableWithoutFeedback>
             )
           }}
           keyExtractor={({ colorway }) => colorway.toString()}
