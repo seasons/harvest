@@ -1,1 +1,0 @@
-{"version":3,"sources":["units.ts"],"names":["units","objectBoundingBox","userSpaceOnUse"],"mappings":";;;;AAAO,IAAMA,KAA4D,GAAG;AAC1EC,EAAAA,iBAAiB,EADyD,CAAA;AAE1EC,EAAAA,cAAc,EAFT;AAAqE,CAArE;;eAIQF,K","sourcesContent":["export const units: { objectBoundingBox: number; userSpaceOnUse: number } = {\n  objectBoundingBox: 0,\n  userSpaceOnUse: 1,\n};\nexport default units;\n"]}

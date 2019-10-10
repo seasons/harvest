@@ -1,5 +1,0 @@
-9117b0984377a91f04f0763ed3a87db1
-var _App = require("./src/App");
-
-(0, _App.start)();
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOztBQUVBIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgc3RhcnQgfSBmcm9tIFwiLi9zcmMvQXBwXCJcblxuc3RhcnQoKVxuIl19
