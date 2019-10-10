@@ -87,39 +87,5 @@ if (process.env.ALLOW_CONSOLE_LOGS !== "true") {
   })
 }
 
+// FIXME: Whats wrong here?
 jest.mock("./Components/Radio", () => null)
-
-// jest.mock("@react-native-community/async-storage", () => ({
-//   AsyncStorage: {
-//     setItem: jest.fn(() => {
-//       return new Promise((resolve, reject) => {
-//         resolve(null)
-//       })
-//     }),
-//     multiSet: jest.fn(() => {
-//       return new Promise((resolve, reject) => {
-//         resolve(null)
-//       })
-//     }),
-//     getItem: jest.fn(() => {
-//       return new Promise((resolve, reject) => {
-//         resolve({ bag: { items: [] } })
-//       })
-//     }),
-//     multiGet: jest.fn(() => {
-//       return new Promise((resolve, reject) => {
-//         resolve(null)
-//       })
-//     }),
-//     removeItem: jest.fn(() => {
-//       return new Promise((resolve, reject) => {
-//         resolve(null)
-//       })
-//     }),
-//     getAllKeys: jest.fn(() => {
-//       return new Promise(resolve => {
-//         resolve(["one", "two", "three"])
-//       })
-//     }),
-//   },
-// }))
