@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-community/async-storage"
 
-export const storeAsyncStorageData = async data => {
+export const persistCache = async data => {
   try {
     await AsyncStorage.setItem("@initial_state", JSON.stringify(data))
   } catch (e) {
@@ -8,7 +8,7 @@ export const storeAsyncStorageData = async data => {
   }
 }
 
-export const getAsyncStorageData = async () => {
+export const restoreCache = async () => {
   try {
     const value = await AsyncStorage.getItem("@initial_state")
     if (value !== null) {
@@ -19,7 +19,6 @@ export const getAsyncStorageData = async () => {
       }
     }
   } catch (e) {
-    console.warn("Error getting AsyncStorage: ", e)
     return {
       bag: { items: [] },
     }

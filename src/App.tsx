@@ -11,7 +11,7 @@ import { InMemoryCache } from "apollo-cache-inmemory"
 import { HttpLink } from "apollo-link-http"
 import { SignIn, Welcome, Initializing, Notifications } from "Scenes/SignIn"
 import { StateProvider } from "App/helpers/StateProvider"
-import { storeAsyncStorageData, getAsyncStorageData } from "./helpers/asyncStorage"
+import { restoreCache, persistCache } from "./helpers/asyncStorage"
 
 // Instantiate required constructor fields
 const cache = new InMemoryCache()
@@ -38,25 +38,27 @@ const client = new ApolloClient({
 // Create the client as outlined in the setup guide
 const App = (Component: React.ComponentType, cacheData) => {
   const initialState = cacheData
-  console.log("initialState???", initialState)
 
   const reducer = (state, action) => {
     const items = state.bag.items || []
     switch (action.type) {
       case "addItemToBag":
+        if (state.bag.items.includes(action.item)) {
+          return
+        }
         items.push(action.item)
         const bagWithItem = {
           ...state,
           bag: { ...state.bag, items },
         }
-        storeAsyncStorageData(bagWithItem)
+        persistCache(bagWithItem)
         return bagWithItem
       case "removeItemFromBag":
         const bagWithoutItem = {
           ...state,
           bag: { ...state.bag, items: items.filter(bagItem => bagItem.id === action.item.id) },
         }
-        storeAsyncStorageData(bagWithoutItem)
+        persistCache(bagWithoutItem)
         return bagWithoutItem
       default:
         return state
@@ -120,5 +122,5 @@ const registerNavigation = cacheData => {
 }
 
 export function start() {
-  getAsyncStorageData().then(data => registerNavigation(data))
+  restoreCache().then(data => registerNavigation(data))
 }
