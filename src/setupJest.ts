@@ -86,6 +86,3 @@ if (process.env.ALLOW_CONSOLE_LOGS !== "true") {
     done() // it is important to call this here or every test will timeout
   })
 }
-
-// FIXME: Whats wrong here?
-jest.mock("./Components/Radio", () => null)
