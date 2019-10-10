@@ -1,0 +1,349 @@
+ef1fea411ac2e58d19c3a41924b55e1a
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "Shape", {
+  enumerable: true,
+  get: function get() {
+    return _Shape.default;
+  }
+});
+Object.defineProperty(exports, "Rect", {
+  enumerable: true,
+  get: function get() {
+    return _Rect.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGRect", {
+  enumerable: true,
+  get: function get() {
+    return _Rect.RNSVGRect;
+  }
+});
+Object.defineProperty(exports, "Circle", {
+  enumerable: true,
+  get: function get() {
+    return _Circle.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGCircle", {
+  enumerable: true,
+  get: function get() {
+    return _Circle.RNSVGCircle;
+  }
+});
+Object.defineProperty(exports, "Ellipse", {
+  enumerable: true,
+  get: function get() {
+    return _Ellipse.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGEllipse", {
+  enumerable: true,
+  get: function get() {
+    return _Ellipse.RNSVGEllipse;
+  }
+});
+Object.defineProperty(exports, "Polygon", {
+  enumerable: true,
+  get: function get() {
+    return _Polygon.default;
+  }
+});
+Object.defineProperty(exports, "Polyline", {
+  enumerable: true,
+  get: function get() {
+    return _Polyline.default;
+  }
+});
+Object.defineProperty(exports, "Line", {
+  enumerable: true,
+  get: function get() {
+    return _Line.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGLine", {
+  enumerable: true,
+  get: function get() {
+    return _Line.RNSVGLine;
+  }
+});
+Object.defineProperty(exports, "Svg", {
+  enumerable: true,
+  get: function get() {
+    return _Svg.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGSvg", {
+  enumerable: true,
+  get: function get() {
+    return _Svg.RNSVGSvg;
+  }
+});
+Object.defineProperty(exports, "Path", {
+  enumerable: true,
+  get: function get() {
+    return _Path.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGPath", {
+  enumerable: true,
+  get: function get() {
+    return _Path.RNSVGPath;
+  }
+});
+Object.defineProperty(exports, "G", {
+  enumerable: true,
+  get: function get() {
+    return _G.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGGroup", {
+  enumerable: true,
+  get: function get() {
+    return _G.RNSVGGroup;
+  }
+});
+Object.defineProperty(exports, "Text", {
+  enumerable: true,
+  get: function get() {
+    return _Text.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGText", {
+  enumerable: true,
+  get: function get() {
+    return _Text.RNSVGText;
+  }
+});
+Object.defineProperty(exports, "TSpan", {
+  enumerable: true,
+  get: function get() {
+    return _TSpan.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGTSpan", {
+  enumerable: true,
+  get: function get() {
+    return _TSpan.RNSVGTSpan;
+  }
+});
+Object.defineProperty(exports, "TextPath", {
+  enumerable: true,
+  get: function get() {
+    return _TextPath.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGTextPath", {
+  enumerable: true,
+  get: function get() {
+    return _TextPath.RNSVGTextPath;
+  }
+});
+Object.defineProperty(exports, "Use", {
+  enumerable: true,
+  get: function get() {
+    return _Use.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGUse", {
+  enumerable: true,
+  get: function get() {
+    return _Use.RNSVGUse;
+  }
+});
+Object.defineProperty(exports, "Image", {
+  enumerable: true,
+  get: function get() {
+    return _Image.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGImage", {
+  enumerable: true,
+  get: function get() {
+    return _Image.RNSVGImage;
+  }
+});
+Object.defineProperty(exports, "Symbol", {
+  enumerable: true,
+  get: function get() {
+    return _Symbol.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGSymbol", {
+  enumerable: true,
+  get: function get() {
+    return _Symbol.RNSVGSymbol;
+  }
+});
+Object.defineProperty(exports, "Defs", {
+  enumerable: true,
+  get: function get() {
+    return _Defs.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGDefs", {
+  enumerable: true,
+  get: function get() {
+    return _Defs.RNSVGDefs;
+  }
+});
+Object.defineProperty(exports, "LinearGradient", {
+  enumerable: true,
+  get: function get() {
+    return _LinearGradient.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGLinearGradient", {
+  enumerable: true,
+  get: function get() {
+    return _LinearGradient.RNSVGLinearGradient;
+  }
+});
+Object.defineProperty(exports, "RadialGradient", {
+  enumerable: true,
+  get: function get() {
+    return _RadialGradient.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGRadialGradient", {
+  enumerable: true,
+  get: function get() {
+    return _RadialGradient.RNSVGRadialGradient;
+  }
+});
+Object.defineProperty(exports, "Stop", {
+  enumerable: true,
+  get: function get() {
+    return _Stop.default;
+  }
+});
+Object.defineProperty(exports, "ClipPath", {
+  enumerable: true,
+  get: function get() {
+    return _ClipPath.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGClipPath", {
+  enumerable: true,
+  get: function get() {
+    return _ClipPath.RNSVGClipPath;
+  }
+});
+Object.defineProperty(exports, "Pattern", {
+  enumerable: true,
+  get: function get() {
+    return _Pattern.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGPattern", {
+  enumerable: true,
+  get: function get() {
+    return _Pattern.RNSVGPattern;
+  }
+});
+Object.defineProperty(exports, "Mask", {
+  enumerable: true,
+  get: function get() {
+    return _Mask.default;
+  }
+});
+Object.defineProperty(exports, "RNSVGMask", {
+  enumerable: true,
+  get: function get() {
+    return _Mask.RNSVGMask;
+  }
+});
+Object.defineProperty(exports, "parse", {
+  enumerable: true,
+  get: function get() {
+    return _xml.parse;
+  }
+});
+Object.defineProperty(exports, "SvgAst", {
+  enumerable: true,
+  get: function get() {
+    return _xml.SvgAst;
+  }
+});
+Object.defineProperty(exports, "SvgFromUri", {
+  enumerable: true,
+  get: function get() {
+    return _xml.SvgFromUri;
+  }
+});
+Object.defineProperty(exports, "SvgFromXml", {
+  enumerable: true,
+  get: function get() {
+    return _xml.SvgFromXml;
+  }
+});
+Object.defineProperty(exports, "SvgUri", {
+  enumerable: true,
+  get: function get() {
+    return _xml.SvgUri;
+  }
+});
+Object.defineProperty(exports, "SvgXml", {
+  enumerable: true,
+  get: function get() {
+    return _xml.SvgXml;
+  }
+});
+exports.default = void 0;
+
+var _Shape = _interopRequireDefault(require("./elements/Shape"));
+
+var _Rect = _interopRequireWildcard(require("./elements/Rect"));
+
+var _Circle = _interopRequireWildcard(require("./elements/Circle"));
+
+var _Ellipse = _interopRequireWildcard(require("./elements/Ellipse"));
+
+var _Polygon = _interopRequireDefault(require("./elements/Polygon"));
+
+var _Polyline = _interopRequireDefault(require("./elements/Polyline"));
+
+var _Line = _interopRequireWildcard(require("./elements/Line"));
+
+var _Svg = _interopRequireWildcard(require("./elements/Svg"));
+
+var _Path = _interopRequireWildcard(require("./elements/Path"));
+
+var _G = _interopRequireWildcard(require("./elements/G"));
+
+var _Text = _interopRequireWildcard(require("./elements/Text"));
+
+var _TSpan = _interopRequireWildcard(require("./elements/TSpan"));
+
+var _TextPath = _interopRequireWildcard(require("./elements/TextPath"));
+
+var _Use = _interopRequireWildcard(require("./elements/Use"));
+
+var _Image = _interopRequireWildcard(require("./elements/Image"));
+
+var _Symbol = _interopRequireWildcard(require("./elements/Symbol"));
+
+var _Defs = _interopRequireWildcard(require("./elements/Defs"));
+
+var _LinearGradient = _interopRequireWildcard(require("./elements/LinearGradient"));
+
+var _RadialGradient = _interopRequireWildcard(require("./elements/RadialGradient"));
+
+var _Stop = _interopRequireDefault(require("./elements/Stop"));
+
+var _ClipPath = _interopRequireWildcard(require("./elements/ClipPath"));
+
+var _Pattern = _interopRequireWildcard(require("./elements/Pattern"));
+
+var _Mask = _interopRequireWildcard(require("./elements/Mask"));
+
+var _xml = require("./xml");
+
+var _default = _Svg.default;
+exports.default = _default;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LnRzIl0sIm5hbWVzIjpbIlN2ZyJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQUEsSUFBQSxNQUFBLEdBQUEsc0JBQUEsQ0FBQSxPQUFBLG9CQUFBLENBQUE7O0FBQ0EsSUFBQSxLQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLG1CQUFBLENBQUE7O0FBQ0EsSUFBQSxPQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLHFCQUFBLENBQUE7O0FBQ0EsSUFBQSxRQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLHNCQUFBLENBQUE7O0FBQ0EsSUFBQSxRQUFBLEdBQUEsc0JBQUEsQ0FBQSxPQUFBLHNCQUFBLENBQUE7O0FBQ0EsSUFBQSxTQUFBLEdBQUEsc0JBQUEsQ0FBQSxPQUFBLHVCQUFBLENBQUE7O0FBQ0EsSUFBQSxLQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLG1CQUFBLENBQUE7O0FBQ0EsSUFBQSxJQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLGtCQUFBLENBQUE7O0FBQ0EsSUFBQSxLQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLG1CQUFBLENBQUE7O0FBQ0EsSUFBQSxFQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLGdCQUFBLENBQUE7O0FBQ0EsSUFBQSxLQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLG1CQUFBLENBQUE7O0FBQ0EsSUFBQSxNQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLG9CQUFBLENBQUE7O0FBQ0EsSUFBQSxTQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLHVCQUFBLENBQUE7O0FBQ0EsSUFBQSxJQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLGtCQUFBLENBQUE7O0FBQ0EsSUFBQSxNQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLG9CQUFBLENBQUE7O0FBQ0EsSUFBQSxPQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLHFCQUFBLENBQUE7O0FBQ0EsSUFBQSxLQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLG1CQUFBLENBQUE7O0FBQ0EsSUFBQSxlQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLDZCQUFBLENBQUE7O0FBQ0EsSUFBQSxlQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLDZCQUFBLENBQUE7O0FBQ0EsSUFBQSxLQUFBLEdBQUEsc0JBQUEsQ0FBQSxPQUFBLG1CQUFBLENBQUE7O0FBQ0EsSUFBQSxTQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLHVCQUFBLENBQUE7O0FBQ0EsSUFBQSxRQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLHNCQUFBLENBQUE7O0FBQ0EsSUFBQSxLQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLG1CQUFBLENBQUE7O0FBQ0EsSUFBQSxJQUFBLEdBQUEsT0FBQSxTQUFBOztlQXFEZUEsSUFBQUEsQ0FBQUEsTyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBTaGFwZSBmcm9tICcuL2VsZW1lbnRzL1NoYXBlJztcbmltcG9ydCBSZWN0LCB7IFJOU1ZHUmVjdCB9IGZyb20gJy4vZWxlbWVudHMvUmVjdCc7XG5pbXBvcnQgQ2lyY2xlLCB7IFJOU1ZHQ2lyY2xlIH0gZnJvbSAnLi9lbGVtZW50cy9DaXJjbGUnO1xuaW1wb3J0IEVsbGlwc2UsIHsgUk5TVkdFbGxpcHNlIH0gZnJvbSAnLi9lbGVtZW50cy9FbGxpcHNlJztcbmltcG9ydCBQb2x5Z29uIGZyb20gJy4vZWxlbWVudHMvUG9seWdvbic7XG5pbXBvcnQgUG9seWxpbmUgZnJvbSAnLi9lbGVtZW50cy9Qb2x5bGluZSc7XG5pbXBvcnQgTGluZSwgeyBSTlNWR0xpbmUgfSBmcm9tICcuL2VsZW1lbnRzL0xpbmUnO1xuaW1wb3J0IFN2ZywgeyBSTlNWR1N2ZyB9IGZyb20gJy4vZWxlbWVudHMvU3ZnJztcbmltcG9ydCBQYXRoLCB7IFJOU1ZHUGF0aCB9IGZyb20gJy4vZWxlbWVudHMvUGF0aCc7XG5pbXBvcnQgRywgeyBSTlNWR0dyb3VwIH0gZnJvbSAnLi9lbGVtZW50cy9HJztcbmltcG9ydCBUZXh0LCB7IFJOU1ZHVGV4dCB9IGZyb20gJy4vZWxlbWVudHMvVGV4dCc7XG5pbXBvcnQgVFNwYW4sIHsgUk5TVkdUU3BhbiB9IGZyb20gJy4vZWxlbWVudHMvVFNwYW4nO1xuaW1wb3J0IFRleHRQYXRoLCB7IFJOU1ZHVGV4dFBhdGggfSBmcm9tICcuL2VsZW1lbnRzL1RleHRQYXRoJztcbmltcG9ydCBVc2UsIHsgUk5TVkdVc2UgfSBmcm9tICcuL2VsZW1lbnRzL1VzZSc7XG5pbXBvcnQgSW1hZ2UsIHsgUk5TVkdJbWFnZSB9IGZyb20gJy4vZWxlbWVudHMvSW1hZ2UnO1xuaW1wb3J0IFN5bWJvbCwgeyBSTlNWR1N5bWJvbCB9IGZyb20gJy4vZWxlbWVudHMvU3ltYm9sJztcbmltcG9ydCBEZWZzLCB7IFJOU1ZHRGVmcyB9IGZyb20gJy4vZWxlbWVudHMvRGVmcyc7XG5pbXBvcnQgTGluZWFyR3JhZGllbnQsIHsgUk5TVkdMaW5lYXJHcmFkaWVudCB9IGZyb20gJy4vZWxlbWVudHMvTGluZWFyR3JhZGllbnQnO1xuaW1wb3J0IFJhZGlhbEdyYWRpZW50LCB7IFJOU1ZHUmFkaWFsR3JhZGllbnQgfSBmcm9tICcuL2VsZW1lbnRzL1JhZGlhbEdyYWRpZW50JztcbmltcG9ydCBTdG9wIGZyb20gJy4vZWxlbWVudHMvU3RvcCc7XG5pbXBvcnQgQ2xpcFBhdGgsIHsgUk5TVkdDbGlwUGF0aCB9IGZyb20gJy4vZWxlbWVudHMvQ2xpcFBhdGgnO1xuaW1wb3J0IFBhdHRlcm4sIHsgUk5TVkdQYXR0ZXJuIH0gZnJvbSAnLi9lbGVtZW50cy9QYXR0ZXJuJztcbmltcG9ydCBNYXNrLCB7IFJOU1ZHTWFzayB9IGZyb20gJy4vZWxlbWVudHMvTWFzayc7XG5pbXBvcnQgeyBwYXJzZSwgU3ZnQXN0LCBTdmdGcm9tVXJpLCBTdmdGcm9tWG1sLCBTdmdVcmksIFN2Z1htbCB9IGZyb20gJy4veG1sJztcblxuZXhwb3J0IHtcbiAgU3ZnLFxuICBDaXJjbGUsXG4gIEVsbGlwc2UsXG4gIEcsXG4gIFRleHQsXG4gIFRTcGFuLFxuICBUZXh0UGF0aCxcbiAgUGF0aCxcbiAgUG9seWdvbixcbiAgUG9seWxpbmUsXG4gIExpbmUsXG4gIFJlY3QsXG4gIFVzZSxcbiAgSW1hZ2UsXG4gIFN5bWJvbCxcbiAgRGVmcyxcbiAgTGluZWFyR3JhZGllbnQsXG4gIFJhZGlhbEdyYWRpZW50LFxuICBTdG9wLFxuICBDbGlwUGF0aCxcbiAgUGF0dGVybixcbiAgTWFzayxcbiAgcGFyc2UsXG4gIFN2Z0FzdCxcbiAgU3ZnRnJvbVVyaSxcbiAgU3ZnRnJvbVhtbCxcbiAgU3ZnVXJpLFxuICBTdmdYbWwsXG4gIFNoYXBlLFxuICBSTlNWR01hc2ssXG4gIFJOU1ZHUGF0dGVybixcbiAgUk5TVkdDbGlwUGF0aCxcbiAgUk5TVkdSYWRpYWxHcmFkaWVudCxcbiAgUk5TVkdMaW5lYXJHcmFkaWVudCxcbiAgUk5TVkdEZWZzLFxuICBSTlNWR1N5bWJvbCxcbiAgUk5TVkdJbWFnZSxcbiAgUk5TVkdVc2UsXG4gIFJOU1ZHVGV4dFBhdGgsXG4gIFJOU1ZHVFNwYW4sXG4gIFJOU1ZHVGV4dCxcbiAgUk5TVkdHcm91cCxcbiAgUk5TVkdQYXRoLFxuICBSTlNWR0xpbmUsXG4gIFJOU1ZHRWxsaXBzZSxcbiAgUk5TVkdDaXJjbGUsXG4gIFJOU1ZHUmVjdCxcbiAgUk5TVkdTdmcsXG59O1xuXG5leHBvcnQgZGVmYXVsdCBTdmc7XG4iXX0=

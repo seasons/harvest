@@ -1,0 +1,30 @@
+95751535c69257fbe1cddbbce408ed98
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.useStateValue = exports.StateProvider = exports.StateContext = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var StateContext = (0, _react.createContext)([{}]);
+exports.StateContext = StateContext;
+
+var StateProvider = function StateProvider(_ref) {
+  var reducer = _ref.reducer,
+      initialState = _ref.initialState,
+      children = _ref.children;
+  return _react.default.createElement(StateContext.Provider, {
+    value: (0, _react.useReducer)(reducer, initialState)
+  }, children);
+};
+
+exports.StateProvider = StateProvider;
+
+var useStateValue = function useStateValue() {
+  return (0, _react.useContext)(StateContext);
+};
+
+exports.useStateValue = useStateValue;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIlN0YXRlUHJvdmlkZXIudHN4Il0sIm5hbWVzIjpbIlN0YXRlQ29udGV4dCIsIlN0YXRlUHJvdmlkZXIiLCJyZWR1Y2VyIiwiaW5pdGlhbFN0YXRlIiwiY2hpbGRyZW4iLCJ1c2VTdGF0ZVZhbHVlIl0sIm1hcHBpbmdzIjoiOzs7Ozs7O0FBQUE7O0FBRU8sSUFBTUEsWUFBWSxHQUFHLDBCQUFjLENBQUMsRUFBRCxDQUFkLENBQXJCOzs7QUFFQSxJQUFNQyxhQUFhLEdBQUcsU0FBaEJBLGFBQWdCO0FBQUEsTUFBR0MsT0FBSCxRQUFHQSxPQUFIO0FBQUEsTUFBWUMsWUFBWixRQUFZQSxZQUFaO0FBQUEsTUFBMEJDLFFBQTFCLFFBQTBCQSxRQUExQjtBQUFBLFNBQzNCLDZCQUFDLFlBQUQsQ0FBYyxRQUFkO0FBQXVCLElBQUEsS0FBSyxFQUFFLHVCQUFXRixPQUFYLEVBQW9CQyxZQUFwQjtBQUE5QixLQUFrRUMsUUFBbEUsQ0FEMkI7QUFBQSxDQUF0Qjs7OztBQUlBLElBQU1DLGFBQWEsR0FBRyxTQUFoQkEsYUFBZ0I7QUFBQSxTQUFNLHVCQUFXTCxZQUFYLENBQU47QUFBQSxDQUF0QiIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCwgeyBjcmVhdGVDb250ZXh0LCB1c2VDb250ZXh0LCB1c2VSZWR1Y2VyIH0gZnJvbSBcInJlYWN0XCJcblxuZXhwb3J0IGNvbnN0IFN0YXRlQ29udGV4dCA9IGNyZWF0ZUNvbnRleHQoW3t9XSlcblxuZXhwb3J0IGNvbnN0IFN0YXRlUHJvdmlkZXIgPSAoeyByZWR1Y2VyLCBpbml0aWFsU3RhdGUsIGNoaWxkcmVuIH0pID0+IChcbiAgPFN0YXRlQ29udGV4dC5Qcm92aWRlciB2YWx1ZT17dXNlUmVkdWNlcihyZWR1Y2VyLCBpbml0aWFsU3RhdGUpfT57Y2hpbGRyZW59PC9TdGF0ZUNvbnRleHQuUHJvdmlkZXI+XG4pXG5cbmV4cG9ydCBjb25zdCB1c2VTdGF0ZVZhbHVlID0gKCkgPT4gdXNlQ29udGV4dChTdGF0ZUNvbnRleHQpXG4iXX0=

@@ -1,6 +1,6 @@
 import React from "react"
 import { Sans, Separator, Spacer, Flex } from "App/Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 interface Props {
   detailType: string

@@ -1,7 +1,7 @@
 import React from "react"
 import { Theme, Button, Sans, Spacer, Box } from "App/Components"
 import { SafeAreaView } from "react-native"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 export class SignInOrApply extends React.Component {
   handleSignIn = () => {

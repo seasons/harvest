@@ -1,0 +1,25 @@
+7b1620d7d31776db79f9a076acbaf408
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports = require('requireNativeComponent')(
+'RCTSafeAreaView');

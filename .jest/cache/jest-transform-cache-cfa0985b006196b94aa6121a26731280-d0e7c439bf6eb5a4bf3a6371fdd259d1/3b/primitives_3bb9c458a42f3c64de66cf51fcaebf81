@@ -1,0 +1,27 @@
+6c49269e68b6c9643a232f52d28ad5ad
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.styledWrapper = exports.ThemeProvider = exports.Image = exports.Text = exports.View = exports.styled = void 0;
+
+var _native = _interopRequireWildcard(require("styled-components/native"));
+
+var styled = {
+  Image: _native.default.Image,
+  Text: _native.default.Text,
+  View: _native.default.View
+};
+exports.styled = styled;
+var View = "View";
+exports.View = View;
+var Text = "Text";
+exports.Text = Text;
+var Image = "Image";
+exports.Image = Image;
+var ThemeProvider = _native.ThemeProvider;
+exports.ThemeProvider = ThemeProvider;
+var styledWrapper = _native.default;
+exports.styledWrapper = styledWrapper;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInByaW1pdGl2ZXMudHMiXSwibmFtZXMiOlsic3R5bGVkIiwiSW1hZ2UiLCJzdHlsZXMiLCJUZXh0IiwiVmlldyIsIlRoZW1lUHJvdmlkZXIiLCJOYXRpdmVUaGVtZVByb3ZpZGVyIiwic3R5bGVkV3JhcHBlciJdLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUFBOztBQUVPLElBQU1BLE1BQU0sR0FBRztBQUNwQkMsRUFBQUEsS0FBSyxFQUFFQyxnQkFBT0QsS0FETTtBQUVwQkUsRUFBQUEsSUFBSSxFQUFFRCxnQkFBT0MsSUFGTztBQUdwQkMsRUFBQUEsSUFBSSxFQUFFRixnQkFBT0U7QUFITyxDQUFmOztBQU1BLElBQU1BLElBQUksR0FBRyxNQUFiOztBQUNBLElBQU1ELElBQUksR0FBRyxNQUFiOztBQUNBLElBQU1GLEtBQUssR0FBRyxPQUFkOztBQUVBLElBQU1JLGFBQWEsR0FBR0MscUJBQXRCOztBQUNBLElBQU1DLGFBQWEsR0FBR0wsZUFBdEIiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgc3R5bGVzLCB7IFRoZW1lUHJvdmlkZXIgYXMgTmF0aXZlVGhlbWVQcm92aWRlciB9IGZyb20gXCJzdHlsZWQtY29tcG9uZW50cy9uYXRpdmVcIlxuXG5leHBvcnQgY29uc3Qgc3R5bGVkID0ge1xuICBJbWFnZTogc3R5bGVzLkltYWdlLFxuICBUZXh0OiBzdHlsZXMuVGV4dCxcbiAgVmlldzogc3R5bGVzLlZpZXcsXG59XG5cbmV4cG9ydCBjb25zdCBWaWV3ID0gXCJWaWV3XCJcbmV4cG9ydCBjb25zdCBUZXh0ID0gXCJUZXh0XCJcbmV4cG9ydCBjb25zdCBJbWFnZSA9IFwiSW1hZ2VcIlxuXG5leHBvcnQgY29uc3QgVGhlbWVQcm92aWRlciA9IE5hdGl2ZVRoZW1lUHJvdmlkZXJcbmV4cG9ydCBjb25zdCBzdHlsZWRXcmFwcGVyID0gc3R5bGVzIGFzIHR5cGVvZiBzdHlsZXNcbiJdfQ==

@@ -1,0 +1,53 @@
+9aba2ac51fb4a08fe2b6412b59b67d52
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.AllowNotifications = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _react = _interopRequireDefault(require("react"));
+
+var _Components = require("../../Components");
+
+var _reactNative = require("react-native");
+
+var _utils = require("../../utils");
+
+var AllowNotifications = function (_React$Component) {
+  (0, _inherits2.default)(AllowNotifications, _React$Component);
+
+  function AllowNotifications() {
+    (0, _classCallCheck2.default)(this, AllowNotifications);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(AllowNotifications).apply(this, arguments));
+  }
+
+  (0, _createClass2.default)(AllowNotifications, [{
+    key: "render",
+    value: function render() {
+      return _react.default.createElement(_reactNative.SafeAreaView, {
+        style: {
+          flex: 1,
+          backgroundColor: (0, _utils.color)("black")
+        }
+      }, _react.default.createElement(_Components.Theme, null, _react.default.createElement(_Components.Sans, {
+        color: "white",
+        size: "3"
+      }, "Allow notification view")));
+    }
+  }]);
+  return AllowNotifications;
+}(_react.default.Component);
+
+exports.AllowNotifications = AllowNotifications;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkFsbG93Tm90aWZpY2F0aW9ucy50c3giXSwibmFtZXMiOlsiQWxsb3dOb3RpZmljYXRpb25zIiwiZmxleCIsImJhY2tncm91bmRDb2xvciIsIlJlYWN0IiwiQ29tcG9uZW50Il0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7OztBQUFBOztBQUNBOztBQUNBOztBQUNBOztJQUVhQSxrQjs7Ozs7Ozs7Ozs2QkFDRjtBQUNQLGFBQ0UsNkJBQUMseUJBQUQ7QUFBYyxRQUFBLEtBQUssRUFBRTtBQUFFQyxVQUFBQSxJQUFJLEVBQUUsQ0FBUjtBQUFXQyxVQUFBQSxlQUFlLEVBQUUsa0JBQU0sT0FBTjtBQUE1QjtBQUFyQixTQUNFLDZCQUFDLGlCQUFELFFBQ0UsNkJBQUMsZ0JBQUQ7QUFBTSxRQUFBLEtBQUssRUFBQyxPQUFaO0FBQW9CLFFBQUEsSUFBSSxFQUFDO0FBQXpCLG1DQURGLENBREYsQ0FERjtBQVNEOzs7RUFYcUNDLGVBQU1DLFMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSBcInJlYWN0XCJcbmltcG9ydCB7IFRoZW1lLCBTYW5zIH0gZnJvbSBcIkFwcC9Db21wb25lbnRzXCJcbmltcG9ydCB7IFNhZmVBcmVhVmlldyB9IGZyb20gXCJyZWFjdC1uYXRpdmVcIlxuaW1wb3J0IHsgY29sb3IgfSBmcm9tIFwiQXBwL3V0aWxzXCJcblxuZXhwb3J0IGNsYXNzIEFsbG93Tm90aWZpY2F0aW9ucyBleHRlbmRzIFJlYWN0LkNvbXBvbmVudCB7XG4gIHJlbmRlcigpIHtcbiAgICByZXR1cm4gKFxuICAgICAgPFNhZmVBcmVhVmlldyBzdHlsZT17eyBmbGV4OiAxLCBiYWNrZ3JvdW5kQ29sb3I6IGNvbG9yKFwiYmxhY2tcIikgfX0+XG4gICAgICAgIDxUaGVtZT5cbiAgICAgICAgICA8U2FucyBjb2xvcj1cIndoaXRlXCIgc2l6ZT1cIjNcIj5cbiAgICAgICAgICAgIEFsbG93IG5vdGlmaWNhdGlvbiB2aWV3XG4gICAgICAgICAgPC9TYW5zPlxuICAgICAgICA8L1RoZW1lPlxuICAgICAgPC9TYWZlQXJlYVZpZXc+XG4gICAgKVxuICB9XG59XG4iXX0=

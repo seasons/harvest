@@ -1,0 +1,171 @@
+c4b10be9dda4bb0425ed1f03cf34a5d2
+
+
+
+
+
+
+
+
+
+'use strict';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function getScaledAssetPath(asset) {
+  var scale = AssetSourceResolver.pickScale(asset.scales, require('PixelRatio').get());
+  var scaleSuffix = scale === 1 ? '' : '@' + scale + 'x';
+  var assetDir = require("./assetPathUtils").getBasePath(asset);
+  return assetDir + '/' + asset.name + scaleSuffix + '.' + asset.type;
+}
+
+
+
+
+function getAssetPathInDrawableFolder(asset) {
+  var scale = AssetSourceResolver.pickScale(asset.scales, require('PixelRatio').get());
+  var drawbleFolder = require("./assetPathUtils").getAndroidResourceFolderName(
+  asset,
+  scale);
+
+  var fileName = require("./assetPathUtils").getAndroidResourceIdentifier(asset);
+  return drawbleFolder + '/' + fileName + '.' + asset.type;
+}var
+
+AssetSourceResolver = function () {
+
+
+
+
+
+
+  function AssetSourceResolver(serverUrl, jsbundleUrl, asset) {require("@babel/runtime/helpers/classCallCheck")(this, AssetSourceResolver);
+    this.serverUrl = serverUrl;
+    this.jsbundleUrl = jsbundleUrl;
+    this.asset = asset;
+  }require("@babel/runtime/helpers/createClass")(AssetSourceResolver, [{ key: "isLoadedFromServer", value: function isLoadedFromServer()
+
+    {
+      return !!this.serverUrl;
+    } }, { key: "isLoadedFromFileSystem", value: function isLoadedFromFileSystem()
+
+    {
+      return !!(this.jsbundleUrl && this.jsbundleUrl.startsWith('file://'));
+    } }, { key: "defaultAsset", value: function defaultAsset()
+
+    {
+      if (this.isLoadedFromServer()) {
+        return this.assetServerURL();
+      }
+
+      if (require('Platform').OS === 'android') {
+        return this.isLoadedFromFileSystem() ?
+        this.drawableFolderInBundle() :
+        this.resourceIdentifierWithoutScale();
+      } else {
+        return this.scaledAssetURLNearBundle();
+      }
+    } }, { key: "assetServerURL", value: function assetServerURL()
+
+
+
+
+
+    {
+      require('invariant')(!!this.serverUrl, 'need server to load from');
+      return this.fromSource(
+      this.serverUrl +
+      getScaledAssetPath(this.asset) +
+      '?platform=' +
+      require('Platform').OS +
+      '&hash=' +
+      this.asset.hash);
+
+    } }, { key: "scaledAssetPath", value: function scaledAssetPath()
+
+
+
+
+
+    {
+      return this.fromSource(getScaledAssetPath(this.asset));
+    } }, { key: "scaledAssetURLNearBundle", value: function scaledAssetURLNearBundle()
+
+
+
+
+
+    {
+      var path = this.jsbundleUrl || 'file://';
+      return this.fromSource(path + getScaledAssetPath(this.asset));
+    } }, { key: "resourceIdentifierWithoutScale", value: function resourceIdentifierWithoutScale()
+
+
+
+
+
+
+
+    {
+      require('invariant')(
+      require('Platform').OS === 'android',
+      'resource identifiers work on Android');
+
+      return this.fromSource(
+      require("./assetPathUtils").getAndroidResourceIdentifier(this.asset));
+
+    } }, { key: "drawableFolderInBundle", value: function drawableFolderInBundle()
+
+
+
+
+
+
+    {
+      var path = this.jsbundleUrl || 'file://';
+      return this.fromSource(path + getAssetPathInDrawableFolder(this.asset));
+    } }, { key: "fromSource", value: function fromSource(
+
+    source) {
+      return {
+        __packager_asset: true,
+        width: this.asset.width,
+        height: this.asset.height,
+        uri: source,
+        scale: AssetSourceResolver.pickScale(this.asset.scales, require('PixelRatio').get()) };
+
+    } }], [{ key: "pickScale", value: function pickScale(
+
+    scales, deviceScale) {
+
+      for (var i = 0; i < scales.length; i++) {
+        if (scales[i] >= deviceScale) {
+          return scales[i];
+        }
+      }
+
+
+
+
+      return scales[scales.length - 1] || 1;
+    } }]);return AssetSourceResolver;}();
+
+
+module.exports = AssetSourceResolver;

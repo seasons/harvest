@@ -1,0 +1,63 @@
+af52ac254ead223c6e411ed5efe960db
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var react_native_1 = require("react-native");
+
+var Constants = function () {
+  (0, _createClass2.default)(Constants, null, [{
+    key: "get",
+    value: function get() {
+      var constants;
+      return _regenerator.default.async(function get$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (this.instance) {
+                _context.next = 5;
+                break;
+              }
+
+              _context.next = 3;
+              return _regenerator.default.awrap(react_native_1.NativeModules.RNNBridgeModule.getConstants());
+
+            case 3:
+              constants = _context.sent;
+              this.instance = new Constants(constants);
+
+            case 5:
+              return _context.abrupt("return", this.instance);
+
+            case 6:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+  }]);
+
+  function Constants(constants) {
+    (0, _classCallCheck2.default)(this, Constants);
+    this.statusBarHeight = constants.statusBarHeight;
+    this.topBarHeight = constants.topBarHeight;
+    this.backButtonId = constants.backButtonId;
+    this.bottomTabsHeight = constants.bottomTabsHeight;
+  }
+
+  return Constants;
+}();
+
+exports.Constants = Constants;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkNvbnN0YW50cy5qcyJdLCJuYW1lcyI6WyJPYmplY3QiLCJkZWZpbmVQcm9wZXJ0eSIsImV4cG9ydHMiLCJ2YWx1ZSIsInJlYWN0X25hdGl2ZV8xIiwicmVxdWlyZSIsIkNvbnN0YW50cyIsImluc3RhbmNlIiwiTmF0aXZlTW9kdWxlcyIsIlJOTkJyaWRnZU1vZHVsZSIsImdldENvbnN0YW50cyIsImNvbnN0YW50cyIsInN0YXR1c0JhckhlaWdodCIsInRvcEJhckhlaWdodCIsImJhY2tCdXR0b25JZCIsImJvdHRvbVRhYnNIZWlnaHQiXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7O0FBQ0FBLE1BQU0sQ0FBQ0MsY0FBUCxDQUFzQkMsT0FBdEIsRUFBK0IsWUFBL0IsRUFBNkM7QUFBRUMsRUFBQUEsS0FBSyxFQUFFO0FBQVQsQ0FBN0M7O0FBQ0EsSUFBTUMsY0FBYyxHQUFHQyxPQUFPLENBQUMsY0FBRCxDQUE5Qjs7SUFDTUMsUzs7Ozs7Ozs7O2tCQUVPLEtBQUtDLFE7Ozs7OztnREFDa0JILGNBQWMsQ0FBQ0ksYUFBZixDQUE2QkMsZUFBN0IsQ0FBNkNDLFlBQTdDLEU7OztBQUFsQkMsY0FBQUEsUztBQUNOLG1CQUFLSixRQUFMLEdBQWdCLElBQUlELFNBQUosQ0FBY0ssU0FBZCxDQUFoQjs7OytDQUVHLEtBQUtKLFE7Ozs7Ozs7Ozs7O0FBRWhCLHFCQUFZSSxTQUFaLEVBQXVCO0FBQUE7QUFDbkIsU0FBS0MsZUFBTCxHQUF1QkQsU0FBUyxDQUFDQyxlQUFqQztBQUNBLFNBQUtDLFlBQUwsR0FBb0JGLFNBQVMsQ0FBQ0UsWUFBOUI7QUFDQSxTQUFLQyxZQUFMLEdBQW9CSCxTQUFTLENBQUNHLFlBQTlCO0FBQ0EsU0FBS0MsZ0JBQUwsR0FBd0JKLFNBQVMsQ0FBQ0ksZ0JBQWxDO0FBQ0g7Ozs7O0FBRUxiLE9BQU8sQ0FBQ0ksU0FBUixHQUFvQkEsU0FBcEIiLCJzb3VyY2VzQ29udGVudCI6WyJcInVzZSBzdHJpY3RcIjtcbk9iamVjdC5kZWZpbmVQcm9wZXJ0eShleHBvcnRzLCBcIl9fZXNNb2R1bGVcIiwgeyB2YWx1ZTogdHJ1ZSB9KTtcbmNvbnN0IHJlYWN0X25hdGl2ZV8xID0gcmVxdWlyZShcInJlYWN0LW5hdGl2ZVwiKTtcbmNsYXNzIENvbnN0YW50cyB7XG4gICAgc3RhdGljIGFzeW5jIGdldCgpIHtcbiAgICAgICAgaWYgKCF0aGlzLmluc3RhbmNlKSB7XG4gICAgICAgICAgICBjb25zdCBjb25zdGFudHMgPSBhd2FpdCByZWFjdF9uYXRpdmVfMS5OYXRpdmVNb2R1bGVzLlJOTkJyaWRnZU1vZHVsZS5nZXRDb25zdGFudHMoKTtcbiAgICAgICAgICAgIHRoaXMuaW5zdGFuY2UgPSBuZXcgQ29uc3RhbnRzKGNvbnN0YW50cyk7XG4gICAgICAgIH1cbiAgICAgICAgcmV0dXJuIHRoaXMuaW5zdGFuY2U7XG4gICAgfVxuICAgIGNvbnN0cnVjdG9yKGNvbnN0YW50cykge1xuICAgICAgICB0aGlzLnN0YXR1c0JhckhlaWdodCA9IGNvbnN0YW50cy5zdGF0dXNCYXJIZWlnaHQ7XG4gICAgICAgIHRoaXMudG9wQmFySGVpZ2h0ID0gY29uc3RhbnRzLnRvcEJhckhlaWdodDtcbiAgICAgICAgdGhpcy5iYWNrQnV0dG9uSWQgPSBjb25zdGFudHMuYmFja0J1dHRvbklkO1xuICAgICAgICB0aGlzLmJvdHRvbVRhYnNIZWlnaHQgPSBjb25zdGFudHMuYm90dG9tVGFic0hlaWdodDtcbiAgICB9XG59XG5leHBvcnRzLkNvbnN0YW50cyA9IENvbnN0YW50cztcbiJdfQ==

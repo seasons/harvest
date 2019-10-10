@@ -1,0 +1,14 @@
+58367f1288295f754af568bcbc24263e
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.space = void 0;
+
+var _Theme = require("../Components/Theme");
+
+var space = function space(spaceKey) {
+  return _Theme.themeProps.space[spaceKey];
+};
+
+exports.space = space;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNwYWNlLnRzIl0sIm5hbWVzIjpbInNwYWNlIiwic3BhY2VLZXkiLCJ0aGVtZVByb3BzIl0sIm1hcHBpbmdzIjoiOzs7OztBQUFBOztBQU1PLElBQU1BLEtBQUssR0FBRyxTQUFSQSxLQUFRLENBQUNDLFFBQUQ7QUFBQSxTQUEyQkMsa0JBQVdGLEtBQVgsQ0FBaUJDLFFBQWpCLENBQTNCO0FBQUEsQ0FBZCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IFNwYWNpbmdVbml0LCB0aGVtZVByb3BzIH0gZnJvbSBcIkNvbXBvbmVudHMvVGhlbWVcIlxuXG4vKipcbiAqIEEgaGVscGVyIHRvIGVhc2lseSBhY2Nlc3Mgc3BhY2UgdmFsdWVzIHdoZW4gbm90IGluIGEgc3R5bGVkLWNvbXBvbmVudHMgb3JcbiAqIHN0eWxlZC1zeXN0ZW1zIGNvbnRleHQuXG4gKi9cbmV4cG9ydCBjb25zdCBzcGFjZSA9IChzcGFjZUtleTogU3BhY2luZ1VuaXQpID0+IHRoZW1lUHJvcHMuc3BhY2Vbc3BhY2VLZXldXG4iXX0=

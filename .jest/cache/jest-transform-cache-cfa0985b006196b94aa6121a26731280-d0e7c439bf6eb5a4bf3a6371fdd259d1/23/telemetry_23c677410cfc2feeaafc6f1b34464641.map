@@ -1,0 +1,1 @@
+{"version":3,"sources":["telemetry.js"],"names":["module","exports","name","version"],"mappings":"AACAA,MAAM,CAACC,OAAP,GAAiB;AACfC,EAAAA,IAAI,EAAE,oBADS;AAEfC,EAAAA,OAAO,EAAE;AAFM,CAAjB","sourcesContent":["// Generated file by lbalmaceda on Mon Sep 23 2019 15:03:23 GMT-0300 (Argentina Standard Time);\nmodule.exports = {\n  name: 'react-native-auth0',\n  version: '1.6.0'\n};\n"]}

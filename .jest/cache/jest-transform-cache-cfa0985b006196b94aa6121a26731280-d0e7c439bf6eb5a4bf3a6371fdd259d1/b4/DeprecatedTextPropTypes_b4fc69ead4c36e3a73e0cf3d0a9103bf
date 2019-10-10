@@ -1,0 +1,41 @@
+690c3a18059a601a30ca151b0ef94cd1
+
+
+
+
+
+
+
+
+
+
+'use strict';
+
+
+
+
+
+
+
+var stylePropType = require('DeprecatedStyleSheetPropType')(require('TextStylePropTypes'));
+
+module.exports = {
+  ellipsizeMode: require('prop-types').oneOf(['head', 'middle', 'tail', 'clip']),
+  numberOfLines: require('prop-types').number,
+  textBreakStrategy: require('prop-types').oneOf(['simple', 'highQuality', 'balanced']),
+  onLayout: require('prop-types').func,
+  onPress: require('prop-types').func,
+  onLongPress: require('prop-types').func,
+  pressRetentionOffset: require('DeprecatedEdgeInsetsPropType'),
+  selectable: require('prop-types').bool,
+  selectionColor: require('DeprecatedColorPropType'),
+  suppressHighlighting: require('prop-types').bool,
+  style: stylePropType,
+  testID: require('prop-types').string,
+  nativeID: require('prop-types').string,
+  allowFontScaling: require('prop-types').bool,
+  maxFontSizeMultiplier: require('prop-types').number,
+  accessible: require('prop-types').bool,
+  adjustsFontSizeToFit: require('prop-types').bool,
+  minimumFontScale: require('prop-types').number,
+  disabled: require('prop-types').bool };

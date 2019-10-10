@@ -1,0 +1,31 @@
+38fa35879ce32ef0c5a1135f3d3d595d
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var react_native_1 = require("react-native");
+
+var AppRegistryService = function () {
+  function AppRegistryService() {
+    (0, _classCallCheck2.default)(this, AppRegistryService);
+  }
+
+  (0, _createClass2.default)(AppRegistryService, [{
+    key: "registerComponent",
+    value: function registerComponent(appKey, getComponentFunc) {
+      react_native_1.AppRegistry.registerComponent(appKey, getComponentFunc);
+    }
+  }]);
+  return AppRegistryService;
+}();
+
+exports.AppRegistryService = AppRegistryService;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkFwcFJlZ2lzdHJ5U2VydmljZS5qcyJdLCJuYW1lcyI6WyJPYmplY3QiLCJkZWZpbmVQcm9wZXJ0eSIsImV4cG9ydHMiLCJ2YWx1ZSIsInJlYWN0X25hdGl2ZV8xIiwicmVxdWlyZSIsIkFwcFJlZ2lzdHJ5U2VydmljZSIsImFwcEtleSIsImdldENvbXBvbmVudEZ1bmMiLCJBcHBSZWdpc3RyeSIsInJlZ2lzdGVyQ29tcG9uZW50Il0sIm1hcHBpbmdzIjoiQUFBQTs7Ozs7Ozs7QUFDQUEsTUFBTSxDQUFDQyxjQUFQLENBQXNCQyxPQUF0QixFQUErQixZQUEvQixFQUE2QztBQUFFQyxFQUFBQSxLQUFLLEVBQUU7QUFBVCxDQUE3Qzs7QUFDQSxJQUFNQyxjQUFjLEdBQUdDLE9BQU8sQ0FBQyxjQUFELENBQTlCOztJQUNNQyxrQjs7Ozs7OztzQ0FDZ0JDLE0sRUFBUUMsZ0IsRUFBa0I7QUFDeENKLE1BQUFBLGNBQWMsQ0FBQ0ssV0FBZixDQUEyQkMsaUJBQTNCLENBQTZDSCxNQUE3QyxFQUFxREMsZ0JBQXJEO0FBQ0g7Ozs7O0FBRUxOLE9BQU8sQ0FBQ0ksa0JBQVIsR0FBNkJBLGtCQUE3QiIsInNvdXJjZXNDb250ZW50IjpbIlwidXNlIHN0cmljdFwiO1xuT2JqZWN0LmRlZmluZVByb3BlcnR5KGV4cG9ydHMsIFwiX19lc01vZHVsZVwiLCB7IHZhbHVlOiB0cnVlIH0pO1xuY29uc3QgcmVhY3RfbmF0aXZlXzEgPSByZXF1aXJlKFwicmVhY3QtbmF0aXZlXCIpO1xuY2xhc3MgQXBwUmVnaXN0cnlTZXJ2aWNlIHtcbiAgICByZWdpc3RlckNvbXBvbmVudChhcHBLZXksIGdldENvbXBvbmVudEZ1bmMpIHtcbiAgICAgICAgcmVhY3RfbmF0aXZlXzEuQXBwUmVnaXN0cnkucmVnaXN0ZXJDb21wb25lbnQoYXBwS2V5LCBnZXRDb21wb25lbnRGdW5jKTtcbiAgICB9XG59XG5leHBvcnRzLkFwcFJlZ2lzdHJ5U2VydmljZSA9IEFwcFJlZ2lzdHJ5U2VydmljZTtcbiJdfQ==

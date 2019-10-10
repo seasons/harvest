@@ -1,0 +1,76 @@
+e15a95af3776d806e15071585c2c4f34
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.RNSVGEllipse = exports.default = void 0;
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _react = _interopRequireDefault(require("react"));
+
+var _reactNative = require("react-native");
+
+var _extractProps = _interopRequireWildcard(require("../lib/extract/extractProps"));
+
+var _Shape2 = _interopRequireDefault(require("./Shape"));
+
+var _jsxFileName = "/Users/jannegylling/IdeaProjects/react-native-svg/src/elements/Ellipse.tsx";
+
+var Ellipse = function (_Shape) {
+  (0, _inherits2.default)(Ellipse, _Shape);
+
+  function Ellipse() {
+    (0, _classCallCheck2.default)(this, Ellipse);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Ellipse).apply(this, arguments));
+  }
+
+  (0, _createClass2.default)(Ellipse, [{
+    key: "render",
+    value: function render() {
+      var props = this.props;
+      var cx = props.cx,
+          cy = props.cy,
+          rx = props.rx,
+          ry = props.ry;
+      return _react.default.createElement(RNSVGEllipse, (0, _extends2.default)({
+        ref: this.refMethod
+      }, (0, _extractProps.default)((0, _extractProps.propsAndStyles)(props), this), {
+        cx: cx,
+        cy: cy,
+        rx: rx,
+        ry: ry,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 26
+        }
+      }));
+    }
+  }]);
+  return Ellipse;
+}(_Shape2.default);
+
+exports.default = Ellipse;
+Ellipse.displayName = 'Ellipse';
+Ellipse.defaultProps = {
+  cx: 0,
+  cy: 0,
+  rx: 0,
+  ry: 0
+};
+var RNSVGEllipse = (0, _reactNative.requireNativeComponent)('RNSVGEllipse');
+exports.RNSVGEllipse = RNSVGEllipse;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkVsbGlwc2UudHN4Il0sIm5hbWVzIjpbIkVsbGlwc2UiLCJTaGFwZSIsImRpc3BsYXlOYW1lIiwiZGVmYXVsdFByb3BzIiwiY3giLCJjeSIsInJ4IiwicnkiLCJwcm9wcyIsIlJOU1ZHRWxsaXBzZSJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQUEsSUFBQSxNQUFBLEdBQUEsc0JBQUEsQ0FBQSxPQUFBLENBQUEsT0FBQSxDQUFBLENBQUE7O0FBQ0EsSUFBQSxZQUFBLEdBQUEsT0FBQSxDQUFBLGNBQUEsQ0FBQTs7QUFDQSxJQUFBLGFBQUEsR0FBQSx1QkFBQSxDQUFBLE9BQUEsK0JBQUEsQ0FBQTs7QUFFQSxJQUFBLE9BQUEsR0FBQSxzQkFBQSxDQUFBLE9BQUEsV0FBQSxDQUFBOzs7O0FBRXFCQSxJQUFBQSxPOzs7Ozs7Ozs7OzZCQWVWO0FBQUEsVUFDQ1EsS0FERCxHQUFBLEtBQUEsS0FBQTtBQUFBLFVBRUNKLEVBRkQsR0FFb0JJLEtBRnBCLENBQUEsRUFBQTtBQUFBLFVBRUtILEVBRkwsR0FFb0JHLEtBRnBCLENBQUEsRUFBQTtBQUFBLFVBRVNGLEVBRlQsR0FFb0JFLEtBRnBCLENBQUEsRUFBQTtBQUFBLFVBRWFELEVBRmIsR0FFb0JDLEtBRnBCLENBQUEsRUFBQTtBQUdQLGFBQ0UsTUFBQSxDQUFBLE9BQUEsQ0FBQSxhQUFBLENBQUEsWUFBQSxFQUFBLENBQUEsR0FBQSxTQUFBLENBQUEsT0FBQSxFQUFBO0FBQ0UsUUFBQSxHQUFHLEVBQUUsS0FEUDtBQUFBLE9BQUEsRUFFTSxDQUFBLEdBQUEsYUFBQSxDQUFBLE9BQUEsRUFBYSxDQUFBLEdBQUEsYUFBQSxDQUFBLGNBQUEsRUFBYixLQUFhLENBQWIsRUFGTixJQUVNLENBRk4sRUFBQTtBQUdFLFFBQUEsRUFBRSxFQUhKLEVBQUE7QUFJRSxRQUFBLEVBQUUsRUFKSixFQUFBO0FBS0UsUUFBQSxFQUFFLEVBTEosRUFBQTtBQU1FLFFBQUEsRUFBRSxFQU5KLEVBQUE7QUFBQSxRQUFBLFFBQUEsRUFBQTtBQUFBLFVBQUEsUUFBQSxFQUFBLFlBQUE7QUFBQSxVQUFBLFVBQUEsRUFERjtBQUNFO0FBQUEsT0FBQSxDQUFBLENBREY7Ozs7RUFsQmlDUCxPQUFBQSxDQUFBQSxPLENBQWhCRDs7O0FBQUFBLE8sQ0FNWkUsV0FOWUYsR0FNRSxTQU5GQTtBQUFBQSxPLENBUVpHLFlBUllILEdBUUc7QUFDcEJJLEVBQUFBLEVBQUUsRUFEa0IsQ0FBQTtBQUVwQkMsRUFBQUEsRUFBRSxFQUZrQixDQUFBO0FBR3BCQyxFQUFBQSxFQUFFLEVBSGtCLENBQUE7QUFJcEJDLEVBQUFBLEVBQUUsRUFKa0I7QUFBQSxDQVJIUDtBQStCZCxJQUFNUyxZQUFZLEdBQUcsQ0FBQSxHQUFBLFlBQUEsQ0FBQSxzQkFBQSxFQUFyQixjQUFxQixDQUFyQiIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCc7XG5pbXBvcnQgeyByZXF1aXJlTmF0aXZlQ29tcG9uZW50IH0gZnJvbSAncmVhY3QtbmF0aXZlJztcbmltcG9ydCBleHRyYWN0UHJvcHMsIHsgcHJvcHNBbmRTdHlsZXMgfSBmcm9tICcuLi9saWIvZXh0cmFjdC9leHRyYWN0UHJvcHMnO1xuaW1wb3J0IHsgTnVtYmVyUHJvcCB9IGZyb20gJy4uL2xpYi9leHRyYWN0L3R5cGVzJztcbmltcG9ydCBTaGFwZSBmcm9tICcuL1NoYXBlJztcblxuZXhwb3J0IGRlZmF1bHQgY2xhc3MgRWxsaXBzZSBleHRlbmRzIFNoYXBlPHtcbiAgY3g/OiBOdW1iZXJQcm9wO1xuICBjeT86IE51bWJlclByb3A7XG4gIHJ4PzogTnVtYmVyUHJvcDtcbiAgcnk/OiBOdW1iZXJQcm9wO1xufT4ge1xuICBzdGF0aWMgZGlzcGxheU5hbWUgPSAnRWxsaXBzZSc7XG5cbiAgc3RhdGljIGRlZmF1bHRQcm9wcyA9IHtcbiAgICBjeDogMCxcbiAgICBjeTogMCxcbiAgICByeDogMCxcbiAgICByeTogMCxcbiAgfTtcblxuICByZW5kZXIoKSB7XG4gICAgY29uc3QgeyBwcm9wcyB9ID0gdGhpcztcbiAgICBjb25zdCB7IGN4LCBjeSwgcngsIHJ5IH0gPSBwcm9wcztcbiAgICByZXR1cm4gKFxuICAgICAgPFJOU1ZHRWxsaXBzZVxuICAgICAgICByZWY9e3RoaXMucmVmTWV0aG9kfVxuICAgICAgICB7Li4uZXh0cmFjdFByb3BzKHByb3BzQW5kU3R5bGVzKHByb3BzKSwgdGhpcyl9XG4gICAgICAgIGN4PXtjeH1cbiAgICAgICAgY3k9e2N5fVxuICAgICAgICByeD17cnh9XG4gICAgICAgIHJ5PXtyeX1cbiAgICAgIC8+XG4gICAgKTtcbiAgfVxufVxuXG5leHBvcnQgY29uc3QgUk5TVkdFbGxpcHNlID0gcmVxdWlyZU5hdGl2ZUNvbXBvbmVudCgnUk5TVkdFbGxpcHNlJyk7XG4iXX0=

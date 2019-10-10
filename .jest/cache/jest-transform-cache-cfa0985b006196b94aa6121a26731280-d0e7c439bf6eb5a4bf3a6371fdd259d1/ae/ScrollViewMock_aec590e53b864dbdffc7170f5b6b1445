@@ -1,0 +1,43 @@
+e70d06228b8013edc600a82ed3678c0e
+'use strict';
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var React = require('React');
+
+var View = require('View');
+
+var requireNativeComponent = require('requireNativeComponent');
+
+var RCTScrollView = requireNativeComponent('RCTScrollView');
+var ScrollViewComponent = jest.genMockFromModule('ScrollView');
+
+var ScrollViewMock = function (_ScrollViewComponent) {
+  (0, _inherits2.default)(ScrollViewMock, _ScrollViewComponent);
+
+  function ScrollViewMock() {
+    (0, _classCallCheck2.default)(this, ScrollViewMock);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(ScrollViewMock).apply(this, arguments));
+  }
+
+  (0, _createClass2.default)(ScrollViewMock, [{
+    key: "render",
+    value: function render() {
+      return React.createElement(RCTScrollView, this.props, this.props.refreshControl, React.createElement(View, null, this.props.children));
+    }
+  }]);
+  return ScrollViewMock;
+}(ScrollViewComponent);
+
+module.exports = ScrollViewMock;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIlNjcm9sbFZpZXdNb2NrLmpzIl0sIm5hbWVzIjpbIlJlYWN0IiwicmVxdWlyZSIsIlZpZXciLCJyZXF1aXJlTmF0aXZlQ29tcG9uZW50IiwiUkNUU2Nyb2xsVmlldyIsIlNjcm9sbFZpZXdDb21wb25lbnQiLCJqZXN0IiwiZ2VuTW9ja0Zyb21Nb2R1bGUiLCJTY3JvbGxWaWV3TW9jayIsInByb3BzIiwicmVmcmVzaENvbnRyb2wiLCJjaGlsZHJlbiIsIm1vZHVsZSIsImV4cG9ydHMiXSwibWFwcGluZ3MiOiJBQVlBOzs7Ozs7Ozs7Ozs7OztBQUVBLElBQU1BLEtBQUssR0FBR0MsT0FBTyxDQUFDLE9BQUQsQ0FBckI7O0FBQ0EsSUFBTUMsSUFBSSxHQUFHRCxPQUFPLENBQUMsTUFBRCxDQUFwQjs7QUFFQSxJQUFNRSxzQkFBc0IsR0FBR0YsT0FBTyxDQUFDLHdCQUFELENBQXRDOztBQUVBLElBQU1HLGFBQWEsR0FBR0Qsc0JBQXNCLENBQUMsZUFBRCxDQUE1QztBQUVBLElBQU1FLG1CQUFtQixHQUFHQyxJQUFJLENBQUNDLGlCQUFMLENBQXVCLFlBQXZCLENBQTVCOztJQUVNQyxjOzs7Ozs7Ozs7OzZCQUNLO0FBQ1AsYUFDRSxvQkFBQyxhQUFELEVBQW1CLEtBQUtDLEtBQXhCLEVBQ0csS0FBS0EsS0FBTCxDQUFXQyxjQURkLEVBRUUsb0JBQUMsSUFBRCxRQUFPLEtBQUtELEtBQUwsQ0FBV0UsUUFBbEIsQ0FGRixDQURGO0FBTUQ7OztFQVIwQk4sbUI7O0FBVzdCTyxNQUFNLENBQUNDLE9BQVAsR0FBaUJMLGNBQWpCIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBDb3B5cmlnaHQgKGMpIEZhY2Vib29rLCBJbmMuIGFuZCBpdHMgYWZmaWxpYXRlcy5cbiAqXG4gKiBUaGlzIHNvdXJjZSBjb2RlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSBNSVQgbGljZW5zZSBmb3VuZCBpbiB0aGVcbiAqIExJQ0VOU0UgZmlsZSBpbiB0aGUgcm9vdCBkaXJlY3Rvcnkgb2YgdGhpcyBzb3VyY2UgdHJlZS5cbiAqXG4gKiBAZm9ybWF0XG4gKiBAZmxvdyBzdHJpY3QtbG9jYWxcbiAqL1xuXG4vKiBlc2xpbnQtZW52IGplc3QgKi9cblxuJ3VzZSBzdHJpY3QnO1xuXG5jb25zdCBSZWFjdCA9IHJlcXVpcmUoJ1JlYWN0Jyk7XG5jb25zdCBWaWV3ID0gcmVxdWlyZSgnVmlldycpO1xuXG5jb25zdCByZXF1aXJlTmF0aXZlQ29tcG9uZW50ID0gcmVxdWlyZSgncmVxdWlyZU5hdGl2ZUNvbXBvbmVudCcpO1xuXG5jb25zdCBSQ1RTY3JvbGxWaWV3ID0gcmVxdWlyZU5hdGl2ZUNvbXBvbmVudCgnUkNUU2Nyb2xsVmlldycpO1xuXG5jb25zdCBTY3JvbGxWaWV3Q29tcG9uZW50ID0gamVzdC5nZW5Nb2NrRnJvbU1vZHVsZSgnU2Nyb2xsVmlldycpO1xuXG5jbGFzcyBTY3JvbGxWaWV3TW9jayBleHRlbmRzIFNjcm9sbFZpZXdDb21wb25lbnQge1xuICByZW5kZXIoKSB7XG4gICAgcmV0dXJuIChcbiAgICAgIDxSQ1RTY3JvbGxWaWV3IHsuLi50aGlzLnByb3BzfT5cbiAgICAgICAge3RoaXMucHJvcHMucmVmcmVzaENvbnRyb2x9XG4gICAgICAgIDxWaWV3Pnt0aGlzLnByb3BzLmNoaWxkcmVufTwvVmlldz5cbiAgICAgIDwvUkNUU2Nyb2xsVmlldz5cbiAgICApO1xuICB9XG59XG5cbm1vZHVsZS5leHBvcnRzID0gU2Nyb2xsVmlld01vY2s7XG4iXX0=

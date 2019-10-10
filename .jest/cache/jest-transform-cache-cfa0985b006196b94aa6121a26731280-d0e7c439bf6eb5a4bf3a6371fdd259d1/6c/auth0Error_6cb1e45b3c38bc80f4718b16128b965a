@@ -1,0 +1,44 @@
+10a7fb289f1ffe6363c72d7d3d2985db
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _baseError = _interopRequireDefault(require("../utils/baseError"));
+
+var Auth0Error = function (_BaseError) {
+  (0, _inherits2.default)(Auth0Error, _BaseError);
+
+  function Auth0Error(response) {
+    var _this;
+
+    (0, _classCallCheck2.default)(this, Auth0Error);
+    var status = response.status,
+        _response$json = response.json,
+        json = _response$json === void 0 ? {} : _response$json,
+        text = response.text;
+    var name = json.name,
+        description = json.description,
+        code = json.code;
+    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Auth0Error).call(this, name || 'a0.response.invalid', description || text || 'unknown error'));
+    _this.json = json;
+    _this.status = status;
+    _this.code = code;
+    return _this;
+  }
+
+  return Auth0Error;
+}(_baseError.default);
+
+exports.default = Auth0Error;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImF1dGgwRXJyb3IuanMiXSwibmFtZXMiOlsiQXV0aDBFcnJvciIsInJlc3BvbnNlIiwic3RhdHVzIiwianNvbiIsInRleHQiLCJuYW1lIiwiZGVzY3JpcHRpb24iLCJjb2RlIiwiQmFzZUVycm9yIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7QUFBQTs7SUFFcUJBLFU7OztBQUNuQixzQkFBWUMsUUFBWixFQUFzQjtBQUFBOztBQUFBO0FBQUEsUUFDWkMsTUFEWSxHQUNnQkQsUUFEaEIsQ0FDWkMsTUFEWTtBQUFBLHlCQUNnQkQsUUFEaEIsQ0FDSkUsSUFESTtBQUFBLFFBQ0pBLElBREksK0JBQ0csRUFESDtBQUFBLFFBQ09DLElBRFAsR0FDZ0JILFFBRGhCLENBQ09HLElBRFA7QUFBQSxRQUVaQyxJQUZZLEdBRWdCRixJQUZoQixDQUVaRSxJQUZZO0FBQUEsUUFFTkMsV0FGTSxHQUVnQkgsSUFGaEIsQ0FFTkcsV0FGTTtBQUFBLFFBRU9DLElBRlAsR0FFZ0JKLElBRmhCLENBRU9JLElBRlA7QUFHcEIsZ0hBQ0VGLElBQUksSUFBSSxxQkFEVixFQUVFQyxXQUFXLElBQUlGLElBQWYsSUFBdUIsZUFGekI7QUFJQSxVQUFLRCxJQUFMLEdBQVlBLElBQVo7QUFDQSxVQUFLRCxNQUFMLEdBQWNBLE1BQWQ7QUFDQSxVQUFLSyxJQUFMLEdBQVlBLElBQVo7QUFUb0I7QUFVckI7OztFQVhxQ0Msa0IiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgQmFzZUVycm9yIGZyb20gJy4uL3V0aWxzL2Jhc2VFcnJvcic7XG5cbmV4cG9ydCBkZWZhdWx0IGNsYXNzIEF1dGgwRXJyb3IgZXh0ZW5kcyBCYXNlRXJyb3Ige1xuICBjb25zdHJ1Y3RvcihyZXNwb25zZSkge1xuICAgIGNvbnN0IHsgc3RhdHVzLCBqc29uID0ge30sIHRleHQgfSA9IHJlc3BvbnNlO1xuICAgIGNvbnN0IHsgbmFtZSwgZGVzY3JpcHRpb24sIGNvZGUgfSA9IGpzb247XG4gICAgc3VwZXIoXG4gICAgICBuYW1lIHx8ICdhMC5yZXNwb25zZS5pbnZhbGlkJyxcbiAgICAgIGRlc2NyaXB0aW9uIHx8IHRleHQgfHwgJ3Vua25vd24gZXJyb3InXG4gICAgKTtcbiAgICB0aGlzLmpzb24gPSBqc29uO1xuICAgIHRoaXMuc3RhdHVzID0gc3RhdHVzO1xuICAgIHRoaXMuY29kZSA9IGNvZGU7XG4gIH1cbn1cbiJdfQ==

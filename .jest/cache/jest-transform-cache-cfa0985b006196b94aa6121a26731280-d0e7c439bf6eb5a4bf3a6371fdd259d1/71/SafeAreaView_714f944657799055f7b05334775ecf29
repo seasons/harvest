@@ -1,0 +1,55 @@
+310f7db23d6dbe49174a3c408de3a082
+var _jsxFileName = "/Users/kierangillen/code/personal/harvest/node_modules/react-native/Libraries/Components/SafeAreaView/SafeAreaView.js";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var exported;
+
+
+
+
+
+
+
+
+
+
+if (require('Platform').OS === 'android') {
+  exported = function (_React$Component) {"use strict";require("@babel/runtime/helpers/inherits")(SafeAreaView, _React$Component);function SafeAreaView() {require("@babel/runtime/helpers/classCallCheck")(this, SafeAreaView);return require("@babel/runtime/helpers/possibleConstructorReturn")(this, require("@babel/runtime/helpers/getPrototypeOf")(SafeAreaView).apply(this, arguments));}require("@babel/runtime/helpers/createClass")(SafeAreaView, [{ key: "render", value: function render()
+      {var _this$props =
+        this.props,emulateUnlessSupported = _this$props.emulateUnlessSupported,props = require("@babel/runtime/helpers/objectWithoutProperties")(_this$props, ["emulateUnlessSupported"]);
+        return require('React').createElement(require('View'), require("@babel/runtime/helpers/extends")({}, props, { __source: { fileName: _jsxFileName, lineNumber: 37 } }));
+      } }]);return SafeAreaView;}(require('React').Component);
+
+} else {
+  var RCTSafeAreaViewNativeComponent = require('RCTSafeAreaViewNativeComponent');
+  exported = function (_React$Component2) {"use strict";require("@babel/runtime/helpers/inherits")(SafeAreaView, _React$Component2);function SafeAreaView() {require("@babel/runtime/helpers/classCallCheck")(this, SafeAreaView);return require("@babel/runtime/helpers/possibleConstructorReturn")(this, require("@babel/runtime/helpers/getPrototypeOf")(SafeAreaView).apply(this, arguments));}require("@babel/runtime/helpers/createClass")(SafeAreaView, [{ key: "render", value: function render()
+      {
+        return (
+          require('React').createElement(RCTSafeAreaViewNativeComponent, require("@babel/runtime/helpers/extends")({
+            emulateUnlessSupported: true },
+          this.props, { __source: { fileName: _jsxFileName, lineNumber: 45 } })));
+
+
+      } }]);return SafeAreaView;}(require('React').Component);
+
+}
+
+module.exports = exported;

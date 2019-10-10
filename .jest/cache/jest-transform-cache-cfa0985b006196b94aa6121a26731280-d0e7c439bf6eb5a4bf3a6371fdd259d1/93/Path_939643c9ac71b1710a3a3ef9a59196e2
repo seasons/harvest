@@ -1,0 +1,63 @@
+b58fc7f48e68aab15de892abaefa636f
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.RNSVGPath = exports.default = void 0;
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _react = _interopRequireDefault(require("react"));
+
+var _reactNative = require("react-native");
+
+var _extractProps = _interopRequireWildcard(require("../lib/extract/extractProps"));
+
+var _Shape2 = _interopRequireDefault(require("./Shape"));
+
+var _jsxFileName = "/Users/jannegylling/IdeaProjects/react-native-svg/src/elements/Path.tsx";
+
+var Path = function (_Shape) {
+  (0, _inherits2.default)(Path, _Shape);
+
+  function Path() {
+    (0, _classCallCheck2.default)(this, Path);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Path).apply(this, arguments));
+  }
+
+  (0, _createClass2.default)(Path, [{
+    key: "render",
+    value: function render() {
+      var props = this.props;
+      return _react.default.createElement(RNSVGPath, (0, _extends2.default)({
+        ref: this.refMethod
+      }, (0, _extractProps.default)((0, _extractProps.propsAndStyles)(props), this), {
+        d: props.d,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 14
+        }
+      }));
+    }
+  }]);
+  return Path;
+}(_Shape2.default);
+
+exports.default = Path;
+Path.displayName = 'Path';
+var RNSVGPath = (0, _reactNative.requireNativeComponent)('RNSVGPath');
+exports.RNSVGPath = RNSVGPath;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIlBhdGgudHN4Il0sIm5hbWVzIjpbIlBhdGgiLCJTaGFwZSIsImRpc3BsYXlOYW1lIiwicHJvcHMiLCJSTlNWR1BhdGgiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQUFBLElBQUEsTUFBQSxHQUFBLHNCQUFBLENBQUEsT0FBQSxDQUFBLE9BQUEsQ0FBQSxDQUFBOztBQUNBLElBQUEsWUFBQSxHQUFBLE9BQUEsQ0FBQSxjQUFBLENBQUE7O0FBQ0EsSUFBQSxhQUFBLEdBQUEsdUJBQUEsQ0FBQSxPQUFBLCtCQUFBLENBQUE7O0FBQ0EsSUFBQSxPQUFBLEdBQUEsc0JBQUEsQ0FBQSxPQUFBLFdBQUEsQ0FBQTs7OztBQUVxQkEsSUFBQUEsSTs7Ozs7Ozs7Ozs2QkFLVjtBQUFBLFVBQ0NHLEtBREQsR0FBQSxLQUFBLEtBQUE7QUFFUCxhQUNFLE1BQUEsQ0FBQSxPQUFBLENBQUEsYUFBQSxDQUFBLFNBQUEsRUFBQSxDQUFBLEdBQUEsU0FBQSxDQUFBLE9BQUEsRUFBQTtBQUNFLFFBQUEsR0FBRyxFQUFFLEtBRFA7QUFBQSxPQUFBLEVBRU0sQ0FBQSxHQUFBLGFBQUEsQ0FBQSxPQUFBLEVBQWEsQ0FBQSxHQUFBLGFBQUEsQ0FBQSxjQUFBLEVBQWIsS0FBYSxDQUFiLEVBRk4sSUFFTSxDQUZOLEVBQUE7QUFHRSxRQUFBLENBQUMsRUFBRUEsS0FBSyxDQUhWLENBQUE7QUFBQSxRQUFBLFFBQUEsRUFBQTtBQUFBLFVBQUEsUUFBQSxFQUFBLFlBQUE7QUFBQSxVQUFBLFVBQUEsRUFERjtBQUNFO0FBQUEsT0FBQSxDQUFBLENBREY7Ozs7RUFQOEJGLE9BQUFBLENBQUFBLE8sQ0FBYkQ7OztBQUFBQSxJLENBR1pFLFdBSFlGLEdBR0UsTUFIRkE7QUFpQmQsSUFBTUksU0FBUyxHQUFHLENBQUEsR0FBQSxZQUFBLENBQUEsc0JBQUEsRUFBbEIsV0FBa0IsQ0FBbEIiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSAncmVhY3QnO1xuaW1wb3J0IHsgcmVxdWlyZU5hdGl2ZUNvbXBvbmVudCB9IGZyb20gJ3JlYWN0LW5hdGl2ZSc7XG5pbXBvcnQgZXh0cmFjdFByb3BzLCB7IHByb3BzQW5kU3R5bGVzIH0gZnJvbSAnLi4vbGliL2V4dHJhY3QvZXh0cmFjdFByb3BzJztcbmltcG9ydCBTaGFwZSBmcm9tICcuL1NoYXBlJztcblxuZXhwb3J0IGRlZmF1bHQgY2xhc3MgUGF0aCBleHRlbmRzIFNoYXBlPHtcbiAgZD86IHN0cmluZztcbn0+IHtcbiAgc3RhdGljIGRpc3BsYXlOYW1lID0gJ1BhdGgnO1xuXG4gIHJlbmRlcigpIHtcbiAgICBjb25zdCB7IHByb3BzIH0gPSB0aGlzO1xuICAgIHJldHVybiAoXG4gICAgICA8Uk5TVkdQYXRoXG4gICAgICAgIHJlZj17dGhpcy5yZWZNZXRob2R9XG4gICAgICAgIHsuLi5leHRyYWN0UHJvcHMocHJvcHNBbmRTdHlsZXMocHJvcHMpLCB0aGlzKX1cbiAgICAgICAgZD17cHJvcHMuZH1cbiAgICAgIC8+XG4gICAgKTtcbiAgfVxufVxuXG5leHBvcnQgY29uc3QgUk5TVkdQYXRoID0gcmVxdWlyZU5hdGl2ZUNvbXBvbmVudCgnUk5TVkdQYXRoJyk7XG4iXX0=

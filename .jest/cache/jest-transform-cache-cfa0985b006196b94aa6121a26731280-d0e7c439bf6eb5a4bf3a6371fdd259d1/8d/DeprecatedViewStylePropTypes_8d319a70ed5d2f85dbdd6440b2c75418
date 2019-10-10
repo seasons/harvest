@@ -1,0 +1,62 @@
+393f0a8f8934098ef9e41bc4bd088a9c
+
+
+
+
+
+
+
+
+
+
+'use strict';function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(source, true).forEach(function (key) {require("@babel/runtime/helpers/defineProperty")(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(source).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}
+
+
+
+
+
+
+
+
+
+
+var DeprecatedViewStylePropTypes = _objectSpread({}, require('DeprecatedLayoutPropTypes'), {}, require('DeprecatedShadowPropTypesIOS'), {}, require('DeprecatedTransformPropTypes'), {
+
+
+
+  backfaceVisibility: require('prop-types').oneOf(['visible', 'hidden']),
+  backgroundColor: require('DeprecatedColorPropType'),
+  borderColor: require('DeprecatedColorPropType'),
+  borderTopColor: require('DeprecatedColorPropType'),
+  borderRightColor: require('DeprecatedColorPropType'),
+  borderBottomColor: require('DeprecatedColorPropType'),
+  borderLeftColor: require('DeprecatedColorPropType'),
+  borderStartColor: require('DeprecatedColorPropType'),
+  borderEndColor: require('DeprecatedColorPropType'),
+  borderRadius: require('prop-types').number,
+  borderTopLeftRadius: require('prop-types').number,
+  borderTopRightRadius: require('prop-types').number,
+  borderTopStartRadius: require('prop-types').number,
+  borderTopEndRadius: require('prop-types').number,
+  borderBottomLeftRadius: require('prop-types').number,
+  borderBottomRightRadius: require('prop-types').number,
+  borderBottomStartRadius: require('prop-types').number,
+  borderBottomEndRadius: require('prop-types').number,
+  borderStyle: require('prop-types').oneOf(['solid', 'dotted', 'dashed']),
+  borderWidth: require('prop-types').number,
+  borderTopWidth: require('prop-types').number,
+  borderRightWidth: require('prop-types').number,
+  borderBottomWidth: require('prop-types').number,
+  borderLeftWidth: require('prop-types').number,
+  opacity: require('prop-types').number,
+
+
+
+
+
+
+
+  elevation: require('prop-types').number });
+
+
+module.exports = DeprecatedViewStylePropTypes;

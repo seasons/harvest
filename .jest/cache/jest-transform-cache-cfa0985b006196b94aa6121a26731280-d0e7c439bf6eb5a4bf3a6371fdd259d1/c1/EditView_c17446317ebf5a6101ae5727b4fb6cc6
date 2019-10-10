@@ -1,0 +1,224 @@
+31eb45b730b9e8050c40cb6018c61414
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EditView = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf3 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _Components = require("../../../Components");
+
+var _reactNative = require("react-native");
+
+var _react = _interopRequireDefault(require("react"));
+
+var EditView = function (_React$Component) {
+  (0, _inherits2.default)(EditView, _React$Component);
+
+  function EditView() {
+    var _getPrototypeOf2;
+
+    var _this;
+
+    (0, _classCallCheck2.default)(this, EditView);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = (0, _possibleConstructorReturn2.default)(this, (_getPrototypeOf2 = (0, _getPrototypeOf3.default)(EditView)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this.state = {
+      sameAsDeliveryRadioSelected: false
+    };
+
+    _this.handleSameAsDevilveryAddress = function () {
+      _this.setState({
+        sameAsDeliveryRadioSelected: !_this.state.sameAsDeliveryRadioSelected
+      });
+    };
+
+    _this.sections = function () {
+      var sections = ["Header", "Delivery address", "Billing address", "Payment information"];
+      return sections;
+    };
+
+    _this.renderItem = function (_ref) {
+      var section = _ref.item;
+
+      switch (section) {
+        case "Header":
+          return _react.default.createElement(_Components.Box, {
+            px: 2,
+            mt: 100
+          }, _react.default.createElement(_Components.Sans, {
+            size: "3"
+          }, "Payment & shipping"));
+
+        case "Delivery address":
+          return _react.default.createElement(_Components.Box, {
+            px: 2
+          }, _react.default.createElement(_Components.Sans, {
+            size: "2"
+          }, "Delivery address"), _react.default.createElement(_Components.Spacer, {
+            mb: 1
+          }), _react.default.createElement(_Components.TextInput, {
+            placeholder: "Address",
+            textContentType: "fullStreetAddress",
+            key: "deliveryAddress"
+          }), _react.default.createElement(_Components.Spacer, {
+            mb: 1
+          }), _react.default.createElement(_Components.Flex, {
+            flexDirection: "row",
+            flexWrap: "nowrap",
+            justifyContent: "space-between"
+          }, _react.default.createElement(_Components.TextInput, {
+            placeholder: "Unit",
+            textContentType: "streetAddressLine2"
+          }), _react.default.createElement(_Components.Spacer, {
+            ml: 1
+          }), _react.default.createElement(_Components.TextInput, {
+            placeholder: "Zipcode",
+            textContentType: "postalCode"
+          })), _react.default.createElement(_Components.Spacer, {
+            mb: 1
+          }), _react.default.createElement(_Components.Flex, {
+            flexDirection: "row",
+            flexWrap: "nowrap",
+            justifyContent: "space-between"
+          }, _react.default.createElement(_Components.TextInput, {
+            placeholder: "City",
+            textContentType: "addressCity"
+          }), _react.default.createElement(_Components.Spacer, {
+            ml: 1
+          }), _react.default.createElement(_Components.TextInput, {
+            placeholder: "State",
+            textContentType: "addressState"
+          })));
+
+        case "Billing address":
+          return _react.default.createElement(_Components.Box, {
+            px: 2
+          }, _react.default.createElement(_Components.Sans, {
+            size: "2"
+          }, "Billing address"), _react.default.createElement(_Components.Spacer, {
+            mb: 2
+          }), _react.default.createElement(_Components.Radio, {
+            selected: _this.state.sameAsDeliveryRadioSelected,
+            onSelect: function onSelect() {
+              return _this.handleSameAsDevilveryAddress();
+            },
+            label: "Same as Delivery Address"
+          }), !_this.state.sameAsDeliveryRadioSelected && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Components.Spacer, {
+            mb: 2
+          }), _react.default.createElement(_Components.TextInput, {
+            placeholder: "Address",
+            textContentType: "fullStreetAddress"
+          }), _react.default.createElement(_Components.Spacer, {
+            mb: 1
+          }), _react.default.createElement(_Components.Flex, {
+            flexDirection: "row",
+            flexWrap: "nowrap",
+            justifyContent: "space-between"
+          }, _react.default.createElement(_Components.TextInput, {
+            placeholder: "Unit",
+            textContentType: "streetAddressLine2"
+          }), _react.default.createElement(_Components.Spacer, {
+            ml: 1
+          }), _react.default.createElement(_Components.TextInput, {
+            placeholder: "Zipcode",
+            textContentType: "postalCode"
+          })), _react.default.createElement(_Components.Spacer, {
+            mb: 1
+          }), _react.default.createElement(_Components.Flex, {
+            flexDirection: "row",
+            flexWrap: "nowrap",
+            justifyContent: "space-between"
+          }, _react.default.createElement(_Components.TextInput, {
+            placeholder: "City",
+            textContentType: "addressCity"
+          }), _react.default.createElement(_Components.Spacer, {
+            ml: 1
+          }), _react.default.createElement(_Components.TextInput, {
+            placeholder: "State",
+            textContentType: "addressState"
+          }))));
+
+        case "Payment information":
+          return _react.default.createElement(_Components.Box, {
+            px: 2
+          }, _react.default.createElement(_Components.Sans, {
+            size: "2"
+          }, "Payment information"), _react.default.createElement(_Components.Spacer, {
+            mb: 1
+          }), _react.default.createElement(_Components.TextInput, {
+            placeholder: "Full name",
+            textContentType: "name"
+          }), _react.default.createElement(_Components.Spacer, {
+            mb: 1
+          }), _react.default.createElement(_Components.TextInput, {
+            placeholder: "Card number",
+            textContentType: "creditCardNumber"
+          }), _react.default.createElement(_Components.Spacer, {
+            mb: 1
+          }), _react.default.createElement(_Components.Flex, {
+            flexDirection: "row",
+            flexWrap: "nowrap",
+            justifyContent: "space-between"
+          }, _react.default.createElement(_Components.TextInput, {
+            placeholder: "Expiration date"
+          }), _react.default.createElement(_Components.Spacer, {
+            ml: 1
+          }), _react.default.createElement(_Components.TextInput, {
+            placeholder: "Zipcode",
+            textContentType: "postalCode"
+          })));
+
+        default:
+          return null;
+      }
+    };
+
+    return _this;
+  }
+
+  (0, _createClass2.default)(EditView, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      return _react.default.createElement(_reactNative.FlatList, {
+        data: this.sections(),
+        ItemSeparatorComponent: function ItemSeparatorComponent() {
+          return _react.default.createElement(_Components.Spacer, {
+            mb: 3
+          });
+        },
+        keyExtractor: function keyExtractor(item, index) {
+          return item + String(index);
+        },
+        renderItem: function renderItem(item) {
+          return _this2.renderItem(item);
+        },
+        ListFooterComponent: function ListFooterComponent() {
+          return _react.default.createElement(_Components.Spacer, {
+            mb: 100
+          });
+        }
+      });
+    }
+  }]);
+  return EditView;
+}(_react.default.Component);
+
+exports.EditView = EditView;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkVkaXRWaWV3LnRzeCJdLCJuYW1lcyI6WyJFZGl0VmlldyIsInN0YXRlIiwic2FtZUFzRGVsaXZlcnlSYWRpb1NlbGVjdGVkIiwiaGFuZGxlU2FtZUFzRGV2aWx2ZXJ5QWRkcmVzcyIsInNldFN0YXRlIiwic2VjdGlvbnMiLCJyZW5kZXJJdGVtIiwic2VjdGlvbiIsIml0ZW0iLCJpbmRleCIsIlN0cmluZyIsIlJlYWN0IiwiQ29tcG9uZW50Il0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7OztBQUFBOztBQUVBOztBQUNBOztJQUVhQSxROzs7Ozs7Ozs7Ozs7Ozs7VUFDWEMsSyxHQUFRO0FBQ05DLE1BQUFBLDJCQUEyQixFQUFFO0FBRHZCLEs7O1VBSVJDLDRCLEdBQStCLFlBQU07QUFDbkMsWUFBS0MsUUFBTCxDQUFjO0FBQ1pGLFFBQUFBLDJCQUEyQixFQUFFLENBQUMsTUFBS0QsS0FBTCxDQUFXQztBQUQ3QixPQUFkO0FBR0QsSzs7VUFFREcsUSxHQUFXLFlBQU07QUFDZixVQUFNQSxRQUFRLEdBQUcsQ0FBQyxRQUFELEVBQVcsa0JBQVgsRUFBK0IsaUJBQS9CLEVBQWtELHFCQUFsRCxDQUFqQjtBQUVBLGFBQU9BLFFBQVA7QUFDRCxLOztVQUVEQyxVLEdBQWEsZ0JBQXVCO0FBQUEsVUFBZEMsT0FBYyxRQUFwQkMsSUFBb0I7O0FBQ2xDLGNBQVFELE9BQVI7QUFDRSxhQUFLLFFBQUw7QUFDRSxpQkFDRSw2QkFBQyxlQUFEO0FBQUssWUFBQSxFQUFFLEVBQUUsQ0FBVDtBQUFZLFlBQUEsRUFBRSxFQUFFO0FBQWhCLGFBQ0UsNkJBQUMsZ0JBQUQ7QUFBTSxZQUFBLElBQUksRUFBQztBQUFYLGtDQURGLENBREY7O0FBS0YsYUFBSyxrQkFBTDtBQUNFLGlCQUNFLDZCQUFDLGVBQUQ7QUFBSyxZQUFBLEVBQUUsRUFBRTtBQUFULGFBQ0UsNkJBQUMsZ0JBQUQ7QUFBTSxZQUFBLElBQUksRUFBQztBQUFYLGdDQURGLEVBRUUsNkJBQUMsa0JBQUQ7QUFBUSxZQUFBLEVBQUUsRUFBRTtBQUFaLFlBRkYsRUFHRSw2QkFBQyxxQkFBRDtBQUFXLFlBQUEsV0FBVyxFQUFDLFNBQXZCO0FBQWlDLFlBQUEsZUFBZSxFQUFDLG1CQUFqRDtBQUFxRSxZQUFBLEdBQUcsRUFBQztBQUF6RSxZQUhGLEVBSUUsNkJBQUMsa0JBQUQ7QUFBUSxZQUFBLEVBQUUsRUFBRTtBQUFaLFlBSkYsRUFLRSw2QkFBQyxnQkFBRDtBQUFNLFlBQUEsYUFBYSxFQUFDLEtBQXBCO0FBQTBCLFlBQUEsUUFBUSxFQUFDLFFBQW5DO0FBQTRDLFlBQUEsY0FBYyxFQUFDO0FBQTNELGFBQ0UsNkJBQUMscUJBQUQ7QUFBVyxZQUFBLFdBQVcsRUFBQyxNQUF2QjtBQUE4QixZQUFBLGVBQWUsRUFBQztBQUE5QyxZQURGLEVBRUUsNkJBQUMsa0JBQUQ7QUFBUSxZQUFBLEVBQUUsRUFBRTtBQUFaLFlBRkYsRUFHRSw2QkFBQyxxQkFBRDtBQUFXLFlBQUEsV0FBVyxFQUFDLFNBQXZCO0FBQWlDLFlBQUEsZUFBZSxFQUFDO0FBQWpELFlBSEYsQ0FMRixFQVVFLDZCQUFDLGtCQUFEO0FBQVEsWUFBQSxFQUFFLEVBQUU7QUFBWixZQVZGLEVBV0UsNkJBQUMsZ0JBQUQ7QUFBTSxZQUFBLGFBQWEsRUFBQyxLQUFwQjtBQUEwQixZQUFBLFFBQVEsRUFBQyxRQUFuQztBQUE0QyxZQUFBLGNBQWMsRUFBQztBQUEzRCxhQUNFLDZCQUFDLHFCQUFEO0FBQVcsWUFBQSxXQUFXLEVBQUMsTUFBdkI7QUFBOEIsWUFBQSxlQUFlLEVBQUM7QUFBOUMsWUFERixFQUVFLDZCQUFDLGtCQUFEO0FBQVEsWUFBQSxFQUFFLEVBQUU7QUFBWixZQUZGLEVBR0UsNkJBQUMscUJBQUQ7QUFBVyxZQUFBLFdBQVcsRUFBQyxPQUF2QjtBQUErQixZQUFBLGVBQWUsRUFBQztBQUEvQyxZQUhGLENBWEYsQ0FERjs7QUFtQkYsYUFBSyxpQkFBTDtBQUNFLGlCQUNFLDZCQUFDLGVBQUQ7QUFBSyxZQUFBLEVBQUUsRUFBRTtBQUFULGFBQ0UsNkJBQUMsZ0JBQUQ7QUFBTSxZQUFBLElBQUksRUFBQztBQUFYLCtCQURGLEVBRUUsNkJBQUMsa0JBQUQ7QUFBUSxZQUFBLEVBQUUsRUFBRTtBQUFaLFlBRkYsRUFHRSw2QkFBQyxpQkFBRDtBQUNFLFlBQUEsUUFBUSxFQUFFLE1BQUtOLEtBQUwsQ0FBV0MsMkJBRHZCO0FBRUUsWUFBQSxRQUFRLEVBQUU7QUFBQSxxQkFBTSxNQUFLQyw0QkFBTCxFQUFOO0FBQUEsYUFGWjtBQUdFLFlBQUEsS0FBSyxFQUFDO0FBSFIsWUFIRixFQVFHLENBQUMsTUFBS0YsS0FBTCxDQUFXQywyQkFBWixJQUNDLDREQUNFLDZCQUFDLGtCQUFEO0FBQVEsWUFBQSxFQUFFLEVBQUU7QUFBWixZQURGLEVBRUUsNkJBQUMscUJBQUQ7QUFBVyxZQUFBLFdBQVcsRUFBQyxTQUF2QjtBQUFpQyxZQUFBLGVBQWUsRUFBQztBQUFqRCxZQUZGLEVBR0UsNkJBQUMsa0JBQUQ7QUFBUSxZQUFBLEVBQUUsRUFBRTtBQUFaLFlBSEYsRUFJRSw2QkFBQyxnQkFBRDtBQUFNLFlBQUEsYUFBYSxFQUFDLEtBQXBCO0FBQTBCLFlBQUEsUUFBUSxFQUFDLFFBQW5DO0FBQTRDLFlBQUEsY0FBYyxFQUFDO0FBQTNELGFBQ0UsNkJBQUMscUJBQUQ7QUFBVyxZQUFBLFdBQVcsRUFBQyxNQUF2QjtBQUE4QixZQUFBLGVBQWUsRUFBQztBQUE5QyxZQURGLEVBRUUsNkJBQUMsa0JBQUQ7QUFBUSxZQUFBLEVBQUUsRUFBRTtBQUFaLFlBRkYsRUFHRSw2QkFBQyxxQkFBRDtBQUFXLFlBQUEsV0FBVyxFQUFDLFNBQXZCO0FBQWlDLFlBQUEsZUFBZSxFQUFDO0FBQWpELFlBSEYsQ0FKRixFQVNFLDZCQUFDLGtCQUFEO0FBQVEsWUFBQSxFQUFFLEVBQUU7QUFBWixZQVRGLEVBVUUsNkJBQUMsZ0JBQUQ7QUFBTSxZQUFBLGFBQWEsRUFBQyxLQUFwQjtBQUEwQixZQUFBLFFBQVEsRUFBQyxRQUFuQztBQUE0QyxZQUFBLGNBQWMsRUFBQztBQUEzRCxhQUNFLDZCQUFDLHFCQUFEO0FBQVcsWUFBQSxXQUFXLEVBQUMsTUFBdkI7QUFBOEIsWUFBQSxlQUFlLEVBQUM7QUFBOUMsWUFERixFQUVFLDZCQUFDLGtCQUFEO0FBQVEsWUFBQSxFQUFFLEVBQUU7QUFBWixZQUZGLEVBR0UsNkJBQUMscUJBQUQ7QUFBVyxZQUFBLFdBQVcsRUFBQyxPQUF2QjtBQUErQixZQUFBLGVBQWUsRUFBQztBQUEvQyxZQUhGLENBVkYsQ0FUSixDQURGOztBQTZCRixhQUFLLHFCQUFMO0FBQ0UsaUJBQ0UsNkJBQUMsZUFBRDtBQUFLLFlBQUEsRUFBRSxFQUFFO0FBQVQsYUFDRSw2QkFBQyxnQkFBRDtBQUFNLFlBQUEsSUFBSSxFQUFDO0FBQVgsbUNBREYsRUFFRSw2QkFBQyxrQkFBRDtBQUFRLFlBQUEsRUFBRSxFQUFFO0FBQVosWUFGRixFQUdFLDZCQUFDLHFCQUFEO0FBQVcsWUFBQSxXQUFXLEVBQUMsV0FBdkI7QUFBbUMsWUFBQSxlQUFlLEVBQUM7QUFBbkQsWUFIRixFQUlFLDZCQUFDLGtCQUFEO0FBQVEsWUFBQSxFQUFFLEVBQUU7QUFBWixZQUpGLEVBS0UsNkJBQUMscUJBQUQ7QUFBVyxZQUFBLFdBQVcsRUFBQyxhQUF2QjtBQUFxQyxZQUFBLGVBQWUsRUFBQztBQUFyRCxZQUxGLEVBTUUsNkJBQUMsa0JBQUQ7QUFBUSxZQUFBLEVBQUUsRUFBRTtBQUFaLFlBTkYsRUFPRSw2QkFBQyxnQkFBRDtBQUFNLFlBQUEsYUFBYSxFQUFDLEtBQXBCO0FBQTBCLFlBQUEsUUFBUSxFQUFDLFFBQW5DO0FBQTRDLFlBQUEsY0FBYyxFQUFDO0FBQTNELGFBQ0UsNkJBQUMscUJBQUQ7QUFBVyxZQUFBLFdBQVcsRUFBQztBQUF2QixZQURGLEVBRUUsNkJBQUMsa0JBQUQ7QUFBUSxZQUFBLEVBQUUsRUFBRTtBQUFaLFlBRkYsRUFHRSw2QkFBQyxxQkFBRDtBQUFXLFlBQUEsV0FBVyxFQUFDLFNBQXZCO0FBQWlDLFlBQUEsZUFBZSxFQUFDO0FBQWpELFlBSEYsQ0FQRixDQURGOztBQWVGO0FBQ0UsaUJBQU8sSUFBUDtBQTFFSjtBQTRFRCxLOzs7Ozs7OzZCQUVRO0FBQUE7O0FBQ1AsYUFDRSw2QkFBQyxxQkFBRDtBQUNFLFFBQUEsSUFBSSxFQUFFLEtBQUtHLFFBQUwsRUFEUjtBQUVFLFFBQUEsc0JBQXNCLEVBQUU7QUFBQSxpQkFBTSw2QkFBQyxrQkFBRDtBQUFRLFlBQUEsRUFBRSxFQUFFO0FBQVosWUFBTjtBQUFBLFNBRjFCO0FBR0UsUUFBQSxZQUFZLEVBQUUsc0JBQUNHLElBQUQsRUFBT0MsS0FBUDtBQUFBLGlCQUFpQkQsSUFBSSxHQUFHRSxNQUFNLENBQUNELEtBQUQsQ0FBOUI7QUFBQSxTQUhoQjtBQUlFLFFBQUEsVUFBVSxFQUFFLG9CQUFBRCxJQUFJO0FBQUEsaUJBQUksTUFBSSxDQUFDRixVQUFMLENBQWdCRSxJQUFoQixDQUFKO0FBQUEsU0FKbEI7QUFLRSxRQUFBLG1CQUFtQixFQUFFO0FBQUEsaUJBQU0sNkJBQUMsa0JBQUQ7QUFBUSxZQUFBLEVBQUUsRUFBRTtBQUFaLFlBQU47QUFBQTtBQUx2QixRQURGO0FBU0Q7OztFQTFHMkJHLGVBQU1DLFMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBCb3gsIEZsZXgsIFJhZGlvLCBTYW5zLCBTcGFjZXIsIFRleHRJbnB1dCB9IGZyb20gXCJBcHAvQ29tcG9uZW50c1wiXG5cbmltcG9ydCB7IEZsYXRMaXN0IH0gZnJvbSBcInJlYWN0LW5hdGl2ZVwiXG5pbXBvcnQgUmVhY3QgZnJvbSBcInJlYWN0XCJcblxuZXhwb3J0IGNsYXNzIEVkaXRWaWV3IGV4dGVuZHMgUmVhY3QuQ29tcG9uZW50IHtcbiAgc3RhdGUgPSB7XG4gICAgc2FtZUFzRGVsaXZlcnlSYWRpb1NlbGVjdGVkOiBmYWxzZSxcbiAgfVxuXG4gIGhhbmRsZVNhbWVBc0RldmlsdmVyeUFkZHJlc3MgPSAoKSA9PiB7XG4gICAgdGhpcy5zZXRTdGF0ZSh7XG4gICAgICBzYW1lQXNEZWxpdmVyeVJhZGlvU2VsZWN0ZWQ6ICF0aGlzLnN0YXRlLnNhbWVBc0RlbGl2ZXJ5UmFkaW9TZWxlY3RlZCxcbiAgICB9KVxuICB9XG5cbiAgc2VjdGlvbnMgPSAoKSA9PiB7XG4gICAgY29uc3Qgc2VjdGlvbnMgPSBbXCJIZWFkZXJcIiwgXCJEZWxpdmVyeSBhZGRyZXNzXCIsIFwiQmlsbGluZyBhZGRyZXNzXCIsIFwiUGF5bWVudCBpbmZvcm1hdGlvblwiXVxuXG4gICAgcmV0dXJuIHNlY3Rpb25zXG4gIH1cblxuICByZW5kZXJJdGVtID0gKHsgaXRlbTogc2VjdGlvbiB9KSA9PiB7XG4gICAgc3dpdGNoIChzZWN0aW9uKSB7XG4gICAgICBjYXNlIFwiSGVhZGVyXCI6XG4gICAgICAgIHJldHVybiAoXG4gICAgICAgICAgPEJveCBweD17Mn0gbXQ9ezEwMH0+XG4gICAgICAgICAgICA8U2FucyBzaXplPVwiM1wiPlBheW1lbnQgJiBzaGlwcGluZzwvU2Fucz5cbiAgICAgICAgICA8L0JveD5cbiAgICAgICAgKVxuICAgICAgY2FzZSBcIkRlbGl2ZXJ5IGFkZHJlc3NcIjpcbiAgICAgICAgcmV0dXJuIChcbiAgICAgICAgICA8Qm94IHB4PXsyfT5cbiAgICAgICAgICAgIDxTYW5zIHNpemU9XCIyXCI+RGVsaXZlcnkgYWRkcmVzczwvU2Fucz5cbiAgICAgICAgICAgIDxTcGFjZXIgbWI9ezF9IC8+XG4gICAgICAgICAgICA8VGV4dElucHV0IHBsYWNlaG9sZGVyPVwiQWRkcmVzc1wiIHRleHRDb250ZW50VHlwZT1cImZ1bGxTdHJlZXRBZGRyZXNzXCIga2V5PVwiZGVsaXZlcnlBZGRyZXNzXCIgLz5cbiAgICAgICAgICAgIDxTcGFjZXIgbWI9ezF9IC8+XG4gICAgICAgICAgICA8RmxleCBmbGV4RGlyZWN0aW9uPVwicm93XCIgZmxleFdyYXA9XCJub3dyYXBcIiBqdXN0aWZ5Q29udGVudD1cInNwYWNlLWJldHdlZW5cIj5cbiAgICAgICAgICAgICAgPFRleHRJbnB1dCBwbGFjZWhvbGRlcj1cIlVuaXRcIiB0ZXh0Q29udGVudFR5cGU9XCJzdHJlZXRBZGRyZXNzTGluZTJcIiAvPlxuICAgICAgICAgICAgICA8U3BhY2VyIG1sPXsxfSAvPlxuICAgICAgICAgICAgICA8VGV4dElucHV0IHBsYWNlaG9sZGVyPVwiWmlwY29kZVwiIHRleHRDb250ZW50VHlwZT1cInBvc3RhbENvZGVcIiAvPlxuICAgICAgICAgICAgPC9GbGV4PlxuICAgICAgICAgICAgPFNwYWNlciBtYj17MX0gLz5cbiAgICAgICAgICAgIDxGbGV4IGZsZXhEaXJlY3Rpb249XCJyb3dcIiBmbGV4V3JhcD1cIm5vd3JhcFwiIGp1c3RpZnlDb250ZW50PVwic3BhY2UtYmV0d2VlblwiPlxuICAgICAgICAgICAgICA8VGV4dElucHV0IHBsYWNlaG9sZGVyPVwiQ2l0eVwiIHRleHRDb250ZW50VHlwZT1cImFkZHJlc3NDaXR5XCIgLz5cbiAgICAgICAgICAgICAgPFNwYWNlciBtbD17MX0gLz5cbiAgICAgICAgICAgICAgPFRleHRJbnB1dCBwbGFjZWhvbGRlcj1cIlN0YXRlXCIgdGV4dENvbnRlbnRUeXBlPVwiYWRkcmVzc1N0YXRlXCIgLz5cbiAgICAgICAgICAgIDwvRmxleD5cbiAgICAgICAgICA8L0JveD5cbiAgICAgICAgKVxuICAgICAgY2FzZSBcIkJpbGxpbmcgYWRkcmVzc1wiOlxuICAgICAgICByZXR1cm4gKFxuICAgICAgICAgIDxCb3ggcHg9ezJ9PlxuICAgICAgICAgICAgPFNhbnMgc2l6ZT1cIjJcIj5CaWxsaW5nIGFkZHJlc3M8L1NhbnM+XG4gICAgICAgICAgICA8U3BhY2VyIG1iPXsyfSAvPlxuICAgICAgICAgICAgPFJhZGlvXG4gICAgICAgICAgICAgIHNlbGVjdGVkPXt0aGlzLnN0YXRlLnNhbWVBc0RlbGl2ZXJ5UmFkaW9TZWxlY3RlZH1cbiAgICAgICAgICAgICAgb25TZWxlY3Q9eygpID0+IHRoaXMuaGFuZGxlU2FtZUFzRGV2aWx2ZXJ5QWRkcmVzcygpfVxuICAgICAgICAgICAgICBsYWJlbD1cIlNhbWUgYXMgRGVsaXZlcnkgQWRkcmVzc1wiXG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgeyF0aGlzLnN0YXRlLnNhbWVBc0RlbGl2ZXJ5UmFkaW9TZWxlY3RlZCAmJiAoXG4gICAgICAgICAgICAgIDw+XG4gICAgICAgICAgICAgICAgPFNwYWNlciBtYj17Mn0gLz5cbiAgICAgICAgICAgICAgICA8VGV4dElucHV0IHBsYWNlaG9sZGVyPVwiQWRkcmVzc1wiIHRleHRDb250ZW50VHlwZT1cImZ1bGxTdHJlZXRBZGRyZXNzXCIgLz5cbiAgICAgICAgICAgICAgICA8U3BhY2VyIG1iPXsxfSAvPlxuICAgICAgICAgICAgICAgIDxGbGV4IGZsZXhEaXJlY3Rpb249XCJyb3dcIiBmbGV4V3JhcD1cIm5vd3JhcFwiIGp1c3RpZnlDb250ZW50PVwic3BhY2UtYmV0d2VlblwiPlxuICAgICAgICAgICAgICAgICAgPFRleHRJbnB1dCBwbGFjZWhvbGRlcj1cIlVuaXRcIiB0ZXh0Q29udGVudFR5cGU9XCJzdHJlZXRBZGRyZXNzTGluZTJcIiAvPlxuICAgICAgICAgICAgICAgICAgPFNwYWNlciBtbD17MX0gLz5cbiAgICAgICAgICAgICAgICAgIDxUZXh0SW5wdXQgcGxhY2Vob2xkZXI9XCJaaXBjb2RlXCIgdGV4dENvbnRlbnRUeXBlPVwicG9zdGFsQ29kZVwiIC8+XG4gICAgICAgICAgICAgICAgPC9GbGV4PlxuICAgICAgICAgICAgICAgIDxTcGFjZXIgbWI9ezF9IC8+XG4gICAgICAgICAgICAgICAgPEZsZXggZmxleERpcmVjdGlvbj1cInJvd1wiIGZsZXhXcmFwPVwibm93cmFwXCIganVzdGlmeUNvbnRlbnQ9XCJzcGFjZS1iZXR3ZWVuXCI+XG4gICAgICAgICAgICAgICAgICA8VGV4dElucHV0IHBsYWNlaG9sZGVyPVwiQ2l0eVwiIHRleHRDb250ZW50VHlwZT1cImFkZHJlc3NDaXR5XCIgLz5cbiAgICAgICAgICAgICAgICAgIDxTcGFjZXIgbWw9ezF9IC8+XG4gICAgICAgICAgICAgICAgICA8VGV4dElucHV0IHBsYWNlaG9sZGVyPVwiU3RhdGVcIiB0ZXh0Q29udGVudFR5cGU9XCJhZGRyZXNzU3RhdGVcIiAvPlxuICAgICAgICAgICAgICAgIDwvRmxleD5cbiAgICAgICAgICAgICAgPC8+XG4gICAgICAgICAgICApfVxuICAgICAgICAgIDwvQm94PlxuICAgICAgICApXG4gICAgICBjYXNlIFwiUGF5bWVudCBpbmZvcm1hdGlvblwiOlxuICAgICAgICByZXR1cm4gKFxuICAgICAgICAgIDxCb3ggcHg9ezJ9PlxuICAgICAgICAgICAgPFNhbnMgc2l6ZT1cIjJcIj5QYXltZW50IGluZm9ybWF0aW9uPC9TYW5zPlxuICAgICAgICAgICAgPFNwYWNlciBtYj17MX0gLz5cbiAgICAgICAgICAgIDxUZXh0SW5wdXQgcGxhY2Vob2xkZXI9XCJGdWxsIG5hbWVcIiB0ZXh0Q29udGVudFR5cGU9XCJuYW1lXCIgLz5cbiAgICAgICAgICAgIDxTcGFjZXIgbWI9ezF9IC8+XG4gICAgICAgICAgICA8VGV4dElucHV0IHBsYWNlaG9sZGVyPVwiQ2FyZCBudW1iZXJcIiB0ZXh0Q29udGVudFR5cGU9XCJjcmVkaXRDYXJkTnVtYmVyXCIgLz5cbiAgICAgICAgICAgIDxTcGFjZXIgbWI9ezF9IC8+XG4gICAgICAgICAgICA8RmxleCBmbGV4RGlyZWN0aW9uPVwicm93XCIgZmxleFdyYXA9XCJub3dyYXBcIiBqdXN0aWZ5Q29udGVudD1cInNwYWNlLWJldHdlZW5cIj5cbiAgICAgICAgICAgICAgPFRleHRJbnB1dCBwbGFjZWhvbGRlcj1cIkV4cGlyYXRpb24gZGF0ZVwiIC8+XG4gICAgICAgICAgICAgIDxTcGFjZXIgbWw9ezF9IC8+XG4gICAgICAgICAgICAgIDxUZXh0SW5wdXQgcGxhY2Vob2xkZXI9XCJaaXBjb2RlXCIgdGV4dENvbnRlbnRUeXBlPVwicG9zdGFsQ29kZVwiIC8+XG4gICAgICAgICAgICA8L0ZsZXg+XG4gICAgICAgICAgPC9Cb3g+XG4gICAgICAgIClcbiAgICAgIGRlZmF1bHQ6XG4gICAgICAgIHJldHVybiBudWxsXG4gICAgfVxuICB9XG5cbiAgcmVuZGVyKCkge1xuICAgIHJldHVybiAoXG4gICAgICA8RmxhdExpc3RcbiAgICAgICAgZGF0YT17dGhpcy5zZWN0aW9ucygpfVxuICAgICAgICBJdGVtU2VwYXJhdG9yQ29tcG9uZW50PXsoKSA9PiA8U3BhY2VyIG1iPXszfSAvPn1cbiAgICAgICAga2V5RXh0cmFjdG9yPXsoaXRlbSwgaW5kZXgpID0+IGl0ZW0gKyBTdHJpbmcoaW5kZXgpfVxuICAgICAgICByZW5kZXJJdGVtPXtpdGVtID0+IHRoaXMucmVuZGVySXRlbShpdGVtKX1cbiAgICAgICAgTGlzdEZvb3RlckNvbXBvbmVudD17KCkgPT4gPFNwYWNlciBtYj17MTAwfSAvPn1cbiAgICAgIC8+XG4gICAgKVxuICB9XG59XG4iXX0=

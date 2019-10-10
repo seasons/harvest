@@ -1,0 +1,51 @@
+bf3c6a0b21f236c45948639601a874b6
+
+
+
+
+
+
+
+
+
+
+'use strict';function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(source, true).forEach(function (key) {require("@babel/runtime/helpers/defineProperty")(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(source).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}
+
+
+
+
+
+
+
+
+
+var ReactNativeStyleAttributes = {};
+
+for (var _i = 0, _Object$keys = Object.keys(_objectSpread({}, require('DeprecatedViewStylePropTypes'), {}, require('TextStylePropTypes'), {}, require('DeprecatedImageStylePropTypes'))); _i < _Object$keys.length; _i++)
+
+
+
+{var attributeName = _Object$keys[_i];
+  ReactNativeStyleAttributes[attributeName] = true;
+}
+
+ReactNativeStyleAttributes.transform = { process: require('processTransform') };
+ReactNativeStyleAttributes.shadowOffset = { diff: require('sizesDiffer') };
+
+var colorAttributes = { process: require('processColor') };
+ReactNativeStyleAttributes.backgroundColor = colorAttributes;
+ReactNativeStyleAttributes.borderBottomColor = colorAttributes;
+ReactNativeStyleAttributes.borderColor = colorAttributes;
+ReactNativeStyleAttributes.borderLeftColor = colorAttributes;
+ReactNativeStyleAttributes.borderRightColor = colorAttributes;
+ReactNativeStyleAttributes.borderTopColor = colorAttributes;
+ReactNativeStyleAttributes.borderStartColor = colorAttributes;
+ReactNativeStyleAttributes.borderEndColor = colorAttributes;
+ReactNativeStyleAttributes.color = colorAttributes;
+ReactNativeStyleAttributes.shadowColor = colorAttributes;
+ReactNativeStyleAttributes.textDecorationColor = colorAttributes;
+ReactNativeStyleAttributes.tintColor = colorAttributes;
+ReactNativeStyleAttributes.textShadowColor = colorAttributes;
+ReactNativeStyleAttributes.overlayColor = colorAttributes;
+
+module.exports = ReactNativeStyleAttributes;

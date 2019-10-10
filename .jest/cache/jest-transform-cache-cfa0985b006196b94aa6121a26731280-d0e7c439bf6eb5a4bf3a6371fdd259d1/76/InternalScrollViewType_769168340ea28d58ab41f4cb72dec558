@@ -1,0 +1,59 @@
+7e334ea5609b0225b32b871066252247
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var ReactNative = require('ReactNative');
+
+var InternalScrollViewType = function (_ReactNative$NativeCo) {
+  (0, _inherits2.default)(InternalScrollViewType, _ReactNative$NativeCo);
+
+  function InternalScrollViewType() {
+    (0, _classCallCheck2.default)(this, InternalScrollViewType);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(InternalScrollViewType).apply(this, arguments));
+  }
+
+  (0, _createClass2.default)(InternalScrollViewType, [{
+    key: "scrollTo",
+    value: function scrollTo(y, x, animated) {}
+  }, {
+    key: "flashScrollIndicators",
+    value: function flashScrollIndicators() {}
+  }, {
+    key: "scrollToEnd",
+    value: function scrollToEnd(options) {}
+  }, {
+    key: "scrollWithoutAnimationTo",
+    value: function scrollWithoutAnimationTo() {
+      var y = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    }
+  }, {
+    key: "getScrollResponder",
+    value: function getScrollResponder() {}
+  }, {
+    key: "getScrollableNode",
+    value: function getScrollableNode() {}
+  }, {
+    key: "getInnerViewNode",
+    value: function getInnerViewNode() {}
+  }, {
+    key: "scrollResponderScrollNativeHandleToKeyboard",
+    value: function scrollResponderScrollNativeHandleToKeyboard(nodeHandle, additionalOffset, preventNegativeScrollOffset) {}
+  }, {
+    key: "scrollResponderScrollTo",
+    value: function scrollResponderScrollTo(x, y, animated) {}
+  }]);
+  return InternalScrollViewType;
+}(ReactNative.NativeComponent);
+
+module.exports = InternalScrollViewType;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkludGVybmFsU2Nyb2xsVmlld1R5cGUuanMiXSwibmFtZXMiOlsiUmVhY3ROYXRpdmUiLCJyZXF1aXJlIiwiSW50ZXJuYWxTY3JvbGxWaWV3VHlwZSIsInkiLCJ4IiwiYW5pbWF0ZWQiLCJvcHRpb25zIiwibm9kZUhhbmRsZSIsImFkZGl0aW9uYWxPZmZzZXQiLCJwcmV2ZW50TmVnYXRpdmVTY3JvbGxPZmZzZXQiLCJOYXRpdmVDb21wb25lbnQiLCJtb2R1bGUiLCJleHBvcnRzIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7QUFVQSxJQUFNQSxXQUFXLEdBQUdDLE9BQU8sQ0FBQyxhQUFELENBQTNCOztJQU1NQyxzQjs7Ozs7Ozs7Ozs2QkFFRkMsQyxFQUNBQyxDLEVBQ0FDLFEsRUFDQSxDQUFFOzs7NENBRW9CLENBQUU7OztnQ0FFZEMsTyxFQUFpQyxDQUFFOzs7K0NBQ1E7QUFBQSxVQUE5QkgsQ0FBOEIsdUVBQWxCLENBQWtCO0FBQUEsVUFBZkMsQ0FBZSx1RUFBSCxDQUFHO0FBQUU7Ozt5Q0FFL0IsQ0FBRTs7O3dDQUNILENBQUU7Ozt1Q0FDSCxDQUFFOzs7Z0VBR3hCRyxVLEVBQ0FDLGdCLEVBQ0FDLDJCLEVBQ0EsQ0FBRTs7OzRDQUdGTCxDLEVBQ0FELEMsRUFDQUUsUSxFQUNBLENBQUU7OztFQTFCc0NMLFdBQVcsQ0FBQ1UsZTs7QUE2QnhEQyxNQUFNLENBQUNDLE9BQVAsR0FBaUJWLHNCQUFqQiIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogQ29weXJpZ2h0IChjKSBGYWNlYm9vaywgSW5jLiBhbmQgaXRzIGFmZmlsaWF0ZXMuXG4gKlxuICogVGhpcyBzb3VyY2UgY29kZSBpcyBsaWNlbnNlZCB1bmRlciB0aGUgTUlUIGxpY2Vuc2UgZm91bmQgaW4gdGhlXG4gKiBMSUNFTlNFIGZpbGUgaW4gdGhlIHJvb3QgZGlyZWN0b3J5IG9mIHRoaXMgc291cmNlIHRyZWUuXG4gKlxuICogQGZvcm1hdFxuICogQGZsb3dcbiAqL1xuXG5jb25zdCBSZWFjdE5hdGl2ZSA9IHJlcXVpcmUoJ1JlYWN0TmF0aXZlJyk7XG5cbi8vIFRoaXMgY2xhc3MgaXMgcHVyZWx5IGEgZmFjc2ltaWxlIG9mIFNjcm9sbFZpZXcgc28gdGhhdCB3ZSBjYW5cbi8vIHByb3Blcmx5IHR5cGUgaXQgd2l0aCBGbG93IGJlZm9yZSBtaWdyYXRpbmcgU2Nyb2xsVmlldyBvZmYgb2Zcbi8vIGNyZWF0ZVJlYWN0Q2xhc3MuIElmIHRoZXJlIGFyZSB0aGluZ3MgbWlzc2luZyBoZXJlIHRoYXQgYXJlIGluXG4vLyBTY3JvbGxWaWV3LCB0aGF0IGlzIHVuaW50ZW50aW9uYWwuXG5jbGFzcyBJbnRlcm5hbFNjcm9sbFZpZXdUeXBlPFByb3BzPiBleHRlbmRzIFJlYWN0TmF0aXZlLk5hdGl2ZUNvbXBvbmVudDxQcm9wcz4ge1xuICBzY3JvbGxUbyhcbiAgICB5PzogbnVtYmVyIHwge3g/OiBudW1iZXIsIHk/OiBudW1iZXIsIGFuaW1hdGVkPzogYm9vbGVhbn0sXG4gICAgeD86IG51bWJlcixcbiAgICBhbmltYXRlZD86IGJvb2xlYW4sXG4gICkge31cblxuICBmbGFzaFNjcm9sbEluZGljYXRvcnMoKSB7fVxuICBwcm9wVHlwZXM6IGVtcHR5O1xuICBzY3JvbGxUb0VuZChvcHRpb25zPzogP3thbmltYXRlZD86IGJvb2xlYW59KSB7fVxuICBzY3JvbGxXaXRob3V0QW5pbWF0aW9uVG8oeTogbnVtYmVyID0gMCwgeDogbnVtYmVyID0gMCkge31cblxuICBnZXRTY3JvbGxSZXNwb25kZXIoKTogYW55IHt9XG4gIGdldFNjcm9sbGFibGVOb2RlKCk6IGFueSB7fVxuICBnZXRJbm5lclZpZXdOb2RlKCk6IGFueSB7fVxuXG4gIHNjcm9sbFJlc3BvbmRlclNjcm9sbE5hdGl2ZUhhbmRsZVRvS2V5Ym9hcmQoXG4gICAgbm9kZUhhbmRsZTogYW55LFxuICAgIGFkZGl0aW9uYWxPZmZzZXQ/OiBudW1iZXIsXG4gICAgcHJldmVudE5lZ2F0aXZlU2Nyb2xsT2Zmc2V0PzogYm9vbGVhbixcbiAgKSB7fVxuXG4gIHNjcm9sbFJlc3BvbmRlclNjcm9sbFRvKFxuICAgIHg/OiBudW1iZXIgfCB7eD86IG51bWJlciwgeT86IG51bWJlciwgYW5pbWF0ZWQ/OiBib29sZWFufSxcbiAgICB5PzogbnVtYmVyLFxuICAgIGFuaW1hdGVkPzogYm9vbGVhbixcbiAgKSB7fVxufVxuXG5tb2R1bGUuZXhwb3J0cyA9IEludGVybmFsU2Nyb2xsVmlld1R5cGU7XG4iXX0=

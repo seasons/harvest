@@ -1,0 +1,63 @@
+44105a8ac934e0d2633105df329a5ed9
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.RNSVGSymbol = exports.default = void 0;
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _react = _interopRequireDefault(require("react"));
+
+var _reactNative = require("react-native");
+
+var _extractViewBox = _interopRequireDefault(require("../lib/extract/extractViewBox"));
+
+var _Shape2 = _interopRequireDefault(require("./Shape"));
+
+var _jsxFileName = "/Users/jannegylling/IdeaProjects/react-native-svg/src/elements/Symbol.tsx";
+
+var Symbol = function (_Shape) {
+  (0, _inherits2.default)(Symbol, _Shape);
+
+  function Symbol() {
+    (0, _classCallCheck2.default)(this, Symbol);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Symbol).apply(this, arguments));
+  }
+
+  (0, _createClass2.default)(Symbol, [{
+    key: "render",
+    value: function render() {
+      var props = this.props;
+      var id = props.id,
+          children = props.children;
+      return _react.default.createElement(RNSVGSymbol, (0, _extends2.default)({
+        ref: this.refMethod,
+        name: id
+      }, (0, _extractViewBox.default)(props), {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 17
+        }
+      }), children);
+    }
+  }]);
+  return Symbol;
+}(_Shape2.default);
+
+exports.default = Symbol;
+Symbol.displayName = 'Symbol';
+var RNSVGSymbol = (0, _reactNative.requireNativeComponent)('RNSVGSymbol');
+exports.RNSVGSymbol = RNSVGSymbol;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIlN5bWJvbC50c3giXSwibmFtZXMiOlsiU3ltYm9sIiwiU2hhcGUiLCJkaXNwbGF5TmFtZSIsInByb3BzIiwiaWQiLCJjaGlsZHJlbiIsIlJOU1ZHU3ltYm9sIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQUEsSUFBQSxNQUFBLEdBQUEsc0JBQUEsQ0FBQSxPQUFBLENBQUEsT0FBQSxDQUFBLENBQUE7O0FBQ0EsSUFBQSxZQUFBLEdBQUEsT0FBQSxDQUFBLGNBQUEsQ0FBQTs7QUFDQSxJQUFBLGVBQUEsR0FBQSxzQkFBQSxDQUFBLE9BQUEsaUNBQUEsQ0FBQTs7QUFDQSxJQUFBLE9BQUEsR0FBQSxzQkFBQSxDQUFBLE9BQUEsV0FBQSxDQUFBOzs7O0FBRXFCQSxJQUFBQSxNOzs7Ozs7Ozs7OzZCQU9WO0FBQUEsVUFDQ0csS0FERCxHQUFBLEtBQUEsS0FBQTtBQUFBLFVBRUNDLEVBRkQsR0FFa0JELEtBRmxCLENBQUEsRUFBQTtBQUFBLFVBRUtFLFFBRkwsR0FFa0JGLEtBRmxCLENBQUEsUUFBQTtBQUdQLGFBQ0UsTUFBQSxDQUFBLE9BQUEsQ0FBQSxhQUFBLENBQUEsV0FBQSxFQUFBLENBQUEsR0FBQSxTQUFBLENBQUEsT0FBQSxFQUFBO0FBQWEsUUFBQSxHQUFHLEVBQUUsS0FBbEIsU0FBQTtBQUFrQyxRQUFBLElBQUksRUFBdEM7QUFBQSxPQUFBLEVBQWdELENBQUEsR0FBQSxlQUFBLENBQUEsT0FBQSxFQUFoRCxLQUFnRCxDQUFoRCxFQUFBO0FBQUEsUUFBQSxRQUFBLEVBQUE7QUFBQSxVQUFBLFFBQUEsRUFBQSxZQUFBO0FBQUEsVUFBQSxVQUFBLEVBQUE7QUFBQTtBQUFBLE9BQUEsQ0FBQSxFQURGLFFBQ0UsQ0FERjs7OztFQVZnQ0YsT0FBQUEsQ0FBQUEsTyxDQUFmRDs7O0FBQUFBLE0sQ0FLWkUsV0FMWUYsR0FLRSxRQUxGQTtBQWtCZCxJQUFNTSxXQUFXLEdBQUcsQ0FBQSxHQUFBLFlBQUEsQ0FBQSxzQkFBQSxFQUFwQixhQUFvQixDQUFwQiIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCc7XG5pbXBvcnQgeyByZXF1aXJlTmF0aXZlQ29tcG9uZW50IH0gZnJvbSAncmVhY3QtbmF0aXZlJztcbmltcG9ydCBleHRyYWN0Vmlld0JveCBmcm9tICcuLi9saWIvZXh0cmFjdC9leHRyYWN0Vmlld0JveCc7XG5pbXBvcnQgU2hhcGUgZnJvbSAnLi9TaGFwZSc7XG5cbmV4cG9ydCBkZWZhdWx0IGNsYXNzIFN5bWJvbCBleHRlbmRzIFNoYXBlPHtcbiAgaWQ/OiBzdHJpbmc7XG4gIHZpZXdCb3g/OiBzdHJpbmc7XG4gIHByZXNlcnZlQXNwZWN0UmF0aW8/OiBzdHJpbmc7XG59PiB7XG4gIHN0YXRpYyBkaXNwbGF5TmFtZSA9ICdTeW1ib2wnO1xuXG4gIHJlbmRlcigpIHtcbiAgICBjb25zdCB7IHByb3BzIH0gPSB0aGlzO1xuICAgIGNvbnN0IHsgaWQsIGNoaWxkcmVuIH0gPSBwcm9wcztcbiAgICByZXR1cm4gKFxuICAgICAgPFJOU1ZHU3ltYm9sIHJlZj17dGhpcy5yZWZNZXRob2R9IG5hbWU9e2lkfSB7Li4uZXh0cmFjdFZpZXdCb3gocHJvcHMpfT5cbiAgICAgICAge2NoaWxkcmVufVxuICAgICAgPC9STlNWR1N5bWJvbD5cbiAgICApO1xuICB9XG59XG5cbmV4cG9ydCBjb25zdCBSTlNWR1N5bWJvbCA9IHJlcXVpcmVOYXRpdmVDb21wb25lbnQoJ1JOU1ZHU3ltYm9sJyk7XG4iXX0=

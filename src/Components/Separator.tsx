@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components/native"
-import { color } from "App/Utils/color"
+import { color } from "App/utils/color"
 
 import { space, SpaceProps, width, WidthProps } from "styled-system"
 

@@ -1,0 +1,11 @@
+cacbc0b910a031d4d2d7a2b696ce2b41
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = extractOpacity;
+
+function extractOpacity(opacity) {
+  var value = +opacity;
+  return isNaN(value) ? 1 : value;
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImV4dHJhY3RPcGFjaXR5LnRzIl0sIm5hbWVzIjpbInZhbHVlIiwiaXNOYU4iXSwibWFwcGluZ3MiOiI7Ozs7O0FBRWUsU0FBQSxjQUFBLENBQUEsT0FBQSxFQUFvRDtBQUNqRSxNQUFNQSxLQUFLLEdBQUcsQ0FBZCxPQUFBO0FBQ0EsU0FBT0MsS0FBSyxDQUFMQSxLQUFLLENBQUxBLEdBQUFBLENBQUFBLEdBQVAsS0FBQTtBQUNEIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgTnVtYmVyUHJvcCB9IGZyb20gJy4vdHlwZXMnO1xuXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBleHRyYWN0T3BhY2l0eShvcGFjaXR5OiBOdW1iZXJQcm9wIHwgdm9pZCkge1xuICBjb25zdCB2YWx1ZSA9ICtvcGFjaXR5O1xuICByZXR1cm4gaXNOYU4odmFsdWUpID8gMSA6IHZhbHVlO1xufVxuIl19

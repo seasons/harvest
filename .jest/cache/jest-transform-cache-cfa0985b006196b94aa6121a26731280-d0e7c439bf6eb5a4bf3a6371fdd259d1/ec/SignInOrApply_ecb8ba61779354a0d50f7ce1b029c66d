@@ -1,0 +1,91 @@
+aa48f184db91054276e995d1e7e8e007
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.SignInOrApply = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf3 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _react = _interopRequireDefault(require("react"));
+
+var _Components = require("../../Components");
+
+var _reactNative = require("react-native");
+
+var _utils = require("../../utils");
+
+var SignInOrApply = function (_React$Component) {
+  (0, _inherits2.default)(SignInOrApply, _React$Component);
+
+  function SignInOrApply() {
+    var _getPrototypeOf2;
+
+    var _this;
+
+    (0, _classCallCheck2.default)(this, SignInOrApply);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = (0, _possibleConstructorReturn2.default)(this, (_getPrototypeOf2 = (0, _getPrototypeOf3.default)(SignInOrApply)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+    _this.handleSignIn = function () {};
+
+    _this.handleApply = function () {};
+
+    return _this;
+  }
+
+  (0, _createClass2.default)(SignInOrApply, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      return _react.default.createElement(_reactNative.SafeAreaView, {
+        style: {
+          flex: 1,
+          backgroundColor: (0, _utils.color)("black")
+        }
+      }, _react.default.createElement(_Components.Theme, null, _react.default.createElement(_Components.Box, {
+        p: 2
+      }, _react.default.createElement(_Components.Sans, {
+        color: "white",
+        size: "3"
+      }, "Welcome"), _react.default.createElement(_Components.Spacer, {
+        mb: 1
+      }), _react.default.createElement(_Components.Sans, {
+        color: "gray",
+        size: "2"
+      }, "Sign in to access the most coveted menswear and streetware brands."), _react.default.createElement(_Components.Spacer, {
+        mb: 2
+      }), _react.default.createElement(_Components.Button, {
+        onPress: function onPress() {
+          return _this2.handleSignIn();
+        },
+        variant: "primaryLight"
+      }, "Sign in"), _react.default.createElement(_Components.Spacer, {
+        mb: 1
+      }), _react.default.createElement(_Components.Button, {
+        onPress: function onPress() {
+          return _this2.handleApply();
+        },
+        variant: "secondaryLight"
+      }, "Apply"))));
+    }
+  }]);
+  return SignInOrApply;
+}(_react.default.Component);
+
+exports.SignInOrApply = SignInOrApply;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIlNpZ25Jbk9yQXBwbHkudHN4Il0sIm5hbWVzIjpbIlNpZ25Jbk9yQXBwbHkiLCJoYW5kbGVTaWduSW4iLCJoYW5kbGVBcHBseSIsImZsZXgiLCJiYWNrZ3JvdW5kQ29sb3IiLCJSZWFjdCIsIkNvbXBvbmVudCJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFBQTs7QUFDQTs7QUFDQTs7QUFDQTs7SUFFYUEsYTs7Ozs7Ozs7Ozs7Ozs7OztVQUNYQyxZLEdBQWUsWUFBTSxDQUVwQixDOztVQUNEQyxXLEdBQWMsWUFBTSxDQUVuQixDOzs7Ozs7OzZCQUVRO0FBQUE7O0FBQ1AsYUFDRSw2QkFBQyx5QkFBRDtBQUFjLFFBQUEsS0FBSyxFQUFFO0FBQUVDLFVBQUFBLElBQUksRUFBRSxDQUFSO0FBQVdDLFVBQUFBLGVBQWUsRUFBRSxrQkFBTSxPQUFOO0FBQTVCO0FBQXJCLFNBQ0UsNkJBQUMsaUJBQUQsUUFDRSw2QkFBQyxlQUFEO0FBQUssUUFBQSxDQUFDLEVBQUU7QUFBUixTQUNFLDZCQUFDLGdCQUFEO0FBQU0sUUFBQSxLQUFLLEVBQUMsT0FBWjtBQUFvQixRQUFBLElBQUksRUFBQztBQUF6QixtQkFERixFQUlFLDZCQUFDLGtCQUFEO0FBQVEsUUFBQSxFQUFFLEVBQUU7QUFBWixRQUpGLEVBS0UsNkJBQUMsZ0JBQUQ7QUFBTSxRQUFBLEtBQUssRUFBQyxNQUFaO0FBQW1CLFFBQUEsSUFBSSxFQUFDO0FBQXhCLDhFQUxGLEVBUUUsNkJBQUMsa0JBQUQ7QUFBUSxRQUFBLEVBQUUsRUFBRTtBQUFaLFFBUkYsRUFTRSw2QkFBQyxrQkFBRDtBQUFRLFFBQUEsT0FBTyxFQUFFO0FBQUEsaUJBQU0sTUFBSSxDQUFDSCxZQUFMLEVBQU47QUFBQSxTQUFqQjtBQUE0QyxRQUFBLE9BQU8sRUFBQztBQUFwRCxtQkFURixFQVlFLDZCQUFDLGtCQUFEO0FBQVEsUUFBQSxFQUFFLEVBQUU7QUFBWixRQVpGLEVBYUUsNkJBQUMsa0JBQUQ7QUFBUSxRQUFBLE9BQU8sRUFBRTtBQUFBLGlCQUFNLE1BQUksQ0FBQ0MsV0FBTCxFQUFOO0FBQUEsU0FBakI7QUFBMkMsUUFBQSxPQUFPLEVBQUM7QUFBbkQsaUJBYkYsQ0FERixDQURGLENBREY7QUF1QkQ7OztFQWhDZ0NHLGVBQU1DLFMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSBcInJlYWN0XCJcbmltcG9ydCB7IFRoZW1lLCBCdXR0b24sIFNhbnMsIFNwYWNlciwgQm94IH0gZnJvbSBcIkFwcC9Db21wb25lbnRzXCJcbmltcG9ydCB7IFNhZmVBcmVhVmlldyB9IGZyb20gXCJyZWFjdC1uYXRpdmVcIlxuaW1wb3J0IHsgY29sb3IgfSBmcm9tIFwiQXBwL3V0aWxzXCJcblxuZXhwb3J0IGNsYXNzIFNpZ25Jbk9yQXBwbHkgZXh0ZW5kcyBSZWFjdC5Db21wb25lbnQge1xuICBoYW5kbGVTaWduSW4gPSAoKSA9PiB7XG4gICAgLy8gRklYTUU6IGhhbmRsZSBzaWduIGluXG4gIH1cbiAgaGFuZGxlQXBwbHkgPSAoKSA9PiB7XG4gICAgLy8gRklYTUU6IGhhbmRsZSBhcHBseVxuICB9XG5cbiAgcmVuZGVyKCkge1xuICAgIHJldHVybiAoXG4gICAgICA8U2FmZUFyZWFWaWV3IHN0eWxlPXt7IGZsZXg6IDEsIGJhY2tncm91bmRDb2xvcjogY29sb3IoXCJibGFja1wiKSB9fT5cbiAgICAgICAgPFRoZW1lPlxuICAgICAgICAgIDxCb3ggcD17Mn0+XG4gICAgICAgICAgICA8U2FucyBjb2xvcj1cIndoaXRlXCIgc2l6ZT1cIjNcIj5cbiAgICAgICAgICAgICAgV2VsY29tZVxuICAgICAgICAgICAgPC9TYW5zPlxuICAgICAgICAgICAgPFNwYWNlciBtYj17MX0gLz5cbiAgICAgICAgICAgIDxTYW5zIGNvbG9yPVwiZ3JheVwiIHNpemU9XCIyXCI+XG4gICAgICAgICAgICAgIFNpZ24gaW4gdG8gYWNjZXNzIHRoZSBtb3N0IGNvdmV0ZWQgbWVuc3dlYXIgYW5kIHN0cmVldHdhcmUgYnJhbmRzLlxuICAgICAgICAgICAgPC9TYW5zPlxuICAgICAgICAgICAgPFNwYWNlciBtYj17Mn0gLz5cbiAgICAgICAgICAgIDxCdXR0b24gb25QcmVzcz17KCkgPT4gdGhpcy5oYW5kbGVTaWduSW4oKX0gdmFyaWFudD1cInByaW1hcnlMaWdodFwiPlxuICAgICAgICAgICAgICBTaWduIGluXG4gICAgICAgICAgICA8L0J1dHRvbj5cbiAgICAgICAgICAgIDxTcGFjZXIgbWI9ezF9IC8+XG4gICAgICAgICAgICA8QnV0dG9uIG9uUHJlc3M9eygpID0+IHRoaXMuaGFuZGxlQXBwbHkoKX0gdmFyaWFudD1cInNlY29uZGFyeUxpZ2h0XCI+XG4gICAgICAgICAgICAgIEFwcGx5XG4gICAgICAgICAgICA8L0J1dHRvbj5cbiAgICAgICAgICA8L0JveD5cbiAgICAgICAgPC9UaGVtZT5cbiAgICAgIDwvU2FmZUFyZWFWaWV3PlxuICAgIClcbiAgfVxufVxuIl19

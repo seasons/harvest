@@ -6,7 +6,7 @@ import { Theme, Spacer, Flex, Box, Separator } from "App/Components"
 import { Text, Image, FlatList } from "react-native"
 import { useStateValue } from "App/helpers/StateProvider"
 import { TouchableWithoutFeedback } from "react-native"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { BagPlus } from "../../../assets/svgs"
 import { goToBrowse } from "App/Navigation"
 
@@ -14,17 +14,18 @@ const SECTION_HEIGHT = 200
 
 export const Bag = () => {
   const [{ bag }, dispatch] = useStateValue()
-  const [bagItems, setBagItems] = useState([])
-  useEffect(() => {
-    const bagArray = bag.items.forEach(item => {
-      bagItems.push({ type: "item", ...item })
-    })
-    for (let i = 0; i < remainingPieces; i++) {
-      bagItems.push({ type: "empty" })
-    }
-    setBagItems(bagArray)
-    console.log("bagitems????", bagItems)
-  }, [bag])
+  const bagItems = bag
+  // const [bagItems, setBagItems] = useState([])
+  // useEffect(() => {
+  //   const bagArray = bag.items.forEach(item => {
+  //     bagItems.push({ type: "item", ...item })
+  //   })
+  //   for (let i = 0; i < remainingPieces; i++) {
+  //     bagItems.push({ type: "empty" })
+  //   }
+  //   setBagItems(bagArray)
+  //   console.log("bagitems????", bagItems)
+  // }, [bag])
 
   if (!bag || !bag.items) {
     return null
