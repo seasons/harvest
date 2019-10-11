@@ -18,6 +18,7 @@
 		74F9F713671146F58215F0A3 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2D8D58AC5A9460AA4001F03 /* ProximaNova-Regular.ttf */; };
 		7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0E1F500ACFA44888E6CB0C1 /* ProximaNova-Regular.ttf */; };
 		7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5AF8182310CACF00A9E513 /* ProximaNova-Semibold.ttf */; };
+		819937AD2350CA0900D4B049 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 819937AC2350CA0900D4B049 /* AppCenter-Config.plist */; };
 		E48E9866ED8A424C835E1727 /* apercu-mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "apercu-mono.ttf"; path = "../assets/fonts/apercu-mono.ttf"; sourceTree = "<group>"; };
 		67317E5959E04BF38074190A /* ProximaNova-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Semibold.ttf"; path = "../assets/fonts/ProximaNova-Semibold.ttf"; sourceTree = "<group>"; };
 		7F5AF8182310CACF00A9E513 /* ProximaNova-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Semibold.ttf"; sourceTree = "<group>"; };
+		819937AC2350CA0900D4B049 /* AppCenter-Config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "Resources/AppCenter-Config.plist"; sourceTree = "<group>"; };
 		8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Medium.otf"; path = "../assets/fonts/ProximaNova-Medium.otf"; sourceTree = "<group>"; };
 		8F22EDD95844A43233B43461 /* Pods-seasons.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-seasons.release.xcconfig"; path = "Target Support Files/Pods-seasons/Pods-seasons.release.xcconfig"; sourceTree = "<group>"; };
 		978CD87D57CA92C1AD151128 /* libPods-seasons.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-seasons.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +83,7 @@
 				9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */,
 				8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */,
 				A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */,
+				819937AC2350CA0900D4B049 /* AppCenter-Config.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				819937AD2350CA0900D4B049 /* AppCenter-Config.plist in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */,
 				7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */,

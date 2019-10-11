@@ -34,5 +34,5 @@ target 'seasons' do
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
   pod 'A0Auth0', :path => '../node_modules/react-native-auth0'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
-
+  pod 'appcenter', path: '../node_modules/appcenter/ios'
 end

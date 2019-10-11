@@ -1,6 +1,12 @@
 PODS:
   - A0Auth0 (1.6.0):
     - React
+  - appcenter (2.4.0):
+    - AppCenterReactNativeShared
+    - React
+  - AppCenter/Core (2.4.0)
+  - AppCenterReactNativeShared (2.4.0):
+    - AppCenter/Core (= 2.4.0)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - EXAppLoaderProvider (6.0.0)
@@ -118,6 +124,7 @@ PODS:
 
 DEPENDENCIES:
   - A0Auth0 (from `../node_modules/react-native-auth0`)
+  - appcenter (from `../node_modules/appcenter/ios`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXAppLoaderProvider (from `../node_modules/expo-app-loader-provider/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
@@ -166,11 +173,15 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - AppCenter
+    - AppCenterReactNativeShared
     - boost-for-react-native
 
 EXTERNAL SOURCES:
   A0Auth0:
     :path: "../node_modules/react-native-auth0"
+  appcenter:
+    :path: "../node_modules/appcenter/ios"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXAppLoaderProvider:
@@ -260,6 +271,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   A0Auth0: 3ef40effed761e80d2ecd7749cc271e0b12e3f75
+  AppCenter: 49a9ffe114c00e2bf5374aeda816d47eabf1978a
+  appcenter: 4072e79b8d037d99056e6fc6556224b4525b5829
+  AppCenterReactNativeShared: 57a66e6539e9abe6079ba8f93a002bc3f95788cc
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   EXAppLoaderProvider: 7a8185228d8ba9e689a0e2d6d957fe9bdd49c8a0
@@ -294,6 +308,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 8664abd37a00715727e60df9ecd65e42ba47b548
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: 71d6f0b6da46efefd102506fb57bae459d4d0b0a
+PODFILE CHECKSUM: 1c9538aa984d3cdd379cb4f7db5c66a8c8d4102f
 
 COCOAPODS: 1.7.5
