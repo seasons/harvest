@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
 import { EmptyState } from "./Components.tsx"
@@ -9,38 +9,31 @@ import { TouchableWithoutFeedback } from "react-native"
 import { color } from "App/utils"
 import { BagPlus } from "../../../assets/svgs"
 import { goToBrowse } from "App/Navigation"
+import { Navigation } from "react-native-navigation"
+import { BAG_NUM_ITEMS } from "App/App"
 
 const SECTION_HEIGHT = 200
 
 export const Bag = () => {
   const [{ bag }, dispatch] = useStateValue()
-  const bagItems = bag
-  // const [bagItems, setBagItems] = useState([])
-  // useEffect(() => {
-  //   const bagArray = bag.items.forEach(item => {
-  //     bagItems.push({ type: "item", ...item })
-  //   })
-  //   for (let i = 0; i < remainingPieces; i++) {
-  //     bagItems.push({ type: "empty" })
-  //   }
-  //   setBagItems(bagArray)
-  //   console.log("bagitems????", bagItems)
-  // }, [bag])
+  const [_, updateState] = useState({})
 
+  useEffect(() => {
+    Navigation.events().registerComponentDidAppearListener(args => {
+      if (args.componentName === "Bag") {
+        console.log("bag updating")
+        updateState({})
+      }
+    })
+  }, [])
+
+  console.log("bag???", bag.items)
   if (!bag || !bag.items) {
     return null
   }
 
+  const remainingPieces = BAG_NUM_ITEMS - bag.items.length
   const bagIsEmpty = bag.items.length === 0
-  const remainingPieces = 3 - bag.items.length
-
-  const handleRemove = id => {
-    return id
-  }
-
-  const handleBagPlusPress = () => {
-    return goToBrowse()
-  }
 
   const emptyBagItem = index => {
     return (
@@ -53,7 +46,7 @@ export const Bag = () => {
             </Sans>
           </Box>
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
-            <TouchableWithoutFeedback onPress={() => handleBagPlusPress()}>
+            <TouchableWithoutFeedback onPress={() => goToBrowse()}>
               <BagPlus />
             </TouchableWithoutFeedback>
             <Spacer mr={3} />
@@ -115,21 +108,21 @@ export const Bag = () => {
         <Box style={{ flex: 1 }}>
           <Spacer mb={3} />
           {bagIsEmpty ? (
-            <Flex flex={1} flexDirection="column" justifyContent="center" alignContent="center">
+            <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignContent="center">
               <EmptyState remainingPieces={remainingPieces} />
             </Flex>
           ) : (
             <Box>
               <Spacer mb={3} />
               <FlatList
-                data={bagItems}
+                data={bag.items}
                 ListHeaderComponent={() => (
                   <Box p={2}>
                     <Sans size="3" color="black">
                       My bag
                     </Sans>
                     <Sans size="2" color="gray">
-                      You have {remainingPieces} pieces remaining
+                      You have {remainingPieces} {remainingPieces === 1 ? "piece" : "pieces"} remaining
                     </Sans>
                   </Box>
                 )}
