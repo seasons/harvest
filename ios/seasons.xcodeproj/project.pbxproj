@@ -312,7 +312,7 @@
 			baseConfigurationReference = 373CF887D83AD215DBD3E5DC /* Pods-seasons.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = QY3QKXPU37;
 				INFOPLIST_FILE = seasons/Info.plist;
@@ -333,7 +333,7 @@
 			baseConfigurationReference = 8F22EDD95844A43233B43461 /* Pods-seasons.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = QY3QKXPU37;
 				INFOPLIST_FILE = seasons/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
