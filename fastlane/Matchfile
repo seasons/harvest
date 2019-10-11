@@ -1,4 +1,4 @@
-git_url("git@github.com:seasons/harvest.git")
+git_url("git@github.com:seasons/ios-certs.git")
 
 storage_mode("git")
 
