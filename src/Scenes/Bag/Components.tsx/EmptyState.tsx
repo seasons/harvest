@@ -1,6 +1,6 @@
 import { Box, Flex, Sans, Spacer, Button, Theme } from "App/Components"
 import React from "react"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { goToBrowse } from "../../../Navigation"
 import { BagPlaceHolderSVG } from "../../../../assets/svgs/BagPlaceHolder"
 

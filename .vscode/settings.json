@@ -9,5 +9,6 @@
   "cSpell.ignoreWords": ["Semibold"],
   "cSpell.diagnosticLevel": "Hint",
   "tslint.autoFixOnSave": true,
-  "autoimport.autoComplete": true
+  "autoimport.autoComplete": true,
+  "debug.node.autoAttach": "on"
 }

@@ -2,11 +2,10 @@ import debounce from "lodash/debounce"
 import React from "react"
 import styled from "styled-components/native"
 import { Flex, FlexProps } from "./Flex"
-import { color, space } from "App/Utils"
+import { color, space } from "App/utils"
 
 import { BorderProps, borders, SizeProps, space as styledSpace, SpaceProps } from "styled-system"
-import { Box } from "./Box"
-import { Sans } from "."
+import { Box, Sans } from "App/Components"
 import { TouchableWithoutFeedback } from "react-native"
 
 /**

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components/native"
 import { TouchableWithoutFeedback } from "react-native"
 import { Sans, Box, Spacer, Separator } from "./"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { animated } from "react-spring/renderprops-native.cjs"
 
 export interface Props {

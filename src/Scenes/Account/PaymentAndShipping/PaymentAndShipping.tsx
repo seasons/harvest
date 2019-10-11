@@ -1,16 +1,18 @@
-import { Box, Button, Flex, Spacer, Theme } from "App/Components"
+import { Box, Button, Flex, Theme } from "App/Components"
 import { DisplayView } from "./DisplayView"
 import { EditView } from "./EditView"
 import React from "react"
 import { SafeAreaView } from "react-native"
-import { space } from "App/Utils"
+import { space } from "App/utils"
 import styled from "styled-components/native"
+
+interface Props {}
 
 interface State {
   renderEditView: boolean
 }
 
-export class PaymentAndShipping extends React.Component<State> {
+export class PaymentAndShipping extends React.Component<Props, State> {
   state = {
     renderEditView: true,
   }

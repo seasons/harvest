@@ -5,7 +5,7 @@ import { Sans } from "Components/Typography"
 import { SafeAreaView } from "react-native"
 import styled from "styled-components/native"
 import { HalfLogoSVG, CurvedLineSVG } from "Assets/svgs"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { goToSignIn } from "App/Navigation"
 
 const image = {

@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react"
 import styled from "styled-components/native"
 import { Color } from "./Theme"
-import { color as colorHelper } from "App/Utils/color"
+import { color as colorHelper } from "App/utils/color"
 import { SansSize, themeProps } from "./Theme"
 import {
   color,

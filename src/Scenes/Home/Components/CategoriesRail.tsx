@@ -1,7 +1,7 @@
 import React from "react"
 import { Box, Sans } from "App/Components"
 import { ScrollView } from "react-native"
-import { styled } from "Components/platform/primitives"
+import styled from "styled-components/native"
 
 interface CategoriesRailProps {
   categories: any
