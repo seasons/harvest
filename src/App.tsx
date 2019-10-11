@@ -13,6 +13,8 @@ import { SignIn, Welcome, Initializing, Notifications } from "Scenes/SignIn"
 import { StateProvider } from "App/helpers/StateProvider"
 import { restoreCache, persistCache } from "./helpers/asyncStorage"
 
+export const BAG_NUM_ITEMS = 3
+
 // Instantiate required constructor fields
 const cache = new InMemoryCache()
 
@@ -39,26 +41,48 @@ const client = new ApolloClient({
 const App = (Component: React.ComponentType, cacheData) => {
   const initialState = cacheData
 
+  const addEmptyItemsToBag = items => {
+    const filteredEmptyItems = items.filter(bagItem => {
+      return bagItem.type !== "empty"
+    })
+    const bagItemsArray = []
+    filteredEmptyItems.forEach(item => {
+      bagItemsArray.push({ type: "item", ...item })
+    })
+    for (let i = 0; i < BAG_NUM_ITEMS - filteredEmptyItems.length; i++) {
+      bagItemsArray.push({ type: "empty", id: "empty" + i })
+    }
+    return bagItemsArray
+  }
+
   const reducer = (state, action) => {
     const items = state.bag.items || []
+    const clonedItems = items.slice(0)
+    let updatedBagItems = null
     switch (action.type) {
       case "addItemToBag":
-        if (state.bag.items.includes(action.item)) {
-          return
+        if (!!clonedItems.find(item => item.id === action.item.id)) {
+          // Item already in bag so we dont add it
+          return state
         }
-        items.push(action.item)
-        const bagWithItem = {
+        clonedItems.push(action.item)
+        updatedBagItems = addEmptyItemsToBag(clonedItems)
+        const bagWithNewItem = {
           ...state,
-          bag: { ...state.bag, items },
+          bag: { items: updatedBagItems },
         }
-        persistCache(bagWithItem)
-        return bagWithItem
+        return bagWithNewItem
       case "removeItemFromBag":
+        const filteredItems = clonedItems.filter(bagItem => {
+          return bagItem.id !== action.item.id
+        })
+        updatedBagItems = addEmptyItemsToBag(filteredItems)
         const bagWithoutItem = {
           ...state,
-          bag: { ...state.bag, items: items.filter(bagItem => bagItem.id === action.item.id) },
+          bag: {
+            items: updatedBagItems,
+          },
         }
-        persistCache(bagWithoutItem)
         return bagWithoutItem
       default:
         return state

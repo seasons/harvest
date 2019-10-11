@@ -10,5 +10,5 @@
   "cSpell.diagnosticLevel": "Hint",
   "tslint.autoFixOnSave": true,
   "autoimport.autoComplete": true,
-  "debug.node.autoAttach": "on"
+  "debug.node.autoAttach": "off"
 }
