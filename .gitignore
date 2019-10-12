@@ -22,6 +22,8 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 .env
+fastlane/report.xml
+seasons.app.dSYM.*
 
 # Android/IntelliJ
 #
