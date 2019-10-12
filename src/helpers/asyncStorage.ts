@@ -15,12 +15,12 @@ export const restoreCache = async () => {
       return JSON.parse(value)
     } else {
       return {
-        bag: { items: [] },
+        bag: { items: [], itemCount: 0 },
       }
     }
   } catch (e) {
     return {
-      bag: { items: [] },
+      bag: { items: [], itemCount: 0 },
     }
   }
 }
