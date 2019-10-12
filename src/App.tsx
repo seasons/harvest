@@ -49,16 +49,16 @@ const App = (Component: React.ComponentType, cacheData) => {
     filteredEmptyItems.forEach(item => {
       bagItemsArray.push({ type: "item", ...item })
     })
+    const itemCount = filteredEmptyItems.length
     for (let i = 0; i < BAG_NUM_ITEMS - filteredEmptyItems.length; i++) {
       bagItemsArray.push({ type: "empty", id: "empty" + i })
     }
-    return bagItemsArray
+    return [bagItemsArray, itemCount]
   }
 
   const reducer = (state, action) => {
     const items = state.bag.items || []
     const clonedItems = items.slice(0)
-    let updatedBagItems = null
     switch (action.type) {
       case "addItemToBag":
         if (!!clonedItems.find(item => item.id === action.item.id)) {
@@ -66,21 +66,22 @@ const App = (Component: React.ComponentType, cacheData) => {
           return state
         }
         clonedItems.push(action.item)
-        updatedBagItems = addEmptyItemsToBag(clonedItems)
+        const [updatedBagItems, itemCount] = addEmptyItemsToBag(clonedItems)
         const bagWithNewItem = {
           ...state,
-          bag: { items: updatedBagItems },
+          bag: { items: updatedBagItems, itemCount },
         }
         return bagWithNewItem
       case "removeItemFromBag":
         const filteredItems = clonedItems.filter(bagItem => {
           return bagItem.id !== action.item.id
         })
-        updatedBagItems = addEmptyItemsToBag(filteredItems)
+        const [updatedBagItems1, itemCount1] = addEmptyItemsToBag(filteredItems)
         const bagWithoutItem = {
           ...state,
           bag: {
-            items: updatedBagItems,
+            items: updatedBagItems1,
+            itemCount: itemCount1,
           },
         }
         return bagWithoutItem

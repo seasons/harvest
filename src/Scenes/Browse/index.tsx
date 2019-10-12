@@ -45,7 +45,7 @@ const renderItem = ({ item }, componentId) => {
   const thumbnail = (image && image.thumbnails && image.thumbnails.large) || { url: "https://via.placeholder.com/150" }
 
   return (
-    <TouchableWithoutFeedback onPress={() => goToProduct(componentId, item.id)}>
+    <TouchableWithoutFeedback onPress={() => goToProduct(componentId, product.id)}>
       <Box m={1} mb={2} width={itemWidth}>
         <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
         <Box m={2}>

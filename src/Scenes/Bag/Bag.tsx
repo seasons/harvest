@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect } from "react"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
 import { EmptyState } from "./Components.tsx"
-import { Theme, Spacer, Flex, Box, Separator } from "App/Components"
+import { Theme, Spacer, Flex, Box, Separator, FixedButton } from "App/Components"
 import { Text, Image, FlatList } from "react-native"
 import { useStateValue } from "App/helpers/StateProvider"
 import { TouchableWithoutFeedback } from "react-native"
@@ -15,7 +15,7 @@ import { BAG_NUM_ITEMS } from "App/App"
 const SECTION_HEIGHT = 200
 
 export const Bag = () => {
-  const [{ bag }, dispatch] = useStateValue()
+  const [{ bag }, dispatch]: any = useStateValue()
   const [_, updateState] = useState({})
 
   useEffect(() => {
@@ -27,13 +27,21 @@ export const Bag = () => {
     })
   }, [])
 
-  console.log("bag???", bag.items)
+  console.log("bag???", bag)
   if (!bag || !bag.items) {
     return null
   }
 
-  const remainingPieces = BAG_NUM_ITEMS - bag.items.length
-  const bagIsEmpty = bag.items.length === 0
+  const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
+  const bagIsEmpty = bag.itemCount === 0
+  const bagIsFull = bag.itemCount === BAG_NUM_ITEMS
+  const remainingPiecesDisplay = !bagIsFull
+    ? `You have ${remainingPieces} ${remainingPieces === 1 ? "piece" : "pieces"} remaining`
+    : "Reserve your order below"
+
+  const handleReserve = () => {
+    // FIXME: Handle reserve items
+  }
 
   const emptyBagItem = index => {
     return (
@@ -106,14 +114,12 @@ export const Bag = () => {
     <Theme>
       <Container>
         <Box style={{ flex: 1 }}>
-          <Spacer mb={3} />
           {bagIsEmpty ? (
             <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignContent="center">
               <EmptyState remainingPieces={remainingPieces} />
             </Flex>
           ) : (
             <Box>
-              <Spacer mb={3} />
               <FlatList
                 data={bag.items}
                 ListHeaderComponent={() => (
@@ -122,7 +128,7 @@ export const Bag = () => {
                       My bag
                     </Sans>
                     <Sans size="2" color="gray">
-                      You have {remainingPieces} {remainingPieces === 1 ? "piece" : "pieces"} remaining
+                      {remainingPiecesDisplay}
                     </Sans>
                   </Box>
                 )}
@@ -137,6 +143,9 @@ export const Bag = () => {
                 renderItem={item => renderItem(item)}
                 ListFooterComponent={() => <Spacer mb={200} />}
               />
+              <FixedButton onPress={() => handleReserve()} disabled={!bagIsFull}>
+                Reserve
+              </FixedButton>
             </Box>
           )}
         </Box>
