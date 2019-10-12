@@ -1,20 +1,24 @@
 lane :beta do
-    build_app(scheme: "Release",
+    sync_code_signing(app_identifier: ['com.seasons.Seasons'], type: 'appstore')
+
+    build_app(scheme: "seasons",
               workspace: "ios/seasons.xcworkspace",
               include_bitcode: true)
-  end
+end
 
 platform :ios do    
     desc 'Fetch certificates and provisioning profiles'
     lane :certificates do
-        match(app_identifier: 'com.seasons.seasons')
+        match(app_identifier: 'com.seasons.Seasons', username: 'luc@seasons.nyc')
     end
 
     desc 'Fetch certificates. Build the iOS application.'
     lane :build do
         certificates
         increment_build_number(xcodeproj: './ios/seasons.xcodeproj')
-        gym(scheme: 'Seasons', project: './ios/seasons.xcodeproj', export_method: 'development')
+        gym(scheme: 'seasons', 
+            workspace: './ios/seasons.xcworkspace',
+            export_method: 'development')
     end
 
     desc 'Fetch certificates, build and upload to App Center.'

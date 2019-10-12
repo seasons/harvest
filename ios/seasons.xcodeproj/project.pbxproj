@@ -15,7 +15,6 @@
 		5A4B65ED798E475A826CC2F0 /* ProximaNova-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */; };
 		60FE4072A3F4CB06A6CB71FF /* libPods-seasons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 978CD87D57CA92C1AD151128 /* libPods-seasons.a */; };
 		61AEAAE2A041469D81CC3E09 /* ProximaNova-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */; };
-		74F9F713671146F58215F0A3 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2D8D58AC5A9460AA4001F03 /* ProximaNova-Regular.ttf */; };
 		7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0E1F500ACFA44888E6CB0C1 /* ProximaNova-Regular.ttf */; };
 		7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5AF8182310CACF00A9E513 /* ProximaNova-Semibold.ttf */; };
 		819937AD2350CA0900D4B049 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 819937AC2350CA0900D4B049 /* AppCenter-Config.plist */; };
@@ -182,6 +181,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = QY3QKXPU37;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -215,7 +215,6 @@
 				7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */,
 				7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */,
 				E48E9866ED8A424C835E1727 /* apercu-mono.ttf in Resources */,
-				74F9F713671146F58215F0A3 /* ProximaNova-Regular.ttf in Resources */,
 				353337DDECE045818531A967 /* ProximaNova-Bold.otf in Resources */,
 				61AEAAE2A041469D81CC3E09 /* ProximaNova-Medium.otf in Resources */,
 				5A4B65ED798E475A826CC2F0 /* ProximaNova-Thin.otf in Resources */,
@@ -312,18 +311,37 @@
 			baseConfigurationReference = 373CF887D83AD215DBD3E5DC /* Pods-seasons.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 2;
+				CLANG_ENABLE_MODULE_DEBUGGING = YES;
+				CLANG_MODULES_DISABLE_PRIVATE_WARNING = YES;
+				CLANG_WARN_BOOL_CONVERSION = NO;
+				CLANG_WARN_COMMA = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = NO;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 7;
 				DEAD_CODE_STRIPPING = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QY3QKXPU37;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
 				INFOPLIST_FILE = seasons/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seasons.Seasons;
 				PRODUCT_NAME = seasons;
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.seasons.Seasons";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -333,17 +351,35 @@
 			baseConfigurationReference = 8F22EDD95844A43233B43461 /* Pods-seasons.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 2;
+				CLANG_ENABLE_MODULE_DEBUGGING = YES;
+				CLANG_MODULES_DISABLE_PRIVATE_WARNING = YES;
+				CLANG_WARN_BOOL_CONVERSION = NO;
+				CLANG_WARN_COMMA = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = NO;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = QY3QKXPU37;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
 				INFOPLIST_FILE = seasons/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seasons.Seasons;
 				PRODUCT_NAME = seasons;
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.seasons.Seasons";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

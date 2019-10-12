@@ -3,7 +3,7 @@ import { ErrorPopUp, Theme, Sans, TextInput, Box, Spacer, Button, Flex } from "A
 import { Text } from "Components/Typography"
 import { SafeAreaView, TouchableWithoutFeedback } from "react-native"
 import AsyncStorage from "@react-native-community/async-storage"
-import { color } from "App/utils"
+import { color } from "App/Utils"
 import Auth0 from "react-native-auth0"
 import { goHome } from "../../Navigation"
 
