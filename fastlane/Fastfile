@@ -30,6 +30,9 @@ platform :ios do
             app_name: ENV["APPCENTER_APP_NAME"],
             ipa: './Seasons.ipa'
         )
+
+        changelog_from_git_commits
+        upload_to_testflight
     end
 end
   
