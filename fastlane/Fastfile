@@ -1,31 +1,35 @@
-lane :beta do
-    build_app(scheme: "Release",
-              workspace: "ios/seasons.xcworkspace",
-              include_bitcode: true)
-  end
-
 platform :ios do    
     desc 'Fetch certificates and provisioning profiles'
     lane :certificates do
-        match(app_identifier: 'com.seasons.seasons')
+        match(app_identifier: 'com.seasons.Seasons', username: 'luc@seasons.nyc', type: "appstore")
     end
 
     desc 'Fetch certificates. Build the iOS application.'
     lane :build do
         certificates
         increment_build_number(xcodeproj: './ios/seasons.xcodeproj')
-        gym(scheme: 'Seasons', project: './ios/seasons.xcodeproj', export_method: 'development')
+        gym(scheme: 'seasons', 
+            workspace: './ios/seasons.xcworkspace', export_method: 'app-store')
     end
 
     desc 'Fetch certificates, build and upload to App Center.'
     lane :beta do
+        # sync_code_signing(app_identifier: ['com.seasons.Seasons'], type: 'appstore')
+
+        # build_app(scheme: "seasons",
+        #           workspace: "ios/seasons.xcworkspace",
+        #           include_bitcode: true)
         build
+
         appcenter_upload(
             api_token: ENV["TEST_APPCENTER_API_TOKEN"],
             owner_name: ENV["TEST_APPCENTER_OWNER_NAME"],
             app_name: ENV["APPCENTER_APP_NAME"],
             ipa: './Seasons.ipa'
         )
+
+        changelog_from_git_commits
+        upload_to_testflight
     end
 end
   

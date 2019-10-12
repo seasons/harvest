@@ -2,6 +2,9 @@ platform :ios, '10.0'
 
 require_relative '../node_modules/react-native-unimodules/cocoapods'
 
+ # ignore all warnings from all pods
+ inhibit_all_warnings!
+
 target 'seasons' do
   # Pods for seasons
   use_unimodules!
