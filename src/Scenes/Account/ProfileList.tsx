@@ -9,7 +9,6 @@ import {
   ChevronIcon,
 } from "Assets/icons"
 import { TouchableWithoutFeedback } from "react-native"
-import { Navigation } from "react-native-navigation"
 
 const lists = [
   { title: "Membership info", icon: <MembershipInfoIcon />, link: "" },
@@ -22,24 +21,24 @@ const lists = [
 export class ProfileList extends React.Component<any> {
   openURL = item => {
     if (item.link) {
-      Navigation.push(this.props.componentId, {
-        component: {
-          name: item.link,
-          passProps: {
-            user: "kierangillen",
-          },
-          options: {
-            topBar: {
-              visible: true,
-              leftButtons: [
-                {
-                  id: "back",
-                },
-              ],
-            },
-          },
-        },
-      })
+      // Navigation.push(this.props.componentId, {
+      //   component: {
+      //     name: item.link,
+      //     passProps: {
+      //       user: "kierangillen",
+      //     },
+      //     options: {
+      //       topBar: {
+      //         visible: true,
+      //         leftButtons: [
+      //           {
+      //             id: "back",
+      //           },
+      //         ],
+      //       },
+      //     },
+      //   },
+      // })
     }
   }
 

@@ -1,1 +1,0 @@
-../../../ReactNativeNavigation/lib/ios/RNNTabBarPresenter.h

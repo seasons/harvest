@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
 import { EmptyState } from "./Components.tsx"
-import { Theme, Spacer, Flex, Box, Separator, FixedButton } from "App/Components"
+import { Theme, Spacer, Flex, Box, Separator, FixedButton, ErrorPopUp } from "App/Components"
 import { Text, Image, FlatList } from "react-native"
 import { useStateValue } from "App/helpers/StateProvider"
 import { TouchableWithoutFeedback } from "react-native"
 import { color } from "App/utils"
 import { BagPlus } from "../../../assets/svgs"
-import { goToBrowse } from "App/Navigation"
-import { Navigation } from "react-native-navigation"
 import { BAG_NUM_ITEMS } from "App/App"
 
 const SECTION_HEIGHT = 200
@@ -17,14 +15,15 @@ const SECTION_HEIGHT = 200
 export const Bag = () => {
   const [{ bag }, dispatch]: any = useStateValue()
   const [_, updateState] = useState({})
+  const [showReserveError, displayReserveError] = useState(false)
 
   useEffect(() => {
-    Navigation.events().registerComponentDidAppearListener(args => {
-      if (args.componentName === "Bag") {
-        console.log("bag updating")
-        updateState({})
-      }
-    })
+    // Navigation.events().registerComponentDidAppearListener(args => {
+    //   if (args.componentName === "Bag") {
+    //     console.log("bag updating")
+    //     updateState({})
+    //   }
+    // })
   }, [])
 
   console.log("bag???", bag)
@@ -54,7 +53,7 @@ export const Bag = () => {
             </Sans>
           </Box>
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
-            <TouchableWithoutFeedback onPress={() => goToBrowse()}>
+            <TouchableWithoutFeedback onPress={() => null}>
               <BagPlus />
             </TouchableWithoutFeedback>
             <Spacer mr={3} />
@@ -143,9 +142,18 @@ export const Bag = () => {
                 renderItem={item => renderItem(item)}
                 ListFooterComponent={() => <Spacer mb={200} />}
               />
-              <FixedButton onPress={() => handleReserve()} disabled={!bagIsFull}>
-                Reserve
-              </FixedButton>
+              <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
+                <FixedButton onPress={() => handleReserve()} disabled={!bagIsFull}>
+                  Reserve
+                </FixedButton>
+              </TouchableWithoutFeedback>
+              <ErrorPopUp
+                buttonText="Got it"
+                title="Pick all 3 items before reserving!"
+                note="Before reserving your order, make sure you've selected all 3 pieces."
+                show={showReserveError}
+                onClose={() => displayReserveError(false)}
+              />
             </Box>
           )}
         </Box>

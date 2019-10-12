@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import { Container, Header, Content, List, ListItem, Text } from "native-base"
-import { Navigation } from "react-native-navigation"
 
 export const Palette = () => {
   return (
@@ -26,4 +25,4 @@ export const Palette = () => {
   )
 }
 
-Navigation.registerComponent("Palette", () => Palette)
+// Navigation.registerComponent("Palette", () => Palette)
