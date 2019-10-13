@@ -33,9 +33,7 @@ target 'seasons' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
   pod 'RNGestureHandler', :podspec => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
   pod 'RNReanimated', :podspec => '../node_modules/react-native-reanimated/RNReanimated.podspec'
-  pod 'ReactNativeNavigation', :podspec => '../node_modules/react-native-navigation/ReactNativeNavigation.podspec'
-  pod 'RNSVG', :path => '../node_modules/react-native-svg'
   pod 'A0Auth0', :path => '../node_modules/react-native-auth0'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
-  pod 'appcenter', path: '../node_modules/appcenter/ios'
+  pod 'RNScreens', :path => '../node_modules/react-native-screens'
 end

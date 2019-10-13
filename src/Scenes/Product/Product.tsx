@@ -9,7 +9,6 @@ import { color, space } from "App/Utils"
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
-import { Navigation } from "react-native-navigation"
 
 const GET_PRODUCT = gql`
   query GetProduct($productId: ID!) {
@@ -33,9 +32,11 @@ const screenHeight = Math.round(Dimensions.get("window").height)
 export const Product = props => {
   const [sizeSelection, setSizeSelection] = useState({ size: "", abbreviated: "X", id: null })
   const [showSizeSelection, toggleShowSizeSelection] = useState(false)
+  const productID =
+    props.navigation && props.navigation.state && props.navigation.state.params && props.navigation.state.params.id
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
-      productId: props.id,
+      productId: productID,
     },
   })
 
@@ -137,7 +138,7 @@ export const Product = props => {
         <FooterNav>
           <Flex p={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
             <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
-              <TouchableWithoutFeedback onPress={() => Navigation.pop(props.componentId)}>
+              <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
                 <BackArrowIcon />
               </TouchableWithoutFeedback>
               <Spacer mr={4} />

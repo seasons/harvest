@@ -1,10 +1,9 @@
 import { Box, Flex, Sans, Spacer, Button, Theme } from "App/Components"
 import React from "react"
 import { color } from "App/Utils"
-import { goToBrowse } from "../../../Navigation"
 import { BagPlaceHolderSVG } from "../../../../assets/svgs/BagPlaceHolder"
 
-export const EmptyState = ({ remainingPieces }) => {
+export const EmptyState = ({ remainingPieces, navigation }) => {
   return (
     <Theme>
       <Box p={2} style={{ flex: 1 }}>
@@ -26,7 +25,7 @@ export const EmptyState = ({ remainingPieces }) => {
           </Sans>
           <Spacer mb={3} />
           <Flex justifyContent="center" flexDirection="row">
-            <Button size="medium" variant="primaryDark" onPress={() => goToBrowse()}>
+            <Button size="medium" variant="primaryDark" onPress={() => navigation.navigate("Browse")}>
               Browse
             </Button>
           </Flex>

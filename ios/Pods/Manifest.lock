@@ -1,12 +1,6 @@
 PODS:
   - A0Auth0 (1.6.0):
     - React
-  - appcenter (2.4.0):
-    - AppCenterReactNativeShared
-    - React
-  - AppCenter/Core (2.4.0)
-  - AppCenterReactNativeShared (2.4.0):
-    - AppCenter/Core (= 2.4.0)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - EXAppLoaderProvider (6.0.0)
@@ -95,13 +89,13 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - ReactNativeNavigation (3.1.1):
-    - React
   - RNCAsyncStorage (1.6.2):
     - React
   - RNGestureHandler (1.3.0):
     - React
   - RNReanimated (1.1.0):
+    - React
+  - RNScreens (1.0.0-alpha.23):
     - React
   - RNSVG (9.9.3):
     - React
@@ -124,7 +118,6 @@ PODS:
 
 DEPENDENCIES:
   - A0Auth0 (from `../node_modules/react-native-auth0`)
-  - appcenter (from `../node_modules/appcenter/ios`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXAppLoaderProvider (from `../node_modules/expo-app-loader-provider/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
@@ -152,10 +145,10 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
-  - ReactNativeNavigation (from `../node_modules/react-native-navigation/ReactNativeNavigation.podspec`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler/RNGestureHandler.podspec`)
   - RNReanimated (from `../node_modules/react-native-reanimated/RNReanimated.podspec`)
+  - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
   - UMCameraInterface (from `../node_modules/unimodules-camera-interface/ios`)
@@ -173,15 +166,11 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - AppCenter
-    - AppCenterReactNativeShared
     - boost-for-react-native
 
 EXTERNAL SOURCES:
   A0Auth0:
     :path: "../node_modules/react-native-auth0"
-  appcenter:
-    :path: "../node_modules/appcenter/ios"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXAppLoaderProvider:
@@ -220,14 +209,14 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
-  ReactNativeNavigation:
-    :podspec: "../node_modules/react-native-navigation/ReactNativeNavigation.podspec"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNGestureHandler:
     :podspec: "../node_modules/react-native-gesture-handler/RNGestureHandler.podspec"
   RNReanimated:
     :podspec: "../node_modules/react-native-reanimated/RNReanimated.podspec"
+  RNScreens:
+    :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   UMBarCodeScannerInterface:
@@ -271,9 +260,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   A0Auth0: 3ef40effed761e80d2ecd7749cc271e0b12e3f75
-  AppCenter: 49a9ffe114c00e2bf5374aeda816d47eabf1978a
-  appcenter: 4072e79b8d037d99056e6fc6556224b4525b5829
-  AppCenterReactNativeShared: 57a66e6539e9abe6079ba8f93a002bc3f95788cc
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   EXAppLoaderProvider: 7a8185228d8ba9e689a0e2d6d957fe9bdd49c8a0
@@ -289,10 +275,10 @@ SPEC CHECKSUMS:
   Folly: de497beb10f102453a1afa9edbf8cf8a251890de
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
-  ReactNativeNavigation: 6e3da7b6e4ee329294a15608d47f1a4e1962e3bb
   RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNReanimated: 7a52c90473b5e81c13408d40d797b98387eaddde
+  RNScreens: f28b48b8345f2f5f39ed6195518291515032a788
   RNSVG: 2a15d0d14d171ba610db927190604d1ab223f413
   UMBarCodeScannerInterface: 84ea2d6b58ff0dc27ef9b68bab71286be18ee020
   UMCameraInterface: 26b26005d1756a0d5f4f04f1e168e39ea9154535
@@ -308,6 +294,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 8664abd37a00715727e60df9ecd65e42ba47b548
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: 0735ecca8231b79c6eede41f48189a171b2fde54
+PODFILE CHECKSUM: a1286db21de95972406d9b24a04902d5d80c9273
 
 COCOAPODS: 1.8.3
