@@ -7,7 +7,7 @@ import { Bag } from "App/Scenes/Bag"
 import { Account } from "App/Scenes/Account"
 import { Image } from "react-native"
 // import { createStackNavigator } from "react-navigation-stack"
-import { color } from "App/utils"
+import { color } from "App/Utils"
 
 const TabNavigator = createBottomTabNavigator(
   {
@@ -18,7 +18,7 @@ const TabNavigator = createBottomTabNavigator(
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: () => {
+      tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state
         let URL
 
@@ -32,11 +32,11 @@ const TabNavigator = createBottomTabNavigator(
           URL = require(`../../assets/images/Account.png`)
         }
 
-        return <Image source={URL} />
+        return <Image source={URL} style={{ opacity: focused ? 1.0 : 0.3 }} />
       },
     }),
     tabBarOptions: {
-      activeTintColor: "tomato",
+      activeTintColor: "white",
       inactiveTintColor: "gray",
       showIcon: true,
       showLabel: false,
@@ -48,6 +48,8 @@ const TabNavigator = createBottomTabNavigator(
     },
   }
 )
+
+export default createAppContainer(TabNavigator)
 
 // const AppNavigator = createStackNavigator(
 //   {
@@ -68,8 +70,6 @@ const TabNavigator = createBottomTabNavigator(
 //     initialRouteName: "Home",
 //   }
 // )
-
-export default createAppContainer(TabNavigator)
 
 // import { Navigation } from "react-native-navigation"
 // import { bottomTabs } from "./tabs"

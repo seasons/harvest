@@ -31,7 +31,7 @@ export const apolloClient = new ApolloClient({
 const ApolloApp = () => {
   return (
     <ApolloProvider client={apolloClient}>
-      <App cacheData={null} />
+      <App cacheData={{ bag: { items: [] } }} />
     </ApolloProvider>
   )
 }
