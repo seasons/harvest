@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-community/async-storage"
+import { EMPTY_BAG } from "App/App"
 
 export const persistCache = async data => {
   try {
@@ -14,13 +15,9 @@ export const restoreCache = async () => {
     if (value !== null) {
       return JSON.parse(value)
     } else {
-      return {
-        bag: { items: [], itemCount: 0 },
-      }
+      return EMPTY_BAG
     }
   } catch (e) {
-    return {
-      bag: { items: [], itemCount: 0 },
-    }
+    return EMPTY_BAG
   }
 }

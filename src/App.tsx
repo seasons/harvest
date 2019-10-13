@@ -5,6 +5,9 @@ import { AppState, View } from "react-native"
 import AppContainer from "App/Navigation"
 
 export const BAG_NUM_ITEMS = 3
+export const EMPTY_BAG = {
+  bag: { items: [], itemCount: 0 },
+}
 
 const handleAppStateChange = (nextAppState, bag) => {
   if (nextAppState === "inactive") {
