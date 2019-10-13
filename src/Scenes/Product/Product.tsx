@@ -9,6 +9,7 @@ import { color, space } from "App/Utils"
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
+import Navigation from "App/Navigation"
 
 const GET_PRODUCT = gql`
   query GetProduct($productId: ID!) {
@@ -140,7 +141,7 @@ export const Product = props => {
         <FooterNav>
           <Flex p={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
             <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
-              <TouchableWithoutFeedback onPress={() => null}>
+              <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
                 <BackArrowIcon />
               </TouchableWithoutFeedback>
               <Spacer mr={4} />

@@ -12,19 +12,9 @@ import { BAG_NUM_ITEMS } from "App/App"
 
 const SECTION_HEIGHT = 200
 
-export const Bag = () => {
+export const Bag = ({ navigation }) => {
   const [{ bag }, dispatch]: any = useStateValue()
-  const [_, updateState] = useState({})
   const [showReserveError, displayReserveError] = useState(false)
-
-  useEffect(() => {
-    // Navigation.events().registerComponentDidAppearListener(args => {
-    //   if (args.componentName === "Bag") {
-    //     console.log("bag updating")
-    //     updateState({})
-    //   }
-    // })
-  }, [])
 
   console.log("bag???", bag)
   if (!bag || !bag.items) {
@@ -115,7 +105,7 @@ export const Bag = () => {
         <Box style={{ flex: 1 }}>
           {bagIsEmpty ? (
             <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignContent="center">
-              <EmptyState remainingPieces={remainingPieces} />
+              <EmptyState remainingPieces={remainingPieces} navigation={navigation} />
             </Flex>
           ) : (
             <Box>

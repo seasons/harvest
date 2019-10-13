@@ -43,7 +43,6 @@ const renderItem = ({ item }, navigation) => {
   const product = item.node
   const image = product.images && product.images[0]
   const thumbnail = (image && image.thumbnails && image.thumbnails.large) || { url: "https://via.placeholder.com/150" }
-  console.log("product.id", product.id)
 
   return (
     <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>

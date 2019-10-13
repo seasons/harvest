@@ -19,17 +19,12 @@ interface AppProps {
   cacheData: any
 }
 
-export const App: React.FC<AppProps> = cacheData => {
+export const App: React.FC<AppProps> = ({ cacheData }) => {
   const [{ bag }]: any = useStateValue()
   useEffect(() => {
     AppState.addEventListener("change", nextAppState => handleAppStateChange(nextAppState, bag))
     return AppState.removeEventListener("change", nextAppState => handleAppStateChange(nextAppState, bag))
   }, [])
-  const initialState = {
-    bag: {
-      items: [],
-    },
-  }
 
   const addEmptyItemsToBag = items => {
     const filteredEmptyItems = items.filter(bagItem => {
@@ -81,7 +76,7 @@ export const App: React.FC<AppProps> = cacheData => {
   }
 
   return (
-    <StateProvider initialState={initialState} reducer={reducer}>
+    <StateProvider initialState={cacheData} reducer={reducer}>
       <AppContainer />
     </StateProvider>
   )
