@@ -1,138 +1,143 @@
 import React from "react"
 import { createBottomTabNavigator } from "react-navigation-tabs"
-import { createAppContainer } from "react-navigation"
+import { createAppContainer, StackActions } from "react-navigation"
+import { createStackNavigator } from "react-navigation-stack"
 import { Home } from "App/Scenes/Home"
 import { Browse } from "App/Scenes/Browse"
 import { Bag } from "App/Scenes/Bag"
+import { Product } from "App/Scenes/Product"
 import { Account } from "App/Scenes/Account"
 import { Image } from "react-native"
-// import { createStackNavigator } from "react-navigation-stack"
 import { color } from "App/utils"
 
-const TabNavigator = createBottomTabNavigator(
+const shouldRenderTabBar = navigation => {
+  let renderTabs = true
+  if (navigation.state.routes.length > 1) {
+    navigation.state.routes.map(route => {
+      if (route.routeName === "Product") {
+        renderTabs = false
+      }
+    })
+  }
+  return renderTabs
+}
+
+const HomeStack = createStackNavigator(
   {
     Home,
-    Browse,
-    Bag,
-    Account,
+    Product,
   },
   {
-    defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: () => {
-        const { routeName } = navigation.state
-        let URL
-
-        if (routeName === "Home") {
-          URL = require(`../../assets/images/Home.png`)
-        } else if (routeName === "Browse") {
-          URL = require(`../../assets/images/Browse.png`)
-        } else if (routeName === "Bag") {
-          URL = require(`../../assets/images/Bag.png`)
-        } else if (routeName === "Account") {
-          URL = require(`../../assets/images/Account.png`)
-        }
-
-        return <Image source={URL} />
-      },
-    }),
-    tabBarOptions: {
-      activeTintColor: "tomato",
-      inactiveTintColor: "gray",
-      showIcon: true,
-      showLabel: false,
-      style: {
-        backgroundColor: color("black"),
-        height: 50,
-        borderTopWidth: 0,
-      },
+    initialRouteName: "Home",
+    defaultNavigationOptions: {
+      header: null,
     },
   }
 )
 
-// const AppNavigator = createStackNavigator(
-//   {
-//     Home: {
-//       screen: Home,
-//     },
-//     Browse: {
-//       screen: Browse,
-//     },
-//     Bag: {
-//       screen: Bag,
-//     },
-//     Account: {
-//       screen: Account,
-//     },
-//   },
-//   {
-//     initialRouteName: "Home",
-//   }
-// )
+HomeStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: shouldRenderTabBar(navigation),
+  }
+}
 
-export default createAppContainer(TabNavigator)
+const BrowseStack = createStackNavigator(
+  {
+    Browse,
+    Product,
+  },
+  {
+    initialRouteName: "Browse",
+    defaultNavigationOptions: {
+      header: null,
+    },
+  }
+)
 
-// import { Navigation } from "react-native-navigation"
-// import { bottomTabs } from "./tabs"
+BrowseStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: shouldRenderTabBar(navigation),
+    header: null,
+  }
+}
 
-// export const goToWelcome = () =>
-//   Navigation.setRoot({
-//     root: {
-//       component: {
-//         name: "Welcome",
-//       },
-//     },
-//   })
+const BagStack = createStackNavigator(
+  {
+    Bag,
+    Product,
+  },
+  {
+    initialRouteName: "Bag",
+    defaultNavigationOptions: {
+      header: null,
+    },
+  }
+)
 
-// export const goToProduct = (componentId, id) =>
-//   Navigation.push(componentId, {
-//     component: {
-//       name: "Product",
-//       passProps: {
-//         id,
-//       },
-//       options: {
-//         bottomTabs: {
-//           visible: false,
-//         },
-//       },
-//     },
-//   })
+BagStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: shouldRenderTabBar(navigation),
+    header: null,
+  }
+}
 
-// export const goToSignIn = () =>
-//   Navigation.setRoot({
-//     root: {
-//       component: {
-//         name: "SignIn",
-//       },
-//     },
-//   })
+const AccountStack = createStackNavigator(
+  {
+    Account,
+  },
+  {
+    initialRouteName: "Account",
+    defaultNavigationOptions: {
+      header: null,
+    },
+  }
+)
 
-// export const goToBrowse = () =>
-//   Navigation.setRoot({
-//     root: {
-//       bottomTabs: bottomTabs,
-//       component: {
-//         name: "Browse",
-//       },
-//     },
-//   })
+AccountStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: shouldRenderTabBar(navigation),
+    header: null,
+  }
+}
 
-// export const goHome = () =>
-//   Navigation.setRoot({
-//     root: {
-//       bottomTabs: bottomTabs,
-//       component: {
-//         name: "Home",
-//       },
-//     },
-//   })
+export default createAppContainer(
+  createBottomTabNavigator(
+    {
+      Home: HomeStack,
+      Browse: BrowseStack,
+      Bag: BagStack,
+      Account: AccountStack,
+    },
+    {
+      defaultNavigationOptions: ({ navigation }) => ({
+        tabBarIcon: () => {
+          const { routeName } = navigation.state
+          let URL
 
-// export const goToBag = () =>
-//   Navigation.setRoot({
-//     root: {
-//       bottomTabs: bottomTabs,
-//       component: {
-//         name: "Bag",
-//       },
-//     },
-//   })
+          if (routeName === "Home") {
+            URL = require(`../../assets/images/Home.png`)
+          } else if (routeName === "Browse") {
+            URL = require(`../../assets/images/Browse.png`)
+          } else if (routeName === "Bag") {
+            URL = require(`../../assets/images/Bag.png`)
+          } else if (routeName === "Account") {
+            URL = require(`../../assets/images/Account.png`)
+          }
+
+          return <Image source={URL} />
+        },
+      }),
+      tabBarOptions: {
+        activeTintColor: "tomato",
+        inactiveTintColor: "gray",
+        showIcon: true,
+        showLabel: false,
+        style: {
+          backgroundColor: color("black"),
+          height: 50,
+          borderTopWidth: 0,
+        },
+      },
+    }
+  )
+)

@@ -38,14 +38,15 @@ const GET_PRODUCTS = gql`
   }
 `
 
-const renderItem = ({ item }, componentId) => {
+const renderItem = ({ item }, navigation) => {
   const itemWidth = Dimensions.get("window").width / 2 - 10
   const product = item.node
   const image = product.images && product.images[0]
   const thumbnail = (image && image.thumbnails && image.thumbnails.large) || { url: "https://via.placeholder.com/150" }
+  console.log("product.id", product.id)
 
   return (
-    <TouchableWithoutFeedback onPress={() => goToProduct(componentId, product.id)}>
+    <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
       <Box m={1} mb={2} width={itemWidth}>
         <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
         <Box m={2}>
@@ -64,6 +65,7 @@ const renderItem = ({ item }, componentId) => {
 
 export const Browse = (props: any) => {
   const { loading, data } = useQuery(GET_PRODUCTS)
+  const { navigation } = props
 
   if (loading) {
     return null
@@ -82,7 +84,7 @@ export const Browse = (props: any) => {
           <FlatList
             data={products}
             keyExtractor={item => item.node.id}
-            renderItem={item => renderItem(item, props.componentId)}
+            renderItem={item => renderItem(item, navigation)}
             numColumns={2}
           />
         </Flex>

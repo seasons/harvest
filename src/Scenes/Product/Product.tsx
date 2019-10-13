@@ -32,11 +32,15 @@ const screenHeight = Math.round(Dimensions.get("window").height)
 export const Product = props => {
   const [sizeSelection, setSizeSelection] = useState({ size: "", abbreviated: "X", id: null })
   const [showSizeSelection, toggleShowSizeSelection] = useState(false)
+  const productID =
+    props.navigation && props.navigation.state && props.navigation.state.params && props.navigation.state.params.id
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
-      productId: props.id,
+      productId: productID,
     },
   })
+
+  console.log("props", props)
 
   const sizes = [
     { size: "small", abbreviated: "s", id: 1, stock: 0 },
