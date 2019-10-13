@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+   AppCenter-Config.plist
+   seasons
+
+   Created by Luc Succès on 10/11/19.
+   Copyright (c) 2019 Facebook. All rights reserved.
+-->
+<plist version="1.0">
+  <dict>
+    <key>AppSecret</key>
+    <string>eef5589c-d0dd-46ce-9951-4921dd3ece0c</string>
+  </dict>
+</plist>

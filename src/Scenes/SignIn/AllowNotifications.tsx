@@ -1,7 +1,7 @@
 import React from "react"
 import { Theme, Sans } from "App/Components"
 import { SafeAreaView } from "react-native"
-import { color } from "App/utils"
+import { color } from "App/Utils"
 
 export class AllowNotifications extends React.Component {
   render() {

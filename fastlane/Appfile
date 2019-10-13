@@ -1,0 +1,2 @@
+app_identifier "com.seasons.Seasons" # The bundle identifier of your app
+apple_id "luc@seasons.nyc"  # Your Apple email address
