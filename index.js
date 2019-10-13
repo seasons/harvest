@@ -1,4 +1,4 @@
-import { App } from "./src/App"
+import { App, EMPTY_BAG } from "./src/App"
 import { ApolloClient } from "apollo-client"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { HttpLink } from "apollo-link-http"
@@ -29,9 +29,12 @@ export const apolloClient = new ApolloClient({
 })
 
 const ApolloApp = () => {
+  const [cacheData, setCacheData] = useState(EMPTY_BAG)
+  restoreCache().then(data => setCacheData(data))
+
   return (
     <ApolloProvider client={apolloClient}>
-      <App cacheData={{ bag: { items: [] } }} />
+      <App cacheData={cacheData} />
     </ApolloProvider>
   )
 }
