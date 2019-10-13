@@ -40,8 +40,6 @@ export const Product = props => {
     },
   })
 
-  console.log("props", props)
-
   const sizes = [
     { size: "small", abbreviated: "s", id: 1, stock: 0 },
     { size: "medium", abbreviated: "m", id: 2, stock: 2 },

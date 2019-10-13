@@ -16,7 +16,6 @@ export const Bag = ({ navigation }) => {
   const [{ bag }, dispatch]: any = useStateValue()
   const [showReserveError, displayReserveError] = useState(false)
 
-  console.log("bag???", bag)
   if (!bag || !bag.items) {
     return null
   }

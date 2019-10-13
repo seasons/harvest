@@ -82,7 +82,6 @@ export class SignIn extends React.Component<SignInProps> {
         connection: "Username-Password-Authentication",
       })
       .then(success => {
-        console.log(success)
         this.alert("Success", "New user created")
       })
       .catch(error => {
