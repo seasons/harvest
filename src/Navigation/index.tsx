@@ -8,7 +8,7 @@ import { Bag } from "App/Scenes/Bag"
 import { Product } from "App/Scenes/Product"
 import { Account } from "App/Scenes/Account"
 import { Image } from "react-native"
-import { color } from "App/utils"
+import { color } from "App/Utils"
 
 const shouldRenderTabBar = navigation => {
   let renderTabs = true
@@ -110,7 +110,7 @@ export default createAppContainer(
     },
     {
       defaultNavigationOptions: ({ navigation }) => ({
-        tabBarIcon: () => {
+        tabBarIcon: ({ focused, tintColor }) => {
           const { routeName } = navigation.state
           let URL
 
@@ -124,11 +124,11 @@ export default createAppContainer(
             URL = require(`../../assets/images/Account.png`)
           }
 
-          return <Image source={URL} />
+          return <Image source={URL} style={{ opacity: focused ? 1.0 : 0.3 }} />
         },
       }),
       tabBarOptions: {
-        activeTintColor: "tomato",
+        activeTintColor: "white",
         inactiveTintColor: "gray",
         showIcon: true,
         showLabel: false,

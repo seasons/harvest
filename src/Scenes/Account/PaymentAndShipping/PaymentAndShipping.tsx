@@ -3,7 +3,7 @@ import { DisplayView } from "./DisplayView"
 import { EditView } from "./EditView"
 import React from "react"
 import { SafeAreaView } from "react-native"
-import { space } from "App/utils"
+import { space } from "App/Utils"
 import styled from "styled-components/native"
 
 interface Props {}

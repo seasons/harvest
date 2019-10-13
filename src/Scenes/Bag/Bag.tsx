@@ -6,7 +6,7 @@ import { Theme, Spacer, Flex, Box, Separator, FixedButton, ErrorPopUp } from "Ap
 import { Text, Image, FlatList } from "react-native"
 import { useStateValue } from "App/helpers/StateProvider"
 import { TouchableWithoutFeedback } from "react-native"
-import { color } from "App/utils"
+import { color } from "App/Utils"
 import { BagPlus } from "../../../assets/svgs"
 import { BAG_NUM_ITEMS } from "App/App"
 

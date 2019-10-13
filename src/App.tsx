@@ -25,7 +25,11 @@ export const App: React.FC<AppProps> = cacheData => {
     AppState.addEventListener("change", nextAppState => handleAppStateChange(nextAppState, bag))
     return AppState.removeEventListener("change", nextAppState => handleAppStateChange(nextAppState, bag))
   }, [])
-  const initialState = cacheData
+  const initialState = {
+    bag: {
+      items: [],
+    },
+  }
 
   const addEmptyItemsToBag = items => {
     const filteredEmptyItems = items.filter(bagItem => {
