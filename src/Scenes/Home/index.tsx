@@ -10,15 +10,16 @@ import { Theme } from "Components/Theme"
 
 export const Home = (props: any) => {
   const renderItem = ({ item }) => {
+    const { navigation } = props
     switch (item.type) {
       case "header":
-        return <HeroRail items={item.data} />
+        return <HeroRail navigation={navigation} items={item.data} />
 
       case "categories":
-        return <CategoriesRail categories={item.data} />
+        return <CategoriesRail navigation={navigation} categories={item.data} />
 
       case "just-added":
-        return <JustAddedRail componentId={props.componentId} items={item.data} />
+        return <JustAddedRail navigation={navigation} componentId={props.componentId} items={item.data} />
     }
   }
 

@@ -2,12 +2,14 @@ import React from "react"
 import { Box, Sans } from "App/Components"
 import { ScrollView } from "react-native"
 import styled from "styled-components/native"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 interface CategoriesRailProps {
   categories: any
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
-export const CategoriesRail: React.FC<CategoriesRailProps> = ({ categories }) => {
+export const CategoriesRail: React.FC<CategoriesRailProps> = ({ categories, navigation }) => {
   return (
     <Box my={2}>
       <Sans size="2">Categories</Sans>
