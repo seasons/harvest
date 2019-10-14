@@ -2,14 +2,15 @@ import React from "react"
 import { Box, Sans, Button } from "App/Components"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
 import { styled } from "Components/platform/primitives"
-import { goToProduct } from "App/Navigation"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 interface JustAddedRailProps {
   items: any
   componentId: string
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
-export const JustAddedRail: React.FC<JustAddedRailProps> = ({ items, componentId }) => {
+export const JustAddedRail: React.FC<JustAddedRailProps> = ({ items, componentId, navigation }) => {
   return (
     <Box my={2} style={{ position: "relative" }}>
       <Sans size="2">Just Added</Sans>
@@ -18,7 +19,7 @@ export const JustAddedRail: React.FC<JustAddedRailProps> = ({ items, componentId
           data={items}
           renderItem={({ item }) => {
             return (
-              <TouchableWithoutFeedback onPress={() => goToProduct(componentId, item.id)}>
+              <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: item.id })}>
                 <Box mr={2}>
                   <ImageContainer source={{ uri: item.imageUrl }}></ImageContainer>
                   <Box m={1}>

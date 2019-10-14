@@ -3,7 +3,7 @@ import { FlatList } from "react-native"
 import { styled } from "Components/platform/primitives"
 import { Box } from "App/Components"
 
-export const HeroRail = ({ items }) => {
+export const HeroRail = ({ items, navigation }) => {
   return (
     <FlatList
       data={items}
