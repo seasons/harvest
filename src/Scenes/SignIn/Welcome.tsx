@@ -6,7 +6,6 @@ import { SafeAreaView } from "react-native"
 import styled from "styled-components/native"
 import { HalfLogoSVG, CurvedLineSVG } from "Assets/svgs"
 import { color } from "App/Utils"
-import { goToSignIn } from "App/Navigation"
 
 const image = {
   id: 1,
@@ -17,7 +16,7 @@ const image = {
 
 const handleApply = () => {}
 
-export const Welcome = () => {
+export const Welcome = ({ navigation }) => {
   return (
     <Outer>
       <SafeAreaView style={{ flex: 1 }}>
@@ -46,7 +45,7 @@ export const Welcome = () => {
                 Sign in to access the most coveted menswear and streetwear brands.
               </Sans>
               <Spacer mb={2} />
-              <Button onPress={() => goToSignIn()} variant="primaryLight">
+              <Button onPress={() => navigation.navigate("SignIn")} variant="primaryLight">
                 Sign in
               </Button>
               <Spacer mb={2} />

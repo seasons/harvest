@@ -1,22 +1,27 @@
 import React from "react"
 import { View } from "react-native"
 import AsyncStorage from "@react-native-community/async-storage"
-import { goToWelcome, goHome } from "../../Navigation"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
-export class Initializing extends React.Component {
+interface Props {
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+}
+
+export class Initializing extends React.Component<Props> {
   async componentDidMount() {
+    const { navigation } = this.props
     try {
       let userSession = await AsyncStorage.getItem("userSession")
       userSession = JSON.parse(userSession)
 
       if (userSession && userSession.accessToken) {
-        goHome()
+        navigation.navigate("MainNavigator")
       } else {
-        goToWelcome()
+        navigation.navigate("AuthStack")
       }
     } catch (err) {
       console.log("error: ", err)
-      goToWelcome()
+      navigation.navigate("AuthStack")
     }
   }
 

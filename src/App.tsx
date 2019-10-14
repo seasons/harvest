@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import { StateProvider, useStateValue } from "App/helpers/StateProvider"
 import { persistCache } from "./helpers/asyncStorage"
 import { AppState } from "react-native"
-import AppContainer from "App/Navigation"
+import { AppContainer } from "App/Navigation"
 
 export const BAG_NUM_ITEMS = 3
 export const EMPTY_BAG = {

@@ -5,7 +5,7 @@ import { SafeAreaView, TouchableWithoutFeedback } from "react-native"
 import AsyncStorage from "@react-native-community/async-storage"
 import { color } from "App/Utils"
 import Auth0 from "react-native-auth0"
-import { goHome } from "../../Navigation"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 const credentials = {
   domain: "seasons.auth0.com",
@@ -16,6 +16,7 @@ const auth0 = new Auth0(credentials)
 
 interface SignInProps {
   onAuth: (credentials, profile) => void
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 export class SignIn extends React.Component<SignInProps> {
@@ -67,7 +68,7 @@ export class SignIn extends React.Component<SignInProps> {
       })
       .then(success => {
         AsyncStorage.setItem("userSession", JSON.stringify(success))
-        goHome()
+        navigation.navigate("MainNavigator")
       })
       .catch(error => {
         this.alert("Error", error.json.description)
