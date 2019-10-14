@@ -4,6 +4,9 @@ import { color } from "App/Utils"
 import { ProductInfoItem } from "./ProductInfoItem"
 
 export const ProductDetails = ({ product }) => {
+  if (!product) {
+    return null
+  }
   return (
     <Box p={2} mb={3}>
       {product.name && (

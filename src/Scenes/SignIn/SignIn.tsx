@@ -5,7 +5,7 @@ import { SafeAreaView, TouchableWithoutFeedback } from "react-native"
 import AsyncStorage from "@react-native-community/async-storage"
 import { color } from "App/Utils"
 import Auth0 from "react-native-auth0"
-import { goHome } from "../../Navigation"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 const credentials = {
   domain: "seasons.auth0.com",
@@ -16,6 +16,7 @@ const auth0 = new Auth0(credentials)
 
 interface SignInProps {
   onAuth: (credentials, profile) => void
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 export class SignIn extends React.Component<SignInProps> {
@@ -55,7 +56,7 @@ export class SignIn extends React.Component<SignInProps> {
       .then(profile => {
         this.props.onAuth(credentials, profile)
       })
-      .catch(error => this.alert("Error", error.json.error_description))
+      .catch(error => this.alert("Error", error))
   }
 
   login(username, password) {
@@ -67,10 +68,10 @@ export class SignIn extends React.Component<SignInProps> {
       })
       .then(success => {
         AsyncStorage.setItem("userSession", JSON.stringify(success))
-        goHome()
+        this.props.navigation.navigate("MainNavigator")
       })
       .catch(error => {
-        this.alert("Error", error.json.description)
+        this.alert("Error", error)
       })
   }
 
@@ -151,7 +152,8 @@ export class SignIn extends React.Component<SignInProps> {
                 <Spacer mb={4} />
                 <Button
                   onPress={() => this.handleSignIn()}
-                  variant={emailComplete && password.length ? "primaryLight" : "secondaryLight"}
+                  disabled={!(emailComplete && password.length)}
+                  variant="primaryLight"
                 >
                   Sign in
                 </Button>

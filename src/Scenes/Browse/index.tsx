@@ -6,7 +6,6 @@ import { useQuery } from "@apollo/react-hooks"
 import { Box, Sans, Flex } from "App/Components"
 import styled from "styled-components/native"
 import { fontFamily } from "Components/Typography"
-import { goToProduct } from "App/Navigation"
 
 const GET_PRODUCTS = gql`
   {
