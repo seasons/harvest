@@ -56,7 +56,7 @@ export class SignIn extends React.Component<SignInProps> {
       .then(profile => {
         this.props.onAuth(credentials, profile)
       })
-      .catch(error => this.alert("Error", error.json.error_description))
+      .catch(error => this.alert("Error", error))
   }
 
   login(username, password) {
@@ -68,10 +68,10 @@ export class SignIn extends React.Component<SignInProps> {
       })
       .then(success => {
         AsyncStorage.setItem("userSession", JSON.stringify(success))
-        navigation.navigate("MainNavigator")
+        this.props.navigation.navigate("MainNavigator")
       })
       .catch(error => {
-        this.alert("Error", error.json.description)
+        this.alert("Error", error)
       })
   }
 
@@ -152,7 +152,8 @@ export class SignIn extends React.Component<SignInProps> {
                 <Spacer mb={4} />
                 <Button
                   onPress={() => this.handleSignIn()}
-                  variant={emailComplete && password.length ? "primaryLight" : "secondaryLight"}
+                  disabled={!(emailComplete && password.length)}
+                  variant="primaryLight"
                 >
                   Sign in
                 </Button>
