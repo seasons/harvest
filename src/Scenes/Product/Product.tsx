@@ -9,6 +9,9 @@ import { color, space } from "App/Utils"
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
+import { GreenCheck } from "Assets/svgs"
+import { BAG_NUM_ITEMS } from "App/App"
+import { useStateValue } from "App/helpers/StateProvider"
 
 const GET_PRODUCT = gql`
   query GetProduct($productId: ID!) {
@@ -30,8 +33,10 @@ const GET_PRODUCT = gql`
 const screenHeight = Math.round(Dimensions.get("window").height)
 
 export const Product = props => {
+  const [{ bag }, _dispatch]: any = useStateValue()
   const [sizeSelection, setSizeSelection] = useState({ size: "", abbreviated: "X", id: null })
   const [showSizeSelection, toggleShowSizeSelection] = useState(false)
+  const [showReserveConfirmation, setShowReserveConfirmation] = useState(false)
   const productID =
     props.navigation && props.navigation.state && props.navigation.state.params && props.navigation.state.params.id
   const { loading, error, data } = useQuery(GET_PRODUCT, {
@@ -47,6 +52,13 @@ export const Product = props => {
     { size: "x-large", abbreviated: "xl", id: 4, stock: 3 },
     { size: "xx-large", abbreviated: "xxl", id: 5, stock: 3 },
   ]
+
+  const displayReserveConfirmation = () => {
+    setShowReserveConfirmation(true)
+    setTimeout(() => {
+      setShowReserveConfirmation(false)
+    }, 2000)
+  }
 
   useEffect(() => {
     // Find the first product with stock
@@ -85,6 +97,29 @@ export const Product = props => {
     }
   }
 
+  const ReserveConfirmation = () => {
+    const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
+    return (
+      <ReserveConfirmationWrapper alignContent="center" justifyContent="center" flexDirection="column">
+        <Flex flexDirection="row" alignContent="center" justifyContent="center">
+          <Flex alignContent="center" justifyContent="center" flexDirection="column">
+            <Flex flexDirection="row" alignContent="center" justifyContent="center">
+              <GreenCheck />
+            </Flex>
+            <Spacer mb={2} />
+            <Sans size="2" color="white" textAlign="center">
+              Added to bag
+            </Sans>
+            <Spacer mb={1} />
+            <Sans size="2" color="gray" textAlign="center">
+              ({remainingPieces} slots remaining)
+            </Sans>
+          </Flex>
+        </Flex>
+      </ReserveConfirmationWrapper>
+    )
+  }
+
   const renderSizes = () => {
     return sizes.map(size => {
       return (
@@ -119,53 +154,56 @@ export const Product = props => {
 
   return (
     <Theme>
-      <Outer>
-        <Spring
-          native
-          toggle={showSizeSelection}
-          from={{ height: screenHeight - 106 }}
-          to={{ height: showSizeSelection ? screenHeight - 436 : screenHeight - 106 }}
-        >
-          {props => (
-            <AnimatedContent style={props}>
-              {showSizeSelection && <AnimatedOverlay style={props} />}
-              <SafeAreaView style={{ flex: 1 }}>
-                <FlatList data={sections()} keyExtractor={item => item} renderItem={item => renderItem(item)} />
-              </SafeAreaView>
-            </AnimatedContent>
-          )}
-        </Spring>
-        <FooterNav>
-          <Flex p={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
-            <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
-              <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
-                <BackArrowIcon />
+      <>
+        {showReserveConfirmation && <ReserveConfirmation />}
+        <Outer>
+          <Spring
+            native
+            toggle={showSizeSelection}
+            from={{ height: screenHeight - 106 }}
+            to={{ height: showSizeSelection ? screenHeight - 436 : screenHeight - 106 }}
+          >
+            {props => (
+              <AnimatedContent style={props}>
+                {showSizeSelection && <AnimatedOverlay style={props} />}
+                <SafeAreaView style={{ flex: 1 }}>
+                  <FlatList data={sections()} keyExtractor={item => item} renderItem={item => renderItem(item)} />
+                </SafeAreaView>
+              </AnimatedContent>
+            )}
+          </Spring>
+          <FooterNav>
+            <Flex p={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
+              <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
+                <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
+                  <BackArrowIcon />
+                </TouchableWithoutFeedback>
+                <Spacer mr={4} />
+                <TouchableWithoutFeedback onPress={() => handleSaveButton()}>
+                  <SaveIcon />
+                </TouchableWithoutFeedback>
+              </Flex>
+              <TouchableWithoutFeedback onPress={() => toggleShowSizeSelection(!showSizeSelection)}>
+                <SizeSelectionButton p={2}>
+                  <StyledSans size="2" color="white">
+                    {sizeSelection.abbreviated.toUpperCase()}
+                  </StyledSans>
+                  <Spacer mr={3} />
+                  <StyledDownChevronIcon rotate={showSizeSelection} />
+                </SizeSelectionButton>
               </TouchableWithoutFeedback>
-              <Spacer mr={4} />
-              <TouchableWithoutFeedback onPress={() => handleSaveButton()}>
-                <SaveIcon />
-              </TouchableWithoutFeedback>
+              <ReserveButton product={product} displayReserveConfirmation={displayReserveConfirmation}></ReserveButton>
             </Flex>
-            <TouchableWithoutFeedback onPress={() => toggleShowSizeSelection(!showSizeSelection)}>
-              <SizeSelectionButton p={2}>
-                <StyledSans size="2" color="white">
-                  {sizeSelection.abbreviated.toUpperCase()}
-                </StyledSans>
-                <Spacer mr={3} />
-                <StyledDownChevronIcon rotate={showSizeSelection} />
-              </SizeSelectionButton>
-            </TouchableWithoutFeedback>
-            <ReserveButton product={product}></ReserveButton>
-          </Flex>
-        </FooterNav>
-        <Selection m={2}>
-          <ScrollView>
-            <Separator color={color("gray")} />
-            {renderSizes()}
-          </ScrollView>
-          <Button onPress={() => toggleShowSizeSelection(!showSizeSelection)}>Cancel</Button>
-        </Selection>
-      </Outer>
+          </FooterNav>
+          <Selection m={2}>
+            <ScrollView>
+              <Separator color={color("gray")} />
+              {renderSizes()}
+            </ScrollView>
+            <Button onPress={() => toggleShowSizeSelection(!showSizeSelection)}>Cancel</Button>
+          </Selection>
+        </Outer>
+      </>
     </Theme>
   )
 }
@@ -218,11 +256,21 @@ const SizeSelectionButton = styled.View`
 `
 
 const Content = styled.View`
-  background-color: white;
+  /* background-color: white;
   border-bottom-left-radius: 30;
   border-bottom-right-radius: 30;
-  overflow: hidden;
+  overflow: hidden; */
   margin-bottom: 10;
+`
+
+const ReserveConfirmationWrapper = styled(Flex)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.8);
 `
 
 const AnimatedContent = animated(Content)

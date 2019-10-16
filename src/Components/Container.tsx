@@ -20,8 +20,6 @@ const Outer = styled.View`
 const Content = styled.View`
   height: 100%;
   background-color: white;
-  border-bottom-left-radius: 30;
-  border-bottom-right-radius: 30;
   overflow: hidden;
   margin-bottom: 15;
 `
