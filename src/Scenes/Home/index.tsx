@@ -1,14 +1,30 @@
 import { Box } from "App/Components"
 import { CategoriesRail } from "./Components/CategoriesRail"
 import { Container } from "Components/Container"
-import { FlatList } from "react-native"
+import { FlatList, AppState } from "react-native"
 import { HeroRail } from "./Components/HeroRail"
 import { JustAddedRail } from "./Components/JustAddedRail"
 import { LogoText } from "Components/Typography"
-import React from "react"
+import React, { useEffect } from "react"
 import { Theme } from "Components/Theme"
+import { useStateValue } from "App/helpers/StateProvider"
+import { persistCache } from "App/helpers/asyncStorage"
 
 export const Home = (props: any) => {
+  // The homescreen persists the local cache
+  const [{ bag }]: any = useStateValue()
+  useEffect(() => {
+    AppState.addEventListener("change", nextAppState => handleAppStateChange(nextAppState))
+    return AppState.removeEventListener("change", nextAppState => handleAppStateChange(nextAppState))
+  }, [])
+
+  const handleAppStateChange = nextAppState => {
+    if (nextAppState === "inactive") {
+      console.log("the bag here", bag)
+      persistCache(bag)
+    }
+  }
+
   const renderItem = ({ item }) => {
     const { navigation } = props
     switch (item.type) {

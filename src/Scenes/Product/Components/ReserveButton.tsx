@@ -4,20 +4,22 @@ import { useStateValue } from "App/helpers/StateProvider"
 
 interface Props {
   product: any
+  displayReserveConfirmation: () => void
 }
 
-export const ReserveButton: React.FC<Props> = ({ product }) => {
-  const [_, dispatch] = useStateValue()
+export const ReserveButton: React.FC<Props> = ({ product, displayReserveConfirmation }) => {
+  const [_, dispatch] = useStateValue() as any
   return (
     <Button
       variant="primaryLight"
       size="small"
-      onPress={() =>
+      onPress={() => {
+        displayReserveConfirmation()
         dispatch({
           type: "addItemToBag",
           item: product,
         })
-      }
+      }}
     >
       Reserve
     </Button>

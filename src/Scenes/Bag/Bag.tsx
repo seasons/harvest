@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
 import { EmptyState } from "./Components.tsx"
@@ -11,6 +11,11 @@ import { BagPlus } from "../../../assets/svgs"
 import { BAG_NUM_ITEMS } from "App/App"
 
 const SECTION_HEIGHT = 200
+
+const handleReserve = () => {
+  // FIXME:
+  return null
+}
 
 export const Bag = ({ navigation }) => {
   const [{ bag }, dispatch]: any = useStateValue()
@@ -26,10 +31,6 @@ export const Bag = ({ navigation }) => {
   const remainingPiecesDisplay = !bagIsFull
     ? `You have ${remainingPieces} ${remainingPieces === 1 ? "piece" : "pieces"} remaining`
     : "Reserve your order below"
-
-  const handleReserve = () => {
-    // FIXME: Handle reserve items
-  }
 
   const emptyBagItem = index => {
     return (

@@ -6,6 +6,7 @@ import { Box, BoxProps } from "./Box"
 import { Flex } from "./Flex"
 import { Sans } from "./Typography"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
+import { TouchableOpacity } from "react-native-gesture-handler"
 
 enum DisplayState {
   Default = "default",
@@ -184,7 +185,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
     return (
       <Spring native from={from} to={to}>
         {props => (
-          <TouchableWithoutFeedback
+          <TouchableOpacity
             onPress={this.onPress}
             onPressIn={() => {
               this.setState({
@@ -207,7 +208,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
                 </Sans>
               </AnimatedContainer>
             </Flex>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         )}
       </Spring>
     )
