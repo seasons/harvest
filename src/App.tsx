@@ -1,7 +1,5 @@
-import React, { useEffect } from "react"
-import { StateProvider, useStateValue } from "App/helpers/StateProvider"
-import { persistCache } from "./helpers/asyncStorage"
-import { AppState } from "react-native"
+import React from "react"
+import { StateProvider } from "App/helpers/StateProvider"
 import { AppContainer } from "App/Navigation"
 
 export const BAG_NUM_ITEMS = 3
@@ -9,23 +7,11 @@ export const EMPTY_BAG = {
   bag: { items: [], itemCount: 0 },
 }
 
-const handleAppStateChange = (nextAppState, bag) => {
-  if (nextAppState === "inactive") {
-    persistCache(bag)
-  }
-}
-
 interface AppProps {
   cacheData: any
 }
 
 export const App: React.FC<AppProps> = ({ cacheData }) => {
-  const [{ bag }]: any = useStateValue()
-  useEffect(() => {
-    AppState.addEventListener("change", nextAppState => handleAppStateChange(nextAppState, bag))
-    return AppState.removeEventListener("change", nextAppState => handleAppStateChange(nextAppState, bag))
-  }, [])
-
   const addEmptyItemsToBag = items => {
     const filteredEmptyItems = items.filter(bagItem => {
       return bagItem.type !== "empty"

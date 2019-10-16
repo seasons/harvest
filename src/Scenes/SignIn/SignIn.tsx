@@ -68,7 +68,7 @@ export class SignIn extends React.Component<SignInProps> {
       })
       .then(success => {
         AsyncStorage.setItem("userSession", JSON.stringify(success))
-        this.props.navigation.navigate("MainNavigator")
+        this.props.navigation.navigate("Home")
       })
       .catch(error => {
         this.alert("Error", error)

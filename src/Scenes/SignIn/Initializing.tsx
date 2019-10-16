@@ -15,7 +15,7 @@ export class Initializing extends React.Component<Props> {
       userSession = JSON.parse(userSession)
 
       if (userSession && userSession.accessToken) {
-        navigation.navigate("MainNavigator")
+        navigation.navigate("Home")
       } else {
         navigation.navigate("AuthStack")
       }

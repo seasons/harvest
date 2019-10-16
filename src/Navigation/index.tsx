@@ -8,8 +8,10 @@ import { Bag } from "App/Scenes/Bag"
 import { SignIn, Initializing, Welcome, SignInOrApply } from "App/Scenes/SignIn"
 import { Product } from "App/Scenes/Product"
 import { Account } from "App/Scenes/Account"
-import { Image } from "react-native"
+import { Image, View, Dimensions } from "react-native"
 import { color } from "App/Utils"
+import styled from "styled-components"
+import { Tabs } from "./Tabs"
 
 const shouldRenderTabBar = navigation => {
   let renderTabs = true
@@ -130,7 +132,7 @@ const MainNavigator = createBottomTabNavigator(
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, tintColor }) => {
+      tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state
         let URL
 
@@ -147,29 +149,46 @@ const MainNavigator = createBottomTabNavigator(
         return <Image source={URL} style={{ opacity: focused ? 1.0 : 0.3 }} />
       },
     }),
-    tabBarOptions: {
-      activeTintColor: "white",
-      inactiveTintColor: "gray",
-      showIcon: true,
-      showLabel: false,
-      style: {
-        backgroundColor: color("black"),
-        height: 50,
-        borderTopWidth: 0,
-      },
-    },
+    tabBarComponent: Tabs,
   }
 )
 
-export const AppContainer = createAppContainer(
-  createSwitchNavigator(
-    {
-      Initializing,
-      AuthStack,
-      MainNavigator,
-    },
-    {
-      initialRouteName: "Initializing",
-    }
-  )
+class CustomNavigator extends React.Component {
+  static router = {
+    ...MainNavigator.router,
+  }
+
+  render() {
+    const { navigation } = this.props
+    const screenHeight = Math.round(Dimensions.get("window").height)
+    const height = screenHeight - 106
+
+    return (
+      <NavigationContainer style={{ flex: 1 }}>
+        <MainNavigator navigation={navigation} />
+      </NavigationContainer>
+    )
+  }
+}
+
+const SwitchNavigator = createSwitchNavigator(
+  {
+    Initializing,
+    AuthStack,
+    Home: CustomNavigator,
+  },
+  {
+    initialRouteName: "Initializing",
+  }
 )
+
+// const Outer = styled.View`
+//   flex: 1;
+//   background-color: turquoise;
+// `
+
+const NavigationContainer = styled.View`
+  background-color: black;
+`
+
+export const AppContainer = createAppContainer(SwitchNavigator)

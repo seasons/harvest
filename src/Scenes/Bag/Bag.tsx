@@ -9,13 +9,19 @@ import { TouchableWithoutFeedback } from "react-native"
 import { color } from "App/Utils"
 import { BagPlus } from "../../../assets/svgs"
 import { BAG_NUM_ITEMS } from "App/App"
-import styled from "styled-components/native"
 
 const SECTION_HEIGHT = 200
+
+const handleReserve = () => {
+  // FIXME:
+  return null
+}
 
 export const Bag = ({ navigation }) => {
   const [{ bag }, dispatch]: any = useStateValue()
   const [showReserveError, displayReserveError] = useState(false)
+
+  console.log("the bag in the bag", bag)
 
   if (!bag || !bag.items) {
     return null

@@ -9,7 +9,7 @@ import { color, space } from "App/Utils"
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
-import { BagPlus } from "Assets/svgs"
+import { GreenCheck } from "Assets/svgs"
 import { BAG_NUM_ITEMS } from "App/App"
 import { useStateValue } from "App/helpers/StateProvider"
 
@@ -33,7 +33,7 @@ const GET_PRODUCT = gql`
 const screenHeight = Math.round(Dimensions.get("window").height)
 
 export const Product = props => {
-  const [{ bag }, dispatch]: any = useStateValue()
+  const [{ bag }, _dispatch]: any = useStateValue()
   const [sizeSelection, setSizeSelection] = useState({ size: "", abbreviated: "X", id: null })
   const [showSizeSelection, toggleShowSizeSelection] = useState(false)
   const [showReserveConfirmation, setShowReserveConfirmation] = useState(false)
@@ -104,7 +104,7 @@ export const Product = props => {
         <Flex flexDirection="row" alignContent="center" justifyContent="center">
           <Flex alignContent="center" justifyContent="center" flexDirection="column">
             <Flex flexDirection="row" alignContent="center" justifyContent="center">
-              <BagPlus />
+              <GreenCheck />
             </Flex>
             <Spacer mb={2} />
             <Sans size="2" color="white" textAlign="center">
@@ -256,10 +256,10 @@ const SizeSelectionButton = styled.View`
 `
 
 const Content = styled.View`
-  background-color: white;
+  /* background-color: white;
   border-bottom-left-radius: 30;
   border-bottom-right-radius: 30;
-  overflow: hidden;
+  overflow: hidden; */
   margin-bottom: 10;
 `
 
