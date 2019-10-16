@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import gql from "graphql-tag"
 import { capitalize } from "lodash"
 import { useQuery } from "@apollo/react-hooks"
 import { Theme, Button, Flex, Sans, Box, Radio, Separator, Spacer } from "App/Components"
-import { FlatList, SafeAreaView, Dimensions, TouchableWithoutFeedback, ScrollView } from "react-native"
-import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand, ReserveButton } from "./Components"
+import { FlatList, SafeAreaView, Dimensions, ScrollView } from "react-native"
+import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand } from "./Components"
 import { color, space } from "App/Utils"
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
-import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
 import { GreenCheck } from "Assets/svgs"
 import { BAG_NUM_ITEMS } from "App/App"
 import { useStateValue } from "App/helpers/StateProvider"
@@ -33,10 +32,8 @@ const GET_PRODUCT = gql`
 const screenHeight = Math.round(Dimensions.get("window").height)
 
 export const Product = props => {
-  const [{ bag }, _dispatch]: any = useStateValue()
-  const [sizeSelection, setSizeSelection] = useState({ size: "", abbreviated: "X", id: null })
-  const [showSizeSelection, toggleShowSizeSelection] = useState(false)
-  const [showReserveConfirmation, setShowReserveConfirmation] = useState(false)
+  const [{ bag, productState }, dispatch]: any = useStateValue()
+  // const [showSizeSelection, toggleShowSizeSelection] = useState(false)
   const productID =
     props.navigation && props.navigation.state && props.navigation.state.params && props.navigation.state.params.id
   const { loading, error, data } = useQuery(GET_PRODUCT, {
@@ -54,9 +51,15 @@ export const Product = props => {
   ]
 
   const displayReserveConfirmation = () => {
-    setShowReserveConfirmation(true)
+    dispatch({
+      type: "toggleReserveConfirmation",
+      showReserveConfirmation: true,
+    })
     setTimeout(() => {
-      setShowReserveConfirmation(false)
+      dispatch({
+        type: "toggleReserveConfirmation",
+        showReserveConfirmation: false,
+      })
     }, 2000)
   }
 
@@ -65,12 +68,18 @@ export const Product = props => {
     const firstInStock = sizes.find(size => {
       return size.stock > 0
     })
-    setSizeSelection(firstInStock)
+    dispatch({
+      type: "productMounted",
+      productMountedState: {
+        displayFooter: true,
+        sizeSelection: firstInStock,
+      },
+    })
+    return dispatch({
+      type: "toggleProductFooter",
+      displayFooter: false,
+    })
   }, [])
-
-  const handleSaveButton = () => {
-    // FIXME: Handle handleSaveButton
-  }
 
   if (loading || !data) {
     return null
@@ -128,9 +137,14 @@ export const Product = props => {
           <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
             <Flex flexDirection="row" alignItems="center">
               <Radio
-                selected={sizeSelection.id === size.id}
+                selected={productState.sizeSelection.id === size.id}
                 disabled={size.stock === 0}
-                onSelect={() => setSizeSelection(size)}
+                onSelect={() =>
+                  dispatch({
+                    type: "setSizeSelection",
+                    sizeSelection: size,
+                  })
+                }
               />
               <Spacer mr={1} />
               <Sans color={size.stock ? "white" : "gray"} size="2">
@@ -151,56 +165,41 @@ export const Product = props => {
   const sections = () => {
     return ["imageRail", "productDetails", "moreLikeThis", "aboutTheBrand"]
   }
-
   return (
     <Theme>
       <>
-        {showReserveConfirmation && <ReserveConfirmation />}
+        {productState.showReserveConfirmation && <ReserveConfirmation />}
         <Outer>
           <Spring
             native
-            toggle={showSizeSelection}
+            toggle={productState.showSizeSelection}
             from={{ height: screenHeight - 106 }}
-            to={{ height: showSizeSelection ? screenHeight - 436 : screenHeight - 106 }}
+            to={{ height: productState.showSizeSelection ? screenHeight - 436 : screenHeight - 106 }}
           >
             {props => (
               <AnimatedContent style={props}>
-                {showSizeSelection && <AnimatedOverlay style={props} />}
+                {productState.showSizeSelection && <AnimatedOverlay style={props} />}
                 <SafeAreaView style={{ flex: 1 }}>
                   <FlatList data={sections()} keyExtractor={item => item} renderItem={item => renderItem(item)} />
                 </SafeAreaView>
               </AnimatedContent>
             )}
           </Spring>
-          <FooterNav>
-            <Flex p={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
-              <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
-                <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
-                  <BackArrowIcon />
-                </TouchableWithoutFeedback>
-                <Spacer mr={4} />
-                <TouchableWithoutFeedback onPress={() => handleSaveButton()}>
-                  <SaveIcon />
-                </TouchableWithoutFeedback>
-              </Flex>
-              <TouchableWithoutFeedback onPress={() => toggleShowSizeSelection(!showSizeSelection)}>
-                <SizeSelectionButton p={2}>
-                  <StyledSans size="2" color="white">
-                    {sizeSelection.abbreviated.toUpperCase()}
-                  </StyledSans>
-                  <Spacer mr={3} />
-                  <StyledDownChevronIcon rotate={showSizeSelection} />
-                </SizeSelectionButton>
-              </TouchableWithoutFeedback>
-              <ReserveButton product={product} displayReserveConfirmation={displayReserveConfirmation}></ReserveButton>
-            </Flex>
-          </FooterNav>
           <Selection m={2}>
             <ScrollView>
               <Separator color={color("gray")} />
               {renderSizes()}
             </ScrollView>
-            <Button onPress={() => toggleShowSizeSelection(!showSizeSelection)}>Cancel</Button>
+            <Button
+              onPress={() =>
+                dispatch({
+                  type: "toggleShowSizeSelection",
+                  showSizeSelection: !productState.showSizeSelection,
+                })
+              }
+            >
+              Cancel
+            </Button>
           </Selection>
         </Outer>
       </>
@@ -208,21 +207,9 @@ export const Product = props => {
   )
 }
 
-const StyledDownChevronIcon = styled(DownChevronIcon)`
-  position: absolute;
-  right: 15;
-  top: 15;
-`
-
-const StyledSans = styled(Sans)`
-  position: absolute;
-  left: 15;
-  top: 8;
-`
-
 const Outer = styled.View`
   flex: 1;
-  background-color: black;
+  background-color: white;
 `
 
 const Selection = styled.View`
@@ -242,24 +229,7 @@ const Overlay = styled.View`
   z-index: 100;
 `
 
-const FooterNav = styled.View`
-  background-color: black;
-`
-
-const SizeSelectionButton = styled.View`
-  border-radius: 30;
-  width: 88;
-  border: 1px solid ${color("gray")};
-  border-width: 1;
-  border-radius: 28;
-  position: relative;
-`
-
 const Content = styled.View`
-  /* background-color: white;
-  border-bottom-left-radius: 30;
-  border-bottom-right-radius: 30;
-  overflow: hidden; */
   margin-bottom: 10;
 `
 

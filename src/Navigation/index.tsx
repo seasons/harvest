@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useState } from "react"
 import { createBottomTabNavigator } from "react-navigation-tabs"
-import { createAppContainer, createSwitchNavigator } from "react-navigation"
+import { createAppContainer, createSwitchNavigator, NavigationEvents } from "react-navigation"
 import { createStackNavigator } from "react-navigation-stack"
 import { Home } from "App/Scenes/Home"
 import { Browse } from "App/Scenes/Browse"
@@ -8,8 +8,7 @@ import { Bag } from "App/Scenes/Bag"
 import { SignIn, Initializing, Welcome, SignInOrApply } from "App/Scenes/SignIn"
 import { Product } from "App/Scenes/Product"
 import { Account } from "App/Scenes/Account"
-import { Image, View, Dimensions } from "react-native"
-import { color } from "App/Utils"
+import { Image, Dimensions } from "react-native"
 import styled from "styled-components"
 import { Tabs } from "./Tabs"
 
@@ -165,6 +164,12 @@ class CustomNavigator extends React.Component {
 
     return (
       <NavigationContainer style={{ flex: 1 }}>
+        <NavigationEvents
+          onWillFocus={payload => console.log("will focus", payload)}
+          onDidFocus={payload => console.log("did focus", payload)}
+          onWillBlur={payload => console.log("will blur", payload)}
+          onDidBlur={payload => console.log("did blur", payload)}
+        />
         <MainNavigator navigation={navigation} />
       </NavigationContainer>
     )

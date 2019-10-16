@@ -1,7 +1,7 @@
 import React from "react"
 import { LeftTabCorner, RightTabCorner } from "../../assets/svgs"
 import styled from "styled-components/native"
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
+import { View, StyleSheet, TouchableOpacity } from "react-native"
 
 const S = StyleSheet.create({
   container: { position: "relative", flexDirection: "row", height: 52 },
@@ -12,8 +12,6 @@ export const Tabs = props => {
   const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation } = props
 
   const { routes, index: activeRouteIndex } = navigation.state
-
-  console.log("nav state", navigation.state)
 
   return (
     <View style={S.container}>

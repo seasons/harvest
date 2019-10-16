@@ -28,41 +28,88 @@ export const App: React.FC<AppProps> = ({ cacheData }) => {
   }
 
   const reducer = (state, action) => {
-    const items = state.bag.items || []
-    const clonedItems = items.slice(0)
+    const clonedState = Object.assign({}, state)
+    const items = clonedState.bag.items || []
     switch (action.type) {
       case "addItemToBag":
-        if (!!clonedItems.find(item => item.id === action.item.id)) {
+        if (!!items.find(item => item.id === action.item.id)) {
           // Item already in bag so we dont add it
           return state
         }
-        clonedItems.push(action.item)
-        const [updatedBagItems, itemCount] = addEmptyItemsToBag(clonedItems)
+        items.push(action.item)
+        const [updatedBagItems, itemCount] = addEmptyItemsToBag(items)
         const bagWithNewItem = {
-          ...state,
+          ...clonedState,
           bag: { items: updatedBagItems, itemCount },
         }
         return bagWithNewItem
       case "removeItemFromBag":
-        const filteredItems = clonedItems.filter(bagItem => {
+        const filteredItems = items.filter(bagItem => {
           return bagItem.id !== action.item.id
         })
         const [updatedBagItems1, itemCount1] = addEmptyItemsToBag(filteredItems)
         const bagWithoutItem = {
-          ...state,
+          ...clonedState,
           bag: {
             items: updatedBagItems1,
             itemCount: itemCount1,
           },
         }
         return bagWithoutItem
+      case "productMounted":
+        const productMountedState = {
+          ...clonedState,
+          productState: {
+            ...clonedState.productState,
+            displayFooter: action.productMountedState.displayFooter,
+            showSizeSelection: action.productMountedState.showSizeSelection,
+          },
+        }
+        return productMountedState
+      case "toggleShowSizeSelection":
+        const toggleSizeSelection = {
+          ...clonedState,
+          productState: {
+            ...clonedState.productState,
+            showSizeSelection: action.showSizeSelection,
+          },
+        }
+        return toggleSizeSelection
+      case "toggleReserveConfirmation":
+        const toggleReserveConfirmation = {
+          ...clonedState,
+          productState: {
+            ...clonedState.productState,
+            showReserveConfirmation: action.showReserveConfirmation,
+          },
+        }
+        return toggleReserveConfirmation
+      case "setSizeSelection":
+        const sizeSelection = {
+          ...clonedState,
+          productState: {
+            ...clonedState.productState,
+            sizeSelection: action.sizeSelection,
+          },
+        }
+        return sizeSelection
       default:
         return state
     }
   }
 
+  const initialState = {
+    productState: {
+      showSizeSelection: false,
+      sizeSelection: { size: "", abbreviated: "X", id: null },
+      showReserveConfirmation: false,
+      displayFooter: false,
+    },
+    ...cacheData,
+  }
+
   return (
-    <StateProvider initialState={cacheData} reducer={reducer}>
+    <StateProvider initialState={initialState} reducer={reducer}>
       <AppContainer />
     </StateProvider>
   )
