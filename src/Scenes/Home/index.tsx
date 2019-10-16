@@ -25,8 +25,6 @@ export const Home = (props: any) => {
     }
   }
 
-  console.log("bag in home", bag)
-
   const renderItem = ({ item }) => {
     const { navigation } = props
     switch (item.type) {

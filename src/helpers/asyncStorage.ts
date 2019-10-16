@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-community/async-storage"
 import { EMPTY_BAG } from "App/App"
 
 export const persistCache = async data => {
-  console.log("data", data)
   if (data) {
     try {
       await AsyncStorage.setItem("@initial_state", JSON.stringify(data))
