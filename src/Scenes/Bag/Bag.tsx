@@ -4,7 +4,7 @@ import { Sans } from "Components/Typography"
 import { EmptyState } from "./Components.tsx"
 import { Theme, Spacer, Flex, Box, Separator, FixedButton, ErrorPopUp } from "App/Components"
 import { Text, Image, FlatList } from "react-native"
-import { useStateValue } from "App/helpers/StateProvider"
+import { useStateContext } from "App/helpers/StateProvider"
 import { TouchableWithoutFeedback } from "react-native"
 import { color } from "App/Utils"
 import { BagPlus } from "../../../assets/svgs"
@@ -18,7 +18,7 @@ const handleReserve = () => {
 }
 
 export const Bag = ({ navigation }) => {
-  const [{ bag }, dispatch]: any = useStateValue()
+  const [{ bag }, dispatch]: any = useStateContext()
   const [showReserveError, displayReserveError] = useState(false)
 
   if (!bag || !bag.items) {

@@ -5,10 +5,10 @@ import { ReserveButton } from "App/Scenes/Product/Components"
 import { Flex, Spacer, Sans } from "App/Components"
 import { TouchableWithoutFeedback } from "react-native"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
-import { useStateValue } from "App/helpers/StateProvider"
+import { useStateContext } from "App/helpers/StateProvider"
 
 export const ProductTabs = props => {
-  const [{ productState }, dispatch]: any = useStateValue()
+  const [{ productState }, dispatch]: any = useStateContext()
 
   const handleSaveButton = () => {
     // FIXME: Handle handleSaveButton

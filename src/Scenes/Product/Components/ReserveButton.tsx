@@ -1,6 +1,6 @@
 import React from "react"
 import { Button } from "App/Components"
-import { useStateValue } from "App/helpers/StateProvider"
+import { useStateContext } from "App/helpers/StateProvider"
 
 interface Props {
   product: any
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const ReserveButton: React.FC<Props> = ({ product, displayReserveConfirmation }) => {
-  const [_, dispatch] = useStateValue() as any
+  const [_, dispatch] = useStateContext() as any
   return (
     <Button
       variant="primaryLight"

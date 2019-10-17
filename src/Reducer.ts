@@ -1,3 +1,10 @@
+import get from "lodash/get"
+
+export const BAG_NUM_ITEMS = 3
+export const EMPTY_BAG = {
+  bag: { items: [], itemCount: 0 },
+}
+
 const addEmptyItemsToBag = items => {
   const filteredEmptyItems = items.filter(bagItem => {
     return bagItem.type !== "empty"
@@ -15,7 +22,8 @@ const addEmptyItemsToBag = items => {
 
 export const reducer = (state, action) => {
   const clonedState = Object.assign({}, state)
-  const items = clonedState.bag.items || []
+  const items = get(clonedState, "bag.items") || []
+
   switch (action.type) {
     case "addItemToBag":
       if (!!items.find(item => item.id === action.item.id)) {

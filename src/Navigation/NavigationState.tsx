@@ -1,13 +1,13 @@
 import { useState, useContext, useEffect } from "react"
 import { NavigationContext } from "react-navigation"
 
-export function useFocusState() {
+export function useNavigationState() {
   const navigation = useContext(NavigationContext)
-  const isFocused = navigation.isFocused()
-  const [focusState, setFocusState] = useState(isFocused)
+  const [navigationState, setNavigationState] = useState({ action: { routeName: "" }, type: "" })
+
   function handleEvt(e) {
-    const newState = e.type
-    newState && setFocusState(newState)
+    const newState = e
+    newState && setNavigationState(newState)
   }
   useEffect(() => {
     const subsA = navigation.addListener("action", handleEvt)
@@ -23,5 +23,5 @@ export function useFocusState() {
       subsDB.remove()
     }
   })
-  return focusState
+  return navigationState
 }

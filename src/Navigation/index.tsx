@@ -28,8 +28,8 @@ const shouldRenderTabBar = navigation => {
 const AuthStack = createStackNavigator(
   {
     SignIn,
-    Welcome,
     SignInOrApply,
+    Welcome,
   },
   {
     initialRouteName: "Welcome",
@@ -153,30 +153,6 @@ const MainNavigator = createBottomTabNavigator(
   }
 )
 
-// class CustomNavigator extends React.Component {
-//   static router = {
-//     ...MainNavigator.router,
-//   }
-
-//   render() {
-//     const { navigation } = this.props
-//     const screenHeight = Math.round(Dimensions.get("window").height)
-//     const height = screenHeight - 106
-
-//     return (
-//       <NavigationContainer style={{ flex: 1 }}>
-//         <NavigationEvents
-//           onWillFocus={payload => console.log("will focus", payload)}
-//           onDidFocus={payload => console.log("did focus", payload)}
-//           onWillBlur={payload => console.log("will blur", payload)}
-//           onDidBlur={payload => console.log("did blur", payload)}
-//         />
-//         <MainNavigator navigation={navigation} />
-//       </NavigationContainer>
-//     )
-//   }
-// }
-
 const CustomNavigator = props => {
   const { navigation } = props
   const screenHeight = Math.round(Dimensions.get("window").height)
@@ -203,7 +179,7 @@ const SwitchNavigator = createSwitchNavigator(
   {
     Initializing,
     AuthStack,
-    Home: CustomNavigator,
+    Root: CustomNavigator,
   },
   {
     initialRouteName: "Initializing",

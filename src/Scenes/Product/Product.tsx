@@ -1,5 +1,6 @@
 import React, { useEffect } from "react"
 import gql from "graphql-tag"
+import get from "lodash/get"
 import { capitalize } from "lodash"
 import { useQuery } from "@apollo/react-hooks"
 import { Theme, Button, Flex, Sans, Box, Radio, Separator, Spacer } from "App/Components"
@@ -9,8 +10,8 @@ import { color, space } from "App/Utils"
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { GreenCheck } from "Assets/svgs"
-import { BAG_NUM_ITEMS } from "App/App"
-import { useStateValue } from "App/helpers/StateProvider"
+import { BAG_NUM_ITEMS } from "App/Reducer"
+import { useStateContext } from "App/helpers/StateProvider"
 
 const GET_PRODUCT = gql`
   query GetProduct($productId: ID!) {
@@ -32,10 +33,8 @@ const GET_PRODUCT = gql`
 const screenHeight = Math.round(Dimensions.get("window").height)
 
 export const Product = props => {
-  const [{ bag, productState }, dispatch]: any = useStateValue()
-  // const [showSizeSelection, toggleShowSizeSelection] = useState(false)
-  const productID =
-    props.navigation && props.navigation.state && props.navigation.state.params && props.navigation.state.params.id
+  const [{ bag, productState }, dispatch]: any = useStateContext()
+  const productID = get(props, "navigation.state.params.id")
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
       productId: productID,
