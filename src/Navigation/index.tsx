@@ -9,6 +9,7 @@ import { SignIn, Initializing, Welcome, SignInOrApply } from "App/Scenes/SignIn"
 import { Product } from "App/Scenes/Product"
 import { Account } from "App/Scenes/Account"
 import { Image, Dimensions } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components"
 import { Tabs } from "./Tabs"
 
@@ -17,7 +18,7 @@ const shouldRenderTabBar = navigation => {
   if (navigation.state.routes.length > 1) {
     navigation.state.routes.map(route => {
       if (route.routeName === "Product") {
-        renderTabs = false
+        renderTabs = true
       }
     })
   }
@@ -152,28 +153,50 @@ const MainNavigator = createBottomTabNavigator(
   }
 )
 
-class CustomNavigator extends React.Component {
-  static router = {
-    ...MainNavigator.router,
-  }
+// class CustomNavigator extends React.Component {
+//   static router = {
+//     ...MainNavigator.router,
+//   }
 
-  render() {
-    const { navigation } = this.props
-    const screenHeight = Math.round(Dimensions.get("window").height)
-    const height = screenHeight - 106
+//   render() {
+//     const { navigation } = this.props
+//     const screenHeight = Math.round(Dimensions.get("window").height)
+//     const height = screenHeight - 106
 
-    return (
-      <NavigationContainer style={{ flex: 1 }}>
-        <NavigationEvents
-          onWillFocus={payload => console.log("will focus", payload)}
-          onDidFocus={payload => console.log("did focus", payload)}
-          onWillBlur={payload => console.log("will blur", payload)}
-          onDidBlur={payload => console.log("did blur", payload)}
-        />
-        <MainNavigator navigation={navigation} />
-      </NavigationContainer>
-    )
-  }
+//     return (
+//       <NavigationContainer style={{ flex: 1 }}>
+//         <NavigationEvents
+//           onWillFocus={payload => console.log("will focus", payload)}
+//           onDidFocus={payload => console.log("did focus", payload)}
+//           onWillBlur={payload => console.log("will blur", payload)}
+//           onDidBlur={payload => console.log("did blur", payload)}
+//         />
+//         <MainNavigator navigation={navigation} />
+//       </NavigationContainer>
+//     )
+//   }
+// }
+
+const CustomNavigator = props => {
+  const { navigation } = props
+  const screenHeight = Math.round(Dimensions.get("window").height)
+  const insets = useSafeArea()
+  const height = screenHeight - 106
+
+  return (
+    <NavigationContainer style={{ flex: 1, marginTop: insets.top }}>
+      <NavigationEvents
+        onWillFocus={payload => console.log("will focus", payload)}
+        onDidFocus={payload => console.log("did focus", payload)}
+        onWillBlur={payload => console.log("will blur", payload)}
+        onDidBlur={payload => console.log("did blur", payload)}
+      />
+      <MainNavigator navigation={navigation} />
+    </NavigationContainer>
+  )
+}
+CustomNavigator.router = {
+  ...MainNavigator.router,
 }
 
 const SwitchNavigator = createSwitchNavigator(

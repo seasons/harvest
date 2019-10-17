@@ -36,6 +36,8 @@ PODS:
   - glog (0.3.5)
   - React (0.59.10):
     - React/Core (= 0.59.10)
+  - react-native-safe-area-context (0.5.0):
+    - React
   - React/Core (0.59.10):
     - yoga (= 0.59.10.React)
   - React/CxxBridge (0.59.10):
@@ -131,6 +133,7 @@ DEPENDENCIES:
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
@@ -165,7 +168,7 @@ DEPENDENCIES:
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - boost-for-react-native
 
 EXTERNAL SOURCES:
@@ -209,6 +212,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
+  react-native-safe-area-context:
+    :path: "../node_modules/react-native-safe-area-context"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNGestureHandler:
@@ -275,6 +280,7 @@ SPEC CHECKSUMS:
   Folly: de497beb10f102453a1afa9edbf8cf8a251890de
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
+  react-native-safe-area-context: 13004a45f3021328fdd9ee1f987c3131fb65928d
   RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNReanimated: 7a52c90473b5e81c13408d40d797b98387eaddde
@@ -294,6 +300,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 8664abd37a00715727e60df9ecd65e42ba47b548
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: a1286db21de95972406d9b24a04902d5d80c9273
+PODFILE CHECKSUM: 3d761fd316958c2bb63f1e86cadc31b501bd1ef4
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.3

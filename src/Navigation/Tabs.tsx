@@ -1,6 +1,7 @@
 import React from "react"
-import { LeftTabCorner, RightTabCorner } from "../../assets/svgs"
 import styled from "styled-components/native"
+import { useSafeArea } from "react-native-safe-area-context"
+import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { View, StyleSheet, TouchableOpacity } from "react-native"
 
 const S = StyleSheet.create({
@@ -10,11 +11,11 @@ const S = StyleSheet.create({
 
 export const Tabs = props => {
   const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation } = props
-
+  const insets = useSafeArea()
   const { routes, index: activeRouteIndex } = navigation.state
 
   return (
-    <View style={S.container}>
+    <View style={[S.container, { marginBottom: insets.bottom }]}>
       <LeftCorner />
       <RightCorner />
       {routes.map((route, routeIndex) => {

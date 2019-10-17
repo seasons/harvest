@@ -3,6 +3,7 @@ package com.seasons;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.auth0.react.A0Auth0Package;
@@ -44,6 +45,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SafeAreaContextPackage(),
             new RNScreensPackage(),
           new ReanimatedPackage(),
           new RNGestureHandlerPackage(),
