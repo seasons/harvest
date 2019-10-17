@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useState } from "react"
 import { createBottomTabNavigator } from "react-navigation-tabs"
-import { createAppContainer, createSwitchNavigator } from "react-navigation"
+import { createAppContainer, createSwitchNavigator, NavigationEvents } from "react-navigation"
 import { createStackNavigator } from "react-navigation-stack"
 import { Home } from "App/Scenes/Home"
 import { Browse } from "App/Scenes/Browse"
@@ -8,8 +8,8 @@ import { Bag } from "App/Scenes/Bag"
 import { SignIn, Initializing, Welcome, SignInOrApply } from "App/Scenes/SignIn"
 import { Product } from "App/Scenes/Product"
 import { Account } from "App/Scenes/Account"
-import { Image, View, Dimensions } from "react-native"
-import { color } from "App/Utils"
+import { Image, Dimensions } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components"
 import { Tabs } from "./Tabs"
 
@@ -18,7 +18,7 @@ const shouldRenderTabBar = navigation => {
   if (navigation.state.routes.length > 1) {
     navigation.state.routes.map(route => {
       if (route.routeName === "Product") {
-        renderTabs = false
+        renderTabs = true
       }
     })
   }
@@ -28,8 +28,8 @@ const shouldRenderTabBar = navigation => {
 const AuthStack = createStackNavigator(
   {
     SignIn,
-    Welcome,
     SignInOrApply,
+    Welcome,
   },
   {
     initialRouteName: "Welcome",
@@ -153,29 +153,33 @@ const MainNavigator = createBottomTabNavigator(
   }
 )
 
-class CustomNavigator extends React.Component {
-  static router = {
-    ...MainNavigator.router,
-  }
+const CustomNavigator = props => {
+  const { navigation } = props
+  const screenHeight = Math.round(Dimensions.get("window").height)
+  const insets = useSafeArea()
+  const height = screenHeight - 106
 
-  render() {
-    const { navigation } = this.props
-    const screenHeight = Math.round(Dimensions.get("window").height)
-    const height = screenHeight - 106
-
-    return (
-      <NavigationContainer style={{ flex: 1 }}>
-        <MainNavigator navigation={navigation} />
-      </NavigationContainer>
-    )
-  }
+  return (
+    <NavigationContainer style={{ flex: 1, marginTop: insets.top }}>
+      <NavigationEvents
+        onWillFocus={payload => console.log("will focus", payload)}
+        onDidFocus={payload => console.log("did focus", payload)}
+        onWillBlur={payload => console.log("will blur", payload)}
+        onDidBlur={payload => console.log("did blur", payload)}
+      />
+      <MainNavigator navigation={navigation} />
+    </NavigationContainer>
+  )
+}
+CustomNavigator.router = {
+  ...MainNavigator.router,
 }
 
 const SwitchNavigator = createSwitchNavigator(
   {
     Initializing,
     AuthStack,
-    Home: CustomNavigator,
+    Root: CustomNavigator,
   },
   {
     initialRouteName: "Initializing",

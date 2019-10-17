@@ -1,43 +1,68 @@
-import React from "react"
-import { LeftTabCorner, RightTabCorner } from "../../assets/svgs"
+import React, { useState } from "react"
 import styled from "styled-components/native"
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
-
-const S = StyleSheet.create({
-  container: { position: "relative", flexDirection: "row", height: 52 },
-  tabButton: { flex: 1, justifyContent: "center", alignItems: "center" },
-})
+import { useSafeArea } from "react-native-safe-area-context"
+import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
+import { useNavigationState } from "./NavigationState"
 
 export const Tabs = props => {
   const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation } = props
+  const navigationState = useNavigationState()
+  const insets = useSafeArea()
 
+  const [isProductRoute, setIsProductRoute] = useState(false)
   const { routes, index: activeRouteIndex } = navigation.state
+  const { action, type } = navigationState
 
-  console.log("nav state", navigation.state)
+  // Handle routing to the product view
+  if (action.routeName === "Product" && !isProductRoute) {
+    setIsProductRoute(true)
+    console.log("Routing to Product", action)
+  } else if (action.routeName !== "Product" && isProductRoute) {
+    setIsProductRoute(false)
+    console.log("Routing away from Product")
+  }
+
+  // Handle routing away from the product view
+  if (action.key === "Browse") {
+    console.log("Routing away from Product", action)
+  }
+
+  const tabs = routes.map((route, routeIndex) => {
+    const isRouteActive = routeIndex === activeRouteIndex
+    const tintColor = isRouteActive ? activeTintColor : inactiveTintColor
+
+    return (
+      <TabButton
+        key={routeIndex}
+        onPress={() => {
+          onTabPress({ route })
+        }}
+      >
+        {renderIcon({ route, focused: isRouteActive, tintColor })}
+      </TabButton>
+    )
+  })
 
   return (
-    <View style={S.container}>
+    <TabContainer style={{ marginBottom: insets.bottom }}>
       <LeftCorner />
       <RightCorner />
-      {routes.map((route, routeIndex) => {
-        const isRouteActive = routeIndex === activeRouteIndex
-        const tintColor = isRouteActive ? activeTintColor : inactiveTintColor
-
-        return (
-          <TouchableOpacity
-            key={routeIndex}
-            style={S.tabButton}
-            onPress={() => {
-              onTabPress({ route })
-            }}
-          >
-            {renderIcon({ route, focused: isRouteActive, tintColor })}
-          </TouchableOpacity>
-        )
-      })}
-    </View>
+      {tabs}
+    </TabContainer>
   )
 }
+
+const TabContainer = styled.View`
+  position: relative;
+  flex-direction: row;
+  height: 52;
+`
+
+const TabButton = styled.TouchableOpacity`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`
 
 const LeftCorner = styled(LeftTabCorner)`
   position: absolute;

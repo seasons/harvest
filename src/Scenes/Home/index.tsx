@@ -7,12 +7,12 @@ import { JustAddedRail } from "./Components/JustAddedRail"
 import { LogoText } from "Components/Typography"
 import React, { useEffect } from "react"
 import { Theme } from "Components/Theme"
-import { useStateValue } from "App/helpers/StateProvider"
+import { useStateContext } from "App/helpers/StateProvider"
 import { persistCache } from "App/helpers/asyncStorage"
 
 export const Home = (props: any) => {
   // The homescreen persists the local cache
-  const [{ bag }]: any = useStateValue()
+  const [{ bag }]: any = useStateContext()
   useEffect(() => {
     AppState.addEventListener("change", nextAppState => handleAppStateChange(nextAppState))
     return AppState.removeEventListener("change", nextAppState => handleAppStateChange(nextAppState))
@@ -80,22 +80,20 @@ export const Home = (props: any) => {
   ]
 
   return (
-    <Theme>
-      <Container>
-        <Box ml={2}>
-          <Box my={2}>
-            <LogoText>SEASONS</LogoText>
-          </Box>
-          <Theme>
-            <FlatList
-              data={sections}
-              contentContainerStyle={{ paddingBottom: 150 }}
-              keyExtractor={item => item.type}
-              renderItem={item => renderItem(item)}
-            />
-          </Theme>
+    <Container>
+      <Box ml={2}>
+        <Box my={2}>
+          <LogoText>SEASONS</LogoText>
         </Box>
-      </Container>
-    </Theme>
+        <Theme>
+          <FlatList
+            data={sections}
+            contentContainerStyle={{ paddingBottom: 150 }}
+            keyExtractor={item => item.type}
+            renderItem={item => renderItem(item)}
+          />
+        </Theme>
+      </Box>
+    </Container>
   )
 }
