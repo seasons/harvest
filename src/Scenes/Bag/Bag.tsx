@@ -100,54 +100,52 @@ export const Bag = ({ navigation }) => {
   }
 
   return (
-    <Theme>
-      <Container>
-        <Box style={{ flex: 1 }}>
-          {bagIsEmpty ? (
-            <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignContent="center">
-              <EmptyState remainingPieces={remainingPieces} navigation={navigation} />
-            </Flex>
-          ) : (
-            <Box>
-              <FlatList
-                data={bag.items}
-                ListHeaderComponent={() => (
-                  <Box p={2}>
-                    <Sans size="3" color="black">
-                      My bag
-                    </Sans>
-                    <Sans size="2" color="gray">
-                      {remainingPiecesDisplay}
-                    </Sans>
-                  </Box>
-                )}
-                ItemSeparatorComponent={() => (
-                  <Box px={2}>
-                    <Spacer mb={2} />
-                    <Separator color={color("lightGray")} />
-                    <Spacer mb={2} />
-                  </Box>
-                )}
-                keyExtractor={(_item, index) => String(index)}
-                renderItem={item => renderItem(item)}
-                ListFooterComponent={() => <Spacer mb={200} />}
-              />
-              <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
-                <FixedButton onPress={() => handleReserve()} disabled={!bagIsFull}>
-                  Reserve
-                </FixedButton>
-              </TouchableWithoutFeedback>
-              <ErrorPopUp
-                buttonText="Got it"
-                title="Pick all 3 items before reserving!"
-                note="Before reserving your order, make sure you've selected all 3 pieces."
-                show={showReserveError}
-                onClose={() => displayReserveError(false)}
-              />
-            </Box>
-          )}
-        </Box>
-      </Container>
-    </Theme>
+    <Container>
+      <Box style={{ flex: 1 }}>
+        {bagIsEmpty ? (
+          <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignContent="center">
+            <EmptyState remainingPieces={remainingPieces} navigation={navigation} />
+          </Flex>
+        ) : (
+          <Box>
+            <FlatList
+              data={bag.items}
+              ListHeaderComponent={() => (
+                <Box p={2}>
+                  <Sans size="3" color="black">
+                    My bag
+                  </Sans>
+                  <Sans size="2" color="gray">
+                    {remainingPiecesDisplay}
+                  </Sans>
+                </Box>
+              )}
+              ItemSeparatorComponent={() => (
+                <Box px={2}>
+                  <Spacer mb={2} />
+                  <Separator color={color("lightGray")} />
+                  <Spacer mb={2} />
+                </Box>
+              )}
+              keyExtractor={(_item, index) => String(index)}
+              renderItem={item => renderItem(item)}
+              ListFooterComponent={() => <Spacer mb={200} />}
+            />
+            <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
+              <FixedButton onPress={() => handleReserve()} disabled={!bagIsFull}>
+                Reserve
+              </FixedButton>
+            </TouchableWithoutFeedback>
+            <ErrorPopUp
+              buttonText="Got it"
+              title="Pick all 3 items before reserving!"
+              note="Before reserving your order, make sure you've selected all 3 pieces."
+              show={showReserveError}
+              onClose={() => displayReserveError(false)}
+            />
+          </Box>
+        )}
+      </Box>
+    </Container>
   )
 }

@@ -1,7 +1,6 @@
 import React from "react"
-import { SafeAreaView } from "react-native"
+import { Theme } from "./Theme"
 
 export const Container = ({ children }) => {
-  // return <SafeAreaView style={{ flex: 1 }}>{children}</SafeAreaView>
-  return <>{children}</>
+  return <Theme>{children}</Theme>
 }
