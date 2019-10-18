@@ -22,7 +22,7 @@ export const Tabs = props => {
   if (action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName === "Product" && !isProductRoute) {
     setIsProductRoute(true)
     console.log("Routing to Product", action)
-  } else if (action.type === "Navigation/BACK" && isProductRoute) {
+  } else if ((action.type === "Navigation/POP_TO_TOP" || action.type === "Navigation/BACK") && isProductRoute) {
     setIsProductRoute(false)
     console.log("Routing away from Product 1", action.routeName)
   }
