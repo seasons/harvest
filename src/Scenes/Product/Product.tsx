@@ -1,12 +1,10 @@
 import React, { useEffect } from "react"
 import gql from "graphql-tag"
 import get from "lodash/get"
-import { capitalize } from "lodash"
 import { useQuery } from "@apollo/react-hooks"
-import { Theme, Button, Flex, Sans, Box, Radio, Separator, Spacer } from "App/Components"
-import { FlatList, SafeAreaView, Dimensions, ScrollView } from "react-native"
+import { Theme, Flex, Sans, Spacer } from "App/Components"
+import { FlatList, SafeAreaView, Dimensions } from "react-native"
 import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand } from "./Components"
-import { color, space } from "App/Utils"
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { GreenCheck } from "Assets/svgs"
@@ -41,6 +39,7 @@ export const Product = props => {
     },
   })
 
+  // FIXME: use real sizes
   const sizes = [
     { size: "small", abbreviated: "s", id: 1, stock: 0 },
     { size: "medium", abbreviated: "m", id: 2, stock: 2 },
@@ -128,39 +127,6 @@ export const Product = props => {
     )
   }
 
-  const renderSizes = () => {
-    return sizes.map(size => {
-      return (
-        <Box key={size.id}>
-          <Spacer mb={2} />
-          <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
-            <Flex flexDirection="row" alignItems="center">
-              <Radio
-                selected={productState.sizeSelection.id === size.id}
-                disabled={size.stock === 0}
-                onSelect={() =>
-                  dispatch({
-                    type: "setSizeSelection",
-                    sizeSelection: size,
-                  })
-                }
-              />
-              <Spacer mr={1} />
-              <Sans color={size.stock ? "white" : "gray"} size="2">
-                {capitalize(size.size)}
-              </Sans>
-            </Flex>
-            <Sans color="gray" size="2">
-              {size.stock ? "(" + size.stock + " left)" : "(Out of stock)"}
-            </Sans>
-          </Flex>
-          <Spacer mb={2} />
-          <Separator color={color("gray")} />
-        </Box>
-      )
-    })
-  }
-
   const sections = () => {
     return ["imageRail", "productDetails", "moreLikeThis", "aboutTheBrand"]
   }
@@ -184,22 +150,6 @@ export const Product = props => {
               </AnimatedContent>
             )}
           </Spring>
-          <Selection m={2}>
-            <ScrollView>
-              <Separator color={color("gray")} />
-              {renderSizes()}
-            </ScrollView>
-            <Button
-              onPress={() =>
-                dispatch({
-                  type: "toggleShowSizeSelection",
-                  showSizeSelection: !productState.showSizeSelection,
-                })
-              }
-            >
-              Cancel
-            </Button>
-          </Selection>
         </Outer>
       </>
     </Theme>
@@ -209,13 +159,6 @@ export const Product = props => {
 const Outer = styled.View`
   flex: 1;
   background-color: white;
-`
-
-const Selection = styled.View`
-  padding-left: ${space(2)}px;
-  padding-right: ${space(2)}px;
-  flex: 1;
-  padding-bottom: ${space(2)}px;
 `
 
 const Overlay = styled.View`
