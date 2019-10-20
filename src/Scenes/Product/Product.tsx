@@ -8,8 +8,10 @@ import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand } from "./Compon
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { GreenCheck } from "Assets/svgs"
-import { BAG_NUM_ITEMS } from "App/Reducer"
-import { useStateContext } from "App/helpers/StateProvider"
+import { BAG_NUM_ITEMS } from "App/Redux/reducer"
+import { bindActionCreators } from "redux"
+import { connect } from "react-redux"
+import { toggleReserveConfirmation, setVariant } from "App/Redux/actions"
 
 const GET_PRODUCT = gql`
   query GetProduct($productId: ID!) {
@@ -30,8 +32,7 @@ const GET_PRODUCT = gql`
 
 const screenHeight = Math.round(Dimensions.get("window").height)
 
-export const Product = props => {
-  const [{ bag, productState }, dispatch]: any = useStateContext()
+export const ProductComponent = props => {
   const productID = get(props, "navigation.state.params.id")
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
@@ -39,8 +40,12 @@ export const Product = props => {
     },
   })
 
+  const { productState, bag, toggleReserveConfirmation, setVariant } = props
+
+  console.log("props", props)
+
   // FIXME: use real sizes
-  const sizes = [
+  const variants = [
     { size: "small", abbreviated: "s", id: 1, stock: 0 },
     { size: "medium", abbreviated: "m", id: 2, stock: 2 },
     { size: "large", abbreviated: "l", id: 3, stock: 1 },
@@ -49,34 +54,18 @@ export const Product = props => {
   ]
 
   const displayReserveConfirmation = () => {
-    dispatch({
-      type: "toggleReserveConfirmation",
-      showReserveConfirmation: true,
-    })
+    toggleReserveConfirmation(true)
     setTimeout(() => {
-      dispatch({
-        type: "toggleReserveConfirmation",
-        showReserveConfirmation: false,
-      })
+      toggleReserveConfirmation(false)
     }, 2000)
   }
 
   useEffect(() => {
     // Find the first product with stock
-    const firstInStock = sizes.find(size => {
-      return size.stock > 0
+    const firstInStock = variants.find(variant => {
+      return variant.stock > 0
     })
-    dispatch({
-      type: "productMounted",
-      productMountedState: {
-        displayFooter: true,
-        sizeSelection: firstInStock,
-      },
-    })
-    return dispatch({
-      type: "toggleProductFooter",
-      displayFooter: false,
-    })
+    setVariant(firstInStock)
   }, [])
 
   if (loading || !data) {
@@ -155,6 +144,25 @@ export const Product = props => {
     </Theme>
   )
 }
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      toggleReserveConfirmation,
+      setVariant,
+    },
+    dispatch
+  )
+
+const mapStateToProps = state => {
+  const { bag, productState } = state
+  return { bag, productState }
+}
+
+export const Product = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProductComponent)
 
 const Outer = styled.View`
   flex: 1;

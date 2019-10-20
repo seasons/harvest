@@ -26,11 +26,11 @@ export const reducer = (state, action) => {
 
   switch (action.type) {
     case "addItemToBag":
-      if (!!items.find(item => item.id === action.item.id)) {
+      if (!!items.find(item => item.id === action.payload.id)) {
         // Item already in bag so we dont add it
         return state
       }
-      items.push(action.item)
+      items.push(action.payload)
       const [updatedBagItems, itemCount] = addEmptyItemsToBag(items)
       const bagWithNewItem = {
         ...clonedState,
@@ -39,7 +39,7 @@ export const reducer = (state, action) => {
       return bagWithNewItem
     case "removeItemFromBag":
       const filteredItems = items.filter(bagItem => {
-        return bagItem.id !== action.item.id
+        return bagItem.id !== action.payload.id
       })
       const [updatedBagItems1, itemCount1] = addEmptyItemsToBag(filteredItems)
       const bagWithoutItem = {
@@ -50,22 +50,12 @@ export const reducer = (state, action) => {
         },
       }
       return bagWithoutItem
-    case "productMounted":
-      const productMountedState = {
-        ...clonedState,
-        productState: {
-          ...clonedState.productState,
-          displayFooter: action.productMountedState.displayFooter,
-          showSizeSelection: action.productMountedState.showSizeSelection,
-        },
-      }
-      return productMountedState
     case "toggleShowSizeSelection":
       const toggleSizeSelection = {
         ...clonedState,
         productState: {
           ...clonedState.productState,
-          showSizeSelection: action.showSizeSelection,
+          showSizeSelection: action.payload,
         },
       }
       return toggleSizeSelection
@@ -74,19 +64,19 @@ export const reducer = (state, action) => {
         ...clonedState,
         productState: {
           ...clonedState.productState,
-          showReserveConfirmation: action.showReserveConfirmation,
+          showReserveConfirmation: action.payload,
         },
       }
       return toggleReserveConfirmation
-    case "setSizeSelection":
-      const sizeSelection = {
+    case "setVariant":
+      const variant = {
         ...clonedState,
         productState: {
           ...clonedState.productState,
-          sizeSelection: action.sizeSelection,
+          variant: action.payload,
         },
       }
-      return sizeSelection
+      return variant
     default:
       return state
   }

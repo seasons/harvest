@@ -2,13 +2,15 @@ import React, { useState } from "react"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
 import { EmptyState } from "./Components.tsx"
-import { Theme, Spacer, Flex, Box, Separator, FixedButton, ErrorPopUp } from "App/Components"
+import { Spacer, Flex, Box, Separator, FixedButton, ErrorPopUp } from "App/Components"
 import { Text, Image, FlatList } from "react-native"
-import { useStateContext } from "App/helpers/StateProvider"
 import { TouchableWithoutFeedback } from "react-native"
 import { color } from "App/Utils"
 import { BagPlus } from "../../../assets/svgs"
-import { BAG_NUM_ITEMS } from "App/App"
+import { BAG_NUM_ITEMS } from "App/Redux/reducer"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import { removeItemFromBag } from "App/Redux/actions"
 
 const SECTION_HEIGHT = 200
 
@@ -17,8 +19,7 @@ const handleReserve = () => {
   return null
 }
 
-export const Bag = ({ navigation }) => {
-  const [{ bag }, dispatch]: any = useStateContext()
+export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(false)
 
   if (!bag || !bag.items) {
@@ -72,14 +73,7 @@ export const Bag = ({ navigation }) => {
                   Size {item.modelSize} |
                 </Sans>
                 {"  "}
-                <TouchableWithoutFeedback
-                  onPress={() =>
-                    dispatch({
-                      type: "removeItemFromBag",
-                      item: item,
-                    })
-                  }
-                >
+                <TouchableWithoutFeedback onPress={() => removeItemFromBag(item)}>
                   <Sans size="2" color="blue">
                     Remove
                   </Sans>
@@ -149,3 +143,21 @@ export const Bag = ({ navigation }) => {
     </Container>
   )
 }
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      removeItemFromBag,
+    },
+    dispatch
+  )
+
+const mapStateToProps = state => {
+  const { bag } = state
+  return { bag }
+}
+
+export const Bag = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BagComponent)

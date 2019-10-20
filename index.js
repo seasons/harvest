@@ -1,4 +1,5 @@
-import { App, EMPTY_BAG } from "./src/App"
+import { App } from "./src/App"
+import { EMPTY_BAG } from "App/Redux/reducer"
 import { ApolloClient } from "apollo-client"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { HttpLink } from "apollo-link-http"
