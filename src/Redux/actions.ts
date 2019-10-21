@@ -22,3 +22,8 @@ export const setVariant = variant => ({
   type: "setVariant",
   payload: variant,
 })
+
+export const setProduct = product => ({
+  type: "setVariant",
+  payload: product,
+})

@@ -13,9 +13,7 @@ import { bindActionCreators } from "redux"
 import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
 
 export const ProductTabsComponent = props => {
-  const { productState, setVariant, toggleShowSizeSelection } = props
-
-  console.log("productSTate in ProductTabsComponent", props)
+  const { productState, setVariant, toggleShowSizeSelection, productID } = props
 
   // FIXME: use real sizes
   const sizes = [
@@ -101,7 +99,7 @@ export const ProductTabsComponent = props => {
           </TouchableOpacity>
           <Flex flexDirection="row">
             <ReserveButton
-              product={productState.product}
+              productID={productID}
               displayReserveConfirmation={productState.displayReserveConfirmation}
             ></ReserveButton>
           </Flex>

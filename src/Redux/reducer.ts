@@ -69,14 +69,24 @@ export const reducer = (state, action) => {
       }
       return toggleReserveConfirmation
     case "setVariant":
-      const variant = {
+      const addVariant = {
         ...clonedState,
         productState: {
           ...clonedState.productState,
           variant: action.payload,
         },
       }
-      return variant
+      return addVariant
+    case "setProduct":
+      const addProduct = {
+        ...clonedState,
+        productState: {
+          ...clonedState.productState,
+          product: action.payload.product,
+          variant: action.payload.initialVariant,
+        },
+      }
+      return addProduct
     default:
       return state
   }

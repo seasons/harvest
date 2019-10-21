@@ -3,7 +3,7 @@ import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
 import { EmptyState } from "./Components.tsx"
 import { Spacer, Flex, Box, Separator, FixedButton, ErrorPopUp } from "App/Components"
-import { Text, Image, FlatList } from "react-native"
+import { FlatList } from "react-native"
 import { TouchableWithoutFeedback } from "react-native"
 import { color } from "App/Utils"
 import { BagPlus } from "../../../assets/svgs"
@@ -11,6 +11,7 @@ import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import { removeItemFromBag } from "App/Redux/actions"
+import { BagItem } from "./Components.tsx/BagItem"
 
 const SECTION_HEIGHT = 200
 
@@ -54,43 +55,13 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
     )
   }
 
-  const bagItem = (item, index) => {
-    const imageURL = item.images && item.images.length && item.images[0].url
-    return (
-      <Box p={2} key={item.id} style={{ height: SECTION_HEIGHT }}>
-        <Flex flexDirection="row" style={{ flex: 1 }}>
-          <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
-            <Box>
-              <Sans size="3">{index + 1}.</Sans>
-              <Sans size="2">{item.brand.name}.</Sans>
-              <Sans size="2" color="gray">
-                {item.name}.
-              </Sans>
-            </Box>
-            <Box>
-              <Text>
-                <Sans size="2" color="gray">
-                  Size {item.modelSize} |
-                </Sans>
-                {"  "}
-                <TouchableWithoutFeedback onPress={() => removeItemFromBag(item)}>
-                  <Sans size="2" color="blue">
-                    Remove
-                  </Sans>
-                </TouchableWithoutFeedback>
-              </Text>
-            </Box>
-          </Flex>
-          <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
-            <Image style={{ height: SECTION_HEIGHT, width: 160 }} resizeMode="contain" source={{ uri: imageURL }} />
-          </Flex>
-        </Flex>
-      </Box>
-    )
-  }
-
   const renderItem = ({ item, index }) => {
-    return item.type === "item" ? bagItem(item, index) : emptyBagItem(index)
+    console.log("item", item)
+    return item.type === "item" ? (
+      <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} productID={item.id} />
+    ) : (
+      emptyBagItem(index)
+    )
   }
 
   return (

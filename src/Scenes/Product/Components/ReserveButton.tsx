@@ -5,14 +5,13 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
 interface Props {
-  product: any
+  productID: string
   addItemToBag: (product: any) => void
-  displayReserveConfirmation: () => void
 }
 
-export const ReserveButtonComponent: React.FC<Props> = ({ product, addItemToBag }) => {
+export const ReserveButtonComponent: React.FC<Props> = ({ productID, addItemToBag }) => {
   return (
-    <Button variant="primaryLight" size="small" onPress={() => addItemToBag(product)}>
+    <Button variant="primaryLight" size="small" onPress={() => addItemToBag(productID)}>
       Reserve
     </Button>
   )
@@ -26,4 +25,7 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export const ReserveButton = connect(mapDispatchToProps)(ReserveButtonComponent)
+export const ReserveButton = connect(
+  null,
+  mapDispatchToProps
+)(ReserveButtonComponent)

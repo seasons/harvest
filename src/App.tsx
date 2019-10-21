@@ -16,6 +16,7 @@ export const App: React.FC<AppProps> = ({ cacheData }) => {
       variant: { size: "", abbreviated: "X", id: null },
       showReserveConfirmation: false,
       displayFooter: false,
+      product: null,
     },
     ...cacheData,
   }

@@ -32,6 +32,15 @@ const GET_PRODUCT = gql`
 
 const screenHeight = Math.round(Dimensions.get("window").height)
 
+// FIXME: use real sizes
+const variants = [
+  { size: "small", abbreviated: "s", id: 1, stock: 0 },
+  { size: "medium", abbreviated: "m", id: 2, stock: 2 },
+  { size: "large", abbreviated: "l", id: 3, stock: 1 },
+  { size: "x-large", abbreviated: "xl", id: 4, stock: 3 },
+  { size: "xx-large", abbreviated: "xxl", id: 5, stock: 3 },
+]
+
 export const ProductComponent = props => {
   const productID = get(props, "navigation.state.params.id")
   const { loading, error, data } = useQuery(GET_PRODUCT, {
@@ -40,18 +49,24 @@ export const ProductComponent = props => {
     },
   })
 
+  const product = data && data.product
+
+  useEffect(() => {
+    // Find the first product with stock
+    const initialVariant = variants.find(variant => {
+      return variant.stock > 0
+    })
+    setVariant(initialVariant)
+  }, [])
+
+  // Get product ID from the redux
+  // Which gets passed to redux when we
+  // Set up navigation hook
+  // ProducttAbs gets id
+  // Dispatch reserve action will make the mutation just using the ID
+  //
+
   const { productState, bag, toggleReserveConfirmation, setVariant } = props
-
-  console.log("props", props)
-
-  // FIXME: use real sizes
-  const variants = [
-    { size: "small", abbreviated: "s", id: 1, stock: 0 },
-    { size: "medium", abbreviated: "m", id: 2, stock: 2 },
-    { size: "large", abbreviated: "l", id: 3, stock: 1 },
-    { size: "x-large", abbreviated: "xl", id: 4, stock: 3 },
-    { size: "xx-large", abbreviated: "xxl", id: 5, stock: 3 },
-  ]
 
   const displayReserveConfirmation = () => {
     toggleReserveConfirmation(true)
@@ -60,22 +75,12 @@ export const ProductComponent = props => {
     }, 2000)
   }
 
-  useEffect(() => {
-    // Find the first product with stock
-    const firstInStock = variants.find(variant => {
-      return variant.stock > 0
-    })
-    setVariant(firstInStock)
-  }, [])
-
   if (loading || !data) {
     return null
   }
   if (error) {
     console.error("error: ", error)
   }
-
-  const product = data && data.product
 
   const renderItem = ({ item: section }) => {
     const images = product && product.images
