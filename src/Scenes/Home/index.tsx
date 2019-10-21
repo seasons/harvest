@@ -7,12 +7,11 @@ import { JustAddedRail } from "./Components/JustAddedRail"
 import { LogoText } from "Components/Typography"
 import React, { useEffect } from "react"
 import { Theme } from "Components/Theme"
-import { useStateContext } from "App/helpers/StateProvider"
 import { persistCache } from "App/helpers/asyncStorage"
+import { connect } from "react-redux"
 
-export const Home = (props: any) => {
+export const HomeComponent = (props: any) => {
   // The homescreen persists the local cache
-  const [{ bag }]: any = useStateContext()
   useEffect(() => {
     AppState.addEventListener("change", nextAppState => handleAppStateChange(nextAppState))
     return AppState.removeEventListener("change", nextAppState => handleAppStateChange(nextAppState))
@@ -20,8 +19,7 @@ export const Home = (props: any) => {
 
   const handleAppStateChange = nextAppState => {
     if (nextAppState === "inactive") {
-      console.log("the bag here", bag)
-      persistCache(bag)
+      persistCache(props.bag)
     }
   }
 
@@ -97,3 +95,10 @@ export const Home = (props: any) => {
     </Container>
   )
 }
+
+const mapStateToProps = state => {
+  const { bag } = state
+  return { bag }
+}
+
+export const Home = connect(mapStateToProps)(HomeComponent)

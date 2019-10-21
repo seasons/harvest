@@ -5,13 +5,15 @@ import { ReserveButton } from "App/Scenes/Product/Components"
 import { Flex, Spacer, Sans, Button, Separator, Box, Radio } from "App/Components"
 import { TouchableOpacity } from "react-native"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
-import { useStateContext } from "App/helpers/StateProvider"
 import { NavigationActions } from "react-navigation"
 import { ScrollView } from "react-native"
 import { capitalize } from "lodash"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
 
-export const ProductTabs = props => {
-  const [{ productState }, dispatch]: any = useStateContext()
+export const ProductTabsComponent = props => {
+  const { productState, setVariant, toggleShowSizeSelection, productID } = props
 
   // FIXME: use real sizes
   const sizes = [
@@ -30,14 +32,9 @@ export const ProductTabs = props => {
           <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
             <Flex flexDirection="row" alignItems="center">
               <Radio
-                selected={productState.sizeSelection.id === size.id}
+                selected={productState.variant.id === size.id}
                 disabled={size.stock === 0}
-                onSelect={() =>
-                  dispatch({
-                    type: "setSizeSelection",
-                    sizeSelection: size,
-                  })
-                }
+                onSelect={() => setVariant(size)}
               />
               <Spacer mr={1} />
               <Sans color={size.stock ? "white" : "gray"} size="2">
@@ -63,16 +60,7 @@ export const ProductTabs = props => {
           <Separator color={color("gray")} />
           {renderSizes()}
         </ScrollView>
-        <Button
-          onPress={() =>
-            dispatch({
-              type: "toggleShowSizeSelection",
-              showSizeSelection: !productState.showSizeSelection,
-            })
-          }
-        >
-          Cancel
-        </Button>
+        <Button onPress={() => toggleShowSizeSelection(!productState.showSizeSelection)}>Cancel</Button>
       </Selection>
     )
   }
@@ -98,17 +86,12 @@ export const ProductTabs = props => {
               <SaveIcon />
             </TouchableOpacity>
           </Flex>
-          <TouchableOpacity
-            onPress={() =>
-              dispatch({
-                type: "toggleShowSizeSelection",
-                showSizeSelection: !productState.showSizeSelection,
-              })
-            }
-          >
+          <TouchableOpacity onPress={() => toggleShowSizeSelection(!productState.showSizeSelection)}>
             <SizeSelectionButton p={2}>
               <StyledSans size="2" color="white">
-                {productState.sizeSelection.abbreviated.toUpperCase()}
+                {productState.variant &&
+                  productState.variant.abbreviated &&
+                  productState.variant.abbreviated.toUpperCase()}
               </StyledSans>
               <Spacer mr={3} />
               <StyledDownChevronIcon rotate={productState.showSizeSelection} />
@@ -116,7 +99,7 @@ export const ProductTabs = props => {
           </TouchableOpacity>
           <Flex flexDirection="row">
             <ReserveButton
-              product={productState.product}
+              productID={productID}
               displayReserveConfirmation={productState.displayReserveConfirmation}
             ></ReserveButton>
           </Flex>
@@ -126,6 +109,25 @@ export const ProductTabs = props => {
     </>
   )
 }
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      setVariant,
+      toggleShowSizeSelection,
+    },
+    dispatch
+  )
+
+const mapStateToProps = state => {
+  const { productState } = state
+  return { productState }
+}
+
+export const ProductTabs = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProductTabsComponent)
 
 const StyledDownChevronIcon = styled(DownChevronIcon)`
   position: absolute;

@@ -6,6 +6,7 @@ import { useNavigationState } from "./NavigationState"
 import { Theme } from "App/Components"
 import { ProductTabs } from "./ProductTabs"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
+import { get } from "lodash"
 
 export const Tabs = props => {
   const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation } = props
@@ -13,18 +14,17 @@ export const Tabs = props => {
   const insets = useSafeArea()
 
   const [isProductRoute, setIsProductRoute] = useState(false)
+  const [productID, setProductID] = useState("")
   const { routes, index: activeRouteIndex } = navigation.state
   const { action, type } = navigationState
-
-  console.log("action", action)
 
   // Handle routing to the product view
   if (action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName === "Product" && !isProductRoute) {
     setIsProductRoute(true)
-    console.log("Routing to Product", action)
+    setProductID(get(action, "params.id") || "")
   } else if ((action.type === "Navigation/POP_TO_TOP" || action.type === "Navigation/BACK") && isProductRoute) {
     setIsProductRoute(false)
-    console.log("Routing away from Product 1", action.routeName)
+    setProductID("")
   }
 
   const tabs = routes.map((route, routeIndex) => {
@@ -54,7 +54,7 @@ export const Tabs = props => {
         <Spring native from={hiddenStyles} to={isProductRoute ? visibleStyles : hiddenStyles}>
           {styleProps => (
             <AnimatedProductTabsWrapper style={styleProps}>
-              <ProductTabs navigation={navigation} />
+              <ProductTabs navigation={navigation} productID={productID} />
             </AnimatedProductTabsWrapper>
           )}
         </Spring>

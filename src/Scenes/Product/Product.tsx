@@ -8,8 +8,10 @@ import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand } from "./Compon
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { GreenCheck } from "Assets/svgs"
-import { BAG_NUM_ITEMS } from "App/Reducer"
-import { useStateContext } from "App/helpers/StateProvider"
+import { BAG_NUM_ITEMS } from "App/Redux/reducer"
+import { bindActionCreators } from "redux"
+import { connect } from "react-redux"
+import { toggleReserveConfirmation, setVariant } from "App/Redux/actions"
 
 const GET_PRODUCT = gql`
   query GetProduct($productId: ID!) {
@@ -30,8 +32,16 @@ const GET_PRODUCT = gql`
 
 const screenHeight = Math.round(Dimensions.get("window").height)
 
-export const Product = props => {
-  const [{ bag, productState }, dispatch]: any = useStateContext()
+// FIXME: use real sizes
+const variants = [
+  { size: "small", abbreviated: "s", id: 1, stock: 0 },
+  { size: "medium", abbreviated: "m", id: 2, stock: 2 },
+  { size: "large", abbreviated: "l", id: 3, stock: 1 },
+  { size: "x-large", abbreviated: "xl", id: 4, stock: 3 },
+  { size: "xx-large", abbreviated: "xxl", id: 5, stock: 3 },
+]
+
+export const ProductComponent = props => {
   const productID = get(props, "navigation.state.params.id")
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
@@ -39,45 +49,31 @@ export const Product = props => {
     },
   })
 
-  // FIXME: use real sizes
-  const sizes = [
-    { size: "small", abbreviated: "s", id: 1, stock: 0 },
-    { size: "medium", abbreviated: "m", id: 2, stock: 2 },
-    { size: "large", abbreviated: "l", id: 3, stock: 1 },
-    { size: "x-large", abbreviated: "xl", id: 4, stock: 3 },
-    { size: "xx-large", abbreviated: "xxl", id: 5, stock: 3 },
-  ]
-
-  const displayReserveConfirmation = () => {
-    dispatch({
-      type: "toggleReserveConfirmation",
-      showReserveConfirmation: true,
-    })
-    setTimeout(() => {
-      dispatch({
-        type: "toggleReserveConfirmation",
-        showReserveConfirmation: false,
-      })
-    }, 2000)
-  }
+  const product = data && data.product
 
   useEffect(() => {
     // Find the first product with stock
-    const firstInStock = sizes.find(size => {
-      return size.stock > 0
+    const initialVariant = variants.find(variant => {
+      return variant.stock > 0
     })
-    dispatch({
-      type: "productMounted",
-      productMountedState: {
-        displayFooter: true,
-        sizeSelection: firstInStock,
-      },
-    })
-    return dispatch({
-      type: "toggleProductFooter",
-      displayFooter: false,
-    })
+    setVariant(initialVariant)
   }, [])
+
+  // Get product ID from the redux
+  // Which gets passed to redux when we
+  // Set up navigation hook
+  // ProducttAbs gets id
+  // Dispatch reserve action will make the mutation just using the ID
+  //
+
+  const { productState, bag, toggleReserveConfirmation, setVariant } = props
+
+  const displayReserveConfirmation = () => {
+    toggleReserveConfirmation(true)
+    setTimeout(() => {
+      toggleReserveConfirmation(false)
+    }, 2000)
+  }
 
   if (loading || !data) {
     return null
@@ -85,8 +81,6 @@ export const Product = props => {
   if (error) {
     console.error("error: ", error)
   }
-
-  const product = data && data.product
 
   const renderItem = ({ item: section }) => {
     const images = product && product.images
@@ -155,6 +149,25 @@ export const Product = props => {
     </Theme>
   )
 }
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      toggleReserveConfirmation,
+      setVariant,
+    },
+    dispatch
+  )
+
+const mapStateToProps = state => {
+  const { bag, productState } = state
+  return { bag, productState }
+}
+
+export const Product = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProductComponent)
 
 const Outer = styled.View`
   flex: 1;
