@@ -23,8 +23,6 @@ const handleReserve = () => {
 export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(false)
 
-  console.log("bag", bag)
-
   if (!bag || !bag.items) {
     return null
   }
