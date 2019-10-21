@@ -12,18 +12,33 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import { removeItemFromBag } from "App/Redux/actions"
 import { BagItem } from "./Components.tsx/BagItem"
+import { useMutation } from "react-apollo"
+import gql from "graphql-tag"
 
 const SECTION_HEIGHT = 200
 
-const handleReserve = () => {
-  // FIXME:
-  return null
-}
+const RESERVE_ITEMS = gql`
+  mutation ReserveItems($items: [ID!]!) {
+    reserveItems(items: $items) {
+      id
+    }
+  }
+`
 
 export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(false)
+  const [reserveItems] = useMutation(RESERVE_ITEMS)
 
   if (!bag || !bag.items) {
+    return null
+  }
+
+  const handleReserve = () => {
+    reserveItems({
+      variables: {
+        items: bag.items,
+      },
+    })
     return null
   }
 

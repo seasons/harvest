@@ -79,7 +79,7 @@ const NavWrapper = styled.View`
 const TabContainer = styled.View`
   position: relative;
   flex-direction: row;
-  height: 60;
+  height: 50;
 `
 
 const TabButton = styled.TouchableOpacity`

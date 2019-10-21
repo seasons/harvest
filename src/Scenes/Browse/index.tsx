@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { FlatList, Dimensions, TouchableWithoutFeedback } from "react-native"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
@@ -6,14 +6,16 @@ import { useQuery } from "@apollo/react-hooks"
 import { Box, Sans, Flex } from "App/Components"
 import styled from "styled-components/native"
 import { fontFamily } from "Components/Typography"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import FadeIn from "@expo/react-native-fade-in-image"
 
 const GET_PRODUCTS = gql`
-  {
+  query getProducts($name: String!, $first: Int!, $skip: Int!) {
     productFunctions {
       name
       id
     }
-    products(where: { functions_every: { name: "Statement" } }, first: 10) {
+    products(where: { functions_every: { name: $name } }, first: $first, skip: $skip) {
       id
       name
       description
@@ -42,7 +44,9 @@ const renderItem = ({ item }, navigation) => {
   return (
     <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
       <Box m={0.5} mb={1} width={itemWidth}>
-        <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
+        <FadeIn>
+          <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
+        </FadeIn>
         <Box m={2}>
           <Sans size="0">{product.brand.name}</Sans>
           <Sans size="0" color="gray">
@@ -58,15 +62,21 @@ const renderItem = ({ item }, navigation) => {
 }
 
 export const Browse = (props: any) => {
-  const { loading, data } = useQuery(GET_PRODUCTS)
+  const [currentCategory, setCurrentCategory] = useState("All")
+  const { data, fetchMore } = useQuery(GET_PRODUCTS, {
+    variables: {
+      name: currentCategory,
+      first: 10,
+      skip: 0,
+    },
+  })
   const { navigation } = props
-
-  if (loading) {
-    return null
-  }
-
   const products = data && data.products
   const categories = (data && data.productFunctions) || []
+
+  const onCategoryPress = item => {
+    setCurrentCategory(item.name)
+  }
 
   return (
     <Container>
@@ -80,17 +90,43 @@ export const Browse = (props: any) => {
             keyExtractor={item => item.id}
             renderItem={item => renderItem(item, navigation)}
             numColumns={2}
+            onEndReached={() => {
+              fetchMore({
+                variables: {
+                  skip: products.length,
+                },
+                updateQuery: (prev, { fetchMoreResult }) => {
+                  if (!fetchMoreResult) {
+                    return prev
+                  }
+
+                  return Object.assign({}, prev, {
+                    products: [...prev.products, ...fetchMoreResult.products],
+                  })
+                },
+              })
+            }}
           />
         </Box>
         <Box height={50}>
           <CategoryPicker
             data={[{ id: "all", name: "All" }, ...categories]}
             renderItem={({ item }) => {
+              const selected = currentCategory == item.name
               return (
-                <Box mr={2}>
-                  <Sans size="1">{item.name}</Sans>
-                </Box>
+                <TouchableOpacity onPress={() => onCategoryPress(item)}>
+                  <Category mr={3} selected={selected}>
+                    <Sans size="0" style={{ opacity: selected ? 1.0 : 0.5 }}>
+                      {item.name}
+                    </Sans>
+                  </Category>
+                </TouchableOpacity>
               )
+            }}
+            contentContainerStyle={{
+              padding: 10,
+              paddingLeft: 20,
+              paddingRight: 20,
             }}
             keyExtractor={({ id }) => id.toString()}
             showsHorizontalScrollIndicator={false}
@@ -124,4 +160,13 @@ const CategoryPicker = styled.FlatList`
   width: 100%;
   bottom: 0;
   left: 0;
+`
+
+const Category = styled(Box)`
+  ${p =>
+    p.selected &&
+    `
+    border-bottom-color: black;
+    border-bottom-width: 3px;
+  `};
 `
