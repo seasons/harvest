@@ -9,29 +9,25 @@ import { fontFamily } from "Components/Typography"
 
 const GET_PRODUCTS = gql`
   {
-    categories {
+    productFunctions {
       name
       id
     }
-    products(first: 30, categoryName: "Puffer") {
-      edges {
-        node {
-          id
-          name
-          description
-          images
-          modelSize
-          modelHeight
-          externalUrl
-          tags
-          retailPrice
-          createdAt
-          updatedAt
+    products(where: { functions_every: { name: "Statement" } }, first: 10) {
+      id
+      name
+      description
+      images
+      modelSize
+      modelHeight
+      externalURL
+      tags
+      retailPrice
+      createdAt
+      updatedAt
 
-          brand {
-            name
-          }
-        }
+      brand {
+        name
       }
     }
   }
@@ -39,13 +35,13 @@ const GET_PRODUCTS = gql`
 
 const renderItem = ({ item }, navigation) => {
   const itemWidth = Dimensions.get("window").width / 2 - 10
-  const product = item.node
+  const product = item
   const image = product.images && product.images[0]
   const thumbnail = (image && image.thumbnails && image.thumbnails.large) || { url: "https://via.placeholder.com/150" }
 
   return (
     <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
-      <Box m={1} mb={2} width={itemWidth}>
+      <Box m={0.5} mb={1} width={itemWidth}>
         <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
         <Box m={2}>
           <Sans size="0">{product.brand.name}</Sans>
@@ -69,34 +65,34 @@ export const Browse = (props: any) => {
     return null
   }
 
-  const products = data && data.products.edges
-  const categories = data && data.categories.edges
+  const products = data && data.products
+  const categories = (data && data.productFunctions) || []
 
   return (
     <Container>
-      <Flex flexDirection="column" pb="150">
-        <Box my={2} mx={4}>
+      <Flex flexDirection="column" flex={1}>
+        <Box my={1} mx={2} height={50}>
           <SearchBar placeholder="Search Seasons" />
         </Box>
-        <Flex>
+        <Box flex={1} flexGrow={1}>
           <FlatList
             data={products}
-            keyExtractor={item => item.node.id}
+            keyExtractor={item => item.id}
             renderItem={item => renderItem(item, navigation)}
             numColumns={2}
           />
-        </Flex>
-        <Box my={1} mx={0} height="70" backgroundColor="blue">
+        </Box>
+        <Box height={50}>
           <CategoryPicker
-            data={categories}
+            data={[{ id: "all", name: "All" }, ...categories]}
             renderItem={({ item }) => {
               return (
                 <Box mr={2}>
-                  <Sans size="1">{item.node.name}</Sans>
+                  <Sans size="1">{item.name}</Sans>
                 </Box>
               )
             }}
-            keyExtractor={({ node }) => node.id.toString()}
+            keyExtractor={({ id }) => id.toString()}
             showsHorizontalScrollIndicator={false}
             horizontal
           />
@@ -123,7 +119,7 @@ const SearchBar = styled.TextInput`
 `
 
 const CategoryPicker = styled.FlatList`
-  height: 70;
+  height: 100%;
   position: absolute;
   width: 100%;
   bottom: 0;
