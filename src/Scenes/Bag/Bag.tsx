@@ -23,6 +23,8 @@ const handleReserve = () => {
 export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(false)
 
+  console.log("bag", bag)
+
   if (!bag || !bag.items) {
     return null
   }
@@ -56,9 +58,8 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   }
 
   const renderItem = ({ item, index }) => {
-    console.log("item", item)
-    return item.type === "item" ? (
-      <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} productID={item.id} />
+    return item.length ? (
+      <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} productID={item} />
     ) : (
       emptyBagItem(index)
     )

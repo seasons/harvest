@@ -2,7 +2,7 @@ import { Box, Flex, Sans } from "App/Components"
 import React from "react"
 import { useQuery } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { Image, Text, TouchableOpacity } from "react-native"
+import { Image, Text, TouchableWithoutFeedback } from "react-native"
 
 const GET_PRODUCT = gql`
   query GetProducts($productId: ID!) {
@@ -27,8 +27,6 @@ export const BagItem = ({ productID, index, sectionHeight, removeItemFromBag }) 
       productId: productID,
     },
   })
-
-  console.log("productID??", productID)
 
   if (loading || !data) {
     return null
@@ -59,11 +57,11 @@ export const BagItem = ({ productID, index, sectionHeight, removeItemFromBag }) 
                 Size {product.modelSize} |
               </Sans>
               {"  "}
-              <TouchableOpacity onPress={() => removeItemFromBag(product.id)}>
+              <TouchableWithoutFeedback onPress={() => removeItemFromBag(product.id)}>
                 <Sans size="2" color="blue">
                   Remove
                 </Sans>
-              </TouchableOpacity>
+              </TouchableWithoutFeedback>
             </Text>
           </Box>
         </Flex>
