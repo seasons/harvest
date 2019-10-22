@@ -5,7 +5,6 @@ Codename: _Harvest_
 Mobile App (iOS and Android) for Seasons.
 This project is the mobile client for Seasons.nyc
 
-
 ## Prerequisites
 
 - Node v10.13.0 or above
@@ -21,6 +20,8 @@ This project is the mobile client for Seasons.nyc
 1. Install Pods: `$ cd ios && pod install`
 
 ### Running the project
+
+1. Run `cp .env.example to .env` and update values
 
 1. Run `$ yarn start` from the top directory, which will:
 
