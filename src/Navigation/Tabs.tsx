@@ -6,9 +6,11 @@ import { useNavigationState } from "./NavigationState"
 import { Theme, Flex } from "App/Components"
 import { ProductTabs } from "./ProductTabs"
 import { connect } from "react-redux"
-import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { get } from "lodash"
 import { color } from "styled-system"
+import { useSpring, animated } from "react-spring"
+
+const PRODUCT_SELECTION_HEIGHT = 440
 
 export const TabsComponent = props => {
   const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation } = props
@@ -45,42 +47,45 @@ export const TabsComponent = props => {
     )
   })
 
-  const hiddenStyles = {
-    opacity: 0,
-    pointerEvents: "none",
-    translateY: 100,
-  }
-  const visibleStyles = { opacity: 1, translateY: 0, pointerEvents: "auto" }
+  const productTabStyles = useSpring({
+    opacity: isProductRoute ? 1 : 0,
+    translateY: isProductRoute ? 0 : 100,
+  })
+  const mainTabStyles = useSpring({
+    opacity: isProductRoute ? 0 : 1,
+    translateY: isProductRoute ? 100 : 0,
+  })
+  const containerStyles = useSpring({
+    height: props.productState.showSizeSelection && isProductRoute ? PRODUCT_SELECTION_HEIGHT : 60,
+  })
 
   return (
     <Theme>
-      <TabContainer
+      <AnimatedTabContainer
         style={{
-          height: props.productState.showSizeSelection && isProductRoute ? 440 : 60,
+          height: containerStyles.height,
           marginBottom: insets.bottom,
         }}
       >
         <LeftCorner />
         <RightCorner />
-        <Spring native from={hiddenStyles} to={isProductRoute ? visibleStyles : hiddenStyles}>
-          {({ opacity, translateY, pointerEvents }) => (
-            <AnimatedProductTabsWrapper pointerEvents={pointerEvents} style={{ opacity, transform: [{ translateY }] }}>
-              <Flex style={{ flex: 1, backgroundColor: color("black") }}>
-                <ProductTabs navigation={navigation} productID={productID} />
-              </Flex>
-            </AnimatedProductTabsWrapper>
-          )}
-        </Spring>
-        <Spring native from={visibleStyles} to={isProductRoute ? hiddenStyles : visibleStyles}>
-          {({ opacity, translateY, pointerEvents }) => (
-            <AnimatedMainNavWrapper pointerEvents={pointerEvents} style={{ opacity, transform: [{ translateY }] }}>
-              <Flex pt={2} alignContent="center" justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
-                {tabs}
-              </Flex>
-            </AnimatedMainNavWrapper>
-          )}
-        </Spring>
-      </TabContainer>
+        <AnimatedProductTabsWrapper
+          pointerEvents={isProductRoute ? "auto" : "none"}
+          style={{ transform: [{ translateY: productTabStyles.translateY }], opacity: productTabStyles.opacity }}
+        >
+          <Flex style={{ flex: 1, backgroundColor: color("black") }}>
+            <ProductTabs navigation={navigation} productID={productID} />
+          </Flex>
+        </AnimatedProductTabsWrapper>
+        <AnimatedMainNavWrapper
+          pointerEvents={isProductRoute ? "none" : "auto"}
+          style={{ transform: [{ translateY: mainTabStyles.translateY }], opacity: mainTabStyles.opacity }}
+        >
+          <Flex pt={2} alignContent="center" justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
+            {tabs}
+          </Flex>
+        </AnimatedMainNavWrapper>
+      </AnimatedTabContainer>
     </Theme>
   )
 }
@@ -126,5 +131,6 @@ const RightCorner = styled(RightTabCorner)`
   right: 0;
 `
 
+const AnimatedTabContainer = animated(TabContainer)
 const AnimatedProductTabsWrapper = animated(NavWrapper)
 const AnimatedMainNavWrapper = animated(NavWrapper)
