@@ -3,7 +3,7 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerNgrokUrl": "https://ki-nv4.l2succes.harvest.exp.direct",
+  "packagerNgrokUrl": "https://packager.ki-nv4.l2succes.harvest.exp.direct",
+  "ngrokPid": 86347
 }
