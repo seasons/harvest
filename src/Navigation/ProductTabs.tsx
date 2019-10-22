@@ -53,14 +53,17 @@ export const ProductTabsComponent = props => {
   }
 
   const renderSelection = () => {
-    return null
     return (
-      <Selection m={2}>
+      <Selection>
         <ScrollView>
-          <Separator color={color("gray")} />
-          {renderSizes()}
+          <Box p={2}>
+            <Spacer mb={2} />
+            <Separator color={color("gray")} />
+            {renderSizes()}
+            <Spacer mb={2} />
+          </Box>
         </ScrollView>
-        <Button onPress={() => toggleShowSizeSelection(!productState.showSizeSelection)}>Cancel</Button>
+        <Button onPress={() => toggleShowSizeSelection(false)}>Cancel</Button>
       </Selection>
     )
   }
@@ -71,7 +74,7 @@ export const ProductTabsComponent = props => {
 
   return (
     <>
-      <Flex flex={1}>
+      <Flex style={{ backgroundColor: color("black") }}>
         <Flex px={2} pt={17} alignContent="center" justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
           <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
             <TouchableOpacity
@@ -152,8 +155,5 @@ const SizeSelectionButton = styled.View`
 `
 
 const Selection = styled.View`
-  padding-left: ${space(2)}px;
-  padding-right: ${space(2)}px;
   flex: 1;
-  padding-bottom: ${space(2)}px;
 `
