@@ -38,8 +38,8 @@ export const reducer = (state, action) => {
       }
       return bagWithNewItem
     case "removeItemFromBag":
-      const filteredItems = items.filter(bagItem => {
-        return bagItem.id !== action.payload.id
+      const filteredItems = items.filter(id => {
+        return id !== action.payload
       })
       const [updatedBagItems1, itemCount1] = addEmptyItemsToBag(filteredItems)
       const bagWithoutItem = {
