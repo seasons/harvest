@@ -1,4 +1,4 @@
-export { SignIn } from "./SignIn"
+export { LogIn as SignIn } from "./LogIn"
 export { SignInOrApply } from "./SignInOrApply"
 export { AllowNotifications } from "./AllowNotifications"
 export { Initializing } from "./Initializing"
