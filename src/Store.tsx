@@ -15,7 +15,6 @@ const initialState = {
   productState: {
     showSizeSelection: false,
     variant: { size: "", abbreviated: "X", id: null },
-    showReserveConfirmation: false,
     displayFooter: false,
     product: null,
   },

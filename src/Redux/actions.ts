@@ -13,11 +13,6 @@ export const toggleShowSizeSelection = showSizeSelection => ({
   payload: showSizeSelection,
 })
 
-export const toggleReserveConfirmation = showReserveConfirmation => ({
-  type: "toggleReserveConfirmation",
-  payload: showReserveConfirmation,
-})
-
 export const setVariant = variant => ({
   type: "setVariant",
   payload: variant,

@@ -3,17 +3,20 @@ import styled from "styled-components/native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { useNavigationState } from "./NavigationState"
-import { Theme, Flex } from "App/Components"
+import { Theme, Flex, Spacer, Sans } from "App/Components"
 import { ProductTabs } from "./ProductTabs"
 import { connect } from "react-redux"
 import { get } from "lodash"
+import { GreenCheck } from "Assets/svgs"
 import { color } from "styled-system"
 import { useSpring, animated } from "react-spring"
+import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 
 const PRODUCT_SELECTION_HEIGHT = 440
 
 export const TabsComponent = props => {
-  const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation } = props
+  const [showReserveConfirmation, setShowReserveConfirmation] = useState(false)
+  const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation, bag } = props
   const navigationState = useNavigationState()
   const insets = useSafeArea()
 
@@ -29,6 +32,29 @@ export const TabsComponent = props => {
   } else if ((action.type === "Navigation/POP_TO_TOP" || action.type === "Navigation/BACK") && isProductRoute) {
     setIsProductRoute(false)
     setProductID("")
+  }
+
+  const ReserveConfirmation = () => {
+    const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
+    return (
+      <ReserveConfirmationWrapper alignContent="center" justifyContent="center" flexDirection="column">
+        <Flex flexDirection="row" alignContent="center" justifyContent="center">
+          <Flex alignContent="center" justifyContent="center" flexDirection="column">
+            <Flex flexDirection="row" alignContent="center" justifyContent="center">
+              <GreenCheck />
+            </Flex>
+            <Spacer mb={2} />
+            <Sans size="2" color="white" textAlign="center">
+              Added to bag
+            </Sans>
+            <Spacer mb={1} />
+            <Sans size="2" color="gray" textAlign="center">
+              ({remainingPieces} slots remaining)
+            </Sans>
+          </Flex>
+        </Flex>
+      </ReserveConfirmationWrapper>
+    )
   }
 
   const tabs = routes.map((route, routeIndex) => {
@@ -47,6 +73,13 @@ export const TabsComponent = props => {
     )
   })
 
+  const displayReserveConfirmation = () => {
+    setShowReserveConfirmation(true)
+    setTimeout(() => {
+      setShowReserveConfirmation(false)
+    }, 2000)
+  }
+
   const productTabStyles = useSpring({
     opacity: isProductRoute ? 1 : 0,
     translateY: isProductRoute ? 0 : 100,
@@ -61,6 +94,7 @@ export const TabsComponent = props => {
 
   return (
     <Theme>
+      {showReserveConfirmation && <ReserveConfirmation />}
       <AnimatedTabContainer
         style={{
           height: containerStyles.height,
@@ -74,7 +108,11 @@ export const TabsComponent = props => {
           style={{ transform: [{ translateY: productTabStyles.translateY }], opacity: productTabStyles.opacity }}
         >
           <Flex style={{ flex: 1, backgroundColor: color("black") }}>
-            <ProductTabs navigation={navigation} productID={productID} />
+            <ProductTabs
+              displayReserveConfirmation={displayReserveConfirmation}
+              navigation={navigation}
+              productID={productID}
+            />
           </Flex>
         </AnimatedProductTabsWrapper>
         <AnimatedMainNavWrapper
@@ -91,8 +129,8 @@ export const TabsComponent = props => {
 }
 
 const mapStateToProps = state => {
-  const { productState } = state
-  return { productState }
+  const { productState, bag } = state
+  return { productState, bag }
 }
 
 export const Tabs = connect(mapStateToProps)(TabsComponent)
@@ -129,6 +167,16 @@ const RightCorner = styled(RightTabCorner)`
   position: absolute;
   top: -28;
   right: 0;
+`
+
+const ReserveConfirmationWrapper = styled(Flex)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.8);
 `
 
 const AnimatedTabContainer = animated(TabContainer)
