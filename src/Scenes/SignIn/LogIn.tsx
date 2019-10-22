@@ -31,7 +31,14 @@ export const LogIn: React.FC<LogInProps> = props => {
   const [password, setPassword] = useState("")
   const [emailComplete, setEmailComplete] = useState(false)
   const [showError, setShowError] = useState(false)
-  const [login, { error }] = useMutation(LOG_IN)
+  const [login] = useMutation(LOG_IN, {
+    onError: error => {
+      console.log(error)
+
+      // TODO: handle different types of errors
+      setShowError(true)
+    },
+  })
 
   const onEmailChange = val => {
     const emailValidationRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
@@ -61,15 +68,15 @@ export const LogIn: React.FC<LogInProps> = props => {
     }
   }
 
-  const handleApply = () => {}
+  const handleApply = () => {
+    // TODO: link to webview
+  }
 
-  const handleResetPassword = () => {}
+  const handleResetPassword = () => {
+    // TODO: implement
+  }
 
   const disabled = !(emailComplete && password.length)
-
-  if (error) {
-    console.log(error)
-  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color("black") }}>
@@ -129,7 +136,7 @@ export const LogIn: React.FC<LogInProps> = props => {
           buttonText="Got it"
           note="Your email or password may be incorrect. Not a member? Apply for the waitlist."
           title="Oops! Try again"
-          show={!!error}
+          show={showError}
           onClose={() => setShowError(false)}
         />
       </Theme>
