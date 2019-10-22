@@ -12,7 +12,7 @@ import { MONSOON_ENDPOINT } from "react-native-dotenv"
 const cache = new InMemoryCache()
 
 const link = new HttpLink({
-  uri: MONSOON_ENDPOINT || "http://localhost:4000",
+  uri: MONSOON_ENDPOINT || "http://localhost:4000/",
 })
 
 const authLink = setContext(async (_, { headers }) => {
