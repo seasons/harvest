@@ -32,7 +32,13 @@ export const ReserveButtonComponent: React.FC<Props> = ({
   const text = itemInBag ? "Added" : "Reserve"
 
   return (
-    <Button variant="primaryLight" disabled={itemInBag} size="small" onPress={() => handleReserve(itemInBag)}>
+    <Button
+      showCheckMark={itemInBag}
+      variant="primaryLight"
+      disabled={itemInBag}
+      size="small"
+      onPress={() => handleReserve(itemInBag)}
+    >
       {text}
     </Button>
   )
