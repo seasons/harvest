@@ -11,8 +11,8 @@ import AsyncStorage from "@react-native-community/async-storage"
 const cache = new InMemoryCache()
 
 const link = new HttpLink({
-  // uri: "https://monsoon-staging.herokuapp.com",
-  uri: "http://localhost:4000",
+  uri: "https://monsoon-staging.herokuapp.com",
+  // uri: "http://localhost:4000",
 })
 
 const authLink = setContext(async (_, { headers }) => {
