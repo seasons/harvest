@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components/native"
-import { color, space } from "App/Utils"
+import { color } from "App/Utils"
 import { ReserveButton } from "App/Scenes/Product/Components"
 import { Flex, Spacer, Sans, Button, Separator, Box, Radio } from "App/Components"
 import { TouchableOpacity } from "react-native"
@@ -13,7 +13,7 @@ import { bindActionCreators } from "redux"
 import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
 
 export const ProductTabsComponent = props => {
-  const { productState, setVariant, toggleShowSizeSelection, productID } = props
+  const { productState, setVariant, toggleShowSizeSelection, productID, displayReserveConfirmation } = props
 
   // FIXME: use real sizes
   const sizes = [
@@ -24,7 +24,7 @@ export const ProductTabsComponent = props => {
     { size: "xx-large", abbreviated: "xxl", id: 5, stock: 3 },
   ]
 
-  const renderSizes = () => {
+  const renderVariantListItem = () => {
     return sizes.map(size => {
       return (
         <Box key={size.id}>
@@ -52,14 +52,14 @@ export const ProductTabsComponent = props => {
     })
   }
 
-  const renderSelection = () => {
+  const renderVariantSelectionList = () => {
     return (
       <Selection>
         <ScrollView>
           <Box p={2}>
             <Spacer mb={2} />
             <Separator color={color("gray")} />
-            {renderSizes()}
+            {renderVariantListItem()}
             <Spacer mb={2} />
           </Box>
         </ScrollView>
@@ -76,7 +76,7 @@ export const ProductTabsComponent = props => {
     <>
       <Flex style={{ backgroundColor: color("black") }}>
         <Flex px={2} pt={17} alignContent="center" justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
-          <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
+          <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 94 }}>
             <TouchableOpacity
               onPress={() => {
                 props.navigation.dispatch(NavigationActions.back())
@@ -103,12 +103,12 @@ export const ProductTabsComponent = props => {
           <Flex flexDirection="row">
             <ReserveButton
               productID={productID}
-              displayReserveConfirmation={productState.displayReserveConfirmation}
+              displayReserveConfirmation={displayReserveConfirmation}
             ></ReserveButton>
           </Flex>
         </Flex>
       </Flex>
-      {renderSelection()}
+      {renderVariantSelectionList()}
     </>
   )
 }
@@ -135,13 +135,13 @@ export const ProductTabs = connect(
 const StyledDownChevronIcon = styled(DownChevronIcon)`
   position: absolute;
   right: 15;
-  top: 15;
+  top: 16;
 `
 
 const StyledSans = styled(Sans)`
   position: absolute;
   left: 15;
-  top: 8;
+  top: 6;
 `
 
 const SizeSelectionButton = styled.View`

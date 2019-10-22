@@ -9,10 +9,7 @@ const GET_PRODUCT = gql`
     product(where: { id: $productId }) {
       name
       id
-      description
-      retailPrice
       modelSize
-      modelHeight
       brand {
         name
       }
@@ -21,10 +18,10 @@ const GET_PRODUCT = gql`
   }
 `
 
-export const BagItem = ({ productID, index, sectionHeight, removeItemFromBag }) => {
+export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag }) => {
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
-      productId: productID,
+      productId: bagItem.productID,
     },
   })
 

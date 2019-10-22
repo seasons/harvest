@@ -71,8 +71,8 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   }
 
   const renderItem = ({ item, index }) => {
-    return item.length ? (
-      <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} productID={item} />
+    return item.productID.length ? (
+      <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} bagItem={item} />
     ) : (
       emptyBagItem(index)
     )
