@@ -1,12 +1,10 @@
 import { App } from "./src/App"
-import { EMPTY_BAG } from "App/Redux/reducer"
 import { ApolloClient } from "apollo-client"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { setContext } from "apollo-link-context"
 import { HttpLink } from "apollo-link-http"
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { AppRegistry } from "react-native"
-import { restoreCache } from "./src/helpers/asyncStorage"
 import { ApolloProvider } from "@apollo/react-hooks"
 import AsyncStorage from "@react-native-community/async-storage"
 
@@ -53,14 +51,9 @@ export const apolloClient = new ApolloClient({
 })
 
 const AppContainer = () => {
-  const [cacheData, setCacheData] = useState(EMPTY_BAG)
-  useEffect(() => {
-    restoreCache().then(data => setCacheData(data))
-  }, [])
-
   return (
     <ApolloProvider client={apolloClient}>
-      <App cacheData={cacheData} />
+      <App />
     </ApolloProvider>
   )
 }

@@ -2,32 +2,25 @@ import React from "react"
 import { AppContainer } from "App/Navigation"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { Provider } from "react-redux"
-import { reducer } from "./Redux/reducer"
-import { createStore } from "redux"
+import { persistor, store } from "./Store"
+import { PersistGate } from "redux-persist/lib/integration/react"
+import { View, Text } from "react-native"
 
-interface AppProps {
-  cacheData: any
-}
-
-export const App: React.FC<AppProps> = ({ cacheData }) => {
-  const initialState = {
-    productState: {
-      showSizeSelection: false,
-      variant: { size: "", abbreviated: "X", id: null },
-      showReserveConfirmation: false,
-      displayFooter: false,
-      product: null,
-    },
-    ...cacheData,
-  }
-
-  const store = createStore(reducer, initialState)
-
+export const App = () => {
   return (
     <Provider store={store}>
-      <SafeAreaProvider>
-        <AppContainer />
-      </SafeAreaProvider>
+      <PersistGate
+        loading={
+          <View>
+            <Text>{"Loading..."}</Text>
+          </View>
+        }
+        persistor={persistor}
+      >
+        <SafeAreaProvider>
+          <AppContainer />
+        </SafeAreaProvider>
+      </PersistGate>
     </Provider>
   )
 }
