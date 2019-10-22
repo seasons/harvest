@@ -7,11 +7,12 @@ import React from "react"
 import { AppRegistry } from "react-native"
 import { ApolloProvider } from "@apollo/react-hooks"
 import AsyncStorage from "@react-native-community/async-storage"
+import { MONSOON_ENDPOINT } from "react-native-dotenv"
 
 const cache = new InMemoryCache()
 
 const link = new HttpLink({
-  uri: process.env.MONSOON_ENDPOINT,
+  uri: MONSOON_ENDPOINT || "http://localhost:4000",
 })
 
 const authLink = setContext(async (_, { headers }) => {
