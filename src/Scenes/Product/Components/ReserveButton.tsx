@@ -37,8 +37,6 @@ export const ReserveButtonComponent: React.FC<Props> = ({
     removeItemFromWantItems({ productID, variantID: productState.variant.id })
   }
 
-  console.log("bag", bag)
-
   const itemInBag = !!bag.items.find(item => item.productID === productID)
   const itemInWantList = !!bag.wantItems.find(item => item.productID === productID)
   const itemStockZero = productState && productState.variant && productState.variant.stock === 0
