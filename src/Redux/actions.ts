@@ -8,6 +8,16 @@ export const removeItemFromBag = item => ({
   payload: item,
 })
 
+export const addItemToWantItems = item => ({
+  type: "addItemToWantItems",
+  payload: item,
+})
+
+export const removeItemFromWantItems = item => ({
+  type: "removeItemFromWantItems",
+  payload: item,
+})
+
 export const toggleShowSizeSelection = showSizeSelection => ({
   type: "toggleShowSizeSelection",
   payload: showSizeSelection,
