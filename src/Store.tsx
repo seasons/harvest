@@ -1,4 +1,4 @@
-import { reducer } from "./Redux/reducer"
+import { reducer, EMPTY_BAG } from "./Redux/reducer"
 import { createStore } from "redux"
 import { persistStore, persistReducer } from "redux-persist"
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2"
@@ -18,7 +18,7 @@ const initialState = {
     displayFooter: false,
     product: null,
   },
-  bag: { items: [], itemCount: 0 },
+  ...EMPTY_BAG,
 }
 
 const pReducer = persistReducer(persistConfig, reducer)

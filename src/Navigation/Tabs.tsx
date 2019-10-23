@@ -15,7 +15,7 @@ import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 const PRODUCT_SELECTION_HEIGHT = 440
 
 export const TabsComponent = props => {
-  const [showReserveConfirmation, setShowReserveConfirmation] = useState(false)
+  const [showConfirmation, setShowConfirmation] = useState({ show: false, type: "" })
   const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation, bag } = props
   const navigationState = useNavigationState()
   const insets = useSafeArea()
@@ -34,10 +34,16 @@ export const TabsComponent = props => {
     setProductID("")
   }
 
-  const ReserveConfirmation = () => {
+  const Confirmation = ({ type }) => {
     const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
+    let text = "Added to bag"
+    let subtext = `(${remainingPieces} slots remaining)`
+    if (type === "want") {
+      text = "Got it!"
+      subtext = "We'll let you know when it's back in stock."
+    }
     return (
-      <ReserveConfirmationWrapper alignContent="center" justifyContent="center" flexDirection="column">
+      <ConfirmationWrapper alignContent="center" justifyContent="center" flexDirection="column">
         <Flex flexDirection="row" alignContent="center" justifyContent="center">
           <Flex alignContent="center" justifyContent="center" flexDirection="column">
             <Flex flexDirection="row" alignContent="center" justifyContent="center">
@@ -45,15 +51,15 @@ export const TabsComponent = props => {
             </Flex>
             <Spacer mb={2} />
             <Sans size="2" color="white" textAlign="center">
-              Added to bag
+              {text}
             </Sans>
             <Spacer mb={1} />
             <Sans size="2" color="gray" textAlign="center">
-              ({remainingPieces} slots remaining)
+              {subtext}
             </Sans>
           </Flex>
         </Flex>
-      </ReserveConfirmationWrapper>
+      </ConfirmationWrapper>
     )
   }
 
@@ -73,10 +79,10 @@ export const TabsComponent = props => {
     )
   })
 
-  const displayReserveConfirmation = () => {
-    setShowReserveConfirmation(true)
+  const displayConfirmation = type => {
+    setShowConfirmation({ show: true, type })
     setTimeout(() => {
-      setShowReserveConfirmation(false)
+      setShowConfirmation({ show: false, type })
     }, 2000)
   }
 
@@ -94,7 +100,7 @@ export const TabsComponent = props => {
 
   return (
     <Theme>
-      {showReserveConfirmation && <ReserveConfirmation />}
+      {showConfirmation.show && <Confirmation type={showConfirmation.type} />}
       <AnimatedTabContainer
         style={{
           height: containerStyles.height,
@@ -108,11 +114,7 @@ export const TabsComponent = props => {
           style={{ transform: [{ translateY: productTabStyles.translateY }], opacity: productTabStyles.opacity }}
         >
           <Flex style={{ flex: 1, backgroundColor: color("black") }}>
-            <ProductTabs
-              displayReserveConfirmation={displayReserveConfirmation}
-              navigation={navigation}
-              productID={productID}
-            />
+            <ProductTabs displayConfirmation={displayConfirmation} navigation={navigation} productID={productID} />
           </Flex>
         </AnimatedProductTabsWrapper>
         <AnimatedMainNavWrapper
@@ -169,7 +171,7 @@ const RightCorner = styled(RightTabCorner)`
   right: 0;
 `
 
-const ReserveConfirmationWrapper = styled(Flex)`
+const ConfirmationWrapper = styled(Flex)`
   position: absolute;
   top: 0;
   left: 0;

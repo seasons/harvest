@@ -1,6 +1,6 @@
 import React from "react"
 import { Button } from "App/Components"
-import { addItemToBag } from "App/Redux/actions"
+import { addItemToBag, removeItemFromWantItems, addItemToWantItems } from "App/Redux/actions"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
@@ -8,37 +8,59 @@ interface Props {
   bag: any
   productState: any
   productID: string
-  displayReserveConfirmation: () => void
+  displayConfirmation: (type: string) => void
   addItemToBag: (product: any) => void
+  removeItemFromWantItems: (product: any) => void
+  addItemToWantItems: (product: any) => void
 }
 
 export const ReserveButtonComponent: React.FC<Props> = ({
   bag,
-  displayReserveConfirmation,
+  displayConfirmation,
   productID,
   addItemToBag,
   productState,
+  removeItemFromWantItems,
+  addItemToWantItems,
 }) => {
-  const handleReserve = itemInBag => {
-    if (itemInBag) {
-      return
-    }
-    addItemToBag({ productID, variantID: productState.variantID })
-    displayReserveConfirmation()
+  const handleReserve = () => {
+    addItemToBag({ productID, variantID: productState.variant.id })
+    displayConfirmation("reserve")
   }
 
-  const itemInBag = !!bag.items.find(item => item.productID === productID)
+  const handleAddWantItem = () => {
+    addItemToWantItems({ productID, variantID: productState.variant.id })
+    displayConfirmation("want")
+  }
 
-  const text = itemInBag ? "Added" : "Reserve"
+  const handleRemoveWantItem = () => {
+    removeItemFromWantItems({ productID, variantID: productState.variant.id })
+  }
+
+  console.log("bag", bag)
+
+  const itemInBag = !!bag.items.find(item => item.productID === productID)
+  const itemInWantList = !!bag.wantItems.find(item => item.productID === productID)
+  const itemStockZero = productState && productState.variant && productState.variant.stock === 0
+
+  let showCheckMark = false
+  let text = "Reserve"
+  let onPress = () => handleReserve()
+  if (itemInBag) {
+    text = "Added"
+    onPress = () => null
+    showCheckMark = true
+  } else if (itemStockZero && itemInWantList) {
+    text = "Want"
+    onPress = () => handleRemoveWantItem()
+    showCheckMark = true
+  } else if (itemStockZero) {
+    onPress = () => handleAddWantItem()
+    text = "Want"
+  }
 
   return (
-    <Button
-      showCheckMark={itemInBag}
-      variant="primaryLight"
-      disabled={itemInBag}
-      size="small"
-      onPress={() => handleReserve(itemInBag)}
-    >
+    <Button showCheckMark={showCheckMark} variant="primaryLight" disabled={itemInBag} size="small" onPress={onPress}>
       {text}
     </Button>
   )
@@ -48,6 +70,8 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       addItemToBag,
+      addItemToWantItems,
+      removeItemFromWantItems,
     },
     dispatch
   )

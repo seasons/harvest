@@ -13,10 +13,10 @@ import { bindActionCreators } from "redux"
 import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
 
 export const ProductTabsComponent = props => {
-  const { productState, setVariant, toggleShowSizeSelection, productID, displayReserveConfirmation } = props
+  const { productState, setVariant, toggleShowSizeSelection, productID, displayConfirmation } = props
 
   // FIXME: use real sizes
-  const sizes = [
+  const variants = [
     { size: "small", abbreviated: "s", id: 1, stock: 0 },
     { size: "medium", abbreviated: "m", id: 2, stock: 2 },
     { size: "large", abbreviated: "l", id: 3, stock: 1 },
@@ -25,24 +25,20 @@ export const ProductTabsComponent = props => {
   ]
 
   const renderVariantListItem = () => {
-    return sizes.map(size => {
+    return variants.map(variant => {
       return (
-        <Box key={size.id}>
+        <Box key={variant.id}>
           <Spacer mb={2} />
           <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
             <Flex flexDirection="row" alignItems="center">
-              <Radio
-                selected={productState.variant.id === size.id}
-                disabled={size.stock === 0}
-                onSelect={() => setVariant(size)}
-              />
+              <Radio selected={productState.variant.id === variant.id} onSelect={() => setVariant(variant)} />
               <Spacer mr={1} />
-              <Sans color={size.stock ? "white" : "gray"} size="2">
-                {capitalize(size.size)}
+              <Sans color={variant.stock ? "white" : "gray"} size="2">
+                {capitalize(variant.size)}
               </Sans>
             </Flex>
             <Sans color="gray" size="2">
-              {size.stock ? "(" + size.stock + " left)" : "(Out of stock)"}
+              {variant.stock ? "(" + variant.stock + " left)" : "(Out of stock)"}
             </Sans>
           </Flex>
           <Spacer mb={2} />
@@ -101,10 +97,7 @@ export const ProductTabsComponent = props => {
             </SizeSelectionButton>
           </TouchableOpacity>
           <Flex flexDirection="row">
-            <ReserveButton
-              productID={productID}
-              displayReserveConfirmation={displayReserveConfirmation}
-            ></ReserveButton>
+            <ReserveButton productID={productID} displayConfirmation={displayConfirmation}></ReserveButton>
           </Flex>
         </Flex>
       </Flex>
