@@ -6,15 +6,16 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from "react-n
 import { space } from "App/Utils"
 import { Dimensions } from "react-native"
 
-interface JustAddedRailProps {
+interface ProductLinkRailProps {
   items: any
   componentId: string
+  title?: string
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 const cardWidth = 240
 
-export const JustAddedRail: React.FC<JustAddedRailProps> = ({ items, componentId, navigation }) => {
+export const ProductLinkRail: React.FC<ProductLinkRailProps> = ({ items, title, navigation }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedItem, setSelectedItem] = useState((items && items.length && items[0]) || null)
   const onScroll = e => {
@@ -29,7 +30,7 @@ export const JustAddedRail: React.FC<JustAddedRailProps> = ({ items, componentId
   const negativeSpace = Math.round(Dimensions.get("window").width) - (cardWidth + 10)
   return (
     <Box my={2} style={{ position: "relative" }}>
-      <Sans size="2">Just Added</Sans>
+      <Sans size="2">{title}</Sans>
       <Box mt={2}>
         <FlatList
           data={items}
