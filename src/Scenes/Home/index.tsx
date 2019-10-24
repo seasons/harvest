@@ -3,7 +3,7 @@ import { CategoriesRail } from "./Components/CategoriesRail"
 import { Container } from "Components/Container"
 import { FlatList, AppState } from "react-native"
 import { HeroRail } from "./Components/HeroRail"
-import { JustAddedRail } from "./Components/JustAddedRail"
+import { ProductLinkRail } from "./Components/ProductLinkRail"
 import { LogoText } from "Components/Typography"
 import React, { useEffect } from "react"
 import { Theme } from "Components/Theme"
@@ -28,12 +28,17 @@ export const HomeComponent = (props: any) => {
     switch (item.type) {
       case "header":
         return <HeroRail navigation={navigation} items={item.data} />
-
       case "categories":
         return <CategoriesRail navigation={navigation} categories={item.data} />
-
-      case "just-added":
-        return <JustAddedRail navigation={navigation} componentId={props.componentId} items={item.data} />
+      case "product-link-rail":
+        return (
+          <ProductLinkRail
+            title={item.title}
+            navigation={navigation}
+            componentId={props.componentId}
+            items={item.data}
+          />
+        )
     }
   }
 
@@ -53,7 +58,32 @@ export const HomeComponent = (props: any) => {
       data: ["Coats", "Jackets", "Sweatshirts", "Tees"],
     },
     {
-      type: "just-added",
+      type: "product-link-rail",
+      title: "Just added",
+      data: [
+        {
+          imageUrl:
+            "https://media.endclothing.com/media/catalog/product/2/0/20-07-2019_helmutlang_printsidetee_white_red_j06dm505_ja_m1.jpg",
+          colorway: "White & Red",
+          productName: "Print Side Tee",
+          brandName: "Helmut Lang",
+          price: "$189",
+          id: "ck1do0t6g00xr07546zzbai6a",
+        },
+        {
+          imageUrl:
+            "https://media.endclothing.com/media/catalog/product/1/1/11-09-2019_aimeleondore_distressedpopoverhoody_royaltypurple_ald-ch004-pr_th_m1.jpg",
+          productName: "Distressed Popover Hoodie",
+          brandName: "Aimé Leon",
+          colorway: "Royalty Purple",
+          price: "$255",
+          id: "ck1do0tft00y20754vnf7l9cb",
+        },
+      ],
+    },
+    {
+      type: "product-link-rail",
+      title: "Latest picks",
       data: [
         {
           imageUrl:
@@ -87,7 +117,7 @@ export const HomeComponent = (props: any) => {
           <FlatList
             data={sections}
             contentContainerStyle={{ paddingBottom: 150 }}
-            keyExtractor={item => item.type}
+            keyExtractor={(item, index) => item.type + index}
             renderItem={item => renderItem(item)}
           />
         </Theme>
