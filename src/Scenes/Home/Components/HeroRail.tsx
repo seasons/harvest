@@ -9,7 +9,7 @@ export const HeroRail = ({ items, navigation }) => {
       data={items}
       renderItem={({ item }) => {
         return (
-          <Box mr={2}>
+          <Box px={2}>
             <ImageContainer source={{ uri: item.url }}></ImageContainer>
           </Box>
         )

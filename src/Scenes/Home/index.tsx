@@ -3,12 +3,13 @@ import { CategoriesRail } from "./Components/CategoriesRail"
 import { Container } from "Components/Container"
 import { FlatList, AppState } from "react-native"
 import { HeroRail } from "./Components/HeroRail"
-import { ProductLinkRail } from "./Components/ProductLinkRail"
+import { ProductRail } from "./Components/ProductRail"
 import { LogoText } from "Components/Typography"
 import React, { useEffect } from "react"
-import { Theme } from "Components/Theme"
 import { persistCache } from "App/helpers/asyncStorage"
 import { connect } from "react-redux"
+import { color } from "App/Utils"
+import { AllCaughtUp } from "./Components/AllCaughtUp"
 
 export const HomeComponent = (props: any) => {
   // The homescreen persists the local cache
@@ -23,7 +24,7 @@ export const HomeComponent = (props: any) => {
     }
   }
 
-  const renderItem = ({ item }) => {
+  const renderItem = item => {
     const { navigation } = props
     switch (item.type) {
       case "header":
@@ -32,12 +33,7 @@ export const HomeComponent = (props: any) => {
         return <CategoriesRail navigation={navigation} categories={item.data} />
       case "product-link-rail":
         return (
-          <ProductLinkRail
-            title={item.title}
-            navigation={navigation}
-            componentId={props.componentId}
-            items={item.data}
-          />
+          <ProductRail title={item.title} navigation={navigation} componentId={props.componentId} items={item.data} />
         )
     }
   }
@@ -109,18 +105,27 @@ export const HomeComponent = (props: any) => {
 
   return (
     <Container>
-      <Box ml={2}>
-        <Box my={2}>
+      <Box style={{ backgroundColor: color("black") }}>
+        <Box p={2} style={{ backgroundColor: color("white") }}>
           <LogoText>SEASONS</LogoText>
         </Box>
-        <Theme>
-          <FlatList
-            data={sections}
-            contentContainerStyle={{ paddingBottom: 150 }}
-            keyExtractor={(item, index) => item.type + index}
-            renderItem={item => renderItem(item)}
-          />
-        </Theme>
+        <FlatList
+          data={sections}
+          keyExtractor={(item, index) => item.type + index}
+          renderItem={({ item, index }) => {
+            const styles =
+              index === sections.length - 1
+                ? {
+                    backgroundColor: color("white"),
+                    paddingBottom: 30,
+                    borderBottomLeftRadius: 30,
+                    borderBottomRightRadius: 30,
+                  }
+                : { backgroundColor: color("white") }
+            return <Box style={styles}>{renderItem(item)}</Box>
+          }}
+          ListFooterComponent={() => <AllCaughtUp navigation={props.navigation} />}
+        />
       </Box>
     </Container>
   )
