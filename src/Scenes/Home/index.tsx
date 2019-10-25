@@ -9,7 +9,7 @@ import React, { useEffect } from "react"
 import { persistCache } from "App/helpers/asyncStorage"
 import { connect } from "react-redux"
 import { color } from "App/Utils"
-import { BagPlaceHolderSVG } from "Assets/svgs/BagPlaceHolder"
+import { AllCaughtUp } from "./Components/AllCaughtUp"
 
 export const HomeComponent = (props: any) => {
   // The homescreen persists the local cache
@@ -36,34 +36,6 @@ export const HomeComponent = (props: any) => {
           <ProductRail title={item.title} navigation={navigation} componentId={props.componentId} items={item.data} />
         )
     }
-  }
-
-  const AllCaughtUp = () => {
-    return (
-      <Box style={{ backgroundColor: color("black") }}>
-        <Spacer mb={4} />
-        <Flex style={{ flex: 1 }} justifyContent="center" flexDirection="column">
-          <Flex justifyContent="center" flexDirection="row">
-            <BagPlaceHolderSVG />
-          </Flex>
-          <Spacer mb={3} />
-          <Sans size="2" color={color("white")} style={{ textAlign: "center" }}>
-            You're all caught up!
-          </Sans>
-          <Spacer mb={0.5} />
-          <Sans size="2" color={color("gray")} style={{ textAlign: "center" }}>
-            Browse our entire collection
-          </Sans>
-          <Spacer mb={3} />
-          <Flex justifyContent="center" flexDirection="row">
-            <Button size="medium" variant="primaryLight" onPress={() => props.navigation.navigate("Browse")}>
-              Browse
-            </Button>
-          </Flex>
-        </Flex>
-        <Spacer mb={150} />
-      </Box>
-    )
   }
 
   const sections = [
@@ -152,7 +124,7 @@ export const HomeComponent = (props: any) => {
                 : { backgroundColor: color("white") }
             return <Box style={styles}>{renderItem(item)}</Box>
           }}
-          ListFooterComponent={() => <AllCaughtUp />}
+          ListFooterComponent={() => <AllCaughtUp navigation={props.navigation} />}
         />
       </Box>
     </Container>
