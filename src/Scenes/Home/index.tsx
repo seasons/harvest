@@ -1,14 +1,15 @@
-import { Box } from "App/Components"
+import { Box, Flex, Spacer, Button } from "App/Components"
 import { CategoriesRail } from "./Components/CategoriesRail"
 import { Container } from "Components/Container"
 import { FlatList, AppState } from "react-native"
 import { HeroRail } from "./Components/HeroRail"
-import { ProductLinkRail } from "./Components/ProductLinkRail"
-import { LogoText } from "Components/Typography"
+import { ProductRail } from "./Components/ProductRail"
+import { LogoText, Sans } from "Components/Typography"
 import React, { useEffect } from "react"
-import { Theme } from "Components/Theme"
 import { persistCache } from "App/helpers/asyncStorage"
 import { connect } from "react-redux"
+import { color } from "App/Utils"
+import { BagPlaceHolderSVG } from "Assets/svgs/BagPlaceHolder"
 
 export const HomeComponent = (props: any) => {
   // The homescreen persists the local cache
@@ -23,7 +24,7 @@ export const HomeComponent = (props: any) => {
     }
   }
 
-  const renderItem = ({ item }) => {
+  const renderItem = item => {
     const { navigation } = props
     switch (item.type) {
       case "header":
@@ -32,14 +33,37 @@ export const HomeComponent = (props: any) => {
         return <CategoriesRail navigation={navigation} categories={item.data} />
       case "product-link-rail":
         return (
-          <ProductLinkRail
-            title={item.title}
-            navigation={navigation}
-            componentId={props.componentId}
-            items={item.data}
-          />
+          <ProductRail title={item.title} navigation={navigation} componentId={props.componentId} items={item.data} />
         )
     }
+  }
+
+  const AllCaughtUp = () => {
+    return (
+      <Box style={{ backgroundColor: color("black") }}>
+        <Spacer mb={4} />
+        <Flex style={{ flex: 1 }} justifyContent="center" flexDirection="column">
+          <Flex justifyContent="center" flexDirection="row">
+            <BagPlaceHolderSVG />
+          </Flex>
+          <Spacer mb={3} />
+          <Sans size="2" color={color("white")} style={{ textAlign: "center" }}>
+            You're all caught up!
+          </Sans>
+          <Spacer mb={0.5} />
+          <Sans size="2" color={color("gray")} style={{ textAlign: "center" }}>
+            Browse our entire collection
+          </Sans>
+          <Spacer mb={3} />
+          <Flex justifyContent="center" flexDirection="row">
+            <Button size="medium" variant="primaryLight" onPress={() => props.navigation.navigate("Browse")}>
+              Browse
+            </Button>
+          </Flex>
+        </Flex>
+        <Spacer mb={150} />
+      </Box>
+    )
   }
 
   const sections = [
@@ -109,18 +133,27 @@ export const HomeComponent = (props: any) => {
 
   return (
     <Container>
-      <Box ml={2}>
-        <Box my={2}>
+      <Box style={{ backgroundColor: color("black") }}>
+        <Box p={2} style={{ backgroundColor: color("white") }}>
           <LogoText>SEASONS</LogoText>
         </Box>
-        <Theme>
-          <FlatList
-            data={sections}
-            contentContainerStyle={{ paddingBottom: 150 }}
-            keyExtractor={(item, index) => item.type + index}
-            renderItem={item => renderItem(item)}
-          />
-        </Theme>
+        <FlatList
+          data={sections}
+          keyExtractor={(item, index) => item.type + index}
+          renderItem={({ item, index }) => {
+            const styles =
+              index === sections.length - 1
+                ? {
+                    backgroundColor: color("white"),
+                    paddingBottom: 30,
+                    borderBottomLeftRadius: 30,
+                    borderBottomRightRadius: 30,
+                  }
+                : { backgroundColor: color("white") }
+            return <Box style={styles}>{renderItem(item)}</Box>
+          }}
+          ListFooterComponent={() => <AllCaughtUp />}
+        />
       </Box>
     </Container>
   )

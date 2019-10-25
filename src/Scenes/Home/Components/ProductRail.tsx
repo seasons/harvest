@@ -6,7 +6,7 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from "react-n
 import { space } from "App/Utils"
 import { Dimensions } from "react-native"
 
-interface ProductLinkRailProps {
+interface ProductRailProps {
   items: any
   componentId: string
   title?: string
@@ -15,7 +15,7 @@ interface ProductLinkRailProps {
 
 const cardWidth = 240
 
-export const ProductLinkRail: React.FC<ProductLinkRailProps> = ({ items, title, navigation }) => {
+export const ProductRail: React.FC<ProductRailProps> = ({ items, title, navigation }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedItem, setSelectedItem] = useState((items && items.length && items[0]) || null)
   const onScroll = e => {
@@ -29,7 +29,7 @@ export const ProductLinkRail: React.FC<ProductLinkRailProps> = ({ items, title, 
 
   const negativeSpace = Math.round(Dimensions.get("window").width) - (cardWidth + 10)
   return (
-    <Box my={2} style={{ position: "relative" }}>
+    <Box py={2} pl={2} style={{ position: "relative" }}>
       <Sans size="2">{title}</Sans>
       <Box mt={2}>
         <FlatList
