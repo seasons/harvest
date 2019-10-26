@@ -12,7 +12,7 @@ export const App = () => {
       <PersistGate
         loading={
           <View>
-            <Text>{"Loading..."}</Text>
+            <Text>Loading...</Text>
           </View>
         }
         persistor={persistor}

@@ -3,7 +3,8 @@ import { CategoriesRail } from "./Components/CategoriesRail"
 import { Container } from "Components/Container"
 import { FlatList, AppState } from "react-native"
 import { HeroRail } from "./Components/HeroRail"
-import { ProductRail } from "./Components/ProductRail"
+import { ProductsRail } from "./Components/ProductsRail"
+import { BrandsRail } from "./Components/BrandsRail"
 import { LogoText } from "Components/Typography"
 import React, { useEffect } from "react"
 import { persistCache } from "App/helpers/asyncStorage"
@@ -72,10 +73,10 @@ export const HomeComponent = (props: any) => {
         return <HeroRail navigation={navigation} items={item.data} />
       case "categories":
         return <CategoriesRail navigation={navigation} categories={item.data} />
+      case "brands":
+        return <BrandsRail title={item.title} navigation={navigation} items={item.data} />
       case "product-link-rail":
-        return (
-          <ProductRail title={item.title} navigation={navigation} componentId={props.componentId} items={item.data} />
-        )
+        return <ProductsRail title={item.title} navigation={navigation} items={item.data} />
     }
   }
 
