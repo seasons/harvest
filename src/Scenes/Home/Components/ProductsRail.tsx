@@ -6,18 +6,18 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from "react-n
 import { space } from "App/Utils"
 import { Dimensions } from "react-native"
 
-interface ProductRailProps {
+interface ProductsRailProps {
   items: any
-  componentId: string
   title?: string
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 const cardWidth = 240
 
-export const ProductRail: React.FC<ProductRailProps> = ({ items, title, navigation }) => {
+export const ProductsRail: React.FC<ProductsRailProps> = ({ items, title, navigation }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedItem, setSelectedItem] = useState((items && items.length && items[0]) || null)
+
   const onScroll = e => {
     const newPageNum = Math.round(e.nativeEvent.contentOffset.x / cardWidth + 1)
 
