@@ -5,20 +5,22 @@ import { Box, Spacer } from "App/Components"
 
 export const HeroRail = ({ items, navigation }) => {
   return (
-    <FlatList
-      data={items}
-      renderItem={({ item }) => {
-        return (
-          <Box px={2}>
-            <ImageContainer source={{ uri: item.heroImageURL }}></ImageContainer>
-          </Box>
-        )
-      }}
-      ListFooterComponent={() => <Spacer mb={3} />}
-      keyExtractor={({ id }) => id.toString()}
-      showsHorizontalScrollIndicator={false}
-      horizontal
-    />
+    <>
+      <FlatList
+        data={items}
+        renderItem={({ item }) => {
+          return (
+            <Box px={2}>
+              <ImageContainer source={{ uri: item.heroImageURL }}></ImageContainer>
+            </Box>
+          )
+        }}
+        keyExtractor={({ id }) => id.toString()}
+        showsHorizontalScrollIndicator={false}
+        horizontal
+      />
+      <Spacer mb={3} />
+    </>
   )
 }
 

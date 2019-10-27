@@ -29,7 +29,7 @@ export const ProductsRail: React.FC<ProductsRailProps> = ({ items, title, naviga
 
   const negativeSpace = Math.round(Dimensions.get("window").width) - (cardWidth + 10)
   return (
-    <Box py={2} pl={2} style={{ position: "relative" }}>
+    <Box mb={3} pl={2} style={{ position: "relative" }}>
       <Sans size="2">{title}</Sans>
       <Box mt={2}>
         <FlatList

@@ -21,6 +21,7 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
 
   useEffect(() => {
     const cards = chunk(items, 6)
+    console.log("items", items)
     createSlideGroups(cards)
   }, [])
 
@@ -41,10 +42,10 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
       const styles =
         index !== slideGroup.length - 1 ? { borderBottomColor: `${color("lightGray")}`, borderBottomWidth: 1 } : {}
       return (
-        <Box p={1} key={brand.logo + index} style={styles}>
+        <Box key={brand.logo + index} style={styles}>
           <TouchableOpacity onPress={navigateToBrand}>
             <Flex flexDirection="column">
-              <ImageContainer source={{ uri: brand.logo }} />
+              <ImageContainer source={{ uri: brand.logo }} resizeMode="contain" />
             </Flex>
           </TouchableOpacity>
         </Box>
@@ -54,7 +55,7 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
 
   const negativeSpace = Math.round(Dimensions.get("window").width) - (cardWidth + 10)
   return (
-    <Box py={2} pl={2} style={{ position: "relative" }}>
+    <Box mb={3} pl={2} style={{ position: "relative" }}>
       <Sans size="2">{title}</Sans>
       <Box mt={2}>
         <FlatList
@@ -100,5 +101,5 @@ const GroupWrapper = styled(Box)`
 `
 
 const ImageContainer = styled(Image)`
-  height: 40px;
+  height: 70;
 `

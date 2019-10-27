@@ -13,6 +13,7 @@ import { color } from "App/Utils"
 import { AllCaughtUp } from "./Components/AllCaughtUp"
 import gql from "graphql-tag"
 import { useQuery } from "react-apollo"
+import styled from "styled-components/native"
 
 const GET_HOMEPAGE = gql`
   query Homepage {
@@ -80,6 +81,7 @@ export const HomeComponent = (props: any) => {
       case "Categories":
         return <CategoriesRail navigation={navigation} categories={item.results} />
       case "Brands":
+        console.log("item???", item)
         return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
       case "Products":
         return <ProductsRail title={item.title} navigation={navigation} items={item.results} />
@@ -90,7 +92,9 @@ export const HomeComponent = (props: any) => {
 
   return (
     <Container>
-      <Box style={{ backgroundColor: color("black") }}>
+      <Box style={{ position: "relative", backgroundColor: "rgba(0,0,0,0)" }}>
+        <WhiteBackground />
+        <BlackBackground />
         <Box p={2} style={{ backgroundColor: color("white") }}>
           <LogoText>SEASONS</LogoText>
         </Box>
@@ -115,6 +119,26 @@ export const HomeComponent = (props: any) => {
     </Container>
   )
 }
+
+const BlackBackground = styled(Box)`
+  background-color: ${color("black")};
+  height: 50%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+`
+
+const WhiteBackground = styled(Box)`
+  z-index: 10;
+  background-color: ${color("white")};
+  height: 50%;
+  top: 0;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  position: absolute;
+`
 
 const mapStateToProps = state => {
   const { bag } = state
