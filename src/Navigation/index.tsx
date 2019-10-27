@@ -189,4 +189,4 @@ const NavigationContainer = styled.View`
   background-color: black;
 `
 
-export const AppContainer = createAppContainer(CustomNavigator)
+export const AppContainer = createAppContainer(SwitchNavigator)
