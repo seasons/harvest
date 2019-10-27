@@ -15,8 +15,6 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,
 })
 
-console.log("MONSOON_ENDPOINT", MONSOON_ENDPOINT)
-
 const cache = new InMemoryCache({ fragmentMatcher })
 
 const link = new HttpLink({

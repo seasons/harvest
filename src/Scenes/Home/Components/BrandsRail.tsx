@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Box, Sans, Spacer, Flex, RailPositionIndicator } from "App/Components"
-import { FlatList, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
+import { FlatList, TouchableOpacity, Image } from "react-native"
 import styled from "styled-components/native"
 import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { space, color } from "App/Utils"
@@ -38,13 +38,16 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
 
   const slide = slideGroup => {
     return slideGroup.map((brand, index) => {
-      const styles = index !== slideGroup.length - 1 ? { borderBottom: `1px solid ${color("lightGray")}` } : {}
+      const styles =
+        index !== slideGroup.length - 1 ? { borderBottomColor: `${color("lightGray")}`, borderBottomWidth: 1 } : {}
       return (
-        <TouchableOpacity onPress={navigateToBrand}>
-          <Flex key={brand.image.url} alignContent="center" justifyContent="center" style={styles}>
-            {brand.image.url}
-          </Flex>
-        </TouchableOpacity>
+        <Box p={1} key={brand.logo + index} style={styles}>
+          <TouchableOpacity onPress={navigateToBrand}>
+            <Flex flexDirection="column">
+              <ImageContainer source={{ uri: brand.logo }} />
+            </Flex>
+          </TouchableOpacity>
+        </Box>
       )
     })
   }
@@ -66,7 +69,7 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
               </>
             )
           }}
-          keyExtractor={({ colorway }) => colorway.toString()}
+          keyExtractor={(item, index) => "brand" + index}
           showsHorizontalScrollIndicator={false}
           horizontal
           overScrollMode="always"
@@ -79,18 +82,23 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
         />
         <Spacer mb={2} />
         <Box pr={2}>
-          <RailPositionIndicator length={items.length} currentPage={currentPage} />
+          <RailPositionIndicator length={slideGroups.length} currentPage={currentPage} />
         </Box>
       </Box>
     </Box>
   )
 }
 
-const GroupWrapper = styled.Image`
+const GroupWrapper = styled(Box)`
   background: rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   width: ${cardWidth};
+  background-color: ${color("white")};
   border: 1px solid ${color("lightGray")};
   border-radius: 10px;
+`
+
+const ImageContainer = styled(Image)`
+  height: 40px;
 `

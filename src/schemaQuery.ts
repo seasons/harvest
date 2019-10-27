@@ -31,7 +31,7 @@ const createFragmentTypes = () => {
         if (err) {
           console.error("Error writing fragmentTypes file", err)
         } else {
-          console.log("Fragment types successfully extracted! ", result.data)
+          console.log("Fragment types successfully extracted!")
         }
       })
     })

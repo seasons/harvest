@@ -1,7 +1,7 @@
 import React from "react"
 import { FlatList } from "react-native"
 import { styled } from "Components/platform/primitives"
-import { Box } from "App/Components"
+import { Box, Spacer } from "App/Components"
 
 export const HeroRail = ({ items, navigation }) => {
   return (
@@ -10,10 +10,11 @@ export const HeroRail = ({ items, navigation }) => {
       renderItem={({ item }) => {
         return (
           <Box px={2}>
-            <ImageContainer source={{ uri: item.url }}></ImageContainer>
+            <ImageContainer source={{ uri: item.heroImageURL }}></ImageContainer>
           </Box>
         )
       }}
+      ListFooterComponent={() => <Spacer mb={3} />}
       keyExtractor={({ id }) => id.toString()}
       showsHorizontalScrollIndicator={false}
       horizontal

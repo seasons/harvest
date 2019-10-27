@@ -35,18 +35,19 @@ export const ProductsRail: React.FC<ProductsRailProps> = ({ items, title, naviga
         <FlatList
           data={items}
           renderItem={({ item, index }) => {
+            const image = item.images && item.images.length && item.images[0]
             return (
               <>
                 <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: item.id })}>
                   <Box mr={2}>
-                    <ImageContainer source={{ uri: item.imageUrl }}></ImageContainer>
+                    <ImageContainer source={{ uri: image.imageUrl }}></ImageContainer>
                   </Box>
                 </TouchableWithoutFeedback>
                 {index === items.length - 1 ? <Spacer mr={negativeSpace} /> : null}
               </>
             )
           }}
-          keyExtractor={({ colorway }) => colorway.toString()}
+          keyExtractor={(item, index) => item.id + index}
           showsHorizontalScrollIndicator={false}
           horizontal
           onScroll={onScroll}
@@ -62,15 +63,21 @@ export const ProductsRail: React.FC<ProductsRailProps> = ({ items, title, naviga
           <Box>
             {selectedItem && (
               <>
-                <Sans size="1" mt={0.3}>
-                  {selectedItem.brandName}
-                </Sans>
-                <Sans size="1" color="gray" mt={0.3} numberOfLines={1} clipMode="tail">
-                  {selectedItem.productName}
-                </Sans>
-                <Sans size="1" color="gray" mt={0.3}>
-                  {selectedItem.price}
-                </Sans>
+                {selectedItem.brand && selectedItem.brand.name && (
+                  <Sans size="1" mt={0.3}>
+                    {selectedItem.brand.name}
+                  </Sans>
+                )}
+                {selectedItem.name && (
+                  <Sans size="1" color="gray" mt={0.3} numberOfLines={1} clipMode="tail">
+                    {selectedItem.name}
+                  </Sans>
+                )}
+                {selectedItem.retailPrice && (
+                  <Sans size="1" color="gray" mt={0.3}>
+                    ${selectedItem.retailPrice}
+                  </Sans>
+                )}
               </>
             )}
           </Box>
