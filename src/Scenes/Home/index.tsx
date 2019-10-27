@@ -19,24 +19,24 @@ const GET_HOMEPAGE = gql`
     homepage {
       sections {
         title
-        results {
-          ... on Product {
-            id
-            images
-            brand {
-              name
-            }
-            name
-            color {
-              name
-            }
-            retailPrice
-          }
-          ... on Hero {
-            id
-            heroImageURL
-          }
-        }
+        # results {
+        #   ... on Product {
+        #     id
+        #     images
+        #     brand {
+        #       name
+        #     }
+        #     name
+        #     color {
+        #       name
+        #     }
+        #     retailPrice
+        #   }
+        #   ... on Hero {
+        #     id
+        #     heroImageURL
+        #   }
+        # }
       }
     }
   }
@@ -55,8 +55,6 @@ export const HomeComponent = (props: any) => {
       persistCache(props.bag)
     }
   }
-
-  console.log("data", data)
 
   if (loading || !data) {
     return null

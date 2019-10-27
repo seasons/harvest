@@ -12,33 +12,34 @@ import { MONSOON_ENDPOINT } from "react-native-dotenv"
 const cache = new InMemoryCache()
 
 const link = new HttpLink({
-  uri: MONSOON_ENDPOINT || "http://localhost:4000/",
+  uri: "http://localhost:4000/",
 })
 
-const authLink = setContext(async (_, { headers }) => {
-  // get the authentication token from local storage if it exists
-  try {
-    const data = await AsyncStorage.getItem("userSession")
-    const userSession = JSON.parse(data)
-    const accessToken = userSession ? userSession.token : ""
-    // return the headers to the context so httpLink can read them
-    return {
-      headers: {
-        ...headers,
-        authorization: accessToken ? `Bearer ${accessToken}` : "",
-      },
-    }
-  } catch (e) {
-    return {
-      headers,
-    }
-  }
-})
+// const authLink = setContext(async (_, { headers }) => {
+//   // get the authentication token from local storage if it exists
+//   try {
+//     const data = await AsyncStorage.getItem("userSession")
+//     const userSession = JSON.parse(data)
+//     const accessToken = userSession ? userSession.token : ""
+//     // return the headers to the context so httpLink can read them
+//     return {
+//       headers: {
+//         ...headers,
+//         authorization: accessToken ? `Bearer ${accessToken}` : "",
+//       },
+//     }
+//   } catch (e) {
+//     return {
+//       headers,
+//     }
+//   }
+// })
 
 export const apolloClient = new ApolloClient({
   // Provide required constructor fields
   cache,
-  link: authLink.concat(link),
+  link,
+  // link: authLink.concat(link),
   // Provide some optional constructor fields
   name: "react-web-client",
   version: "1.3",
