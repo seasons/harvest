@@ -1,23 +1,26 @@
 import React from "react"
 import { FlatList } from "react-native"
 import { styled } from "Components/platform/primitives"
-import { Box } from "App/Components"
+import { Box, Spacer } from "App/Components"
 
 export const HeroRail = ({ items, navigation }) => {
   return (
-    <FlatList
-      data={items}
-      renderItem={({ item }) => {
-        return (
-          <Box px={2}>
-            <ImageContainer source={{ uri: item.url }}></ImageContainer>
-          </Box>
-        )
-      }}
-      keyExtractor={({ id }) => id.toString()}
-      showsHorizontalScrollIndicator={false}
-      horizontal
-    />
+    <>
+      <FlatList
+        data={items}
+        renderItem={({ item }) => {
+          return (
+            <Box px={2}>
+              <ImageContainer source={{ uri: item.heroImageURL }}></ImageContainer>
+            </Box>
+          )
+        }}
+        keyExtractor={({ id }) => id.toString()}
+        showsHorizontalScrollIndicator={false}
+        horizontal
+      />
+      <Spacer mb={3} />
+    </>
   )
 }
 

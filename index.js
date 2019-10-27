@@ -8,8 +8,14 @@ import { AppRegistry } from "react-native"
 import { ApolloProvider } from "@apollo/react-hooks"
 import AsyncStorage from "@react-native-community/async-storage"
 import { MONSOON_ENDPOINT } from "react-native-dotenv"
+import { IntrospectionFragmentMatcher } from "apollo-cache-inmemory"
+import introspectionQueryResultData from "./src/fragmentTypes.json"
 
-const cache = new InMemoryCache()
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData,
+})
+
+const cache = new InMemoryCache({ fragmentMatcher })
 
 const link = new HttpLink({
   uri: MONSOON_ENDPOINT || "http://localhost:4000/",

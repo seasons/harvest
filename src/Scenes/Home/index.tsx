@@ -3,15 +3,54 @@ import { CategoriesRail } from "./Components/CategoriesRail"
 import { Container } from "Components/Container"
 import { FlatList, AppState } from "react-native"
 import { HeroRail } from "./Components/HeroRail"
-import { ProductRail } from "./Components/ProductRail"
+import { ProductsRail } from "./Components/ProductsRail"
+import { BrandsRail } from "./Components/BrandsRail"
 import { LogoText } from "Components/Typography"
 import React, { useEffect } from "react"
 import { persistCache } from "App/helpers/asyncStorage"
 import { connect } from "react-redux"
 import { color } from "App/Utils"
 import { AllCaughtUp } from "./Components/AllCaughtUp"
+import gql from "graphql-tag"
+import { useQuery } from "react-apollo"
+import styled from "styled-components/native"
+
+const GET_HOMEPAGE = gql`
+  query Homepage {
+    homepage {
+      sections {
+        title
+        type
+        results {
+          ... on Brand {
+            id
+            logo
+            brandCode
+          }
+          ... on Product {
+            id
+            images
+            brand {
+              name
+            }
+            name
+            color {
+              name
+            }
+            retailPrice
+          }
+          ... on Hero {
+            id
+            heroImageURL
+          }
+        }
+      }
+    }
+  }
+`
 
 export const HomeComponent = (props: any) => {
+  const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   // The homescreen persists the local cache
   useEffect(() => {
     AppState.addEventListener("change", nextAppState => handleAppStateChange(nextAppState))
@@ -24,94 +63,44 @@ export const HomeComponent = (props: any) => {
     }
   }
 
+  console.log("data", data)
+
+  if (loading || !data) {
+    return null
+  }
+
+  if (error) {
+    console.error("error /home/index.tsx: ", error)
+  }
+
   const renderItem = item => {
     const { navigation } = props
     switch (item.type) {
-      case "header":
-        return <HeroRail navigation={navigation} items={item.data} />
-      case "categories":
-        return <CategoriesRail navigation={navigation} categories={item.data} />
-      case "product-link-rail":
-        return (
-          <ProductRail title={item.title} navigation={navigation} componentId={props.componentId} items={item.data} />
-        )
+      case "Hero":
+        return <HeroRail navigation={navigation} items={item.results} />
+      case "Categories":
+        return <CategoriesRail navigation={navigation} categories={item.results} />
+      case "Brands":
+        console.log("item???", item)
+        return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
+      case "Products":
+        return <ProductsRail title={item.title} navigation={navigation} items={item.results} />
     }
   }
 
-  const sections = [
-    {
-      type: "header",
-      data: [
-        { id: 1, url: "https://i.pinimg.com/564x/ef/84/64/ef84647415e51db15a87993393aa8fe2.jpg" },
-        { id: 2, url: "https://i.pinimg.com/564x/f5/ba/30/f5ba30d71615c639199887f5e7cb2608.jpg" },
-        { id: 3, url: "https://i.pinimg.com/564x/9e/de/54/9ede54d2e658c7b73c49f0c7051f0f3f.jpg" },
-        { id: 4, url: "https://i.pinimg.com/564x/d8/ad/60/d8ad6000717d71e36fb828bfc1a64432.jpg" },
-        { id: 5, url: "https://i.pinimg.com/564x/1e/ac/c1/1eacc1e8b6d30435c88cf0ef5a58a7de.jpg" },
-      ],
-    },
-    {
-      type: "categories",
-      data: ["Coats", "Jackets", "Sweatshirts", "Tees"],
-    },
-    {
-      type: "product-link-rail",
-      title: "Just added",
-      data: [
-        {
-          imageUrl:
-            "https://media.endclothing.com/media/catalog/product/2/0/20-07-2019_helmutlang_printsidetee_white_red_j06dm505_ja_m1.jpg",
-          colorway: "White & Red",
-          productName: "Print Side Tee",
-          brandName: "Helmut Lang",
-          price: "$189",
-          id: "ck1do0t6g00xr07546zzbai6a",
-        },
-        {
-          imageUrl:
-            "https://media.endclothing.com/media/catalog/product/1/1/11-09-2019_aimeleondore_distressedpopoverhoody_royaltypurple_ald-ch004-pr_th_m1.jpg",
-          productName: "Distressed Popover Hoodie",
-          brandName: "Aimé Leon",
-          colorway: "Royalty Purple",
-          price: "$255",
-          id: "ck1do0tft00y20754vnf7l9cb",
-        },
-      ],
-    },
-    {
-      type: "product-link-rail",
-      title: "Latest picks",
-      data: [
-        {
-          imageUrl:
-            "https://media.endclothing.com/media/catalog/product/2/0/20-07-2019_helmutlang_printsidetee_white_red_j06dm505_ja_m1.jpg",
-          colorway: "White & Red",
-          productName: "Print Side Tee",
-          brandName: "Helmut Lang",
-          price: "$189",
-          id: "ck1do0t6g00xr07546zzbai6a",
-        },
-        {
-          imageUrl:
-            "https://media.endclothing.com/media/catalog/product/1/1/11-09-2019_aimeleondore_distressedpopoverhoody_royaltypurple_ald-ch004-pr_th_m1.jpg",
-          productName: "Distressed Popover Hoodie",
-          brandName: "Aimé Leon",
-          colorway: "Royalty Purple",
-          price: "$255",
-          id: "ck1do0tft00y20754vnf7l9cb",
-        },
-      ],
-    },
-  ]
+  const { sections } = data.homepage
 
   return (
     <Container>
-      <Box style={{ backgroundColor: color("black") }}>
+      <Box style={{ position: "relative", backgroundColor: "rgba(0,0,0,0)" }}>
+        <WhiteBackground />
+        <BlackBackground />
         <Box p={2} style={{ backgroundColor: color("white") }}>
           <LogoText>SEASONS</LogoText>
         </Box>
         <FlatList
           data={sections}
-          keyExtractor={(item, index) => item.type + index}
+          keyExtractor={(item, index) => `${index}`}
           renderItem={({ item, index }) => {
             const styles =
               index === sections.length - 1
@@ -130,6 +119,26 @@ export const HomeComponent = (props: any) => {
     </Container>
   )
 }
+
+const BlackBackground = styled(Box)`
+  background-color: ${color("black")};
+  height: 50%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+`
+
+const WhiteBackground = styled(Box)`
+  z-index: 10;
+  background-color: ${color("white")};
+  height: 50%;
+  top: 0;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  position: absolute;
+`
 
 const mapStateToProps = state => {
   const { bag } = state

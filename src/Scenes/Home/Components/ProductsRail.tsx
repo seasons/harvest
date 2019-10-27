@@ -6,18 +6,18 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from "react-n
 import { space } from "App/Utils"
 import { Dimensions } from "react-native"
 
-interface ProductRailProps {
+interface ProductsRailProps {
   items: any
-  componentId: string
   title?: string
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 const cardWidth = 240
 
-export const ProductRail: React.FC<ProductRailProps> = ({ items, title, navigation }) => {
+export const ProductsRail: React.FC<ProductsRailProps> = ({ items, title, navigation }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedItem, setSelectedItem] = useState((items && items.length && items[0]) || null)
+
   const onScroll = e => {
     const newPageNum = Math.round(e.nativeEvent.contentOffset.x / cardWidth + 1)
 
@@ -29,24 +29,25 @@ export const ProductRail: React.FC<ProductRailProps> = ({ items, title, navigati
 
   const negativeSpace = Math.round(Dimensions.get("window").width) - (cardWidth + 10)
   return (
-    <Box py={2} pl={2} style={{ position: "relative" }}>
+    <Box mb={3} pl={2} style={{ position: "relative" }}>
       <Sans size="2">{title}</Sans>
       <Box mt={2}>
         <FlatList
           data={items}
           renderItem={({ item, index }) => {
+            const image = item.images && item.images.length && item.images[0]
             return (
               <>
                 <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: item.id })}>
                   <Box mr={2}>
-                    <ImageContainer source={{ uri: item.imageUrl }}></ImageContainer>
+                    <ImageContainer source={{ uri: image.imageUrl }}></ImageContainer>
                   </Box>
                 </TouchableWithoutFeedback>
                 {index === items.length - 1 ? <Spacer mr={negativeSpace} /> : null}
               </>
             )
           }}
-          keyExtractor={({ colorway }) => colorway.toString()}
+          keyExtractor={(item, index) => item.id + index}
           showsHorizontalScrollIndicator={false}
           horizontal
           onScroll={onScroll}
@@ -62,15 +63,21 @@ export const ProductRail: React.FC<ProductRailProps> = ({ items, title, navigati
           <Box>
             {selectedItem && (
               <>
-                <Sans size="1" mt={0.3}>
-                  {selectedItem.brandName}
-                </Sans>
-                <Sans size="1" color="gray" mt={0.3} numberOfLines={1} clipMode="tail">
-                  {selectedItem.productName}
-                </Sans>
-                <Sans size="1" color="gray" mt={0.3}>
-                  {selectedItem.price}
-                </Sans>
+                {selectedItem.brand && selectedItem.brand.name && (
+                  <Sans size="1" mt={0.3}>
+                    {selectedItem.brand.name}
+                  </Sans>
+                )}
+                {selectedItem.name && (
+                  <Sans size="1" color="gray" mt={0.3} numberOfLines={1} clipMode="tail">
+                    {selectedItem.name}
+                  </Sans>
+                )}
+                {selectedItem.retailPrice && (
+                  <Sans size="1" color="gray" mt={0.3}>
+                    ${selectedItem.retailPrice}
+                  </Sans>
+                )}
               </>
             )}
           </Box>
