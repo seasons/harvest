@@ -24,6 +24,7 @@ import org.unimodules.core.interfaces.SingletonModule;
 import expo.modules.constants.ConstantsPackage;
 import expo.modules.permissions.PermissionsPackage;
 import expo.modules.filesystem.FileSystemPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,11 +46,13 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new SafeAreaContextPackage(),
-            new RNScreensPackage(),
+          (ReactPackage) new SafeAreaContextPackage(),
+          new RNScreensPackage(),
           new ReanimatedPackage(),
           new RNGestureHandlerPackage(),
-          new ModuleRegistryAdapter(mModuleRegistryProvider)
+          new AsyncStoragePackage(),
+          new SvgPackage(),
+          new ModuleRegistryAdapter(mModuleRegistryProvider)    
       );
     }
 
@@ -66,17 +69,16 @@ public class MainApplication extends Application implements ReactApplication {
 
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
-        new MainReactPackage(),
+            new MainReactPackage(),
             new AsyncStoragePackage(),
             new A0Auth0Package(),
-          new SvgPackage(),
-        new ReanimatedPackage(),
-        new RNGestureHandlerPackage(),
-        new ModuleRegistryAdapter(mModuleRegistryProvider)
+            new ReanimatedPackage(),
+            new RNGestureHandlerPackage(),
+            new ModuleRegistryAdapter(mModuleRegistryProvider),
+            new SvgPackage()
     );
   }
 
-  @Override
   public List<ReactPackage> createAdditionalReactPackages() {
       return getPackages();
   }
