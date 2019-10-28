@@ -6,8 +6,8 @@ export const EMPTY_BAG = {
 }
 
 const addEmptyItemsToBag = items => {
-  const filteredEmptyItems = items.filter(itemID => {
-    return itemID.length
+  const filteredEmptyItems = items.filter(item => {
+    return item.productID.length
   })
   const bagItemsArray = []
   filteredEmptyItems.forEach(item => {
@@ -15,7 +15,7 @@ const addEmptyItemsToBag = items => {
   })
   const itemCount = bagItemsArray.length
   for (let i = 0; i < BAG_NUM_ITEMS - filteredEmptyItems.length; i++) {
-    bagItemsArray.push("")
+    bagItemsArray.push({ productID: "", variantID: "" })
   }
   return [bagItemsArray, itemCount]
 }
@@ -26,7 +26,7 @@ export const reducer = (state, action) => {
 
   switch (action.type) {
     case "addItemToBag":
-      if (!!items.find(item => item === action.payload)) {
+      if (!!items.find(item => item.productID === action.payload.productID)) {
         // Item already in bag so we dont add it
         return state
       }
@@ -38,8 +38,8 @@ export const reducer = (state, action) => {
       }
       return bagWithNewItem
     case "removeItemFromBag":
-      const filteredItems = items.filter(id => {
-        return id !== action.payload
+      const filteredItems = items.filter(item => {
+        return item.productID !== action.payload.productID
       })
       const [updatedBagItems1, itemCount1] = addEmptyItemsToBag(filteredItems)
       const bagWithoutItem = {

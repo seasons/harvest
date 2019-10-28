@@ -1,55 +1,23 @@
 import React from "react"
 import styled from "styled-components/native"
-import { color, space } from "App/Utils"
+import { color } from "App/Utils"
 import { ReserveButton } from "App/Scenes/Product/Components"
-import { Flex, Spacer, Sans, Button, Separator, Box, Radio } from "App/Components"
+import { Flex, Spacer, Sans, Button, Separator, Box } from "App/Components"
 import { TouchableOpacity } from "react-native"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
 import { NavigationActions } from "react-navigation"
 import { ScrollView } from "react-native"
-import { capitalize } from "lodash"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
+import { SizePicker } from "./SizePicker"
 
 export const ProductTabsComponent = props => {
-  const { productState, setVariant, toggleShowSizeSelection, productID } = props
+  const { productState, setVariant, toggleShowSizeSelection, productID, navigation } = props
+  const { variant, displayReserveConfirmation, showSizeSelection } = productState
 
-  // FIXME: use real sizes
-  const sizes = [
-    { size: "small", abbreviated: "s", id: 1, stock: 0 },
-    { size: "medium", abbreviated: "m", id: 2, stock: 2 },
-    { size: "large", abbreviated: "l", id: 3, stock: 1 },
-    { size: "x-large", abbreviated: "xl", id: 4, stock: 3 },
-    { size: "xx-large", abbreviated: "xxl", id: 5, stock: 3 },
-  ]
-
-  const renderSizes = () => {
-    return sizes.map(size => {
-      return (
-        <Box key={size.id}>
-          <Spacer mb={2} />
-          <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
-            <Flex flexDirection="row" alignItems="center">
-              <Radio
-                selected={productState.variant.id === size.id}
-                disabled={size.stock === 0}
-                onSelect={() => setVariant(size)}
-              />
-              <Spacer mr={1} />
-              <Sans color={size.stock ? "white" : "gray"} size="2">
-                {capitalize(size.size)}
-              </Sans>
-            </Flex>
-            <Sans color="gray" size="2">
-              {size.stock ? "(" + size.stock + " left)" : "(Out of stock)"}
-            </Sans>
-          </Flex>
-          <Spacer mb={2} />
-          <Separator color={color("gray")} />
-        </Box>
-      )
-    })
+  if (!productID) {
+    return null
   }
 
   const renderSelection = () => {
@@ -59,7 +27,7 @@ export const ProductTabsComponent = props => {
           <Box p={2}>
             <Spacer mb={2} />
             <Separator color={color("gray")} />
-            {renderSizes()}
+            <SizePicker productID={productID} setVariant={setVariant} productState={productState} />
             <Spacer mb={2} />
           </Box>
         </ScrollView>
@@ -79,7 +47,7 @@ export const ProductTabsComponent = props => {
           <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
             <TouchableOpacity
               onPress={() => {
-                props.navigation.dispatch(NavigationActions.back())
+                navigation.dispatch(NavigationActions.back())
               }}
             >
               <BackArrowIcon />
@@ -89,21 +57,20 @@ export const ProductTabsComponent = props => {
               <SaveIcon />
             </TouchableOpacity>
           </Flex>
-          <TouchableOpacity onPress={() => toggleShowSizeSelection(!productState.showSizeSelection)}>
+          <TouchableOpacity onPress={() => toggleShowSizeSelection(!showSizeSelection)}>
             <SizeSelectionButton p={2}>
               <StyledSans size="2" color="white">
-                {productState.variant &&
-                  productState.variant.abbreviated &&
-                  productState.variant.abbreviated.toUpperCase()}
+                {variant.abbreviated.toUpperCase()}
               </StyledSans>
               <Spacer mr={3} />
-              <StyledDownChevronIcon rotate={productState.showSizeSelection} />
+              <StyledDownChevronIcon rotate={displayReserveConfirmation} />
             </SizeSelectionButton>
           </TouchableOpacity>
           <Flex flexDirection="row">
             <ReserveButton
               productID={productID}
-              displayReserveConfirmation={productState.displayReserveConfirmation}
+              variant={variant}
+              displayReserveConfirmation={displayReserveConfirmation}
             ></ReserveButton>
           </Flex>
         </Flex>

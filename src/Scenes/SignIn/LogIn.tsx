@@ -41,7 +41,7 @@ export const LogIn: React.FC<LogInProps> = props => {
   })
 
   const onEmailChange = val => {
-    const emailValidationRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    const emailValidationRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     setEmail(val)
     setEmailComplete(emailValidationRegex.test(val))
   }

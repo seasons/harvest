@@ -5,7 +5,7 @@ import gql from "graphql-tag"
 import { Image, Text, TouchableWithoutFeedback } from "react-native"
 
 const GET_PRODUCT = gql`
-  query GetProducts($productId: ID!) {
+  query GetProduct($productId: ID!) {
     product(where: { id: $productId }) {
       name
       id

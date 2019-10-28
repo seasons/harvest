@@ -12,7 +12,7 @@ import { useSpring, animated } from "react-spring"
 
 const PRODUCT_SELECTION_HEIGHT = 440
 
-export const TabsComponent = props => {
+export const TabBar = props => {
   const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation } = props
   const navigationState = useNavigationState()
   const insets = useSafeArea()
@@ -20,7 +20,7 @@ export const TabsComponent = props => {
   const [isProductRoute, setIsProductRoute] = useState(false)
   const [productID, setProductID] = useState("")
   const { routes, index: activeRouteIndex } = navigation.state
-  const { action, type } = navigationState
+  const { action } = navigationState
 
   // Handle routing to the product view
   if (action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName === "Product" && !isProductRoute) {
@@ -95,7 +95,7 @@ const mapStateToProps = state => {
   return { productState }
 }
 
-export const Tabs = connect(mapStateToProps)(TabsComponent)
+export const Tabs = connect(mapStateToProps)(TabBar)
 
 const NavWrapper = styled.View`
   overflow: hidden;

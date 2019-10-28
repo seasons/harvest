@@ -36,7 +36,7 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const handleReserve = () => {
     reserveItems({
       variables: {
-        items: bag.items,
+        items: bag.items.map(item => item.variantID),
       },
     })
     return null
@@ -71,8 +71,13 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   }
 
   const renderItem = ({ item, index }) => {
-    return item.length ? (
-      <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} productID={item} />
+    return item.productID.length ? (
+      <BagItem
+        removeItemFromBag={removeItemFromBag}
+        sectionHeight={SECTION_HEIGHT}
+        index={index}
+        productID={item.productID}
+      />
     ) : (
       emptyBagItem(index)
     )
