@@ -3,17 +3,20 @@ import styled from "styled-components/native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { useNavigationState } from "./NavigationState"
-import { Theme, Flex } from "App/Components"
+import { Theme, Flex, Spacer, Sans } from "App/Components"
 import { ProductTabs } from "./ProductTabs"
 import { connect } from "react-redux"
 import { get } from "lodash"
+import { GreenCheck } from "Assets/svgs"
 import { color } from "styled-system"
 import { useSpring, animated } from "react-spring"
+import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 
 const PRODUCT_SELECTION_HEIGHT = 440
 
-export const TabBar = props => {
-  const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation } = props
+export const TabsComponent = props => {
+  const [showConfirmation, setShowConfirmation] = useState({ show: false, type: "" })
+  const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation, bag } = props
   const navigationState = useNavigationState()
   const insets = useSafeArea()
 
@@ -29,6 +32,35 @@ export const TabBar = props => {
   } else if ((action.type === "Navigation/POP_TO_TOP" || action.type === "Navigation/BACK") && isProductRoute) {
     setIsProductRoute(false)
     setProductID("")
+  }
+
+  const Confirmation = ({ type }) => {
+    const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
+    let text = "Added to bag"
+    let subtext = `(${remainingPieces} slots remaining)`
+    if (type === "want") {
+      text = "Got it!"
+      subtext = "We'll let you know when it's back in stock."
+    }
+    return (
+      <ConfirmationWrapper alignContent="center" justifyContent="center" flexDirection="column">
+        <Flex flexDirection="row" alignContent="center" justifyContent="center">
+          <Flex alignContent="center" justifyContent="center" flexDirection="column">
+            <Flex flexDirection="row" alignContent="center" justifyContent="center">
+              <GreenCheck />
+            </Flex>
+            <Spacer mb={2} />
+            <Sans size="2" color="white" textAlign="center">
+              {text}
+            </Sans>
+            <Spacer mb={1} />
+            <Sans size="2" color="gray" textAlign="center">
+              {subtext}
+            </Sans>
+          </Flex>
+        </Flex>
+      </ConfirmationWrapper>
+    )
   }
 
   const tabs = routes.map((route, routeIndex) => {
@@ -47,6 +79,13 @@ export const TabBar = props => {
     )
   })
 
+  const displayConfirmation = type => {
+    setShowConfirmation({ show: true, type })
+    setTimeout(() => {
+      setShowConfirmation({ show: false, type })
+    }, 2000)
+  }
+
   const productTabStyles = useSpring({
     opacity: isProductRoute ? 1 : 0,
     translateY: isProductRoute ? 0 : 100,
@@ -61,6 +100,7 @@ export const TabBar = props => {
 
   return (
     <Theme>
+      {showConfirmation.show && <Confirmation type={showConfirmation.type} />}
       <AnimatedTabContainer
         style={{
           height: containerStyles.height,
@@ -74,7 +114,7 @@ export const TabBar = props => {
           style={{ transform: [{ translateY: productTabStyles.translateY }], opacity: productTabStyles.opacity }}
         >
           <Flex style={{ flex: 1, backgroundColor: color("black") }}>
-            <ProductTabs navigation={navigation} productID={productID} />
+            <ProductTabs displayConfirmation={displayConfirmation} navigation={navigation} productID={productID} />
           </Flex>
         </AnimatedProductTabsWrapper>
         <AnimatedMainNavWrapper
@@ -91,11 +131,11 @@ export const TabBar = props => {
 }
 
 const mapStateToProps = state => {
-  const { productState } = state
-  return { productState }
+  const { productState, bag } = state
+  return { productState, bag }
 }
 
-export const Tabs = connect(mapStateToProps)(TabBar)
+export const Tabs = connect(mapStateToProps)(TabsComponent)
 
 const NavWrapper = styled.View`
   overflow: hidden;
@@ -129,6 +169,16 @@ const RightCorner = styled(RightTabCorner)`
   position: absolute;
   top: -28;
   right: 0;
+`
+
+const ConfirmationWrapper = styled(Flex)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.8);
 `
 
 const AnimatedTabContainer = animated(TabContainer)

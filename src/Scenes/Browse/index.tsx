@@ -70,6 +70,7 @@ export const Browse = (props: any) => {
       skip: 0,
     },
   })
+  console.log("data", data)
   const { navigation } = props
   const products = data && data.products
   const categories = (data && data.productFunctions) || []

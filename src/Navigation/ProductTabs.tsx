@@ -13,14 +13,14 @@ import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
 import { SizePicker } from "./SizePicker"
 
 export const ProductTabsComponent = props => {
-  const { productState, setVariant, toggleShowSizeSelection, productID, navigation } = props
+  const { displayConfirmation, productState, setVariant, toggleShowSizeSelection, productID, navigation } = props
   const { variant, displayReserveConfirmation, showSizeSelection } = productState
 
   if (!productID) {
     return null
   }
 
-  const renderSelection = () => {
+  const renderVariantSelectionList = () => {
     return (
       <Selection>
         <ScrollView>
@@ -44,7 +44,7 @@ export const ProductTabsComponent = props => {
     <>
       <Flex style={{ backgroundColor: color("black") }}>
         <Flex px={2} pt={17} alignContent="center" justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
-          <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 114 }}>
+          <Flex alignItems="center" flexWrap="nowrap" flexDirection="row" style={{ width: 94 }}>
             <TouchableOpacity
               onPress={() => {
                 navigation.dispatch(NavigationActions.back())
@@ -70,12 +70,12 @@ export const ProductTabsComponent = props => {
             <ReserveButton
               productID={productID}
               variant={variant}
-              displayReserveConfirmation={displayReserveConfirmation}
+              displayConfirmation={displayConfirmation}
             ></ReserveButton>
           </Flex>
         </Flex>
       </Flex>
-      {renderSelection()}
+      {renderVariantSelectionList()}
     </>
   )
 }
@@ -102,13 +102,13 @@ export const ProductTabs = connect(
 const StyledDownChevronIcon = styled(DownChevronIcon)`
   position: absolute;
   right: 15;
-  top: 15;
+  top: 16;
 `
 
 const StyledSans = styled(Sans)`
   position: absolute;
   left: 15;
-  top: 8;
+  top: 6;
 `
 
 const SizeSelectionButton = styled.View`

@@ -1,23 +1,35 @@
 import React from "react"
 import { FlatList } from "react-native"
 import { styled } from "Components/platform/primitives"
-import { Box } from "App/Components"
+import { Box, Spacer } from "App/Components"
+import { space } from "App/Utils"
+
+const cardWidth = 240
 
 export const HeroRail = ({ items, navigation }) => {
   return (
-    <FlatList
-      data={items}
-      renderItem={({ item }) => {
-        return (
-          <Box mr={2}>
-            <ImageContainer source={{ uri: item.url }}></ImageContainer>
-          </Box>
-        )
-      }}
-      keyExtractor={({ id }) => id.toString()}
-      showsHorizontalScrollIndicator={false}
-      horizontal
-    />
+    <Box pl={2}>
+      <FlatList
+        data={items}
+        renderItem={({ item }) => {
+          return (
+            <Box mr={2}>
+              <ImageContainer source={{ uri: item.heroImageURL }}></ImageContainer>
+            </Box>
+          )
+        }}
+        keyExtractor={({ id }) => id.toString()}
+        showsHorizontalScrollIndicator={false}
+        overScrollMode="always"
+        snapToAlignment="start"
+        decelerationRate="fast"
+        scrollEventThrottle={299}
+        directionalLockEnabled={true}
+        snapToInterval={cardWidth + space(1)}
+        horizontal
+      />
+      <Spacer mb={3} />
+    </Box>
   )
 }
 

@@ -1,12 +1,13 @@
 import React, { Component, ReactNode } from "react"
-import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { themeProps } from "./Theme"
 import { Box, BoxProps } from "./Box"
 import { Flex } from "./Flex"
 import { Sans } from "./Typography"
+import { TextCheckSVG } from "../../assets/svgs"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import { Spacer } from "./Spacer"
 
 enum DisplayState {
   Default = "default",
@@ -28,6 +29,7 @@ export interface ButtonProps extends BoxProps {
   /** React Native only, Callback on press, use instead of onClick */
   onPress?: (e) => void
   disabled?: boolean
+  showCheckMark?: boolean
 }
 
 export type ButtonVariant = "primaryLight" | "secondaryLight" | "primaryDark" | "secondaryOutline" | "secondaryDark"
@@ -175,7 +177,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   render() {
-    const { children, disabled, ...rest } = this.props
+    const { children, showCheckMark, disabled, ...rest } = this.props
     const { px, size, height } = this.getSize()
     const variantColors = getColorsForVariant(this.props.variant)
     const { current, previous } = this.state
@@ -206,6 +208,12 @@ export class Button extends Component<ButtonProps, ButtonState> {
                 <Sans color={to.color} size={size}>
                   {children}
                 </Sans>
+                {showCheckMark && (
+                  <Flex flexDirection="row" flexWrap="nowrap">
+                    <Spacer mr={0.5} />
+                    <TextCheckSVG color={to.color} />
+                  </Flex>
+                )}
               </AnimatedContainer>
             </Flex>
           </TouchableOpacity>
@@ -219,6 +227,8 @@ const Container = styled(Box)<ButtonProps>`
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-wrap: nowrap;
+  flex-direction: row;
   border-width: 1;
   border-radius: 28;
   width: ${p => (p.size === "large" ? "100%" : "auto")};

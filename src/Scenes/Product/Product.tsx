@@ -2,16 +2,14 @@ import React, { useEffect } from "react"
 
 import get from "lodash/get"
 import { useQuery } from "@apollo/react-hooks"
-import { Theme, Flex, Sans, Spacer } from "App/Components"
+import { Theme } from "App/Components"
 import { FlatList, SafeAreaView, Dimensions } from "react-native"
 import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand } from "./Components"
 import styled from "styled-components/native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
-import { GreenCheck } from "Assets/svgs"
-import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import { toggleReserveConfirmation, setVariant } from "App/Redux/actions"
+import { setVariant } from "App/Redux/actions"
 import { GET_PRODUCT } from "App/Apollo/Queries"
 
 const screenHeight = Math.round(Dimensions.get("window").height)
@@ -25,15 +23,7 @@ export const ProductComponent = props => {
   })
 
   const product = data && data.product
-
-  const { productState, bag, toggleReserveConfirmation } = props
-
-  const displayReserveConfirmation = () => {
-    toggleReserveConfirmation(true)
-    setTimeout(() => {
-      toggleReserveConfirmation(false)
-    }, 2000)
-  }
+  const { productState } = props
 
   if (loading || !data) {
     return null
@@ -58,54 +48,28 @@ export const ProductComponent = props => {
     }
   }
 
-  const ReserveConfirmation = () => {
-    const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
-    return (
-      <ReserveConfirmationWrapper alignContent="center" justifyContent="center" flexDirection="column">
-        <Flex flexDirection="row" alignContent="center" justifyContent="center">
-          <Flex alignContent="center" justifyContent="center" flexDirection="column">
-            <Flex flexDirection="row" alignContent="center" justifyContent="center">
-              <GreenCheck />
-            </Flex>
-            <Spacer mb={2} />
-            <Sans size="2" color="white" textAlign="center">
-              Added to bag
-            </Sans>
-            <Spacer mb={1} />
-            <Sans size="2" color="gray" textAlign="center">
-              ({remainingPieces} slots remaining)
-            </Sans>
-          </Flex>
-        </Flex>
-      </ReserveConfirmationWrapper>
-    )
-  }
-
   const sections = () => {
     return ["imageRail", "productDetails", "moreLikeThis", "aboutTheBrand"]
   }
   return (
     <Theme>
-      <>
-        {productState.showReserveConfirmation && <ReserveConfirmation />}
-        <Outer>
-          <Spring
-            native
-            toggle={productState.showSizeSelection}
-            from={{ height: screenHeight - 106 }}
-            to={{ height: productState.showSizeSelection ? screenHeight - 436 : screenHeight - 106 }}
-          >
-            {props => (
-              <AnimatedContent style={props}>
-                {productState.showSizeSelection && <AnimatedOverlay style={props} />}
-                <SafeAreaView style={{ flex: 1 }}>
-                  <FlatList data={sections()} keyExtractor={item => item} renderItem={item => renderItem(item)} />
-                </SafeAreaView>
-              </AnimatedContent>
-            )}
-          </Spring>
-        </Outer>
-      </>
+      <Outer>
+        <Spring
+          native
+          toggle={productState.showSizeSelection}
+          from={{ height: screenHeight - 106 }}
+          to={{ height: productState.showSizeSelection ? screenHeight - 436 : screenHeight - 106 }}
+        >
+          {props => (
+            <AnimatedContent style={props}>
+              {productState.showSizeSelection && <AnimatedOverlay style={props} />}
+              <SafeAreaView style={{ flex: 1 }}>
+                <FlatList data={sections()} keyExtractor={item => item} renderItem={item => renderItem(item)} />
+              </SafeAreaView>
+            </AnimatedContent>
+          )}
+        </Spring>
+      </Outer>
     </Theme>
   )
 }
@@ -113,7 +77,6 @@ export const ProductComponent = props => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      toggleReserveConfirmation,
       setVariant,
     },
     dispatch
@@ -146,16 +109,6 @@ const Overlay = styled.View`
 
 const Content = styled.View`
   margin-bottom: 10;
-`
-
-const ReserveConfirmationWrapper = styled(Flex)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 99;
-  background-color: rgba(0, 0, 0, 0.8);
 `
 
 const AnimatedContent = animated(Content)
