@@ -1,22 +1,25 @@
 import React from "react"
 import Svg, { Defs, LinearGradient, Stop, Path, G, Use } from "react-native-svg"
-import ContentLoader from "react-content-loader"
+import ContentLoader from "react-content-loader/native"
 import { Col, Row } from "native-base"
+import { Box } from "App/Components"
 
 export const BrowseItemLoader = props => (
-  <Svg width={184} height={316} {...props}>
-    <Defs>
-      <LinearGradient x1="79.389%" y1="0%" x2="20.611%" y2="100%" id="prefix__b">
-        <Stop stopColor="#F2F2F2" offset="0%" />
-        <Stop stopColor="#F2F2F2" offset="100%" />
-      </LinearGradient>
-      <Path id="prefix__a" d="M0 0h184v240H0z" />
-    </Defs>
-    <G fill="none" fillRule="evenodd">
-      <Use fill="url(#prefix__b)" xlinkHref="#prefix__a" />
-      <Path fill="#F2F2F2" d="M20 260h88v8H20zM20 284h112v8H20zM20 308h80v8H20z" />
-    </G>
-  </Svg>
+  <Box m={0.5}>
+    <Svg width={184} height={316} {...props}>
+      <Defs>
+        <LinearGradient x1="79.389%" y1="0%" x2="20.611%" y2="100%" id="prefix__b">
+          <Stop stopColor="#F2F2F2" offset="0%" />
+          <Stop stopColor="#F2F2F2" offset="100%" />
+        </LinearGradient>
+        <Path id="prefix__a" d="M0 0h184v240H0z" />
+      </Defs>
+      <G fill="none" fillRule="evenodd">
+        <Use fill="url(#prefix__b)" xlinkHref="#prefix__a" />
+        <Path fill="#F2F2F2" d="M20 260h88v8H20zM20 284h112v8H20zM20 308h80v8H20z" />
+      </G>
+    </Svg>
+  </Box>
 )
 
 export const TabBarLoader = props => (
@@ -39,7 +42,7 @@ export const TabBarLoader = props => (
 
 export const BrowseLoader = props => {
   return (
-    <ContentLoader>
+    <>
       <Col>
         <Row>
           <BrowseItemLoader />
@@ -51,6 +54,6 @@ export const BrowseLoader = props => {
         </Row>
       </Col>
       <TabBarLoader />
-    </ContentLoader>
+    </>
   )
 }

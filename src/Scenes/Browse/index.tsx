@@ -8,6 +8,9 @@ import styled from "styled-components/native"
 import { fontFamily } from "Components/Typography"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import FadeIn from "@expo/react-native-fade-in-image"
+import { BrowseLoader } from "./Loader"
+import { imageResize } from "App/helpers/imageResize"
+import get from "lodash/get"
 
 const GET_PRODUCTS = gql`
   query getProducts($name: String!, $first: Int!, $skip: Int!) {
@@ -38,14 +41,15 @@ const GET_PRODUCTS = gql`
 const renderItem = ({ item }, navigation) => {
   const itemWidth = Dimensions.get("window").width / 2 - 10
   const product = item
-  const image = product.images && product.images[0]
-  const thumbnail = (image && image.thumbnails && image.thumbnails.large) || { url: "https://via.placeholder.com/150" }
+
+  const image = get(product, "images[0]", { url: "https://via.placeholder.com/150" })
+  const resizedImage = imageResize(image.url, "medium")
 
   return (
     <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
       <Box m={0.5} mb={1} width={itemWidth}>
         <FadeIn>
-          <ImageContainer source={{ uri: thumbnail.url }}></ImageContainer>
+          <ImageContainer source={{ uri: resizedImage }}></ImageContainer>
         </FadeIn>
         <Box m={2}>
           <Sans size="0">{product.brand.name}</Sans>
@@ -70,7 +74,6 @@ export const Browse = (props: any) => {
       skip: 0,
     },
   })
-  console.log("data", data)
   const { navigation } = props
   const products = data && data.products
   const categories = (data && data.productFunctions) || []
@@ -78,6 +81,14 @@ export const Browse = (props: any) => {
   const onCategoryPress = item => {
     setCurrentCategory(item.name)
   }
+
+  // if (loading) {
+  //   return (
+  //     <Container>
+  //       <BrowseLoader />
+  //     </Container>
+  //   )
+  // }
 
   return (
     <Container>

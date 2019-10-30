@@ -17,11 +17,11 @@ export class Initializing extends React.Component<Props> {
       if (userSession && userSession.token) {
         navigation.navigate("Home")
       } else {
-        navigation.navigate("AuthStack")
+        navigation.navigate("Auth")
       }
     } catch (err) {
       console.log("error: ", err)
-      navigation.navigate("AuthStack")
+      navigation.navigate("Auth")
     }
   }
 
