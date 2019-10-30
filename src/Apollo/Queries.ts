@@ -17,12 +17,10 @@ export const GET_PRODUCT = gql`
       variants {
         id
         size
-        inventoryLevel {
-          total
-          reservable
-          nonReservable
-          reserved
-        }
+        total
+        reservable
+        nonReservable
+        reserved
       }
     }
   }

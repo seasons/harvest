@@ -54,7 +54,7 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag }) =>
                 Size {product.modelSize} |
               </Sans>
               {"  "}
-              <TouchableWithoutFeedback onPress={() => removeItemFromBag(product.id)}>
+              <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
                 <Sans size="2" color="blue">
                   Remove
                 </Sans>

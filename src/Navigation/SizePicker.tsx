@@ -47,8 +47,7 @@ const sizeDataForVariants = (variants = []) => {
 
   if (variants) {
     for (let variant of variants) {
-      const { id, size, inventoryLevel } = variant
-      const { reservable } = inventoryLevel
+      const { id, size, reservable } = variant
 
       sizeData[size] = {
         id,
