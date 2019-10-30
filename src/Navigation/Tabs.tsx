@@ -23,7 +23,7 @@ export const TabsComponent = props => {
   const [isProductRoute, setIsProductRoute] = useState(false)
   const [productID, setProductID] = useState("")
   const { routes, index: activeRouteIndex } = navigation.state
-  const { action, type } = navigationState
+  const { action } = navigationState
 
   // Handle routing to the product view
   if (action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName === "Product" && !isProductRoute) {

@@ -51,18 +51,6 @@ const GET_HOMEPAGE = gql`
 
 export const HomeComponent = (props: any) => {
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
-  // The homescreen persists the local cache
-  useEffect(() => {
-    AppState.addEventListener("change", nextAppState => handleAppStateChange(nextAppState))
-    return AppState.removeEventListener("change", nextAppState => handleAppStateChange(nextAppState))
-  }, [])
-
-  const handleAppStateChange = nextAppState => {
-    if (nextAppState === "inactive") {
-      persistCache(props.bag)
-    }
-  }
-
   console.log("data", data)
 
   if (loading || !data) {
@@ -81,7 +69,6 @@ export const HomeComponent = (props: any) => {
       case "Categories":
         return <CategoriesRail navigation={navigation} categories={item.results} />
       case "Brands":
-        console.log("item???", item)
         return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
       case "Products":
         return <ProductsRail title={item.title} navigation={navigation} items={item.results} />
@@ -130,10 +117,9 @@ const BlackBackground = styled(Box)`
 `
 
 const WhiteBackground = styled(Box)`
-  z-index: 10;
   background-color: ${color("white")};
-  height: 50%;
-  top: 0;
+  height: 100px;
+  top: -100px;
   z-index: -1;
   left: 0;
   right: 0;

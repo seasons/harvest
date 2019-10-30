@@ -2,6 +2,7 @@ import React from "react"
 import { Box } from "App/Components"
 import { FlatList } from "react-native"
 import { styled } from "App/Components/platform/primitives"
+import { imageResize } from "App/helpers/imageResize"
 
 export const ImageRail = ({ images }) => {
   return (
@@ -9,7 +10,7 @@ export const ImageRail = ({ images }) => {
       <FlatList
         data={images}
         renderItem={({ item }) => {
-          const imageURL = item && item.url
+          const imageURL = imageResize(item && item.url, "x-large")
           return (
             <Box mr={1}>
               <ImageContainer source={{ uri: imageURL }}></ImageContainer>

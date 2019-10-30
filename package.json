@@ -24,8 +24,10 @@
     "lodash": "^4.17.15",
     "native-base": "^2.13.5",
     "node-fetch": "^2.6.0",
+    "querystring": "^0.2.0",
     "react": "16.8.3",
     "react-apollo": "^3.1.1",
+    "react-content-loader": "^4.3.2",
     "react-dom": "16.8.3",
     "react-native": "0.59.10",
     "react-native-auth0": "^1.6.0",
@@ -63,6 +65,7 @@
     "jest-styled-components": "7.0.0-2",
     "jetifier": "^1.6.4",
     "react-test-renderer": "^16.9.0",
+    "redux-devtools-extension": "^2.13.8",
     "remote-redux-devtools": "^0.5.16",
     "snapshot-diff": "0.2.2",
     "typescript": "^3.4.5"

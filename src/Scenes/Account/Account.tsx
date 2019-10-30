@@ -2,9 +2,10 @@ import { Box, Flex, Sans, Separator, Spacer, Theme, Toggle } from "App/Component
 import { Container } from "Components/Container"
 import { ProfileList } from "./ProfileList"
 import React from "react"
-import { ScrollView, Text, View } from "react-native"
+import { ScrollView, Text, View, TouchableOpacity } from "react-native"
 import { useQuery } from "react-apollo"
 import gql from "graphql-tag"
+import AsyncStorage from "@react-native-community/async-storage"
 
 const GET_USER = gql`
   query getUser {
@@ -18,7 +19,7 @@ const GET_USER = gql`
   }
 `
 
-export function Account() {
+export function Account(props) {
   const { loading, error, data } = useQuery(GET_USER)
 
   if (loading) {
@@ -49,7 +50,7 @@ export function Account() {
           <Spacer m={2} />
           <Separator />
           <Spacer m={2} />
-          <ProfileList {...this.props} />
+          <ProfileList {...props} />
           <Spacer m={2} />
           <Separator />
           <Spacer m={2} />
@@ -64,6 +65,24 @@ export function Account() {
           </Flex>
           <Spacer m={2} />
           <Separator />
+          <Box py={2}>
+            <Sans size="2">Support</Sans>
+          </Box>
+          <Box py={2}>
+            <Sans size="2">Privacy Policy & Terms of Service</Sans>
+          </Box>
+          <TouchableOpacity
+            onPress={async () => {
+              await AsyncStorage.removeItem("userSession")
+              props.navigation.navigate("Auth")
+            }}
+          >
+            <Box py={2}>
+              <Sans size="2" color="red">
+                Sign out
+              </Sans>
+            </Box>
+          </TouchableOpacity>
         </Box>
       </ScrollView>
     </Container>

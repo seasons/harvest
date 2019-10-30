@@ -7,7 +7,8 @@ import { Browse } from "App/Scenes/Browse"
 import { Bag } from "App/Scenes/Bag"
 import { SignIn, Initializing, Welcome, SignInOrApply } from "App/Scenes/SignIn"
 import { Product } from "App/Scenes/Product"
-import { Account } from "App/Scenes/Account"
+import { Account, PaymentAndShipping } from "App/Scenes/Account"
+import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { Image, Dimensions } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components"
@@ -107,6 +108,8 @@ BagStack.navigationOptions = ({ navigation }) => {
 const AccountStack = createStackNavigator(
   {
     Account,
+    MembershipInfo,
+    PaymentAndShipping,
   },
   {
     initialRouteName: "Account",
@@ -172,18 +175,13 @@ CustomNavigator.router = {
 const SwitchNavigator = createSwitchNavigator(
   {
     Initializing,
-    AuthStack,
+    Auth: AuthStack,
     Root: CustomNavigator,
   },
   {
     initialRouteName: "Initializing",
   }
 )
-
-// const Outer = styled.View`
-//   flex: 1;
-//   background-color: turquoise;
-// `
 
 const NavigationContainer = styled.View`
   background-color: black;

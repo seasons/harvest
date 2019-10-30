@@ -3,7 +3,8 @@ import { createStore } from "redux"
 import { persistStore, persistReducer } from "redux-persist"
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2"
 import AsyncStorage from "@react-native-community/async-storage"
-import devToolsEnhancer from "remote-redux-devtools"
+import { devToolsEnhancer } from "redux-devtools-extension"
+import * as actionCreators from "App/Redux/actions"
 
 const persistConfig = {
   key: "root",
@@ -23,5 +24,11 @@ const initialState = {
 
 const pReducer = persistReducer(persistConfig, reducer)
 
-export const store = createStore(pReducer, initialState, devToolsEnhancer())
+export const store = createStore(
+  pReducer,
+  initialState,
+  devToolsEnhancer({
+    actionCreators,
+  })
+)
 export const persistor = persistStore(store)

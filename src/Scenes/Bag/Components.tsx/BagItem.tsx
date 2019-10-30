@@ -5,7 +5,7 @@ import gql from "graphql-tag"
 import { Image, Text, TouchableWithoutFeedback } from "react-native"
 
 const GET_PRODUCT = gql`
-  query GetProducts($productId: ID!) {
+  query GetProduct($productId: ID!) {
     product(where: { id: $productId }) {
       name
       id
@@ -54,7 +54,7 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag }) =>
                 Size {product.modelSize} |
               </Sans>
               {"  "}
-              <TouchableWithoutFeedback onPress={() => removeItemFromBag(product.id)}>
+              <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
                 <Sans size="2" color="blue">
                   Remove
                 </Sans>

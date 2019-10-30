@@ -36,7 +36,7 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const handleReserve = () => {
     reserveItems({
       variables: {
-        items: bag.items,
+        items: bag.items.map(item => item.variantID),
       },
     })
     return null
