@@ -1,13 +1,12 @@
 import { Box } from "App/Components"
 import { CategoriesRail } from "./Components/CategoriesRail"
 import { Container } from "Components/Container"
-import { FlatList, AppState } from "react-native"
-import { HeroRail } from "./Components/HeroRail"
+import { FlatList } from "react-native"
+import { CollectionsRail } from "./Components/CollectionsRail"
 import { ProductsRail } from "./Components/ProductsRail"
 import { BrandsRail } from "./Components/BrandsRail"
 import { LogoText } from "Components/Typography"
-import React, { useEffect } from "react"
-import { persistCache } from "App/helpers/asyncStorage"
+import React from "react"
 import { connect } from "react-redux"
 import { color } from "App/Utils"
 import { AllCaughtUp } from "./Components/AllCaughtUp"
@@ -22,6 +21,13 @@ const GET_HOMEPAGE = gql`
         title
         type
         results {
+          ... on Collection {
+            id
+            slug
+            images
+            title
+            subTitle
+          }
           ... on Brand {
             id
             logo
@@ -39,10 +45,6 @@ const GET_HOMEPAGE = gql`
             }
             retailPrice
           }
-          ... on Hero {
-            id
-            heroImageURL
-          }
         }
       }
     }
@@ -51,7 +53,6 @@ const GET_HOMEPAGE = gql`
 
 export const HomeComponent = (props: any) => {
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
-  console.log("data", data)
 
   if (loading || !data) {
     return null
@@ -64,8 +65,8 @@ export const HomeComponent = (props: any) => {
   const renderItem = item => {
     const { navigation } = props
     switch (item.type) {
-      case "Hero":
-        return <HeroRail navigation={navigation} items={item.results} />
+      case "CollectionGroups":
+        return <CollectionsRail navigation={navigation} items={item.results} />
       case "Categories":
         return <CategoriesRail navigation={navigation} categories={item.results} />
       case "Brands":
@@ -132,3 +133,5 @@ const mapStateToProps = state => {
 }
 
 export const Home = connect(mapStateToProps)(HomeComponent)
+
+// postgres://mtbiihcqbrfjiu:b96b56ff6e890953a3e2964edb921cac53320d78e31653abae9490dcfba66a0a@ec2-174-129-218-200.compute-1.amazonaws.com:5432/d3h716dmvtgnrr

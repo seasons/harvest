@@ -15,7 +15,7 @@ export const sizes = {
     fit: "clip",
   },
   medium: {
-    w: 184, // w: 368,
+    w: 250,
     fit: "clip",
   },
   large: {

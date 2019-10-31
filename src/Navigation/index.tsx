@@ -4,6 +4,7 @@ import { createAppContainer, createSwitchNavigator, NavigationEvents } from "rea
 import { createStackNavigator } from "react-navigation-stack"
 import { Home } from "App/Scenes/Home"
 import { Browse } from "App/Scenes/Browse"
+import { Collection } from "App/Scenes/Collection"
 import { Bag } from "App/Scenes/Bag"
 import { SignIn, Initializing, Welcome, SignInOrApply } from "App/Scenes/SignIn"
 import { Product } from "App/Scenes/Product"
@@ -50,6 +51,7 @@ const HomeStack = createStackNavigator(
   {
     Home,
     Product,
+    Collection,
   },
   {
     initialRouteName: "Home",
