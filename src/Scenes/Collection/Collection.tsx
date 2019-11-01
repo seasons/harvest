@@ -22,7 +22,6 @@ export const Collection = props => {
   const windowWidth = Dimensions.get("window").width
 
   useEffect(() => {
-    console.log("data", data)
     if (!data || !data.collection) {
       return
     }
