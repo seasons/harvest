@@ -21,7 +21,6 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
 
   useEffect(() => {
     const cards = chunk(items, 6)
-    console.log("items", items)
     createSlideGroups(cards)
   }, [])
 

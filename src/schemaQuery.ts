@@ -1,10 +1,8 @@
-import { MONSOON_ENDPOINT } from "react-native-dotenv"
-
 const createFragmentTypes = () => {
   const fetch = require("node-fetch")
   const fs = require("fs")
 
-  fetch(`${MONSOON_ENDPOINT}/graphql`, {
+  fetch(`https://monsoon-staging.herokuapp.com/graphql`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

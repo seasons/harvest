@@ -42,7 +42,7 @@ const renderItem = ({ item }, navigation) => {
   const itemWidth = Dimensions.get("window").width / 2 - 10
   const product = item
 
-  const image = get(product, "images[0]", { url: "https://via.placeholder.com/150" })
+  const image = get(product, "images[0]", { url: "" })
   const resizedImage = imageResize(image.url, "medium")
 
   return (

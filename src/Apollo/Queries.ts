@@ -25,3 +25,29 @@ export const GET_PRODUCT = gql`
     }
   }
 `
+
+export const GET_COLLECTION = gql`
+  query GetCollection($collectionID: ID!) {
+    collection(where: { id: $collectionID }) {
+      id
+      slug
+      description
+      images
+      title
+      subTitle
+      products {
+        id
+        slug
+        name
+        description
+        retailPrice
+        modelSize
+        modelHeight
+        brand {
+          name
+        }
+        images
+      }
+    }
+  }
+`

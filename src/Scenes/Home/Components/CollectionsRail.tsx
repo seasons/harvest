@@ -1,21 +1,28 @@
 import React from "react"
-import { FlatList } from "react-native"
+import { FlatList, TouchableWithoutFeedback } from "react-native"
 import { styled } from "Components/platform/primitives"
 import { Box, Spacer } from "App/Components"
 import { space } from "App/Utils"
+import { imageResize } from "App/helpers/imageResize"
+import get from "lodash/get"
 
 const cardWidth = 240
 
-export const HeroRail = ({ items, navigation }) => {
+export const CollectionsRail = ({ items, navigation }) => {
   return (
     <Box pl={2}>
       <FlatList
         data={items}
         renderItem={({ item }) => {
+          const image = get(item, "images[0].url")
+          const id = get(item, "id")
+          const resizedImage = imageResize(image, "medium")
           return (
-            <Box mr={2}>
-              <ImageContainer source={{ uri: item.heroImageURL }}></ImageContainer>
-            </Box>
+            <TouchableWithoutFeedback onPress={() => navigation.navigate("Collection", { id })}>
+              <Box mr={2}>
+                <ImageContainer source={{ uri: resizedImage }} />
+              </Box>
+            </TouchableWithoutFeedback>
           )
         }}
         keyExtractor={({ id }) => id.toString()}
