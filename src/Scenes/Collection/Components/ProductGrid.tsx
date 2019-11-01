@@ -5,8 +5,14 @@ import { imageResize } from "App/helpers/imageResize"
 import { Image } from "react-native"
 import styled from "styled-components/native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+import { TouchableWithoutFeedback } from "react-native-gesture-handler"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
-export const ProductGrid: React.FC<{ products: any; windowWidth: number }> = ({ products, windowWidth }) => {
+export const ProductGrid: React.FC<{
+  products: any
+  windowWidth: number
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+}> = ({ products, windowWidth, navigation }) => {
   return (
     <Flex style={{ flex: 1 }} flexDirection="row" flexWrap="wrap">
       {products.map((product, index) => {
@@ -16,18 +22,20 @@ export const ProductGrid: React.FC<{ products: any; windowWidth: number }> = ({ 
         const width = windowWidth / 2 - 5
         return (
           <Flex style={{ width, ...containerStyles }} key={product.id}>
-            <ImageContainer source={{ uri: resizedImage }} style={{ width, height: width * PRODUCT_ASPECT_RATIO }} />
-            <Box py={2} pl={index % 2 === 0 ? 2 : 0}>
-              <Sans size="0">{product.brand.name}</Sans>
-              <Spacer mb={0.5} />
-              <Sans size="0" color="gray">
-                {product.name}
-              </Sans>
-              <Spacer mb={0.5} />
-              <Sans size="0" color="gray">
-                Retail ${product.retailPrice}
-              </Sans>
-            </Box>
+            <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
+              <ImageContainer source={{ uri: resizedImage }} style={{ width, height: width * PRODUCT_ASPECT_RATIO }} />
+              <Box py={2} pl={index % 2 === 0 ? 2 : 0}>
+                <Sans size="0">{product.brand.name}</Sans>
+                <Spacer mb={0.5} />
+                <Sans size="0" color="gray">
+                  {product.name}
+                </Sans>
+                <Spacer mb={0.5} />
+                <Sans size="0" color="gray">
+                  Retail ${product.retailPrice}
+                </Sans>
+              </Box>
+            </TouchableWithoutFeedback>
           </Flex>
         )
       })}
