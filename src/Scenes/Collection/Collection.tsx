@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react"
 import { get, chunk } from "lodash"
 import { useQuery } from "@apollo/react-hooks"
-import { Theme } from "App/Components"
+import { Theme, Box, CloseButton } from "App/Components"
 import { FlatList, SafeAreaView, Image } from "react-native"
 import { ProductGrid, CollectionText } from "./Components"
 import styled from "styled-components/native"
 import { imageResize } from "App/helpers/imageResize"
 import { GET_COLLECTION } from "App/Apollo/Queries"
 import { Dimensions } from "react-native"
+import { color } from "App/Utils"
 
 export const Collection = props => {
   const [sections, setSections] = useState([])
@@ -29,7 +30,6 @@ export const Collection = props => {
     const clonedImages = collection.images.slice(0)
     const firstImage = clonedImages.shift()
     const groupedProducts = chunk(collection.products, 4)
-    console.log("groupedProducts", collection)
 
     if (firstImage) {
       sectionsArray.push({ section: "collectionImage", data: firstImage })
@@ -38,12 +38,11 @@ export const Collection = props => {
       sectionsArray.push({ section: "collectionText" })
     }
     groupedProducts.forEach(group => {
+      sectionsArray.push({ section: "productGrid", data: group })
       if (clonedImages.length) {
         const image = clonedImages.shift()
         sectionsArray.push({ section: "collectionImage", data: image })
       }
-      console.log("group,", group)
-      sectionsArray.push({ section: "productGrid", data: group })
     })
 
     setSections(sectionsArray)
@@ -64,7 +63,7 @@ export const Collection = props => {
     return height / width
   }
 
-  const renderItem = ({ item }) => {
+  const renderItem = (item, index) => {
     switch (item.section) {
       case "collectionText":
         return <CollectionText collection={data.collection} />
@@ -72,24 +71,39 @@ export const Collection = props => {
         const imageURL = get(item, "data.url")
         const aspectRatio = getAspectRatio(item)
         const resizedImage = imageResize(imageURL, "large")
+        const imageWidth = index === 0 ? windowWidth - 50 : windowWidth
         return (
-          <Image source={{ uri: resizedImage }} style={{ width: windowWidth, height: windowWidth * aspectRatio }} />
+          <Box
+            mb={index === 0 ? 2 : 50}
+            mt={index === 0 ? 0 : 30}
+            pl={index === 0 ? 50 : 0}
+            styles={{ width: imageWidth, backgroundColor: color("white") }}
+          >
+            <Image source={{ uri: resizedImage }} style={{ width: imageWidth, height: imageWidth * aspectRatio }} />
+          </Box>
         )
       case "productGrid":
-        return <ProductGrid products={item.data} />
+        return <ProductGrid products={item.data} windowWidth={windowWidth} />
       default:
         return null
     }
   }
 
   return (
-    <Theme>
-      <Outer>
-        <SafeAreaView style={{ flex: 1 }}>
-          <FlatList data={sections} keyExtractor={(_item, index) => `${index}`} renderItem={item => renderItem(item)} />
-        </SafeAreaView>
-      </Outer>
-    </Theme>
+    <>
+      <Theme>
+        <CloseButton navigation={props.navigation} />
+        <Outer>
+          <SafeAreaView style={{ flex: 1 }}>
+            <FlatList
+              data={sections}
+              keyExtractor={(_item, index) => `${index}`}
+              renderItem={({ item, index }) => renderItem(item, index)}
+            />
+          </SafeAreaView>
+        </Outer>
+      </Theme>
+    </>
   )
 }
 

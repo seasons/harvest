@@ -3,7 +3,7 @@ import { Box, Sans, Spacer } from "App/Components"
 
 export const CollectionText: React.FC<{ collection: any }> = ({ collection }) => {
   return (
-    <Box p={2}>
+    <Box px={2} mb={2}>
       {collection.title && (
         <>
           <Sans size="3">{collection.title}</Sans>
@@ -20,7 +20,7 @@ export const CollectionText: React.FC<{ collection: any }> = ({ collection }) =>
       {collection.description && (
         <>
           <Spacer mb={2} />
-          <Sans size="2" color="gray">
+          <Sans size="1" color="gray">
             {collection.description}
           </Sans>
         </>

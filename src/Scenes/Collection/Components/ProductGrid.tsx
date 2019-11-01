@@ -1,21 +1,33 @@
 import React from "react"
-import { Flex } from "App/Components"
+import { Flex, Box, Sans, Spacer } from "App/Components"
 import get from "lodash/get"
 import { imageResize } from "App/helpers/imageResize"
 import { Image } from "react-native"
 import styled from "styled-components/native"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
-export const ProductGrid: React.FC<{ products: any }> = ({ products }) => {
-  console.log("products", products)
+export const ProductGrid: React.FC<{ products: any; windowWidth: number }> = ({ products, windowWidth }) => {
   return (
-    <Flex style={{ flex: 1 }}>
+    <Flex style={{ flex: 1 }} flexDirection="row" flexWrap="wrap">
       {products.map((product, index) => {
-        const image = get(product, "images[0].url")
-        const resizedImage = imageResize(image, "medium")
-        const styles = index % 2 === 0 ? { marginLeft: 5 } : { marginRight: 5 }
+        const image = get(product, "images[0]")
+        const resizedImage = imageResize(image.url, "medium")
+        const containerStyles = index % 2 === 0 ? { marginRight: 5 } : { marginLeft: 5 }
+        const width = windowWidth / 2 - 5
         return (
-          <Flex style={{ flex: 2, ...styles }} key={product.id}>
-            <ImageContainer source={{ uri: resizedImage }} />
+          <Flex style={{ width, ...containerStyles }} key={product.id}>
+            <ImageContainer source={{ uri: resizedImage }} style={{ width, height: width * PRODUCT_ASPECT_RATIO }} />
+            <Box py={2} pl={index % 2 === 0 ? 2 : 0}>
+              <Sans size="0">{product.brand.name}</Sans>
+              <Spacer mb={0.5} />
+              <Sans size="0" color="gray">
+                {product.name}
+              </Sans>
+              <Spacer mb={0.5} />
+              <Sans size="0" color="gray">
+                Retail ${product.retailPrice}
+              </Sans>
+            </Box>
           </Flex>
         )
       })}

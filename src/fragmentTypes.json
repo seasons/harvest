@@ -1,1 +1,1 @@
-{"__schema":{"types":[{"kind":"UNION","name":"HomepageResult","possibleTypes":[{"name":"Category"},{"name":"Product"},{"name":"Brand"},{"name":"Hero"}]}]}}
+{"__schema":{"types":[{"kind":"UNION","name":"HomepageResult","possibleTypes":[{"name":"Category"},{"name":"Product"},{"name":"Brand"},{"name":"Collection"}]}]}}
