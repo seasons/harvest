@@ -17,11 +17,11 @@ export const CollectionText: React.FC<{ collection: any }> = ({ collection }) =>
           </Sans>
         </>
       )}
-      {collection.description && (
+      {collection.descriptionTop && (
         <>
           <Spacer mb={2} />
           <Sans size="1" color="gray">
-            {collection.description}
+            {collection.descriptionTop}
           </Sans>
         </>
       )}

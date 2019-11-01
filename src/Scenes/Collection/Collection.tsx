@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { get, chunk } from "lodash"
 import { useQuery } from "@apollo/react-hooks"
-import { Theme, Box, CloseButton } from "App/Components"
+import { Theme, Box, CloseButton, Spacer, Sans } from "App/Components"
 import { FlatList, SafeAreaView, Image } from "react-native"
 import { ProductGrid, CollectionText } from "./Components"
 import styled from "styled-components/native"
@@ -22,6 +22,7 @@ export const Collection = props => {
   const windowWidth = Dimensions.get("window").width
 
   useEffect(() => {
+    console.log("data", data)
     if (!data || !data.collection) {
       return
     }
@@ -30,15 +31,20 @@ export const Collection = props => {
     const clonedImages = collection.images.slice(0)
     const firstImage = clonedImages.shift()
     const groupedProducts = chunk(collection.products, 4)
+    let descriptionBottomPushed = false
 
     if (firstImage) {
       sectionsArray.push({ section: "collectionImage", data: firstImage })
     }
-    if (collection.title || collection.subTitle || collection.description) {
+    if (collection.title || collection.subTitle || collection.descriptionTop) {
       sectionsArray.push({ section: "collectionText" })
     }
     groupedProducts.forEach(group => {
       sectionsArray.push({ section: "productGrid", data: group })
+      if (collection.descriptionBottom && !descriptionBottomPushed) {
+        descriptionBottomPushed = true
+        sectionsArray.push({ section: "descriptionBottom" })
+      }
       if (clonedImages.length) {
         const image = clonedImages.shift()
         sectionsArray.push({ section: "collectionImage", data: image })
@@ -82,8 +88,17 @@ export const Collection = props => {
             <Image source={{ uri: resizedImage }} style={{ width: imageWidth, height: imageWidth * aspectRatio }} />
           </Box>
         )
+      case "descriptionBottom":
+        return (
+          <Box px={2}>
+            <Sans size="1" color="gray">
+              {data.collection.descriptionBottom}
+            </Sans>
+            <Spacer mb={2} />
+          </Box>
+        )
       case "productGrid":
-        return <ProductGrid products={item.data} windowWidth={windowWidth} />
+        return <ProductGrid products={item.data} windowWidth={windowWidth} navigation={props.navigation} />
       default:
         return null
     }

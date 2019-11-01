@@ -31,7 +31,8 @@ export const GET_COLLECTION = gql`
     collection(where: { id: $collectionID }) {
       id
       slug
-      description
+      descriptionTop
+      descriptionBottom
       images
       title
       subTitle
