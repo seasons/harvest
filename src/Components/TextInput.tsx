@@ -15,7 +15,7 @@ export interface TextInputProps {
   secureTextEntry?: boolean
   autoCompleteType?: string
   textContentType?: string
-  inputKey: string
+  inputKey?: string
   onChangeText?: (inputKey: string, text: string) => void
 }
 

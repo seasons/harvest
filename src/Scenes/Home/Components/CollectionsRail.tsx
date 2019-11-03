@@ -5,6 +5,7 @@ import { Box, Spacer } from "App/Components"
 import { space } from "App/Utils"
 import { imageResize } from "App/helpers/imageResize"
 import get from "lodash/get"
+import * as Animatable from "react-native-animatable"
 
 const cardWidth = 240
 
@@ -18,11 +19,13 @@ export const CollectionsRail = ({ items, navigation }) => {
           const id = get(item, "id")
           const resizedImage = imageResize(image, "medium")
           return (
-            <TouchableWithoutFeedback onPress={() => navigation.navigate("Collection", { id })}>
-              <Box mr={2}>
-                <ImageContainer source={{ uri: resizedImage }} />
-              </Box>
-            </TouchableWithoutFeedback>
+            <Animatable.View animation="fadeIn" duration={300}>
+              <TouchableWithoutFeedback onPress={() => navigation.navigate("Collection", { id })}>
+                <Box mr={2}>
+                  <ImageContainer source={{ uri: resizedImage }} />
+                </Box>
+              </TouchableWithoutFeedback>
+            </Animatable.View>
           )
         }}
         keyExtractor={({ id }) => id.toString()}
