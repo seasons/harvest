@@ -32,7 +32,7 @@ export function Account(props) {
 
   const {
     me: { firstName, lastName },
-  } = data
+  } = data || { me: { firstName: "", lastName: "" } }
 
   return (
     <Container>

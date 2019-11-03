@@ -13,6 +13,7 @@ import { AllCaughtUp } from "./Components/AllCaughtUp"
 import gql from "graphql-tag"
 import { useQuery } from "react-apollo"
 import styled from "styled-components/native"
+import * as Animatable from "react-native-animatable"
 
 const GET_HOMEPAGE = gql`
   query Homepage {
@@ -79,32 +80,34 @@ export const HomeComponent = (props: any) => {
   const { sections } = data.homepage
 
   return (
-    <Container>
-      <Box style={{ position: "relative", backgroundColor: "rgba(0,0,0,0)" }}>
-        <WhiteBackground />
-        <BlackBackground />
-        <Box p={2} style={{ backgroundColor: color("white") }}>
-          <LogoText>SEASONS</LogoText>
+    <Animatable.View animation="fadeIn" duration={300}>
+      <Container>
+        <Box style={{ position: "relative", backgroundColor: "rgba(0,0,0,0)" }}>
+          <WhiteBackground />
+          <BlackBackground />
+          <Box p={2} style={{ backgroundColor: color("white") }}>
+            <LogoText>SEASONS</LogoText>
+          </Box>
+          <FlatList
+            data={sections}
+            keyExtractor={(item, index) => `${index}`}
+            renderItem={({ item, index }) => {
+              const styles =
+                index === sections.length - 1
+                  ? {
+                      backgroundColor: color("white"),
+                      paddingBottom: 30,
+                      borderBottomLeftRadius: 30,
+                      borderBottomRightRadius: 30,
+                    }
+                  : { backgroundColor: color("white") }
+              return <Box style={styles}>{renderItem(item)}</Box>
+            }}
+            ListFooterComponent={() => <AllCaughtUp navigation={props.navigation} />}
+          />
         </Box>
-        <FlatList
-          data={sections}
-          keyExtractor={(item, index) => `${index}`}
-          renderItem={({ item, index }) => {
-            const styles =
-              index === sections.length - 1
-                ? {
-                    backgroundColor: color("white"),
-                    paddingBottom: 30,
-                    borderBottomLeftRadius: 30,
-                    borderBottomRightRadius: 30,
-                  }
-                : { backgroundColor: color("white") }
-            return <Box style={styles}>{renderItem(item)}</Box>
-          }}
-          ListFooterComponent={() => <AllCaughtUp navigation={props.navigation} />}
-        />
-      </Box>
-    </Container>
+      </Container>
+    </Animatable.View>
   )
 }
 

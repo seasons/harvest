@@ -10,15 +10,20 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import FadeIn from "@expo/react-native-fade-in-image"
 import { BrowseLoader } from "./Loader"
 import { imageResize } from "App/helpers/imageResize"
+import * as Animatable from "react-native-animatable"
 import get from "lodash/get"
 
 const GET_PRODUCTS = gql`
   query getProducts($name: String!, $first: Int!, $skip: Int!) {
-    productFunctions {
-      name
+    categories(where: { visible: true }) {
       id
+      slug
+      name
+      children {
+        slug
+      }
     }
-    products(where: { functions_every: { name: $name } }, first: $first, skip: $skip) {
+    products(category: $name, first: $first, skip: $skip) {
       id
       name
       description
@@ -38,7 +43,7 @@ const GET_PRODUCTS = gql`
   }
 `
 
-const renderItem = ({ item }, navigation) => {
+const renderItem = ({ item }, i, navigation) => {
   const itemWidth = Dimensions.get("window").width / 2 - 10
   const product = item
 
@@ -46,27 +51,28 @@ const renderItem = ({ item }, navigation) => {
   const resizedImage = imageResize(image.url, "medium")
 
   return (
-    <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
-      <Box m={0.5} mb={1} width={itemWidth}>
-        <FadeIn>
+    <Animatable.View animation="fadeIn" duration={300} delay={(i * 300) / 5}>
+      <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
+        <Box m={0.5} mb={1} width={itemWidth}>
           <ImageContainer source={{ uri: resizedImage }}></ImageContainer>
-        </FadeIn>
-        <Box m={2}>
-          <Sans size="0">{product.brand.name}</Sans>
-          <Sans size="0" color="gray">
-            {product.name}
-          </Sans>
-          <Sans size="0" color="gray">
-            ${product.retailPrice}
-          </Sans>
+
+          <Box m={2}>
+            <Sans size="0">{product.brand.name}</Sans>
+            <Sans size="0" color="gray">
+              {product.name}
+            </Sans>
+            <Sans size="0" color="gray">
+              ${product.retailPrice}
+            </Sans>
+          </Box>
         </Box>
-      </Box>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </Animatable.View>
   )
 }
 
 export const Browse = (props: any) => {
-  const [currentCategory, setCurrentCategory] = useState("All")
+  const [currentCategory, setCurrentCategory] = useState("all")
   const { data, fetchMore } = useQuery(GET_PRODUCTS, {
     variables: {
       name: currentCategory,
@@ -76,10 +82,10 @@ export const Browse = (props: any) => {
   })
   const { navigation } = props
   const products = data && data.products
-  const categories = (data && data.productFunctions) || []
+  const categories = (data && data.categories) || []
 
   const onCategoryPress = item => {
-    setCurrentCategory(item.name)
+    setCurrentCategory(item.slug)
   }
 
   // if (loading) {
@@ -100,7 +106,7 @@ export const Browse = (props: any) => {
           <FlatList
             data={products}
             keyExtractor={item => item.id}
-            renderItem={item => renderItem(item, navigation)}
+            renderItem={(item, i) => renderItem(item, i, navigation)}
             numColumns={2}
             onEndReached={() => {
               fetchMore({
@@ -111,7 +117,6 @@ export const Browse = (props: any) => {
                   if (!fetchMoreResult) {
                     return prev
                   }
-
                   return Object.assign({}, prev, {
                     products: [...prev.products, ...fetchMoreResult.products],
                   })
@@ -122,9 +127,9 @@ export const Browse = (props: any) => {
         </Box>
         <Box height={50}>
           <CategoryPicker
-            data={[{ id: "all", name: "All" }, ...categories]}
+            data={[{ slug: "all", name: "All" }, ...categories]}
             renderItem={({ item }) => {
-              const selected = currentCategory == item.name
+              const selected = currentCategory == item.slug
               return (
                 <TouchableOpacity onPress={() => onCategoryPress(item)}>
                   <Category mr={3} selected={selected}>
@@ -140,7 +145,7 @@ export const Browse = (props: any) => {
               paddingLeft: 20,
               paddingRight: 20,
             }}
-            keyExtractor={({ id }) => id.toString()}
+            keyExtractor={({ slug }) => slug}
             showsHorizontalScrollIndicator={false}
             horizontal
           />
@@ -151,7 +156,7 @@ export const Browse = (props: any) => {
 }
 
 const ImageContainer = styled.Image`
-  background: rgba(0, 0, 0, 0.3);
+  background-color: #f2f2f2;
   width: 100%;
   height: 240;
 `
