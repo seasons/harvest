@@ -1,8 +1,11 @@
 import React from "react"
 import { Box, Sans } from "App/Components"
-import { ScrollView } from "react-native"
+import { ScrollView, TouchableWithoutFeedback } from "react-native"
+import { Image } from "react-native"
+import get from "lodash/get"
+import { imageResize } from "App/helpers/imageResize"
 import styled from "styled-components/native"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
+import { NavigationScreenProp, NavigationState, NavigationParams, NavigationActions } from "react-navigation"
 
 interface CategoriesRailProps {
   categories: any
@@ -14,14 +17,24 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ categories, navi
     <Box py={2} pl={2}>
       <Sans size="2">Categories</Sans>
       <Box mt={2}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1, width: "100%", height: 130 }}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {categories.map(category => {
+            const image = get(category, "image[0]", { url: "" })
+            const resizedImage = imageResize(image.url, "small")
             return (
-              <Box mr={1} key={category}>
-                <CategoryContainer />
-                <Sans size="0" color="gray" mt={1} textAlign="center">
-                  {category}
-                </Sans>
+              <Box mr={1} key={category.id}>
+                <TouchableWithoutFeedback
+                  onPress={() => {
+                    navigation.navigate("Browse", { categorySlug: category.slug })
+                  }}
+                >
+                  <Box>
+                    <ImageContainer source={{ uri: resizedImage }} />
+                    <Sans size="0" color="gray" mt={1} textAlign="center" style={{ width: 92 }}>
+                      {category.name}
+                    </Sans>
+                  </Box>
+                </TouchableWithoutFeedback>
               </Box>
             )
           })}
@@ -31,9 +44,9 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ categories, navi
   )
 }
 
-const CategoryContainer = styled.View`
-  height: 92;
+const ImageContainer = styled(Image)`
+  background-color: #f2f2f2;
+  height: 112;
   width: 92;
   border-radius: 46;
-  background: rgba(0, 0, 0, 0.1);
 `

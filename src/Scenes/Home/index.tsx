@@ -6,7 +6,7 @@ import { CollectionsRail } from "./Components/CollectionsRail"
 import { ProductsRail } from "./Components/ProductsRail"
 import { BrandsRail } from "./Components/BrandsRail"
 import { LogoText } from "Components/Typography"
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { connect } from "react-redux"
 import { color } from "App/Utils"
 import { AllCaughtUp } from "./Components/AllCaughtUp"
@@ -17,6 +17,15 @@ import * as Animatable from "react-native-animatable"
 
 const GET_HOMEPAGE = gql`
   query Homepage {
+    categories(where: { visible: true }) {
+      id
+      slug
+      name
+      image
+      children {
+        slug
+      }
+    }
     homepage {
       sections {
         title
@@ -53,7 +62,19 @@ const GET_HOMEPAGE = gql`
 `
 
 export const HomeComponent = (props: any) => {
+  const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
+
+  useEffect(() => {
+    if (data && data.homepage) {
+      const dataSections = data.homepage.sections
+      if (data.categories && dataSections) {
+        dataSections.splice(1, 0, { type: "Categories", results: data.categories })
+      }
+      console.log("data.homepage", dataSections)
+      setSections(dataSections)
+    }
+  }, [data])
 
   if (loading || !data) {
     return null
@@ -76,8 +97,6 @@ export const HomeComponent = (props: any) => {
         return <ProductsRail title={item.title} navigation={navigation} items={item.results} />
     }
   }
-
-  const { sections } = data.homepage
 
   return (
     <Animatable.View animation="fadeIn" duration={300}>
