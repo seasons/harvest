@@ -10,8 +10,8 @@ import { SignIn, Initializing, Welcome, SignInOrApply } from "App/Scenes/SignIn"
 import { Product } from "App/Scenes/Product"
 import { Account, PaymentAndShipping } from "App/Scenes/Account"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
-import { Image, Dimensions } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { Reservation } from "Scenes/Browse/Reservation"
+import { Image } from "react-native"
 import styled from "styled-components"
 import { Tabs } from "./Tabs"
 
@@ -91,6 +91,7 @@ const BagStack = createStackNavigator(
   {
     Bag,
     Product,
+    Reservation,
   },
   {
     initialRouteName: "Bag",
@@ -160,12 +161,9 @@ const MainNavigator = createBottomTabNavigator(
 
 const CustomNavigator = props => {
   const { navigation } = props
-  const screenHeight = Math.round(Dimensions.get("window").height)
-  const insets = useSafeArea()
-  const height = screenHeight - 106
 
   return (
-    <NavigationContainer style={{ flex: 1, marginTop: insets.top }}>
+    <NavigationContainer style={{ flex: 1 }}>
       <MainNavigator navigation={navigation} />
     </NavigationContainer>
   )

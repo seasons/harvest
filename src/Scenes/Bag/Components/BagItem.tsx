@@ -3,6 +3,7 @@ import React from "react"
 import { useQuery } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { Image, Text, TouchableWithoutFeedback } from "react-native"
+import { get } from "lodash"
 
 const GET_PRODUCT = gql`
   query GetProduct($productId: ID!) {
@@ -18,7 +19,7 @@ const GET_PRODUCT = gql`
   }
 `
 
-export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag }) => {
+export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, showRemoveButton = true }) => {
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
       productId: bagItem.productID,
@@ -35,10 +36,14 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag }) =>
 
   const product = data && data.product
 
-  const imageURL = product.images && product.images.length && product.images[0].url
+  if (!product) {
+    return null
+  }
+
+  const imageURL = get(product, "images[0].url")
 
   return (
-    <Box p={2} key={product.id} style={{ height: sectionHeight }}>
+    <Box py={2} key={product.id} style={{ height: sectionHeight }}>
       <Flex flexDirection="row" style={{ flex: 1 }}>
         <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
           <Box>
@@ -51,14 +56,19 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag }) =>
           <Box>
             <Text>
               <Sans size="2" color="gray">
-                Size {product.modelSize} |
+                Size {product.modelSize}
               </Sans>
-              {"  "}
-              <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
-                <Sans size="2" color="blue">
-                  Remove
-                </Sans>
-              </TouchableWithoutFeedback>
+
+              {showRemoveButton && (
+                <>
+                  {"|  "}
+                  <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
+                    <Sans size="2" color="blue">
+                      Remove
+                    </Sans>
+                  </TouchableWithoutFeedback>
+                </>
+              )}
             </Text>
           </Box>
         </Flex>

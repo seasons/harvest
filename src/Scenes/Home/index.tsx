@@ -80,8 +80,8 @@ export const HomeComponent = (props: any) => {
   const { sections } = data.homepage
 
   return (
-    <Animatable.View animation="fadeIn" duration={300}>
-      <Container>
+    <Container>
+      <Animatable.View animation="fadeIn" duration={300}>
         <Box style={{ position: "relative", backgroundColor: "rgba(0,0,0,0)" }}>
           <WhiteBackground />
           <BlackBackground />
@@ -106,8 +106,8 @@ export const HomeComponent = (props: any) => {
             ListFooterComponent={() => <AllCaughtUp navigation={props.navigation} />}
           />
         </Box>
-      </Container>
-    </Animatable.View>
+      </Animatable.View>
+    </Container>
   )
 }
 
