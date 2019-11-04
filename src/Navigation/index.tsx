@@ -160,11 +160,13 @@ const MainNavigator = createBottomTabNavigator(
 )
 
 const CustomNavigator = props => {
+  const [browseFilter, setBrowseFilter] = useState("all")
   const { navigation } = props
+  const screenProps = { browseFilter, setBrowseFilter }
 
   return (
     <NavigationContainer style={{ flex: 1 }}>
-      <MainNavigator navigation={navigation} />
+      <MainNavigator navigation={navigation} screenProps={screenProps} />
     </NavigationContainer>
   )
 }

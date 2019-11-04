@@ -6,7 +6,7 @@ import { CollectionsRail } from "./Components/CollectionsRail"
 import { ProductsRail } from "./Components/ProductsRail"
 import { BrandsRail } from "./Components/BrandsRail"
 import { LogoText } from "Components/Typography"
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { connect } from "react-redux"
 import { color } from "App/Utils"
 import { AllCaughtUp } from "./Components/AllCaughtUp"
@@ -17,6 +17,15 @@ import * as Animatable from "react-native-animatable"
 
 const GET_HOMEPAGE = gql`
   query Homepage {
+    categories(where: { visible: true }) {
+      id
+      slug
+      name
+      image
+      children {
+        slug
+      }
+    }
     homepage {
       sections {
         title
@@ -53,7 +62,18 @@ const GET_HOMEPAGE = gql`
 `
 
 export const HomeComponent = (props: any) => {
+  const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
+
+  useEffect(() => {
+    if (data && data.homepage) {
+      const dataSections = data.homepage.sections
+      if (data.categories && dataSections) {
+        dataSections.splice(1, 0, { type: "Categories", results: data.categories })
+      }
+      setSections(dataSections)
+    }
+  }, [data])
 
   if (loading || !data) {
     return null
@@ -69,15 +89,13 @@ export const HomeComponent = (props: any) => {
       case "CollectionGroups":
         return <CollectionsRail navigation={navigation} items={item.results} />
       case "Categories":
-        return <CategoriesRail navigation={navigation} categories={item.results} />
+        return <CategoriesRail navigation={navigation} categories={item.results} screenProps={props.screenProps} />
       case "Brands":
         return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
       case "Products":
         return <ProductsRail title={item.title} navigation={navigation} items={item.results} />
     }
   }
-
-  const { sections } = data.homepage
 
   return (
     <Container>

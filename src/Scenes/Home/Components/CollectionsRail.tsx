@@ -38,7 +38,7 @@ export const CollectionsRail = ({ items, navigation }) => {
         snapToInterval={cardWidth + space(1)}
         horizontal
       />
-      <Spacer mb={3} />
+      <Spacer mb={2} />
     </Box>
   )
 }
