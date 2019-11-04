@@ -15,7 +15,7 @@ interface CategoriesRailProps {
 
 export const CategoriesRail: React.FC<CategoriesRailProps> = ({ categories, navigation, screenProps }) => {
   return (
-    <Box py={2} pl={2}>
+    <Box pb={2} pl={2}>
       <Sans size="2">Categories</Sans>
       <Box mt={2}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
