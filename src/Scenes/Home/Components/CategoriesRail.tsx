@@ -9,10 +9,11 @@ import { NavigationScreenProp, NavigationState, NavigationParams, NavigationActi
 
 interface CategoriesRailProps {
   categories: any
+  screenProps: any
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
-export const CategoriesRail: React.FC<CategoriesRailProps> = ({ categories, navigation }) => {
+export const CategoriesRail: React.FC<CategoriesRailProps> = ({ categories, navigation, screenProps }) => {
   return (
     <Box py={2} pl={2}>
       <Sans size="2">Categories</Sans>
@@ -25,7 +26,9 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ categories, navi
               <Box mr={1} key={category.id}>
                 <TouchableWithoutFeedback
                   onPress={() => {
-                    navigation.navigate("Browse", { categorySlug: category.slug })
+                    screenProps.setBrowseFilter(category.slug)
+                    // navigation.setParams({ categorySlug: category.slug })
+                    navigation.navigate("Browse")
                   }}
                 >
                   <Box>

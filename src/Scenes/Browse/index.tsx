@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { FlatList, Dimensions, TouchableWithoutFeedback } from "react-native"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
@@ -72,10 +72,10 @@ const renderItem = ({ item }, i, navigation) => {
 }
 
 export const Browse = (props: any) => {
-  const categorySlug = get(props, "navigation.state.params.categorySlug")
-  const [currentCategory, setCurrentCategory] = useState(categorySlug || "all")
-  // console.log("currentCategory", currentCategory)
-  console.log("categorySlug", props.navigation)
+  const [currentCategory, setCurrentCategory] = useState(props.screenProps.browseFilter || "all")
+  useEffect(() => {
+    setCurrentCategory(props.screenProps.browseFilter)
+  }, [props.screenProps.browseFilter])
   const { data, fetchMore } = useQuery(GET_PRODUCTS, {
     variables: {
       name: currentCategory,

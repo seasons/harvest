@@ -71,7 +71,6 @@ export const HomeComponent = (props: any) => {
       if (data.categories && dataSections) {
         dataSections.splice(1, 0, { type: "Categories", results: data.categories })
       }
-      console.log("data.homepage", dataSections)
       setSections(dataSections)
     }
   }, [data])
@@ -90,7 +89,7 @@ export const HomeComponent = (props: any) => {
       case "CollectionGroups":
         return <CollectionsRail navigation={navigation} items={item.results} />
       case "Categories":
-        return <CategoriesRail navigation={navigation} categories={item.results} />
+        return <CategoriesRail navigation={navigation} categories={item.results} screenProps={props.screenProps} />
       case "Brands":
         return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
       case "Products":

@@ -159,14 +159,16 @@ const MainNavigator = createBottomTabNavigator(
 )
 
 const CustomNavigator = props => {
+  const [browseFilter, setBrowseFilter] = useState("all")
   const { navigation } = props
   const screenHeight = Math.round(Dimensions.get("window").height)
   const insets = useSafeArea()
   const height = screenHeight - 106
+  const screenProps = { browseFilter, setBrowseFilter }
 
   return (
     <NavigationContainer style={{ flex: 1, marginTop: insets.top }}>
-      <MainNavigator navigation={navigation} />
+      <MainNavigator navigation={navigation} screenProps={screenProps} />
     </NavigationContainer>
   )
 }
