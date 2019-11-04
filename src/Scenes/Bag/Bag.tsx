@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
-import { EmptyState } from "./Components.tsx"
+import { EmptyState } from "./Components"
 import { Spacer, Flex, Box, Separator, FixedButton, ErrorPopUp } from "App/Components"
 import { FlatList } from "react-native"
 import { TouchableWithoutFeedback } from "react-native"
@@ -11,7 +11,7 @@ import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import { removeItemFromBag } from "App/Redux/actions"
-import { BagItem } from "./Components.tsx/BagItem"
+import { BagItem } from "./Components/BagItem"
 import { useMutation } from "react-apollo"
 import gql from "graphql-tag"
 
@@ -33,13 +33,8 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
     return null
   }
 
-  const handleReserve = () => {
-    reserveItems({
-      variables: {
-        items: bag.items.map(item => item.variantID),
-      },
-    })
-    return null
+  const handleReserve = navigation => {
+    navigation.navigate("Reservation")
   }
 
   const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
@@ -72,7 +67,9 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
 
   const renderItem = ({ item, index }) => {
     return item.productID.length ? (
-      <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} bagItem={item} />
+      <Box mx={2}>
+        <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} bagItem={item} />
+      </Box>
     ) : (
       emptyBagItem(index)
     )
@@ -111,7 +108,7 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
               ListFooterComponent={() => <Spacer mb={200} />}
             />
             <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
-              <FixedButton onPress={() => handleReserve()} disabled={!bagIsFull}>
+              <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
                 Reserve
               </FixedButton>
             </TouchableWithoutFeedback>

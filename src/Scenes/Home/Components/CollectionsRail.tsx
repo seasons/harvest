@@ -46,5 +46,5 @@ export const CollectionsRail = ({ items, navigation }) => {
 const ImageContainer = styled.Image`
   background: rgba(0, 0, 0, 0.3);
   height: 360;
-  width: 240;
+  width: 288;
 `

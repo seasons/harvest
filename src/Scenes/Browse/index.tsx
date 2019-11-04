@@ -7,11 +7,11 @@ import { Box, Sans, Flex } from "App/Components"
 import styled from "styled-components/native"
 import { fontFamily } from "Components/Typography"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import FadeIn from "@expo/react-native-fade-in-image"
 import { BrowseLoader } from "./Loader"
 import { imageResize } from "App/helpers/imageResize"
 import * as Animatable from "react-native-animatable"
 import get from "lodash/get"
+import { FadeInImage } from "App/Components/FadeInImage"
 
 const GET_PRODUCTS = gql`
   query getProducts($name: String!, $first: Int!, $skip: Int!) {
@@ -51,23 +51,21 @@ const renderItem = ({ item }, i, navigation) => {
   const resizedImage = imageResize(image.url, "medium")
 
   return (
-    <Animatable.View animation="fadeIn" duration={300} delay={(i * 300) / 5}>
-      <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
-        <Box m={0.5} mb={1} width={itemWidth}>
-          <ImageContainer source={{ uri: resizedImage }} />
+    <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
+      <Box m={0.5} mb={1} width={itemWidth}>
+        <ImageContainer source={{ uri: resizedImage }}></ImageContainer>
 
-          <Box m={2}>
-            <Sans size="0">{product.brand.name}</Sans>
-            <Sans size="0" color="gray">
-              {product.name}
-            </Sans>
-            <Sans size="0" color="gray">
-              ${product.retailPrice}
-            </Sans>
-          </Box>
+        <Box m={2}>
+          <Sans size="0">{product.brand.name}</Sans>
+          <Sans size="0" color="gray">
+            {product.name}
+          </Sans>
+          <Sans size="0" color="gray">
+            ${product.retailPrice}
+          </Sans>
         </Box>
-      </TouchableWithoutFeedback>
-    </Animatable.View>
+      </Box>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -158,8 +156,7 @@ export const Browse = (props: any) => {
   )
 }
 
-const ImageContainer = styled.Image`
-  background-color: #f2f2f2;
+const ImageContainer = styled(FadeInImage)`
   width: 100%;
   height: 240;
 `

@@ -10,11 +10,13 @@ import AsyncStorage from "@react-native-community/async-storage"
 const GET_USER = gql`
   query getUser {
     me {
-      id
-      email
-      firstName
-      lastName
-      role
+      user {
+        id
+        email
+        firstName
+        lastName
+        role
+      }
     }
   }
 `
@@ -31,7 +33,9 @@ export function Account(props) {
   }
 
   const {
-    me: { firstName, lastName },
+    me: {
+      user: { firstName, lastName },
+    },
   } = data || { me: { firstName: "", lastName: "" } }
 
   return (
