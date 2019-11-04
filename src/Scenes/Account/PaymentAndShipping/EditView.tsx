@@ -1,14 +1,29 @@
 import { Box, Flex, Radio, Sans, Spacer, TextInput } from "App/Components"
-
+import stripe, { PaymentCardTextField, StripeToken } from "tipsi-stripe"
 import { FlatList } from "react-native"
 import React from "react"
 
+interface CreditCardFormProps {
+  navigator?: NavigatorIOS
+  params?: PaymentCardTextFieldParams
+  onSubmit: (t: StripeToken, p: PaymentCardTextFieldParams) => void
+}
+
 export class EditView extends React.Component {
+  private paymentInfo: PaymentCardTextField
+
   state = {
     sameAsDeliveryRadioSelected: false,
   }
 
-  handleSameAsDevilveryAddress = () => {
+  componentDidMount() {
+    if (this.paymentInfo.value) {
+      this.paymentInfo.value.setParams(this.state.params)
+      this.paymentInfo.value.focus()
+    }
+  }
+
+  handleSameAsDeliveryAddress = () => {
     this.setState({
       sameAsDeliveryRadioSelected: !this.state.sameAsDeliveryRadioSelected,
     })
@@ -18,6 +33,22 @@ export class EditView extends React.Component {
     const sections = ["Header", "Delivery address", "Billing address", "Payment information"]
 
     return sections
+  }
+
+  tokenizeCardAndSubmit = async () => {
+    this.setState({ isLoading: true, isError: false })
+
+    const { params } = this.state
+
+    try {
+      const token = await stripe.createTokenWithCard({ ...params })
+      this.props.onSubmit(token, this.state.params)
+      this.setState({ isLoading: false })
+      this.props.navigator.pop()
+    } catch (error) {
+      console.error("CreditCardForm.tsx", error)
+      this.setState({ isError: true, isLoading: false })
+    }
   }
 
   renderItem = ({ item: section }) => {
@@ -55,7 +86,7 @@ export class EditView extends React.Component {
             <Spacer mb={2} />
             <Radio
               selected={this.state.sameAsDeliveryRadioSelected}
-              onSelect={() => this.handleSameAsDevilveryAddress()}
+              onSelect={() => this.handleSameAsDeliveryAddress()}
               label="Same as Delivery Address"
             />
             {!this.state.sameAsDeliveryRadioSelected && (
