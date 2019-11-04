@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { FlatList, Dimensions, TouchableWithoutFeedback } from "react-native"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
@@ -54,7 +54,7 @@ const renderItem = ({ item }, i, navigation) => {
     <Animatable.View animation="fadeIn" duration={300} delay={(i * 300) / 5}>
       <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
         <Box m={0.5} mb={1} width={itemWidth}>
-          <ImageContainer source={{ uri: resizedImage }}></ImageContainer>
+          <ImageContainer source={{ uri: resizedImage }} />
 
           <Box m={2}>
             <Sans size="0">{product.brand.name}</Sans>
@@ -72,7 +72,10 @@ const renderItem = ({ item }, i, navigation) => {
 }
 
 export const Browse = (props: any) => {
-  const [currentCategory, setCurrentCategory] = useState("all")
+  const [currentCategory, setCurrentCategory] = useState(props.screenProps.browseFilter || "all")
+  useEffect(() => {
+    setCurrentCategory(props.screenProps.browseFilter)
+  }, [props.screenProps.browseFilter])
   const { data, fetchMore } = useQuery(GET_PRODUCTS, {
     variables: {
       name: currentCategory,
