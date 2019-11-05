@@ -4,6 +4,7 @@ import { Sans } from "Components/Typography"
 import { EmptyState } from "./Components"
 import { Spacer, Flex, Box, Separator, FixedButton, ErrorPopUp } from "App/Components"
 import { FlatList } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
 import { TouchableWithoutFeedback } from "react-native"
 import { color } from "App/Utils"
 import { BagPlus } from "../../../assets/svgs"
@@ -28,13 +29,29 @@ const RESERVE_ITEMS = gql`
 export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(false)
   const [reserveItems] = useMutation(RESERVE_ITEMS)
+  const insets = useSafeArea()
 
   if (!bag || !bag.items) {
     return null
   }
 
-  const handleReserve = navigation => {
-    navigation.navigate("Reservation")
+  const handleReserve = async navigation => {
+    try {
+      const result = await reserveItems({
+        variables: {
+          items: bag.items.map(item => item.variantID),
+          options: {
+            dryRun: true,
+          },
+        },
+      })
+      if (result) {
+        navigation.navigate("ReservationModal")
+      }
+    } catch (e) {
+      console.log(e)
+      displayReserveError(true)
+    }
   }
 
   const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
@@ -77,7 +94,7 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
 
   return (
     <Container>
-      <Box style={{ flex: 1 }}>
+      <Box style={{ flex: 1, paddingTop: insets.top }}>
         {bagIsEmpty ? (
           <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignContent="center">
             <EmptyState remainingPieces={remainingPieces} navigation={navigation} />
@@ -112,16 +129,16 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
                 Reserve
               </FixedButton>
             </TouchableWithoutFeedback>
-            <ErrorPopUp
-              buttonText="Got it"
-              title="Pick all 3 items before reserving!"
-              note="Before reserving your order, make sure you've selected all 3 pieces."
-              show={showReserveError}
-              onClose={() => displayReserveError(false)}
-            />
           </Box>
         )}
       </Box>
+      <ErrorPopUp
+        buttonText="Got it"
+        title="Pick all 3 items before reserving!"
+        note="Before reserving your order, make sure you've selected all 3 pieces."
+        show={showReserveError}
+        onClose={() => displayReserveError(false)}
+      />
     </Container>
   )
 }

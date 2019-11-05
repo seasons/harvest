@@ -14,6 +14,7 @@ import gql from "graphql-tag"
 import { useQuery } from "react-apollo"
 import styled from "styled-components/native"
 import * as Animatable from "react-native-animatable"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_HOMEPAGE = gql`
   query Homepage {
@@ -64,6 +65,7 @@ const GET_HOMEPAGE = gql`
 export const HomeComponent = (props: any) => {
   const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
+  const insets = useSafeArea()
 
   useEffect(() => {
     if (data && data.homepage) {
@@ -100,7 +102,7 @@ export const HomeComponent = (props: any) => {
   return (
     <Container>
       <Animatable.View animation="fadeIn" duration={300}>
-        <Box style={{ position: "relative", backgroundColor: "rgba(0,0,0,0)" }}>
+        <Box style={{ position: "relative", backgroundColor: "rgba(0,0,0,0)", paddingTop: insets.top }}>
           <WhiteBackground />
           <BlackBackground />
           <Box p={2} style={{ backgroundColor: color("white") }}>

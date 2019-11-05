@@ -10,10 +10,11 @@ import { SignIn, Initializing, Welcome, SignInOrApply } from "App/Scenes/SignIn"
 import { Product } from "App/Scenes/Product"
 import { Account, PaymentAndShipping } from "App/Scenes/Account"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
-import { Reservation } from "Scenes/Browse/Reservation"
+import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import { Image } from "react-native"
 import styled from "styled-components"
 import { Tabs } from "./Tabs"
+import DismissableStackNavigator from "./DismissableStackNavigator"
 
 const shouldRenderTabBar = navigation => {
   let renderTabs = true
@@ -129,6 +130,16 @@ AccountStack.navigationOptions = ({ navigation }) => {
   }
 }
 
+const ReservationModal = DismissableStackNavigator(
+  {
+    Reservation,
+    ReservationConfirmation,
+  },
+  {
+    headerMode: "none",
+  }
+)
+
 const MainNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
@@ -174,11 +185,26 @@ CustomNavigator.router = {
   ...MainNavigator.router,
 }
 
+const RootStack = createStackNavigator(
+  {
+    Main: {
+      screen: CustomNavigator,
+    },
+    ReservationModal: {
+      screen: ReservationModal,
+    },
+  },
+  {
+    mode: "modal",
+    headerMode: "none",
+  }
+)
+
 const SwitchNavigator = createSwitchNavigator(
   {
     Initializing,
     Auth: AuthStack,
-    Root: CustomNavigator,
+    Root: RootStack,
   },
   {
     initialRouteName: "Initializing",
