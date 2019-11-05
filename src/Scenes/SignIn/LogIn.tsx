@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { ErrorPopUp, Theme, Sans, TextInput, Box, Spacer, Button, Flex } from "App/Components"
 import { Text } from "Components/Typography"
-import { SafeAreaView, TouchableWithoutFeedback } from "react-native"
+import { Keyboard, SafeAreaView, TouchableWithoutFeedback } from "react-native"
 import { useMutation } from "react-apollo"
 import AsyncStorage from "@react-native-community/async-storage"
 import { color } from "App/Utils"
@@ -35,6 +35,7 @@ export const LogIn: React.FC<LogInProps> = props => {
     onError: error => {
       console.log(error)
 
+      Keyboard.dismiss()
       // TODO: handle different types of errors
       setShowError(true)
     },

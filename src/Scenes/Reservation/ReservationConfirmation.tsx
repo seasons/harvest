@@ -2,7 +2,7 @@ import React from "react"
 import styled from "styled-components/native"
 import { Theme, Box, Separator, Spacer, Sans, FixedButton, Flex } from "App/Components"
 import { color } from "App/Utils"
-import { useMutation, useQuery } from "react-apollo"
+import { useQuery } from "react-apollo"
 import gql from "graphql-tag"
 import { BackArrowIcon } from "Assets/icons"
 import { TouchableWithoutFeedback, ScrollView } from "react-native"
@@ -11,14 +11,6 @@ import { get } from "lodash"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { BagItem } from "../Bag/Components/BagItem"
-
-const RESERVE_ITEMS = gql`
-  mutation ReserveItems($items: [ID!]!) {
-    reserveItems(items: $items) {
-      id
-    }
-  }
-`
 
 const GET_CUSTOMER = gql`
   {
@@ -47,19 +39,10 @@ const GET_CUSTOMER = gql`
   }
 `
 
-export const ReservationView = props => {
+export const ReservationConfirmationView = props => {
   const { bag } = props
   const { data, loading } = useQuery(GET_CUSTOMER)
-  const [reserveItems] = useMutation(RESERVE_ITEMS)
   const insets = useSafeArea()
-
-  const handleReserve = () => {
-    reserveItems({
-      variables: {
-        // items: [].items.map(item => item.variantID),
-      },
-    })
-  }
 
   const customer = get(data, "me.customer")
   const address = get(customer, "detail.shippingAddress", {
@@ -78,9 +61,6 @@ export const ReservationView = props => {
           <Sans size="2" color="black">
             {title}
           </Sans>
-          <EditButton ml="auto" size="2">
-            Edit
-          </EditButton>
         </Flex>
         <Spacer mb={1} />
         <Separator color="#e5e5e5" />
@@ -135,21 +115,21 @@ export const ReservationView = props => {
           </Box>
         </ScrollView>
       </Flex>
-      <FixedButton onPress={() => handleReserve()}>Place order</FixedButton>
+      <Box mb={insets.bottom}>
+        <FixedButton onPress={() => props.navigation.dismiss()}>Done</FixedButton>
+      </Box>
     </>
   )
 
   return (
     <Theme>
       <Container style={{ paddingTop: insets.top }}>
-        <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
-          <Box m={2}>
-            <BackArrowIcon />
-          </Box>
-        </TouchableWithoutFeedback>
         <Box style={{ marginTop: 60 }} m={2}>
           <Sans size="3" color="white">
-            Review your order
+            We've got your order!
+          </Sans>
+          <Sans size="1" color="gray">
+            We've emailed you a confirmation and we'll notify you when its out for delivery.
           </Sans>
         </Box>
         <Content>{content}</Content>
@@ -165,10 +145,10 @@ const mapStateToProps = state => {
   return { bag }
 }
 
-export const Reservation = connect(
+export const ReservationConfirmation = connect(
   mapStateToProps,
   mapDispatchToProps
-)(ReservationView)
+)(ReservationConfirmationView)
 
 const Container = styled(Box)`
   background: black;
