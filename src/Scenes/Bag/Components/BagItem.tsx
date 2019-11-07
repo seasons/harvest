@@ -4,6 +4,9 @@ import { useQuery } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { Image, Text, TouchableWithoutFeedback } from "react-native"
 import { get } from "lodash"
+import styled from "styled-components/native"
+import { FadeInImage } from "App/Components/FadeInImage"
+import { imageResize } from "App/helpers/imageResize"
 
 const GET_PRODUCT = gql`
   query GetProduct($productId: ID!) {
@@ -40,7 +43,7 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
     return null
   }
 
-  const imageURL = get(product, "images[0].url")
+  const imageURL = imageResize(get(product, "images[0].url"), "medium")
 
   return (
     <Box py={2} key={product.id} style={{ height: sectionHeight }}>
@@ -56,12 +59,11 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
           <Box>
             <Text>
               <Sans size="2" color="gray">
-                Size {product.modelSize}
+                Size {product.modelSize} {showRemoveButton && ` | `}
               </Sans>
 
               {showRemoveButton && (
                 <>
-                  {"|  "}
                   <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
                     <Sans size="2" color="blue">
                       Remove
@@ -73,9 +75,18 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
           </Box>
         </Flex>
         <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
-          <Image style={{ height: sectionHeight, width: 160 }} resizeMode="contain" source={{ uri: imageURL }} />
+          <ImageContainer
+            style={{ height: sectionHeight, width: 160 }}
+            resizeMode="contain"
+            source={{ uri: imageURL }}
+          />
         </Flex>
       </Flex>
     </Box>
   )
 }
+
+const ImageContainer = styled(FadeInImage)`
+  height: 200;
+  background: #f2f2f2;
+`

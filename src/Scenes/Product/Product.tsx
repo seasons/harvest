@@ -48,9 +48,8 @@ export const ProductComponent = props => {
     }
   }
 
-  const sections = () => {
-    return ["imageRail", "productDetails", "moreLikeThis", "aboutTheBrand"]
-  }
+  const sections = ["imageRail", "productDetails", "moreLikeThis", "aboutTheBrand"]
+
   return (
     <Theme>
       <Outer>
@@ -64,7 +63,7 @@ export const ProductComponent = props => {
             <AnimatedContent style={props}>
               {productState.showSizeSelection && <AnimatedOverlay style={props} />}
               <SafeAreaView style={{ flex: 1 }}>
-                <FlatList data={sections()} keyExtractor={item => item} renderItem={item => renderItem(item)} />
+                <FlatList data={sections} keyExtractor={item => item} renderItem={item => renderItem(item)} />
               </SafeAreaView>
             </AnimatedContent>
           )}
