@@ -19,8 +19,8 @@ import gql from "graphql-tag"
 const SECTION_HEIGHT = 200
 
 const RESERVE_ITEMS = gql`
-  mutation ReserveItems($items: [ID!]!) {
-    reserveItems(items: $items) {
+  mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
+    reserveItems(items: $items, options: $options) {
       id
     }
   }
@@ -49,7 +49,24 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
         navigation.navigate("ReservationModal")
       }
     } catch (e) {
-      console.log(e)
+      const { graphQLErrors } = e
+      console.log(graphQLErrors)
+      const error = graphQLErrors.length > 0 ? graphQLErrors[0] : null
+      if (error) {
+        debugger
+        const { code, exception } = error.extensions
+        if (code === "511") {
+          const data = Object.values(exception)
+            .filter(a => !!a.reserved)
+            .map(a => ({
+              variantID: a.id,
+            }))
+
+          for (let item of data) {
+            removeItemFromBag(item)
+          }
+        }
+      }
       displayReserveError(true)
     }
   }
