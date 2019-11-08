@@ -135,16 +135,15 @@ export const ReservationView = props => {
           onPress={async () => {
             // TODO: display loading screen
             try {
-              const result = await reserveItems({
+              const { data } = await reserveItems({
                 variables: {
                   items: bag.items.map(item => item.variantID),
-                  options: {
-                    dryRun: true,
-                  },
                 },
               })
-              if (result) {
-                props.navigation.navigate("ReservationConfirmation")
+              if (data.reserveItems) {
+                props.navigation.navigate("ReservationConfirmation", {
+                  reservationID: data.reserveItems.id,
+                })
               }
             } catch (e) {
               setShowError(true)

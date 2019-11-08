@@ -18,17 +18,15 @@ import gql from "graphql-tag"
 
 const SECTION_HEIGHT = 200
 
-const RESERVE_ITEMS = gql`
-  mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
-    reserveItems(items: $items, options: $options) {
-      id
-    }
+const CHECK_ITEMS = gql`
+  mutation CheckItemsAvailability($items: [ID!]!) {
+    checkItemsAvailability(items: $items)
   }
 `
 
 export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(false)
-  const [reserveItems] = useMutation(RESERVE_ITEMS)
+  const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
   const insets = useSafeArea()
 
   if (!bag || !bag.items) {
@@ -37,15 +35,12 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
 
   const handleReserve = async navigation => {
     try {
-      const result = await reserveItems({
+      const { data } = await checkItemsAvailability({
         variables: {
           items: bag.items.map(item => item.variantID),
-          options: {
-            dryRun: true,
-          },
         },
       })
-      if (result) {
+      if (data.checkItemsAvailability) {
         navigation.navigate("ReservationModal")
       }
     } catch (e) {
@@ -53,7 +48,6 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
       console.log(graphQLErrors)
       const error = graphQLErrors.length > 0 ? graphQLErrors[0] : null
       if (error) {
-        debugger
         const { code, exception } = error.extensions
         if (code === "511") {
           const data = Object.values(exception)

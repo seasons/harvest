@@ -1,11 +1,9 @@
 import React from "react"
 import styled from "styled-components/native"
 import { Theme, Box, Separator, Spacer, Sans, FixedButton, Flex } from "App/Components"
-import { color } from "App/Utils"
 import { useQuery } from "react-apollo"
 import gql from "graphql-tag"
-import { BackArrowIcon } from "Assets/icons"
-import { TouchableWithoutFeedback, ScrollView } from "react-native"
+import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { get } from "lodash"
 import { bindActionCreators } from "redux"
@@ -13,7 +11,7 @@ import { connect } from "react-redux"
 import { BagItem } from "../Bag/Components/BagItem"
 
 const GET_CUSTOMER = gql`
-  {
+  query GetCustomer($reservationID: String!) {
     me {
       user {
         firstName
@@ -34,6 +32,10 @@ const GET_CUSTOMER = gql`
             zipCode
           }
         }
+        reservations(where: { id: $reservationID }) {
+          id
+          reservationNumber
+        }
       }
     }
   }
@@ -41,7 +43,11 @@ const GET_CUSTOMER = gql`
 
 export const ReservationConfirmationView = props => {
   const { bag } = props
-  const { data, loading } = useQuery(GET_CUSTOMER)
+  const { data, loading } = useQuery(GET_CUSTOMER, {
+    variables: {
+      reservationID: get(props, "navigation.state.params.reservationID"),
+    },
+  })
   const insets = useSafeArea()
 
   const customer = get(data, "me.customer")
