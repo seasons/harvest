@@ -17,7 +17,7 @@ export const CollectionsRail = ({ items, navigation }) => {
         renderItem={({ item }) => {
           const image = get(item, "images[0].url")
           const id = get(item, "id")
-          const resizedImage = imageResize(image, "medium")
+          const resizedImage = imageResize(image, "large")
           return (
             <Animatable.View animation="fadeIn" duration={300}>
               <TouchableWithoutFeedback onPress={() => navigation.navigate("Collection", { id })}>

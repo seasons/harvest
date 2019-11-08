@@ -4,6 +4,7 @@ import { Sans } from "Components/Typography"
 import { EmptyState } from "./Components"
 import { Spacer, Flex, Box, Separator, FixedButton, ErrorPopUp } from "App/Components"
 import { FlatList } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
 import { TouchableWithoutFeedback } from "react-native"
 import { color } from "App/Utils"
 import { BagPlus } from "../../../assets/svgs"
@@ -17,24 +18,51 @@ import gql from "graphql-tag"
 
 const SECTION_HEIGHT = 200
 
-const RESERVE_ITEMS = gql`
-  mutation ReserveItems($items: [ID!]!) {
-    reserveItems(items: $items) {
-      id
-    }
+const CHECK_ITEMS = gql`
+  mutation CheckItemsAvailability($items: [ID!]!) {
+    checkItemsAvailability(items: $items)
   }
 `
 
 export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(false)
-  const [reserveItems] = useMutation(RESERVE_ITEMS)
+  const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
+  const insets = useSafeArea()
 
   if (!bag || !bag.items) {
     return null
   }
 
-  const handleReserve = navigation => {
-    navigation.navigate("Reservation")
+  const handleReserve = async navigation => {
+    try {
+      const { data } = await checkItemsAvailability({
+        variables: {
+          items: bag.items.map(item => item.variantID),
+        },
+      })
+      if (data.checkItemsAvailability) {
+        navigation.navigate("ReservationModal")
+      }
+    } catch (e) {
+      const { graphQLErrors } = e
+      console.log(graphQLErrors)
+      const error = graphQLErrors.length > 0 ? graphQLErrors[0] : null
+      if (error) {
+        const { code, exception } = error.extensions
+        if (code === "511") {
+          const data = Object.values(exception)
+            .filter(a => !!a.reserved)
+            .map(a => ({
+              variantID: a.id,
+            }))
+
+          for (let item of data) {
+            removeItemFromBag(item)
+          }
+        }
+      }
+      displayReserveError(true)
+    }
   }
 
   const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
@@ -77,7 +105,7 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
 
   return (
     <Container>
-      <Box style={{ flex: 1 }}>
+      <Box style={{ flex: 1, paddingTop: insets.top }}>
         {bagIsEmpty ? (
           <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignContent="center">
             <EmptyState remainingPieces={remainingPieces} navigation={navigation} />
@@ -112,16 +140,16 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
                 Reserve
               </FixedButton>
             </TouchableWithoutFeedback>
-            <ErrorPopUp
-              buttonText="Got it"
-              title="Pick all 3 items before reserving!"
-              note="Before reserving your order, make sure you've selected all 3 pieces."
-              show={showReserveError}
-              onClose={() => displayReserveError(false)}
-            />
           </Box>
         )}
       </Box>
+      <ErrorPopUp
+        buttonText="Got it"
+        title="Pick all 3 items before reserving!"
+        note="Before reserving your order, make sure you've selected all 3 pieces."
+        show={showReserveError}
+        onClose={() => displayReserveError(false)}
+      />
     </Container>
   )
 }

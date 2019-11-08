@@ -1,11 +1,12 @@
 import React, { useState } from "react"
 import { Box, Sans, Button, Spacer, Flex, RailPositionIndicator } from "App/Components"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
-import { styled } from "Components/platform/primitives"
+import styled from "styled-components/native"
 import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { space } from "App/Utils"
 import { Dimensions } from "react-native"
 import * as Animatable from "react-native-animatable"
+import { FadeInImage } from "App/Components/FadeInImage"
 
 interface ProductsRailProps {
   items: any
@@ -97,8 +98,7 @@ export const ProductsRail: React.FC<ProductsRailProps> = ({ items, title, naviga
   )
 }
 
-const ImageContainer = styled.Image`
-  background: rgba(0, 0, 0, 0.3);
+const ImageContainer = styled(FadeInImage)`
   height: 360;
   width: ${cardWidth};
 `

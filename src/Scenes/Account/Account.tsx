@@ -6,6 +6,7 @@ import { ScrollView, Text, View, TouchableOpacity } from "react-native"
 import { useQuery } from "react-apollo"
 import gql from "graphql-tag"
 import AsyncStorage from "@react-native-community/async-storage"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_USER = gql`
   query getUser {
@@ -28,6 +29,7 @@ const GET_USER = gql`
 
 export function Account(props) {
   const { loading, error, data } = useQuery(GET_USER)
+  const insets = useSafeArea()
 
   if (loading) {
     return (
@@ -60,7 +62,7 @@ export function Account(props) {
   return (
     <Container>
       <ScrollView>
-        <Box p={2}>
+        <Box p={2} mt={insets.top}>
           <Flex>
             <Box mb={5} />
             {firstName && lastName && (

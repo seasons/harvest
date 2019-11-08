@@ -12,6 +12,7 @@ import { imageResize } from "App/helpers/imageResize"
 import * as Animatable from "react-native-animatable"
 import get from "lodash/get"
 import { FadeInImage } from "App/Components/FadeInImage"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_PRODUCTS = gql`
   query getProducts($name: String!, $first: Int!, $skip: Int!) {
@@ -84,6 +85,7 @@ export const Browse = (props: any) => {
   const { navigation } = props
   const products = data && data.products
   const categories = (data && data.categories) || []
+  const insets = useSafeArea()
 
   const onCategoryPress = item => {
     setCurrentCategory(item.slug)
@@ -99,7 +101,7 @@ export const Browse = (props: any) => {
 
   return (
     <Container>
-      <Flex flexDirection="column" flex={1}>
+      <Flex flexDirection="column" flex={1} pt={insets.top}>
         <Box my={1} mx={2} height={50}>
           <SearchBar placeholder="Search Seasons" />
         </Box>

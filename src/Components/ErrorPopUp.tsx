@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import styled from "styled-components/native"
 import { TouchableWithoutFeedback } from "react-native"
 import { Sans, Box, Spacer, Separator } from "./"
 import { color } from "App/Utils"
-import { animated } from "react-spring/renderprops-native.cjs"
+import { animated, useSpring } from "react-spring/native.cjs"
+import { useComponentSize } from "App/Utils/Hooks/useComponentSize"
 
 export interface Props {
   title: string
@@ -14,28 +15,21 @@ export interface Props {
 }
 
 export const ErrorPopUp: React.FC<Props> = ({ title, note, show, buttonText, onClose }) => {
-  const [outerWrapperAnimation, setOuterWrapperAnimation] = useState({
-    backgroundColor: "rgba(0, 0, 0, 0)",
+  const [size, onLayout] = useComponentSize()
+  const height = size ? size.height + 40 : 400
+
+  const popUpAnimation = useSpring({
+    bottom: show ? 0 : -height,
   })
 
-  const [popUpAnimation, setPopUpAnimation] = useState({
-    height: 0,
+  const outerWrapperAnimation = useSpring({
+    backgroundColor: show ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0)",
   })
-
-  useEffect(() => {
-    if (show) {
-      setOuterWrapperAnimation({ backgroundColor: "rgba(0, 0, 0, 0.5)" })
-      setPopUpAnimation({ height: "auto" })
-    } else {
-      setOuterWrapperAnimation({ backgroundColor: "rgba(0, 0, 0, 0)" })
-      setPopUpAnimation({ height: 0 })
-    }
-  }, [show])
 
   return (
     <>
-      <AnimatedPopUp style={popUpAnimation}>
-        <Box m={2}>
+      <AnimatedPopUp style={popUpAnimation} height={height}>
+        <Box m={2} onLayout={onLayout}>
           <Spacer mt={2} />
           <Box>
             <Sans size="2" color={color("white")}>
@@ -84,7 +78,7 @@ const PopUp = styled(Box)`
   background-color: ${color("green")};
   position: absolute;
   width: 100%;
-  bottom: 0;
+  bottom: -${p => p.height};
   left: 0;
   overflow: hidden;
   z-index: 100;
