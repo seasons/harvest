@@ -11,12 +11,17 @@ import { useSafeArea } from "react-native-safe-area-context"
 const GET_USER = gql`
   query getUser {
     me {
-      user {
-        id
-        email
-        firstName
-        lastName
-        role
+      customer {
+        user {
+          firstName
+          lastName
+        }
+        detail {
+          shippingAddress {
+            city
+            state
+          }
+        }
       }
     }
   }
@@ -36,9 +41,23 @@ export function Account(props) {
 
   const {
     me: {
-      user: { firstName, lastName },
+      customer: {
+        user: { firstName, lastName },
+        detail: {
+          shippingAddress: { city, state },
+        },
+      },
     },
-  } = data || { me: { firstName: "", lastName: "" } }
+  } = data || {
+    me: {
+      customer: {
+        user: { firstName: "", lastName: "" },
+        detail: {
+          shippingAddress: { city: "", state: "" },
+        },
+      },
+    },
+  }
 
   return (
     <Container>
@@ -46,12 +65,16 @@ export function Account(props) {
         <Box p={2} mt={insets.top}>
           <Flex>
             <Box mb={5} />
-            <Sans size="3" color="black">
-              {`${firstName} ${lastName}`}
-            </Sans>
-            <Sans size="2" color="gray">
-              Brooklyn, NY
-            </Sans>
+            {firstName && lastName && (
+              <Sans size="3" color="black">
+                {`${firstName} ${lastName}`}
+              </Sans>
+            )}
+            {city && state && (
+              <Sans size="2" color="gray">
+                {`${city}, ${state}`}
+              </Sans>
+            )}
           </Flex>
           <Spacer m={2} />
           <Separator />
