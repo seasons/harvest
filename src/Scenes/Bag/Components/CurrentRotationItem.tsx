@@ -17,27 +17,23 @@ export const CurrentRotationItem = ({ physicalProduct }) => {
   const imageURL = imageResize(get(product, "images[0].url"), "medium")
 
   return (
-    <Container m={2} key={product.id}>
-      <Flex flexDirection="row" style={{ flex: 1 }}>
+    <Container key={product.id}>
+      <Flex flexDirection="row">
         <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
-          <Box>
+          <Box p={2}>
             <Sans size="2">{product.brand.name}.</Sans>
             <Sans size="2" color="gray">
               {product.name}.
             </Sans>
+            <Sans size="2" color="gray">
+              Size {productVariant.size}
+            </Sans>
           </Box>
-          <Box>
-            <Text>
-              <Sans size="2" color="gray">
-                Size {productVariant.modelSize}
-              </Sans>
-            </Text>
-          </Box>
-        </Flex>
-        <Flex>
-          <ImageContainer resizeMode="contain" source={{ uri: imageURL }} />
         </Flex>
       </Flex>
+      <Box>
+        <ImageContainer resizeMode="contain" source={{ uri: imageURL }} />
+      </Box>
     </Container>
   )
 }

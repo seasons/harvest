@@ -10,6 +10,7 @@ import { useQuery } from "react-apollo"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import { Bag } from "./Bag"
+import { DateTime } from "luxon"
 
 const ACTIVE_RESERVATION = gql`
   {
@@ -17,6 +18,7 @@ const ACTIVE_RESERVATION = gql`
       activeReservation {
         id
         shipped
+        createdAt
         products {
           id
           seasonsUID
@@ -47,6 +49,11 @@ export const CurrentRotation = props => {
   }
 
   const activeReservation = get(data, "me.activeReservation", null)
+  const returnDate = !!activeReservation
+    ? DateTime.fromISO(activeReservation.createdAt)
+        .plus({ days: 30 })
+        .toLocaleString(DateTime.DATE_FULL)
+    : ""
 
   if (!activeReservation) {
     return <Bag {...props} />
@@ -68,25 +75,23 @@ export const CurrentRotation = props => {
             <FlatList
               data={activeReservation.products}
               ListHeaderComponent={() => (
-                <Box p={2}>
+                <Box p={3}>
                   <Sans size="3" color="black">
                     Current Rotation
                   </Sans>
                   <Sans size="2" color="gray">
-                    Return By {``}
+                    Return By {returnDate}
                   </Sans>
                 </Box>
               )}
               ItemSeparatorComponent={() => (
                 <Box px={2}>
                   <Spacer mb={2} />
-                  <Separator color={color("lightGray")} />
-                  <Spacer mb={2} />
                 </Box>
               )}
               keyExtractor={(_item, index) => String(index)}
               renderItem={item => renderItem(item)}
-              ListFooterComponent={() => <Spacer mb={200} />}
+              ListFooterComponent={() => <Spacer mb={40} />}
             />
           </Box>
         }
