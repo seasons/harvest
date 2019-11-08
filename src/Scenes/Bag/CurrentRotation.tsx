@@ -1,10 +1,9 @@
 import React from "react"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
-import { Spacer, Box, Separator } from "App/Components"
+import { Spacer, Box } from "App/Components"
 import { FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { color } from "App/Utils"
 import { CurrentRotationItem } from "./Components/CurrentRotationItem"
 import { useQuery } from "react-apollo"
 import gql from "graphql-tag"
@@ -28,6 +27,7 @@ const ACTIVE_RESERVATION = gql`
             size
             product {
               name
+              retailPrice
               brand {
                 name
               }
