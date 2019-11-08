@@ -99,7 +99,7 @@ export const Browse = (props: any) => {
     setCurrentCategory(item.slug)
   }
 
-  if (showLoader && !!data) {
+  if (showLoader && !data) {
     return <Loader />
   }
 
