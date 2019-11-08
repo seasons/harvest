@@ -8,6 +8,7 @@ require_relative '../node_modules/react-native-unimodules/cocoapods'
 target 'seasons' do
   # Pods for seasons
   use_unimodules!
+  use_frameworks!
   
   pod 'React', :path => '../node_modules/react-native', :subspecs => [
     'Core',
@@ -37,5 +38,7 @@ target 'seasons' do
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
   pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+  pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
+  pod 'lottie-ios', :path => '../node_modules/lottie-ios'
 
 end

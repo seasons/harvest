@@ -3,6 +3,7 @@ import { Theme, Sans, Box, Spacer, Button } from "App/Components"
 import { SafeAreaView } from "react-native"
 import styled from "styled-components/native"
 import { goToSignIn } from "App/Navigation"
+import LottieView from "lottie-react-native"
 
 export class Notifications extends React.Component {
   handleAllow = () => {
@@ -17,7 +18,7 @@ export class Notifications extends React.Component {
             <Wrapper>
               <Box style={{ flex: 1 }}>
                 <Box style={{ padding: 50, width: "100%", height: "100%" }}>
-                  <Placeholder />
+                  <LottieView source={require("./animation.json")} autoPlay loop />
                 </Box>
               </Box>
               <Box m={2} mt={4}>
