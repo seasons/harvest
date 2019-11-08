@@ -63,7 +63,7 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
 
       if (details.height) {
         const feet = Math.floor(details.height / 12)
-        const inches = details.height & 12
+        const inches = details.height % 12
         sectionsArray.push({ title: "Height", value: `${feet} ft ${inches} in` })
       }
 
