@@ -5,7 +5,7 @@ import { createStackNavigator } from "react-navigation-stack"
 import { Home } from "App/Scenes/Home"
 import { Browse } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
-import { Bag } from "App/Scenes/Bag"
+import { Bag, CurrentRotation } from "App/Scenes/Bag"
 import { SignIn, Initializing, Welcome, SignInOrApply } from "App/Scenes/SignIn"
 import { Product } from "App/Scenes/Product"
 import { Account, PaymentAndShipping } from "App/Scenes/Account"
@@ -92,10 +92,10 @@ const BagStack = createStackNavigator(
   {
     Bag,
     Product,
-    Reservation,
+    CurrentRotation,
   },
   {
-    initialRouteName: "Bag",
+    initialRouteName: "CurrentRotation",
     defaultNavigationOptions: {
       header: null,
     },
