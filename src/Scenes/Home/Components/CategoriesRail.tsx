@@ -48,7 +48,7 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ categories, navi
 }
 
 const ImageContainer = styled(Image)`
-  background-color: #f2f2f2;
+  background-color: #f6f6f6;
   height: 112;
   width: 92;
   border-radius: 46;

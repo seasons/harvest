@@ -7,12 +7,11 @@ import { Box, Sans, Flex } from "App/Components"
 import styled from "styled-components/native"
 import { fontFamily } from "Components/Typography"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import { BrowseLoader } from "./Loader"
 import { imageResize } from "App/helpers/imageResize"
-import * as Animatable from "react-native-animatable"
 import get from "lodash/get"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { useSafeArea } from "react-native-safe-area-context"
+import { Loader } from "App/Components/Loader"
 
 const GET_PRODUCTS = gql`
   query getProducts($name: String!, $first: Int!, $skip: Int!) {
@@ -72,16 +71,25 @@ const renderItem = ({ item }, i, navigation) => {
 
 export const Browse = (props: any) => {
   const [currentCategory, setCurrentCategory] = useState(props.screenProps.browseFilter || "all")
-  useEffect(() => {
-    setCurrentCategory(props.screenProps.browseFilter)
-  }, [props.screenProps.browseFilter])
-  const { data, fetchMore } = useQuery(GET_PRODUCTS, {
+  const [showLoader, toggleLoader] = useState(true)
+  const { data, loading, fetchMore } = useQuery(GET_PRODUCTS, {
     variables: {
       name: currentCategory,
       first: 10,
       skip: 0,
     },
   })
+
+  useEffect(() => {
+    setCurrentCategory(props.screenProps.browseFilter)
+  }, [props.screenProps.browseFilter])
+
+  useEffect(() => {
+    setTimeout(() => {
+      toggleLoader(loading)
+    }, 500)
+  }, [loading])
+
   const { navigation } = props
   const products = data && data.products
   const categories = (data && data.categories) || []
@@ -91,13 +99,9 @@ export const Browse = (props: any) => {
     setCurrentCategory(item.slug)
   }
 
-  // if (loading) {
-  //   return (
-  //     <Container>
-  //       <BrowseLoader />
-  //     </Container>
-  //   )
-  // }
+  if (showLoader && !!data) {
+    return <Loader />
+  }
 
   return (
     <Container>

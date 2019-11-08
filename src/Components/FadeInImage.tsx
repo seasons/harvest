@@ -29,5 +29,5 @@ export const FadeInImage: React.FC<ImageProps> = props => {
 }
 
 const Container = styled(View)`
-  background-color: #f2f2f2;
+  background-color: #f6f6f6;
 `

@@ -3,6 +3,7 @@ import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
 import { EmptyState } from "./Components"
 import { Spacer, Flex, Box, Separator, FixedButton, ErrorPopUp } from "App/Components"
+import * as Animatable from "react-native-animatable"
 import { FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { TouchableWithoutFeedback } from "react-native"
@@ -105,51 +106,53 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
 
   return (
     <Container>
-      <Box style={{ flex: 1, paddingTop: insets.top }}>
-        {bagIsEmpty ? (
-          <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignContent="center">
-            <EmptyState remainingPieces={remainingPieces} navigation={navigation} />
-          </Flex>
-        ) : (
-          <Box>
-            <FlatList
-              data={bag.items}
-              ListHeaderComponent={() => (
-                <Box p={2}>
-                  <Sans size="3" color="black">
-                    My bag
-                  </Sans>
-                  <Sans size="2" color="gray">
-                    {remainingPiecesDisplay}
-                  </Sans>
-                </Box>
-              )}
-              ItemSeparatorComponent={() => (
-                <Box px={2}>
-                  <Spacer mb={2} />
-                  <Separator color={color("lightGray")} />
-                  <Spacer mb={2} />
-                </Box>
-              )}
-              keyExtractor={(_item, index) => String(index)}
-              renderItem={item => renderItem(item)}
-              ListFooterComponent={() => <Spacer mb={200} />}
-            />
-            <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
-              <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
-                Reserve
-              </FixedButton>
-            </TouchableWithoutFeedback>
-          </Box>
-        )}
-      </Box>
-      <ErrorPopUp
-        buttonText="Got it"
-        title="Pick all 3 items before reserving!"
-        note="Before reserving your order, make sure you've selected all 3 pieces."
-        show={showReserveError}
-        onClose={() => displayReserveError(false)}
-      />
+      <Animatable.View animation="fadeIn" duration={300}>
+        <Box style={{ flex: 1, paddingTop: insets.top }}>
+          {bagIsEmpty ? (
+            <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignContent="center">
+              <EmptyState remainingPieces={remainingPieces} navigation={navigation} />
+            </Flex>
+          ) : (
+            <Box>
+              <FlatList
+                data={bag.items}
+                ListHeaderComponent={() => (
+                  <Box p={2}>
+                    <Sans size="3" color="black">
+                      My bag
+                    </Sans>
+                    <Sans size="2" color="gray">
+                      {remainingPiecesDisplay}
+                    </Sans>
+                  </Box>
+                )}
+                ItemSeparatorComponent={() => (
+                  <Box px={2}>
+                    <Spacer mb={2} />
+                    <Separator color={color("lightGray")} />
+                    <Spacer mb={2} />
+                  </Box>
+                )}
+                keyExtractor={(_item, index) => String(index)}
+                renderItem={item => renderItem(item)}
+                ListFooterComponent={() => <Spacer mb={200} />}
+              />
+              <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
+                <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
+                  Reserve
+                </FixedButton>
+              </TouchableWithoutFeedback>
+            </Box>
+          )}
+        </Box>
+        <ErrorPopUp
+          buttonText="Got it"
+          title="Pick all 3 items before reserving!"
+          note="Before reserving your order, make sure you've selected all 3 pieces."
+          show={showReserveError}
+          onClose={() => displayReserveError(false)}
+        />
+      </Animatable.View>
     </Container>
   )
 }

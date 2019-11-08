@@ -15,6 +15,7 @@ import { useQuery } from "react-apollo"
 import styled from "styled-components/native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
+import { Loader } from "App/Components/Loader"
 
 const GET_HOMEPAGE = gql`
   query Homepage {
@@ -64,6 +65,7 @@ const GET_HOMEPAGE = gql`
 
 export const HomeComponent = (props: any) => {
   const [sections, setSections] = useState([])
+  const [showLoader, toggleLoader] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const insets = useSafeArea()
 
@@ -77,8 +79,14 @@ export const HomeComponent = (props: any) => {
     }
   }, [data])
 
-  if (loading || !data) {
-    return null
+  useEffect(() => {
+    setTimeout(() => {
+      toggleLoader(loading)
+    }, 500)
+  }, [loading])
+
+  if (showLoader || !data) {
+    return <Loader />
   }
 
   if (error) {

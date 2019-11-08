@@ -88,5 +88,5 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
 
 const ImageContainer = styled(FadeInImage)`
   height: 200;
-  background: #f2f2f2;
+  background: #f6f6f6;
 `

@@ -1,15 +1,17 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
 import { Spacer, Box } from "App/Components"
 import { FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { CurrentRotationItem } from "./Components/CurrentRotationItem"
+import * as Animatable from "react-native-animatable"
 import { useQuery } from "react-apollo"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import { Bag } from "./Bag"
 import { DateTime } from "luxon"
+import { Loader } from "App/Components/Loader"
 
 const ACTIVE_RESERVATION = gql`
   {
@@ -42,11 +44,21 @@ const ACTIVE_RESERVATION = gql`
 
 export const CurrentRotation = props => {
   const { data, loading } = useQuery(ACTIVE_RESERVATION)
+  const [showLoader, toggleLoader] = useState(true)
   const insets = useSafeArea()
 
-  if (loading) {
+  useEffect(() => {
+    setTimeout(() => {
+      toggleLoader(loading)
+    }, 500)
+  }, [loading])
+
+  if (showLoader) {
     // Show loading screen
+    return <Loader />
   }
+
+  console.log(data)
 
   const activeReservation = get(data, "me.activeReservation", null)
   const returnDate = !!activeReservation
@@ -70,7 +82,7 @@ export const CurrentRotation = props => {
   return (
     <Container>
       <Box style={{ flex: 1, paddingTop: insets.top }}>
-        {
+        <Animatable.View animation="fadeIn" duration={300}>
           <Box>
             <FlatList
               data={activeReservation.products}
@@ -94,7 +106,7 @@ export const CurrentRotation = props => {
               ListFooterComponent={() => <Spacer mb={40} />}
             />
           </Box>
-        }
+        </Animatable.View>
       </Box>
     </Container>
   )
