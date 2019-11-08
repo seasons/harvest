@@ -71,7 +71,9 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
       const details = data.me.customer.detail
 
       if (details.birthday) {
-        const birthdayAsDate = DateTime.fromISO(details.birthday).toLocaleString(DateTime.DATE_FULL)
+        const birthdayAsDate = DateTime.fromISO(details.birthday)
+          .toUTC()
+          .toLocaleString(DateTime.DATE_FULL)
         sectionsArray.push({ title: "Birthday", value: birthdayAsDate })
       }
 
