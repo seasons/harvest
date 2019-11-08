@@ -1,0 +1,6 @@
+framework module EXPermissions {
+  umbrella header "EXPermissions-umbrella.h"
+
+  export *
+  module * { export * }
+}

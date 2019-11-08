@@ -1,0 +1,6 @@
+framework module EXLinearGradient {
+  umbrella header "EXLinearGradient-umbrella.h"
+
+  export *
+  module * { export * }
+}

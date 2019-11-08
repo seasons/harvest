@@ -16,6 +16,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 })
 
 const cache = new InMemoryCache({ fragmentMatcher })
+
 console.log("Monsoon Endpoint:", MONSOON_ENDPOINT)
 
 const link = new HttpLink({

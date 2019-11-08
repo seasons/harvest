@@ -55,5 +55,5 @@ const ImageContainer = styled(Box)`
 const Image = styled(FadeInImage)`
   height: 260;
   width: 100%;
-  background: #f2f2f2;
+  background: #f6f6f6;
 `
