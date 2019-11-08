@@ -104,7 +104,7 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
           data={sections}
           ListHeaderComponent={() => (
             <Box px={2}>
-              <Spacer mb={60} />
+              <Spacer mb={80} />
               <Sans size="3">Personal preferences</Sans>
               <Spacer mb={3} />
             </Box>
