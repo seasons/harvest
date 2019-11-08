@@ -17,12 +17,26 @@ const GET_PREFERENCES = gql`
           height
           weight
           bodyType
+          averageSpend
           averageTopSize
           averageWaistSize
           profession
+          partyFrequency
+          travelFrequency
+          shoppingFrequency
+          style
+          phoneOS
+          commuteStyle
+          preferredPronouns
+          averagePantLength
           shippingAddress {
+            name
+            company
+            address1
+            address2
             city
             state
+            zipCode
           }
         }
       }
@@ -61,10 +75,18 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
         sectionsArray.push({ title: "Birthday", value: birthdayAsDate })
       }
 
+      if (details.preferredPronouns) {
+        sectionsArray.push({ title: "Preferred pronouns", value: details.preferredPronouns })
+      }
+
       if (details.height) {
         const feet = Math.floor(details.height / 12)
         const inches = details.height % 12
         sectionsArray.push({ title: "Height", value: `${feet} ft ${inches} in` })
+      }
+
+      if (details.weight) {
+        sectionsArray.push({ title: "Weight", value: details.weight })
       }
 
       if (details.bodyType) {
@@ -77,6 +99,77 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
 
       if (details.averageWaistSize) {
         sectionsArray.push({ title: "Average waist size", value: `${details.averageWaistSize} in` })
+      }
+
+      if (details.averagePantLength) {
+        sectionsArray.push({ title: "Average pant length", value: `${details.averagePantLength} in` })
+      }
+
+      // page 2
+
+      if (details.profession) {
+        sectionsArray.push({ title: "Profession", value: details.profession })
+      }
+
+      if (details.commuteStyle) {
+        sectionsArray.push({ title: "Commute style", value: details.commuteStyle })
+      }
+
+      if (details.partyFrequency) {
+        sectionsArray.push({ title: "Party frequency", value: details.partyFrequency })
+      }
+
+      if (details.travelFrequency) {
+        sectionsArray.push({ title: "Travel frequency", value: details.travelFrequency })
+      }
+
+      if (details.shoppingFrequency) {
+        sectionsArray.push({ title: "Shopping frequency", value: details.shoppingFrequency })
+      }
+
+      if (details.averageSpend) {
+        sectionsArray.push({ title: "Spending average", value: details.averageSpend })
+      }
+
+      if (details.style) {
+        sectionsArray.push({ title: "Style", value: details.style })
+      }
+
+      if (details.phoneOS) {
+        sectionsArray.push({ title: "Phone type", value: details.phoneOS })
+      }
+
+      // page 3
+
+      if (details.shippingAddress) {
+        const shippingAddress = details.shippingAddress
+        if (shippingAddress.name) {
+          sectionsArray.push({ title: "Full name", value: shippingAddress.name })
+        }
+
+        if (shippingAddress.company) {
+          sectionsArray.push({ title: "Company", value: shippingAddress.company })
+        }
+
+        if (shippingAddress.address1) {
+          sectionsArray.push({ title: "Address", value: shippingAddress.address1 })
+        }
+
+        if (shippingAddress.address2) {
+          sectionsArray.push({ title: "Apt, suite #", value: shippingAddress.address2 })
+        }
+
+        if (shippingAddress.city) {
+          sectionsArray.push({ title: "City", value: shippingAddress.city })
+        }
+
+        if (shippingAddress.state) {
+          sectionsArray.push({ title: "State", value: shippingAddress.state })
+        }
+
+        if (shippingAddress.zipCode) {
+          sectionsArray.push({ title: "Zipcode", value: shippingAddress.zipCode })
+        }
       }
 
       setSections(sectionsArray)
