@@ -44,16 +44,24 @@ const GET_PREFERENCES = gql`
   }
 `
 
-const AccountSection: React.FC<{ title: string; value: string }> = ({ title, value }) => {
+export const AccountSection: React.FC<{ title: string; value: string | [string] }> = ({ title, value }) => {
   return (
     <Box key={title} px={2}>
       <Sans size="2">{title}</Sans>
       <Box mb={1} />
       <Separator color={color("gray")} />
       <Box mb={1} />
-      <Sans size="2" color="gray">
-        {value}
-      </Sans>
+      {Array.isArray(value) ? (
+        value.map(text => (
+          <Sans key={text} size="2" color="gray">
+            {text}
+          </Sans>
+        ))
+      ) : (
+        <Sans size="2" color="gray">
+          {value}
+        </Sans>
+      )}
       <Spacer mb={2} />
     </Box>
   )
