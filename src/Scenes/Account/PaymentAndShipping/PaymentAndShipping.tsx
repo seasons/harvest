@@ -14,7 +14,7 @@ interface State {
 
 export class PaymentAndShipping extends React.Component<Props, State> {
   state = {
-    renderEditView: true,
+    renderEditView: false,
   }
 
   toggleView = () => {

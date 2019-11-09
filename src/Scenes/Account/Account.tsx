@@ -1,14 +1,12 @@
-import { Box, Flex, Sans, Separator, Spacer, Theme, Toggle } from "App/Components"
+import { Box, Flex, Sans, Separator, Spacer, Toggle } from "App/Components"
 import { Container } from "Components/Container"
 import { ProfileList } from "./ProfileList"
 import React from "react"
-import { ScrollView, Text, View, TouchableOpacity } from "react-native"
+import { ScrollView, TouchableOpacity } from "react-native"
 import { useQuery } from "react-apollo"
 import gql from "graphql-tag"
 import AsyncStorage from "@react-native-community/async-storage"
-import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
-import { Loader } from "App/Components/Loader"
 
 const GET_USER = gql`
   query getUser {
@@ -55,61 +53,59 @@ export function Account(props) {
 
   return (
     <Container>
-      <Animatable.View animation="fadeIn" duration={300}>
-        <ScrollView>
-          <Box p={2} mt={insets.top}>
-            <Flex>
-              <Box mb={5} />
-              {firstName && lastName && (
-                <Sans size="3" color="black">
-                  {`${firstName} ${lastName}`}
-                </Sans>
-              )}
-              {city && state && (
-                <Sans size="2" color="gray">
-                  {`${city}, ${state}`}
-                </Sans>
-              )}
-            </Flex>
-            <Spacer m={2} />
-            <Separator />
-            <Spacer m={2} />
-            <ProfileList {...props} />
-            <Spacer m={2} />
-            <Separator />
-            <Spacer m={2} />
-            <Flex flexDirection="row" justifyContent="space-between">
-              <Box>
-                <Sans size="2">Order updates</Sans>
-                <Sans size="2" color="gray">
-                  Send me push notifications
-                </Sans>
-              </Box>
-              <Toggle />
-            </Flex>
-            <Spacer m={2} />
-            <Separator />
-            <Box py={2}>
-              <Sans size="2">Support</Sans>
+      <ScrollView>
+        <Box p={2} mt={insets.top}>
+          <Flex>
+            <Box mb={5} />
+            {
+              <Sans size="3" color="black">
+                {`${firstName} ${lastName}`}
+              </Sans>
+            }
+            {
+              <Sans size="2" color="gray">
+                {`${city}, ${state}`}
+              </Sans>
+            }
+          </Flex>
+          <Spacer m={2} />
+          <Separator />
+          <Spacer m={2} />
+          <ProfileList {...props} />
+          <Spacer m={2} />
+          <Separator />
+          <Spacer m={2} />
+          <Flex flexDirection="row" justifyContent="space-between">
+            <Box>
+              <Sans size="2">Order updates</Sans>
+              <Sans size="2" color="gray">
+                Send me push notifications
+              </Sans>
             </Box>
-            <Box py={2}>
-              <Sans size="2">Privacy Policy & Terms of Service</Sans>
-            </Box>
-            <TouchableOpacity
-              onPress={async () => {
-                await AsyncStorage.removeItem("userSession")
-                props.navigation.navigate("Auth")
-              }}
-            >
-              <Box py={2}>
-                <Sans size="2" color="red">
-                  Sign out
-                </Sans>
-              </Box>
-            </TouchableOpacity>
+            <Toggle />
+          </Flex>
+          <Spacer m={2} />
+          <Separator />
+          <Box py={2}>
+            <Sans size="2">Support</Sans>
           </Box>
-        </ScrollView>
-      </Animatable.View>
+          <Box py={2}>
+            <Sans size="2">Privacy Policy & Terms of Service</Sans>
+          </Box>
+          <TouchableOpacity
+            onPress={async () => {
+              await AsyncStorage.removeItem("userSession")
+              props.navigation.navigate("Auth")
+            }}
+          >
+            <Box py={2}>
+              <Sans size="2" color="red">
+                Sign out
+              </Sans>
+            </Box>
+          </TouchableOpacity>
+        </Box>
+      </ScrollView>
     </Container>
   )
 }
