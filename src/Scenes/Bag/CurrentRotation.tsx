@@ -9,9 +9,10 @@ import * as Animatable from "react-native-animatable"
 import { useQuery } from "react-apollo"
 import gql from "graphql-tag"
 import { get } from "lodash"
-import { Bag } from "./Bag"
 import { DateTime } from "luxon"
 import { Loader } from "App/Components/Loader"
+import { StackActions, NavigationActions } from "react-navigation"
+import { Bag } from "./Bag"
 
 const ACTIVE_RESERVATION = gql`
   {
@@ -68,6 +69,8 @@ export const CurrentRotation = props => {
     : ""
 
   if (!activeReservation) {
+    console.log("Inside navigate to Bag")
+
     return <Bag {...props} />
   }
 
@@ -85,7 +88,7 @@ export const CurrentRotation = props => {
         <Animatable.View animation="fadeIn" duration={300}>
           <Box>
             <FlatList
-              data={activeReservation.products}
+              data={activeReservation ? activeReservation.products : []}
               ListHeaderComponent={() => (
                 <Box p={3}>
                   <Sans size="3" color="black">

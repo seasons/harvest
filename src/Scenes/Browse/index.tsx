@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { FlatList, Dimensions, TouchableWithoutFeedback } from "react-native"
+import { FlatList, Dimensions, TouchableWithoutFeedback, Image } from "react-native"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import { useQuery } from "@apollo/react-hooks"
@@ -53,7 +53,7 @@ const renderItem = ({ item }, i, navigation) => {
   return (
     <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
       <Box m={0.5} mb={1} width={itemWidth}>
-        <ImageContainer source={{ uri: resizedImage }}></ImageContainer>
+        <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: 240 }} />
 
         <Box m={2}>
           <Sans size="0">{product.brand.name}</Sans>
@@ -106,13 +106,20 @@ export const Browse = (props: any) => {
   return (
     <Container>
       <Flex flexDirection="column" flex={1} pt={insets.top}>
-        <Box my={1} mx={2} height={50}>
-          <SearchBar placeholder="Search Seasons" />
-        </Box>
         <Box flex={1} flexGrow={1}>
           <FlatList
             data={products}
             keyExtractor={item => item.id}
+            ListHeaderComponent={() => (
+              <Box p={2}>
+                <Sans size="3" color="black">
+                  Browse
+                </Sans>
+                <Sans size="2" color="gray">
+                  Viewing all categories
+                </Sans>
+              </Box>
+            )}
             renderItem={(item, i) => renderItem(item, i, navigation)}
             numColumns={2}
             onEndReached={() => {
@@ -161,11 +168,6 @@ export const Browse = (props: any) => {
     </Container>
   )
 }
-
-const ImageContainer = styled(FadeInImage)`
-  width: 100%;
-  height: 240;
-`
 
 const SearchBar = styled.TextInput`
   background-color: #f2f2f2;
