@@ -6,6 +6,7 @@ import { FlatList } from "react-native"
 import { color } from "App/Utils"
 import { DateTime } from "luxon"
 import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
+import { Loader } from "App/Components/Loader"
 
 const GET_PREFERENCES = gql`
   query getUser {
@@ -187,7 +188,7 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
   }, [data])
 
   if (loading) {
-    return null
+    return <Loader />
   }
 
   if (error) {

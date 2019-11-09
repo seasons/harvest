@@ -5,6 +5,7 @@ import gql from "graphql-tag"
 import { useQuery } from "react-apollo"
 import { get } from "lodash"
 import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
+import { Loader } from "App/Components/Loader"
 
 const GET_MEMBERSHIP_INFO = gql`
   query getMembershipInfo {
@@ -24,7 +25,7 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
   const { loading, error, data } = useQuery(GET_MEMBERSHIP_INFO)
 
   if (loading) {
-    return null
+    return <Loader />
   }
 
   if (error) {

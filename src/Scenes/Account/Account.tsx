@@ -31,6 +31,10 @@ export function Account(props) {
   const { loading, error, data } = useQuery(GET_USER)
   const insets = useSafeArea()
 
+  if (loading) {
+    return <Loader />
+  }
+
   const {
     me: {
       customer: {

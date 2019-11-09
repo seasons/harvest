@@ -11,6 +11,7 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { setVariant } from "App/Redux/actions"
 import { GET_PRODUCT } from "App/Apollo/Queries"
+import { Loader } from "App/Components/Loader"
 
 const screenHeight = Math.round(Dimensions.get("window").height)
 
@@ -26,8 +27,9 @@ export const ProductComponent = props => {
   const { productState } = props
 
   if (loading || !data) {
-    return null
+    return <Loader />
   }
+
   if (error) {
     console.error("error: ", error)
   }

@@ -7,6 +7,7 @@ import { useQuery } from "react-apollo"
 import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import gql from "graphql-tag"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
+import { Loader } from "App/Components/Loader"
 
 const GET_PAYMENT_DATA = gql`
   query getUser {
@@ -67,7 +68,7 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
   }, [data])
 
   if (loading) {
-    return null
+    return <Loader />
   }
 
   const renderItem = item => {
