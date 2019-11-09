@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { ErrorPopUp, Theme, Sans, TextInput, Box, Spacer, Button, Flex } from "App/Components"
+import { ErrorPopUp, Theme, Sans, TextInput, Box, Spacer, Button, Flex, Container } from "App/Components"
 import { Text } from "Components/Typography"
 import { Keyboard, SafeAreaView, TouchableWithoutFeedback } from "react-native"
 import { useMutation } from "react-apollo"
@@ -80,8 +80,8 @@ export const LogIn: React.FC<LogInProps> = props => {
   const disabled = !(emailComplete && password.length)
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color("black") }}>
-      <Theme>
+    <Container>
+      <>
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
           <Box p={2} mt={6}>
             <Sans color="white" size="3">
@@ -140,7 +140,7 @@ export const LogIn: React.FC<LogInProps> = props => {
           show={showError}
           onClose={() => setShowError(false)}
         />
-      </Theme>
-    </SafeAreaView>
+      </>
+    </Container>
   )
 }

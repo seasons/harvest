@@ -60,12 +60,12 @@ export function Account(props) {
           <Box p={2} mt={insets.top}>
             <Flex>
               <Box mb={5} />
-              {firstName && lastName && (
+              {!!firstName && !!lastName && (
                 <Sans size="3" color="black">
                   {`${firstName} ${lastName}`}
                 </Sans>
               )}
-              {city && state && (
+              {!!city && !!state && (
                 <Sans size="2" color="gray">
                   {`${city}, ${state}`}
                 </Sans>
