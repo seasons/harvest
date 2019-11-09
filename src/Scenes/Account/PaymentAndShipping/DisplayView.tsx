@@ -3,6 +3,9 @@ import { Box, Sans, Separator, Spacer } from "App/Components"
 import gql from "graphql-tag"
 import { useQuery } from "react-apollo"
 import { Loader } from "App/Components/Loader"
+import { ScrollView } from "react-native"
+import { FixedBackArrow } from "App/Components/FixedBackArrow"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_BILLING_INFO = gql`
   {
@@ -38,6 +41,7 @@ const GET_BILLING_INFO = gql`
 `
 
 export const DisplayView = props => {
+  const insets = useSafeArea()
   const { data, loading } = useQuery(GET_BILLING_INFO)
 
   if (loading) {
@@ -82,22 +86,31 @@ export const DisplayView = props => {
   }
 
   return (
-    <>
-      {sections.map(section => {
-        return (
-          <Box mb={4} key={section.title}>
-            <Sans size="2">{section.title}</Sans>
-            <Spacer mb={2} />
-            <Separator />
-            <Spacer mb={2} />
-            {section.textLines.map((string, index) => (
-              <Sans color="gray" size="2" key={section.title + index}>
-                {string}
-              </Sans>
-            ))}
-          </Box>
-        )
-      })}
-    </>
+    <ScrollView style={{ flex: 1, marginTop: insets.top }}>
+      <FixedBackArrow navigation={props.navigation} />
+      <Box px={2}>
+        <Spacer mb={80} />
+        <Sans size="3">Payment & Shipping</Sans>
+        <Spacer mb={3} />
+      </Box>
+
+      <Box p={2}>
+        {sections.map(section => {
+          return (
+            <Box mb={4} key={section.title}>
+              <Sans size="2">{section.title}</Sans>
+              <Spacer mb={2} />
+              <Separator />
+              <Spacer mb={2} />
+              {section.textLines.map((string, index) => (
+                <Sans color="gray" size="2" key={section.title + index}>
+                  {string}
+                </Sans>
+              ))}
+            </Box>
+          )
+        })}
+      </Box>
+    </ScrollView>
   )
 }

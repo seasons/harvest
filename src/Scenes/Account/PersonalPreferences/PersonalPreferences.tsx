@@ -6,6 +6,7 @@ import { FlatList } from "react-native"
 import { color } from "App/Utils"
 import { DateTime } from "luxon"
 import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_PREFERENCES = gql`
   query getUser {
@@ -62,6 +63,7 @@ const AccountSection: React.FC<{ title: string; value: string }> = ({ title, val
 export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
   navigation,
 }) => {
+  const insets = useSafeArea()
   const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_PREFERENCES)
 
@@ -193,7 +195,7 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
 
   return (
     <Container>
-      <>
+      <Box mt={insets.top}>
         <FixedBackArrow navigation={navigation} />
         <FlatList
           data={sections}
@@ -207,7 +209,7 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
           keyExtractor={item => item.title}
           renderItem={({ item }) => renderItem(item)}
         />
-      </>
+      </Box>
     </Container>
   )
 }
