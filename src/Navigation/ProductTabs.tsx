@@ -11,6 +11,7 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
 import { SizePicker } from "./SizePicker"
+import gql from "graphql-tag"
 
 export const ProductTabsComponent = props => {
   const { displayConfirmation, productState, setVariant, toggleShowSizeSelection, productID, navigation } = props
@@ -37,7 +38,13 @@ export const ProductTabsComponent = props => {
   }
 
   const handleSaveButton = () => {
-    // FIXME: Handle handleSaveButton
+    const SAVE_ITEM = gql`
+      mutation SaveItem($item: ID!, $options: ReserveItemsOptions) {
+        saveItem(items: $item, options: $options) {
+          id
+        }
+      }
+    `
   }
 
   return (

@@ -1,7 +1,5 @@
-import { Box, Container, Sans, Separator, Spacer, FixedBackArrow } from "App/Components"
+import { Box, Container, Sans, Spacer, FixedBackArrow } from "App/Components"
 import React, { useState, useEffect } from "react"
-import { space } from "App/Utils"
-import styled from "styled-components/native"
 import { FlatList } from "react-native"
 import { useQuery } from "react-apollo"
 import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
@@ -26,6 +24,18 @@ const GET_PAYMENT_DATA = gql`
           }
         }
       }
+      activeReservation {
+        customer {
+          billingInfo {
+            last_digits
+            street1
+            street2
+            city
+            state
+            postal_code
+          }
+        }
+      }
     }
   }
 `
@@ -44,6 +54,20 @@ export const createShippingAddress = shippingAddress => {
   return addressArray
 }
 
+export const createBillingAddress = billingInfo => {
+  const addressArray = []
+  if (billingInfo.street1) {
+    addressArray.push(billingInfo.address1)
+  }
+  if (billingInfo.street2) {
+    addressArray.push(billingInfo.address2)
+  }
+  if (billingInfo.city && billingInfo.state && billingInfo.zipCode) {
+    addressArray.push(`${billingInfo.city}, ${billingInfo.state}, ${billingInfo.postal_code}`)
+  }
+  return addressArray
+}
+
 export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
   navigation,
 }) => {
@@ -51,15 +75,29 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
 
   useEffect(() => {
-    if (data && data.me && data.me.customer && data.me.customer.detail) {
+    if (data && data.me && data.me.customer) {
       const sectionsArray = []
       const details = data.me.customer.detail
+      const activeReservation = data.me.activeReservation
 
-      if (details.shippingAddress) {
+      if (details && details.shippingAddress) {
         sectionsArray.push({ title: "Shipping address", value: createShippingAddress(details.shippingAddress) })
       }
 
-      if (details.phoneNumber) {
+      if (activeReservation && activeReservation.customer && activeReservation.customer.billingInfo) {
+        sectionsArray.push({
+          title: "Billing address",
+          value: createBillingAddress(activeReservation.customer.billingInfo),
+        })
+
+        if (activeReservation.customer.billingInfo.last_digits)
+          sectionsArray.push({
+            title: "Payment info",
+            value: activeReservation.customer.billingInfo.last_digits,
+          })
+      }
+
+      if (details && details.phoneNumber) {
         sectionsArray.push({ title: "Phone number", value: details.phoneNumber })
       }
 
@@ -68,6 +106,11 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
   }, [data])
 
   if (loading) {
+    return <Loader />
+  }
+
+  if (error) {
+    console.log("error PaymentAndShipping.tsx: ", error)
     return <Loader />
   }
 
@@ -95,8 +138,3 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
     </Container>
   )
 }
-
-const FixedButtonWrapper = styled(Box)`
-  position: absolute;
-  bottom: ${space(1)};
-`

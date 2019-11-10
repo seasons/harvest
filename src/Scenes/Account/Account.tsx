@@ -35,6 +35,8 @@ export function Account(props) {
     return <Loader />
   }
 
+  console.log("data", data)
+
   const {
     me: {
       customer: {
