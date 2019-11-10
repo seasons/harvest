@@ -38,6 +38,7 @@ export const ProductTabsComponent = props => {
   }
 
   const handleSaveButton = () => {
+    // FIXME: Handle save
     const SAVE_ITEM = gql`
       mutation SaveItem($item: ID!, $options: ReserveItemsOptions) {
         saveItem(items: $item, options: $options) {
