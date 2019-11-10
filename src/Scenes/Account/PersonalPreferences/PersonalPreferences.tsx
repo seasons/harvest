@@ -207,7 +207,7 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
         <FlatList
           data={sections}
           ListHeaderComponent={() => (
-            <Box px={2}>
+            <Box px={2} mt={4}>
               <Spacer mb={80} />
               <Sans size="3">Personal preferences</Sans>
               <Spacer mb={3} />

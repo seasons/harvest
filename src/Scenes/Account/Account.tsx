@@ -4,9 +4,11 @@ import { ProfileList } from "./ProfileList"
 import React from "react"
 import { ScrollView, TouchableOpacity } from "react-native"
 import { useQuery } from "react-apollo"
+import * as Animatable from "react-native-animatable"
 import gql from "graphql-tag"
 import AsyncStorage from "@react-native-community/async-storage"
 import { useSafeArea } from "react-native-safe-area-context"
+import { Loader } from "App/Components/Loader"
 
 const GET_USER = gql`
   query getUser {
@@ -96,30 +98,24 @@ export function Account(props) {
             <Box py={2}>
               <Sans size="2">Support</Sans>
             </Box>
-            <Toggle />
-          </Flex>
-          <Spacer m={2} />
-          <Separator />
-          <Box py={2}>
-            <Sans size="2">Support</Sans>
-          </Box>
-          <Box py={2}>
-            <Sans size="2">Privacy Policy & Terms of Service</Sans>
-          </Box>
-          <TouchableOpacity
-            onPress={async () => {
-              await AsyncStorage.removeItem("userSession")
-              props.navigation.navigate("Auth")
-            }}
-          >
             <Box py={2}>
-              <Sans size="2" color="red">
-                Sign out
-              </Sans>
+              <Sans size="2">Privacy Policy & Terms of Service</Sans>
             </Box>
-          </TouchableOpacity>
-        </Box>
-      </ScrollView>
+            <TouchableOpacity
+              onPress={async () => {
+                await AsyncStorage.removeItem("userSession")
+                props.navigation.navigate("Auth")
+              }}
+            >
+              <Box py={2}>
+                <Sans size="2" color="red">
+                  Sign out
+                </Sans>
+              </Box>
+            </TouchableOpacity>
+          </Box>
+        </ScrollView>
+      </Animatable.View>
     </Container>
   )
 }

@@ -1,4 +1,4 @@
-import { Box, Container, Sans, Spacer, FixedBackArrow } from "App/Components"
+import { Box, Container, Sans, Spacer, FixedBackArrow, Flex } from "App/Components"
 import React, { useState, useEffect } from "react"
 import { FlatList } from "react-native"
 import { useQuery } from "react-apollo"
@@ -120,12 +120,12 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
 
   return (
     <Container>
-      <>
+      <Flex style={{ flex: 1 }}>
         <FixedBackArrow navigation={navigation} />
         <FlatList
           data={sections}
           ListHeaderComponent={() => (
-            <Box px={2}>
+            <Box px={2} mt={4}>
               <Spacer mb={80} />
               <Sans size="3">Payment & Shipping</Sans>
               <Spacer mb={3} />
@@ -134,7 +134,7 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
           keyExtractor={item => item.title}
           renderItem={({ item }) => renderItem(item)}
         />
-      </>
+      </Flex>
     </Container>
   )
 }
