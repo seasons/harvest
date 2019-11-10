@@ -9,11 +9,14 @@ import { Loader } from "App/Components/Loader"
 
 const GET_MEMBERSHIP_INFO = gql`
   query getMembershipInfo {
-    membershipInfo {
-      results {
-        type
-        price
-        whatsIncluded
+    me {
+      activeReservation {
+        customer {
+          planInfo {
+            whatsIncluded
+            price
+          }
+        }
       }
     }
   }
@@ -33,7 +36,7 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
     return null
   }
 
-  const results = get(data, "membershipInfo.results[0]")
+  const results = get(data, "me.customer.activeRegistration.customer.planInfo")
 
   return (
     <Container>
