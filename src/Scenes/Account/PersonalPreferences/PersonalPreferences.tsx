@@ -6,6 +6,7 @@ import { FlatList } from "react-native"
 import { color } from "App/Utils"
 import { DateTime } from "luxon"
 import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
+import { Loader } from "App/Components/Loader"
 
 const GET_PREFERENCES = gql`
   query getUser {
@@ -44,16 +45,24 @@ const GET_PREFERENCES = gql`
   }
 `
 
-const AccountSection: React.FC<{ title: string; value: string }> = ({ title, value }) => {
+export const AccountSection: React.FC<{ title: string; value: string | [string] }> = ({ title, value }) => {
   return (
     <Box key={title} px={2}>
       <Sans size="2">{title}</Sans>
       <Box mb={1} />
       <Separator color={color("gray")} />
       <Box mb={1} />
-      <Sans size="2" color="gray">
-        {value}
-      </Sans>
+      {Array.isArray(value) ? (
+        value.map(text => (
+          <Sans key={text} size="2" color="gray">
+            {text}
+          </Sans>
+        ))
+      ) : (
+        <Sans size="2" color="gray">
+          {value}
+        </Sans>
+      )}
       <Spacer mb={2} />
     </Box>
   )
@@ -179,7 +188,7 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
   }, [data])
 
   if (loading) {
-    return null
+    return <Loader />
   }
 
   if (error) {
@@ -198,7 +207,7 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
         <FlatList
           data={sections}
           ListHeaderComponent={() => (
-            <Box px={2}>
+            <Box px={2} mt={4}>
               <Spacer mb={80} />
               <Sans size="3">Personal preferences</Sans>
               <Spacer mb={3} />

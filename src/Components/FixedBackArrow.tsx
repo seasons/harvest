@@ -17,7 +17,7 @@ export const FixedBackArrow = ({ navigation }) => {
 
 const Wrapper = styled(Box)`
   position: absolute;
-  top: 20;
+  top: 50;
   left: 20;
   z-index: 100;
 `

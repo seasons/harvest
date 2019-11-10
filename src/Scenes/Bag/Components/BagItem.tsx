@@ -7,6 +7,7 @@ import { get } from "lodash"
 import styled from "styled-components/native"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
+import { Loader } from "App/Components/Loader"
 
 const GET_PRODUCT = gql`
   query GetProduct($productId: ID!) {
@@ -30,7 +31,7 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
   })
 
   if (loading || !data) {
-    return null
+    return <Loader />
   }
 
   if (error) {
