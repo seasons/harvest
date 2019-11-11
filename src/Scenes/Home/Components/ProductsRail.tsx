@@ -37,12 +37,13 @@ export const ProductsRail: React.FC<ProductsRailProps> = ({ items, title, naviga
         <FlatList
           data={items}
           renderItem={({ item, index }) => {
+            console.log("item", item)
             const image = item.images && item.images.length && item.images[0]
             return (
               <Animatable.View animation="fadeIn" duration={300}>
                 <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: item.id })}>
                   <Box mr={2}>
-                    <ImageContainer source={{ uri: image.imageUrl }}></ImageContainer>
+                    <ImageContainer source={{ uri: image.url }}></ImageContainer>
                   </Box>
                 </TouchableWithoutFeedback>
                 {index === items.length - 1 ? <Spacer mr={negativeSpace} /> : null}

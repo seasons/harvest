@@ -40,11 +40,6 @@ const GET_HOMEPAGE = gql`
             title
             subTitle
           }
-          ... on Brand {
-            id
-            logo
-            brandCode
-          }
           ... on Product {
             id
             images
@@ -89,6 +84,8 @@ export const HomeComponent = (props: any) => {
     return <Loader />
   }
 
+  console.log("data", data)
+
   if (error) {
     console.error("error /home/index.tsx: ", error)
   }
@@ -103,6 +100,7 @@ export const HomeComponent = (props: any) => {
       case "Brands":
         return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
       case "Products":
+      case "HomepageProductRails":
         return <ProductsRail title={item.title} navigation={navigation} items={item.results} />
     }
   }
