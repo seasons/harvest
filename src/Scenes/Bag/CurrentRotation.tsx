@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
 import { Spacer, Box } from "App/Components"
@@ -11,7 +11,6 @@ import gql from "graphql-tag"
 import { get } from "lodash"
 import { DateTime } from "luxon"
 import { Loader } from "App/Components/Loader"
-import { StackActions, NavigationActions } from "react-navigation"
 import { Bag } from "./Bag"
 
 const ACTIVE_RESERVATION = gql`
@@ -45,21 +44,11 @@ const ACTIVE_RESERVATION = gql`
 
 export const CurrentRotation = props => {
   const { data, loading } = useQuery(ACTIVE_RESERVATION)
-  const [showLoader, toggleLoader] = useState(true)
   const insets = useSafeArea()
 
-  useEffect(() => {
-    setTimeout(() => {
-      toggleLoader(loading)
-    }, 500)
-  }, [loading])
-
-  if (showLoader) {
-    // Show loading screen
+  if (loading) {
     return <Loader />
   }
-
-  console.log(data)
 
   const activeReservation = get(data, "me.activeReservation", null)
   const returnDate = !!activeReservation

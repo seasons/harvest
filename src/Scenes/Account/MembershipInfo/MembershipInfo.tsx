@@ -27,9 +27,11 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
 }) => {
   const { loading, error, data } = useQuery(GET_MEMBERSHIP_INFO)
 
-  if (loading) {
+  if (loading || (data && !data.activeReservation)) {
     return <Loader />
   }
+
+  console.log("data", data)
 
   if (error) {
     console.log("error MembershipInfo.tsx: ", error)
