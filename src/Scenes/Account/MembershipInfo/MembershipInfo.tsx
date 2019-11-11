@@ -1,22 +1,17 @@
-import React from "react"
-import { Sans, Box, Separator, Spacer, Container, FixedBackArrow } from "App/Components"
-import { ScrollView } from "react-native"
-import gql from "graphql-tag"
-import { useQuery } from "react-apollo"
-import { get } from "lodash"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
+import { Box, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import gql from "graphql-tag"
+import { get } from "lodash"
+import React from "react"
+import { useQuery } from "react-apollo"
+import { ScrollView } from "react-native"
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 
 const GET_MEMBERSHIP_INFO = gql`
   query getMembershipInfo {
     me {
-      activeReservation {
-        customer {
-          planInfo {
-            whatsIncluded
-            price
-          }
-        }
+      customer {
+        plan
       }
     }
   }
@@ -26,6 +21,7 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
   navigation,
 }) => {
   const { loading, error, data } = useQuery(GET_MEMBERSHIP_INFO)
+  console.log(data)
 
   if (loading || (data && !data.activeReservation)) {
     return <Loader />
