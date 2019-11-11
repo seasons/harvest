@@ -1,4 +1,4 @@
-import { Box } from "App/Components"
+import { Box, Flex, Spacer } from "App/Components"
 import { CategoriesRail } from "./Components/CategoriesRail"
 import { Container } from "Components/Container"
 import { FlatList } from "react-native"
@@ -16,6 +16,7 @@ import styled from "styled-components/native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Loader } from "App/Components/Loader"
+import { SeasonsLogoSVG } from "Assets/svgs"
 
 const GET_HOMEPAGE = gql`
   query Homepage {
@@ -110,7 +111,11 @@ export const HomeComponent = (props: any) => {
           <WhiteBackground />
           <BlackBackground />
           <Box p={2} style={{ backgroundColor: color("white") }}>
-            <LogoText>SEASONS</LogoText>
+            <Flex flexDirection="row" flexWrap="nowrap" alignContent="center">
+              <SeasonsLogoSVG />
+              <Spacer mr={1} />
+              <LogoText>SEASONS</LogoText>
+            </Flex>
           </Box>
           <FlatList
             data={sections}

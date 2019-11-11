@@ -57,6 +57,27 @@ export function Account(props) {
     },
   }
 
+  const renderOrderUpdates = () => {
+    return null
+    // FIXME: When push notifiations, re-enable
+    return (
+      <>
+        <Separator />
+        <Spacer m={2} />
+        <Flex flexDirection="row" justifyContent="space-between">
+          <Box>
+            <Sans size="2">Order updates</Sans>
+            <Sans size="2" color="gray">
+              Send me push notifications
+            </Sans>
+          </Box>
+          <Toggle />
+        </Flex>
+        <Spacer m={2} />
+      </>
+    )
+  }
+
   return (
     <Container>
       <Animatable.View animation="fadeIn" duration={300}>
@@ -80,18 +101,7 @@ export function Account(props) {
             <Spacer m={2} />
             <ProfileList {...props} />
             <Spacer m={2} />
-            <Separator />
-            <Spacer m={2} />
-            <Flex flexDirection="row" justifyContent="space-between">
-              <Box>
-                <Sans size="2">Order updates</Sans>
-                <Sans size="2" color="gray">
-                  Send me push notifications
-                </Sans>
-              </Box>
-              <Toggle />
-            </Flex>
-            <Spacer m={2} />
+            {renderOrderUpdates()}
             <Separator />
             <Box py={2}>
               <Sans size="2">Support</Sans>
