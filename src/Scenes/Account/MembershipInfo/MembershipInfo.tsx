@@ -1,25 +1,48 @@
 import React from "react"
-import { Sans, Box, Theme, Separator, Spacer } from "App/Components"
-import { SafeAreaView } from "react-native"
+import { Sans, Box, Separator, Spacer, Container, FixedBackArrow } from "App/Components"
+import { ScrollView } from "react-native"
 import gql from "graphql-tag"
+import { useQuery } from "react-apollo"
+import { get } from "lodash"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
+import { Loader } from "App/Components/Loader"
 
-const GET_ROLE = gql`
-  query getUser {
+const GET_MEMBERSHIP_INFO = gql`
+  query getMembershipInfo {
     me {
-      customer {
-        user {
-          role
+      activeReservation {
+        customer {
+          planInfo {
+            whatsIncluded
+            price
+          }
         }
       }
     }
   }
 `
 
-export class MembershipInfo extends React.Component {
-  render() {
-    return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <Theme>
+export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
+  navigation,
+}) => {
+  const { loading, error, data } = useQuery(GET_MEMBERSHIP_INFO)
+
+  if (loading || (data && !data.activeReservation)) {
+    return <Loader />
+  }
+
+  if (error) {
+    console.log("error MembershipInfo.tsx: ", error)
+    return null
+  }
+
+  const results = get(data, "me.customer.activeRegistration.customer.planInfo")
+
+  return (
+    <Container>
+      <>
+        <FixedBackArrow navigation={navigation} />
+        <ScrollView>
           <Box mt={6} p={2}>
             <Sans size="3" color="black">
               Membership info
@@ -27,30 +50,33 @@ export class MembershipInfo extends React.Component {
             <Spacer mb={2} />
             <Separator />
             <Spacer mb={6} />
-            <Sans size="4" color="black">
-              $155
-            </Sans>
-            <Sans size="2" color="gray">
-              per month
-            </Sans>
-            <Spacer mb={6} />
-            <Sans size="3">Whats included</Sans>
-            <Spacer mb={2} />
-            <Separator />
-            <Spacer mb={3} />
-            <Sans size="2">4 pieces per month</Sans>
-            <Spacer mb={3} />
-            <Sans size="2">1 rotation every month</Sans>
-            <Spacer mb={3} />
-            <Sans size="2">Free returns & dry cleaning</Sans>
-            <Spacer mb={3} />
-            <Sans size="2">Personalized style recommendations</Sans>
-            <Spacer mb={3} />
-            <Sans size="2">Swap out your pieces early for $60</Sans>
-            <Spacer mb={3} />
+            {!!results.price && (
+              <>
+                <Sans size="4" color="black">
+                  {`$${results.price}`}
+                </Sans>
+                <Sans size="2" color="gray">
+                  per month
+                </Sans>
+              </>
+            )}
+            {!!results.whatsIncluded && (
+              <>
+                <Spacer mb={6} />
+                <Sans size="3">Whats included</Sans>
+                <Spacer mb={2} />
+                <Separator />
+                {results.whatsIncluded.map(text => (
+                  <Box key={text}>
+                    <Spacer mb={3} />
+                    <Sans size="2">{text}</Sans>
+                  </Box>
+                ))}
+              </>
+            )}
           </Box>
-        </Theme>
-      </SafeAreaView>
-    )
-  }
+        </ScrollView>
+      </>
+    </Container>
+  )
 }

@@ -9,6 +9,7 @@ import { imageResize } from "App/helpers/imageResize"
 import { GET_COLLECTION } from "App/Apollo/Queries"
 import { Dimensions } from "react-native"
 import { color } from "App/Utils"
+import { Loader } from "App/Components/Loader"
 
 export const Collection = props => {
   const [sections, setSections] = useState([])
@@ -54,7 +55,7 @@ export const Collection = props => {
   }, [data])
 
   if (loading || !data) {
-    return null
+    return <Loader />
   }
 
   if (error) {

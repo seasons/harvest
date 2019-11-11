@@ -8,7 +8,7 @@ import {
   OrderHistoryIcon,
   ChevronIcon,
 } from "Assets/icons"
-import { TouchableWithoutFeedback } from "react-native"
+import { TouchableOpacity } from "react-native"
 
 const lists = [
   { title: "Membership info", icon: <MembershipInfoIcon />, link: "MembershipInfo" },
@@ -30,7 +30,7 @@ export class ProfileList extends React.Component<any> {
       <Box>
         {lists.map((item, index) => {
           return (
-            <TouchableWithoutFeedback key={item.title} onPress={this.openURL.bind(this, item)}>
+            <TouchableOpacity key={item.title} onPress={this.openURL.bind(this, item)}>
               <Box style={index !== lists.length - 1 ? { marginBottom: 50 } : null}>
                 <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" justifyContent="space-between">
                   <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
@@ -40,7 +40,7 @@ export class ProfileList extends React.Component<any> {
                   <ChevronIcon />
                 </Flex>
               </Box>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           )
         })}
       </Box>

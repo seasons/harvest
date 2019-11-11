@@ -30,6 +30,7 @@ export interface ButtonProps extends BoxProps {
   onPress?: (e) => void
   disabled?: boolean
   showCheckMark?: boolean
+  width?: number
 }
 
 export type ButtonVariant = "primaryLight" | "secondaryLight" | "primaryDark" | "secondaryOutline" | "secondaryDark"
@@ -231,7 +232,13 @@ const Container = styled(Box)<ButtonProps>`
   flex-direction: row;
   border-width: 1;
   border-radius: 28;
-  width: ${p => (p.size === "large" ? "100%" : "auto")};
+  width: ${p => {
+    if (p.width) {
+      return p.width
+    } else {
+      return p.size === "large" ? "100%" : "auto"
+    }
+  }};
 `
 
 const AnimatedContainer = animated(Container)

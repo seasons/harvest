@@ -3,11 +3,10 @@ import { FadeInImage } from "App/Components/FadeInImage"
 import { Loader } from "App/Components/Loader"
 import { imageResize } from "App/helpers/imageResize"
 import { Container } from "Components/Container"
-import { fontFamily } from "Components/Typography"
 import gql from "graphql-tag"
 import get from "lodash/get"
-import React, { useEffect, useRef, useState } from "react"
-import { Dimensions, FlatList, Image, TouchableWithoutFeedback } from "react-native"
+import React, { useEffect, useState } from "react"
+import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
@@ -71,8 +70,7 @@ const renderItem = ({ item }, i, navigation) => {
 }
 
 export const Browse = (props: any) => {
-  const [currentCategory, setCurrentCategory] = useState(props.screenProps.browseFilter || "all")
-  const [showLoader, toggleLoader] = useState(true)
+  const [currentCategory, setCurrentCategory] = useState("all")
   const { data, loading, fetchMore } = useQuery(GET_PRODUCTS, {
     variables: {
       name: currentCategory,
@@ -83,33 +81,29 @@ export const Browse = (props: any) => {
   let scrollViewEl = null
 
   useEffect(() => {
-    setCurrentCategory(props.screenProps.browseFilter)
-  }, [props.screenProps.browseFilter])
-
-  useEffect(() => {
-    if (scrollViewEl) {
-      scrollViewEl.scrollToOffset({ x: 0, y: 0, animated: true })
+    const browseFilter = props && props.screenProps && props.screenProps.browseFilter
+    if (browseFilter && browseFilter !== currentCategory) {
+      setCurrentCategory(props.screenProps.browseFilter)
     }
-  }, [currentCategory])
-
-  useEffect(() => {
-    setTimeout(() => {
-      toggleLoader(loading)
-    }, 500)
-  }, [loading])
+  }, [props.screenProps.browseFilter])
 
   const { navigation } = props
   const products = data && data.products
   const categories = (data && data.categories) || []
   const insets = useSafeArea()
+  const selectedCategory = categories.find(c => c.slug === currentCategory)
 
   const onCategoryPress = item => {
-    setCurrentCategory(item.slug)
+    if (item.slug !== currentCategory) {
+      setCurrentCategory(item.slug)
+    }
   }
 
-  if (showLoader && !data) {
+  if (loading && !data) {
     return <Loader />
   }
+
+  console.log("products", products)
 
   return (
     <Container>
@@ -118,33 +112,38 @@ export const Browse = (props: any) => {
           <FlatList
             data={products}
             ref={ref => (scrollViewEl = ref)}
-            keyExtractor={item => item.id}
+            keyExtractor={(item, index) => item.id + index}
             ListHeaderComponent={() => (
               <Box p={2}>
                 <Sans size="3" color="black">
                   Browse
                 </Sans>
                 <Sans size="2" color="gray">
-                  Viewing all categories
+                  {currentCategory === "all"
+                    ? "Viewing all categories"
+                    : `Viewing by ${selectedCategory.name.toLowerCase()}`}
                 </Sans>
               </Box>
             )}
             renderItem={(item, i) => renderItem(item, i, navigation)}
             numColumns={2}
+            onEndReachedThreshold={0.7}
             onEndReached={() => {
-              fetchMore({
-                variables: {
-                  skip: products.length,
-                },
-                updateQuery: (prev, { fetchMoreResult }) => {
-                  if (!fetchMoreResult) {
-                    return prev
-                  }
-                  return Object.assign({}, prev, {
-                    products: [...prev.products, ...fetchMoreResult.products],
-                  })
-                },
-              })
+              if (!loading) {
+                fetchMore({
+                  variables: {
+                    skip: products.length,
+                  },
+                  updateQuery: (prev, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) {
+                      return prev
+                    }
+                    return Object.assign({}, prev, {
+                      products: [...prev.products, ...fetchMoreResult.products],
+                    })
+                  },
+                })
+              }
             }}
           />
         </Box>
@@ -177,16 +176,6 @@ export const Browse = (props: any) => {
     </Container>
   )
 }
-
-const SearchBar = styled.TextInput`
-  background-color: #f2f2f2;
-  border-radius: 21px;
-  height: 42px;
-  width: 100%;
-  font-family: ${fontFamily.sans.medium};
-  font-size: 16px;
-  text-align: center;
-`
 
 const CategoryPicker = styled.FlatList`
   height: 100%;

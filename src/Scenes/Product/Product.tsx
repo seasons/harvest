@@ -1,5 +1,6 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Theme } from "App/Components"
+import { Loader } from "App/Components/Loader"
 import { setVariant } from "App/Redux/actions"
 import get from "lodash/get"
 import React from "react"
@@ -27,8 +28,9 @@ export const ProductComponent = props => {
   const { productState } = props
 
   if (loading || !data) {
-    return null
+    return <Loader />
   }
+
   if (error) {
     console.error("error: ", error)
   }

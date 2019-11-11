@@ -1,12 +1,12 @@
-import { Container, Sans, Spacer, Box, Separator, FixedBackArrow } from "App/Components"
-import React, { useState, useEffect } from "react"
-import { useQuery } from "react-apollo"
-import gql from "graphql-tag"
-import { FlatList } from "react-native"
+import { Box, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
+import { Loader } from "App/Components/Loader"
 import { color } from "App/Utils"
+import gql from "graphql-tag"
 import { DateTime } from "luxon"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
-import { useSafeArea } from "react-native-safe-area-context"
+import React, { useEffect, useState } from "react"
+import { useQuery } from "react-apollo"
+import { FlatList } from "react-native"
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 
 const GET_PREFERENCES = gql`
   query getUser {
@@ -30,31 +30,30 @@ const GET_PREFERENCES = gql`
           commuteStyle
           preferredPronouns
           averagePantLength
-          shippingAddress {
-            name
-            company
-            address1
-            address2
-            city
-            state
-            zipCode
-          }
         }
       }
     }
   }
 `
 
-const AccountSection: React.FC<{ title: string; value: string }> = ({ title, value }) => {
+export const AccountSection: React.FC<{ title: string; value: string | [string] }> = ({ title, value }) => {
   return (
     <Box key={title} px={2}>
       <Sans size="2">{title}</Sans>
       <Box mb={1} />
       <Separator color={color("gray")} />
       <Box mb={1} />
-      <Sans size="2" color="gray">
-        {value}
-      </Sans>
+      {Array.isArray(value) ? (
+        value.map(text => (
+          <Sans key={text} size="2" color="gray">
+            {text}
+          </Sans>
+        ))
+      ) : (
+        <Sans size="2" color="gray">
+          {value}
+        </Sans>
+      )}
       <Spacer mb={2} />
     </Box>
   )
@@ -143,45 +142,12 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
         sectionsArray.push({ title: "Phone type", value: details.phoneOS })
       }
 
-      // page 3
-
-      if (details.shippingAddress) {
-        const shippingAddress = details.shippingAddress
-        if (shippingAddress.name) {
-          sectionsArray.push({ title: "Full name", value: shippingAddress.name })
-        }
-
-        if (shippingAddress.company) {
-          sectionsArray.push({ title: "Company", value: shippingAddress.company })
-        }
-
-        if (shippingAddress.address1) {
-          sectionsArray.push({ title: "Address", value: shippingAddress.address1 })
-        }
-
-        if (shippingAddress.address2) {
-          sectionsArray.push({ title: "Apt, suite #", value: shippingAddress.address2 })
-        }
-
-        if (shippingAddress.city) {
-          sectionsArray.push({ title: "City", value: shippingAddress.city })
-        }
-
-        if (shippingAddress.state) {
-          sectionsArray.push({ title: "State", value: shippingAddress.state })
-        }
-
-        if (shippingAddress.zipCode) {
-          sectionsArray.push({ title: "Zipcode", value: shippingAddress.zipCode })
-        }
-      }
-
       setSections(sectionsArray)
     }
   }, [data])
 
   if (loading) {
-    return null
+    return <Loader />
   }
 
   if (error) {
@@ -200,7 +166,7 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
         <FlatList
           data={sections}
           ListHeaderComponent={() => (
-            <Box px={2}>
+            <Box px={2} mt={4}>
               <Spacer mb={80} />
               <Sans size="3">Personal preferences</Sans>
               <Spacer mb={3} />

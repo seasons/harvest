@@ -1,4 +1,4 @@
-import { Box } from "App/Components"
+import { Box, Flex, Spacer } from "App/Components"
 import { CategoriesRail } from "./Components/CategoriesRail"
 import { Container } from "Components/Container"
 import { FlatList } from "react-native"
@@ -16,6 +16,7 @@ import styled from "styled-components/native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Loader } from "App/Components/Loader"
+import { SeasonsLogoSVG } from "Assets/svgs"
 
 const GET_HOMEPAGE = gql`
   query Homepage {
@@ -39,11 +40,6 @@ const GET_HOMEPAGE = gql`
             images
             title
             subTitle
-          }
-          ... on Brand {
-            id
-            logo
-            brandCode
           }
           ... on Product {
             id
@@ -103,6 +99,7 @@ export const HomeComponent = (props: any) => {
       case "Brands":
         return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
       case "Products":
+      case "HomepageProductRails":
         return <ProductsRail title={item.title} navigation={navigation} items={item.results} />
     }
   }
@@ -114,7 +111,11 @@ export const HomeComponent = (props: any) => {
           <WhiteBackground />
           <BlackBackground />
           <Box p={2} style={{ backgroundColor: color("white") }}>
-            <LogoText>SEASONS</LogoText>
+            <Flex flexDirection="row" flexWrap="nowrap" alignContent="center">
+              <SeasonsLogoSVG />
+              <Spacer mr={1} />
+              <LogoText>SEASONS</LogoText>
+            </Flex>
           </Box>
           <FlatList
             data={sections}
@@ -141,7 +142,7 @@ export const HomeComponent = (props: any) => {
 
 const BlackBackground = styled(Box)`
   background-color: ${color("black")};
-  height: 50%;
+  height: 60%;
   bottom: 0;
   left: 0;
   right: 0;
@@ -164,5 +165,3 @@ const mapStateToProps = state => {
 }
 
 export const Home = connect(mapStateToProps)(HomeComponent)
-
-// postgres://mtbiihcqbrfjiu:b96b56ff6e890953a3e2964edb921cac53320d78e31653abae9490dcfba66a0a@ec2-174-129-218-200.compute-1.amazonaws.com:5432/d3h716dmvtgnrr

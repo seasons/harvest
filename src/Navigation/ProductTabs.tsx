@@ -11,10 +11,11 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
 import { SizePicker } from "./SizePicker"
+import gql from "graphql-tag"
 
 export const ProductTabsComponent = props => {
   const { displayConfirmation, productState, setVariant, toggleShowSizeSelection, productID, navigation } = props
-  const { variant, displayReserveConfirmation, showSizeSelection } = productState
+  const { variant, showSizeSelection } = productState
 
   if (!productID) {
     return null
@@ -37,9 +38,15 @@ export const ProductTabsComponent = props => {
   }
 
   const handleSaveButton = () => {
-    // FIXME: Handle handleSaveButton
+    // FIXME: Handle save
+    const SAVE_ITEM = gql`
+      mutation SaveItem($item: ID!, $options: ReserveItemsOptions) {
+        saveItem(items: $item, options: $options) {
+          id
+        }
+      }
+    `
   }
-
   return (
     <>
       <Flex style={{ backgroundColor: color("black") }}>
@@ -63,7 +70,7 @@ export const ProductTabsComponent = props => {
                 {variant.abbreviated.toUpperCase()}
               </StyledSans>
               <Spacer mr={3} />
-              <StyledDownChevronIcon rotate={displayReserveConfirmation} />
+              <StyledDownChevronIcon rotate={showSizeSelection} />
             </SizeSelectionButton>
           </TouchableOpacity>
           <Flex flexDirection="row">

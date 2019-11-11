@@ -31,7 +31,7 @@ export const ProductsRail: React.FC<ProductsRailProps> = ({ items, title, naviga
 
   const negativeSpace = Math.round(Dimensions.get("window").width) - (cardWidth + 10)
   return (
-    <Box mb={3} pl={2} style={{ position: "relative" }}>
+    <Box mb={40} pl={2} style={{ position: "relative" }}>
       <Sans size="2">{title}</Sans>
       <Box mt={2}>
         <FlatList
@@ -42,7 +42,7 @@ export const ProductsRail: React.FC<ProductsRailProps> = ({ items, title, naviga
               <Animatable.View animation="fadeIn" duration={300}>
                 <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: item.id })}>
                   <Box mr={2}>
-                    <ImageContainer source={{ uri: image.imageUrl }}></ImageContainer>
+                    <ImageContainer source={{ uri: image.url }}></ImageContainer>
                   </Box>
                 </TouchableWithoutFeedback>
                 {index === items.length - 1 ? <Spacer mr={negativeSpace} /> : null}

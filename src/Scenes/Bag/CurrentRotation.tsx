@@ -5,7 +5,6 @@ import { Sans } from "Components/Typography"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import { DateTime } from "luxon"
-import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
@@ -45,21 +44,11 @@ const ACTIVE_RESERVATION = gql`
 
 export const CurrentRotation = props => {
   const { data, loading } = useQuery(ACTIVE_RESERVATION)
-  const [showLoader, toggleLoader] = useState(true)
   const insets = useSafeArea()
 
-  useEffect(() => {
-    setTimeout(() => {
-      toggleLoader(loading)
-    }, 500)
-  }, [loading])
-
-  if (showLoader) {
-    // Show loading screen
+  if (loading) {
     return <Loader />
   }
-
-  console.log(data)
 
   const activeReservation = get(data, "me.activeReservation", null)
   const returnDate = !!activeReservation
