@@ -86,31 +86,33 @@ export const DisplayView = props => {
   }
 
   return (
-    <ScrollView style={{ flex: 1, marginTop: insets.top }}>
+    <Box flex={1} mt={insets.top}>
       <FixedBackArrow navigation={props.navigation} />
-      <Box px={2}>
-        <Spacer mb={80} />
-        <Sans size="3">Payment & Shipping</Sans>
-        <Spacer mb={3} />
-      </Box>
+      <ScrollView style={{ flex: 1, marginTop: insets.top }}>
+        <Box px={2}>
+          <Spacer mb={80} />
+          <Sans size="3">Payment & Shipping</Sans>
+          <Spacer mb={3} />
+        </Box>
 
-      <Box p={2}>
-        {sections.map(section => {
-          return (
-            <Box mb={4} key={section.title}>
-              <Sans size="2">{section.title}</Sans>
-              <Spacer mb={2} />
-              <Separator />
-              <Spacer mb={2} />
-              {section.textLines.map((string, index) => (
-                <Sans color="gray" size="2" key={section.title + index}>
-                  {string}
-                </Sans>
-              ))}
-            </Box>
-          )
-        })}
-      </Box>
-    </ScrollView>
+        <Box p={2}>
+          {sections.map(section => {
+            return (
+              <Box mb={4} key={section.title}>
+                <Sans size="2">{section.title}</Sans>
+                <Spacer mb={2} />
+                <Separator />
+                <Spacer mb={2} />
+                {section.textLines.map((string, index) => (
+                  <Sans color="gray" size="2" key={section.title + index}>
+                    {string}
+                  </Sans>
+                ))}
+              </Box>
+            )
+          })}
+        </Box>
+      </ScrollView>
+    </Box>
   )
 }

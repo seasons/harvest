@@ -27,18 +27,16 @@ export class PaymentAndShipping extends React.Component<Props, State> {
     const { renderEditView } = this.state
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <Theme>
-          <Flex style={{ flex: 1 }}>
-            {renderEditView ? <EditView {...this.props} /> : <DisplayView {...this.props} />}
-            <FixedButtonWrapper px={2}>
-              <Button variant={renderEditView ? "primaryDark" : "secondaryDark"} onPress={() => this.toggleView()}>
-                {renderEditView ? "Done" : "Edit"}
-              </Button>
-            </FixedButtonWrapper>
-          </Flex>
-        </Theme>
-      </SafeAreaView>
+      <Theme>
+        <Flex style={{ flex: 1 }}>
+          {renderEditView ? <EditView {...this.props} /> : <DisplayView {...this.props} />}
+          <FixedButtonWrapper px={2}>
+            <Button variant={renderEditView ? "primaryDark" : "secondaryDark"} onPress={() => this.toggleView()}>
+              {renderEditView ? "Done" : "Edit"}
+            </Button>
+          </FixedButtonWrapper>
+        </Flex>
+      </Theme>
     )
   }
 }

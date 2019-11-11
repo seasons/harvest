@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react"
+import { Box, Spacer } from "App/Components"
+import { Loader } from "App/Components/Loader"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
-import { Spacer, Box } from "App/Components"
-import { FlatList } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
-import { CurrentRotationItem } from "./Components/CurrentRotationItem"
-import * as Animatable from "react-native-animatable"
-import { useQuery } from "react-apollo"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import { DateTime } from "luxon"
-import { Loader } from "App/Components/Loader"
-import { StackActions, NavigationActions } from "react-navigation"
+import React, { useEffect, useState } from "react"
+import { useQuery } from "react-apollo"
+import { FlatList } from "react-native"
+import * as Animatable from "react-native-animatable"
+import { useSafeArea } from "react-native-safe-area-context"
+
 import { Bag } from "./Bag"
+import { CurrentRotationItem } from "./Components/CurrentRotationItem"
 
 const ACTIVE_RESERVATION = gql`
   {
@@ -90,7 +90,7 @@ export const CurrentRotation = props => {
             <FlatList
               data={activeReservation ? activeReservation.products : []}
               ListHeaderComponent={() => (
-                <Box p={3}>
+                <Box p={2}>
                   <Sans size="3" color="black">
                     Current Rotation
                   </Sans>

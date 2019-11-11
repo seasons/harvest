@@ -1,16 +1,17 @@
-import React from "react"
-
-import get from "lodash/get"
-import { useQuery } from "@apollo/react-hooks"
+import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Theme } from "App/Components"
-import { FlatList, SafeAreaView, Dimensions } from "react-native"
-import { ImageRail, ProductDetails, MoreLikeThis, AboutTheBrand } from "./Components"
-import styled from "styled-components/native"
+import { setVariant } from "App/Redux/actions"
+import get from "lodash/get"
+import React from "react"
+import { Dimensions, FlatList, SafeAreaView } from "react-native"
+import { connect } from "react-redux"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import { bindActionCreators } from "redux"
-import { connect } from "react-redux"
-import { setVariant } from "App/Redux/actions"
-import { GET_PRODUCT } from "App/Apollo/Queries"
+import styled from "styled-components/native"
+
+import { useQuery } from "@apollo/react-hooks"
+
+import { AboutTheBrand, ImageRail, MoreLikeThis, ProductDetails } from "./Components"
 
 const screenHeight = Math.round(Dimensions.get("window").height)
 
@@ -48,7 +49,7 @@ export const ProductComponent = props => {
     }
   }
 
-  const sections = ["imageRail", "productDetails", "moreLikeThis", "aboutTheBrand"]
+  const sections = ["imageRail", "productDetails", "aboutTheBrand"]
 
   return (
     <Theme>

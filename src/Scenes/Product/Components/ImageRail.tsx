@@ -1,8 +1,9 @@
-import React from "react"
 import { Box } from "App/Components"
-import { FlatList } from "react-native"
-import { styled } from "App/Components/platform/primitives"
+import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
+import React from "react"
+import { FlatList } from "react-native"
+import styled from "styled-components/native"
 
 export const ImageRail = ({ images }) => {
   return (
@@ -28,7 +29,7 @@ export const ImageRail = ({ images }) => {
   )
 }
 
-const ImageContainer = styled.Image`
+const ImageContainer = styled(FadeInImage)`
   background: rgba(0, 0, 0, 0.3);
   height: 360;
   width: 240;

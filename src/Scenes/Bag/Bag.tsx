@@ -1,21 +1,21 @@
-import React, { useState } from "react"
+import { Box, ErrorPopUp, FixedButton, Flex, Separator, Spacer } from "App/Components"
+import { removeItemFromBag } from "App/Redux/actions"
+import { BAG_NUM_ITEMS } from "App/Redux/reducer"
+import { color } from "App/Utils"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
-import { EmptyState } from "./Components"
-import { Spacer, Flex, Box, Separator, FixedButton, ErrorPopUp } from "App/Components"
+import gql from "graphql-tag"
+import React, { useState } from "react"
+import { useMutation } from "react-apollo"
+import { FlatList, TouchableWithoutFeedback } from "react-native"
 import * as Animatable from "react-native-animatable"
-import { FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { TouchableWithoutFeedback } from "react-native"
-import { color } from "App/Utils"
-import { BagPlus } from "../../../assets/svgs"
-import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import { removeItemFromBag } from "App/Redux/actions"
+
+import { BagPlus } from "../../../assets/svgs"
+import { EmptyState } from "./Components"
 import { BagItem } from "./Components/BagItem"
-import { useMutation } from "react-apollo"
-import gql from "graphql-tag"
 
 const SECTION_HEIGHT = 200
 
@@ -134,7 +134,7 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
               )}
               keyExtractor={(_item, index) => String(index)}
               renderItem={item => renderItem(item)}
-              ListFooterComponent={() => <Spacer mb={40} />}
+              ListFooterComponent={() => <Spacer mb={80} />}
             />
             <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
               <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>

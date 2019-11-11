@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react"
-import { FlatList, Dimensions, TouchableWithoutFeedback, Image } from "react-native"
-import { Container } from "Components/Container"
-import gql from "graphql-tag"
-import { useQuery } from "@apollo/react-hooks"
-import { Box, Sans, Flex } from "App/Components"
-import styled from "styled-components/native"
-import { fontFamily } from "Components/Typography"
-import { TouchableOpacity } from "react-native-gesture-handler"
-import { imageResize } from "App/helpers/imageResize"
-import get from "lodash/get"
+import { Box, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { useSafeArea } from "react-native-safe-area-context"
 import { Loader } from "App/Components/Loader"
+import { imageResize } from "App/helpers/imageResize"
+import { Container } from "Components/Container"
+import { fontFamily } from "Components/Typography"
+import gql from "graphql-tag"
+import get from "lodash/get"
+import React, { useEffect, useRef, useState } from "react"
+import { Dimensions, FlatList, Image, TouchableWithoutFeedback } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { useSafeArea } from "react-native-safe-area-context"
+import styled from "styled-components/native"
+
+import { useQuery } from "@apollo/react-hooks"
 
 const GET_PRODUCTS = gql`
   query getProducts($name: String!, $first: Int!, $skip: Int!) {
@@ -79,10 +80,17 @@ export const Browse = (props: any) => {
       skip: 0,
     },
   })
+  let scrollViewEl = null
 
   useEffect(() => {
     setCurrentCategory(props.screenProps.browseFilter)
   }, [props.screenProps.browseFilter])
+
+  useEffect(() => {
+    if (scrollViewEl) {
+      scrollViewEl.scrollToOffset({ x: 0, y: 0, animated: true })
+    }
+  }, [currentCategory])
 
   useEffect(() => {
     setTimeout(() => {
@@ -105,10 +113,11 @@ export const Browse = (props: any) => {
 
   return (
     <Container>
-      <Flex flexDirection="column" flex={1} pt={insets.top}>
+      <Flex flexDirection="column" flex={1} pt={insets.top} ref={scrollViewEl}>
         <Box flex={1} flexGrow={1}>
           <FlatList
             data={products}
+            ref={ref => (scrollViewEl = ref)}
             keyExtractor={item => item.id}
             ListHeaderComponent={() => (
               <Box p={2}>
