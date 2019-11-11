@@ -33,8 +33,6 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
   const plan = get(data, "me.customer.plan")
   let planInfo = null
 
-  console.log("data", data)
-
   if (plan === "Essential") {
     planInfo = {
       price: "155",
