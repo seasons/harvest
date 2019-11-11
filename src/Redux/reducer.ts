@@ -2,7 +2,7 @@ import get from "lodash/get"
 
 export const BAG_NUM_ITEMS = 3
 export const EMPTY_BAG = {
-  bag: { items: [], itemCount: 0, wantItems: [] },
+  bag: { items: [], itemCount: 0, wantItems: [], reserved: false },
 }
 
 const addEmptyItemsToBag = items => {
@@ -103,6 +103,14 @@ export const reducer = (state, action) => {
         },
       }
       return addProduct
+    case "setActiveReservation":
+      return {
+        ...clonedState,
+        bag: {
+          ...clonedState.bag,
+          reservationID: action.payload,
+        },
+      }
     default:
       return state
   }

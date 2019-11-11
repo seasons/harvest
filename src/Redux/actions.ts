@@ -32,3 +32,8 @@ export const setProduct = product => ({
   type: "setVariant",
   payload: product,
 })
+
+export const setActiveReservation = id => ({
+  type: "setActiveReservation",
+  payload: id,
+})

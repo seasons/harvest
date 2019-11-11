@@ -52,12 +52,14 @@ export class Initializing extends React.Component<Props> {
     let userSession = await AsyncStorage.getItem("userSession")
     userSession = JSON.parse(userSession)
 
-    const newToken = await auth0.auth.refreshToken({
-      refreshToken: userSession.refreshToken,
-    })
+    if (userSession) {
+      const newToken = await auth0.auth.refreshToken({
+        refreshToken: userSession.refreshToken,
+      })
 
-    userSession.token = newToken.accessToken
-    await AsyncStorage.setItem("userSession", JSON.stringify(userSession))
+      userSession.token = newToken.accessToken
+      await AsyncStorage.setItem("userSession", JSON.stringify(userSession))
+    }
   }
 
   render() {

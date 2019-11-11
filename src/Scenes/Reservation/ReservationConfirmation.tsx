@@ -1,17 +1,19 @@
-import React from "react"
-import styled from "styled-components/native"
-import { Theme, Box, Separator, Spacer, Sans, FixedButton, Flex } from "App/Components"
-import { useQuery } from "react-apollo"
+import { Box, FixedButton, Flex, Sans, Separator, Spacer, Theme } from "App/Components"
+import { setActiveReservation } from "App/Redux/actions"
 import gql from "graphql-tag"
+import { get } from "lodash"
+import React from "react"
+import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { get } from "lodash"
-import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import styled from "styled-components/native"
+
 import { BagItem } from "../Bag/Components/BagItem"
 
 const GET_CUSTOMER = gql`
-  query GetCustomer($reservationID: String!) {
+  query GetCustomer($reservationID: ID!) {
     me {
       user {
         firstName
@@ -32,6 +34,10 @@ const GET_CUSTOMER = gql`
             zipCode
           }
         }
+        billingInfo {
+          brand
+          last_digits
+        }
         reservations(where: { id: $reservationID }) {
           id
           reservationNumber
@@ -43,9 +49,10 @@ const GET_CUSTOMER = gql`
 
 export const ReservationConfirmationView = props => {
   const { bag } = props
-  const { data, loading } = useQuery(GET_CUSTOMER, {
+  const reservationID = get(props, "navigation.state.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
+  const { data, loading, error } = useQuery(GET_CUSTOMER, {
     variables: {
-      reservationID: get(props, "navigation.state.params.reservationID"),
+      reservationID,
     },
   })
   const insets = useSafeArea()
@@ -58,7 +65,8 @@ export const ReservationConfirmationView = props => {
     state: "",
     zipCode: "",
   })
-  const phoneNumber = get(customer, "detail.phoneNumber")
+  const billingInfo = get(customer, "detail.billingInfo", { brand: "", last_digits: "" })
+  const reservation = get(data, "me.customer.reservations[0]", { reservationNumber: "" })
 
   const SectionHeader = ({ title }) => {
     return (
@@ -78,28 +86,50 @@ export const ReservationConfirmationView = props => {
     <>
       <Flex flex={1} p={2}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-          <Box mt={2} mb={4}>
-            <SectionHeader title="Shipping address" />
-            <Sans size="2" color="gray" mt={1}>
-              {`${address.address1} ${address.address2}`}
-            </Sans>
-            <Sans size="2" color="gray">
-              {`${address.city}, ${address.state} ${address.zipCode}`}
-            </Sans>
+          <Box>
+            <Flex flexDirection="row" flex={1} width="100%">
+              <Sans size="2" color="black">
+                Order number
+              </Sans>
+              <Sans size="2" color="black" ml="auto">
+                {reservation.reservationNumber}
+              </Sans>
+            </Flex>
+            <Spacer mb={1} />
+            <Separator color="#e5e5e5" />
           </Box>
-          <Box mb={4}>
-            <SectionHeader title="Payment info" />
-            <Sans size="2" color="gray" mt={1}>
-              {`0007`}
-            </Sans>
+          <Box>
+            <Flex flexDirection="row" flex={1} width="100%">
+              <Box py={1}>
+                <Sans size="2" color="black">
+                  Shipping
+                </Sans>
+              </Box>
+              <Box ml="auto" py={1}>
+                <Sans size="2" color="gray" mt={1} textAlign="right">
+                  {`${address.address1} ${address.address2}`}
+                </Sans>
+                <Sans size="2" color="gray" textAlign="right">
+                  {`${address.city}, ${address.state} ${address.zipCode}`}
+                </Sans>
+              </Box>
+            </Flex>
+            <Spacer mb={1} />
+            <Separator color="#e5e5e5" />
           </Box>
-          <Box mb={4}>
-            <SectionHeader title="Phone number" />
-            <Sans size="2" color="gray" mt={1}>
-              {phoneNumber}
-            </Sans>
+          <Box>
+            <Flex flexDirection="row" flex={1} width="100%" py={1}>
+              <Sans size="2" color="black">
+                Payment
+              </Sans>
+              <Sans size="2" color="black" ml="auto">
+                {`${billingInfo.brand} ${billingInfo.last_digits}`}
+              </Sans>
+            </Flex>
+            <Spacer mb={1} />
+            <Separator color="#e5e5e5" />
           </Box>
-          <Box mb={5}>
+          <Box mt={4} mb={5}>
             <SectionHeader title="Items" />
             <Box mt={2} mb="80">
               {bag.items.map((item, i) => {
@@ -122,7 +152,15 @@ export const ReservationConfirmationView = props => {
         </ScrollView>
       </Flex>
       <Box mb={insets.bottom}>
-        <FixedButton onPress={() => props.navigation.dismiss()}>Done</FixedButton>
+        <FixedButton
+          onPress={() => {
+            setActiveReservation(reservationID)
+            props.navigation.navigate("CurrentRotation")
+            props.navigation.dismiss()
+          }}
+        >
+          Done
+        </FixedButton>
       </Box>
     </>
   )
@@ -144,7 +182,13 @@ export const ReservationConfirmationView = props => {
   )
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      setActiveReservation,
+    },
+    dispatch
+  )
 
 const mapStateToProps = state => {
   const { bag } = state
@@ -167,9 +211,4 @@ const Content = styled(Box)`
   border-top-right-radius: 30;
   overflow: hidden;
   flex: 1;
-`
-
-const EditButton = styled(Sans)`
-  color: #004eff;
-  align-self: flex-end;
 `

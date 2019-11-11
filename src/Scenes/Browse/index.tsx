@@ -194,6 +194,9 @@ const CategoryPicker = styled.FlatList`
   width: 100%;
   bottom: 0;
   left: 0;
+  border-top-color: #e5e5e5;
+  border-style: solid;
+  border-top-width: 1px;
 `
 
 const Category = styled(Box)`
