@@ -30,15 +30,6 @@ const GET_PREFERENCES = gql`
           commuteStyle
           preferredPronouns
           averagePantLength
-          shippingAddress {
-            name
-            company
-            address1
-            address2
-            city
-            state
-            zipCode
-          }
         }
       }
     }
@@ -148,39 +139,6 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
 
       if (details.phoneOS) {
         sectionsArray.push({ title: "Phone type", value: details.phoneOS })
-      }
-
-      // page 3
-
-      if (details.shippingAddress) {
-        const shippingAddress = details.shippingAddress
-        if (shippingAddress.name) {
-          sectionsArray.push({ title: "Full name", value: shippingAddress.name })
-        }
-
-        if (shippingAddress.company) {
-          sectionsArray.push({ title: "Company", value: shippingAddress.company })
-        }
-
-        if (shippingAddress.address1) {
-          sectionsArray.push({ title: "Address", value: shippingAddress.address1 })
-        }
-
-        if (shippingAddress.address2) {
-          sectionsArray.push({ title: "Apt, suite #", value: shippingAddress.address2 })
-        }
-
-        if (shippingAddress.city) {
-          sectionsArray.push({ title: "City", value: shippingAddress.city })
-        }
-
-        if (shippingAddress.state) {
-          sectionsArray.push({ title: "State", value: shippingAddress.state })
-        }
-
-        if (shippingAddress.zipCode) {
-          sectionsArray.push({ title: "Zipcode", value: shippingAddress.zipCode })
-        }
       }
 
       setSections(sectionsArray)
