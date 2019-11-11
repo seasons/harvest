@@ -4,12 +4,12 @@ import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
 import gql from "graphql-tag"
 import { get } from "lodash"
+import React from "react"
 import { DateTime } from "luxon"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
-
 import { Bag } from "./Bag"
 import { CurrentRotationItem } from "./Components/CurrentRotationItem"
 

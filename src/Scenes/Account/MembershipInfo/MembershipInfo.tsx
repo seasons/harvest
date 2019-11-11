@@ -6,6 +6,7 @@ import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_MEMBERSHIP_INFO = gql`
   query getMembershipInfo {
@@ -21,48 +22,74 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
   navigation,
 }) => {
   const { loading, error, data } = useQuery(GET_MEMBERSHIP_INFO)
-  console.log(data)
 
-  if (loading || (data && !data.activeReservation)) {
-    return <Loader />
-  }
+  const insets = useSafeArea()
 
   if (error) {
     console.log("error MembershipInfo.tsx: ", error)
     return null
   }
 
-  const results = get(data, "me.customer.activeRegistration.customer.planInfo")
+  const plan = get(data, "me.customer.plan")
+  let planInfo = null
 
+  console.log("data", data)
+
+  if (plan === "Essential") {
+    planInfo = {
+      price: "155",
+      whatsIncluded: [
+        "3 pieces every month",
+        "Keep for up to 30 days",
+        "Free returns & dry cleaning",
+        "Pause or cancel anytime",
+      ],
+    }
+  } else if (plan === "AllAccess") {
+    planInfo = {
+      price: "195",
+      whatsIncluded: [
+        "3 pieces at a time",
+        "Unlimited swaps",
+        "Free returns & dry cleaning",
+        "Pause or cancel anytime",
+      ],
+    }
+  }
+
+  if (loading || !planInfo) {
+    return <Loader />
+  }
   return (
     <Container>
       <>
         <FixedBackArrow navigation={navigation} />
         <ScrollView>
-          <Box mt={6} p={2}>
+          <Box p={2} mt={insets.top}>
+            <Spacer mb={60} />
             <Sans size="3" color="black">
               Membership info
             </Sans>
             <Spacer mb={2} />
             <Separator />
             <Spacer mb={6} />
-            {!!results.price && (
+            {!!planInfo.price && (
               <>
                 <Sans size="4" color="black">
-                  {`$${results.price}`}
+                  {`$${planInfo.price}`}
                 </Sans>
                 <Sans size="2" color="gray">
                   per month
                 </Sans>
               </>
             )}
-            {!!results.whatsIncluded && (
+            {!!planInfo.whatsIncluded && (
               <>
                 <Spacer mb={6} />
                 <Sans size="3">Whats included</Sans>
                 <Spacer mb={2} />
                 <Separator />
-                {results.whatsIncluded.map(text => (
+                {planInfo.whatsIncluded.map(text => (
                   <Box key={text}>
                     <Spacer mb={3} />
                     <Sans size="2">{text}</Sans>
