@@ -141,7 +141,6 @@ export const Browse = (props: any) => {
                     })
                   },
                 })
-                console.log("end reached")
               }
             }}
           />
