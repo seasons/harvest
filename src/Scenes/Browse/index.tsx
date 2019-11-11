@@ -70,7 +70,7 @@ const renderItem = ({ item }, i, navigation) => {
 }
 
 export const Browse = (props: any) => {
-  const [currentCategory, setCurrentCategory] = useState(props.screenProps.browseFilter || "all")
+  const [currentCategory, setCurrentCategory] = useState("all")
   const [showLoader, toggleLoader] = useState(true)
   const { data, loading, fetchMore } = useQuery(GET_PRODUCTS, {
     variables: {
@@ -81,27 +81,37 @@ export const Browse = (props: any) => {
   })
 
   useEffect(() => {
-    setCurrentCategory(props.screenProps.browseFilter)
+    const browseFilter = props && props.screenProps && props.screenProps.browseFilter
+    if (browseFilter && browseFilter !== currentCategory) {
+      setCurrentCategory(props.screenProps.browseFilter)
+    }
   }, [props.screenProps.browseFilter])
 
-  useEffect(() => {
-    setTimeout(() => {
-      toggleLoader(loading)
-    }, 500)
-  }, [loading])
+  // useEffect(() => {
+  //   if (!loading && showLoader) {
+  //     setTimeout(() => {
+  //       toggleLoader(loading)
+  //     }, 500)
+  //   }
+  // }, [loading])
 
   const { navigation } = props
   const products = data && data.products
   const categories = (data && data.categories) || []
   const insets = useSafeArea()
+  const selectedCategory = categories.find(c => c.slug === currentCategory)
 
   const onCategoryPress = item => {
-    setCurrentCategory(item.slug)
+    if (item.slug !== currentCategory) {
+      setCurrentCategory(item.slug)
+    }
   }
 
-  if (showLoader && !data) {
+  if (loading && !data) {
     return <Loader />
   }
+
+  console.log("products", products)
 
   return (
     <Container>
@@ -109,33 +119,39 @@ export const Browse = (props: any) => {
         <Box flex={1} flexGrow={1}>
           <FlatList
             data={products}
-            keyExtractor={item => item.id}
+            keyExtractor={(item, index) => item.id + index}
             ListHeaderComponent={() => (
               <Box p={2}>
                 <Sans size="3" color="black">
                   Browse
                 </Sans>
                 <Sans size="2" color="gray">
-                  Viewing all categories
+                  {currentCategory === "all"
+                    ? "Viewing all categories"
+                    : `Viewing by ${selectedCategory.name.toLowerCase()}`}
                 </Sans>
               </Box>
             )}
             renderItem={(item, i) => renderItem(item, i, navigation)}
             numColumns={2}
+            onEndReachedThreshold={0.7}
             onEndReached={() => {
-              fetchMore({
-                variables: {
-                  skip: products.length,
-                },
-                updateQuery: (prev, { fetchMoreResult }) => {
-                  if (!fetchMoreResult) {
-                    return prev
-                  }
-                  return Object.assign({}, prev, {
-                    products: [...prev.products, ...fetchMoreResult.products],
-                  })
-                },
-              })
+              if (!loading) {
+                fetchMore({
+                  variables: {
+                    skip: products.length,
+                  },
+                  updateQuery: (prev, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) {
+                      return prev
+                    }
+                    return Object.assign({}, prev, {
+                      products: [...prev.products, ...fetchMoreResult.products],
+                    })
+                  },
+                })
+                console.log("end reached")
+              }
             }}
           />
         </Box>
@@ -169,15 +185,15 @@ export const Browse = (props: any) => {
   )
 }
 
-const SearchBar = styled.TextInput`
-  background-color: #f2f2f2;
-  border-radius: 21px;
-  height: 42px;
-  width: 100%;
-  font-family: ${fontFamily.sans.medium};
-  font-size: 16px;
-  text-align: center;
-`
+// const SearchBar = styled.TextInput`
+//   background-color: #f2f2f2;
+//   border-radius: 21px;
+//   height: 42px;
+//   width: 100%;
+//   font-family: ${fontFamily.sans.medium};
+//   font-size: 16px;
+//   text-align: center;
+// `
 
 const CategoryPicker = styled.FlatList`
   height: 100%;

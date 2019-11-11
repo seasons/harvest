@@ -84,8 +84,6 @@ export const HomeComponent = (props: any) => {
     return <Loader />
   }
 
-  console.log("data", data)
-
   if (error) {
     console.error("error /home/index.tsx: ", error)
   }

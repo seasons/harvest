@@ -58,7 +58,14 @@ export const ReserveButtonComponent: React.FC<Props> = ({
   }
 
   return (
-    <Button showCheckMark={showCheckMark} variant="primaryLight" disabled={itemInBag} size="small" onPress={onPress}>
+    <Button
+      width={95}
+      showCheckMark={showCheckMark}
+      variant="primaryLight"
+      disabled={itemInBag}
+      size="small"
+      onPress={onPress}
+    >
       {text}
     </Button>
   )
