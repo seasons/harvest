@@ -84,8 +84,6 @@ export const HomeComponent = (props: any) => {
     return <Loader />
   }
 
-  console.log("data", data)
-
   if (error) {
     console.error("error /home/index.tsx: ", error)
   }
@@ -139,7 +137,7 @@ export const HomeComponent = (props: any) => {
 
 const BlackBackground = styled(Box)`
   background-color: ${color("black")};
-  height: 50%;
+  height: 60%;
   bottom: 0;
   left: 0;
   right: 0;

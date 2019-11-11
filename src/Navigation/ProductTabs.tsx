@@ -15,7 +15,7 @@ import gql from "graphql-tag"
 
 export const ProductTabsComponent = props => {
   const { displayConfirmation, productState, setVariant, toggleShowSizeSelection, productID, navigation } = props
-  const { variant, displayReserveConfirmation, showSizeSelection } = productState
+  const { variant, showSizeSelection } = productState
 
   if (!productID) {
     return null
@@ -47,7 +47,6 @@ export const ProductTabsComponent = props => {
       }
     `
   }
-
   return (
     <>
       <Flex style={{ backgroundColor: color("black") }}>
@@ -71,7 +70,7 @@ export const ProductTabsComponent = props => {
                 {variant.abbreviated.toUpperCase()}
               </StyledSans>
               <Spacer mr={3} />
-              <StyledDownChevronIcon rotate={displayReserveConfirmation} />
+              <StyledDownChevronIcon rotate={showSizeSelection} />
             </SizeSelectionButton>
           </TouchableOpacity>
           <Flex flexDirection="row">
