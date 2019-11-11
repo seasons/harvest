@@ -160,5 +160,3 @@ const mapStateToProps = state => {
 }
 
 export const Home = connect(mapStateToProps)(HomeComponent)
-
-// postgres://mtbiihcqbrfjiu:b96b56ff6e890953a3e2964edb921cac53320d78e31653abae9490dcfba66a0a@ec2-174-129-218-200.compute-1.amazonaws.com:5432/d3h716dmvtgnrr
