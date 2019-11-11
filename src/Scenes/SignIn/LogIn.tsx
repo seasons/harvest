@@ -1,12 +1,13 @@
-import React, { useState } from "react"
-import { ErrorPopUp, Theme, Sans, TextInput, Box, Spacer, Button, Flex } from "App/Components"
-import { Text } from "Components/Typography"
-import { Keyboard, SafeAreaView, TouchableWithoutFeedback } from "react-native"
-import { useMutation } from "react-apollo"
-import AsyncStorage from "@react-native-community/async-storage"
+import { Box, Button, ErrorPopUp, Flex, Sans, Spacer, TextInput, Theme } from "App/Components"
 import { color } from "App/Utils"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
+import { Text } from "Components/Typography"
 import gql from "graphql-tag"
+import React, { useState } from "react"
+import { useMutation } from "react-apollo"
+import { Keyboard, SafeAreaView, TouchableWithoutFeedback } from "react-native"
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
+
+import AsyncStorage from "@react-native-community/async-storage"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -17,6 +18,8 @@ const LOG_IN = gql`
         lastName
       }
       token
+      refreshToken
+      expiresIn
     }
   }
 `
