@@ -66,9 +66,9 @@ export class Initializing extends React.Component<Props> {
     return (
       <Query query={GET_USER}>
         {({ loading, error, data }) => {
-          if (error) {
+          if (error && error.networkError) {
             this.getRefreshToken()
-          } else if (data) {
+          } else {
             this.navigateTo()
           }
           return <View />
