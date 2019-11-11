@@ -37,7 +37,6 @@ export const ProductsRail: React.FC<ProductsRailProps> = ({ items, title, naviga
         <FlatList
           data={items}
           renderItem={({ item, index }) => {
-            console.log("item", item)
             const image = item.images && item.images.length && item.images[0]
             return (
               <Animatable.View animation="fadeIn" duration={300}>
