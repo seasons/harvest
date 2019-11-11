@@ -71,7 +71,6 @@ const renderItem = ({ item }, i, navigation) => {
 
 export const Browse = (props: any) => {
   const [currentCategory, setCurrentCategory] = useState("all")
-  const [showLoader, toggleLoader] = useState(true)
   const { data, loading, fetchMore } = useQuery(GET_PRODUCTS, {
     variables: {
       name: currentCategory,
@@ -86,14 +85,6 @@ export const Browse = (props: any) => {
       setCurrentCategory(props.screenProps.browseFilter)
     }
   }, [props.screenProps.browseFilter])
-
-  // useEffect(() => {
-  //   if (!loading && showLoader) {
-  //     setTimeout(() => {
-  //       toggleLoader(loading)
-  //     }, 500)
-  //   }
-  // }, [loading])
 
   const { navigation } = props
   const products = data && data.products
