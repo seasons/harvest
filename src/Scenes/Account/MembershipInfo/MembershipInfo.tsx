@@ -31,8 +31,6 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
     return <Loader />
   }
 
-  console.log("data", data)
-
   if (error) {
     console.log("error MembershipInfo.tsx: ", error)
     return null
