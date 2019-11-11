@@ -15,7 +15,7 @@ const lists = [
   { title: "Personal preferences", icon: <PersonalPreferencesIcon />, link: "PersonalPreferences" },
   { title: "Payments & Shipping", icon: <PaymentShippingIcon />, link: "PaymentAndShipping" },
   { title: "Saved pieces", icon: <SavedPiecesIcon />, link: "" },
-  { title: "Order history", icon: <OrderHistoryIcon />, link: "" },
+  // { title: "Order history", icon: <OrderHistoryIcon />, link: "" },
 ]
 
 export class ProfileList extends React.Component<any> {

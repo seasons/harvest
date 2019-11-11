@@ -103,23 +103,20 @@ export function Account(props) {
             <Spacer m={2} />
             {renderOrderUpdates()}
             <Separator />
-            <Box py={2}>
-              <Sans size="2">Support</Sans>
-            </Box>
-            <Box py={2}>
-              <Sans size="2">Privacy Policy & Terms of Service</Sans>
-            </Box>
+            <Spacer m={2} />
+            <Sans size="2">Support</Sans>
+            <Spacer m={2} />
+            <Sans size="2">Privacy Policy & Terms of Service</Sans>
+            <Spacer m={2} />
             <TouchableOpacity
               onPress={async () => {
                 await AsyncStorage.removeItem("userSession")
                 props.navigation.navigate("Auth")
               }}
             >
-              <Box py={2}>
-                <Sans size="2" color="red">
-                  Sign out
-                </Sans>
-              </Box>
+              <Sans size="2" color="red">
+                Sign out
+              </Sans>
             </TouchableOpacity>
           </Box>
         </ScrollView>
