@@ -6,6 +6,7 @@ import { DateTime } from "luxon"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 
 const GET_PREFERENCES = gql`

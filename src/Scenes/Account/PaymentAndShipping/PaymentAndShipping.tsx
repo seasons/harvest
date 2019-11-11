@@ -24,6 +24,14 @@ const GET_PAYMENT_DATA = gql`
             zipCode
           }
         }
+        billingInfo {
+          last_digits
+          street1
+          street2
+          city
+          state
+          postal_code
+        }
       }
       activeReservation {
         customer {
@@ -58,12 +66,12 @@ export const createShippingAddress = shippingAddress => {
 export const createBillingAddress = billingInfo => {
   const addressArray = []
   if (billingInfo.street1) {
-    addressArray.push(billingInfo.address1)
+    addressArray.push(billingInfo.street1)
   }
   if (billingInfo.street2) {
-    addressArray.push(billingInfo.address2)
+    addressArray.push(billingInfo.street2)
   }
-  if (billingInfo.city && billingInfo.state && billingInfo.zipCode) {
+  if (billingInfo.city && billingInfo.state && billingInfo.postal_code) {
     addressArray.push(`${billingInfo.city}, ${billingInfo.state}, ${billingInfo.postal_code}`)
   }
   return addressArray
@@ -76,26 +84,27 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
 
   useEffect(() => {
+    console.log(data)
     if (data && data.me && data.me.customer) {
       const sectionsArray = []
-      const details = data.me.customer.detail
+      const customer = data.me.customer
+      const details = customer.detail
       const activeReservation = data.me.activeReservation
 
       if (details && details.shippingAddress) {
         sectionsArray.push({ title: "Shipping address", value: createShippingAddress(details.shippingAddress) })
       }
 
-      if (activeReservation && activeReservation.customer && activeReservation.customer.billingInfo) {
+      if (customer && customer.billingInfo) {
         sectionsArray.push({
           title: "Billing address",
-          value: createBillingAddress(activeReservation.customer.billingInfo),
+          value: createBillingAddress(customer.billingInfo),
         })
 
-        if (activeReservation.customer.billingInfo.last_digits)
-          sectionsArray.push({
-            title: "Payment info",
-            value: activeReservation.customer.billingInfo.last_digits,
-          })
+        sectionsArray.push({
+          title: "Payment info",
+          value: customer.billingInfo.last_digits,
+        })
       }
 
       if (details && details.phoneNumber) {
