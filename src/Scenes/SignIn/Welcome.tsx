@@ -4,13 +4,20 @@ import { Sans } from "Components/Typography"
 import styled from "styled-components/native"
 import { SeasonsLogoSVG } from "Assets/svgs"
 import { color } from "App/Utils"
-
-const handleApply = () => {}
+import LottieView from "lottie-react-native"
+import { Dimensions } from "react-native"
 
 export const Welcome = ({ navigation }) => {
+  const dimensions = Dimensions.get("window")
   return (
     <Container>
       <Wrapper>
+        <LottieView
+          source={require("../../../assets/animations/welcome.json")}
+          autoPlay
+          loop
+          style={{ height: dimensions.height, width: dimensions.width, alignSelf: "center", position: "absolute" }}
+        />
         <Box p={2}>
           <SeasonsLogoSVG width={40} height={40} />
           <Spacer mb={4} />
