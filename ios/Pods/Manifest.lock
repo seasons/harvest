@@ -1,5 +1,5 @@
 PODS:
-  - A0Auth0 (1.6.0):
+  - A0Auth0 (2.1.0):
     - React
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
@@ -41,6 +41,8 @@ PODS:
   - React (0.59.10):
     - React/Core (= 0.59.10)
   - react-native-safe-area-context (0.3.6):
+    - React
+  - react-native-splash-screen (3.2.0):
     - React
   - React/Core (0.59.10):
     - yoga (= 0.59.10.React)
@@ -123,7 +125,7 @@ PODS:
   - yoga (0.59.10.React)
 
 DEPENDENCIES:
-  - A0Auth0 (from `../node_modules/react-native-auth0`)
+  - A0Auth0 (from `../node_modules/react-native-auth0/ios`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXAppLoaderProvider (from `../node_modules/expo-app-loader-provider/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
@@ -140,6 +142,7 @@ DEPENDENCIES:
   - lottie-ios (from `../node_modules/lottie-ios`)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
@@ -174,12 +177,12 @@ DEPENDENCIES:
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - boost-for-react-native
 
 EXTERNAL SOURCES:
   A0Auth0:
-    :path: "../node_modules/react-native-auth0"
+    :path: "../node_modules/react-native-auth0/ios"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXAppLoaderProvider:
@@ -224,6 +227,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNGestureHandler:
@@ -274,7 +279,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  A0Auth0: 3ef40effed761e80d2ecd7749cc271e0b12e3f75
+  A0Auth0: 351b3b07e58db39b3bb33f58acf35a878fbba74d
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   EXAppLoaderProvider: 5d348813a9cf09b03bbe5b8b55437bc1bfbddbd1
@@ -293,6 +298,7 @@ SPEC CHECKSUMS:
   lottie-react-native: b123a79529cc732201091f585c62c89bb4747252
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
   react-native-safe-area-context: e380a6f783ccaec848e2f3cc8eb205a62362950d
+  react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNReanimated: 7a52c90473b5e81c13408d40d797b98387eaddde
@@ -312,6 +318,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 1e70fe58b872355f0ecb44fb81bb1a16484047f0
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: b06c2493ecbf26c2df6f034979944715292b3487
+PODFILE CHECKSUM: 6b019c57742ef84fb47a364fd17946fdcd8126a2
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.3

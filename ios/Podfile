@@ -34,11 +34,12 @@ target 'seasons' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
   pod 'RNGestureHandler', :podspec => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
   pod 'RNReanimated', :podspec => '../node_modules/react-native-reanimated/RNReanimated.podspec'
-  pod 'A0Auth0', :path => '../node_modules/react-native-auth0'
+  pod 'A0Auth0', :path => '../node_modules/react-native-auth0/ios'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
   pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
   pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
   pod 'lottie-ios', :path => '../node_modules/lottie-ios'
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
 end
