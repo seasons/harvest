@@ -42,7 +42,7 @@ export const AccountSection: React.FC<{ title: string; value: string | [string] 
     <Box key={title} px={2}>
       <Sans size="2">{title}</Sans>
       <Box mb={1} />
-      <Separator color={color("gray")} />
+      <Separator color={color("lightGray")} />
       <Box mb={1} />
       {Array.isArray(value) ? (
         value.map(text => (
@@ -55,7 +55,7 @@ export const AccountSection: React.FC<{ title: string; value: string | [string] 
           {value}
         </Sans>
       )}
-      <Spacer mb={2} />
+      <Spacer mb={4} />
     </Box>
   )
 }
