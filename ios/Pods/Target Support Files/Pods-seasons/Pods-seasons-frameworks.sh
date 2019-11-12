@@ -186,6 +186,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/lottie-react-native/lottie_react_native.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/react-native-safe-area-context/react_native_safe_area_context.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/react-native-splash-screen/react_native_splash_screen.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/yoga/yoga.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -214,6 +215,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/lottie-react-native/lottie_react_native.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/react-native-safe-area-context/react_native_safe_area_context.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/react-native-splash-screen/react_native_splash_screen.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/yoga/yoga.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then

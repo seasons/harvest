@@ -3,6 +3,7 @@ import React, { useEffect } from "react"
 import { Query } from "react-apollo"
 import { View } from "react-native"
 import Auth0 from "react-native-auth0"
+import SplashScreen from "react-native-splash-screen"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 
 import AsyncStorage from "@react-native-community/async-storage"
@@ -29,7 +30,9 @@ const GET_USER = gql`
 `
 
 export class Initializing extends React.Component<Props> {
-  async componentDidMount() {}
+  async componentDidMount() {
+    SplashScreen.hide()
+  }
 
   async navigateTo() {
     const { navigation } = this.props
