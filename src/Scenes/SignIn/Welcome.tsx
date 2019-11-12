@@ -1,118 +1,46 @@
 import React from "react"
-import { Box, Spacer, Button } from "App/Components"
-import { Theme } from "Components/Theme"
+import { Box, Spacer, Button, Container } from "App/Components"
 import { Sans } from "Components/Typography"
-import { SafeAreaView } from "react-native"
 import styled from "styled-components/native"
-import { HalfLogoSVG, CurvedLineSVG } from "Assets/svgs"
+import { SeasonsLogoSVG } from "Assets/svgs"
 import { color } from "App/Utils"
-
-const image = {
-  id: 1,
-  height: 300,
-  width: 200,
-  url: "https://i.pinimg.com/564x/ef/84/64/ef84647415e51db15a87993393aa8fe2.jpg",
-}
 
 const handleApply = () => {}
 
 export const Welcome = ({ navigation }) => {
   return (
-    <Outer>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Theme>
-          <Wrapper>
-            <Box style={{ flex: 1, position: "relative" }} mr={2}>
-              <HalfLogoWrapper>
-                <HalfLogoSVG />
-              </HalfLogoWrapper>
-              <CurvedLineWrapper pr={4}>
-                <CurvedLineSVG />
-              </CurvedLineWrapper>
-              <ImageBackgroundShadowWrapper>
-                <ImageBackgroundShadow width={image.width} height={image.height} />
-              </ImageBackgroundShadowWrapper>
-              <ImageContainerWrapper>
-                <ImageContainer source={{ uri: image.url }}></ImageContainer>
-              </ImageContainerWrapper>
-            </Box>
-            <Box m={2} mt={4}>
-              <Sans color="white" size="3">
-                Welcome
-              </Sans>
-              <Spacer mb={2} />
-              <Sans size="2" color="gray">
-                Sign in to access the most coveted menswear and streetwear brands.
-              </Sans>
-              <Spacer mb={2} />
-              <Button onPress={() => navigation.navigate("SignIn")} variant="primaryLight">
-                Sign in
-              </Button>
-              <Spacer mb={2} />
-              <Button onPress={handleApply} variant="secondaryLight">
-                Apply
-              </Button>
-            </Box>
-          </Wrapper>
-        </Theme>
-      </SafeAreaView>
-    </Outer>
+    <Container>
+      <Wrapper>
+        <Box p={2}>
+          <SeasonsLogoSVG width={40} height={40} />
+          <Spacer mb={4} />
+          <Sans color="white" size="3">
+            This is Seasons
+          </Sans>
+          <Sans size="3" color="gray">
+            A members only rental subscription service for menswear and streetwear.
+          </Sans>
+          <Spacer mb={4} />
+          <Button onPress={() => navigation.navigate("SignIn")} variant="primaryLight">
+            Sign in
+          </Button>
+          <Spacer mb={2} />
+          <Button
+            onPress={() => navigation.navigate("Webview", { uri: "http://signup.seasons.nyc/" })}
+            variant="secondaryLight"
+          >
+            Join the waitlist
+          </Button>
+        </Box>
+      </Wrapper>
+    </Container>
   )
 }
 
-const ImageContainerWrapper = styled(Box)`
-  right: 0;
-  bottom: 0;
-  width: 70%;
-  height: 85%;
-  padding-left: 30;
-  position: absolute;
-  z-index: 4;
-`
-
-const ImageContainer = styled.ImageBackground`
-  background: ${color("lightGray")};
-  width: 100%;
-  height: 100%;
-`
-
-const ImageBackgroundShadowWrapper = styled.View`
-  position: absolute;
-  width: 70%;
-  height: 85%;
-  right: 20;
-  bottom: 20;
-  z-index: 0;
-  padding-left: 30;
-`
-
-const ImageBackgroundShadow = styled.View`
-  background-color: ${color("lightGray")};
-  height: 100%;
-  width: 100%;
-`
-
-const CurvedLineWrapper = styled(Box)`
-  position: absolute;
-  width: 100%;
-  z-index: 1;
-`
-
-const HalfLogoWrapper = styled(Box)`
-  position: absolute;
-  top: 30;
-  z-index: 3;
-  padding-right: 20;
-  width: 30%;
-`
-
 const Wrapper = styled.View`
   flex: 1;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
-`
-
-const Outer = styled.View`
-  flex: 1;
-  background-color: black;
+  background-color: ${color("black")};
 `

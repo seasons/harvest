@@ -59,7 +59,6 @@ export const LogIn: React.FC<LogInProps> = props => {
             password,
           },
         })
-        console.log(result)
 
         const {
           data: { login: userSession },
@@ -72,8 +71,8 @@ export const LogIn: React.FC<LogInProps> = props => {
     }
   }
 
-  const handleApply = () => {
-    // TODO: link to webview
+  const handleJoinWaitlist = () => {
+    props.navigation.navigate("Webview", { uri: "http://signup.seasons.nyc/" })
   }
 
   const handleResetPassword = () => {
@@ -128,9 +127,9 @@ export const LogIn: React.FC<LogInProps> = props => {
               <Sans size="2" color="gray">
                 Not a member?
               </Sans>{" "}
-              <TouchableWithoutFeedback onPress={handleApply}>
+              <TouchableWithoutFeedback onPress={handleJoinWaitlist}>
                 <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
-                  Apply
+                  Join the waitlist
                 </Sans>
               </TouchableWithoutFeedback>
             </Text>

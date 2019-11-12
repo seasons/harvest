@@ -5,6 +5,7 @@ import { Browse } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
+import { Webview } from "App/Scenes/Webview"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import { Initializing, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
 import React, { useState } from "react"
@@ -35,6 +36,7 @@ const AuthStack = createStackNavigator(
     SignIn,
     SignInOrApply,
     Welcome,
+    Webview,
   },
   {
     initialRouteName: "Welcome",
