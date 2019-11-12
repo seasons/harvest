@@ -10,7 +10,6 @@ import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
-
 import { useQuery } from "@apollo/react-hooks"
 
 const GET_PRODUCTS = gql`
@@ -43,7 +42,7 @@ const GET_PRODUCTS = gql`
   }
 `
 
-const renderItem = ({ item }, i, navigation) => {
+const renderItem = ({ item }, _i, navigation) => {
   const itemWidth = Dimensions.get("window").width / 2 - 10
   const product = item
 
@@ -102,8 +101,6 @@ export const Browse = (props: any) => {
   if (loading && !data) {
     return <Loader />
   }
-
-  console.log("products", products)
 
   return (
     <Container>
