@@ -7,6 +7,7 @@ import { FlatList } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_PAYMENT_DATA = gql`
   query getUser {
@@ -80,11 +81,11 @@ export const createBillingAddress = billingInfo => {
 export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
   navigation,
 }) => {
+  const insets = useSafeArea()
   const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
 
   useEffect(() => {
-    console.log(data)
     if (data && data.me && data.me.customer) {
       const sectionsArray = []
       const customer = data.me.customer
@@ -130,12 +131,12 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
 
   return (
     <Container>
-      <Flex style={{ flex: 1 }}>
+      <>
         <FixedBackArrow navigation={navigation} />
         <FlatList
           data={sections}
           ListHeaderComponent={() => (
-            <Box px={2} mt={4}>
+            <Box px={2} mt={insets.top}>
               <Spacer mb={80} />
               <Sans size="3">Payment & Shipping</Sans>
               <Spacer mb={3} />
@@ -144,7 +145,7 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
           keyExtractor={item => item.title}
           renderItem={({ item }) => renderItem(item)}
         />
-      </Flex>
+      </>
     </Container>
   )
 }
