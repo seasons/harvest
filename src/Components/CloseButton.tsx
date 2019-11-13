@@ -18,7 +18,7 @@ export const CloseButton = ({ navigation }) => {
 
 const Wrapper = styled(Box)`
   position: absolute;
-  top: 20;
+  top: 60;
   right: 20;
   z-index: 100;
 `

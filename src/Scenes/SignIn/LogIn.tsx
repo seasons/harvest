@@ -4,9 +4,9 @@ import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
-import { Keyboard, SafeAreaView, TouchableWithoutFeedback } from "react-native"
+import { Keyboard, SafeAreaView, TouchableWithoutFeedback, Dimensions } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
-
+import LottieView from "lottie-react-native"
 import AsyncStorage from "@react-native-community/async-storage"
 
 const LOG_IN = gql`
@@ -80,61 +80,70 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   const disabled = !(emailComplete && password.length)
+  const dimensions = Dimensions.get("window")
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color("black") }}>
       <Theme>
-        <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-          <Box p={2} mt={6}>
-            <Sans color="white" size="3">
-              Welcome
-            </Sans>
-            <Spacer mb={2} />
-            <TextInput
-              placeholder="Email"
-              variant="dark"
-              textContentType="Email"
-              inputKey="email"
-              onChangeText={(_, val) => onEmailChange(val)}
-            />
-            <Spacer mb={2} />
-            <TextInput
-              secureTextEntry
-              placeholder="Password"
-              variant="dark"
-              inputKey="password"
-              textContentType="Password"
-              onChangeText={(_, val) => setPassword(val)}
-            />
-            <Spacer mb={2} />
-            <Text>
-              <Sans size="2" color="gray">
-                Forget password?
-              </Sans>{" "}
-              <TouchableWithoutFeedback onPress={handleResetPassword}>
-                <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
-                  Reset
-                </Sans>
-              </TouchableWithoutFeedback>
-            </Text>
-            <Spacer mb={4} />
-            <Button onPress={handleLogin} disabled={disabled} variant="primaryLight">
-              Sign in
-            </Button>
-          </Box>
-          <Box p={2}>
-            <Text style={{ textAlign: "center" }}>
-              <Sans size="2" color="gray">
-                Not a member?
-              </Sans>{" "}
-              <TouchableWithoutFeedback onPress={handleJoinWaitlist}>
-                <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
-                  Join the waitlist
-                </Sans>
-              </TouchableWithoutFeedback>
-            </Text>
-          </Box>
-        </Flex>
+        <>
+          <LottieView
+            source={require("../../../assets/animations/login.json")}
+            autoPlay
+            loop
+            style={{ height: dimensions.height, width: dimensions.width, alignSelf: "center", position: "absolute" }}
+          />
+          <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
+            <Box p={2} mt={6}>
+              <Sans color="white" size="3">
+                Welcome
+              </Sans>
+              <Spacer mb={2} />
+              <TextInput
+                placeholder="Email"
+                variant="dark"
+                textContentType="Email"
+                inputKey="email"
+                onChangeText={(_, val) => onEmailChange(val)}
+              />
+              <Spacer mb={2} />
+              <TextInput
+                secureTextEntry
+                placeholder="Password"
+                variant="dark"
+                inputKey="password"
+                textContentType="Password"
+                onChangeText={(_, val) => setPassword(val)}
+              />
+              <Spacer mb={2} />
+              <Text>
+                <Sans size="2" color="gray">
+                  Forget password?
+                </Sans>{" "}
+                <TouchableWithoutFeedback onPress={handleResetPassword}>
+                  <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
+                    Reset
+                  </Sans>
+                </TouchableWithoutFeedback>
+              </Text>
+              <Spacer mb={4} />
+              <Button onPress={handleLogin} disabled={disabled} variant="primaryLight">
+                Sign in
+              </Button>
+            </Box>
+            <Box p={2}>
+              <Text style={{ textAlign: "center" }}>
+                <Sans size="2" color="gray">
+                  Not a member?
+                </Sans>{" "}
+                <TouchableWithoutFeedback onPress={handleJoinWaitlist}>
+                  <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
+                    Join the waitlist
+                  </Sans>
+                </TouchableWithoutFeedback>
+              </Text>
+            </Box>
+          </Flex>
+        </>
         <ErrorPopUp
           buttonText="Got it"
           note="Your email or password may be incorrect. Not a member? Apply for the waitlist."
