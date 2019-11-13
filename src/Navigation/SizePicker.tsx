@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react"
-import { Flex, Spacer, Sans, Separator, Box, Radio } from "App/Components"
-import { capitalize, get, find } from "lodash"
-import { color } from "App/Utils"
 import { GET_PRODUCT } from "App/Apollo/Queries"
+import { Box, Flex, Radio, Sans, Separator, Spacer } from "App/Components"
+import { color } from "App/Utils"
+import { capitalize, find, get } from "lodash"
+import React, { useEffect, useState } from "react"
+import { TouchableOpacity } from "react-native-gesture-handler"
+
 import { useQuery } from "@apollo/react-hooks"
-import { TouchableWithoutFeedback } from "react-native"
 
 export interface Size {
   id: string
@@ -62,7 +63,7 @@ const sizeDataForVariants = (variants = []) => {
   return sizeData
 }
 
-export const SizePicker = ({ productID, setVariant, productState }) => {
+export const SizePicker = ({ productID, setVariant, productState, onSizeSelected }) => {
   const [sizeData, setSizeData] = useState({})
   const { data } = useQuery(GET_PRODUCT, {
     variables: {
@@ -90,25 +91,26 @@ export const SizePicker = ({ productID, setVariant, productState }) => {
   const rows = Object.values(sizeData).map((size: Size, i) => {
     return (
       <Box key={size.id || i}>
-        <TouchableWithoutFeedback onPress={() => setVariant(size)}>
-          <>
-            <Spacer mb={2} />
-            <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
-              <Flex flexDirection="row" alignItems="center">
-                <Radio selected={productState.variant.id === size.id} />
-                <Spacer mr={1} />
-                <Sans color={size.stock ? "white" : "gray"} size="2">
-                  {capitalize(size.size)}
-                </Sans>
-              </Flex>
-              <Sans color="gray" size="2">
-                {size.stock ? "(" + size.stock + " left)" : "(Out of stock)"}
+        <TouchableOpacity
+          onPress={() => {
+            setVariant(size)
+            onSizeSelected(size)
+          }}
+        >
+          <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap" my={2}>
+            <Flex flexDirection="row" alignItems="center">
+              <Radio selected={productState.variant.id === size.id} />
+              <Spacer mr={1} />
+              <Sans color={size.stock ? "white" : "gray"} size="2">
+                {capitalize(size.size)}
               </Sans>
             </Flex>
-            <Spacer mb={2} />
-            <Separator color={color("gray")} />
-          </>
-        </TouchableWithoutFeedback>
+            <Sans color="gray" size="2">
+              {size.stock ? "(" + size.stock + " left)" : "(Out of stock)"}
+            </Sans>
+          </Flex>
+        </TouchableOpacity>
+        <Separator color={color("gray")} />
       </Box>
     )
   })

@@ -25,7 +25,7 @@ const CHECK_ITEMS = gql`
 `
 
 export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
-  const [showReserveError, displayReserveError] = useState(false)
+  const [showReserveError, displayReserveError] = useState(null)
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
   const insets = useSafeArea()
 
@@ -49,8 +49,9 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
       const error = graphQLErrors.length > 0 ? graphQLErrors[0] : null
       if (error) {
         const { code, exception } = error.extensions
+        let data
         if (code === "511") {
-          const data = Object.values(exception)
+          data = Object.values(exception)
             .filter(a => !!a.reserved)
             .map(a => ({
               variantID: a.id,
@@ -59,9 +60,13 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
           for (let item of data) {
             removeItemFromBag(item)
           }
+        } else if (code === "510") {
         }
+        displayReserveError({
+          code,
+          data,
+        })
       }
-      displayReserveError(true)
     }
   }
 
@@ -91,6 +96,33 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
         </Flex>
       </Box>
     )
+  }
+
+  const ErrorMessage = () => {
+    if (showReserveError) {
+      const { code, data } = showReserveError
+      let title, description
+      if (code === "511") {
+        title = "One or more items have been reserved already"
+        description =
+          "Sorry, some of the items you had selected were confirmed before you, please replace them with available items"
+      } else {
+        title = "Pick all 3 items before reserving!"
+        description = "Before reserving your order, make sure you've selected all 3 pieces."
+      }
+
+      return (
+        <ErrorPopUp
+          buttonText="Got it"
+          title={title}
+          note={description}
+          show={showReserveError}
+          onClose={() => displayReserveError(false)}
+        />
+      )
+    }
+
+    return null
   }
 
   const renderItem = ({ item, index }) => {
@@ -143,13 +175,7 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
           </Box>
         )}
       </Box>
-      <ErrorPopUp
-        buttonText="Got it"
-        title="Pick all 3 items before reserving!"
-        note="Before reserving your order, make sure you've selected all 3 pieces."
-        show={showReserveError}
-        onClose={() => displayReserveError(false)}
-      />
+      <ErrorMessage />
     </Container>
   )
 }

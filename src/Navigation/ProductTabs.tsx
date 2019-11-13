@@ -1,17 +1,17 @@
-import React from "react"
-import styled from "styled-components/native"
-import { color } from "App/Utils"
+import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
+import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
 import { ReserveButton } from "App/Scenes/Product/Components"
-import { Flex, Spacer, Sans, Button, Separator, Box } from "App/Components"
-import { TouchableOpacity } from "react-native"
+import { color } from "App/Utils"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
+import gql from "graphql-tag"
+import React from "react"
+import { ScrollView, TouchableOpacity } from "react-native"
 import { NavigationActions } from "react-navigation"
-import { ScrollView } from "react-native"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
+import styled from "styled-components/native"
+
 import { SizePicker } from "./SizePicker"
-import gql from "graphql-tag"
 
 export const ProductTabsComponent = props => {
   const { displayConfirmation, productState, setVariant, toggleShowSizeSelection, productID, navigation } = props
@@ -28,7 +28,14 @@ export const ProductTabsComponent = props => {
           <Box p={2}>
             <Spacer mb={2} />
             <Separator color={color("gray")} />
-            <SizePicker productID={productID} setVariant={setVariant} productState={productState} />
+            <SizePicker
+              productID={productID}
+              setVariant={setVariant}
+              productState={productState}
+              onSizeSelected={() => {
+                toggleShowSizeSelection(false)
+              }}
+            />
             <Spacer mb={2} />
           </Box>
         </ScrollView>
