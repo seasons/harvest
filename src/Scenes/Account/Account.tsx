@@ -2,13 +2,14 @@ import { Box, Flex, Sans, Separator, Spacer, Toggle } from "App/Components"
 import { Container } from "Components/Container"
 import { ProfileList } from "./ProfileList"
 import React from "react"
-import { ScrollView, TouchableOpacity, Linking } from "react-native"
+import { ScrollView, TouchableOpacity, Linking, Image } from "react-native"
 import { useQuery } from "react-apollo"
 import * as Animatable from "react-native-animatable"
 import gql from "graphql-tag"
 import AsyncStorage from "@react-native-community/async-storage"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Loader } from "App/Components/Loader"
+import styled from "styled-components/native"
 
 const GET_USER = gql`
   query getUser {
@@ -83,18 +84,21 @@ export function Account(props) {
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
           <Box p={2} mt={insets.top}>
-            <Flex>
-              <Box mb={5} />
-              {!!firstName && !!lastName && (
-                <Sans size="3" color="black">
-                  {`${firstName} ${lastName}`}
-                </Sans>
-              )}
-              {!!city && !!state && (
-                <Sans size="2" color="gray">
-                  {`${city}, ${state}`}
-                </Sans>
-              )}
+            <Box mb={5} />
+            <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
+              <Flex>
+                {!!firstName && !!lastName && (
+                  <Sans size="3" color="black">
+                    {`${firstName} ${lastName}`}
+                  </Sans>
+                )}
+                {!!city && !!state && (
+                  <Sans size="2" color="gray">
+                    {`${city}, ${state}`}
+                  </Sans>
+                )}
+              </Flex>
+              <ImageContainer source={require(`../../../assets/images/smiley.png`)} />
             </Flex>
             <Spacer m={2} />
             <Separator />
@@ -137,3 +141,8 @@ export function Account(props) {
     </Container>
   )
 }
+
+const ImageContainer = styled(Image)`
+  height: 64;
+  width: 64;
+`
