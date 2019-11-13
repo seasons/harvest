@@ -52,7 +52,7 @@ export const ReserveButtonComponent: React.FC<Props> = ({
     text = "Want"
     onPress = () => handleRemoveWantItem()
     showCheckMark = true
-  } else if (itemStockZero) {
+  } else if (itemStockZero || bag.itemCount >= 3) {
     onPress = () => handleAddWantItem()
     text = "Want"
   }
@@ -86,7 +86,4 @@ const mapStateToProps = state => {
   return { bag, productState }
 }
 
-export const ReserveButton = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReserveButtonComponent)
+export const ReserveButton = connect(mapStateToProps, mapDispatchToProps)(ReserveButtonComponent)
