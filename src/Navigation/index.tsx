@@ -15,7 +15,6 @@ import { createStackNavigator } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import styled from "styled-components"
-
 import DismissableStackNavigator from "./DismissableStackNavigator"
 import { Tabs } from "./Tabs"
 
@@ -119,6 +118,7 @@ const AccountStack = createStackNavigator(
     MembershipInfo,
     PaymentAndShipping,
     PersonalPreferences,
+    Webview,
   },
   {
     initialRouteName: "Account",

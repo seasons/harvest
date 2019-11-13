@@ -2,7 +2,7 @@ import { Box, Flex, Sans, Separator, Spacer, Toggle } from "App/Components"
 import { Container } from "Components/Container"
 import { ProfileList } from "./ProfileList"
 import React from "react"
-import { ScrollView, TouchableOpacity } from "react-native"
+import { ScrollView, TouchableOpacity, Linking } from "react-native"
 import { useQuery } from "react-apollo"
 import * as Animatable from "react-native-animatable"
 import gql from "graphql-tag"
@@ -104,9 +104,21 @@ export function Account(props) {
             {renderOrderUpdates()}
             <Separator />
             <Spacer m={2} />
-            <Sans size="2">Support</Sans>
+            <TouchableOpacity onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject=Help`)}>
+              <Sans size="2">Support</Sans>
+            </TouchableOpacity>
             <Spacer m={2} />
-            <Sans size="2">Privacy Policy & Terms of Service</Sans>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })}
+            >
+              <Sans size="2">Privacy Policy</Sans>
+            </TouchableOpacity>
+            <Spacer m={2} />
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })}
+            >
+              <Sans size="2">Terms of Service</Sans>
+            </TouchableOpacity>
             <Spacer m={2} />
             <TouchableOpacity
               onPress={async () => {
@@ -118,6 +130,7 @@ export function Account(props) {
                 Sign out
               </Sans>
             </TouchableOpacity>
+            <Spacer m={2} />
           </Box>
         </ScrollView>
       </Animatable.View>
