@@ -2,11 +2,12 @@ import { Box, Button, ErrorPopUp, Flex, Sans, Spacer, TextInput, Theme } from "A
 import { color } from "App/Utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
+import LottieView from "lottie-react-native"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
-import { Keyboard, SafeAreaView, TouchableWithoutFeedback, Dimensions } from "react-native"
+import { Dimensions, Keyboard, SafeAreaView, TouchableWithoutFeedback } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
-import LottieView from "lottie-react-native"
+
 import AsyncStorage from "@react-native-community/async-storage"
 
 const LOG_IN = gql`
@@ -86,12 +87,6 @@ export const LogIn: React.FC<LogInProps> = props => {
     <SafeAreaView style={{ flex: 1, backgroundColor: color("black") }}>
       <Theme>
         <>
-          <LottieView
-            source={require("../../../assets/animations/login.json")}
-            autoPlay
-            loop
-            style={{ height: dimensions.height, width: dimensions.width, alignSelf: "center", position: "absolute" }}
-          />
           <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
             <Box p={2} mt={6}>
               <Sans color="white" size="3">

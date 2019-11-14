@@ -1,22 +1,23 @@
 import { Box, Flex, Spacer } from "App/Components"
-import { CategoriesRail } from "./Components/CategoriesRail"
-import { Container } from "Components/Container"
-import { FlatList } from "react-native"
-import { CollectionsRail } from "./Components/CollectionsRail"
-import { ProductsRail } from "./Components/ProductsRail"
-import { BrandsRail } from "./Components/BrandsRail"
-import { LogoText } from "Components/Typography"
-import React, { useState, useEffect } from "react"
-import { connect } from "react-redux"
+import { Loader } from "App/Components/Loader"
 import { color } from "App/Utils"
-import { AllCaughtUp } from "./Components/AllCaughtUp"
+import { SeasonsLogoSVG } from "Assets/svgs"
+import { Container } from "Components/Container"
+import { LogoText } from "Components/Typography"
 import gql from "graphql-tag"
+import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
-import styled from "styled-components/native"
+import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
-import { Loader } from "App/Components/Loader"
-import { SeasonsLogoSVG } from "Assets/svgs"
+import { connect } from "react-redux"
+import styled from "styled-components/native"
+
+import { AllCaughtUp } from "./Components/AllCaughtUp"
+import { BrandsRail } from "./Components/BrandsRail"
+import { CategoriesRail } from "./Components/CategoriesRail"
+import { CollectionsRail } from "./Components/CollectionsRail"
+import { ProductsRail } from "./Components/ProductsRail"
 
 const GET_HOMEPAGE = gql`
   query Homepage {
@@ -110,13 +111,6 @@ export const HomeComponent = (props: any) => {
         <Box style={{ position: "relative", backgroundColor: "rgba(0,0,0,0)", paddingTop: insets.top }}>
           <WhiteBackground />
           <BlackBackground />
-          <Box p={2} style={{ backgroundColor: color("white") }}>
-            <Flex flexDirection="row" flexWrap="nowrap" alignContent="center">
-              <SeasonsLogoSVG />
-              <Spacer mr={1} />
-              <LogoText>SEASONS</LogoText>
-            </Flex>
-          </Box>
           <FlatList
             data={sections}
             keyExtractor={(item, index) => `${index}`}
@@ -132,6 +126,15 @@ export const HomeComponent = (props: any) => {
                   : { backgroundColor: color("white") }
               return <Box style={styles}>{renderItem(item)}</Box>
             }}
+            ListHeaderComponent={() => (
+              <Box p={2} style={{ backgroundColor: color("white") }}>
+                <Flex flexDirection="row" flexWrap="nowrap" alignContent="center">
+                  <SeasonsLogoSVG />
+                  <Spacer mr={1} />
+                  <LogoText>SEASONS</LogoText>
+                </Flex>
+              </Box>
+            )}
             ListFooterComponent={() => <AllCaughtUp navigation={props.navigation} />}
           />
         </Box>
@@ -142,7 +145,7 @@ export const HomeComponent = (props: any) => {
 
 const BlackBackground = styled(Box)`
   background-color: ${color("black")};
-  height: 60%;
+  height: 80%;
   bottom: 0;
   left: 0;
   right: 0;

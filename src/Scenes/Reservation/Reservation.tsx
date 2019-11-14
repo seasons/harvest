@@ -1,14 +1,15 @@
-import React, { useState } from "react"
-import styled from "styled-components/native"
-import { Theme, Box, Separator, Spacer, Sans, FixedButton, Flex, ErrorPopUp } from "App/Components"
-import { useMutation, useQuery } from "react-apollo"
-import gql from "graphql-tag"
+import { Box, ErrorPopUp, FixedButton, Flex, Sans, Separator, Spacer, Theme } from "App/Components"
 import { CloseXIcon } from "Assets/icons"
+import gql from "graphql-tag"
+import { get } from "lodash"
+import React, { useState } from "react"
+import { useMutation, useQuery } from "react-apollo"
 import { ScrollView, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { get } from "lodash"
-import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import styled from "styled-components/native"
+
 import { BagItem } from "../Bag/Components/BagItem"
 
 const RESERVE_ITEMS = gql`
@@ -40,6 +41,9 @@ const GET_CUSTOMER = gql`
             state
             zipCode
           }
+          billingInfo {
+            last_digits
+          }
         }
       }
     }
@@ -63,6 +67,7 @@ export const ReservationView = props => {
     zipCode: "",
   })
   const phoneNumber = get(customer, "detail.phoneNumber")
+  const lastFourDigits = get(customer, "detail.billingInfo.last_digits", "")
 
   const SectionHeader = ({ title }) => {
     return (
@@ -96,18 +101,22 @@ export const ReservationView = props => {
               {`${address.city}, ${address.state} ${address.zipCode}`}
             </Sans>
           </Box>
-          <Box mb={4}>
-            <SectionHeader title="Payment info" />
-            <Sans size="2" color="gray" mt={1}>
-              {`0007`}
-            </Sans>
-          </Box>
-          <Box mb={4}>
-            <SectionHeader title="Phone number" />
-            <Sans size="2" color="gray" mt={1}>
-              {phoneNumber}
-            </Sans>
-          </Box>
+          {lastFourDigits && (
+            <Box mb={4}>
+              <SectionHeader title="Payment info" />
+              <Sans size="2" color="gray" mt={1}>
+                {lastFourDigits}
+              </Sans>
+            </Box>
+          )}
+          {phoneNumber && (
+            <Box mb={4}>
+              <SectionHeader title="Phone number" />
+              <Sans size="2" color="gray" mt={1}>
+                {phoneNumber}
+              </Sans>
+            </Box>
+          )}
           <Box mb={5}>
             <SectionHeader title="Items" />
             <Box mt={2} mb="80">

@@ -129,6 +129,17 @@ export const ReservationConfirmationView = props => {
             <Spacer mb={1} />
             <Separator color="#e5e5e5" />
           </Box>
+          <Box>
+            <Flex flexDirection="row" flex={1} width="100%" py={1}>
+              <Sans size="2" color="black">
+                Delivery
+              </Sans>
+              <Sans size="2" color="black" ml="auto">
+                {`UPS Ground - 2 day shipping`}
+              </Sans>
+            </Flex>
+            <Spacer mb={1} />
+          </Box>
           <Box mt={4} mb={5}>
             <SectionHeader title="Items" />
             <Box mt={2} mb="80">
@@ -155,7 +166,7 @@ export const ReservationConfirmationView = props => {
         <FixedButton
           onPress={() => {
             setActiveReservation(reservationID)
-            props.navigation.navigate("CurrentRotation")
+            props.navigation.navigate("CurrentRotation", { reservationID: reservationID })
             props.navigation.dismiss()
           }}
         >

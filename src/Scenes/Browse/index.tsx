@@ -33,6 +33,7 @@ const GET_PRODUCTS = gql`
       externalURL
       tags
       retailPrice
+      status
       createdAt
       updatedAt
       brand {
@@ -178,8 +179,8 @@ export const Browse = (props: any) => {
 }
 
 const CategoryPicker = styled.FlatList`
-  height: 100%;
   position: absolute;
+  height: 100%;
   width: 100%;
   bottom: 0;
   left: 0;
