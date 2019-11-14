@@ -14,7 +14,7 @@ const lists = [
   { title: "Membership info", icon: <MembershipInfoIcon />, link: "MembershipInfo" },
   { title: "Personal preferences", icon: <PersonalPreferencesIcon />, link: "PersonalPreferences" },
   { title: "Payments & Shipping", icon: <PaymentShippingIcon />, link: "PaymentAndShipping" },
-  { title: "Saved pieces", icon: <SavedPiecesIcon />, link: "" },
+  // { title: "Saved pieces", icon: <SavedPiecesIcon />, link: "" },
   // { title: "Order history", icon: <OrderHistoryIcon />, link: "" },
 ]
 

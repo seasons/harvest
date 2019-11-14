@@ -14,7 +14,7 @@ export const ImageRail = ({ images }) => {
           const imageURL = imageResize(item && item.url, "x-large")
           return (
             <Box mr={1}>
-              <ImageContainer source={{ uri: imageURL }}></ImageContainer>
+              <ImageContainer source={{ uri: imageURL }} />
             </Box>
           )
         }}

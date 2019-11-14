@@ -31,6 +31,10 @@ export const reducer = (state, action) => {
         // Item already in bag so we dont add it
         return state
       }
+      const itemsInBag = items.filter(item => item.productID !== "")
+      if (itemsInBag.length === 3) {
+        return state
+      }
       items.push(action.payload)
       const [updatedBagItems, itemCount] = addEmptyItemsToBag(items)
       const bagWithNewItem = {

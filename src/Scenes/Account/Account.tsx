@@ -2,13 +2,14 @@ import { Box, Flex, Sans, Separator, Spacer, Toggle } from "App/Components"
 import { Container } from "Components/Container"
 import { ProfileList } from "./ProfileList"
 import React from "react"
-import { ScrollView, TouchableOpacity } from "react-native"
+import { ScrollView, TouchableOpacity, Linking, Image } from "react-native"
 import { useQuery } from "react-apollo"
 import * as Animatable from "react-native-animatable"
 import gql from "graphql-tag"
 import AsyncStorage from "@react-native-community/async-storage"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Loader } from "App/Components/Loader"
+import styled from "styled-components/native"
 
 const GET_USER = gql`
   query getUser {
@@ -83,18 +84,21 @@ export function Account(props) {
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
           <Box p={2} mt={insets.top}>
-            <Flex>
-              <Box mb={5} />
-              {!!firstName && !!lastName && (
-                <Sans size="3" color="black">
-                  {`${firstName} ${lastName}`}
-                </Sans>
-              )}
-              {!!city && !!state && (
-                <Sans size="2" color="gray">
-                  {`${city}, ${state}`}
-                </Sans>
-              )}
+            <Box mb={5} />
+            <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
+              <Flex>
+                {!!firstName && !!lastName && (
+                  <Sans size="3" color="black">
+                    {`${firstName} ${lastName}`}
+                  </Sans>
+                )}
+                {!!city && !!state && (
+                  <Sans size="2" color="gray">
+                    {`${city}, ${state}`}
+                  </Sans>
+                )}
+              </Flex>
+              <ImageContainer source={require(`../../../assets/images/smiley.png`)} />
             </Flex>
             <Spacer m={2} />
             <Separator />
@@ -104,9 +108,21 @@ export function Account(props) {
             {renderOrderUpdates()}
             <Separator />
             <Spacer m={2} />
-            <Sans size="2">Support</Sans>
+            <TouchableOpacity onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject=Help`)}>
+              <Sans size="2">Support</Sans>
+            </TouchableOpacity>
             <Spacer m={2} />
-            <Sans size="2">Privacy Policy & Terms of Service</Sans>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })}
+            >
+              <Sans size="2">Privacy Policy</Sans>
+            </TouchableOpacity>
+            <Spacer m={2} />
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })}
+            >
+              <Sans size="2">Terms of Service</Sans>
+            </TouchableOpacity>
             <Spacer m={2} />
             <TouchableOpacity
               onPress={async () => {
@@ -118,9 +134,15 @@ export function Account(props) {
                 Sign out
               </Sans>
             </TouchableOpacity>
+            <Spacer m={2} />
           </Box>
         </ScrollView>
       </Animatable.View>
     </Container>
   )
 }
+
+const ImageContainer = styled(Image)`
+  height: 64;
+  width: 64;
+`
