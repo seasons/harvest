@@ -7,7 +7,7 @@ import styled from "styled-components/native"
 
 export const ImageRail = ({ images }) => {
   return (
-    <Box ml={2}>
+    <Box ml={2} mt={2}>
       <FlatList
         data={images}
         renderItem={({ item }) => {
@@ -31,6 +31,6 @@ export const ImageRail = ({ images }) => {
 
 const ImageContainer = styled(FadeInImage)`
   background: rgba(0, 0, 0, 0.3);
-  height: 360;
-  width: 240;
+  height: 400;
+  width: 320;
 `

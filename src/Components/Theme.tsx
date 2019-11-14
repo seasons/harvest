@@ -1,6 +1,7 @@
 import React from "react"
-import { fontFamily } from "./Typography"
 import { ThemeProvider } from "styled-components/native"
+
+import { fontFamily } from "./Typography"
 
 /**
  * A list of breakpoints accessible by key/value.
@@ -31,6 +32,7 @@ export const themeProps = {
     lightGreen: "#989F9B",
     lightGray: "#DFDFDF",
     gray: "#7F7F7F",
+    mediumGray: "#2a2a2a",
     darkGray: "#303030",
     blue: "#2B50DF",
   },

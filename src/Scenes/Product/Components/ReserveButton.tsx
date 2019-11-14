@@ -1,8 +1,8 @@
-import React from "react"
 import { Button } from "App/Components"
-import { addItemToBag, removeItemFromWantItems, addItemToWantItems } from "App/Redux/actions"
-import { bindActionCreators } from "redux"
+import { addItemToBag, addItemToWantItems, removeItemFromWantItems } from "App/Redux/actions"
+import React from "react"
 import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
 
 interface Props {
   bag: any
@@ -61,7 +61,7 @@ export const ReserveButtonComponent: React.FC<Props> = ({
     <Button
       width={95}
       showCheckMark={showCheckMark}
-      variant="primaryLight"
+      variant="primaryGray"
       disabled={itemInBag}
       size="small"
       onPress={onPress}

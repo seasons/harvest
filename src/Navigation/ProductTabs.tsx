@@ -64,9 +64,11 @@ export const ProductTabsComponent = props => {
                 navigation.dispatch(NavigationActions.back())
               }}
             >
-              <BackArrowIcon />
+              <Box ml={1}>
+                <BackArrowIcon />
+              </Box>
             </TouchableOpacity>
-            <Spacer mr={4} />
+            <Spacer mr={2} />
             <TouchableOpacity onPress={() => handleSaveButton()}>
               <SaveIcon />
             </TouchableOpacity>

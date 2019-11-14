@@ -1,6 +1,7 @@
-import React from "react"
 import { Box, Sans, Separator, Spacer } from "App/Components"
 import { color } from "App/Utils"
+import React from "react"
+
 import { ProductInfoItem } from "./ProductInfoItem"
 
 export const ProductDetails = ({ product }) => {
@@ -33,7 +34,12 @@ export const ProductDetails = ({ product }) => {
 
       <Spacer mb={2} />
       <Separator color={color("lightGray")} />
-      {product.modelSize && <ProductInfoItem detailType="Fit" detailValue={product.modelSize} />}
+      {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
+      {product.modelSize && <ProductInfoItem detailType="Fit" detailValue={`Model size is ${product.modelSize}`} />}
+      {product.outerMaterials && (
+        <ProductInfoItem detailType="Materials" detailValue={product.outerMaterials.join(", ")} />
+      )}
+      {product.brand && <ProductInfoItem detailType="Brand" detailValue={product.brand.name} />}
       {product.retailPrice && <ProductInfoItem detailType="Retail price" detailValue={"$" + product.retailPrice} />}
     </Box>
   )

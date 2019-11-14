@@ -10,6 +10,7 @@ import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
+
 import { useQuery } from "@apollo/react-hooks"
 
 const GET_PRODUCTS = gql`
@@ -22,7 +23,7 @@ const GET_PRODUCTS = gql`
         slug
       }
     }
-    products(category: $name, first: $first, skip: $skip) {
+    products(category: $name, first: $first, skip: $skip, where: { status: Available }) {
       id
       name
       description
@@ -34,7 +35,6 @@ const GET_PRODUCTS = gql`
       retailPrice
       createdAt
       updatedAt
-
       brand {
         name
       }
@@ -42,24 +42,27 @@ const GET_PRODUCTS = gql`
   }
 `
 
-const renderItem = ({ item }, _i, navigation) => {
-  const itemWidth = Dimensions.get("window").width / 2 - 10
+const renderItem = ({ item }, i, navigation) => {
+  const itemWidth = Dimensions.get("window").width / 2 - 5
   const product = item
 
   const image = get(product, "images[0]", { url: "" })
   const resizedImage = imageResize(image.url, "medium")
+  const isLeft = i % 2 === 0
 
   return (
     <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
-      <Box m={0.5} mb={1} width={itemWidth}>
+      <Box mr={isLeft ? 0.0 : "10px"} mb={1} width={itemWidth}>
         <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: 240 }} />
 
-        <Box m={2}>
-          <Sans size="0">{product.brand.name}</Sans>
-          <Sans size="0" color="gray">
+        <Box my={2} mx={1}>
+          <Sans size="0" mb={0.5}>
+            {product.brand.name}
+          </Sans>
+          <Sans size="0" color="gray" mb={0.5}>
             {product.name}
           </Sans>
-          <Sans size="0" color="gray">
+          <Sans size="0" color="gray" mb={0.5}>
             ${product.retailPrice}
           </Sans>
         </Box>
@@ -144,15 +147,15 @@ export const Browse = (props: any) => {
             }}
           />
         </Box>
-        <Box height={50}>
+        <Box height={70}>
           <CategoryPicker
             data={[{ slug: "all", name: "All" }, ...categories]}
             renderItem={({ item }) => {
               const selected = currentCategory == item.slug
               return (
                 <TouchableOpacity onPress={() => onCategoryPress(item)}>
-                  <Category mr={3} selected={selected}>
-                    <Sans size="0" style={{ opacity: selected ? 1.0 : 0.5 }}>
+                  <Category mr={3} mt={1} selected={selected}>
+                    <Sans size="1" style={{ opacity: selected ? 1.0 : 0.5 }}>
                       {item.name}
                     </Sans>
                   </Category>

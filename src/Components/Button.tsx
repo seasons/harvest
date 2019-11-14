@@ -1,13 +1,14 @@
 import React, { Component, ReactNode } from "react"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
-import { themeProps } from "./Theme"
+
+import { TextCheckSVG } from "../../assets/svgs"
 import { Box, BoxProps } from "./Box"
 import { Flex } from "./Flex"
-import { Sans } from "./Typography"
-import { TextCheckSVG } from "../../assets/svgs"
-import { animated, Spring } from "react-spring/renderprops-native.cjs"
-import { TouchableOpacity } from "react-native-gesture-handler"
 import { Spacer } from "./Spacer"
+import { themeProps } from "./Theme"
+import { Sans } from "./Typography"
 
 enum DisplayState {
   Default = "default",
@@ -33,7 +34,13 @@ export interface ButtonProps extends BoxProps {
   width?: number
 }
 
-export type ButtonVariant = "primaryLight" | "secondaryLight" | "primaryDark" | "secondaryOutline" | "secondaryDark"
+export type ButtonVariant =
+  | "primaryLight"
+  | "primaryGray"
+  | "secondaryLight"
+  | "primaryDark"
+  | "secondaryOutline"
+  | "secondaryDark"
 export type ButtonSize = "small" | "medium" | "large"
 
 /** Default button size */
@@ -46,7 +53,7 @@ export const defaultVariant: ButtonVariant = "primaryDark"
  */
 export function getColorsForVariant(variant: ButtonVariant) {
   const {
-    colors: { black, white, gray, darkGray, lightGray },
+    colors: { black, white, gray, mediumGray, darkGray, lightGray },
   } = themeProps
 
   switch (variant) {
@@ -61,6 +68,24 @@ export function getColorsForVariant(variant: ButtonVariant) {
           backgroundColor: white,
           borderColor: white,
           color: black,
+        },
+        disabled: {
+          backgroundColor: darkGray,
+          borderColor: darkGray,
+          color: gray,
+        },
+      }
+    case "primaryGray":
+      return {
+        default: {
+          backgroundColor: mediumGray,
+          borderColor: mediumGray,
+          color: white,
+        },
+        pressed: {
+          backgroundColor: darkGray,
+          borderColor: darkGray,
+          color: gray,
         },
         disabled: {
           backgroundColor: darkGray,
