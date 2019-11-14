@@ -1,7 +1,7 @@
-import { Box, Flex, Sans, Spacer, Button, Theme } from "App/Components"
-import React from "react"
+import { Box, Button, Flex, Sans, Spacer, Theme } from "App/Components"
 import { color } from "App/Utils"
-import { BagPlaceHolderSVG } from "../../../../assets/svgs/BagPlaceHolder"
+import React from "react"
+import { Image } from "react-native"
 
 export const EmptyState = ({ remainingPieces, navigation }) => {
   return (
@@ -17,7 +17,10 @@ export const EmptyState = ({ remainingPieces, navigation }) => {
         </Box>
         <Flex style={{ flex: 1 }} justifyContent="center" flexDirection="column">
           <Flex justifyContent="center" flexDirection="row">
-            <BagPlaceHolderSVG />
+            <Image
+              style={{ width: 200, height: 200, resizeMode: "contain" }}
+              source={require("../../../../assets/images/EmptyBag.png")}
+            />
           </Flex>
           <Spacer mb={3} />
           <Sans size="2" color={color("gray")} style={{ textAlign: "center" }}>
