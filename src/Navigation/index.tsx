@@ -5,9 +5,9 @@ import { Browse } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
-import { Webview } from "App/Scenes/Webview"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import { Initializing, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
+import { Webview } from "App/Scenes/Webview"
 import React, { useState } from "react"
 import { Image } from "react-native"
 import { createAppContainer, createSwitchNavigator } from "react-navigation"
@@ -15,6 +15,7 @@ import { createStackNavigator } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import styled from "styled-components"
+
 import DismissableStackNavigator from "./DismissableStackNavigator"
 import { Tabs } from "./Tabs"
 
@@ -177,8 +178,10 @@ const MainNavigator = createBottomTabNavigator(
 
 const CustomNavigator = props => {
   const [browseFilter, setBrowseFilter] = useState("all")
+  const [isReserved, setIsReserved] = useState(false)
+
   const { navigation } = props
-  const screenProps = { browseFilter, setBrowseFilter }
+  const screenProps = { browseFilter, setBrowseFilter, isReserved, setIsReserved }
 
   return (
     <NavigationContainer style={{ flex: 1 }}>

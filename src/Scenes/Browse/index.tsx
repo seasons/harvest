@@ -51,15 +51,23 @@ const renderItem = ({ item }, i, navigation) => {
   const resizedImage = imageResize(image.url, "medium")
   const isLeft = i % 2 === 0
 
+  const brandName = get(product, "brand.name")
+
+  if (!product) {
+    return null
+  }
+
   return (
     <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
       <Box mr={isLeft ? 0.0 : "10px"} mb={1} width={itemWidth}>
         <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: 240 }} />
 
         <Box my={2} mx={1}>
-          <Sans size="0" mb={0.5}>
-            {product.brand.name}
-          </Sans>
+          {brandName && (
+            <Sans size="0" mb={0.5}>
+              {brandName}
+            </Sans>
+          )}
           <Sans size="0" color="gray" mb={0.5}>
             {product.name}
           </Sans>

@@ -69,7 +69,7 @@ export const ProductTabsComponent = props => {
               </Box>
             </TouchableOpacity>
             <Spacer mr={2} />
-            <TouchableOpacity onPress={() => handleSaveButton()}>
+            <TouchableOpacity onPress={() => handleSaveButton()} style={{ opacity: 0 }}>
               <SaveIcon />
             </TouchableOpacity>
           </Flex>

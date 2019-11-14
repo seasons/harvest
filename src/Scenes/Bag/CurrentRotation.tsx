@@ -5,11 +5,13 @@ import { Sans } from "Components/Typography"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import { DateTime } from "luxon"
-import React from "react"
+import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
 
 import { Bag } from "./Bag"
 import { CurrentRotationItem } from "./Components/CurrentRotationItem"
@@ -43,26 +45,31 @@ const ACTIVE_RESERVATION = gql`
   }
 `
 
-export const CurrentRotation = props => {
-  const { data, loading } = useQuery(ACTIVE_RESERVATION)
+export const CurrentRotationComponent = props => {
+  const { data, loading, refetch } = useQuery(ACTIVE_RESERVATION)
   const insets = useSafeArea()
+
+  useEffect(() => {
+    refetch()
+  }, [get(props, "navigation.state.params.reservationID", "")])
 
   if (loading) {
     return <Loader />
   }
 
   const activeReservation = get(data, "me.activeReservation", null)
-  const returnDate = !!activeReservation
-    ? DateTime.fromISO(activeReservation.createdAt)
-        .plus({ days: 30 })
-        .toLocaleString(DateTime.DATE_FULL)
-    : ""
 
   if (!activeReservation) {
     console.log("Inside navigate to Bag")
 
     return <Bag {...props} />
   }
+
+  const returnDate = !!activeReservation
+    ? DateTime.fromISO(activeReservation.createdAt)
+        .plus({ days: 30 })
+        .toLocaleString(DateTime.DATE_FULL)
+    : ""
 
   const renderItem = ({ item, index }) => {
     return (
@@ -104,3 +111,15 @@ export const CurrentRotation = props => {
     </Container>
   )
 }
+
+const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
+
+const mapStateToProps = state => {
+  const { bag } = state
+  return { bag }
+}
+
+export const CurrentRotation = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CurrentRotationComponent)

@@ -113,6 +113,7 @@ export const reducer = (state, action) => {
         bag: {
           ...clonedState.bag,
           reservationID: action.payload,
+          reserved: true,
         },
       }
     default:

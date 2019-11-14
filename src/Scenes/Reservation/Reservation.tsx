@@ -1,4 +1,5 @@
 import { Box, ErrorPopUp, FixedButton, Flex, Sans, Separator, Spacer, Theme } from "App/Components"
+import { Loader } from "App/Components/Loader"
 import { CloseXIcon } from "Assets/icons"
 import gql from "graphql-tag"
 import { get } from "lodash"
@@ -41,22 +42,42 @@ const GET_CUSTOMER = gql`
             state
             zipCode
           }
-          billingInfo {
-            last_digits
-          }
+        }
+        billingInfo {
+          last_digits
         }
       }
     }
   }
 `
 
+const SectionHeader = ({ title }) => {
+  return (
+    <>
+      <Flex flexDirection="row" flex={1} width="100%">
+        <Sans size="2" color="black">
+          {title}
+        </Sans>
+        <EditButton ml="auto" size="2">
+          Edit
+        </EditButton>
+      </Flex>
+      <Spacer mb={1} />
+      <Separator color="#e5e5e5" />
+    </>
+  )
+}
+
 export const ReservationView = props => {
   const { bag } = props
   const { data, loading } = useQuery(GET_CUSTOMER)
   const [reserveItems] = useMutation(RESERVE_ITEMS)
   const [showError, setShowError] = useState(false)
-
   const insets = useSafeArea()
+
+  if (loading) {
+    return <Loader />
+  }
 
   const customer = get(data, "me.customer")
   const address = get(customer, "detail.shippingAddress", {
@@ -66,27 +87,10 @@ export const ReservationView = props => {
     state: "",
     zipCode: "",
   })
-  const phoneNumber = get(customer, "detail.phoneNumber")
-  const lastFourDigits = get(customer, "detail.billingInfo.last_digits", "")
+  const phoneNumber = get(customer, "detail.phoneNumber", "")
+  const lastFourDigits = get(customer, "billingInfo.last_digits", null)
 
-  const SectionHeader = ({ title }) => {
-    return (
-      <>
-        <Flex flexDirection="row" flex={1} width="100%">
-          <Sans size="2" color="black">
-            {title}
-          </Sans>
-          <EditButton ml="auto" size="2">
-            Edit
-          </EditButton>
-        </Flex>
-        <Spacer mb={1} />
-        <Separator color="#e5e5e5" />
-      </>
-    )
-  }
-
-  console.log(address)
+  console.log(data)
 
   const content = (
     <>
@@ -105,7 +109,7 @@ export const ReservationView = props => {
             <Box mb={4}>
               <SectionHeader title="Payment info" />
               <Sans size="2" color="gray" mt={1}>
-                {lastFourDigits}
+                {lastFourDigits || ""}
               </Sans>
             </Box>
           )}
@@ -113,7 +117,7 @@ export const ReservationView = props => {
             <Box mb={4}>
               <SectionHeader title="Phone number" />
               <Sans size="2" color="gray" mt={1}>
-                {phoneNumber}
+                {phoneNumber || ""}
               </Sans>
             </Box>
           )}
@@ -142,7 +146,6 @@ export const ReservationView = props => {
       <Box mb={insets.bottom}>
         <FixedButton
           onPress={async () => {
-            // TODO: display loading screen
             try {
               const { data } = await reserveItems({
                 variables: {
