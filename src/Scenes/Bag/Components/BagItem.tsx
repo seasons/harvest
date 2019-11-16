@@ -1,16 +1,18 @@
 import { Box, Flex, Sans } from "App/Components"
-import React from "react"
-import { useQuery } from "@apollo/react-hooks"
-import gql from "graphql-tag"
-import { Image, Text, TouchableWithoutFeedback } from "react-native"
-import { get } from "lodash"
-import styled from "styled-components/native"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
 import { Loader } from "App/Components/Loader"
+import { imageResize } from "App/helpers/imageResize"
+import gql from "graphql-tag"
+import { get } from "lodash"
+import React from "react"
+import ContentLoader, { Rect } from "react-content-loader/native"
+import { Text, TouchableWithoutFeedback } from "react-native"
+import styled from "styled-components/native"
+
+import { useQuery } from "@apollo/react-hooks"
 
 const GET_PRODUCT = gql`
-  query GetProduct($productId: ID!) {
+  query GetProduct($productId: ID!, $variantId: ID!) {
     product(where: { id: $productId }) {
       name
       id
@@ -19,6 +21,10 @@ const GET_PRODUCT = gql`
         name
       }
       images
+      variants(where: { id: $variantId }) {
+        id
+        size
+      }
     }
   }
 `
@@ -27,11 +33,12 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
       productId: bagItem.productID,
+      variantId: bagItem.variantID,
     },
   })
 
   if (loading || !data) {
-    return <Loader />
+    return <BagItemLoader />
   }
 
   if (error) {
@@ -45,6 +52,7 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
   }
 
   const imageURL = imageResize(get(product, "images[0].url"), "medium")
+  const size = get(data, "product.variants[0].size")
 
   return (
     <Box py={2} key={product.id} style={{ height: sectionHeight }}>
@@ -60,7 +68,7 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
           <Box>
             <Text>
               <Sans size="2" color="gray">
-                Size {product.modelSize} {showRemoveButton && ` | `}
+                Size {size} {showRemoveButton && ` | `}
               </Sans>
 
               {showRemoveButton && (
@@ -91,3 +99,16 @@ const ImageContainer = styled(FadeInImage)`
   height: 200;
   background: #f6f6f6;
 `
+
+const BagItemLoader = () => {
+  return (
+    <ContentLoader height={200} primaryColor="#f6f6f6">
+      <Rect x="0" y="20" width="20" height="20" />
+      <Rect x="0" y="62" width="80" height="18" />
+      <Rect x="0" y="87" width="130" height="18" />
+      <Rect x="0" y="112" width="90" height="18" />
+      <Rect x="0" y="162" width="90" height="20" />
+      <Rect x="175" y="0" width="160" height="200" />
+    </ContentLoader>
+  )
+}
