@@ -3,6 +3,7 @@ package com.seasons;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.sentry.RNSentryPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
@@ -48,6 +49,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSentryPackage(),
             new RNCWebViewPackage(),
             new SplashScreenReactPackage(),
           (ReactPackage) new SafeAreaContextPackage(),

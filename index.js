@@ -10,6 +10,11 @@ import AsyncStorage from "@react-native-community/async-storage"
 import { MONSOON_ENDPOINT } from "react-native-dotenv"
 import { IntrospectionFragmentMatcher } from "apollo-cache-inmemory"
 import introspectionQueryResultData from "./src/fragmentTypes.json"
+import * as Sentry from "@sentry/react-native"
+
+Sentry.init({
+  dsn: "https://6e163b9f771f4c53951c546a4ac64891@sentry.io/1824125",
+})
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,
