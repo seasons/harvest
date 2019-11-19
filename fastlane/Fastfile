@@ -21,12 +21,12 @@ platform :ios do
         #           include_bitcode: true)
         build
 
-        appcenter_upload(
-            api_token: ENV["TEST_APPCENTER_API_TOKEN"],
-            owner_name: ENV["TEST_APPCENTER_OWNER_NAME"],
-            app_name: ENV["APPCENTER_APP_NAME"],
-            ipa: './Seasons.ipa'
-        )
+        # appcenter_upload(
+        #     api_token: ENV["TEST_APPCENTER_API_TOKEN"],
+        #     owner_name: ENV["TEST_APPCENTER_OWNER_NAME"],
+        #     app_name: ENV["APPCENTER_APP_NAME"],
+        #     ipa: './Seasons.ipa'
+        # )
 
         changelog_from_git_commits
         upload_to_testflight
