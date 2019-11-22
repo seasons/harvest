@@ -9,9 +9,12 @@ import React, { useEffect, useState } from "react"
 import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useSafeArea } from "react-native-safe-area-context"
+import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 
 import { useQuery } from "@apollo/react-hooks"
+
+import { BrowseLoader } from "./Loader"
 
 const GET_PRODUCTS = gql`
   query getProducts($name: String!, $first: Int!, $skip: Int!) {
@@ -116,7 +119,10 @@ export const Browse = (props: any) => {
 
   return (
     <Container>
-      <Flex flexDirection="column" flex={1} pt={insets.top} ref={scrollViewEl}>
+      <LoaderContainer mt={insets.top}>
+        <BrowseLoader />
+      </LoaderContainer>
+      <Flex flexDirection="column" flex={1} pt={insets.top} ref={scrollViewEl} style={{ opacity: 0 }}>
         <Box flex={1} flexGrow={1}>
           <FlatList
             data={products}
@@ -196,6 +202,13 @@ const CategoryPicker = styled.FlatList`
   border-style: solid;
   border-top-width: 1px;
 `
+
+const LoaderContainer = animated(styled(Box)`
+  flex: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+`)
 
 const Category = styled(Box)`
   ${p =>

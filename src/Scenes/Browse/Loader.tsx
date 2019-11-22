@@ -1,25 +1,19 @@
-import React from "react"
-import Svg, { Defs, LinearGradient, Stop, Path, G, Use } from "react-native-svg"
-import ContentLoader from "react-content-loader/native"
-import { Col, Row } from "native-base"
 import { Box } from "App/Components"
+import { Col, Row } from "native-base"
+import React from "react"
+import ContentLoader, { Rect } from "react-content-loader/native"
+import { Dimensions } from "react-native"
+import Svg, { Defs, G, LinearGradient, Path, Stop, Use } from "react-native-svg"
+import { animated, useSpring } from "react-spring/native.cjs"
+import styled from "styled-components/native"
 
 export const BrowseItemLoader = props => (
-  <Box m={0.5}>
-    <Svg width={184} height={316} {...props}>
-      <Defs>
-        <LinearGradient x1="79.389%" y1="0%" x2="20.611%" y2="100%" id="prefix__b">
-          <Stop stopColor="#F2F2F2" offset="0%" />
-          <Stop stopColor="#F2F2F2" offset="100%" />
-        </LinearGradient>
-        <Path id="prefix__a" d="M0 0h184v240H0z" />
-      </Defs>
-      <G fill="none" fillRule="evenodd">
-        <Use fill="url(#prefix__b)" xlinkHref="#prefix__a" />
-        <Path fill="#F2F2F2" d="M20 260h88v8H20zM20 284h112v8H20zM20 308h80v8H20z" />
-      </G>
-    </Svg>
-  </Box>
+  <G>
+    <Rect x="0" y="0" width="240" height="184" />
+    <Rect x="0" y="5" width="120" height="8" />
+    <Rect x="0" y="26" width="80" height="8" />
+    <Rect x="0" y="36" width="90" height="8" />
+  </G>
 )
 
 export const TabBarLoader = props => (
@@ -41,19 +35,25 @@ export const TabBarLoader = props => (
 )
 
 export const BrowseLoader = props => {
+  const { width, height } = Dimensions.get("window")
+
+  const cardWidth = width / 2 - 7
+
+  // const renderCard =
+
   return (
-    <>
-      <Col>
-        <Row>
-          <BrowseItemLoader />
-          <BrowseItemLoader />
-        </Row>
-        <Row>
-          <BrowseItemLoader />
-          <BrowseItemLoader />
-        </Row>
-      </Col>
-      <TabBarLoader />
-    </>
+    <ContentLoader height={676}>
+      <>
+        <Rect x="0" y="100" width={cardWidth} height="240" />
+        <Rect x="5" y="250" width="120" height="8" />
+        <Rect x="5" y="260" width="80" height="8" />
+        <Rect x="5" y="270" width="90" height="8" />
+      </>
+    </ContentLoader>
   )
 }
+
+const HeaderContainer = animated(styled(Box)`
+  height: 100;
+  position: absolute;
+`)

@@ -6,7 +6,7 @@ import { Theme } from "./Theme"
 export const Container = ({ children }) => {
   return (
     <Theme>
-      <StatusBar backgroundColor="transparent" barStyle="default" />
+      <StatusBar backgroundColor="black" barStyle="default" />
       <View style={{ flex: 1 }}>{children}</View>
     </Theme>
   )
