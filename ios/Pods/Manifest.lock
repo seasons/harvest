@@ -40,6 +40,8 @@ PODS:
     - React
   - React (0.59.10):
     - React/Core (= 0.59.10)
+  - react-native-config (0.12.0):
+    - React
   - react-native-safe-area-context (0.3.6):
     - React
   - react-native-splash-screen (3.2.0):
@@ -149,6 +151,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - lottie-ios (from `../node_modules/lottie-ios`)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
+  - react-native-config (from `../node_modules/react-native-config`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -237,6 +240,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/lottie-react-native"
   React:
     :path: "../node_modules/react-native"
+  react-native-config:
+    :path: "../node_modules/react-native-config"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
@@ -313,6 +318,7 @@ SPEC CHECKSUMS:
   lottie-ios: 496ac5cea1bbf1a7bd1f1f472f3232eb1b8d744b
   lottie-react-native: b123a79529cc732201091f585c62c89bb4747252
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
+  react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
   react-native-safe-area-context: e380a6f783ccaec848e2f3cc8eb205a62362950d
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webview: deb4a57eee4906e992e2f84bb087a15fd302378e
@@ -337,6 +343,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 1e70fe58b872355f0ecb44fb81bb1a16484047f0
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: dae54d98cf10d9c536c17d6891ceddd89986e517
+PODFILE CHECKSUM: 85d8aec3d057429cf1042bc5eb866b3d39325cb2
 
 COCOAPODS: 1.8.3

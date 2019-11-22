@@ -2,6 +2,7 @@ import { Box } from "App/Components"
 import { Col, Row } from "native-base"
 import React from "react"
 import ContentLoader, { Rect } from "react-content-loader/native"
+import { Dimensions } from "react-native"
 import Svg, { Defs, G, LinearGradient, Path, Stop, Use } from "react-native-svg"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
@@ -34,18 +35,20 @@ export const TabBarLoader = props => (
 )
 
 export const BrowseLoader = props => {
+  const { width, height } = Dimensions.get("window")
+
+  const cardWidth = width / 2 - 7
+
+  // const renderCard =
+
   return (
     <ContentLoader height={676}>
-      <Rect x="0" y="5" width="120" height="20" />
-      <Rect x="0" y="35" width="80" height="20" />
-      <Rect x="90" y="35" width="90" height="20" />
-
-      <Rect x="0" y="100" width="184" height="240" />
-      <Rect x="5" y="250" width="120" height="8" />
-      <Rect x="5" y="260" width="80" height="8" />
-      <Rect x="5" y="270" width="90" height="8" />
-      <BrowseItemLoader />
-      <TabBarLoader />
+      <>
+        <Rect x="0" y="100" width={cardWidth} height="240" />
+        <Rect x="5" y="250" width="120" height="8" />
+        <Rect x="5" y="260" width="80" height="8" />
+        <Rect x="5" y="270" width="90" height="8" />
+      </>
     </ContentLoader>
   )
 }

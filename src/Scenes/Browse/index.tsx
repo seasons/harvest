@@ -206,7 +206,6 @@ const CategoryPicker = styled.FlatList`
 const LoaderContainer = animated(styled(Box)`
   flex: 1;
   position: absolute;
-  background: red;
   left: 0;
   top: 0;
 `)
