@@ -122,7 +122,7 @@ export const Browse = (props: any) => {
       <LoaderContainer mt={insets.top}>
         <BrowseLoader />
       </LoaderContainer>
-      <Flex flexDirection="column" flex={1} pt={insets.top} ref={scrollViewEl} style={{ opacity: 0 }}>
+      <Flex flexDirection="column" flex={1} pt={insets.top} ref={scrollViewEl} style={{ opacity: 100 }}>
         <Box flex={1} flexGrow={1}>
           <FlatList
             data={products}
