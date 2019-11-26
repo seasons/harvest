@@ -1,5 +1,4 @@
 import { Box } from "App/Components"
-import { Col, Row } from "native-base"
 import React from "react"
 import ContentLoader, { Rect } from "react-content-loader/native"
 import { Dimensions } from "react-native"
