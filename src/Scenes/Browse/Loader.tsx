@@ -1,4 +1,5 @@
 import { Box } from "App/Components"
+import { number } from "prop-types"
 import React from "react"
 import ContentLoader, { Rect } from "react-content-loader/native"
 import { Dimensions } from "react-native"
@@ -38,15 +39,30 @@ export const BrowseLoader = props => {
 
   const cardWidth = width / 2 - 7
 
-  // const renderCard =
+  const renderCard = ({ x, y }) => (
+    <>
+      <Rect x={x + 0} y={y + 100} width={cardWidth} height="238" />
+      <Rect x={x + 10} y={y + 360} width="80" height={8} />
+      <Rect x={x + 10} y={y + 390} width="80" height={8} />
+      <Rect x={x + 10} y={y + 420} width="30" height={8} />
+    </>
+  )
 
   return (
     <ContentLoader height={676}>
+      <Rect x={20} y={20} width={80} height={25} />
+      <Rect x={20} y={60} width={180} height={15} />
+
+      {renderCard({ x: 0, y: 0 })}
+      {renderCard({ x: cardWidth + 14, y: 0 })}
+      <Rect x={0} y={482} width={cardWidth} height={120} />
+      <Rect x={cardWidth + 14} y={482} width={cardWidth} height={120} />
       <>
-        <Rect x="0" y="100" width={cardWidth} height="240" />
-        <Rect x="5" y="250" width="120" height="8" />
-        <Rect x="5" y="260" width="80" height="8" />
-        <Rect x="5" y="270" width="90" height="8" />
+        <Rect x={20} y={height - 180} height={10} width={30} />
+        <Rect x={70} y={height - 180} height={10} width={55} />
+        <Rect x={140} y={height - 180} height={10} width={30} />
+        <Rect x={190} y={height - 180} height={10} width={80} />
+        <Rect x={290} y={height - 180} height={10} width={60} />
       </>
     </ContentLoader>
   )
