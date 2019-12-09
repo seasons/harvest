@@ -171,7 +171,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
       case "medium":
         return { height: 55, size: "2", px: 30 }
       case "large":
-        return { height: 55, size: "1", px: 5 }
+        return { height: 55, size: "2", px: 5 }
     }
   }
 

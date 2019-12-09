@@ -1,4 +1,5 @@
-import { Box, ErrorPopUp, FixedButton, Flex, Separator, Spacer } from "App/Components"
+import { Box, ErrorPopUp, FixedButton, Separator, Spacer } from "App/Components"
+import { Loader } from "App/Components/Loader"
 import { removeItemFromBag } from "App/Redux/actions"
 import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 import { color } from "App/Utils"
@@ -8,15 +9,13 @@ import { Sans } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import { FlatList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
+import { FlatList, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import styled from "styled-components/native"
 
-import { BagPlus } from "../../../assets/svgs"
-import { EmptyState } from "./Components"
 import { BagItem } from "./Components/BagItem"
+import { EmptyBagItem } from "./Components/EmptyBagItem"
 
 const SECTION_HEIGHT = 300
 
@@ -30,20 +29,42 @@ const GET_BAG = gql`
   query GetBag {
     me {
       bag {
-        items {
+        id
+        productVariant {
           id
+          product {
+            id
+          }
         }
+        position
+        saved
       }
     }
   }
 `
 
+enum BagView {
+  Bag = 0,
+  Saved = 1,
+}
+
 export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(null)
-  const { variables, data } = useQuery(GET_BAG)
-  const [tabNumber, setTabNumber] = useState(0)
+  const { variables, data, loading } = useQuery(GET_BAG)
+  const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
   const insets = useSafeArea()
+
+  if (loading) {
+    return <Loader />
+  }
+
+  const bag2 = data.me.bag.map(item => ({
+    variantID: item.productVariant.id,
+    productID: item.productVariant.product.id,
+  }))
+
+  console.log("bag2: ", bag2)
 
   if (!bag || !bag.items) {
     return null
@@ -87,34 +108,10 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   }
 
   const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
-  const bagIsEmpty = bag.itemCount === 0
   const bagIsFull = bag.itemCount === BAG_NUM_ITEMS
   const remainingPiecesDisplay = !bagIsFull
     ? `You have ${remainingPieces} ${remainingPieces === 1 ? "piece" : "pieces"} remaining`
     : "Reserve your order below"
-
-  const emptyBagItem = index => {
-    return (
-      <Box p={2}>
-        <EmptyBagItemContainer>
-          <Flex flex={1} pt="84px" flexDirection="column" alignItems="center">
-            <Flex flexWrap="nowrap" flexDirection="column" alignItems="center" alignSelf="center">
-              <TouchableOpacity onPress={() => navigation.navigate("Browse")}>
-                <Box>
-                  <Box my={1} mx="auto">
-                    <BagPlus />
-                  </Box>
-                  <Sans size="2" color="black" textAlign="center">
-                    Add item
-                  </Sans>
-                </Box>
-              </TouchableOpacity>
-            </Flex>
-          </Flex>
-        </EmptyBagItemContainer>
-      </Box>
-    )
-  }
 
   const ErrorMessage = () => {
     if (showReserveError) {
@@ -149,59 +146,53 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
         <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} bagItem={item} />
       </Box>
     ) : (
-      emptyBagItem(index)
+      <EmptyBagItem navigation={navigation} />
     )
   }
+
+  const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"
+  const headerSubtitle = currentView === BagView.Bag ? remainingPiecesDisplay : "Tucked away for later"
 
   return (
     <Container>
       <Box style={{ flex: 1, paddingTop: insets.top }}>
-        {bagIsEmpty ? (
-          <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignContent="center">
-            <EmptyState remainingPieces={remainingPieces} navigation={navigation} />
-          </Flex>
-        ) : (
-          <Box>
-            <FlatList
-              data={bag.items}
-              ListHeaderComponent={() => (
-                <>
-                  <Box p={2}>
-                    <Sans size="3" color="black">
-                      My bag
-                    </Sans>
-                    <Sans size="2" color="gray">
-                      {remainingPiecesDisplay}
-                    </Sans>
-                  </Box>
-                  <TabBar
-                    tabs={["Bag", "Saved"]}
-                    spaceEvenly
-                    activeTab={tabNumber}
-                    goToPage={page => {
-                      setTabNumber(page)
-                      console.log("page : ", page)
-                    }}
-                  />
-                </>
-              )}
-              ItemSeparatorComponent={() => (
-                <Box>
-                  <Spacer mb={2} />
-                  <Separator color={color("lightGray")} />
-                </Box>
-              )}
-              keyExtractor={(_item, index) => String(index)}
-              renderItem={item => renderItem(item)}
-              ListFooterComponent={() => <Spacer mb={80} />}
-            />
-            <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
-              <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
-                Reserve
-              </FixedButton>
-            </TouchableWithoutFeedback>
-          </Box>
-        )}
+        <FlatList
+          data={bag.items}
+          ListHeaderComponent={() => (
+            <>
+              <Box p={2}>
+                <Sans size="3" color="black">
+                  {headerTitle}
+                </Sans>
+                <Sans size="2" color="gray">
+                  {headerSubtitle}
+                </Sans>
+              </Box>
+              <TabBar
+                tabs={["Bag", "Saved"]}
+                spaceEvenly
+                activeTab={currentView}
+                goToPage={page => {
+                  setCurrentView(page as BagView)
+                  console.log("page : ", page)
+                }}
+              />
+            </>
+          )}
+          ItemSeparatorComponent={() => (
+            <Box>
+              <Separator color={color("lightGray")} />
+            </Box>
+          )}
+          keyExtractor={(_item, index) => String(index)}
+          renderItem={item => renderItem(item)}
+          ListFooterComponent={() => <Spacer mb={80} />}
+        />
+        <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
+          <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
+            Reserve
+          </FixedButton>
+        </TouchableWithoutFeedback>
       </Box>
       <ErrorMessage />
     </Container>
@@ -222,10 +213,3 @@ const mapStateToProps = state => {
 }
 
 export const Bag = connect(mapStateToProps, mapDispatchToProps)(BagComponent)
-
-const EmptyBagItemContainer = styled(Box)`
-  background: #f6f6f6;
-  border-radius: 8px;
-  overflow: hidden;
-  height: 270;
-`

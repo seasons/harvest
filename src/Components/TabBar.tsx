@@ -28,8 +28,6 @@ const Button = styled(TouchableWithoutFeedback)`
   flex: 1;
 `
 
-const Underline = Animated.View
-
 const Tabs = styled(View)`
   height: 55px;
   flex-direction: row;
@@ -41,12 +39,13 @@ const TabButton = styled.View<{ spaceEvenly?: boolean; active?: boolean }>`
   justify-content: center;
   padding-top: 5;
   flex-grow: 1;
+  border-color: transparent;
+  border-bottom-width: 3px;
   ${p => p.spaceEvenly && `flex: 1;`};
   ${p =>
     p.active &&
     `
     border-color: #000000;
-    border-bottom-width: 3px;
   `};
 `
 
@@ -79,7 +78,7 @@ export class TabBar extends React.Component<TabBarProps, null> {
 
   render() {
     return (
-      <Wrapper px={2}>
+      <Wrapper>
         <Tabs>
           {this.props.tabs.map((name, index) => {
             const isTabActive = this.props.activeTab === index

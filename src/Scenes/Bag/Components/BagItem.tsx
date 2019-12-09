@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Sans } from "App/Components"
+import { Box, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
 import gql from "graphql-tag"
@@ -54,7 +54,7 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
   const size = get(data, "product.variants[0].size")
 
   return (
-    <Box py={2} key={product.id} style={{ height: sectionHeight }}>
+    <Box py={2} key={product.id}>
       <BagItemContainer flexDirection="row">
         <Flex style={{ flex: 2 }} p={2} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
           <Box>
@@ -83,7 +83,7 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
         </Flex>
       </BagItemContainer>
 
-      <Flex flexDirection="row" py={2}>
+      <Flex flexDirection="row" pt={1}>
         <Box flex={1} pr={1}>
           <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
             <RemoveButton>
