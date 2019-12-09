@@ -11,11 +11,22 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 
+import { useMutation } from "@apollo/react-hooks"
+
 import { SizePicker } from "./SizePicker"
+
+const SAVE_ITEM = gql`
+  mutation SaveItem($item: ID!, $save: Boolean!) {
+    saveProduct(item: $item, save: $save) {
+      id
+    }
+  }
+`
 
 export const ProductTabsComponent = props => {
   const { displayConfirmation, productState, setVariant, toggleShowSizeSelection, productID, navigation } = props
   const { variant, showSizeSelection } = productState
+  const [saveItem] = useMutation(SAVE_ITEM)
 
   if (!productID) {
     return null
@@ -45,15 +56,14 @@ export const ProductTabsComponent = props => {
   }
 
   const handleSaveButton = () => {
-    // FIXME: Handle save
-    const SAVE_ITEM = gql`
-      mutation SaveItem($item: ID!, $options: ReserveItemsOptions) {
-        saveItem(items: $item, options: $options) {
-          id
-        }
-      }
-    `
+    saveItem({
+      variables: {
+        item: variant.id,
+        save: true,
+      },
+    })
   }
+
   return (
     <>
       <Flex style={{ backgroundColor: color("black") }}>

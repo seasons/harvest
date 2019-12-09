@@ -13,7 +13,7 @@ interface TabBarProps {
   /** Auto: A list of strings for the buttons */
   tabs: string[]
   /** Auto:  A callback for usage in the tab buttons */
-  goToPage?: () => null
+  goToPage?: (page: Number) => null | void
   /** Auto: The index of the currently active tab */
   activeTab?: number
   /** Auto: How much horiztonal space do you have */
@@ -31,7 +31,7 @@ const Button = styled(TouchableWithoutFeedback)`
 const Underline = Animated.View
 
 const Tabs = styled(View)`
-  height: 50px;
+  height: 55px;
   flex-direction: row;
   justify-content: space-around;
 `
@@ -43,12 +43,10 @@ const TabButton = styled.View<{ spaceEvenly?: boolean; active?: boolean }>`
   flex-grow: 1;
   ${p => p.spaceEvenly && `flex: 1;`};
   ${p =>
-    !p.spaceEvenly &&
     p.active &&
     `
-    border-color: ${color("black100")};
-    border-bottom-width: 1px;
-    margin-bottom: -1px;
+    border-color: #000000;
+    border-bottom-width: 3px;
   `};
 `
 
@@ -71,7 +69,7 @@ export class TabBar extends React.Component<TabBarProps, null> {
         onPress={() => onPressHandler(page)}
       >
         <TabButton spaceEvenly={this.props.spaceEvenly} active={isTabActive}>
-          <Sans numberOfLines={1} weight="medium" size="3" color={isTabActive ? "black" : color("gray")}>
+          <Sans numberOfLines={1} weight="medium" size="2" color={isTabActive ? "black" : color("gray")}>
             {name}
           </Sans>
         </TabButton>
@@ -80,34 +78,13 @@ export class TabBar extends React.Component<TabBarProps, null> {
   }
 
   render() {
-    const containerWidth = this.props.containerWidth - space(4)
-    const numberOfTabs = this.props.tabs.length
-
     return (
       <Wrapper px={2}>
         <Tabs>
-          {this.props.tabs.map((name, page) => {
-            const isTabActive = this.props.activeTab === page
-            return this.renderTab(name, page, isTabActive, this.props.goToPage)
+          {this.props.tabs.map((name, index) => {
+            const isTabActive = this.props.activeTab === index
+            return this.renderTab(name, index, isTabActive, this.props.goToPage)
           })}
-          {this.props.spaceEvenly ? (
-            <Underline
-              style={[
-                {
-                  position: "absolute",
-                  width: containerWidth / numberOfTabs,
-                  height: 1,
-                  backgroundColor: "black",
-                  bottom: -1,
-                  left: 0,
-                  right: 0,
-                },
-                // {
-                //   transform: [{ translateX }],
-                // },
-              ]}
-            />
-          ) : null}
         </Tabs>
       </Wrapper>
     )
@@ -116,5 +93,5 @@ export class TabBar extends React.Component<TabBarProps, null> {
 
 const Wrapper = styled(Box)`
   border-bottom-width: 1px;
-  border-bottom-color: ${color("black")};
+  border-bottom-color: #e5e5e5;
 `

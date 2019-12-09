@@ -1,6 +1,5 @@
-import { Box, Flex, Sans } from "App/Components"
+import { Box, Button, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { Loader } from "App/Components/Loader"
 import { imageResize } from "App/helpers/imageResize"
 import gql from "graphql-tag"
 import { get } from "lodash"
@@ -59,48 +58,80 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
       <BagItemContainer flexDirection="row">
         <Flex style={{ flex: 2 }} p={2} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
           <Box>
-            <Sans size="3">{index + 1}.</Sans>
-            <Sans size="2">{product.brand.name}.</Sans>
+            <Sans size="3" pb={1}>
+              {index + 1}
+            </Sans>
+            <Sans size="2">{product.brand.name}</Sans>
             <Sans size="2" color="gray">
-              {product.name}.
+              {product.name}
             </Sans>
           </Box>
           <Box>
             <Text>
               <Sans size="2" color="gray">
-                Size {size} {showRemoveButton && ` | `}
+                Size {size}
               </Sans>
             </Text>
           </Box>
         </Flex>
         <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
           <ImageContainer
-            style={{ height: sectionHeight, width: 160 }}
+            style={{ height: sectionHeight, width: 170 }}
             resizeMode="contain"
             source={{ uri: imageURL }}
           />
         </Flex>
       </BagItemContainer>
-      {showRemoveButton && (
-        <>
+
+      <Flex flexDirection="row" py={2}>
+        <Box flex={1} pr={1}>
           <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
-            <Box>
-              <Sans size="2">Remove</Sans>
-            </Box>
+            <RemoveButton>
+              <Sans size="2" textAlign="center">
+                Remove
+              </Sans>
+            </RemoveButton>
           </TouchableWithoutFeedback>
-        </>
-      )}
+        </Box>
+        <Box flex={1}>
+          <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
+            <SaveForLaterButton>
+              <Sans size="2" textAlign="center">
+                Save For Later
+              </Sans>
+            </SaveForLaterButton>
+          </TouchableWithoutFeedback>
+        </Box>
+      </Flex>
     </Box>
   )
 }
 
+const RemoveButton = styled(Box)`
+  height: 50px;
+  border-radius: 5px;
+  background: #f6f6f6;
+  padding: 10px;
+`
+
+const SaveForLaterButton = styled(Box)`
+  height: 50px;
+  border-radius: 5px;
+  border: 1px;
+  border-color: #e5e5e5;
+  background: transparent;
+  padding: 10px;
+`
+
 const BagItemContainer = styled(Box)`
   background: #f6f6f6;
   border-radius: 8px;
+  overflow: hidden;
+  height: 210px;
 `
 
 const ImageContainer = styled(FadeInImage)`
-  height: 300;
+  height: 214;
 `
 
 const BagItemLoader = () => {

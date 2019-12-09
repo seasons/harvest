@@ -8,11 +8,11 @@ import { Sans } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import { FlatList, TouchableWithoutFeedback } from "react-native"
+import { FlatList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import SortableList from "react-native-sortable-list"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
+import styled from "styled-components/native"
 
 import { BagPlus } from "../../../assets/svgs"
 import { EmptyState } from "./Components"
@@ -41,6 +41,7 @@ const GET_BAG = gql`
 export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(null)
   const { variables, data } = useQuery(GET_BAG)
+  const [tabNumber, setTabNumber] = useState(0)
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
   const insets = useSafeArea()
 
@@ -94,21 +95,23 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
 
   const emptyBagItem = index => {
     return (
-      <Box p={2} style={{ height: SECTION_HEIGHT }}>
-        <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
-          <Box>
-            <Sans size="3">{index + 1}.</Sans>
-            <Sans size="2" color="gray">
-              Add your item
-            </Sans>
-          </Box>
-          <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
-            <TouchableWithoutFeedback onPress={() => null}>
-              <BagPlus />
-            </TouchableWithoutFeedback>
-            <Spacer mr={3} />
+      <Box p={2}>
+        <EmptyBagItemContainer>
+          <Flex flex={1} pt="84px" flexDirection="column" alignItems="center">
+            <Flex flexWrap="nowrap" flexDirection="column" alignItems="center" alignSelf="center">
+              <TouchableOpacity onPress={() => navigation.navigate("Browse")}>
+                <Box>
+                  <Box my={1} mx="auto">
+                    <BagPlus />
+                  </Box>
+                  <Sans size="2" color="black" textAlign="center">
+                    Add item
+                  </Sans>
+                </Box>
+              </TouchableOpacity>
+            </Flex>
           </Flex>
-        </Flex>
+        </EmptyBagItemContainer>
       </Box>
     )
   }
@@ -140,10 +143,10 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
     return null
   }
 
-  const renderItem = ({ data, index }) => {
-    return data.productID.length ? (
+  const renderItem = ({ item, index }) => {
+    return item.productID.length ? (
       <Box mx={2}>
-        <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} bagItem={data} />
+        <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} bagItem={item} />
       </Box>
     ) : (
       emptyBagItem(index)
@@ -159,10 +162,10 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
           </Flex>
         ) : (
           <Box>
-            <SortableList
+            <FlatList
               data={bag.items}
-              renderHeader={() => {
-                return (
+              ListHeaderComponent={() => (
+                <>
                   <Box p={2}>
                     <Sans size="3" color="black">
                       My bag
@@ -171,18 +174,26 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
                       {remainingPiecesDisplay}
                     </Sans>
                   </Box>
-                )
-              }}
+                  <TabBar
+                    tabs={["Bag", "Saved"]}
+                    spaceEvenly
+                    activeTab={tabNumber}
+                    goToPage={page => {
+                      setTabNumber(page)
+                      console.log("page : ", page)
+                    }}
+                  />
+                </>
+              )}
               ItemSeparatorComponent={() => (
-                <Box px={2}>
+                <Box>
                   <Spacer mb={2} />
                   <Separator color={color("lightGray")} />
-                  <Spacer mb={2} />
                 </Box>
               )}
               keyExtractor={(_item, index) => String(index)}
-              renderRow={item => renderItem(item)}
-              renderFooter={() => <Spacer mb={80} />}
+              renderItem={item => renderItem(item)}
+              ListFooterComponent={() => <Spacer mb={80} />}
             />
             <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
               <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
@@ -211,3 +222,10 @@ const mapStateToProps = state => {
 }
 
 export const Bag = connect(mapStateToProps, mapDispatchToProps)(BagComponent)
+
+const EmptyBagItemContainer = styled(Box)`
+  background: #f6f6f6;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 270;
+`
