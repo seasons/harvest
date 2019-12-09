@@ -162,6 +162,7 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/A0Auth0/A0Auth0.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Analytics/Analytics.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/EXAppLoaderProvider/EXAppLoaderProvider.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/EXConstants/EXConstants.framework"
@@ -175,6 +176,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/EXWebBrowser/EXWebBrowser.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/FBReactNativeSpec/FBReactNativeSpec.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Folly/folly.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Mixpanel/Mixpanel.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/RCTTypeSafety/RCTTypeSafety.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/RNCAsyncStorage/RNCAsyncStorage.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/RNGestureHandler/RNGestureHandler.framework"
@@ -198,6 +200,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/React-jsiexecutor/jsireact.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/React-jsinspector/jsinspector.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ReactCommon/ReactCommon.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Segment-Mixpanel/Segment_Mixpanel.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Sentry/Sentry.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/UMCore/UMCore.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/UMReactNativeAdapter/UMReactNativeAdapter.framework"
@@ -212,6 +215,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/A0Auth0/A0Auth0.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Analytics/Analytics.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/EXAppLoaderProvider/EXAppLoaderProvider.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/EXConstants/EXConstants.framework"
@@ -225,6 +229,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/EXWebBrowser/EXWebBrowser.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/FBReactNativeSpec/FBReactNativeSpec.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Folly/folly.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Mixpanel/Mixpanel.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/RCTTypeSafety/RCTTypeSafety.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/RNCAsyncStorage/RNCAsyncStorage.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/RNGestureHandler/RNGestureHandler.framework"
@@ -248,6 +253,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/React-jsiexecutor/jsireact.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/React-jsinspector/jsinspector.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ReactCommon/ReactCommon.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Segment-Mixpanel/Segment_Mixpanel.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Sentry/Sentry.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/UMCore/UMCore.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/UMReactNativeAdapter/UMReactNativeAdapter.framework"
