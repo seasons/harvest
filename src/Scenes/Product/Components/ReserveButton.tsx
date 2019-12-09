@@ -1,8 +1,11 @@
 import { Button } from "App/Components"
 import { addItemToBag, addItemToWantItems, removeItemFromWantItems } from "App/Redux/actions"
+import gql from "graphql-tag"
 import React from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
+
+import { useMutation } from "@apollo/react-hooks"
 
 interface Props {
   bag: any
@@ -14,6 +17,12 @@ interface Props {
   addItemToWantItems: (product: any) => void
 }
 
+const ADD_TO_BAG = gql`
+  mutation AddToBag($item: ID!) {
+    addToBag(item: $item)
+  }
+`
+
 export const ReserveButtonComponent: React.FC<Props> = ({
   bag,
   displayConfirmation,
@@ -23,8 +32,15 @@ export const ReserveButtonComponent: React.FC<Props> = ({
   removeItemFromWantItems,
   addItemToWantItems,
 }) => {
+  const [addToBag, { data }] = useMutation(ADD_TO_BAG, {
+    variables: {
+      item: productState.variant.id,
+    },
+  })
+
   const handleReserve = () => {
     addItemToBag({ productID, variantID: productState.variant.id })
+    addToBag()
     displayConfirmation("reserve")
   }
 
@@ -42,7 +58,7 @@ export const ReserveButtonComponent: React.FC<Props> = ({
   const itemStockZero = productState && productState.variant && productState.variant.stock === 0
 
   let showCheckMark = false
-  let text = "Reserve"
+  let text = "Add to Bag"
   let onPress = () => handleReserve()
   if (itemInBag) {
     text = "Added"
@@ -59,7 +75,7 @@ export const ReserveButtonComponent: React.FC<Props> = ({
 
   return (
     <Button
-      width={95}
+      width={110}
       showCheckMark={showCheckMark}
       variant="primaryGray"
       disabled={itemInBag}

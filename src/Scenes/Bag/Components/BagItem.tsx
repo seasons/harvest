@@ -56,8 +56,8 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
 
   return (
     <Box py={2} key={product.id} style={{ height: sectionHeight }}>
-      <Flex flexDirection="row" style={{ flex: 1 }}>
-        <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
+      <BagItemContainer flexDirection="row">
+        <Flex style={{ flex: 2 }} p={2} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
           <Box>
             <Sans size="3">{index + 1}.</Sans>
             <Sans size="2">{product.brand.name}.</Sans>
@@ -70,16 +70,6 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
               <Sans size="2" color="gray">
                 Size {size} {showRemoveButton && ` | `}
               </Sans>
-
-              {showRemoveButton && (
-                <>
-                  <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
-                    <Sans size="2" color="blue">
-                      Remove
-                    </Sans>
-                  </TouchableWithoutFeedback>
-                </>
-              )}
             </Text>
           </Box>
         </Flex>
@@ -90,14 +80,27 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
             source={{ uri: imageURL }}
           />
         </Flex>
-      </Flex>
+      </BagItemContainer>
+      {showRemoveButton && (
+        <>
+          <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
+            <Box>
+              <Sans size="2">Remove</Sans>
+            </Box>
+          </TouchableWithoutFeedback>
+        </>
+      )}
     </Box>
   )
 }
 
-const ImageContainer = styled(FadeInImage)`
-  height: 200;
+const BagItemContainer = styled(Box)`
   background: #f6f6f6;
+  border-radius: 8px;
+`
+
+const ImageContainer = styled(FadeInImage)`
+  height: 300;
 `
 
 const BagItemLoader = () => {

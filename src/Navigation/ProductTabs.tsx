@@ -69,7 +69,7 @@ export const ProductTabsComponent = props => {
               </Box>
             </TouchableOpacity>
             <Spacer mr={2} />
-            <TouchableOpacity onPress={() => handleSaveButton()} style={{ opacity: 0 }}>
+            <TouchableOpacity onPress={() => handleSaveButton()}>
               <SaveIcon />
             </TouchableOpacity>
           </Flex>
@@ -110,10 +110,7 @@ const mapStateToProps = state => {
   return { productState }
 }
 
-export const ProductTabs = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProductTabsComponent)
+export const ProductTabs = connect(mapStateToProps, mapDispatchToProps)(ProductTabsComponent)
 
 const StyledDownChevronIcon = styled(DownChevronIcon)`
   position: absolute;

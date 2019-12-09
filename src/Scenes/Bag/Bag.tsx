@@ -3,12 +3,14 @@ import { removeItemFromBag } from "App/Redux/actions"
 import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 import { color } from "App/Utils"
 import { Container } from "Components/Container"
+import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
-import { useMutation } from "react-apollo"
+import { useMutation, useQuery } from "react-apollo"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
+import SortableList from "react-native-sortable-list"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 
@@ -16,7 +18,7 @@ import { BagPlus } from "../../../assets/svgs"
 import { EmptyState } from "./Components"
 import { BagItem } from "./Components/BagItem"
 
-const SECTION_HEIGHT = 200
+const SECTION_HEIGHT = 300
 
 const CHECK_ITEMS = gql`
   mutation CheckItemsAvailability($items: [ID!]!) {
@@ -24,8 +26,21 @@ const CHECK_ITEMS = gql`
   }
 `
 
+const GET_BAG = gql`
+  query GetBag {
+    me {
+      bag {
+        items {
+          id
+        }
+      }
+    }
+  }
+`
+
 export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(null)
+  const { variables, data } = useQuery(GET_BAG)
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
   const insets = useSafeArea()
 
@@ -125,10 +140,10 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
     return null
   }
 
-  const renderItem = ({ item, index }) => {
-    return item.productID.length ? (
+  const renderItem = ({ data, index }) => {
+    return data.productID.length ? (
       <Box mx={2}>
-        <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} bagItem={item} />
+        <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} bagItem={data} />
       </Box>
     ) : (
       emptyBagItem(index)
@@ -144,18 +159,20 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
           </Flex>
         ) : (
           <Box>
-            <FlatList
+            <SortableList
               data={bag.items}
-              ListHeaderComponent={() => (
-                <Box p={2}>
-                  <Sans size="3" color="black">
-                    My bag
-                  </Sans>
-                  <Sans size="2" color="gray">
-                    {remainingPiecesDisplay}
-                  </Sans>
-                </Box>
-              )}
+              renderHeader={() => {
+                return (
+                  <Box p={2}>
+                    <Sans size="3" color="black">
+                      My bag
+                    </Sans>
+                    <Sans size="2" color="gray">
+                      {remainingPiecesDisplay}
+                    </Sans>
+                  </Box>
+                )
+              }}
               ItemSeparatorComponent={() => (
                 <Box px={2}>
                   <Spacer mb={2} />
@@ -164,8 +181,8 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
                 </Box>
               )}
               keyExtractor={(_item, index) => String(index)}
-              renderItem={item => renderItem(item)}
-              ListFooterComponent={() => <Spacer mb={80} />}
+              renderRow={item => renderItem(item)}
+              renderFooter={() => <Spacer mb={80} />}
             />
             <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
               <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
@@ -193,7 +210,4 @@ const mapStateToProps = state => {
   return { bag }
 }
 
-export const Bag = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BagComponent)
+export const Bag = connect(mapStateToProps, mapDispatchToProps)(BagComponent)

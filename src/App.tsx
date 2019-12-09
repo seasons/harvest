@@ -1,10 +1,12 @@
-import React from "react"
 import { AppContainer } from "App/Navigation"
+import React from "react"
+import { Text, View } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { Provider } from "react-redux"
-import { persistor, store } from "./Store"
 import { PersistGate } from "redux-persist/lib/integration/react"
-import { View, Text } from "react-native"
+
+import setupAnalytics from "./setupAnalytics"
+import { persistor, store } from "./Store"
 
 export const App = () => {
   return (

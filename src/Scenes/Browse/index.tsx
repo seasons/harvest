@@ -117,7 +117,7 @@ export const Browse = (props: any) => {
 
   return (
     <Container>
-      <LoaderContainer mt={insets.top} style={loaderStyle}>
+      <LoaderContainer mt={insets.top} style={[loaderStyle]}>
         <BrowseLoader />
       </LoaderContainer>
       <AnimatedFlex flexDirection="column" flex={1} pt={insets.top} ref={scrollViewEl} style={[containerStyle]}>

@@ -1,6 +1,7 @@
 PODS:
   - A0Auth0 (2.1.0):
     - React
+  - Analytics (3.7.0)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - EXAppLoaderProvider (7.0.0)
@@ -47,10 +48,13 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - GoogleAnalytics (3.17.0)
+  - GoogleIDFASupport (3.14.0)
   - lottie-ios (3.1.3)
   - lottie-react-native (3.2.1):
     - lottie-ios (~> 3.1.3)
     - React
+  - Mixpanel (3.4.9)
   - RCTRequired (0.61.4)
   - RCTTypeSafety (0.61.4):
     - FBLazyVector (= 0.61.4)
@@ -257,6 +261,17 @@ PODS:
     - React-cxxreact (= 0.61.4)
     - React-jsi (= 0.61.4)
     - ReactCommon/jscallinvoker (= 0.61.4)
+  - RNAnalytics (1.1.0):
+    - Analytics
+    - React
+  - RNAnalyticsIntegration-Google-Analytics (1.1.0):
+    - Analytics
+    - React
+    - Segment-GoogleAnalytics
+  - RNAnalyticsIntegration-Mixpanel (1.1.0):
+    - Analytics
+    - React
+    - Segment-Mixpanel
   - RNCAsyncStorage (1.6.2):
     - React
   - RNGestureHandler (1.3.0):
@@ -270,6 +285,19 @@ PODS:
     - Sentry (~> 4.4.0)
   - RNSVG (9.9.9):
     - React
+  - Segment-GoogleAnalytics (1.2.0):
+    - Analytics (~> 3.0)
+    - Segment-GoogleAnalytics/GoogleIDFASupport (= 1.2.0)
+  - Segment-GoogleAnalytics/Core (1.2.0):
+    - Analytics (~> 3.0)
+    - GoogleAnalytics (~> 3.14)
+  - Segment-GoogleAnalytics/GoogleIDFASupport (1.2.0):
+    - Analytics (~> 3.0)
+    - GoogleIDFASupport (~> 3.14)
+    - Segment-GoogleAnalytics/Core
+  - Segment-Mixpanel (1.4.0):
+    - Analytics (~> 3.0)
+    - Mixpanel (~> 3.4.7)
   - Sentry (4.4.2):
     - Sentry/Core (= 4.4.2)
   - Sentry/Core (4.4.2)
@@ -335,6 +363,9 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNAnalytics (from `../node_modules/@segment/analytics-react-native`)"
+  - "RNAnalyticsIntegration-Google-Analytics (from `../node_modules/@segment/analytics-react-native-google-analytics`)"
+  - "RNAnalyticsIntegration-Mixpanel (from `../node_modules/@segment/analytics-react-native-mixpanel`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler/RNGestureHandler.podspec`)
   - RNReanimated (from `../node_modules/react-native-reanimated/RNReanimated.podspec`)
@@ -359,6 +390,12 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - boost-for-react-native
   trunk:
+    - Analytics
+    - GoogleAnalytics
+    - GoogleIDFASupport
+    - Mixpanel
+    - Segment-GoogleAnalytics
+    - Segment-Mixpanel
     - Sentry
 
 EXTERNAL SOURCES:
@@ -454,6 +491,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNAnalytics:
+    :path: "../node_modules/@segment/analytics-react-native"
+  RNAnalyticsIntegration-Google-Analytics:
+    :path: "../node_modules/@segment/analytics-react-native-google-analytics"
+  RNAnalyticsIntegration-Mixpanel:
+    :path: "../node_modules/@segment/analytics-react-native-mixpanel"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNGestureHandler:
@@ -507,6 +550,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   A0Auth0: 351b3b07e58db39b3bb33f58acf35a878fbba74d
+  Analytics: 77fd5fb102a4a5eedafa2c2b0245ceb7b7c15e45
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   EXAppLoaderProvider: 5d348813a9cf09b03bbe5b8b55437bc1bfbddbd1
@@ -523,8 +567,11 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 51477b84b1bf7ab6f9ef307c24e3dd675391be44
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  GoogleAnalytics: f42cc53a87a51fe94334821868d9c8481ff47a7b
+  GoogleIDFASupport: aaf8c10bd429abb1c15349d5252244f5eda8ead1
   lottie-ios: 496ac5cea1bbf1a7bd1f1f472f3232eb1b8d744b
   lottie-react-native: b123a79529cc732201091f585c62c89bb4747252
+  Mixpanel: 5aca6e506b34650b96dc759a208513d86650fac7
   RCTRequired: f3b3fb6f4723e8e52facb229d0c75fdc76773849
   RCTTypeSafety: 2ec60de6abb1db050b56ecc4b60188026078fd10
   React: 10e0130b57e55a7cd8c3dee37c1261102ce295f4
@@ -548,12 +595,17 @@ SPEC CHECKSUMS:
   React-RCTText: 21934e0a51d522abcd0a275407e80af45d6fd9ec
   React-RCTVibration: 0f76400ee3cec6edb9c125da49fed279340d145a
   ReactCommon: a6a294e7028ed67b926d29551aa9394fd989c24c
+  RNAnalytics: 35a54cb740c472a0a6a3de765176b82cccc2d1ef
+  RNAnalyticsIntegration-Google-Analytics: b9ee84deb74d6ca72260c4f4544f74e0f936f1d8
+  RNAnalyticsIntegration-Mixpanel: b6189df6949ec6cab33cdb7b737f36ceb95f4de6
   RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNReanimated: 1b52415c4302f198cb581282a0166690bad62c43
   RNScreens: f28b48b8345f2f5f39ed6195518291515032a788
   RNSentry: 932ac1c8b2f581b1c8be5812f88ff556c99e7fb7
   RNSVG: b7e8745a87c046386569eecb437b3040cc6a7954
+  Segment-GoogleAnalytics: b5070619ad337eb09c4b01c52c3d0d90495307cf
+  Segment-Mixpanel: 8fd96846cd92cbc8b5c75ec23df66cc3da1b2eac
   Sentry: bba998b0fb157fdd6596aa73290a9d67ae47be79
   UMBarCodeScannerInterface: d5a6fdc98ed6241225b0a8432a7f4e2b397668bc
   UMCameraInterface: 68870a3197fee85bd5afca5609ba4a5b7257d19d
@@ -569,6 +621,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 1e70fe58b872355f0ecb44fb81bb1a16484047f0
   Yoga: ba3d99dbee6c15ea6bbe3783d1f0cb1ffb79af0f
 
-PODFILE CHECKSUM: 7abbf401eda09d9cbe991c8e339672dda9ad00ed
+PODFILE CHECKSUM: 53ec4775063db5c5d546a75213bd5da0a2967e81
 
 COCOAPODS: 1.8.3
