@@ -4,7 +4,6 @@ import { imageResize } from "App/helpers/imageResize"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React from "react"
-import ContentLoader, { Rect } from "react-content-loader/native"
 import { Text, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 
@@ -28,7 +27,15 @@ const GET_PRODUCT = gql`
   }
 `
 
-export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, showRemoveButton = true }) => {
+export const BagItem = ({
+  bagItem,
+  index,
+  sectionHeight,
+  navigation,
+  removeItemFromBag,
+  removeFromBagAndSaveItem,
+  saved,
+}) => {
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
       productId: bagItem.productID,
@@ -37,7 +44,7 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
   })
 
   if (loading || !data) {
-    return <BagItemLoader />
+    return <Box height={310} />
   }
 
   if (error) {
@@ -54,63 +61,85 @@ export const BagItem = ({ bagItem, index, sectionHeight, removeItemFromBag, show
   const size = get(data, "product.variants[0].size")
 
   return (
-    <Box py={2} key={product.id}>
-      <BagItemContainer flexDirection="row">
-        <Flex style={{ flex: 2 }} p={2} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
-          <Box>
-            <Sans size="3" pb={1}>
-              {index + 1}
-            </Sans>
-            <Sans size="2">{product.brand.name}</Sans>
-            <Sans size="2" color="gray">
-              {product.name}
-            </Sans>
-          </Box>
-          <Box>
-            <Text>
+    <Box py={saved ? 1 : 2} key={product.id}>
+      <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
+        <BagItemContainer flexDirection="row">
+          <Flex style={{ flex: 2 }} p={2} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
+            <Box>
+              {!saved && (
+                <Sans size="3" pb={1}>
+                  {index + 1}
+                </Sans>
+              )}
+              <Sans size="2">{product.brand.name}</Sans>
               <Sans size="2" color="gray">
-                Size {size}
+                {product.name}
               </Sans>
-            </Text>
+            </Box>
+            <Box>
+              <Text>
+                <Sans size="2" color="gray">
+                  Size {size}
+                </Sans>
+              </Text>
+            </Box>
+          </Flex>
+          <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
+            <ImageContainer
+              style={{ height: sectionHeight, width: 170 }}
+              resizeMode="contain"
+              source={{ uri: imageURL }}
+            />
+          </Flex>
+        </BagItemContainer>
+      </TouchableWithoutFeedback>
+
+      {!saved && (
+        <Flex flexDirection="row" pt={1}>
+          <Box flex={1} pr={1}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                removeItemFromBag({
+                  variables: {
+                    id: bagItem.variantID,
+                  },
+                })
+              }}
+            >
+              <RemoveButton>
+                <Sans size="2" textAlign="center">
+                  Remove
+                </Sans>
+              </RemoveButton>
+            </TouchableWithoutFeedback>
+          </Box>
+          <Box flex={1}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                removeFromBagAndSaveItem({
+                  variables: {
+                    id: bagItem.variantID,
+                  },
+                })
+              }}
+            >
+              <SaveForLaterButton>
+                <Sans size="2" textAlign="center">
+                  {!saved ? "Save For Later" : "Add to Bag"}
+                </Sans>
+              </SaveForLaterButton>
+            </TouchableWithoutFeedback>
           </Box>
         </Flex>
-        <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
-          <ImageContainer
-            style={{ height: sectionHeight, width: 170 }}
-            resizeMode="contain"
-            source={{ uri: imageURL }}
-          />
-        </Flex>
-      </BagItemContainer>
-
-      <Flex flexDirection="row" pt={1}>
-        <Box flex={1} pr={1}>
-          <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
-            <RemoveButton>
-              <Sans size="2" textAlign="center">
-                Remove
-              </Sans>
-            </RemoveButton>
-          </TouchableWithoutFeedback>
-        </Box>
-        <Box flex={1}>
-          <TouchableWithoutFeedback onPress={() => removeItemFromBag(bagItem)}>
-            <SaveForLaterButton>
-              <Sans size="2" textAlign="center">
-                Save For Later
-              </Sans>
-            </SaveForLaterButton>
-          </TouchableWithoutFeedback>
-        </Box>
-      </Flex>
+      )}
     </Box>
   )
 }
 
 const RemoveButton = styled(Box)`
-  height: 50px;
-  border-radius: 5px;
   background: #f6f6f6;
+  border-radius: 5px;
+  height: 50px;
   padding: 10px;
 `
 
@@ -133,16 +162,3 @@ const BagItemContainer = styled(Box)`
 const ImageContainer = styled(FadeInImage)`
   height: 214;
 `
-
-const BagItemLoader = () => {
-  return (
-    <ContentLoader height={200} primaryColor="#f6f6f6">
-      <Rect x="0" y="20" width="20" height="20" />
-      <Rect x="0" y="62" width="80" height="18" />
-      <Rect x="0" y="87" width="130" height="18" />
-      <Rect x="0" y="112" width="90" height="18" />
-      <Rect x="0" y="162" width="90" height="20" />
-      <Rect x="175" y="0" width="160" height="200" />
-    </ContentLoader>
-  )
-}

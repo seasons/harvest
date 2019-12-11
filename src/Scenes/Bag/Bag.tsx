@@ -1,18 +1,16 @@
 import { Box, ErrorPopUp, FixedButton, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { removeItemFromBag } from "App/Redux/actions"
 import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 import { color } from "App/Utils"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
 import gql from "graphql-tag"
+import { assign, fill } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { connect } from "react-redux"
-import { bindActionCreators } from "redux"
 
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
@@ -26,7 +24,7 @@ const CHECK_ITEMS = gql`
 `
 
 const GET_BAG = gql`
-  query GetBag {
+  query GetBagAndSavedItems {
     me {
       bag {
         id
@@ -39,6 +37,35 @@ const GET_BAG = gql`
         position
         saved
       }
+      savedItems {
+        id
+        productVariant {
+          id
+          product {
+            id
+          }
+        }
+        saved
+      }
+    }
+  }
+`
+
+const REMOVE_FROM_BAG = gql`
+  mutation RemoveFromBag($id: ID!) {
+    removeFromBag(item: $id) {
+      id
+    }
+  }
+`
+
+const REMOVE_FROM_BAG_AND_SAVE_ITEM = gql`
+  mutation RemoveFromBagAndSaveItem($id: ID!) {
+    removeFromBag(item: $id) {
+      id
+    }
+    saveProduct(item: $id, save: true) {
+      id
     }
   }
 `
@@ -48,10 +75,53 @@ enum BagView {
   Saved = 1,
 }
 
-export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
+export const Bag = ({ navigation, bag, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(null)
-  const { variables, data, loading } = useQuery(GET_BAG)
+  const { variables, data, loading } = useQuery(GET_BAG, {
+    fetchPolicy: "cache-and-network",
+  })
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+  const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
+    update(cache, { data }) {
+      const { me } = cache.readQuery({ query: GET_BAG })
+      const key = currentView === BagView.Bag ? "bag" : "savedItems"
+      const list = me[key]
+      const filteredList = list.filter(a => a.id !== data.removeFromBag.id)
+      cache.writeQuery({
+        query: GET_BAG,
+        data: {
+          me: {
+            ...me,
+            [key]: filteredList,
+          },
+        },
+      })
+      console.log(me, data)
+    },
+  })
+  const [removeFromBagAndSaveItem] = useMutation(REMOVE_FROM_BAG_AND_SAVE_ITEM, {
+    update(cache, { data }) {
+      const { me } = cache.readQuery({ query: GET_BAG })
+      const old = currentView === BagView.Bag ? "bag" : "savedItems"
+      const newKey = currentView === BagView.Bag ? "savedItems" : "bag"
+      const list = me[old]
+      const filteredList = list.filter(a => a.id !== data.removeFromBag.id)
+      const item = list.find(a => a.id === data.removeFromBag.id)
+
+      cache.writeQuery({
+        query: GET_BAG,
+        data: {
+          me: {
+            ...me,
+            [old]: filteredList,
+            [newKey]: me[newKey].concat(item),
+          },
+        },
+      })
+      console.log(me, data)
+    },
+  })
+
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
   const insets = useSafeArea()
 
@@ -59,16 +129,25 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
     return <Loader />
   }
 
-  const bag2 = data.me.bag.map(item => ({
-    variantID: item.productVariant.id,
-    productID: item.productVariant.product.id,
-  }))
+  const items =
+    (data &&
+      data.me &&
+      data.me.bag.map(item => ({
+        variantID: item.productVariant.id,
+        productID: item.productVariant.product.id,
+      }))) ||
+    []
 
-  console.log("bag2: ", bag2)
+  const savedItems =
+    (data &&
+      data.me &&
+      data.me.savedItems.map(item => ({
+        variantID: item.productVariant.id,
+        productID: item.productVariant.product.id,
+      }))) ||
+    []
 
-  if (!bag || !bag.items) {
-    return null
-  }
+  const paddedItems = assign(fill(new Array(3), { variantID: "", productID: "" }), items)
 
   const handleReserve = async navigation => {
     try {
@@ -107,8 +186,9 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
     }
   }
 
-  const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
-  const bagIsFull = bag.itemCount === BAG_NUM_ITEMS
+  const bagCount = items.length
+  const remainingPieces = BAG_NUM_ITEMS - bagCount
+  const bagIsFull = bagCount === BAG_NUM_ITEMS
   const remainingPiecesDisplay = !bagIsFull
     ? `You have ${remainingPieces} ${remainingPieces === 1 ? "piece" : "pieces"} remaining`
     : "Reserve your order below"
@@ -143,7 +223,15 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
   const renderItem = ({ item, index }) => {
     return item.productID.length ? (
       <Box mx={2}>
-        <BagItem removeItemFromBag={removeItemFromBag} sectionHeight={SECTION_HEIGHT} index={index} bagItem={item} />
+        <BagItem
+          removeItemFromBag={deleteBagItem}
+          removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+          saved={BagView.Saved == currentView}
+          sectionHeight={SECTION_HEIGHT}
+          index={index}
+          bagItem={item}
+          navigation={navigation}
+        />
       </Box>
     ) : (
       <EmptyBagItem navigation={navigation} />
@@ -157,7 +245,7 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
     <Container>
       <Box style={{ flex: 1, paddingTop: insets.top }}>
         <FlatList
-          data={bag.items}
+          data={currentView === BagView.Bag ? paddedItems : savedItems}
           ListHeaderComponent={() => (
             <>
               <Box p={2}>
@@ -169,8 +257,8 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
                 </Sans>
               </Box>
               <TabBar
-                tabs={["Bag", "Saved"]}
                 spaceEvenly
+                tabs={["Bag", "Saved"]}
                 activeTab={currentView}
                 goToPage={page => {
                   setCurrentView(page as BagView)
@@ -179,11 +267,16 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
               />
             </>
           )}
-          ItemSeparatorComponent={() => (
-            <Box>
-              <Separator color={color("lightGray")} />
-            </Box>
-          )}
+          ItemSeparatorComponent={() => {
+            if (BagView.Saved == currentView) {
+              return null
+            }
+            return (
+              <Box>
+                <Separator color={color("lightGray")} />
+              </Box>
+            )
+          }}
           keyExtractor={(_item, index) => String(index)}
           renderItem={item => renderItem(item)}
           ListFooterComponent={() => <Spacer mb={80} />}
@@ -198,18 +291,3 @@ export const BagComponent = ({ navigation, bag, removeItemFromBag }) => {
     </Container>
   )
 }
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      removeItemFromBag,
-    },
-    dispatch
-  )
-
-const mapStateToProps = state => {
-  const { bag } = state
-  return { bag }
-}
-
-export const Bag = connect(mapStateToProps, mapDispatchToProps)(BagComponent)

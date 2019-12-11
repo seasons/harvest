@@ -60,8 +60,6 @@ export const CurrentRotationComponent = props => {
   const activeReservation = get(data, "me.activeReservation", null)
 
   if (!activeReservation) {
-    console.log("Inside navigate to Bag")
-
     return <Bag {...props} />
   }
 
@@ -119,7 +117,4 @@ const mapStateToProps = state => {
   return { bag }
 }
 
-export const CurrentRotation = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CurrentRotationComponent)
+export const CurrentRotation = connect(mapStateToProps, mapDispatchToProps)(CurrentRotationComponent)

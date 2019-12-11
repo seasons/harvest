@@ -5,7 +5,7 @@ import React from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 
-import { useMutation } from "@apollo/react-hooks"
+import { useMutation, useQuery } from "@apollo/react-hooks"
 
 interface Props {
   bag: any
@@ -19,7 +19,37 @@ interface Props {
 
 const ADD_TO_BAG = gql`
   mutation AddToBag($item: ID!) {
-    addToBag(item: $item)
+    addToBag(item: $item) {
+      id
+    }
+  }
+`
+
+const GET_BAG = gql`
+  query GetBag {
+    me {
+      bag {
+        id
+        productVariant {
+          id
+          product {
+            id
+          }
+        }
+        position
+        saved
+      }
+      savedItems {
+        id
+        productVariant {
+          id
+          product {
+            id
+          }
+        }
+        saved
+      }
+    }
   }
 `
 
@@ -32,20 +62,20 @@ export const ReserveButtonComponent: React.FC<Props> = ({
   removeItemFromWantItems,
   addItemToWantItems,
 }) => {
-  const [addToBag, { data }] = useMutation(ADD_TO_BAG, {
+  const { variables, data, loading } = useQuery(GET_BAG)
+  const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
       item: productState.variant.id,
     },
+    refetchQueries: [GET_BAG],
   })
 
   const handleReserve = () => {
-    addItemToBag({ productID, variantID: productState.variant.id })
     addToBag()
     displayConfirmation("reserve")
   }
 
   const handleAddWantItem = () => {
-    addItemToWantItems({ productID, variantID: productState.variant.id })
     displayConfirmation("want")
   }
 
@@ -53,24 +83,29 @@ export const ReserveButtonComponent: React.FC<Props> = ({
     removeItemFromWantItems({ productID, variantID: productState.variant.id })
   }
 
-  const itemInBag = !!bag.items.find(item => item.productID === productID)
-  const itemInWantList = !!bag.wantItems.find(item => item.productID === productID)
+  const items =
+    (data &&
+      data.me &&
+      data.me.bag.map(item => ({
+        variantID: item.productVariant.id,
+        productID: item.productVariant.product.id,
+      }))) ||
+    []
+
+  const itemInBag = !!items.find(item => item.productID === productID)
   const itemStockZero = productState && productState.variant && productState.variant.stock === 0
 
   let showCheckMark = false
   let text = "Add to Bag"
+  let disabled = false
   let onPress = () => handleReserve()
   if (itemInBag) {
     text = "Added"
     onPress = () => null
     showCheckMark = true
-  } else if (itemStockZero && itemInWantList) {
+  } else if (itemStockZero || items >= 3) {
     text = "Want"
-    onPress = () => handleRemoveWantItem()
-    showCheckMark = true
-  } else if (itemStockZero || bag.itemCount >= 3) {
     onPress = () => handleAddWantItem()
-    text = "Want"
   }
 
   return (
@@ -78,7 +113,7 @@ export const ReserveButtonComponent: React.FC<Props> = ({
       width={110}
       showCheckMark={showCheckMark}
       variant="primaryGray"
-      disabled={itemInBag}
+      disabled={disabled}
       size="small"
       onPress={onPress}
     >
