@@ -179,7 +179,8 @@ export const ReservationView = props => {
   return (
     <Theme>
       <Container style={{ paddingTop: insets.top }}>
-        <CloseButton onPress={() => props.navigation.dismiss()}>
+        <CloseButton
+          onPress={() => props.navigation.dismiss()}>
           <Box p="14px">
             <CloseXIcon />
           </Box>

@@ -94,12 +94,21 @@ BrowseStack.navigationOptions = ({ navigation }) => {
   }
 }
 
-const ProductRequestStack = createStackNavigator(
+const ProductRequestModal = DismissableStackNavigator(
   {
     ProductRequest,
   },
   {
-    initialRouteName: "ProductRequest",
+    headerMode: "none",
+  }
+)
+
+const ProductRequestStack = createStackNavigator(
+  {
+    ProductRequestModal,
+  },
+  {
+    initialRouteName: "ProductRequestModal",
     defaultNavigationOptions: {
       header: null,
     },

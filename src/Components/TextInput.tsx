@@ -16,6 +16,7 @@ export interface TextInputProps {
   autoCompleteType?: string
   textContentType?: string
   inputKey?: string
+  multiline?: boolean
   onChangeText?: (inputKey: string, text: string) => void
 }
 
@@ -70,6 +71,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
   onChangeText,
   style,
   inputKey,
+  multiline,
 }) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
   const [current, setCurrent] = React.useState(DisplayState.Inactive)
@@ -93,11 +95,15 @@ export const TextInput: React.SFC<TextInputProps> = ({
     }
   }
 
+  console.log("MULTILINE: " + multiline);
+  const height = style && style.height ? style.height : 56;
+
   return (
-    <Box style={{ height: 56 }}>
+    <Box style={{ height: height }}>
       <Spring native from={from} to={to}>
         {props => (
           <AnimatedTextInput
+            multiline={multiline || false}
             secureTextEntry={secureTextEntry}
             placeholder={placeholder}
             style={{ ...style, ...props }}
@@ -112,7 +118,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
   )
 }
 
-const StyledTextInput = styled(RNTextInput)<TextInputProps>`
+const StyledTextInput = styled(RNTextInput) <TextInputProps>`
   border-width: 1;
   height: 56;
   border-radius: 8;
