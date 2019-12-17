@@ -22,7 +22,6 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
   navigation,
 }) => {
   const { loading, error, data } = useQuery(GET_MEMBERSHIP_INFO)
-
   const insets = useSafeArea()
 
   if (error) {

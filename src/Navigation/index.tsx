@@ -5,6 +5,7 @@ import { Browse } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
+import { ProductRequest } from "App/Scenes/ProductRequest"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import { Initializing, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
@@ -14,6 +15,7 @@ import { createAppContainer, createSwitchNavigator } from "react-navigation"
 import { createStackNavigator } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
+import { RequestProduct } from "Scenes/Account/RequestProduct"
 import styled from "styled-components"
 
 import DismissableStackNavigator from "./DismissableStackNavigator"
@@ -92,6 +94,25 @@ BrowseStack.navigationOptions = ({ navigation }) => {
   }
 }
 
+const ProductRequestStack = createStackNavigator(
+  {
+    ProductRequest,
+  },
+  {
+    initialRouteName: "ProductRequest",
+    defaultNavigationOptions: {
+      header: null,
+    },
+  }
+)
+
+ProductRequestStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: shouldRenderTabBar(navigation),
+    header: null,
+  }
+}
+
 const BagStack = createStackNavigator(
   {
     Bag,
@@ -119,6 +140,7 @@ const AccountStack = createStackNavigator(
     MembershipInfo,
     PaymentAndShipping,
     PersonalPreferences,
+    RequestProduct,
     Webview,
   },
   {
@@ -150,6 +172,7 @@ const MainNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Browse: BrowseStack,
+    ProductRequest: ProductRequestStack,
     Bag: BagStack,
     Account: AccountStack,
   },
@@ -162,6 +185,8 @@ const MainNavigator = createBottomTabNavigator(
         if (routeName === "Home") {
           URL = require(`../../assets/images/Home.png`)
         } else if (routeName === "Browse") {
+          URL = require(`../../assets/images/Browse.png`)
+        } else if (routeName === "ProductRequest") {
           URL = require(`../../assets/images/Browse.png`)
         } else if (routeName === "Bag") {
           URL = require(`../../assets/images/Bag.png`)
