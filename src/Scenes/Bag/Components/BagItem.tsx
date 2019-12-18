@@ -37,8 +37,8 @@ interface BagItemProps {
   sectionHeight: Number
   navigation: NavigationDispatch
   saved: Boolean
-  removeItemFromBag: Function
-  removeFromBagAndSaveItem: Function
+  removeItemFromBag?: Function
+  removeFromBagAndSaveItem?: Function
 }
 
 export const BagItem: React.FC<BagItemProps> = ({

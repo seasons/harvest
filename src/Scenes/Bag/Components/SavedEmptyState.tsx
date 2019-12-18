@@ -1,13 +1,15 @@
 import { Box, Button, Flex, Sans, Spacer, Theme } from "App/Components"
 import { color } from "App/Utils"
 import React from "react"
-import { Image } from "react-native"
+import { Dimensions, Image } from "react-native"
 
 export const SavedEmptyState = ({ navigation }) => {
+  const { height } = Dimensions.get("window")
+  const rowHeight = height - 300
   return (
     <Theme>
-      <Box p={2} pt={4} style={{ flex: 1 }}>
-        <Flex style={{ flex: 1 }} justifyContent="center" flexDirection="column">
+      <Box p={2} style={{ height: rowHeight }}>
+        <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center" flexDirection="column">
           <Box>
             <Flex justifyContent="center" flexDirection="row">
               <Image
