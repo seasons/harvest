@@ -1,16 +1,16 @@
-import React, { useState } from "react"
-import styled from "styled-components/native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { Flex, Theme } from "App/Components"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
-import { useNavigationState } from "./NavigationState"
-import { Theme, Flex, Spacer, Sans } from "App/Components"
-import { ProductTabs } from "./ProductTabs"
-import { connect } from "react-redux"
 import { get } from "lodash"
-import { GreenCheck } from "Assets/svgs"
+import React, { useState } from "react"
+import { useSafeArea } from "react-native-safe-area-context"
+import { connect } from "react-redux"
+import { animated, useSpring } from "react-spring"
+import styled from "styled-components/native"
 import { color } from "styled-system"
-import { useSpring, animated } from "react-spring"
-import { BAG_NUM_ITEMS } from "App/Redux/reducer"
+
+import { Confirmation } from "./Confirmation"
+import { useNavigationState } from "./NavigationState"
+import { ProductTabs } from "./ProductTabs"
 
 const PRODUCT_SELECTION_HEIGHT = 440
 
@@ -32,35 +32,6 @@ export const TabsComponent = props => {
   } else if ((action.type === "Navigation/POP_TO_TOP" || action.type === "Navigation/BACK") && isProductRoute) {
     setIsProductRoute(false)
     setProductID("")
-  }
-
-  const Confirmation = ({ type }) => {
-    const remainingPieces = BAG_NUM_ITEMS - bag.itemCount
-    let text = "Added to bag"
-    let subtext = `(${remainingPieces} slots remaining)`
-    if (type === "want") {
-      text = "Got it!"
-      subtext = "We'll let you know when it's back in stock."
-    }
-    return (
-      <ConfirmationWrapper alignContent="center" justifyContent="center" flexDirection="column">
-        <Flex flexDirection="row" alignContent="center" justifyContent="center">
-          <Flex alignContent="center" justifyContent="center" flexDirection="column">
-            <Flex flexDirection="row" alignContent="center" justifyContent="center">
-              <GreenCheck />
-            </Flex>
-            <Spacer mb={2} />
-            <Sans size="2" color="white" textAlign="center">
-              {text}
-            </Sans>
-            <Spacer mb={1} />
-            <Sans size="2" color="gray" textAlign="center">
-              {subtext}
-            </Sans>
-          </Flex>
-        </Flex>
-      </ConfirmationWrapper>
-    )
   }
 
   const tabs = routes.map((route, routeIndex) => {
@@ -169,16 +140,6 @@ const RightCorner = styled(RightTabCorner)`
   position: absolute;
   top: -28;
   right: 0;
-`
-
-const ConfirmationWrapper = styled(Flex)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 99;
-  background-color: rgba(0, 0, 0, 0.8);
 `
 
 const AnimatedTabContainer = animated(TabContainer)

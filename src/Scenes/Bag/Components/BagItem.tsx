@@ -5,6 +5,7 @@ import gql from "graphql-tag"
 import { get } from "lodash"
 import React from "react"
 import { Text, TouchableWithoutFeedback } from "react-native"
+import { NavigationDispatch } from "react-navigation"
 import styled from "styled-components/native"
 
 import { useQuery } from "@apollo/react-hooks"
@@ -27,14 +28,27 @@ const GET_PRODUCT = gql`
   }
 `
 
-export const BagItem = ({
+interface BagItemProps {
+  bagItem: {
+    productID: String
+    variantID: String
+  }
+  index?: Number
+  sectionHeight: Number
+  navigation: NavigationDispatch
+  saved: Boolean
+  removeItemFromBag: Function
+  removeFromBagAndSaveItem: Function
+}
+
+export const BagItem: React.FC<BagItemProps> = ({
   bagItem,
   index,
   sectionHeight,
   navigation,
+  saved,
   removeItemFromBag,
   removeFromBagAndSaveItem,
-  saved,
 }) => {
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {

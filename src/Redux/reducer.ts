@@ -88,6 +88,17 @@ export const reducer = (state, action) => {
         },
       }
       return toggleSizeSelection
+    case "togglePopUp":
+      return {
+        ...clonedState,
+        popUp: {
+          ...action.payload,
+        },
+        productState: {
+          ...clonedState.productState,
+          showPopUp: action.payload,
+        },
+      }
     case "setVariant":
       const addVariant = {
         ...clonedState,

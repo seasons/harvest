@@ -1,4 +1,5 @@
-import { Box, ErrorPopUp, FixedButton, Separator, Spacer } from "App/Components"
+import { GET_BAG } from "App/Apollo/Queries"
+import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 import { color } from "App/Utils"
@@ -14,40 +15,13 @@ import { useSafeArea } from "react-native-safe-area-context"
 
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
+import { SavedEmptyState } from "./Components/SavedEmptyState"
 
 const SECTION_HEIGHT = 300
 
 const CHECK_ITEMS = gql`
   mutation CheckItemsAvailability($items: [ID!]!) {
     checkItemsAvailability(items: $items)
-  }
-`
-
-const GET_BAG = gql`
-  query GetBagAndSavedItems {
-    me {
-      bag {
-        id
-        productVariant {
-          id
-          product {
-            id
-          }
-        }
-        position
-        saved
-      }
-      savedItems {
-        id
-        productVariant {
-          id
-          product {
-            id
-          }
-        }
-        saved
-      }
-    }
   }
 `
 
@@ -75,14 +49,14 @@ enum BagView {
   Saved = 1,
 }
 
-export const Bag = ({ navigation, bag, removeItemFromBag }) => {
+export const Bag = ({ navigation, removeItemFromBag }) => {
   const [showReserveError, displayReserveError] = useState(null)
-  const { variables, data, loading } = useQuery(GET_BAG, {
+  const { data, loading, refetch } = useQuery(GET_BAG, {
     fetchPolicy: "cache-and-network",
   })
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
-    update(cache, { data }) {
+    update(cache, { data, errors }) {
       const { me } = cache.readQuery({ query: GET_BAG })
       const key = currentView === BagView.Bag ? "bag" : "savedItems"
       const list = me[key]
@@ -98,9 +72,14 @@ export const Bag = ({ navigation, bag, removeItemFromBag }) => {
       })
       console.log(me, data)
     },
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+    ],
   })
   const [removeFromBagAndSaveItem] = useMutation(REMOVE_FROM_BAG_AND_SAVE_ITEM, {
-    update(cache, { data }) {
+    update(cache, { data, errors }) {
       const { me } = cache.readQuery({ query: GET_BAG })
       const old = currentView === BagView.Bag ? "bag" : "savedItems"
       const newKey = currentView === BagView.Bag ? "savedItems" : "bag"
@@ -120,6 +99,11 @@ export const Bag = ({ navigation, bag, removeItemFromBag }) => {
       })
       console.log(me, data)
     },
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+    ],
   })
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
@@ -153,7 +137,15 @@ export const Bag = ({ navigation, bag, removeItemFromBag }) => {
     try {
       const { data } = await checkItemsAvailability({
         variables: {
-          items: bag.items.map(item => item.variantID),
+          items: items.map(item => item.variantID),
+        },
+        refetchQueries: [
+          {
+            query: GET_BAG,
+          },
+        ],
+        update(cache, { data, errors }) {
+          console.log(data, errors)
         },
       })
       if (data.checkItemsAvailability) {
@@ -172,10 +164,7 @@ export const Bag = ({ navigation, bag, removeItemFromBag }) => {
             .map(a => ({
               variantID: a.id,
             }))
-
-          for (let item of data) {
-            removeItemFromBag(item)
-          }
+          refetch()
         } else if (code === "510") {
         }
         displayReserveError({
@@ -185,7 +174,9 @@ export const Bag = ({ navigation, bag, removeItemFromBag }) => {
       }
     }
   }
-
+  const isBagView = BagView.Bag == currentView
+  const isSavedView = BagView.Saved == currentView
+  const isEmpty = items.length === 0
   const bagCount = items.length
   const remainingPieces = BAG_NUM_ITEMS - bagCount
   const bagIsFull = bagCount === BAG_NUM_ITEMS
@@ -202,12 +193,13 @@ export const Bag = ({ navigation, bag, removeItemFromBag }) => {
         description =
           "Sorry, some of the items you had selected were confirmed before you, please replace them with available items"
       } else {
-        title = "Pick all 3 items before reserving!"
-        description = "Before reserving your order, make sure you've selected all 3 pieces."
+        title = "Sorry!"
+        description = "We couldn't process your order because of an unexpected error, please try again later"
       }
 
       return (
-        <ErrorPopUp
+        <PopUp
+          theme="light"
           buttonText="Got it"
           title={title}
           note={description}
@@ -222,7 +214,7 @@ export const Bag = ({ navigation, bag, removeItemFromBag }) => {
 
   const renderItem = ({ item, index }) => {
     return item.productID.length ? (
-      <Box mx={2}>
+      <Box mx={2} mt={isSavedView && index === 0 ? 1 : 0}>
         <BagItem
           removeItemFromBag={deleteBagItem}
           removeFromBagAndSaveItem={removeFromBagAndSaveItem}
@@ -267,8 +259,11 @@ export const Bag = ({ navigation, bag, removeItemFromBag }) => {
               />
             </>
           )}
+          ListEmptyComponent={() => {
+            return <SavedEmptyState navigation={navigation} />
+          }}
           ItemSeparatorComponent={() => {
-            if (BagView.Saved == currentView) {
+            if (isSavedView) {
               return null
             }
             return (
@@ -278,14 +273,20 @@ export const Bag = ({ navigation, bag, removeItemFromBag }) => {
             )
           }}
           keyExtractor={(_item, index) => String(index)}
-          renderItem={item => renderItem(item)}
+          renderItem={item => {
+            if (isSavedView && isEmpty) {
+            }
+            return renderItem(item)
+          }}
           ListFooterComponent={() => <Spacer mb={80} />}
         />
-        <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
-          <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
-            Reserve
-          </FixedButton>
-        </TouchableWithoutFeedback>
+        {isBagView && (
+          <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
+            <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
+              Reserve
+            </FixedButton>
+          </TouchableWithoutFeedback>
+        )}
       </Box>
       <ErrorMessage />
     </Container>

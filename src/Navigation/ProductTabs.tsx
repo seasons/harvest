@@ -1,9 +1,12 @@
+import { GET_BAG, GET_PRODUCT } from "App/Apollo/Queries"
 import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
-import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
+import { setVariant, togglePopUp, toggleShowSizeSelection } from "App/Redux/actions"
 import { ReserveButton } from "App/Scenes/Product/Components"
 import { color } from "App/Utils"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
+import { CircledSaveIcon } from "Assets/icons/CircledSaveIcon"
 import gql from "graphql-tag"
+import { head } from "lodash"
 import React from "react"
 import { ScrollView, TouchableOpacity } from "react-native"
 import { NavigationActions } from "react-navigation"
@@ -11,7 +14,7 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 
-import { useMutation } from "@apollo/react-hooks"
+import { useMutation, useQuery } from "@apollo/react-hooks"
 
 import { SizePicker } from "./SizePicker"
 
@@ -24,13 +27,46 @@ const SAVE_ITEM = gql`
 `
 
 export const ProductTabsComponent = props => {
-  const { displayConfirmation, productState, setVariant, toggleShowSizeSelection, productID, navigation } = props
+  const {
+    displayConfirmation,
+    productState,
+    setVariant,
+    toggleShowSizeSelection,
+    togglePopUp,
+    productID,
+    navigation,
+  } = props
   const { variant, showSizeSelection } = productState
-  const [saveItem] = useMutation(SAVE_ITEM)
 
   if (!productID) {
     return null
   }
+
+  const { data } = useQuery(GET_PRODUCT, {
+    variables: {
+      productID,
+    },
+  })
+  const [saveItem] = useMutation(SAVE_ITEM, {
+    refetchQueries: [
+      {
+        query: GET_PRODUCT,
+        variables: {
+          productID,
+        },
+      },
+      {
+        query: GET_BAG,
+      },
+    ],
+  })
+
+  const { product } = data || { product: { isSaved: false } }
+  const selectedVariant = head((product.variants || []).filter(a => a.id === variant.id))
+  const { isSaved } = selectedVariant || product
+  const isSoldOut = (selectedVariant && selectedVariant.reservable > 0) || false
+
+  console.log("Selected Variant: ", selectedVariant)
 
   const renderVariantSelectionList = () => {
     return (
@@ -59,8 +95,14 @@ export const ProductTabsComponent = props => {
     saveItem({
       variables: {
         item: variant.id,
-        save: true,
+        save: !isSaved,
       },
+    })
+    togglePopUp(true, {
+      icon: <CircledSaveIcon />,
+      title: "Saved for later",
+      note: `The ${product.name}, size ${variant.size} has been saved for later in your bag.`,
+      buttonText: "Got It",
     })
   }
 
@@ -80,7 +122,7 @@ export const ProductTabsComponent = props => {
             </TouchableOpacity>
             <Spacer mr={2} />
             <TouchableOpacity onPress={() => handleSaveButton()}>
-              <SaveIcon />
+              <SaveIcon enabled={isSaved} />
             </TouchableOpacity>
           </Flex>
           <TouchableOpacity onPress={() => toggleShowSizeSelection(!showSizeSelection)}>
@@ -110,6 +152,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       setVariant,
+      togglePopUp,
       toggleShowSizeSelection,
     },
     dispatch
