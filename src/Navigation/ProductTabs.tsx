@@ -98,10 +98,11 @@ export const ProductTabsComponent = props => {
         save: !isSaved,
       },
     })
+    const updateText = isSaved ? "been removed from" : "added to"
     togglePopUp(true, {
       icon: <CircledSaveIcon />,
       title: "Saved for later",
-      note: `The ${product.name}, size ${variant.size} has been saved for later in your bag.`,
+      note: `The ${product.name}, size ${variant.size} has ${updateText} your saved items.`,
       buttonText: "Got It",
     })
   }

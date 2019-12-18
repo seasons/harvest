@@ -77,6 +77,7 @@ export const GET_BAG = gql`
         }
         position
         saved
+        status
       }
       savedItems {
         id

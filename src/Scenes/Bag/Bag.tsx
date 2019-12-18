@@ -117,6 +117,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
     (data &&
       data.me &&
       data.me.bag.map(item => ({
+        ...item,
         variantID: item.productVariant.id,
         productID: item.productVariant.product.id,
       }))) ||
@@ -126,6 +127,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
     (data &&
       data.me &&
       data.me.savedItems.map(item => ({
+        ...item,
         variantID: item.productVariant.id,
         productID: item.productVariant.product.id,
       }))) ||
@@ -218,7 +220,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
         <BagItem
           removeItemFromBag={deleteBagItem}
           removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-          saved={BagView.Saved == currentView}
+          saved={BagView.Saved == currentView || item.status !== "Added"}
           sectionHeight={SECTION_HEIGHT}
           index={index}
           bagItem={item}
