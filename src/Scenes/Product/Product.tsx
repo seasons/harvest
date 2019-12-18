@@ -1,7 +1,7 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Theme } from "App/Components"
+import { PopUp, Theme } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { setVariant } from "App/Redux/actions"
+import { setVariant, togglePopUp } from "App/Redux/actions"
 import get from "lodash/get"
 import React from "react"
 import { Dimensions, FlatList, SafeAreaView } from "react-native"
@@ -17,6 +17,7 @@ import { AboutTheBrand, ImageRail, MoreLikeThis, ProductDetails } from "./Compon
 const screenHeight = Math.round(Dimensions.get("window").height)
 
 export const ProductComponent = props => {
+  const { togglePopUp, popUp } = props
   const productID = get(props, "navigation.state.params.id")
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
@@ -26,6 +27,7 @@ export const ProductComponent = props => {
 
   const product = data && data.product
   const { productState } = props
+  const { variant } = productState
 
   if (loading || !data) {
     return <Loader />
@@ -71,6 +73,18 @@ export const ProductComponent = props => {
             </AnimatedContent>
           )}
         </Spring>
+
+        <PopUp
+          title={popUp.title}
+          note={popUp.note}
+          icon={popUp.icon}
+          buttonText={popUp.buttonText}
+          show={productState.showPopUp}
+          theme="light"
+          onClose={() => {
+            togglePopUp(false)
+          }}
+        />
       </Outer>
     </Theme>
   )
@@ -80,19 +94,17 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       setVariant,
+      togglePopUp,
     },
     dispatch
   )
 
 const mapStateToProps = state => {
-  const { bag, productState } = state
-  return { bag, productState }
+  const { bag, productState, popUp } = state
+  return { bag, productState, popUp }
 }
 
-export const Product = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProductComponent)
+export const Product = connect(mapStateToProps, mapDispatchToProps)(ProductComponent)
 
 const Outer = styled.View`
   flex: 1;
@@ -100,8 +112,8 @@ const Outer = styled.View`
 `
 
 const Overlay = styled.View`
-  background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
   flex: 1;
   width: 100%;
   top: 0;
@@ -109,9 +121,7 @@ const Overlay = styled.View`
   z-index: 100;
 `
 
-const Content = styled.View`
-  margin-bottom: 10;
-`
+const Content = styled.View``
 
 const AnimatedContent = animated(Content)
 const AnimatedOverlay = animated(Overlay)

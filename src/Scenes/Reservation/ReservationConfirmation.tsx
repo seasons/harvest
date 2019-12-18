@@ -41,6 +41,15 @@ const GET_CUSTOMER = gql`
         reservations(where: { id: $reservationID }) {
           id
           reservationNumber
+          products {
+            id
+            productVariant {
+              id
+              product {
+                id
+              }
+            }
+          }
         }
       }
     }
@@ -48,13 +57,13 @@ const GET_CUSTOMER = gql`
 `
 
 export const ReservationConfirmationView = props => {
-  const { bag } = props
   const reservationID = get(props, "navigation.state.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
   const { data, loading, error } = useQuery(GET_CUSTOMER, {
     variables: {
       reservationID,
     },
   })
+  console.log(data)
   const insets = useSafeArea()
 
   const customer = get(data, "me.customer")
@@ -66,7 +75,15 @@ export const ReservationConfirmationView = props => {
     zipCode: "",
   })
   const billingInfo = get(customer, "detail.billingInfo", { brand: "", last_digits: "" })
-  const reservation = get(data, "me.customer.reservations[0]", { reservationNumber: "" })
+  const reservation = get(data, "me.customer.reservations[0]", { reservationNumber: "", products: [] })
+
+  const items =
+    (reservation &&
+      reservation.products.map(item => ({
+        variantID: item.productVariant.id,
+        productID: item.productVariant.product.id,
+      }))) ||
+    []
 
   const SectionHeader = ({ title }) => {
     return (
@@ -143,18 +160,10 @@ export const ReservationConfirmationView = props => {
           <Box mt={4} mb={5}>
             <SectionHeader title="Items" />
             <Box mt={2} mb="80">
-              {bag.items.map((item, i) => {
+              {items.map((item, i) => {
                 return (
-                  <Box my={1} key={item.productID}>
-                    <BagItem
-                      removeItemFromBag={() => null}
-                      sectionHeight={200}
-                      index={i}
-                      bagItem={item}
-                      showRemoveButton={false}
-                    />
-                    <Spacer mb={1} />
-                    <Separator color="#e5e5e5" />
+                  <Box key={item.productID}>
+                    <BagItem removeItemFromBag={() => null} sectionHeight={200} index={i} bagItem={item} saved={true} />
                   </Box>
                 )
               })}
@@ -206,10 +215,7 @@ const mapStateToProps = state => {
   return { bag }
 }
 
-export const ReservationConfirmation = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReservationConfirmationView)
+export const ReservationConfirmation = connect(mapStateToProps, mapDispatchToProps)(ReservationConfirmationView)
 
 const Container = styled(Box)`
   background: black;
