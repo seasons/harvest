@@ -1,6 +1,0 @@
-framework module ReactNativeNavigation {
-  umbrella header "ReactNativeNavigation-umbrella.h"
-
-  export *
-  module * { export * }
-}

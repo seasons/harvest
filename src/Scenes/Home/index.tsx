@@ -12,6 +12,7 @@ import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
 import styled from "styled-components/native"
+import { track } from "Utils/track"
 
 import { AllCaughtUp } from "./Components/AllCaughtUp"
 import { BrandsRail } from "./Components/BrandsRail"

@@ -7,28 +7,30 @@ import React from "react"
 import { AppRegistry } from "react-native"
 import { ApolloProvider } from "@apollo/react-hooks"
 import AsyncStorage from "@react-native-community/async-storage"
-import { MONSOON_ENDPOINT } from "react-native-dotenv"
+import Config from "react-native-config"
 import { IntrospectionFragmentMatcher } from "apollo-cache-inmemory"
 import introspectionQueryResultData from "./src/fragmentTypes.json"
 import * as Sentry from "@sentry/react-native"
+// import "./src/setupAnalytics"
 
 // https://github.com/facebook/react-native/issues/25701#issuecomment-513450639
 global.Blob = null
 
-Sentry.init({
-  dsn: "https://6e163b9f771f4c53951c546a4ac64891@sentry.io/1824125",
-})
+if (!__DEV__) {
+  Sentry.init({
+    dsn: "https://6e163b9f771f4c53951c546a4ac64891@sentry.io/1824125",
+  })
+}
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,
 })
 
 const cache = new InMemoryCache({ fragmentMatcher })
-
-console.log("Monsoon Endpoint:", MONSOON_ENDPOINT)
+console.log("Monsoon Endpoint:", Config.MONSOON_ENDPOINT)
 
 const link = new HttpLink({
-  uri: MONSOON_ENDPOINT || "http://localhost:4000/",
+  uri: Config.MONSOON_ENDPOINT || "http://localhost:4000/",
 })
 
 const authLink = setContext(async (_, { headers }) => {

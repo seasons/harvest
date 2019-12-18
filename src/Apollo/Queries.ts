@@ -23,7 +23,7 @@ export const GET_PRODUCT = gql`
       outerMaterials
       innerMaterials
       images
-
+      isSaved
       variants {
         id
         size
@@ -31,6 +31,7 @@ export const GET_PRODUCT = gql`
         reservable
         nonReservable
         reserved
+        isSaved
       }
     }
   }
@@ -58,6 +59,34 @@ export const GET_COLLECTION = gql`
           name
         }
         images
+      }
+    }
+  }
+`
+
+export const GET_BAG = gql`
+  query GetBagAndSavedItems {
+    me {
+      bag {
+        id
+        productVariant {
+          id
+          product {
+            id
+          }
+        }
+        position
+        saved
+      }
+      savedItems {
+        id
+        productVariant {
+          id
+          product {
+            id
+          }
+        }
+        saved
       }
     }
   }

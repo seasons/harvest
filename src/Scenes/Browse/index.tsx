@@ -74,9 +74,6 @@ const renderItem = ({ item }, i, navigation) => {
           <Sans size="0" color="gray" mb={0.5}>
             {product.name}
           </Sans>
-          <Sans size="0" color="gray" mb={0.5}>
-            ${product.retailPrice}
-          </Sans>
         </Box>
       </Box>
     </TouchableWithoutFeedback>
@@ -101,28 +98,27 @@ export const Browse = (props: any) => {
     }
   }, [props.screenProps.browseFilter])
 
+  const insets = useSafeArea()
+  const loaderStyle = useSpring({ opacity: loading && !data ? 1 : 0 })
+  const containerStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
   const { navigation } = props
   const products = data && data.products
   const categories = (data && data.categories) || []
-  const insets = useSafeArea()
-  const selectedCategory = categories.find(c => c.slug === currentCategory)
+  const selectedCategory = categories.find(c => c.slug === currentCategory) || { name: "", slug: "" }
 
   const onCategoryPress = item => {
     if (item.slug !== currentCategory) {
       setCurrentCategory(item.slug)
     }
-  }
-
-  if (loading && !data) {
-    return <Loader />
+    scrollViewEl.scrollToOffset({ offset: 0, animated: true })
   }
 
   return (
     <Container>
-      <LoaderContainer mt={insets.top}>
+      <LoaderContainer mt={insets.top} style={[loaderStyle]}>
         <BrowseLoader />
       </LoaderContainer>
-      <Flex flexDirection="column" flex={1} pt={insets.top} ref={scrollViewEl} style={{ opacity: 100 }}>
+      <AnimatedFlex flexDirection="column" flex={1} pt={insets.top} style={[containerStyle]}>
         <Box flex={1} flexGrow={1}>
           <FlatList
             data={products}
@@ -150,6 +146,10 @@ export const Browse = (props: any) => {
                     skip: products.length,
                   },
                   updateQuery: (prev, { fetchMoreResult }) => {
+                    if (!prev) {
+                      return []
+                    }
+
                     if (!fetchMoreResult) {
                       return prev
                     }
@@ -187,7 +187,7 @@ export const Browse = (props: any) => {
             horizontal
           />
         </Box>
-      </Flex>
+      </AnimatedFlex>
     </Container>
   )
 }
@@ -209,6 +209,8 @@ const LoaderContainer = animated(styled(Box)`
   left: 0;
   top: 0;
 `)
+
+const AnimatedFlex = animated(Flex)
 
 const Category = styled(Box)`
   ${p =>

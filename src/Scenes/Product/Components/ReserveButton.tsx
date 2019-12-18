@@ -1,68 +1,141 @@
 import { Button } from "App/Components"
-import { addItemToBag, addItemToWantItems, removeItemFromWantItems } from "App/Redux/actions"
+import { togglePopUp } from "App/Redux/actions"
+import gql from "graphql-tag"
+import { head } from "lodash"
 import React from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 
+import { useMutation, useQuery } from "@apollo/react-hooks"
+
 interface Props {
-  bag: any
   productState: any
   productID: string
   displayConfirmation: (type: string) => void
   addItemToBag: (product: any) => void
   removeItemFromWantItems: (product: any) => void
   addItemToWantItems: (product: any) => void
+  togglePopUp: (show: boolean, data: any) => void
+  disabled?: Boolean
 }
 
-export const ReserveButtonComponent: React.FC<Props> = ({
-  bag,
-  displayConfirmation,
-  productID,
-  addItemToBag,
-  productState,
-  removeItemFromWantItems,
-  addItemToWantItems,
-}) => {
+const ADD_TO_BAG = gql`
+  mutation AddToBag($item: ID!) {
+    addToBag(item: $item) {
+      id
+    }
+  }
+`
+
+const REMOVE_FROM_BAG = gql`
+  mutation RemoveFromBag($item: ID!) {
+    removeFromBag(item: $item) {
+      id
+    }
+  }
+`
+
+const GET_BAG = gql`
+  query GetBag {
+    me {
+      bag {
+        id
+        productVariant {
+          id
+          product {
+            id
+          }
+        }
+        position
+        saved
+      }
+      savedItems {
+        id
+        productVariant {
+          id
+          product {
+            id
+          }
+        }
+        saved
+      }
+    }
+  }
+`
+
+export const ReserveButtonComponent: React.FC<Props> = props => {
+  const { displayConfirmation, productID, productState, togglePopUp } = props
+  const { data } = useQuery(GET_BAG)
+  const [addToBag] = useMutation(ADD_TO_BAG, {
+    variables: {
+      item: productState.variant.id,
+    },
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+    ],
+    onCompleted: () => {
+      displayConfirmation("reserve")
+    },
+    onError: err => {
+      if (err && err.graphQLErrors) {
+        const error = head(err.graphQLErrors)
+        console.log(error)
+
+        togglePopUp(true, {
+          title: "Your bag is full",
+          note: "Remove one or more items from your bag to continue adding this item.",
+          buttonText: "Got It",
+        })
+      }
+    },
+  })
+  const [removeFromBag] = useMutation(REMOVE_FROM_BAG, {
+    variables: {
+      item: productState.variant.id,
+    },
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+    ],
+  })
+
   const handleReserve = () => {
-    addItemToBag({ productID, variantID: productState.variant.id })
-    displayConfirmation("reserve")
+    addToBag()
   }
 
-  const handleAddWantItem = () => {
-    addItemToWantItems({ productID, variantID: productState.variant.id })
-    displayConfirmation("want")
-  }
+  const items =
+    (data &&
+      data.me &&
+      data.me.bag.map(item => ({
+        variantID: item.productVariant.id,
+        productID: item.productVariant.product.id,
+      }))) ||
+    []
 
-  const handleRemoveWantItem = () => {
-    removeItemFromWantItems({ productID, variantID: productState.variant.id })
-  }
-
-  const itemInBag = !!bag.items.find(item => item.productID === productID)
-  const itemInWantList = !!bag.wantItems.find(item => item.productID === productID)
-  const itemStockZero = productState && productState.variant && productState.variant.stock === 0
+  const itemInBag = !!items.find(item => item.productID === productID)
 
   let showCheckMark = false
-  let text = "Reserve"
+  let text = "Add to Bag"
+  let disabled = !!props.disabled || false
   let onPress = () => handleReserve()
+
   if (itemInBag) {
     text = "Added"
-    onPress = () => null
+    onPress = () => {
+      removeFromBag()
+    }
     showCheckMark = true
-  } else if (itemStockZero && itemInWantList) {
-    text = "Want"
-    onPress = () => handleRemoveWantItem()
-    showCheckMark = true
-  } else if (itemStockZero || bag.itemCount >= 3) {
-    onPress = () => handleAddWantItem()
-    text = "Want"
   }
 
   return (
     <Button
-      width={95}
+      width={110}
       showCheckMark={showCheckMark}
       variant="primaryGray"
-      disabled={itemInBag}
+      disabled={disabled}
       size="small"
       onPress={onPress}
     >
@@ -74,9 +147,7 @@ export const ReserveButtonComponent: React.FC<Props> = ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      addItemToBag,
-      addItemToWantItems,
-      removeItemFromWantItems,
+      togglePopUp,
     },
     dispatch
   )

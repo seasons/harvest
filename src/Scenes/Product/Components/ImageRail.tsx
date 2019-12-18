@@ -30,7 +30,7 @@ export const ImageRail = ({ images }) => {
 }
 
 const ImageContainer = styled(FadeInImage)`
-  background: rgba(0, 0, 0, 0.3);
+  background: #f6f6f6;
   height: 400;
   width: 320;
 `

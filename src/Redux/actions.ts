@@ -23,6 +23,14 @@ export const toggleShowSizeSelection = showSizeSelection => ({
   payload: showSizeSelection,
 })
 
+export const togglePopUp = (showPopUp, data) => ({
+  type: "togglePopUp",
+  payload: {
+    ...data,
+    show: showPopUp,
+  },
+})
+
 export const setVariant = variant => ({
   type: "setVariant",
   payload: variant,
