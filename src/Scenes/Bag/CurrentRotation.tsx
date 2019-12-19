@@ -1,3 +1,4 @@
+import { ACTIVE_RESERVATION } from "App/Apollo/Queries"
 import { Box, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { Container } from "Components/Container"
@@ -15,35 +16,6 @@ import { bindActionCreators } from "redux"
 
 import { Bag } from "./Bag"
 import { CurrentRotationItem } from "./Components/CurrentRotationItem"
-
-const ACTIVE_RESERVATION = gql`
-  {
-    me {
-      activeReservation {
-        id
-        shipped
-        createdAt
-        products {
-          id
-          seasonsUID
-          inventoryStatus
-          productStatus
-          productVariant {
-            size
-            product {
-              name
-              retailPrice
-              brand {
-                name
-              }
-              images
-            }
-          }
-        }
-      }
-    }
-  }
-`
 
 export const CurrentRotationComponent = props => {
   const { data, loading, refetch } = useQuery(ACTIVE_RESERVATION)

@@ -77,6 +77,7 @@ export const GET_BAG = gql`
         }
         position
         saved
+        status
       }
       savedItems {
         id
@@ -87,6 +88,35 @@ export const GET_BAG = gql`
           }
         }
         saved
+      }
+    }
+  }
+`
+
+export const ACTIVE_RESERVATION = gql`
+  query ActiveReservation {
+    me {
+      activeReservation {
+        id
+        shipped
+        createdAt
+        products {
+          id
+          seasonsUID
+          inventoryStatus
+          productStatus
+          productVariant {
+            size
+            product {
+              name
+              retailPrice
+              brand {
+                name
+              }
+              images
+            }
+          }
+        }
       }
     }
   }
