@@ -77,7 +77,6 @@ export const ProductComponent = props => {
         <PopUp
           title={popUp.title}
           note={popUp.note}
-          icon={popUp.icon}
           buttonText={popUp.buttonText}
           show={productState.showPopUp}
           theme="light"

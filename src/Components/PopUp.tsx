@@ -57,7 +57,7 @@ export const PopUp: React.FC<Props> = ({ title, note, show, icon, buttonText, on
     <>
       <AnimatedPopUp style={popUpAnimation} height={height} color={colors.backgroundColor}>
         <Box m={2} onLayout={onLayout}>
-          {icon && (
+          {!!icon && (
             <Box mt={2} mx="auto">
               {icon}
             </Box>
