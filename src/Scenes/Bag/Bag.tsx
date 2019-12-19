@@ -7,7 +7,7 @@ import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
 import gql from "graphql-tag"
-import { assign, fill } from "lodash"
+import { assign, fill, get } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
@@ -134,6 +134,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
     []
 
   const paddedItems = assign(fill(new Array(3), { variantID: "", productID: "" }), items)
+  const hasActiveReservation = !!get(data, "me.activeReservation")
 
   const handleReserve = async navigation => {
     try {
@@ -185,6 +186,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
   const remainingPiecesDisplay = !bagIsFull
     ? `You have ${remainingPieces} ${remainingPieces === 1 ? "piece" : "pieces"} remaining`
     : "Reserve your order below"
+  const bagSubtitle = hasActiveReservation ? "Your current rotation" : remainingPiecesDisplay
 
   const ErrorMessage = () => {
     if (showReserveError) {
@@ -233,7 +235,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
   }
 
   const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"
-  const headerSubtitle = currentView === BagView.Bag ? remainingPiecesDisplay : "Tucked away for later"
+  const headerSubtitle = currentView === BagView.Bag ? bagSubtitle : "Tucked away for later"
 
   return (
     <Container>
@@ -282,7 +284,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
           }}
           ListFooterComponent={() => <Spacer mb={80} />}
         />
-        {isBagView && (
+        {isBagView && !hasActiveReservation && (
           <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
             <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
               Reserve

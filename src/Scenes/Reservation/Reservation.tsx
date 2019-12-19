@@ -129,14 +129,7 @@ export const ReservationView = props => {
               {`${address.city}, ${address.state} ${address.zipCode}`}
             </Sans>
           </Box>
-          {lastFourDigits && (
-            <Box mb={4}>
-              <SectionHeader title="Payment info" />
-              <Sans size="2" color="gray" mt={1}>
-                {lastFourDigits || ""}
-              </Sans>
-            </Box>
-          )}
+
           {phoneNumber && (
             <Box mb={4}>
               <SectionHeader title="Phone number" />

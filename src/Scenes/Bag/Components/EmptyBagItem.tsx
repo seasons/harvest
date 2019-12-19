@@ -32,7 +32,6 @@ export const EmptyBagItem = props => {
 }
 
 const EmptyBagItemContainer = styled(Box)`
-  background: #f6f6f6;
   border-radius: 8px;
   overflow: hidden;
   height: 270;

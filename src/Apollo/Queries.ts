@@ -67,6 +67,11 @@ export const GET_COLLECTION = gql`
 export const GET_BAG = gql`
   query GetBagAndSavedItems {
     me {
+      activeReservation {
+        id
+        shipped
+        createdAt
+      }
       bag {
         id
         productVariant {

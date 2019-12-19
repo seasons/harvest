@@ -33,7 +33,9 @@ console.log("Monsoon Endpoint:", Config.MONSOON_ENDPOINT)
 
 const link = new HttpLink({
   // uri: Config.MONSOON_ENDPOINT || "http://localhost:4000/",
-  uri: "https://monsoon.seasons.nyc",
+  // uri: "https://monsoon.seasons.nyc",
+  // uri: "http://localhost:4000",
+  uri: "http://eb37214e.ngrok.io",
 })
 
 const authLink = setContext(async (_, { headers }) => {

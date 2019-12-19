@@ -137,18 +137,6 @@ export const ReservationConfirmationView = props => {
           <Box>
             <Flex flexDirection="row" flex={1} width="100%" py={1}>
               <Sans size="2" color="black">
-                Payment
-              </Sans>
-              <Sans size="2" color="black" ml="auto">
-                {`${billingInfo.brand} ${billingInfo.last_digits}`}
-              </Sans>
-            </Flex>
-            <Spacer mb={1} />
-            <Separator color="#e5e5e5" />
-          </Box>
-          <Box>
-            <Flex flexDirection="row" flex={1} width="100%" py={1}>
-              <Sans size="2" color="black">
                 Delivery
               </Sans>
               <Sans size="2" color="black" ml="auto">
