@@ -11,6 +11,7 @@ import Config from "react-native-config"
 import { IntrospectionFragmentMatcher } from "apollo-cache-inmemory"
 import introspectionQueryResultData from "./src/fragmentTypes.json"
 import * as Sentry from "@sentry/react-native"
+import "react-native-gesture-handler"
 // import "./src/setupAnalytics"
 
 // https://github.com/facebook/react-native/issues/25701#issuecomment-513450639
@@ -27,6 +28,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 })
 
 const cache = new InMemoryCache({ fragmentMatcher })
+
 console.log("Monsoon Endpoint:", Config.MONSOON_ENDPOINT)
 
 const link = new HttpLink({
