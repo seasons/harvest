@@ -1,16 +1,70 @@
-import { Box, FixedButton, Flex, Sans, Spacer, TextInput, Theme } from "App/Components"
+import { Box, ErrorPopUp, FixedButton, Flex, Sans, Spacer, TextInput, Theme } from "App/Components"
 import { CloseXIcon } from "Assets/icons"
 import { color } from "App/Utils"
+import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { Dimensions, Keyboard, KeyboardAvoidingView, SafeAreaView, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
+import { useMutation } from "react-apollo"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
 import styled from "styled-components/native"
 
+const ADD_PRODUCT_REQUEST = gql`
+  mutation AddProductRequest($url: String!) {
+    addProductRequest(url: $url) {
+      id
+      sku
+      brand
+      description
+      images
+      name
+      price
+      priceCurrency
+      productID
+      url
+    }
+  }
+`
+
 export const ProductRequestComponent = (props: any) => {
-  const [statusBarHeight, setStatusBarHeight] = useState(0)
+  const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true)
+  const [likeReason, setLikeReason] = useState("")
+  const [showError, setShowError] = useState(false);
+  const [url, setURL] = useState("")
+
+  const [addProductRequest] = useMutation(ADD_PRODUCT_REQUEST, {
+    onError: error => {
+      console.log(error)
+
+      Keyboard.dismiss()
+      // TODO: handle different types of errors
+      setShowError(true)
+    },
+  })
+
+  const onURLChange = val => {
+    console.log(val);
+    setURL(val);
+    setIsNextButtonDisabled(url !== "" && likeReason !== "");
+  }
+
+  const onLikeReasonChange = val => {
+    setLikeReason(val);
+    setIsNextButtonDisabled(url !== "" && likeReason !== "");
+  }
+
+  const handleNextBtnPressed = async () => {
+    const result = await addProductRequest({
+      variables: {
+        url
+      }
+    })
+    console.log(result);
+  };
+
   const insets = useSafeArea()
+
   return (
     <Theme>
       <Container style={{ paddingTop: insets.top, background: color("black") }}>
@@ -24,17 +78,17 @@ export const ProductRequestComponent = (props: any) => {
             <Box style={{ marginTop: 8 }} m={2}>
               <Sans size="3" color="white" weight="medium">
                 Submit an item
-            </Sans>
+              </Sans>
               <Spacer mb={1} />
               <Sans size="2" color="rgba(255, 255, 255, 0.5)" weight="medium">
                 Recommend something for us to carry by pasting the link to the item below.
-            </Sans>
+              </Sans>
               <Spacer mb={3} />
               <TextInput
                 placeholder="Your link goes here"
                 variant="dark"
                 textContentType="link"
-                onChangeText={(_, val) => { }}
+                onChangeText={(_, val) => onURLChange(val)}
               />
               <Spacer mb={1} />
               <TextInput
@@ -43,17 +97,27 @@ export const ProductRequestComponent = (props: any) => {
                 variant="dark"
                 textContentType="whyLike"
                 multiline={true}
-                onChangeText={(_, val) => { }}
+                onChangeText={(_, val) => onLikeReasonChange(val)}
               />
             </Box>
           </Flex>
         </TouchableWithoutFeedback>
-        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={statusBarHeight}>
-          <FixedButton onPress={() => { }} disabled={true}>
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0}>
+          <FixedButton
+            disabled={isNextButtonDisabled}
+            variant={"primaryLight"}
+            onPress={handleNextBtnPressed} >
             Next
-                </FixedButton>
+          </FixedButton>
         </KeyboardAvoidingView>
       </Container>
+      <ErrorPopUp
+        buttonText="Got it"
+        note="We couldn’t find anything using this URL. Double check and try again."
+        title="Your link didn’t work!"
+        show={showError}
+        onClose={() => setShowError(false)}
+      />
     </Theme >
   )
 }
