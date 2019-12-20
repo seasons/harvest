@@ -12,6 +12,8 @@
 
 #import "RNSScreen.h"
 #import "RNSScreenContainer.h"
+#import "RNSScreenStack.h"
+#import "RNSScreenStackHeaderConfig.h"
 
 FOUNDATION_EXPORT double RNScreensVersionNumber;
 FOUNDATION_EXPORT const unsigned char RNScreensVersionString[];
