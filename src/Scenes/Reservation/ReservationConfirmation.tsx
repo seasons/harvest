@@ -163,7 +163,7 @@ export const ReservationConfirmationView = props => {
         <FixedButton
           onPress={() => {
             setActiveReservation(reservationID)
-            props.navigation.navigate("CurrentRotation", { reservationID: reservationID })
+            props.navigation.navigate("Bag", { reservationID: reservationID })
             props.navigation.dismiss()
           }}
         >

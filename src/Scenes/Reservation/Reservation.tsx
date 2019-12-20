@@ -1,4 +1,4 @@
-import { ACTIVE_RESERVATION } from "App/Apollo/Queries"
+import { GET_BAG } from "App/Apollo/Queries"
 import { Box, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { CloseXIcon } from "Assets/icons"
@@ -83,7 +83,7 @@ export const ReservationView = props => {
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
       {
-        query: ACTIVE_RESERVATION,
+        query: GET_BAG,
       },
     ],
   })
