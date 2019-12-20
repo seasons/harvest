@@ -44,14 +44,13 @@ export const ProductRequestComponent = (props: any) => {
   })
 
   const onURLChange = val => {
-    console.log(val);
     setURL(val);
-    setIsNextButtonDisabled(url !== "" && likeReason !== "");
+    setIsNextButtonDisabled(val === "" || likeReason === "");
   }
 
   const onLikeReasonChange = val => {
     setLikeReason(val);
-    setIsNextButtonDisabled(url !== "" && likeReason !== "");
+    setIsNextButtonDisabled(url === "" || val === "");
   }
 
   const handleNextBtnPressed = async () => {

@@ -95,7 +95,6 @@ export const TextInput: React.SFC<TextInputProps> = ({
     }
   }
 
-  console.log("MULTILINE: " + multiline);
   const height = style && style.height ? style.height : 56;
 
   return (
