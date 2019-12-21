@@ -1,4 +1,4 @@
-import { Box, Container, Flex, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
+import { Box, Container, Flex, FixedButton, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { CloseXIcon } from "Assets/icons"
 import { color } from "App/Utils"
@@ -35,11 +35,16 @@ export const ReviewProductRequestComponent: React.FC<{ navigation: NavigationScr
   navigation,
 }) => {
   const productRequest = get(navigation, "state.params.productRequest")
-  console.log("GOT IT");
-  console.log(productRequest);
-  const insets = useSafeArea()
-  const { images } = productRequest;
+  const { brand, description, images, name, price, priceCurrency, productID, sku } = productRequest;
+  const miscellaneousSections = [['Brand', brand], ['SKU', sku], ['Retail Price', `$${price}`]];
   const shouldDisplayImages = images.length >= 4;
+
+  const handleSubmitBtnPressed = () => {
+
+  }
+
+  const insets = useSafeArea()
+
   return (
     <Container>
       <>
@@ -58,14 +63,14 @@ export const ReviewProductRequestComponent: React.FC<{ navigation: NavigationScr
                 <>
                   <ImageContainer
                     resizeMode="contain"
-                    style={{ flex: 3 }}
+                    style={{ flex: 3, marginRight: 8 }}
                     source={{ uri: images[0] }}
                   />
                   <Box style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
-                    {images.slice(1, 4).map((image: String) =>
+                    {images.slice(1, 4).map((image: String, index: number) =>
                       <ImageContainer
                         resizeMode="contain"
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginBottom: index !== 2 ? 8 : 0 }}
                         source={{ uri: image }}
                       />
                     )}
@@ -74,8 +79,46 @@ export const ReviewProductRequestComponent: React.FC<{ navigation: NavigationScr
                 : null
               }
             </Box>
+            <Spacer mb={24} />
+            <Sans size="1" color="black">
+              Name
+            </Sans>
+            <Sans size="1" color="gray">
+              {name}
+            </Sans>
+            <Spacer mb={16} />
+            <Sans size="1" color="black">
+              Description
+            </Sans>
+            <Sans size="1" color="gray">
+              {description}
+            </Sans>
+            <Spacer mb={24} />
+            <Separator />
+            {miscellaneousSections.map(section =>
+              <>
+                <Spacer mb={24} />
+                <Box style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <Sans size="1" color="black">
+                    {section[0]}
+                  </Sans>
+                  <Sans size="1" color="gray">
+                    {section[1]}
+                  </Sans>
+                </Box>
+                <Spacer mb={24} />
+                <Separator />
+              </>
+            )}
+            <Spacer mb={112} />
           </Box>
         </ScrollView>
+        <FixedButton
+          disabled={false}
+          variant={"primaryDark"}
+          onPress={handleSubmitBtnPressed} >
+          Submit
+        </FixedButton>
       </>
     </Container >
   )
@@ -84,7 +127,6 @@ export const ReviewProductRequestComponent: React.FC<{ navigation: NavigationScr
 const ImageContainer = styled(Image)`
   border-width: 1px;
   border-color: rgba(240, 240, 240, 1);
-  margin: 4px;
 `
 
 const mapStateToProps = state => {
