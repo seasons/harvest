@@ -5,7 +5,7 @@ import { Browse } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
-import { ProductRequest } from "App/Scenes/ProductRequest"
+import { ProductRequest, ReviewProductRequest } from "App/Scenes/ProductRequest"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import { Initializing, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
@@ -97,6 +97,7 @@ BrowseStack.navigationOptions = ({ navigation }) => {
 const ProductRequestModal = DismissableStackNavigator(
   {
     ProductRequest,
+    ReviewProductRequest,
   },
   {
     headerMode: "none",
@@ -196,7 +197,7 @@ const MainNavigator = createBottomTabNavigator(
         } else if (routeName === "Browse") {
           URL = require(`../../assets/images/Browse.png`)
         } else if (routeName === "ProductRequest") {
-          URL = require(`../../assets/images/Browse.png`)
+          URL = require(`../../assets/images/Submit.png`)
         } else if (routeName === "Bag") {
           URL = require(`../../assets/images/Bag.png`)
         } else if (routeName === "Account") {
