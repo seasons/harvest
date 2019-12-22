@@ -14,23 +14,6 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
 import styled from "styled-components/native"
 
-const ADD_PRODUCT_REQUEST = gql`
-  mutation AddProductRequest($url: String!) {
-    addProductRequest(url: $url) {
-      id
-      sku
-      brand
-      description
-      images
-      name
-      price
-      priceCurrency
-      productID
-      url
-    }
-  }
-`
-
 export const ReviewProductRequestComponent: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
   navigation,
 }) => {
@@ -40,7 +23,7 @@ export const ReviewProductRequestComponent: React.FC<{ navigation: NavigationScr
   const shouldDisplayImages = images.length >= 4;
 
   const handleSubmitBtnPressed = () => {
-
+    navigation.navigate('FinishProductRequest');
   }
 
   const insets = useSafeArea()

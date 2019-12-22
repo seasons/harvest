@@ -5,7 +5,7 @@ import { Browse } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
-import { ProductRequest, ReviewProductRequest } from "App/Scenes/ProductRequest"
+import { FinishProductRequest, ProductRequest, ReviewProductRequest } from "App/Scenes/ProductRequest"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import { Initializing, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
@@ -98,30 +98,12 @@ const ProductRequestModal = DismissableStackNavigator(
   {
     ProductRequest,
     ReviewProductRequest,
+    FinishProductRequest,
   },
   {
     headerMode: "none",
   }
 )
-
-const ProductRequestStack = createStackNavigator(
-  {
-    ProductRequestModal,
-  },
-  {
-    initialRouteName: "ProductRequestModal",
-    defaultNavigationOptions: {
-      header: null,
-    },
-  }
-)
-
-ProductRequestStack.navigationOptions = ({ navigation }) => {
-  return {
-    tabBarVisible: shouldRenderTabBar(navigation),
-    header: null,
-  }
-}
 
 const BagStack = createStackNavigator(
   {
@@ -182,7 +164,7 @@ const MainNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Browse: BrowseStack,
-    ProductRequest: ProductRequestStack,
+    ProductRequest: ProductRequestModal,
     Bag: BagStack,
     Account: AccountStack,
   },
@@ -205,6 +187,14 @@ const MainNavigator = createBottomTabNavigator(
         }
 
         return <Image source={URL} style={{ opacity: focused ? 1.0 : 0.3 }} />
+      },
+      tabBarOnPress: ({ navigation, defaultHandler }) => {
+        const { routeName } = navigation.state
+        if (routeName === "ProductRequest") {
+          navigation.navigate('ProductRequestModal');
+        } else {
+          defaultHandler();
+        }
       },
     }),
     tabBarComponent: Tabs,
@@ -236,6 +226,9 @@ const RootStack = createStackNavigator(
     ReservationModal: {
       screen: ReservationModal,
     },
+    ProductRequestModal: {
+      screen: ProductRequestModal
+    }
   },
   {
     mode: "modal",
