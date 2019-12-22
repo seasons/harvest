@@ -62,7 +62,7 @@ export const ProductRequestComponent = (props: any) => {
 
     console.log(result);
     if (result.data) {
-      props.navigation.navigate("ReviewProductRequest", {
+      props.navigation.navigate("ProductRequestConfirmation", {
         productRequest: result.data.addProductRequest,
       })
     }
@@ -72,7 +72,7 @@ export const ProductRequestComponent = (props: any) => {
 
   return (
     <Theme>
-      <Container style={{ paddingTop: insets.top, background: color("black") }}>
+      <Container style={{ paddingTop: insets.top, paddingBottom: insets.bottom, background: color("black") }}>
         <CloseButton onPress={() => props.navigation.dismiss()}>
           <Box p="14px">
             <CloseXIcon />
