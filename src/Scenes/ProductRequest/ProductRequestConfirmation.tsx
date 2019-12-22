@@ -14,7 +14,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
 import styled from "styled-components/native"
 
-export const ReviewProductRequestComponent: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
+export const ProductRequestConfirmationComponent: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
   navigation,
 }) => {
   const productRequest = get(navigation, "state.params.productRequest")
@@ -116,4 +116,4 @@ const mapStateToProps = state => {
   return {}
 }
 
-export const ReviewProductRequest = connect(mapStateToProps)(ReviewProductRequestComponent)
+export const ProductRequestConfirmation = connect(mapStateToProps)(ProductRequestConfirmationComponent)

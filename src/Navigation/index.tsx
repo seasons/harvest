@@ -5,7 +5,7 @@ import { Browse } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
-import { FinishProductRequest, ProductRequest, ReviewProductRequest } from "App/Scenes/ProductRequest"
+import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import { Initializing, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
@@ -97,7 +97,7 @@ BrowseStack.navigationOptions = ({ navigation }) => {
 const ProductRequestModal = DismissableStackNavigator(
   {
     ProductRequest,
-    ReviewProductRequest,
+    ProductRequestConfirmation,
     FinishProductRequest,
   },
   {
