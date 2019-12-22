@@ -1,1 +1,0 @@
-export { RequestProduct } from './RequestProduct';

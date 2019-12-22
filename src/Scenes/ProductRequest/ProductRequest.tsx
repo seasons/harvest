@@ -1,13 +1,13 @@
+import gql from "graphql-tag"
+import React, { useState } from "react"
+import { useMutation } from "react-apollo"
+import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
+import { connect } from "react-redux"
+
 import { Box, ErrorPopUp, FixedButton, Flex, Sans, Spacer, TextInput, Theme } from "App/Components"
 import { CloseXIcon } from "Assets/icons"
 import { color } from "App/Utils"
-import gql from "graphql-tag"
-import React, { useEffect, useState } from "react"
-import { Dimensions, Keyboard, KeyboardAvoidingView, SafeAreaView, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
-import { useMutation } from "react-apollo"
-import * as Animatable from "react-native-animatable"
-import { useSafeArea } from "react-native-safe-area-context"
-import { connect } from "react-redux"
 import styled from "styled-components/native"
 
 const ADD_PRODUCT_REQUEST = gql`
@@ -38,7 +38,6 @@ export const ProductRequestComponent = (props: any) => {
       console.log(error)
 
       Keyboard.dismiss()
-      // TODO: handle different types of errors
       setShowError(true)
     },
   })

@@ -1,19 +1,12 @@
-import { Box, Container, Flex, FixedButton, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
-import { FadeInImage } from "App/Components/FadeInImage"
-import { CloseXIcon } from "Assets/icons"
-import { color } from "App/Utils"
 import { get } from "lodash"
-import gql from "graphql-tag"
-import React, { useEffect, useState } from "react"
-import { Dimensions, Keyboard, KeyboardAvoidingView, SafeAreaView, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
-import { useMutation } from "react-apollo"
-import * as Animatable from "react-native-animatable"
-import { ProductRequestGallery } from "./Components"
-import { Image, ScrollView } from "react-native"
+import React from "react"
+import { ScrollView } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
-import styled from "styled-components/native"
+
+import { Box, Container, FixedButton, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
+import { ProductRequestGallery } from "./Components"
 
 export const ProductRequestConfirmationComponent: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
   navigation,

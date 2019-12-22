@@ -132,7 +132,6 @@ const AccountStack = createStackNavigator(
     MembershipInfo,
     PaymentAndShipping,
     PersonalPreferences,
-    RequestProduct,
     Webview,
   },
   {
@@ -191,6 +190,7 @@ const MainNavigator = createBottomTabNavigator(
       tabBarOnPress: ({ navigation, defaultHandler }) => {
         const { routeName } = navigation.state
         if (routeName === "ProductRequest") {
+          // Have to navigate in order for screen to pop up modally
           navigation.navigate('ProductRequestModal');
         } else {
           defaultHandler();

@@ -1,18 +1,10 @@
-import { Box, Container, Flex, FixedButton, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
-import { FadeInImage } from "App/Components/FadeInImage"
-import { CloseXIcon } from "Assets/icons"
-import { color } from "App/Utils"
-import { get } from "lodash"
-import gql from "graphql-tag"
-import React, { useEffect, useState } from "react"
-import { Dimensions, Keyboard, KeyboardAvoidingView, SafeAreaView, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
-import { useMutation } from "react-apollo"
-import * as Animatable from "react-native-animatable"
-import { Image, ImageBackground, ScrollView } from "react-native"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
+import React from "react"
+import { Dimensions } from "react-native"
+import { Image } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
-import styled from "styled-components/native"
+
+import { Box, Container, FixedButton, Sans, Spacer } from "App/Components"
 
 export const FinishProductRequestComponent = (props: any) => {
   const handleFinishBtnPressed = () => {
