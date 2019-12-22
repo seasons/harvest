@@ -1,12 +1,11 @@
 import { Box, Flex, Sans, Separator, Spacer, Toggle } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { Loader } from "App/Components/Loader"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React from "react"
 import { useQuery } from "react-apollo"
 import ContentLoader, { Rect } from "react-content-loader/native"
-import { Linking, ScrollView, TouchableOpacity } from "react-native"
+import { Image, Linking, ScrollView, TouchableOpacity } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
@@ -150,9 +149,11 @@ export function Account(props) {
   )
 }
 
-const ImageContainer = styled(FadeInImage)`
+const ImageContainer = styled(Image)`
   height: 64;
   width: 64;
+  border-radius: 32;
+  overflow: hidden;
 `
 
 const LoaderContainer = animated(styled(Box)`

@@ -1,4 +1,4 @@
-import { Box, Button, ErrorPopUp, Flex, Sans, Spacer, TextInput, Theme } from "App/Components"
+import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, Theme } from "App/Components"
 import { color } from "App/Utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
@@ -139,7 +139,7 @@ export const LogIn: React.FC<LogInProps> = props => {
             </Box>
           </Flex>
         </>
-        <ErrorPopUp
+        <PopUp
           buttonText="Got it"
           note="Your email or password may be incorrect. Not a member? Apply for the waitlist."
           title="Oops! Try again"

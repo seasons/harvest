@@ -44,7 +44,7 @@
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
   
-  [RNSplashScreen show];
+//  [RNSplashScreen show];
   
   return YES;
 }

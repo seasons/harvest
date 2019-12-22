@@ -54,5 +54,8 @@ target 'seasons' do
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
   pod 'RNSentry', :path => '../node_modules/@sentry/react-native'
   pod 'react-native-config', :path => '../node_modules/react-native-config'
+  # pod 'RNAnalytics', :path => '../node_modules/@segment/analytics-react-native'
+  # pod 'RNAnalyticsIntegration-Google-Analytics', :path => '../node_modules/@segment/analytics-react-native-google-analytics'
+  # pod 'RNAnalyticsIntegration-Mixpanel', :path => '../node_modules/@segment/analytics-react-native-mixpanel'
 
 end

@@ -1,11 +1,12 @@
-import { Box, ErrorPopUp, FixedButton, Flex, Sans, Separator, Spacer, Theme } from "App/Components"
+import { GET_BAG } from "App/Apollo/Queries"
+import { Box, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { CloseXIcon } from "Assets/icons"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import { ScrollView, TouchableOpacity } from "react-native"
+import { ScrollView, StatusBar, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
@@ -28,6 +29,15 @@ const GET_CUSTOMER = gql`
         firstName
         lastName
         email
+      }
+      bag {
+        id
+        productVariant {
+          id
+          product {
+            id
+          }
+        }
       }
       customer {
         id
@@ -69,9 +79,14 @@ const SectionHeader = ({ title }) => {
 }
 
 export const ReservationView = props => {
-  const { bag } = props
   const { data, loading } = useQuery(GET_CUSTOMER)
-  const [reserveItems] = useMutation(RESERVE_ITEMS)
+  const [reserveItems] = useMutation(RESERVE_ITEMS, {
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+    ],
+  })
   const [showError, setShowError] = useState(false)
   const insets = useSafeArea()
 
@@ -91,9 +106,18 @@ export const ReservationView = props => {
   const lastFourDigits = get(customer, "billingInfo.last_digits", null)
 
   console.log(data)
+  const items =
+    (data &&
+      data.me &&
+      data.me.bag.map(item => ({
+        variantID: item.productVariant.id,
+        productID: item.productVariant.product.id,
+      }))) ||
+    []
 
   const content = (
     <>
+      <StatusBar backgroundColor="dark" barStyle="light-content" />
       <Flex flex={1} p={2}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <Box mt={2} mb={4}>
@@ -105,14 +129,7 @@ export const ReservationView = props => {
               {`${address.city}, ${address.state} ${address.zipCode}`}
             </Sans>
           </Box>
-          {lastFourDigits && (
-            <Box mb={4}>
-              <SectionHeader title="Payment info" />
-              <Sans size="2" color="gray" mt={1}>
-                {lastFourDigits || ""}
-              </Sans>
-            </Box>
-          )}
+
           {phoneNumber && (
             <Box mb={4}>
               <SectionHeader title="Phone number" />
@@ -124,18 +141,10 @@ export const ReservationView = props => {
           <Box mb={5}>
             <SectionHeader title="Items" />
             <Box mt={2} mb="80">
-              {bag.items.map((item, i) => {
+              {items.map((item, i) => {
                 return (
-                  <Box my={1} key={item.productID}>
-                    <BagItem
-                      removeItemFromBag={() => null}
-                      sectionHeight={200}
-                      index={i}
-                      bagItem={item}
-                      showRemoveButton={false}
-                    />
-                    <Spacer mb={1} />
-                    <Separator color="#e5e5e5" />
+                  <Box key={item.productID}>
+                    <BagItem sectionHeight={200} index={i} bagItem={item} navigation={props.navigation} saved={true} />
                   </Box>
                 )
               })}
@@ -149,7 +158,7 @@ export const ReservationView = props => {
             try {
               const { data } = await reserveItems({
                 variables: {
-                  items: bag.items.map(item => item.variantID),
+                  items: items.map(item => item.variantID),
                 },
               })
               if (data.reserveItems) {
@@ -166,11 +175,12 @@ export const ReservationView = props => {
         </FixedButton>
       </Box>
 
-      <ErrorPopUp
+      <PopUp
+        theme="light"
         show={showError}
-        title="One of your items is out of order!"
-        note="Sorry, one of the items became unavailable while you checked out, please replacement with another item"
-        buttonText="Got it"
+        title="Sorry!"
+        note="We couldn't process your order because of an unexpected error, please try again later"
+        buttonText="Close"
         onClose={() => setShowError(false)}
       />
     </>
@@ -203,10 +213,7 @@ const mapStateToProps = state => {
   return { bag }
 }
 
-export const Reservation = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReservationView)
+export const Reservation = connect(mapStateToProps, mapDispatchToProps)(ReservationView)
 
 const Container = styled(Box)`
   background: black;

@@ -112,7 +112,7 @@ const BagStack = createStackNavigator(
     CurrentRotation,
   },
   {
-    initialRouteName: "CurrentRotation",
+    initialRouteName: "Bag",
     defaultNavigationOptions: {
       header: null,
     },

@@ -1,9 +1,12 @@
+import { GET_BAG, GET_PRODUCT } from "App/Apollo/Queries"
 import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
-import { setVariant, toggleShowSizeSelection } from "App/Redux/actions"
+import { setVariant, togglePopUp, toggleShowSizeSelection } from "App/Redux/actions"
 import { ReserveButton } from "App/Scenes/Product/Components"
 import { color } from "App/Utils"
 import { BackArrowIcon, DownChevronIcon, SaveIcon } from "Assets/icons"
+import { CircledSaveIcon } from "Assets/icons/CircledSaveIcon"
 import gql from "graphql-tag"
+import { head } from "lodash"
 import React from "react"
 import { ScrollView, TouchableOpacity } from "react-native"
 import { NavigationActions } from "react-navigation"
@@ -11,15 +14,59 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 
+import { useMutation, useQuery } from "@apollo/react-hooks"
+
 import { SizePicker } from "./SizePicker"
 
+const SAVE_ITEM = gql`
+  mutation SaveItem($item: ID!, $save: Boolean!) {
+    saveProduct(item: $item, save: $save) {
+      id
+    }
+  }
+`
+
 export const ProductTabsComponent = props => {
-  const { displayConfirmation, productState, setVariant, toggleShowSizeSelection, productID, navigation } = props
+  const {
+    displayConfirmation,
+    productState,
+    setVariant,
+    toggleShowSizeSelection,
+    togglePopUp,
+    productID,
+    navigation,
+  } = props
   const { variant, showSizeSelection } = productState
 
   if (!productID) {
     return null
   }
+
+  const { data } = useQuery(GET_PRODUCT, {
+    variables: {
+      productID,
+    },
+  })
+  const [saveItem] = useMutation(SAVE_ITEM, {
+    refetchQueries: [
+      {
+        query: GET_PRODUCT,
+        variables: {
+          productID,
+        },
+      },
+      {
+        query: GET_BAG,
+      },
+    ],
+  })
+
+  const { product } = data || { product: { isSaved: false } }
+  const selectedVariant = head((product.variants || []).filter(a => a.id === variant.id))
+  const { isSaved } = selectedVariant || product
+  const isSoldOut = (selectedVariant && selectedVariant.reservable > 0) || false
+
+  console.log("Selected Variant: ", selectedVariant)
 
   const renderVariantSelectionList = () => {
     return (
@@ -45,15 +92,21 @@ export const ProductTabsComponent = props => {
   }
 
   const handleSaveButton = () => {
-    // FIXME: Handle save
-    const SAVE_ITEM = gql`
-      mutation SaveItem($item: ID!, $options: ReserveItemsOptions) {
-        saveItem(items: $item, options: $options) {
-          id
-        }
-      }
-    `
+    saveItem({
+      variables: {
+        item: variant.id,
+        save: !isSaved,
+      },
+    })
+    const updateText = isSaved ? "been removed from" : "added to"
+    togglePopUp(true, {
+      icon: <CircledSaveIcon />,
+      title: "Saved for later",
+      note: `The ${product.name}, size ${variant.size} has ${updateText} your saved items.`,
+      buttonText: "Got It",
+    })
   }
+
   return (
     <>
       <Flex style={{ backgroundColor: color("black") }}>
@@ -69,8 +122,8 @@ export const ProductTabsComponent = props => {
               </Box>
             </TouchableOpacity>
             <Spacer mr={2} />
-            <TouchableOpacity onPress={() => handleSaveButton()} style={{ opacity: 0 }}>
-              <SaveIcon />
+            <TouchableOpacity onPress={() => handleSaveButton()}>
+              <SaveIcon enabled={isSaved} />
             </TouchableOpacity>
           </Flex>
           <TouchableOpacity onPress={() => toggleShowSizeSelection(!showSizeSelection)}>
@@ -100,6 +153,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       setVariant,
+      togglePopUp,
       toggleShowSizeSelection,
     },
     dispatch
@@ -110,10 +164,7 @@ const mapStateToProps = state => {
   return { productState }
 }
 
-export const ProductTabs = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProductTabsComponent)
+export const ProductTabs = connect(mapStateToProps, mapDispatchToProps)(ProductTabsComponent)
 
 const StyledDownChevronIcon = styled(DownChevronIcon)`
   position: absolute;
