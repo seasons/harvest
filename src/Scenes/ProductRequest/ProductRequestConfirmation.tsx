@@ -12,9 +12,16 @@ export const ProductRequestConfirmationComponent: React.FC<{ navigation: Navigat
   navigation,
 }) => {
   const productRequest = get(navigation, "state.params.productRequest")
-  const { brand, description, images, name, price, priceCurrency, productID, sku } = productRequest;
-  const primarySections = [['Name', name], ['Description', description]];
-  const miscellaneousSections = [['Brand', brand], ['SKU', sku], ['Retail Price', `$${price}`]];
+  const { brand, description, images, name, price, sku } = productRequest;
+  const primarySections = [
+    ['Name', name],
+    ['Description', description]
+  ];
+  const miscellaneousSections = [
+    ['Brand', brand],
+    ['SKU', sku],
+    ['Retail Price', `$${price}`]
+  ];
 
   const handleSubmitBtnPressed = () => {
     navigation.navigate('FinishProductRequest');

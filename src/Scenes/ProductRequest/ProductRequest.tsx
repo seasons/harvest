@@ -35,8 +35,7 @@ export const ProductRequestComponent = (props: any) => {
 
   const [addProductRequest] = useMutation(ADD_PRODUCT_REQUEST, {
     onError: error => {
-      console.log(error)
-
+      console.log(error);
       Keyboard.dismiss()
       setShowError(true)
     },
@@ -83,11 +82,11 @@ export const ProductRequestComponent = (props: any) => {
               <Sans size="3" color="white" weight="medium">
                 Submit an item
               </Sans>
-              <Spacer mb={1} />
+              <Spacer mb={14} />
               <Sans size="2" color="rgba(255, 255, 255, 0.5)" weight="medium">
                 Recommend something for us to carry by pasting the link to the item below.
               </Sans>
-              <Spacer mb={3} />
+              <Spacer mb={32} />
               <TextInput
                 placeholder="Your link goes here"
                 variant="dark"
@@ -122,24 +121,24 @@ export const ProductRequestComponent = (props: any) => {
         show={showError}
         onClose={() => setShowError(false)}
       />
-    </Theme >
+    </Theme>
   )
 }
 
 const Container = styled(Box)`
-      background: black;
-      flex: 1;
-    `
+  background: black;
+  flex: 1;
+`
 
 const CloseButton = styled(TouchableOpacity)`
-      background-color: rgba(255, 255, 255, 0.2);
-      width: 40;
-      height: 40;
-      border-radius: 20;
-      margin-left: auto;
-      margin-right: 20;
-      margin-top: 12;
-    `
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 40;
+  height: 40;
+  border-radius: 20;
+  margin-left: auto;
+  margin-right: 20;
+  margin-top: 12;
+`
 
 const mapStateToProps = state => {
   return {}
