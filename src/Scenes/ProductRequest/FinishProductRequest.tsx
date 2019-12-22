@@ -44,7 +44,6 @@ export const FinishProductRequestComponent = (props: any) => {
   )
 }
 
-
 const mapStateToProps = state => {
   return {}
 }

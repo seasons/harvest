@@ -58,11 +58,13 @@ export const ProductRequestComponent = (props: any) => {
       }
     })
 
-    console.log(result);
-    if (result.data) {
+    if (result.data && result.data.addProductRequest) {
       props.navigation.navigate("ProductRequestConfirmation", {
         productRequest: result.data.addProductRequest,
       })
+    } else {
+      Keyboard.dismiss()
+      setShowError(true)
     }
   };
 
