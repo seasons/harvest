@@ -5,7 +5,7 @@ import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, TouchableOpac
 import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
 
-import { Box, ErrorPopUp, FixedButton, Flex, Sans, Spacer, TextInput, Theme } from "App/Components"
+import { Box, PopUp, FixedButton, Flex, Sans, Spacer, TextInput, Theme } from "App/Components"
 import { CloseXIcon } from "Assets/icons"
 import { color } from "App/Utils"
 import styled from "styled-components/native"
@@ -116,10 +116,11 @@ export const ProductRequestComponent = (props: any) => {
           </FixedButton>
         </KeyboardAvoidingView>
       </Container>
-      <ErrorPopUp
+      <PopUp
         buttonText="Got it"
         note="We couldn’t find anything using this URL. Double check and try again."
         title="Your link didn’t work!"
+        theme="light"
         show={showError}
         onClose={() => setShowError(false)}
       />
