@@ -11,8 +11,8 @@ import { color } from "App/Utils"
 import styled from "styled-components/native"
 
 const ADD_PRODUCT_REQUEST = gql`
-  mutation AddProductRequest($url: String!) {
-    addProductRequest(url: $url) {
+  mutation AddProductRequest($reason: String!, $url: String!) {
+    addProductRequest(reason: $reason, url: $url) {
       id
       sku
       brand
@@ -54,6 +54,7 @@ export const ProductRequestComponent = (props: any) => {
   const handleNextBtnPressed = async () => {
     const result = await addProductRequest({
       variables: {
+        reason: likeReason,
         url
       }
     })
