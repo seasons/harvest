@@ -29,6 +29,7 @@ const SAVE_ITEM = gql`
 export const ProductTabsComponent = props => {
   const {
     displayConfirmation,
+    showLoader,
     productState,
     setVariant,
     toggleShowSizeSelection,
@@ -64,7 +65,6 @@ export const ProductTabsComponent = props => {
   const { product } = data || { product: { isSaved: false } }
   const selectedVariant = head((product.variants || []).filter(a => a.id === variant.id))
   const { isSaved } = selectedVariant || product
-  const isSoldOut = (selectedVariant && selectedVariant.reservable > 0) || false
 
   console.log("Selected Variant: ", selectedVariant)
 
@@ -140,6 +140,7 @@ export const ProductTabsComponent = props => {
               productID={productID}
               variant={variant}
               displayConfirmation={displayConfirmation}
+              showLoader={showLoader}
             ></ReserveButton>
           </Flex>
         </Flex>

@@ -11,6 +11,7 @@ import { color } from "styled-system"
 import { Confirmation } from "./Confirmation"
 import { useNavigationState } from "./NavigationState"
 import { ProductTabs } from "./ProductTabs"
+import { Loader } from "App/Components/Loader"
 
 const PRODUCT_SELECTION_HEIGHT = 440
 
@@ -22,6 +23,7 @@ export const TabsComponent = props => {
 
   const [isProductRoute, setIsProductRoute] = useState(false)
   const [productID, setProductID] = useState("")
+  const [showLoader, setShowLoader] = useState(false)
   const { routes, index: activeRouteIndex } = navigation.state
   const { action } = navigationState
 
@@ -71,6 +73,7 @@ export const TabsComponent = props => {
 
   return (
     <Theme>
+      {showLoader && <Loader />}
       {showConfirmation.show && <Confirmation type={showConfirmation.type} />}
       <AnimatedTabContainer
         style={{
@@ -85,7 +88,12 @@ export const TabsComponent = props => {
           style={{ transform: [{ translateY: productTabStyles.translateY }], opacity: productTabStyles.opacity }}
         >
           <Flex style={{ flex: 1, backgroundColor: color("black") }}>
-            <ProductTabs displayConfirmation={displayConfirmation} navigation={navigation} productID={productID} />
+            <ProductTabs
+              showLoader={setShowLoader}
+              displayConfirmation={displayConfirmation}
+              navigation={navigation}
+              productID={productID}
+            />
           </Flex>
         </AnimatedProductTabsWrapper>
         <AnimatedMainNavWrapper

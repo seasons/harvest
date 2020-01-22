@@ -2,7 +2,7 @@ import { Button } from "App/Components"
 import { togglePopUp } from "App/Redux/actions"
 import gql from "graphql-tag"
 import { head } from "lodash"
-import React from "react"
+import React, { useState } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 
@@ -17,6 +17,7 @@ interface Props {
   addItemToWantItems: (product: any) => void
   togglePopUp: (show: boolean, data: any) => void
   disabled?: Boolean
+  showLoader: (show: boolean) => void
 }
 
 const ADD_TO_BAG = gql`
@@ -64,7 +65,8 @@ const GET_BAG = gql`
 `
 
 export const ReserveButtonComponent: React.FC<Props> = props => {
-  const { displayConfirmation, productID, productState, togglePopUp } = props
+  const [isMutating, setIsMutating] = useState(false)
+  const { displayConfirmation, productID, productState, togglePopUp, showLoader } = props
   const { data } = useQuery(GET_BAG)
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
@@ -76,12 +78,16 @@ export const ReserveButtonComponent: React.FC<Props> = props => {
       },
     ],
     onCompleted: () => {
+      setIsMutating(false)
+      showLoader(false)
       displayConfirmation("reserve")
     },
     onError: err => {
+      setIsMutating(false)
+      showLoader(false)
       if (err && err.graphQLErrors) {
         const error = head(err.graphQLErrors)
-        console.log(error)
+        console.log("ReserveButton.tsx: ", error)
 
         togglePopUp(true, {
           title: "Your bag is full",
@@ -100,10 +106,26 @@ export const ReserveButtonComponent: React.FC<Props> = props => {
         query: GET_BAG,
       },
     ],
+    onCompleted: () => {
+      setIsMutating(false)
+      showLoader(false)
+    },
+    onError: err => {
+      showLoader(false)
+      setIsMutating(false)
+      if (err && err.graphQLErrors) {
+        const error = head(err.graphQLErrors)
+        console.log("ReserveButton.tsx: ", error)
+      }
+    },
   })
 
   const handleReserve = () => {
-    addToBag()
+    if (!isMutating) {
+      setIsMutating(true)
+      showLoader(true)
+      addToBag()
+    }
   }
 
   const items =
@@ -125,7 +147,11 @@ export const ReserveButtonComponent: React.FC<Props> = props => {
   if (itemInBag) {
     text = "Added"
     onPress = () => {
-      removeFromBag()
+      if (!isMutating) {
+        setIsMutating(true)
+        showLoader(true)
+        removeFromBag()
+      }
     }
     showCheckMark = true
   }
