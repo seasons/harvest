@@ -6,7 +6,7 @@ import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
-import { Initializing, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
+import { Initializing, ResetPassword, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
 import React, { useState } from "react"
 import { Image } from "react-native"
@@ -31,7 +31,7 @@ const shouldRenderTabBar = navigation => {
   return renderTabs
 }
 
-const AuthStack = createStackNavigator(
+const MainAuthStack = createStackNavigator(
   {
     SignIn,
     SignInOrApply,
@@ -46,11 +46,35 @@ const AuthStack = createStackNavigator(
   }
 )
 
-AuthStack.navigationOptions = () => {
+MainAuthStack.navigationOptions = () => {
   return {
     tabBarVisible: false,
   }
 }
+
+const ResetPasswordModal = DismissableStackNavigator(
+  {
+    ResetPassword,
+  },
+  {
+    headerMode: "none",
+  }
+)
+
+const AuthStack = createStackNavigator(
+  {
+    MainAuthStack: {
+      screen: MainAuthStack
+    },
+    ResetPasswordModal: {
+      screen: ResetPasswordModal
+    },
+  },
+  {
+    mode: "modal",
+    headerMode: "none",
+  }
+)
 
 const HomeStack = createStackNavigator(
   {
