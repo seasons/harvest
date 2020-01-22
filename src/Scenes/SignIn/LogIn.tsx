@@ -2,6 +2,7 @@ import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, Theme } from "App/Co
 import { color } from "App/Utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
+import { isValidEmail } from "App/helpers/regex"
 import LottieView from "lottie-react-native"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
@@ -46,9 +47,8 @@ export const LogIn: React.FC<LogInProps> = props => {
   })
 
   const onEmailChange = val => {
-    const emailValidationRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     setEmail(val)
-    setEmailComplete(emailValidationRegex.test(val))
+    setEmailComplete(isValidEmail(val))
   }
 
   const handleLogin = async () => {
@@ -77,7 +77,7 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   const handleResetPassword = () => {
-    // TODO: implement
+    props.navigation.navigate("ResetPasswordModal")
   }
 
   const disabled = !(emailComplete && password.length)
