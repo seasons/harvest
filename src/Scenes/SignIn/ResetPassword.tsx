@@ -1,13 +1,12 @@
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
-import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
+import { Keyboard, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 
-import { CloseXIcon } from "Assets/icons"
-import { Box, Button, PopUp, FixedButton, Flex, ModalCloseButton, Sans, Spacer, TextInput, Theme } from "../../Components"
+import { Box, Button, PopUp, Flex, ModalCloseButton, Sans, Spacer, TextInput, Theme } from "../../Components"
 import { isValidEmail } from "../../helpers/regex"
 import styled from "styled-components/native"
 import { color } from "../../Utils"
@@ -27,7 +26,6 @@ export const ResetPasswordComponent = (props: any) => {
 
   const [resetPassword] = useMutation(RESET_PASSWORD, {
     onError: error => {
-      console.log("ERROR")
       console.log(error)
       Keyboard.dismiss()
       setShowError(true)
@@ -52,7 +50,6 @@ export const ResetPasswordComponent = (props: any) => {
       Keyboard.dismiss()
       setShowError(true)
     }
-    console.log(result)
   }
 
   const insets = useSafeArea()

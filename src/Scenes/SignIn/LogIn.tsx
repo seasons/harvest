@@ -77,8 +77,6 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   const handleResetPassword = () => {
-    // TODO: implement
-    console.log("RESET")
     props.navigation.navigate("ResetPasswordModal")
   }
 

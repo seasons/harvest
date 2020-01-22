@@ -1,22 +1,14 @@
-import gql from "graphql-tag"
-import React, { useState } from "react"
-import { useMutation } from "react-apollo"
-import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
+import React from "react"
+import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 
-import { CloseXIcon } from "Assets/icons"
-import { Box, Button, CloseButton, PopUp, FixedBackArrow, FixedButton, Flex, ModalCloseButton, Sans, Spacer, TextInput, Theme } from "../../Components"
-import { isValidEmail } from "../../helpers/regex"
+import { Box, Flex, ModalCloseButton, Sans, Spacer, Theme } from "../../Components"
 import styled from "styled-components/native"
 import { color } from "../../Utils"
 
 export const ResetPasswordConfirmationComponent = (props: any) => {
-  const handleDoneButton = () => {
-    props.navigation.dismiss()
-  }
-
   const insets = useSafeArea()
 
   return (
