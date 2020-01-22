@@ -13,7 +13,7 @@ export const ResetPasswordConfirmationComponent = (props: any) => {
 
   return (
     <Theme>
-      <Container style={{ paddingTop: insets.top, paddingBottom: insets.bottom, background: color("black") }}>
+      <Container px={2} pt={insets.top} >
         <ModalCloseButton navigation={props.navigation} />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
