@@ -7,22 +7,93 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 
 import { CloseXIcon } from "Assets/icons"
-import { Box, PopUp, FixedButton, Flex, Sans, Spacer, TextInput, Theme } from "../../Components"
+import { Box, Button, PopUp, FixedButton, Flex, ModalCloseButton, Sans, Spacer, TextInput, Theme } from "../../Components"
+import { isValidEmail } from "../../helpers/regex"
 import styled from "styled-components/native"
 import { color } from "../../Utils"
 
+const RESET_PASSWORD = gql`
+  mutation ResetPassword($email: String!) {
+    resetPassword(email: $email) {
+      message
+    }
+  }
+`
+
 export const ResetPasswordComponent = (props: any) => {
+  const [email, setEmail] = useState("")
+  const [isEmailComplete, setIsEmailComplete] = useState(false)
+  const [showError, setShowError] = useState(false);
+
+  const [resetPassword] = useMutation(RESET_PASSWORD, {
+    onError: error => {
+      console.log("ERROR")
+      console.log(error)
+      Keyboard.dismiss()
+      setShowError(true)
+    },
+  })
+
+  const onEmailChange = val => {
+    setEmail(val)
+    setIsEmailComplete(isValidEmail(val))
+  }
+
+  const handleSendLink = async () => {
+    const result = await resetPassword({
+      variables: {
+        email
+      }
+    })
+
+    if (result.data && result.data.resetPassword) {
+      props.navigation.navigate("ResetPasswordConfirmation")
+    } else {
+      Keyboard.dismiss()
+      setShowError(true)
+    }
+    console.log(result)
+  }
+
   const insets = useSafeArea()
 
   return (
     <Theme>
       <Container style={{ paddingTop: insets.top, paddingBottom: insets.bottom, background: color("black") }}>
-        <CloseButton onPress={() => props.navigation.dismiss()}>
-          <Box p="14px">
-            <CloseXIcon />
-          </Box>
-        </CloseButton>
+        <ModalCloseButton navigation={props.navigation} />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
+            <Box style={{ marginTop: 8 }} m={2}>
+              <Sans size="3" color="white" weight="medium">
+                Reset Password
+               </Sans>
+              <Spacer mb={14} />
+              <Sans size="2" color="rgba(255, 255, 255, 0.5)" weight="medium">
+                Enter your email and we'll promptly send you a link to reset your password.
+               </Sans>
+              <Spacer mb={32} />
+              <TextInput
+                placeholder="Your email goes here"
+                variant="dark"
+                textContentType="email"
+                onChangeText={(_, val) => onEmailChange(val)}
+              />
+              <Spacer mb={4} />
+              <Button onPress={handleSendLink} disabled={!isEmailComplete} variant="primaryLight">
+                Send Reset Link
+              </Button>
+            </Box>
+          </Flex>
+        </TouchableWithoutFeedback>
       </Container>
+      <PopUp
+        buttonText="Got it"
+        note="We couldn’t find an account tied to this email. Double check and try again."
+        title="Your email didn’t work!"
+        theme="light"
+        show={showError}
+        onClose={() => setShowError(false)}
+      />
     </Theme>
   )
 }
@@ -30,16 +101,6 @@ export const ResetPasswordComponent = (props: any) => {
 const Container = styled(Box)`
   background: black;
   flex: 1;
-`
-
-const CloseButton = styled(TouchableOpacity)`
-  background-color: rgba(255, 255, 255, 0.2);
-  width: 40;
-  height: 40;
-  border-radius: 20;
-  margin-left: auto;
-  margin-right: 20;
-  margin-top: 12;
 `
 
 const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)

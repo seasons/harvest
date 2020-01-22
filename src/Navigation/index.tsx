@@ -6,7 +6,7 @@ import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
-import { Initializing, ResetPassword, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
+import { Initializing, ResetPassword, ResetPasswordConfirmation, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
 import React, { useState } from "react"
 import { Image } from "react-native"
@@ -55,6 +55,7 @@ MainAuthStack.navigationOptions = () => {
 const ResetPasswordModal = DismissableStackNavigator(
   {
     ResetPassword,
+    ResetPasswordConfirmation
   },
   {
     headerMode: "none",
