@@ -60,9 +60,16 @@ export const ProductRequestComponent = (props: any) => {
     })
 
     if (result.data && result.data.addProductRequest) {
-      props.navigation.navigate("ProductRequestConfirmation", {
-        productRequest: result.data.addProductRequest,
-      })
+      const productRequest = result.data.addProductRequest
+      if (productRequest.name) {
+        props.navigation.navigate("ProductRequestConfirmation", {
+          productRequest
+        })
+      } else {
+        // Means that we failed to scrape the product information from the URL
+        // and just stored the URL for now
+        props.navigation.navigate("FinishProductRequest")
+      }
     } else {
       Keyboard.dismiss()
       setShowError(true)
