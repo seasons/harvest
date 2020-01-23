@@ -106,7 +106,7 @@ export const SizePicker = ({ productID, setVariant, productState, onSizeSelected
               </Sans>
             </Flex>
             <Sans color="gray" size="2">
-              {size.stock ? "" : "(Out of stock)"}
+              {size.stock ? "" : "Unavailable"}
             </Sans>
           </Flex>
         </TouchableOpacity>

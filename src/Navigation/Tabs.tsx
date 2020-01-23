@@ -1,4 +1,4 @@
-import { Flex, Theme } from "App/Components"
+import { Flex, Theme, Box } from "App/Components"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { get } from "lodash"
 import React, { useState } from "react"
@@ -6,14 +6,13 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { connect } from "react-redux"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-import { color } from "styled-system"
-
 import { Confirmation } from "./Confirmation"
 import { useNavigationState } from "./NavigationState"
-import { ProductTabs } from "./ProductTabs"
-import { Loader } from "App/Components/Loader"
+import { VariantPicker } from "./VariantPicker"
+import { Dimensions } from "react-native"
+import { color } from "App/Utils"
 
-const PRODUCT_SELECTION_HEIGHT = 440
+const variantPickerHeight = Dimensions.get("window").height / 2
 
 export const TabsComponent = props => {
   const [showConfirmation, setShowConfirmation] = useState({ show: false, type: "" })
@@ -23,7 +22,6 @@ export const TabsComponent = props => {
 
   const [isProductRoute, setIsProductRoute] = useState(false)
   const [productID, setProductID] = useState("")
-  const [showLoader, setShowLoader] = useState(false)
   const { routes, index: activeRouteIndex } = navigation.state
   const { action } = navigationState
 
@@ -61,50 +59,42 @@ export const TabsComponent = props => {
 
   const productTabStyles = useSpring({
     opacity: isProductRoute ? 1 : 0,
-    translateY: isProductRoute ? 0 : 100,
   })
-  const mainTabStyles = useSpring({
+
+  const mainNavStyle = useSpring({
     opacity: isProductRoute ? 0 : 1,
-    translateY: isProductRoute ? 100 : 0,
   })
-  const containerStyles = useSpring({
-    height: props.productState.showSizeSelection && isProductRoute ? PRODUCT_SELECTION_HEIGHT : 60,
+
+  const trayStyle = useSpring({
+    translateY: 0,
   })
+
+  const trayWrapperStyle = useSpring({
+    translateY: isProductRoute ? 0 : -insets.bottom,
+  })
+
+  console.log("variantPickerHeight", variantPickerHeight)
 
   return (
     <Theme>
-      {showLoader && <Loader />}
-      {showConfirmation.show && <Confirmation type={showConfirmation.type} />}
-      <AnimatedTabContainer
-        style={{
-          height: containerStyles.height,
-          marginBottom: insets.bottom,
-        }}
-      >
-        <LeftCorner />
-        <RightCorner />
-        <AnimatedProductTabsWrapper
-          pointerEvents={isProductRoute ? "auto" : "none"}
-          style={{ transform: [{ translateY: productTabStyles.translateY }], opacity: productTabStyles.opacity }}
-        >
-          <Flex style={{ flex: 1, backgroundColor: color("black") }}>
-            <ProductTabs
-              showLoader={setShowLoader}
-              displayConfirmation={displayConfirmation}
-              navigation={navigation}
-              productID={productID}
-            />
-          </Flex>
-        </AnimatedProductTabsWrapper>
-        <AnimatedMainNavWrapper
-          pointerEvents={isProductRoute ? "none" : "auto"}
-          style={{ transform: [{ translateY: mainTabStyles.translateY }], opacity: mainTabStyles.opacity }}
-        >
-          <Flex pt={2} alignContent="center" justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
-            {tabs}
-          </Flex>
-        </AnimatedMainNavWrapper>
-      </AnimatedTabContainer>
+      <AnimatedTrayWrapper style={{ transform: [{ translateY: trayWrapperStyle.translateY }] }}>
+        {showConfirmation.show && <Confirmation type={showConfirmation.type} />}
+        <AnimatedTray style={{ transform: [{ translateY: trayStyle.translateY }] }}>
+          <LeftCorner />
+          <RightCorner />
+          <AnimatedProductTabs style={{ opacity: productTabStyles.opacity, height: variantPickerHeight }}>
+            {isProductRoute && (
+              <VariantPicker
+                height={variantPickerHeight}
+                displayConfirmation={displayConfirmation}
+                navigation={navigation}
+                productID={productID}
+              />
+            )}
+          </AnimatedProductTabs>
+          <AnimatedMainTabs style={{ opacity: mainNavStyle.opacity }}>{tabs}</AnimatedMainTabs>
+        </AnimatedTray>
+      </AnimatedTrayWrapper>
     </Theme>
   )
 }
@@ -115,22 +105,6 @@ const mapStateToProps = state => {
 }
 
 export const Tabs = connect(mapStateToProps)(TabsComponent)
-
-const NavWrapper = styled.View`
-  overflow: hidden;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  flex: 1;
-  position: absolute;
-`
-
-const TabContainer = styled.View`
-  position: relative;
-  flex-direction: row;
-  height: 50;
-`
 
 const TabButton = styled.TouchableOpacity`
   flex: 1;
@@ -150,6 +124,24 @@ const RightCorner = styled(RightTabCorner)`
   right: 0;
 `
 
-const AnimatedTabContainer = animated(TabContainer)
-const AnimatedProductTabsWrapper = animated(NavWrapper)
-const AnimatedMainNavWrapper = animated(NavWrapper)
+const MainTabs = styled(Flex)`
+  height: 44;
+  background-color: pink;
+  align-content: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  flex-direction: row;
+`
+const ProductTabs = styled.View`
+  background-color: yellow;
+`
+
+const Tray = styled.View`
+  /* background-color: ${color("black")}; */
+  background-color: green;
+`
+
+const AnimatedTray = animated(Tray)
+const AnimatedTrayWrapper = animated(Box)
+const AnimatedProductTabs = animated(ProductTabs)
+const AnimatedMainTabs = animated(MainTabs)

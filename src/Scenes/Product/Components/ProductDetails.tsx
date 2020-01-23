@@ -1,10 +1,41 @@
-import { Box, Sans, Separator, Spacer } from "App/Components"
+import { Box, Sans, Separator, Spacer, Flex } from "App/Components"
 import { color } from "App/Utils"
 import React from "react"
-
+import { GET_BAG, GET_PRODUCT } from "App/Apollo/Queries"
+import { connect } from "react-redux"
 import { ProductInfoItem } from "./ProductInfoItem"
+import { TouchableOpacity } from "react-native"
+import { SaveIcon } from "Assets/icons"
+import { head } from "lodash"
+import gql from "graphql-tag"
+import { togglePopUp } from "App/Redux/actions"
+import { CircledSaveIcon } from "Assets/icons/CircledSaveIcon"
+import { useMutation } from "react-apollo"
+import { bindActionCreators } from "redux"
 
-export const ProductDetails = ({ product }) => {
+const SAVE_ITEM = gql`
+  mutation SaveItem($item: ID!, $save: Boolean!) {
+    saveProduct(item: $item, save: $save) {
+      id
+    }
+  }
+`
+
+export const ProductDetailsComponent = ({ product, productState, togglePopUp }) => {
+  const [saveItem] = useMutation(SAVE_ITEM, {
+    refetchQueries: [
+      {
+        query: GET_PRODUCT,
+        variables: {
+          productID: product.id,
+        },
+      },
+      {
+        query: GET_BAG,
+      },
+    ],
+  })
+
   if (!product) {
     return null
   }
@@ -15,23 +46,52 @@ export const ProductDetails = ({ product }) => {
     brand: { name: brandName },
   } = product
 
+  const { variant } = productState
+
+  const selectedVariant = head((product.variants || []).filter(a => a.id === variant.id))
+  const { isSaved } = selectedVariant || product
+
+  const handleSaveButton = () => {
+    saveItem({
+      variables: {
+        item: variant.id,
+        save: !isSaved,
+      },
+    })
+    const updateText = isSaved ? "been removed from" : "been added to"
+    togglePopUp(true, {
+      icon: <CircledSaveIcon />,
+      title: "Saved for later",
+      note: `The ${product.name}, size ${variant.size} has ${updateText} your saved items.`,
+      buttonText: "Got It",
+    })
+  }
+
+  console.log("isSaved", isSaved)
+  console.log("product", product)
+
   return (
-    <Box p={2} mb={3}>
-      <Sans size="3" color="black">
-        {name}
-      </Sans>
+    <Box pt={2} px={2} mb={3}>
+      <Flex flexDirection="row" justifyContent="space-between">
+        <Box>
+          <Sans size="1" color="black">
+            {name}
+          </Sans>
+          <Sans size="1" color="gray">
+            {brandName}
+          </Sans>
+        </Box>
+        <Box>
+          <TouchableOpacity onPress={() => handleSaveButton()}>
+            <SaveIcon enabled={isSaved} />
+          </TouchableOpacity>
+        </Box>
+      </Flex>
       <Spacer mb={1} />
-
-      <Sans size="1" color="gray">
-        {brandName}
-      </Sans>
-      <Spacer mb={1} />
-
       <Sans size="1" color="gray" lineHeight={26}>
         {description}
       </Sans>
       <Spacer mb={1} />
-
       <Spacer mb={2} />
       <Separator color={color("lightGray")} />
       {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
@@ -44,3 +104,18 @@ export const ProductDetails = ({ product }) => {
     </Box>
   )
 }
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      togglePopUp,
+    },
+    dispatch
+  )
+
+const mapStateToProps = state => {
+  const { productState } = state
+  return { productState }
+}
+
+export const ProductDetails = connect(mapStateToProps, mapDispatchToProps)(ProductDetailsComponent)
