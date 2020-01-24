@@ -5,6 +5,7 @@ import { Browse } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
+import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import { Initializing, ResetPassword, ResetPasswordConfirmation, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
@@ -14,6 +15,7 @@ import { createAppContainer, createSwitchNavigator } from "react-navigation"
 import { createStackNavigator } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
+import { RequestProduct } from "Scenes/Account/RequestProduct"
 import styled from "styled-components"
 
 import DismissableStackNavigator from "./DismissableStackNavigator"
@@ -117,6 +119,17 @@ BrowseStack.navigationOptions = ({ navigation }) => {
   }
 }
 
+const ProductRequestModal = DismissableStackNavigator(
+  {
+    ProductRequest,
+    ProductRequestConfirmation,
+    FinishProductRequest,
+  },
+  {
+    headerMode: "none",
+  }
+)
+
 const BagStack = createStackNavigator(
   {
     Bag,
@@ -175,6 +188,7 @@ const MainNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Browse: BrowseStack,
+    ProductRequest: ProductRequestModal,
     Bag: BagStack,
     Account: AccountStack,
   },
@@ -188,6 +202,8 @@ const MainNavigator = createBottomTabNavigator(
           URL = require(`../../assets/images/Home.png`)
         } else if (routeName === "Browse") {
           URL = require(`../../assets/images/Browse.png`)
+        } else if (routeName === "ProductRequest") {
+          URL = require(`../../assets/images/Submit.png`)
         } else if (routeName === "Bag") {
           URL = require(`../../assets/images/Bag.png`)
         } else if (routeName === "Account") {
@@ -195,6 +211,15 @@ const MainNavigator = createBottomTabNavigator(
         }
 
         return <Image source={URL} style={{ opacity: focused ? 1.0 : 0.3 }} />
+      },
+      tabBarOnPress: ({ navigation, defaultHandler }) => {
+        const { routeName } = navigation.state
+        if (routeName === "ProductRequest") {
+          // Have to navigate in order for screen to pop up modally
+          navigation.navigate('ProductRequestModal');
+        } else {
+          defaultHandler();
+        }
       },
     }),
     tabBarComponent: Tabs,
@@ -226,6 +251,9 @@ const RootStack = createStackNavigator(
     ReservationModal: {
       screen: ReservationModal,
     },
+    ProductRequestModal: {
+      screen: ProductRequestModal
+    }
   },
   {
     mode: "modal",

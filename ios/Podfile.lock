@@ -270,9 +270,9 @@ PODS:
     - Sentry (~> 4.4.0)
   - RNSVG (9.13.3):
     - React
-  - Sentry (4.4.2):
-    - Sentry/Core (= 4.4.2)
-  - Sentry/Core (4.4.2)
+  - Sentry (4.4.3):
+    - Sentry/Core (= 4.4.3)
+  - Sentry/Core (4.4.3)
   - UMBarCodeScannerInterface (4.0.0)
   - UMCameraInterface (4.0.0)
   - UMConstantsInterface (4.0.0)
@@ -356,9 +356,8 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
-    - boost-for-react-native
   trunk:
+    - boost-for-react-native
     - Sentry
 
 EXTERNAL SOURCES:
@@ -553,8 +552,8 @@ SPEC CHECKSUMS:
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
   RNScreens: 254da4b84f25971cbb30ed3ddc84131f23cac812
   RNSentry: 932ac1c8b2f581b1c8be5812f88ff556c99e7fb7
-  RNSVG: f6177f8d7c095fada7cfee2e4bb7388ba426064c
-  Sentry: bba998b0fb157fdd6596aa73290a9d67ae47be79
+  RNSVG: b7e8745a87c046386569eecb437b3040cc6a7954
+  Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390
   UMBarCodeScannerInterface: d5a6fdc98ed6241225b0a8432a7f4e2b397668bc
   UMCameraInterface: 68870a3197fee85bd5afca5609ba4a5b7257d19d
   UMConstantsInterface: d25b8e8887ca7aaf568c06caf08f4d40734ee4ef
