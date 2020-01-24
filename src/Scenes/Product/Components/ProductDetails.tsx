@@ -67,9 +67,6 @@ export const ProductDetailsComponent = ({ product, productState, togglePopUp }) 
     })
   }
 
-  console.log("isSaved", isSaved)
-  console.log("product", product)
-
   return (
     <Box pt={2} px={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between">

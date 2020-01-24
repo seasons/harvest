@@ -65,7 +65,7 @@ const GET_BAG = gql`
   }
 `
 
-export const ReserveButtonComponent: React.FC<Props> = props => {
+export const AddToBagButtonComponent: React.FC<Props> = props => {
   const [isMutating, setIsMutating] = useState(false)
   const { displayConfirmation, productID, productState, togglePopUp, variantInStock, width } = props
   const { data } = useQuery(GET_BAG)
@@ -86,7 +86,7 @@ export const ReserveButtonComponent: React.FC<Props> = props => {
       setIsMutating(false)
       if (err && err.graphQLErrors) {
         const error = head(err.graphQLErrors)
-        console.log("ReserveButton.tsx: ", error)
+        console.log("AddToBagButton.tsx: ", error)
 
         togglePopUp(true, {
           title: "Your bag is full",
@@ -96,6 +96,7 @@ export const ReserveButtonComponent: React.FC<Props> = props => {
       }
     },
   })
+
   const [removeFromBag] = useMutation(REMOVE_FROM_BAG, {
     variables: {
       item: productState.variant.id,
@@ -112,7 +113,7 @@ export const ReserveButtonComponent: React.FC<Props> = props => {
       setIsMutating(false)
       if (err && err.graphQLErrors) {
         const error = head(err.graphQLErrors)
-        console.log("ReserveButton.tsx: ", error)
+        console.log("AddToBagButton.tsx: ", error)
       }
     },
   })
@@ -134,6 +135,9 @@ export const ReserveButtonComponent: React.FC<Props> = props => {
     []
 
   const itemInBag = !!items.find(item => item.productID === productID)
+
+  console.log("itemInBag", itemInBag)
+  console.log("productID", productID)
 
   let showCheckMark = false
   let text = "Add to Bag"
@@ -180,4 +184,4 @@ const mapStateToProps = state => {
   return { bag, productState }
 }
 
-export const ReserveButton = connect(mapStateToProps, mapDispatchToProps)(ReserveButtonComponent)
+export const AddToBagButton = connect(mapStateToProps, mapDispatchToProps)(AddToBagButtonComponent)

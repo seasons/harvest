@@ -1,36 +1,40 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { PopUp, Theme, Box, Flex, Sans } from "App/Components"
+import { PopUp, Theme, Box, Flex, Sans, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { setVariant, togglePopUp } from "App/Redux/actions"
 import get from "lodash/get"
-import React from "react"
+import React, { useState } from "react"
 import { NavigationActions } from "react-navigation"
-import { Dimensions, FlatList, SafeAreaView, TouchableOpacity, TextComponent } from "react-native"
+import { Dimensions, FlatList, SafeAreaView, TouchableOpacity } from "react-native"
 import { connect } from "react-redux"
-import { animated } from "react-spring/renderprops-native.cjs"
+import { animated, useSpring } from "react-spring"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
-
 import { useQuery } from "@apollo/react-hooks"
-
 import { AboutTheBrand, ImageRail, MoreLikeThis, ProductDetails } from "./Components"
 import { BackArrowIcon } from "Assets/icons"
 import { color } from "App/Utils"
 import { SelectionButtons } from "./Components/SelectionButtons"
+import { VariantPicker } from "./Components/VariantPicker"
+import { Confirmation } from "./Components/Confirmation"
 
-const screenHeight = Math.round(Dimensions.get("window").height)
+const variantPickerHeight = Dimensions.get("window").height / 2.5
 
 export const ProductComponent = props => {
-  const { togglePopUp, popUp, navigation } = props
+  const { togglePopUp, popUp, navigation, productState } = props
+  const showVariantSelection = productState && productState.showVariantSelection
+  const [showConfirmation, setShowConfirmation] = useState({ show: false, type: "" })
   const productID = get(props, "navigation.state.params.id")
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
       productID,
     },
   })
+  const pickerTransition = useSpring({
+    translateY: showVariantSelection ? 0 : variantPickerHeight,
+  })
 
   const product = data && data.product
-  const { productState } = props
 
   if (loading || !data) {
     return <Loader />
@@ -58,6 +62,14 @@ export const ProductComponent = props => {
     )
   }
 
+  const displayConfirmation = type => {
+    console.log("type", type)
+    setShowConfirmation({ show: true, type })
+    setTimeout(() => {
+      setShowConfirmation({ show: false, type })
+    }, 2000)
+  }
+
   const renderItem = ({ item: section }) => {
     const images = product && product.images
     switch (section) {
@@ -75,7 +87,7 @@ export const ProductComponent = props => {
   }
 
   const sections = ["imageRail", "productDetails", "aboutTheBrand"]
-
+  console.log("pickerTransition.translateY", pickerTransition.translateY)
   return (
     <Theme>
       <SafeAreaView style={{ flex: 1 }}>
@@ -85,14 +97,22 @@ export const ProductComponent = props => {
               navigation.dispatch(NavigationActions.back())
             }}
           >
+            <ArrowBackground />
             <BackArrowIcon color={color("black")} />
           </TouchableOpacity>
         </ArrowWrapper>
-
-        {productState.showSizeSelection && <AnimatedOverlay style={props} />}
-        <FlatList data={sections} keyExtractor={item => item} renderItem={item => renderItem(item)} />
-        <SelectionButtons />
-
+        {productState.showVariantSelection && <AnimatedOverlay style={props} />}
+        <FlatList
+          data={sections}
+          ListFooterComponent={() => <Spacer mb={58} />}
+          keyExtractor={item => item}
+          renderItem={item => renderItem(item)}
+        />
+        <SelectionButtons displayConfirmation={displayConfirmation} productID={productID} />
+        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
+          <VariantPicker height={variantPickerHeight} navigation={navigation} productID={productID} />
+        </AnimatedVariantPicker>
+        {showConfirmation.show && <Confirmation type={showConfirmation.type} />}
         <PopUp
           title={popUp.title}
           note={popUp.note}
@@ -124,6 +144,14 @@ const mapStateToProps = state => {
 
 export const Product = connect(mapStateToProps, mapDispatchToProps)(ProductComponent)
 
+const VariantPickerWrapper = styled(Box)`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: ${variantPickerHeight};
+`
+
 const Overlay = styled.View`
   position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
@@ -141,7 +169,14 @@ const ArrowWrapper = styled(Box)`
   z-index: 1000;
 `
 
-const Content = styled.View``
+const ArrowBackground = styled(Box)`
+  width: 30;
+  height: 30;
+  position: absolute;
+  background-color: ${color("black4")};
+  border-radius: 40;
+  left: -6;
+`
 
 const Strikethrough = styled.View`
   background-color: ${color("lightgray")};
@@ -153,3 +188,4 @@ const Strikethrough = styled.View`
 `
 
 const AnimatedOverlay = animated(Overlay)
+const AnimatedVariantPicker = animated(VariantPickerWrapper)

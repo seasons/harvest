@@ -101,11 +101,11 @@ export const SizePicker = ({ productID, setVariant, productState, onSizeSelected
             <Flex flexDirection="row" alignItems="center">
               <Radio selected={productState.variant.id === size.id} />
               <Spacer mr={1} />
-              <Sans color={size.stock ? "white" : "gray"} size="2">
+              <Sans color={size.stock ? "white" : "gray"} size="1">
                 {capitalize(size.size)}
               </Sans>
             </Flex>
-            <Sans color="gray" size="2">
+            <Sans color="gray" size="1">
               {size.stock ? "" : "Unavailable"}
             </Sans>
           </Flex>
