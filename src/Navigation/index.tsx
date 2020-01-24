@@ -5,8 +5,9 @@ import { Browse } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
+import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
-import { Initializing, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
+import { Initializing, ResetPassword, ResetPasswordConfirmation, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
 import React, { useState } from "react"
 import { Image } from "react-native"
@@ -14,6 +15,7 @@ import { createAppContainer, createSwitchNavigator } from "react-navigation"
 import { createStackNavigator } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
+import { RequestProduct } from "Scenes/Account/RequestProduct"
 import styled from "styled-components"
 
 import DismissableStackNavigator from "./DismissableStackNavigator"
@@ -31,7 +33,7 @@ const shouldRenderTabBar = navigation => {
   return renderTabs
 }
 
-const AuthStack = createStackNavigator(
+const MainAuthStack = createStackNavigator(
   {
     SignIn,
     SignInOrApply,
@@ -46,11 +48,36 @@ const AuthStack = createStackNavigator(
   }
 )
 
-AuthStack.navigationOptions = () => {
+MainAuthStack.navigationOptions = () => {
   return {
     tabBarVisible: false,
   }
 }
+
+const ResetPasswordModal = DismissableStackNavigator(
+  {
+    ResetPassword,
+    ResetPasswordConfirmation
+  },
+  {
+    headerMode: "none",
+  }
+)
+
+const AuthStack = createStackNavigator(
+  {
+    MainAuthStack: {
+      screen: MainAuthStack
+    },
+    ResetPasswordModal: {
+      screen: ResetPasswordModal
+    },
+  },
+  {
+    mode: "modal",
+    headerMode: "none",
+  }
+)
 
 const HomeStack = createStackNavigator(
   {
@@ -91,6 +118,17 @@ BrowseStack.navigationOptions = ({ navigation }) => {
     header: null,
   }
 }
+
+const ProductRequestModal = DismissableStackNavigator(
+  {
+    ProductRequest,
+    ProductRequestConfirmation,
+    FinishProductRequest,
+  },
+  {
+    headerMode: "none",
+  }
+)
 
 const BagStack = createStackNavigator(
   {
@@ -150,6 +188,7 @@ const MainNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Browse: BrowseStack,
+    ProductRequest: ProductRequestModal,
     Bag: BagStack,
     Account: AccountStack,
   },
@@ -163,6 +202,8 @@ const MainNavigator = createBottomTabNavigator(
           URL = require(`../../assets/images/Home.png`)
         } else if (routeName === "Browse") {
           URL = require(`../../assets/images/Browse.png`)
+        } else if (routeName === "ProductRequest") {
+          URL = require(`../../assets/images/Submit.png`)
         } else if (routeName === "Bag") {
           URL = require(`../../assets/images/Bag.png`)
         } else if (routeName === "Account") {
@@ -170,6 +211,15 @@ const MainNavigator = createBottomTabNavigator(
         }
 
         return <Image source={URL} style={{ opacity: focused ? 1.0 : 0.3 }} />
+      },
+      tabBarOnPress: ({ navigation, defaultHandler }) => {
+        const { routeName } = navigation.state
+        if (routeName === "ProductRequest") {
+          // Have to navigate in order for screen to pop up modally
+          navigation.navigate('ProductRequestModal');
+        } else {
+          defaultHandler();
+        }
       },
     }),
     tabBarComponent: Tabs,
@@ -201,6 +251,9 @@ const RootStack = createStackNavigator(
     ReservationModal: {
       screen: ReservationModal,
     },
+    ProductRequestModal: {
+      screen: ProductRequestModal
+    }
   },
   {
     mode: "modal",
