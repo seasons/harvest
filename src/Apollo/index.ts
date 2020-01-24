@@ -16,8 +16,8 @@ const cache = new InMemoryCache({ fragmentMatcher })
 console.log("Monsoon Endpoint:", Config.MONSOON_ENDPOINT)
 
 const link = new HttpLink({
-  //   uri: "https://monsoon.seasons.nyc",
   uri: "http://localhost:4000",
+  //   uri: "https://monsoon.seasons.nyc",
   //   uri: "https://monsoon-staging.seasons.nyc",
 })
 
