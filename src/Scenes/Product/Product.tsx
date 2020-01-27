@@ -1,5 +1,5 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { PopUp, Theme, Box, Flex, Sans, Spacer } from "App/Components"
+import { PopUp, Theme, Box, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { setVariant, togglePopUp, toggleShowVariantPicker } from "App/Redux/actions"
 import get from "lodash/get"
@@ -16,15 +16,12 @@ import { BackArrowIcon } from "Assets/icons"
 import { color } from "App/Utils"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
-import { Confirmation } from "./Components/Confirmation"
-import { sortVariants } from "App/helpers/sortVariants"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5
 
 export const ProductComponent = props => {
   const { togglePopUp, popUp, navigation, productState, toggleShowVariantPicker } = props
   const showVariantSelection = productState && productState.showVariantSelection
-  const [showConfirmation, setShowConfirmation] = useState({ show: false, type: "" })
   useEffect(() => {
     return () => {
       toggleShowVariantPicker(false)
@@ -50,37 +47,17 @@ export const ProductComponent = props => {
     console.error("error: ", error)
   }
 
-  const TextComponent = () => {
-    const sortedVariants = sortVariants(product.variants)
-    return (
-      <Flex flexDirection="row">
-        {sortedVariants.map(variant => {
-          const reservable = !!variant.reservable
-          return (
-            <Box key={variant.id} mr={0.3} style={{ position: "relative" }}>
-              <Sans size="1" color={reservable ? "black" : "lightgray"}>
-                {variant.size}
-              </Sans>
-              {!reservable && <Strikethrough />}
-            </Box>
-          )
-        })}
-      </Flex>
-    )
-  }
-
-  const displayConfirmation = type => {
-    setShowConfirmation({ show: true, type })
-    setTimeout(() => {
-      setShowConfirmation({ show: false, type })
-    }, 2000)
-  }
-
   const renderItem = ({ item: section }) => {
     const images = product && product.images
     switch (section) {
       case "imageRail":
-        return <ImageRail images={images} showPageDots TextComponent={TextComponent} />
+        return (
+          <ImageRail
+            images={images}
+            showPageDots
+            TextComponent={() => <VariantSizes size="1" variants={product.variants} />}
+          />
+        )
       case "productDetails":
         return <ProductDetails product={product} />
       case "moreLikeThis":
@@ -113,12 +90,11 @@ export const ProductComponent = props => {
           keyExtractor={item => item}
           renderItem={item => renderItem(item)}
         />
-        <SelectionButtons displayConfirmation={displayConfirmation} productID={productID} />
+        <SelectionButtons productID={productID} />
         {showVariantSelection && <Overlay />}
         <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
           <VariantPicker height={variantPickerHeight} navigation={navigation} productID={productID} />
         </AnimatedVariantPicker>
-        {showConfirmation.show && <Confirmation type={showConfirmation.type} />}
         <PopUp
           title={popUp.title}
           note={popUp.note}

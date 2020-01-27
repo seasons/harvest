@@ -1,6 +1,5 @@
-import { Box, Flex, Sans } from "App/Components"
+import { Box, Flex, Sans, VariantSizes, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { Loader } from "App/Components/Loader"
 import { imageResize } from "App/helpers/imageResize"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
@@ -11,10 +10,10 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-
 import { useQuery } from "@apollo/react-hooks"
-
 import { BrowseLoader } from "./Loader"
+
+const IMAGE_HEIGHT = 240
 
 const GET_PRODUCTS = gql`
   query getProducts($name: String!, $first: Int!, $skip: Int!) {
@@ -42,12 +41,21 @@ const GET_PRODUCTS = gql`
       brand {
         name
       }
+      variants {
+        id
+        size
+        total
+        reservable
+        nonReservable
+        reserved
+        isSaved
+      }
     }
   }
 `
 
 const renderItem = ({ item }, i, navigation) => {
-  const itemWidth = Dimensions.get("window").width / 2 - 5
+  const itemWidth = Dimensions.get("window").width / 2 - 2
   const product = item
 
   const image = get(product, "images[0]", { url: "" })
@@ -62,19 +70,13 @@ const renderItem = ({ item }, i, navigation) => {
 
   return (
     <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
-      <Box mr={isLeft ? 0.0 : "10px"} mb={1} width={itemWidth}>
-        <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: 240 }} />
-
-        <Box my={2} mx={1}>
-          {brandName && (
-            <Sans size="0" mb={0.5}>
-              {brandName}
-            </Sans>
-          )}
-          <Sans size="0" color="gray" mb={0.5}>
-            {product.name}
-          </Sans>
+      <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
+        <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
+        <Box my={0.5} mx={1}>
+          {brandName && <Sans size="0">{brandName}</Sans>}
+          <VariantSizes size="0" variants={product.variants} />
         </Box>
+        <Spacer mb={0.5} />
       </Box>
     </TouchableWithoutFeedback>
   )
@@ -104,7 +106,6 @@ export const Browse = (props: any) => {
   const { navigation } = props
   const products = data && data.products
   const categories = (data && data.categories) || []
-  const selectedCategory = categories.find(c => c.slug === currentCategory) || { name: "", slug: "" }
 
   const onCategoryPress = item => {
     if (item.slug !== currentCategory) {
@@ -116,7 +117,7 @@ export const Browse = (props: any) => {
   return (
     <Container>
       <LoaderContainer mt={insets.top} style={[loaderStyle]}>
-        <BrowseLoader />
+        <BrowseLoader imageHeight={IMAGE_HEIGHT} />
       </LoaderContainer>
       <AnimatedFlex flexDirection="column" flex={1} pt={insets.top} style={[containerStyle]}>
         <Box flex={1} flexGrow={1}>
@@ -124,18 +125,6 @@ export const Browse = (props: any) => {
             data={products}
             ref={ref => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
-            ListHeaderComponent={() => (
-              <Box p={2}>
-                <Sans size="3" color="black">
-                  Browse
-                </Sans>
-                <Sans size="2" color="gray">
-                  {currentCategory === "all"
-                    ? "Viewing all categories"
-                    : `Viewing by ${selectedCategory.name.toLowerCase()}`}
-                </Sans>
-              </Box>
-            )}
             renderItem={(item, i) => renderItem(item, i, navigation)}
             numColumns={2}
             onEndReachedThreshold={0.7}
@@ -162,7 +151,7 @@ export const Browse = (props: any) => {
             }}
           />
         </Box>
-        <Box height={60} mb={40}>
+        <Box height={60} mb={insets.bottom}>
           <CategoryPicker
             data={[{ slug: "all", name: "All" }, ...categories]}
             renderItem={({ item }) => {

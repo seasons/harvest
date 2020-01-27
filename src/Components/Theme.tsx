@@ -44,34 +44,25 @@ export const themeProps = {
   fontFamily,
 
   space: {
-    // unit: px value
-    /** Equivalent to 3px  */
-    0.3: 3,
-    /** Equivalent to 5px  */
-    0.5: 5,
-    /** Equivalent to 10px  */
-    1: 10,
-    /** Equivalent to 20px  */
-    2: 20,
-    /** Equivalent to 30px  */
-    3: 30,
+    /** Equivalent to 4px  */
+    0.5: 4,
+    /** Equivalent to 8px  */
+    1: 8,
+    /** Equivalent to 16px  */
+    2: 16,
+    /** Equivalent to 24px  */
+    3: 24,
+    /** Equivalent to 32px  */
+    4: 32,
     /** Equivalent to 40px  */
-    4: 40,
-    /** Equivalent to 60px  */
-    6: 60,
-    /** Equivalent to 90px  */
-    9: 90,
-    /** Equivalent to 120px  */
-    12: 120,
-    /** Equivalent to 180px  */
-    18: 180,
+    6: 40,
   },
 
   typeSizes: {
     /** Equivalent to 14px size / 20px line-height  */
     "0": {
-      fontSize: 14,
-      lineHeight: 20,
+      fontSize: 12,
+      lineHeight: 16,
     },
     /** Equivalent to 16px size / 24px line-height  */
     "1": {

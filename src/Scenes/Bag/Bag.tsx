@@ -12,7 +12,6 @@ import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
@@ -291,7 +290,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
             }
             return renderItem(item)
           }}
-          ListFooterComponent={() => <Spacer mb={80} />}
+          ListFooterComponent={() => <Spacer mb={96} />}
         />
         {isBagView && !hasActiveReservation && (
           <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>

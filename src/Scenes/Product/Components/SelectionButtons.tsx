@@ -12,10 +12,8 @@ import { DownChevronIcon } from "Assets/icons"
 const twoButtonWidth = Dimensions.get("window").width / 2 - 12
 
 export const SelectionButtonsComponent = props => {
-  const { displayConfirmation, productState, toggleShowVariantPicker, productID } = props
+  const { productState, toggleShowVariantPicker, productID } = props
   const { variant, showVariantSelection } = productState
-
-  console.log("productID", productID)
   const inStock = variant && !!variant.stock
 
   return (
@@ -49,7 +47,6 @@ export const SelectionButtonsComponent = props => {
             variantInStock={inStock}
             productID={productID}
             variant={variant}
-            displayConfirmation={displayConfirmation}
             width={twoButtonWidth}
           ></AddToBagButton>
         )}

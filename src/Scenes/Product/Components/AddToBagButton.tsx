@@ -11,7 +11,6 @@ import { useMutation, useQuery } from "@apollo/react-hooks"
 interface Props {
   productState: any
   productID: string
-  displayConfirmation: (type: string) => void
   addItemToBag: (product: any) => void
   removeItemFromWantItems: (product: any) => void
   addItemToWantItems: (product: any) => void
@@ -67,7 +66,7 @@ const GET_BAG = gql`
 
 export const AddToBagButtonComponent: React.FC<Props> = props => {
   const [isMutating, setIsMutating] = useState(false)
-  const { displayConfirmation, productID, productState, togglePopUp, variantInStock, width } = props
+  const { productID, productState, togglePopUp, variantInStock, width } = props
   const { data } = useQuery(GET_BAG)
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
@@ -80,7 +79,6 @@ export const AddToBagButtonComponent: React.FC<Props> = props => {
     ],
     onCompleted: () => {
       setIsMutating(false)
-      displayConfirmation("reserve")
     },
     onError: err => {
       setIsMutating(false)
