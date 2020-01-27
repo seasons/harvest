@@ -8,7 +8,9 @@ import FadeIn from "@expo/react-native-fade-in-image"
 export const FadeInImage: React.FC<ImageProps> = props => {
   return (
     <Container>
-      <FastImage source={props.source} {...props} />
+      <FadeIn>
+        <FastImage source={props.source} {...props} />
+      </FadeIn>
     </Container>
   )
 }
