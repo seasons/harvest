@@ -49,7 +49,7 @@ enum BagView {
 }
 
 export const Bag = ({ navigation, removeItemFromBag }) => {
-  const [showLoader, setShowLoader] = useState(false)
+  const [isMutating, setMutating] = useState(false)
   const [showReserveError, displayReserveError] = useState(null)
   const { data, loading, refetch } = useQuery(GET_BAG, {
     fetchPolicy: "cache-and-network",
@@ -137,10 +137,10 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
   const hasActiveReservation = !!get(data, "me.activeReservation")
 
   const handleReserve = async navigation => {
-    if (showLoader) {
+    if (isMutating) {
       return
     }
-    setShowLoader(true)
+    setMutating(true)
     try {
       const { data } = await checkItemsAvailability({
         variables: {
@@ -158,7 +158,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
       if (data.checkItemsAvailability) {
         navigation.navigate("ReservationModal")
       }
-      setShowLoader(false)
+      setMutating(false)
     } catch (e) {
       const { graphQLErrors } = e
       console.log(graphQLErrors)
@@ -180,7 +180,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
           data,
         })
       }
-      setShowLoader(false)
+      setMutating(false)
     }
   }
 
@@ -246,7 +246,6 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
 
   return (
     <Container>
-      {showLoader && <Loader />}
       <Box style={{ flex: 1, paddingTop: insets.top }}>
         <FlatList
           data={currentView === BagView.Bag ? paddedItems : savedItems}
@@ -294,9 +293,11 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
         />
         {isBagView && !hasActiveReservation && (
           <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
-            <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
-              Reserve
-            </FixedButton>
+            <Box mb={0.5}>
+              <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
+                Reserve
+              </FixedButton>
+            </Box>
           </TouchableWithoutFeedback>
         )}
       </Box>

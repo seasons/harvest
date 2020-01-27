@@ -68,9 +68,6 @@ const SectionHeader = ({ title }) => {
         <Sans size="2" color="black">
           {title}
         </Sans>
-        <EditButton ml="auto" size="2">
-          Edit
-        </EditButton>
       </Flex>
       <Spacer mb={1} />
       <Separator color="#e5e5e5" />
@@ -79,6 +76,7 @@ const SectionHeader = ({ title }) => {
 }
 
 export const ReservationView = props => {
+  const [isMutating, setIsMutating] = useState(false)
   const { data, loading } = useQuery(GET_CUSTOMER)
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
@@ -86,6 +84,13 @@ export const ReservationView = props => {
         query: GET_BAG,
       },
     ],
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: err => {
+      setIsMutating(false)
+      console.log("Error reservation.tsx: ", err)
+    },
   })
   const [showError, setShowError] = useState(false)
   const insets = useSafeArea()
@@ -105,7 +110,6 @@ export const ReservationView = props => {
   const phoneNumber = get(customer, "detail.phoneNumber", "")
   const lastFourDigits = get(customer, "billingInfo.last_digits", null)
 
-  console.log(data)
   const items =
     (data &&
       data.me &&
@@ -118,7 +122,7 @@ export const ReservationView = props => {
   const content = (
     <>
       <StatusBar backgroundColor="dark" barStyle="light-content" />
-      <Flex flex={1} p={2}>
+      <Flex flex={1} px={2}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <Box mt={2} mb={4}>
             <SectionHeader title="Shipping address" />
@@ -152,28 +156,33 @@ export const ReservationView = props => {
           </Box>
         </ScrollView>
       </Flex>
-      <Box mb={insets.bottom}>
-        <FixedButton
-          onPress={async () => {
-            try {
-              const { data } = await reserveItems({
-                variables: {
-                  items: items.map(item => item.variantID),
-                },
+      <FixedButton
+        loading={isMutating}
+        disabled={isMutating}
+        onPress={async () => {
+          if (isMutating) {
+            return
+          }
+          setIsMutating(true)
+          try {
+            const { data } = await reserveItems({
+              variables: {
+                items: items.map(item => item.variantID),
+              },
+            })
+            if (data.reserveItems) {
+              props.navigation.navigate("ReservationConfirmation", {
+                reservationID: data.reserveItems.id,
               })
-              if (data.reserveItems) {
-                props.navigation.navigate("ReservationConfirmation", {
-                  reservationID: data.reserveItems.id,
-                })
-              }
-            } catch (e) {
-              setShowError(true)
             }
-          }}
-        >
-          Place order
-        </FixedButton>
-      </Box>
+          } catch (e) {
+            setShowError(true)
+            setIsMutating(false)
+          }
+        }}
+      >
+        Place order
+      </FixedButton>
 
       <PopUp
         theme="light"
