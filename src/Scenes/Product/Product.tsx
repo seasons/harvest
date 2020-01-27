@@ -1,9 +1,9 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { PopUp, Theme, Box, Flex, Sans, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { setVariant, togglePopUp } from "App/Redux/actions"
+import { setVariant, togglePopUp, toggleShowVariantPicker } from "App/Redux/actions"
 import get from "lodash/get"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { NavigationActions } from "react-navigation"
 import { Dimensions, FlatList, SafeAreaView, TouchableOpacity } from "react-native"
 import { connect } from "react-redux"
@@ -11,19 +11,25 @@ import { animated, useSpring } from "react-spring"
 import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 import { useQuery } from "@apollo/react-hooks"
-import { AboutTheBrand, ImageRail, MoreLikeThis, ProductDetails } from "./Components"
+import { ImageRail, MoreLikeThis, ProductDetails } from "./Components"
 import { BackArrowIcon } from "Assets/icons"
 import { color } from "App/Utils"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 import { Confirmation } from "./Components/Confirmation"
+import { sortVariants } from "App/helpers/sortVariants"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5
 
 export const ProductComponent = props => {
-  const { togglePopUp, popUp, navigation, productState } = props
+  const { togglePopUp, popUp, navigation, productState, toggleShowVariantPicker } = props
   const showVariantSelection = productState && productState.showVariantSelection
   const [showConfirmation, setShowConfirmation] = useState({ show: false, type: "" })
+  useEffect(() => {
+    return () => {
+      toggleShowVariantPicker(false)
+    }
+  }, [])
   const productID = get(props, "navigation.state.params.id")
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: {
@@ -45,9 +51,10 @@ export const ProductComponent = props => {
   }
 
   const TextComponent = () => {
+    const sortedVariants = sortVariants(product.variants)
     return (
       <Flex flexDirection="row">
-        {product.variants.map(variant => {
+        {sortedVariants.map(variant => {
           const reservable = !!variant.reservable
           return (
             <Box key={variant.id} mr={0.3} style={{ position: "relative" }}>
@@ -63,7 +70,6 @@ export const ProductComponent = props => {
   }
 
   const displayConfirmation = type => {
-    console.log("type", type)
     setShowConfirmation({ show: true, type })
     setTimeout(() => {
       setShowConfirmation({ show: false, type })
@@ -79,15 +85,15 @@ export const ProductComponent = props => {
         return <ProductDetails product={product} />
       case "moreLikeThis":
         return <MoreLikeThis products={images} />
-      case "aboutTheBrand":
-        return <AboutTheBrand product={product} />
+      // case "aboutTheBrand":
+      // FIXME: Hiding this component until it has more content
+      //   return <AboutTheBrand product={product} />
       default:
         return null
     }
   }
 
   const sections = ["imageRail", "productDetails", "aboutTheBrand"]
-  console.log("pickerTransition.translateY", pickerTransition.translateY)
   return (
     <Theme>
       <SafeAreaView style={{ flex: 1 }}>
@@ -97,11 +103,10 @@ export const ProductComponent = props => {
               navigation.dispatch(NavigationActions.back())
             }}
           >
-            <ArrowBackground />
-            <BackArrowIcon color={color("black")} />
+            <ArrowBackground showVariantSelection={showVariantSelection} />
+            <BackArrowIcon color={showVariantSelection ? color("white100") : color("black100")} />
           </TouchableOpacity>
         </ArrowWrapper>
-        {productState.showVariantSelection && <AnimatedOverlay style={props} />}
         <FlatList
           data={sections}
           ListFooterComponent={() => <Spacer mb={58} />}
@@ -109,6 +114,7 @@ export const ProductComponent = props => {
           renderItem={item => renderItem(item)}
         />
         <SelectionButtons displayConfirmation={displayConfirmation} productID={productID} />
+        {showVariantSelection && <Overlay />}
         <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
           <VariantPicker height={variantPickerHeight} navigation={navigation} productID={productID} />
         </AnimatedVariantPicker>
@@ -133,6 +139,7 @@ const mapDispatchToProps = dispatch =>
     {
       setVariant,
       togglePopUp,
+      toggleShowVariantPicker,
     },
     dispatch
   )
@@ -154,12 +161,11 @@ const VariantPickerWrapper = styled(Box)`
 
 const Overlay = styled.View`
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.5);
-  flex: 1;
-  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
   top: 0;
   left: 0;
-  z-index: 100;
+  bottom: 0;
+  right: 0;
 `
 
 const ArrowWrapper = styled(Box)`
@@ -173,9 +179,10 @@ const ArrowBackground = styled(Box)`
   width: 30;
   height: 30;
   position: absolute;
-  background-color: ${color("black4")};
+  background-color: ${p => (p.showVariantSelection ? color("black100") : color("black4"))};
   border-radius: 40;
   left: -6;
+  top: -1;
 `
 
 const Strikethrough = styled.View`
@@ -187,5 +194,4 @@ const Strikethrough = styled.View`
   left: 0;
 `
 
-const AnimatedOverlay = animated(Overlay)
 const AnimatedVariantPicker = animated(VariantPickerWrapper)

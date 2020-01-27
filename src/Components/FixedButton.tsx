@@ -22,6 +22,6 @@ export const FixedButton: React.FC<Props> = props => {
 
 const FlexWrapper = styled(Flex)`
   position: absolute;
-  bottom: 0;
+  bottom: 23;
   z-index: 100;
 `

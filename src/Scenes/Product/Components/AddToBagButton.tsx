@@ -136,9 +136,6 @@ export const AddToBagButtonComponent: React.FC<Props> = props => {
 
   const itemInBag = !!items.find(item => item.productID === productID)
 
-  console.log("itemInBag", itemInBag)
-  console.log("productID", productID)
-
   let showCheckMark = false
   let text = "Add to Bag"
   let disabled = !!props.disabled || false
