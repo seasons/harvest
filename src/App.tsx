@@ -9,13 +9,8 @@ import { ApolloProvider } from "@apollo/react-hooks"
 
 import { apolloClient } from "./Apollo"
 import { persistor, store } from "./Store"
-import { getAccessTokenOrRefresh } from "./Utils/auth"
 
 export const App = () => {
-  useEffect(() => {
-    getAccessTokenOrRefresh()
-  })
-
   return (
     <ApolloProvider client={apolloClient}>
       <Provider store={store}>

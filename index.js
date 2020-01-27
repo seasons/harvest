@@ -4,7 +4,7 @@ import * as Sentry from "@sentry/react-native"
 import "react-native-gesture-handler"
 
 // https://github.com/facebook/react-native/issues/25701#issuecomment-513450639
-global.Blob = null
+// global.Blob = null
 
 if (!__DEV__) {
   Sentry.init({

@@ -35,7 +35,6 @@ export const getAccessTokenOrRefresh = async () => {
 
     if (userSession) {
       const accessToken = userSession.token
-      const refreshToken = userSession.refreshToken
 
       return auth0.auth
         .userInfo({
@@ -48,16 +47,7 @@ export const getAccessTokenOrRefresh = async () => {
           console.log(e)
 
           try {
-            const newToken = auth0.auth.refreshToken({
-              refreshToken,
-            })
-
-            const newUserSession = {
-              token: newToken.token,
-              refreshToken,
-            }
-
-            await AsyncStorage.setItem("userSession", JSON.stringify(newUserSession))
+            const newUserSession = await getNewToken()
             resolve(newUserSession)
           } catch (e) {
             console.log(e)
@@ -65,4 +55,18 @@ export const getAccessTokenOrRefresh = async () => {
         })
     }
   })
+}
+
+export const getNewToken = async () => {
+  const { refreshToken } = await getUserSession()
+  const newToken = await auth0.auth.refreshToken({
+    refreshToken,
+  })
+
+  const newUserSession = {
+    token: newToken.accessToken,
+    refreshToken,
+  }
+  await AsyncStorage.setItem("userSession", JSON.stringify(newUserSession))
+  return newUserSession
 }

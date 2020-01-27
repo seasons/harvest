@@ -1,9 +1,8 @@
 import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, Theme } from "App/Components"
+import { isValidEmail } from "App/helpers/regex"
 import { color } from "App/Utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
-import { isValidEmail } from "App/helpers/regex"
-import LottieView from "lottie-react-native"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Dimensions, Keyboard, SafeAreaView, TouchableWithoutFeedback } from "react-native"
@@ -81,7 +80,6 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   const disabled = !(emailComplete && password.length)
-  const dimensions = Dimensions.get("window")
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color("black") }}>
