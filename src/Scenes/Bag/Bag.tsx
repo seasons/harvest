@@ -50,6 +50,7 @@ enum BagView {
 }
 
 export const Bag = ({ navigation, removeItemFromBag }) => {
+  const [showLoader, setShowLoader] = useState(false)
   const [showReserveError, displayReserveError] = useState(null)
   const { data, loading, refetch } = useQuery(GET_BAG, {
     fetchPolicy: "cache-and-network",
@@ -137,6 +138,10 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
   const hasActiveReservation = !!get(data, "me.activeReservation")
 
   const handleReserve = async navigation => {
+    if (showLoader) {
+      return
+    }
+    setShowLoader(true)
     try {
       const { data } = await checkItemsAvailability({
         variables: {
@@ -154,6 +159,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
       if (data.checkItemsAvailability) {
         navigation.navigate("ReservationModal")
       }
+      setShowLoader(false)
     } catch (e) {
       const { graphQLErrors } = e
       console.log(graphQLErrors)
@@ -175,8 +181,10 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
           data,
         })
       }
+      setShowLoader(false)
     }
   }
+
   const isBagView = BagView.Bag == currentView
   const isSavedView = BagView.Saved == currentView
   const isEmpty = items.length === 0
@@ -239,6 +247,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
 
   return (
     <Container>
+      {showLoader && <Loader />}
       <Box style={{ flex: 1, paddingTop: insets.top }}>
         <FlatList
           data={currentView === BagView.Bag ? paddedItems : savedItems}

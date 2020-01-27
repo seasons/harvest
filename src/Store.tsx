@@ -17,7 +17,7 @@ const persistConfig = {
 const initialState = {
   ...EMPTY_BAG,
   productState: {
-    showSizeSelection: false,
+    showVariantSelection: false,
     variant: { size: "", abbreviated: "X", id: null },
     displayFooter: false,
     product: null,

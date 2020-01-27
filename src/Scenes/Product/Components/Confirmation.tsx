@@ -48,6 +48,6 @@ const ConfirmationWrapper = styled(Flex)`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 99;
-  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 2000;
+  background-color: rgba(0, 0, 0, 0.6);
 `

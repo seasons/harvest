@@ -26,7 +26,11 @@ export const themeProps = {
   borders: ["1px solid", "2px solid"],
 
   colors: {
+    black100: "#000",
+    black10: "#E5E5E5",
+    black4: "#F6F6F6",
     white: "#fff",
+    white100: "#fff",
     black: "#000",
     green: "#44524A",
     lightGreen: "#989F9B",

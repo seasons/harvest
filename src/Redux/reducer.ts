@@ -79,15 +79,15 @@ export const reducer = (state, action) => {
         },
       }
       return bagWithoutWantItem
-    case "toggleShowSizeSelection":
-      const toggleSizeSelection = {
+    case "toggleShowVariantPicker":
+      const toggleVariantSelection = {
         ...clonedState,
         productState: {
           ...clonedState.productState,
-          showSizeSelection: action.payload,
+          showVariantSelection: action.payload,
         },
       }
-      return toggleSizeSelection
+      return toggleVariantSelection
     case "togglePopUp":
       return {
         ...clonedState,

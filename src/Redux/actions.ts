@@ -18,9 +18,9 @@ export const removeItemFromWantItems = item => ({
   payload: item,
 })
 
-export const toggleShowSizeSelection = showSizeSelection => ({
-  type: "toggleShowSizeSelection",
-  payload: showSizeSelection,
+export const toggleShowVariantPicker = showVariantSelection => ({
+  type: "toggleShowVariantPicker",
+  payload: showVariantSelection,
 })
 
 export const togglePopUp = (showPopUp, data) => ({

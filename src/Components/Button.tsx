@@ -41,6 +41,7 @@ export type ButtonVariant =
   | "primaryDark"
   | "secondaryOutline"
   | "secondaryDark"
+  | "transparentWhite"
 export type ButtonSize = "small" | "medium" | "large"
 
 /** Default button size */
@@ -108,7 +109,7 @@ export function getColorsForVariant(variant: ButtonVariant) {
         disabled: {
           backgroundColor: black,
           borderColor: gray,
-          color: white,
+          color: gray,
         },
       }
     case "primaryDark":
@@ -147,6 +148,24 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: black,
         },
       }
+    case "transparentWhite":
+      return {
+        default: {
+          backgroundColor: "rgba(0,0,0,0.4)",
+          borderColor: "rgba(0,0,0,0)",
+          color: white,
+        },
+        pressed: {
+          backgroundColor: "rgba(0,0,0,0)",
+          borderColor: "rgba(0,0,0,0)",
+          color: white,
+        },
+        disabled: {
+          backgroundColor: "rgba(0,0,0,0)",
+          borderColor: "rgba(0,0,0,0)",
+          color: white,
+        },
+      }
     default:
   }
 }
@@ -169,7 +188,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
       case "small":
         return { height: 40, size: "0", px: 2 }
       case "medium":
-        return { height: 55, size: "2", px: 30 }
+        return { height: 48, size: "1", px: 30 }
       case "large":
         return { height: 55, size: "2", px: 5 }
     }

@@ -2,7 +2,7 @@ import { Button } from "App/Components"
 import { togglePopUp } from "App/Redux/actions"
 import gql from "graphql-tag"
 import { head } from "lodash"
-import React from "react"
+import React, { useState } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 
@@ -17,6 +17,8 @@ interface Props {
   addItemToWantItems: (product: any) => void
   togglePopUp: (show: boolean, data: any) => void
   disabled?: Boolean
+  variantInStock: Boolean
+  width: number
 }
 
 const ADD_TO_BAG = gql`
@@ -63,8 +65,9 @@ const GET_BAG = gql`
   }
 `
 
-export const ReserveButtonComponent: React.FC<Props> = props => {
-  const { displayConfirmation, productID, productState, togglePopUp } = props
+export const AddToBagButtonComponent: React.FC<Props> = props => {
+  const [isMutating, setIsMutating] = useState(false)
+  const { displayConfirmation, productID, productState, togglePopUp, variantInStock, width } = props
   const { data } = useQuery(GET_BAG)
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
@@ -76,12 +79,14 @@ export const ReserveButtonComponent: React.FC<Props> = props => {
       },
     ],
     onCompleted: () => {
+      setIsMutating(false)
       displayConfirmation("reserve")
     },
     onError: err => {
+      setIsMutating(false)
       if (err && err.graphQLErrors) {
         const error = head(err.graphQLErrors)
-        console.log(error)
+        console.log("AddToBagButton.tsx: ", error)
 
         togglePopUp(true, {
           title: "Your bag is full",
@@ -91,6 +96,7 @@ export const ReserveButtonComponent: React.FC<Props> = props => {
       }
     },
   })
+
   const [removeFromBag] = useMutation(REMOVE_FROM_BAG, {
     variables: {
       item: productState.variant.id,
@@ -100,10 +106,23 @@ export const ReserveButtonComponent: React.FC<Props> = props => {
         query: GET_BAG,
       },
     ],
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: err => {
+      setIsMutating(false)
+      if (err && err.graphQLErrors) {
+        const error = head(err.graphQLErrors)
+        console.log("AddToBagButton.tsx: ", error)
+      }
+    },
   })
 
   const handleReserve = () => {
-    addToBag()
+    if (!isMutating) {
+      setIsMutating(true)
+      addToBag()
+    }
   }
 
   const items =
@@ -125,18 +144,23 @@ export const ReserveButtonComponent: React.FC<Props> = props => {
   if (itemInBag) {
     text = "Added"
     onPress = () => {
-      removeFromBag()
+      if (!isMutating) {
+        setIsMutating(true)
+        removeFromBag()
+      }
     }
     showCheckMark = true
+  } else if (!variantInStock) {
+    disabled = true
   }
 
   return (
     <Button
-      width={110}
+      width={width}
       showCheckMark={showCheckMark}
-      variant="primaryGray"
+      variant="secondaryLight"
       disabled={disabled}
-      size="small"
+      size="medium"
       onPress={onPress}
     >
       {text}
@@ -157,4 +181,4 @@ const mapStateToProps = state => {
   return { bag, productState }
 }
 
-export const ReserveButton = connect(mapStateToProps, mapDispatchToProps)(ReserveButtonComponent)
+export const AddToBagButton = connect(mapStateToProps, mapDispatchToProps)(AddToBagButtonComponent)
