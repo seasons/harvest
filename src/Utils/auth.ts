@@ -1,10 +1,11 @@
 import Auth0 from "react-native-auth0"
+import Config from "react-native-config"
 
 import AsyncStorage from "@react-native-community/async-storage"
 
 export const auth0 = new Auth0({
-  domain: "seasons-staging.auth0.com",
-  clientId: "fcHPQx7KYqpkqI2yn31fcLgt7nuU2S5D",
+  domain: Config.AUTH0_DOMAIN,
+  clientId: Config.AUTH0_CLIENT_ID,
 })
 
 export interface UserSession {

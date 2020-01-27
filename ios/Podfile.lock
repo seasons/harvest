@@ -377,13 +377,10 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-<<<<<<< HEAD
+    - boost-for-react-native
     - libwebp
     - SDWebImage
     - SDWebImageWebPCoder
-=======
-    - boost-for-react-native
->>>>>>> 728c3d48e48e659e233ff242f0868e050579c1ff
     - Sentry
 
 EXTERNAL SOURCES:
@@ -582,15 +579,10 @@ SPEC CHECKSUMS:
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
   RNScreens: 254da4b84f25971cbb30ed3ddc84131f23cac812
   RNSentry: 932ac1c8b2f581b1c8be5812f88ff556c99e7fb7
-<<<<<<< HEAD
   RNSVG: f6177f8d7c095fada7cfee2e4bb7388ba426064c
   SDWebImage: 1245d058b7b8f59adef7a6da6bbafd4f1ab67041
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Sentry: bba998b0fb157fdd6596aa73290a9d67ae47be79
-=======
-  RNSVG: b7e8745a87c046386569eecb437b3040cc6a7954
-  Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390
->>>>>>> 728c3d48e48e659e233ff242f0868e050579c1ff
   UMBarCodeScannerInterface: d5a6fdc98ed6241225b0a8432a7f4e2b397668bc
   UMCameraInterface: 68870a3197fee85bd5afca5609ba4a5b7257d19d
   UMConstantsInterface: d25b8e8887ca7aaf568c06caf08f4d40734ee4ef
@@ -607,4 +599,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: f859cd8845fb7c9fa77b49b041e5c6136fb270d5
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.8.3
