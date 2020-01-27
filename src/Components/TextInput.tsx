@@ -1,11 +1,12 @@
+import { color } from "App/Utils"
 import React from "react"
+import { TextInput as RNTextInput, ViewStyle } from "react-native"
+import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
+
+import { Box } from "./"
 import { themeProps } from "./Theme"
 import { fontFamily } from "./Typography"
-import { ViewStyle, TextInput as RNTextInput } from "react-native"
-import { animated, Spring } from "react-spring/renderprops-native.cjs"
-import { color } from "App/Utils"
-import { Box } from "./"
 
 export interface TextInputProps {
   /** The theme of the input */
@@ -19,7 +20,6 @@ export interface TextInputProps {
   multiline?: boolean
   onChangeText?: (inputKey: string, text: string) => void
 }
-
 enum DisplayState {
   Active = "active",
   Inactive = "inactive",

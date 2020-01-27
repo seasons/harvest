@@ -1,3 +1,4 @@
+import { getAccessTokenOrRefresh, getUserSession } from "App/Utils/auth"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { Query } from "react-apollo"
@@ -37,8 +38,7 @@ export class Initializing extends React.Component<Props> {
   async navigateTo() {
     const { navigation } = this.props
     try {
-      let userSession = await AsyncStorage.getItem("userSession")
-      userSession = JSON.parse(userSession)
+      let userSession = await getUserSession()
 
       if (userSession && userSession.token) {
         navigation.navigate("Home")
@@ -51,32 +51,8 @@ export class Initializing extends React.Component<Props> {
     }
   }
 
-  async getRefreshToken() {
-    let userSession = await AsyncStorage.getItem("userSession")
-    userSession = JSON.parse(userSession)
-
-    if (userSession) {
-      const newToken = await auth0.auth.refreshToken({
-        refreshToken: userSession.refreshToken,
-      })
-
-      userSession.token = newToken.accessToken
-      await AsyncStorage.setItem("userSession", JSON.stringify(userSession))
-    }
-  }
-
   render() {
-    return (
-      <Query query={GET_USER}>
-        {({ loading, error, data }) => {
-          if (error && error.networkError) {
-            this.getRefreshToken()
-          } else {
-            this.navigateTo()
-          }
-          return <View />
-        }}
-      </Query>
-    )
+    this.navigateTo()
+    return null
   }
 }

@@ -51,7 +51,7 @@ const renderItem = ({ item }, i, navigation) => {
   const product = item
 
   const image = get(product, "images[0]", { url: "" })
-  const resizedImage = imageResize(image.url, "medium")
+  const resizedImage = imageResize(image.url, "large")
   const isLeft = i % 2 === 0
 
   const brandName = get(product, "brand.name")
