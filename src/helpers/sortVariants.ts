@@ -1,3 +1,5 @@
+import { uniqBy } from "lodash"
+
 const sizes = {
   xs: {
     sortWeight: 0,
@@ -21,12 +23,12 @@ const sizes = {
 
 export const sortVariants = variants => {
   // The higher the sortWeight the sooner it will be displayed, e.g. "xxl, xl, l, m"
-  const variantArray = variants.slice()
-  return variantArray.sort((variantA, variantB) => {
+  const uniqueArray = uniqBy(variants, "size")
+  return uniqueArray.sort((variantA, variantB) => {
     const sortWeightA =
       (variantA.size && sizes[variantA.size.toLowerCase()] && sizes[variantA.size.toLowerCase()].sortWeight) || 0
     const sortWeightB =
       (variantB.size && sizes[variantB.size.toLowerCase()] && sizes[variantB.size.toLowerCase()].sortWeight) || 0
-    return sortWeightB - sortWeightA
+    return sortWeightA - sortWeightB
   })
 }

@@ -1,11 +1,7 @@
-import { Box } from "App/Components"
-import { number } from "prop-types"
 import React from "react"
 import ContentLoader, { Rect } from "react-content-loader/native"
 import { Dimensions } from "react-native"
-import Svg, { Defs, G, LinearGradient, Path, Use } from "react-native-svg"
-import { animated, useSpring } from "react-spring/native.cjs"
-import styled from "styled-components/native"
+import Svg, { Defs, G, Path, Use } from "react-native-svg"
 
 export const BrowseItemLoader = props => (
   <G>
@@ -34,43 +30,43 @@ export const TabBarLoader = props => (
   </Svg>
 )
 
-export const BrowseLoader = props => {
+export const BrowseLoader: React.FC<{ imageHeight: number }> = props => {
+  const { imageHeight } = props
   const { width, height } = Dimensions.get("window")
+  const cardWidth = width / 2 - 2
 
-  const cardWidth = width / 2 - 7
-
-  const renderCard = ({ x, y }) => (
+  const renderCard = ({ x, y, maxCardHeight, doesOverlap }) => (
     <>
-      <Rect x={x + 0} y={y + 100} width={cardWidth} height="238" />
-      <Rect x={x + 10} y={y + 360} width="80" height={8} />
-      <Rect x={x + 10} y={y + 390} width="80" height={8} />
-      <Rect x={x + 10} y={y + 420} width="30" height={8} />
+      <Rect x={x + 0} y={y} width={cardWidth} height={imageHeight > maxCardHeight ? maxCardHeight : imageHeight} />
+      {!doesOverlap && <Rect x={x + 8} y={y + imageHeight + 8} width="80" height={8} />}
+      {!doesOverlap && <Rect x={x + 8} y={y + imageHeight + 23} width="80" height={8} />}
     </>
   )
 
-  const secondRowHeight = height - 180 - 487
+  const rowHeight = imageHeight + 45
+  const rowCount = Math.floor(height / rowHeight)
 
   return (
-    <ContentLoader height={height}>
-      <Rect x={20} y={20} width={80} height={25} />
-      <Rect x={20} y={60} width={180} height={15} />
-
-      {renderCard({ x: 0, y: 0 })}
-      {renderCard({ x: cardWidth + 14, y: 0 })}
-      <Rect x={0} y={462} width={cardWidth} height={secondRowHeight} />
-      <Rect x={cardWidth + 14} y={462} width={cardWidth} height={secondRowHeight} />
+    <ContentLoader height={height} width={width}>
+      {[...Array(rowCount)].map((_, index) => {
+        const yPosition = index * rowHeight
+        const maxCardHeight = height - yPosition - 190
+        const doesOverlap = yPosition + rowHeight > height - 190
+        return (
+          <React.Fragment key={index}>
+            {renderCard({ x: 0, y: yPosition, maxCardHeight, doesOverlap })}
+            {renderCard({ x: cardWidth + 4, y: yPosition, maxCardHeight, doesOverlap })}
+          </React.Fragment>
+        )
+      })}
       <>
-        <Rect x={20} y={height - 180} height={10} width={30} />
-        <Rect x={70} y={height - 180} height={10} width={55} />
-        <Rect x={140} y={height - 180} height={10} width={30} />
-        <Rect x={190} y={height - 180} height={10} width={80} />
-        <Rect x={290} y={height - 180} height={10} width={60} />
+        <Rect x={20} y={height - 160} height={10} width={30} />
+        <Rect x={70} y={height - 160} height={10} width={55} />
+        <Rect x={140} y={height - 160} height={10} width={30} />
+        <Rect x={190} y={height - 160} height={10} width={80} />
+        <Rect x={290} y={height - 160} height={10} width={60} />
+        <Rect x={340} y={height - 160} height={10} width={55} />
       </>
     </ContentLoader>
   )
 }
-
-const HeaderContainer = animated(styled(Box)`
-  height: 100;
-  position: absolute;
-`)
