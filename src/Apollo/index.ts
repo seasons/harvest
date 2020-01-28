@@ -18,9 +18,9 @@ const cache = new InMemoryCache({ fragmentMatcher })
 console.log("Monsoon Endpoint:", Config.MONSOON_ENDPOINT)
 
 const link = new HttpLink({
-  uri: Config.MONSOON_ENDPOINT || "http://localhost:4000/",
-  //   uri: "https://monsoon.seasons.nyc",
-  //   uri: "https://monsoon-staging.seasons.nyc",
+  // uri: Config.MONSOON_ENDPOINT || "http://localhost:4000/",
+  uri: "https://monsoon.seasons.nyc",
+  // uri: "https://monsoon-staging.seasons.nyc",
 })
 
 const authLink = setContext(async (_, { headers }) => {
