@@ -67,7 +67,7 @@ export const Home = (props: any) => {
 
   useEffect(() => {
     if (data && data.homepage) {
-      const dataSections = data.homepage.sections
+      const dataSections = data.homepage.sections.slice()
       if (data.categories && dataSections && !categoriesAdded) {
         categoriesAdded = true
         dataSections.splice(1, 0, { type: "Categories", results: data.categories })
@@ -113,7 +113,9 @@ export const Home = (props: any) => {
           <BlackBackground />
           <FlatList
             data={sections}
-            keyExtractor={item => item.type}
+            keyExtractor={item => {
+              return item.type
+            }}
             renderItem={({ item, index }) => {
               const styles =
                 index === sections.length - 1

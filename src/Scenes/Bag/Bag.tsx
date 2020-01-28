@@ -96,7 +96,6 @@ export const Bag = ({ navigation }) => {
           },
         },
       })
-      console.log(me, data)
     },
     refetchQueries: [
       {
@@ -261,7 +260,6 @@ export const Bag = ({ navigation }) => {
                 activeTab={currentView}
                 goToPage={page => {
                   setCurrentView(page as BagView)
-                  console.log("page : ", page)
                 }}
               />
             </>

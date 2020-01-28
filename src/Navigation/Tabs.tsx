@@ -41,12 +41,12 @@ export const Tabs = props => {
 
   const animation = useSpring({
     mainNavTranslateY: isProductRoute ? 50 : 0,
-    trayranslateY: isProductRoute ? 0 : -insets.bottom,
+    trayTranslateY: isProductRoute ? 0 : -insets.bottom,
   })
 
   return (
     <Theme>
-      <AnimatedTray style={{ transform: [{ translateY: animation.trayranslateY }] }}>
+      <AnimatedTray style={{ transform: [{ translateY: animation.trayTranslateY }] }}>
         <LeftCorner />
         <RightCorner />
         <Box style={{ backgroundColor: color("black") }}>
