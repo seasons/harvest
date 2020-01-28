@@ -3,7 +3,6 @@ import { Box, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
-import gql from "graphql-tag"
 import { get } from "lodash"
 import { DateTime } from "luxon"
 import React, { useEffect } from "react"
@@ -11,13 +10,10 @@ import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
-import { connect } from "react-redux"
-import { bindActionCreators } from "redux"
-
 import { Bag } from "./Bag"
 import { CurrentRotationItem } from "./Components/CurrentRotationItem"
 
-export const CurrentRotationComponent = props => {
+export const CurrentRotation = props => {
   const { data, loading, refetch } = useQuery(ACTIVE_RESERVATION)
   const insets = useSafeArea()
 
@@ -81,12 +77,3 @@ export const CurrentRotationComponent = props => {
     </Container>
   )
 }
-
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
-
-const mapStateToProps = state => {
-  const { bag } = state
-  return { bag }
-}
-
-export const CurrentRotation = connect(mapStateToProps, mapDispatchToProps)(CurrentRotationComponent)

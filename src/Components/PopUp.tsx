@@ -8,11 +8,11 @@ import { Box, Sans, Separator, Spacer } from "./"
 import { Button } from "./Button"
 
 export interface Props {
-  title: string
+  title?: string
   icon?: JSX.Element
   note?: string
   show: boolean
-  buttonText: string
+  buttonText?: string
   onClose: () => void
   theme: "light" | "dark"
 }

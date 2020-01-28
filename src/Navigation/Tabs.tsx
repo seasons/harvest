@@ -2,13 +2,12 @@ import { Flex, Theme, Box } from "App/Components"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import React, { useState } from "react"
 import { useSafeArea } from "react-native-safe-area-context"
-import { connect } from "react-redux"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { useNavigationState } from "./NavigationState"
 import { color } from "App/Utils"
 
-export const TabsComponent = props => {
+export const Tabs = props => {
   const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation, bag } = props
   const navigationState = useNavigationState()
   const insets = useSafeArea()
@@ -59,13 +58,6 @@ export const TabsComponent = props => {
     </Theme>
   )
 }
-
-const mapStateToProps = state => {
-  const { productState, bag } = state
-  return { productState, bag }
-}
-
-export const Tabs = connect(mapStateToProps)(TabsComponent)
 
 const TabButton = styled.TouchableOpacity`
   flex: 1;

@@ -1,13 +1,10 @@
 import { Box, FixedButton, Flex, Sans, Separator, Spacer, Theme } from "App/Components"
-import { setActiveReservation } from "App/Redux/actions"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { connect } from "react-redux"
-import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 
 import { BagItem } from "../Bag/Components/BagItem"
@@ -56,7 +53,7 @@ const GET_CUSTOMER = gql`
   }
 `
 
-export const ReservationConfirmationView = props => {
+export const ReservationConfirmation = props => {
   const reservationID = get(props, "navigation.state.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
   const { data, loading, error } = useQuery(GET_CUSTOMER, {
     variables: {
@@ -162,7 +159,6 @@ export const ReservationConfirmationView = props => {
       <Box mb={insets.bottom}>
         <FixedButton
           onPress={() => {
-            setActiveReservation(reservationID)
             props.navigation.navigate("Bag", { reservationID: reservationID })
             props.navigation.dismiss()
           }}
@@ -189,21 +185,6 @@ export const ReservationConfirmationView = props => {
     </Theme>
   )
 }
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      setActiveReservation,
-    },
-    dispatch
-  )
-
-const mapStateToProps = state => {
-  const { bag } = state
-  return { bag }
-}
-
-export const ReservationConfirmation = connect(mapStateToProps, mapDispatchToProps)(ReservationConfirmationView)
 
 const Container = styled(Box)`
   background: black;
