@@ -1,7 +1,6 @@
 import { GET_BAG } from "App/Apollo/Queries"
 import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 import { color } from "App/Utils"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
@@ -15,6 +14,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
+import { BAG_NUM_ITEMS } from "App/helpers/constants"
 
 const SECTION_HEIGHT = 300
 
@@ -96,7 +96,6 @@ export const Bag = ({ navigation }) => {
           },
         },
       })
-      console.log(me, data)
     },
     refetchQueries: [
       {
@@ -261,7 +260,6 @@ export const Bag = ({ navigation }) => {
                 activeTab={currentView}
                 goToPage={page => {
                   setCurrentView(page as BagView)
-                  console.log("page : ", page)
                 }}
               />
             </>

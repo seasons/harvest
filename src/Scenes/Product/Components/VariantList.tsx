@@ -63,7 +63,7 @@ const sizeDataForVariants = (variants = []) => {
   return sizeData
 }
 
-export const SizePicker = ({ productID, setVariant, productState, onSizeSelected }) => {
+export const VariantList = ({ productID, setVariant, variant, onSizeSelected }) => {
   const [sizeData, setSizeData] = useState({})
   const { data } = useQuery(GET_PRODUCT, {
     variables: {
@@ -99,7 +99,7 @@ export const SizePicker = ({ productID, setVariant, productState, onSizeSelected
         >
           <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap" my={2}>
             <Flex flexDirection="row" alignItems="center">
-              <Radio selected={productState.variant.id === size.id} />
+              <Radio selected={variant.id === size.id} />
               <Spacer mr={1} />
               <Sans color={size.stock ? "white" : "gray"} size="1">
                 {capitalize(size.size)}

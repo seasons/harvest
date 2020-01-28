@@ -1,9 +1,6 @@
-import { Flex, Spacer, Sans, Box } from "App/Components"
-import { toggleShowVariantPicker } from "App/Redux/actions"
+import { Flex, Spacer, Sans } from "App/Components"
 import { AddToBagButton } from "App/Scenes/Product/Components"
 import React from "react"
-import { connect } from "react-redux"
-import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 import { TouchableWithoutFeedback, Dimensions } from "react-native"
 import { color } from "App/Utils"
@@ -11,15 +8,18 @@ import { DownChevronIcon } from "Assets/icons"
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - 12
 
-export const SelectionButtonsComponent = props => {
-  const { productState, toggleShowVariantPicker, productID } = props
-  const { variant, showVariantSelection } = productState
+export const SelectionButtons = props => {
+  const { variant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
   const inStock = variant && !!variant.stock
+
+  if (!variant) {
+    return <></>
+  }
 
   return (
     <Wrapper>
       <Flex px={8} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
-        <TouchableWithoutFeedback onPress={() => toggleShowVariantPicker(!showVariantSelection)}>
+        <TouchableWithoutFeedback onPress={() => toggleShowVariantPicker(!showVariantPicker)}>
           <VariantSelectionButton p={2} inStock={inStock}>
             <Flex
               px={2}
@@ -32,7 +32,7 @@ export const SelectionButtonsComponent = props => {
                   {variant.size}
                 </Sans>
                 <Spacer mr={1} />
-                <DownChevronIcon color={color("black")} rotate={showVariantSelection} />
+                <DownChevronIcon color={color("black")} rotate={showVariantPicker} />
               </Flex>
               {!inStock && (
                 <Sans size="1" color="gray">
@@ -47,6 +47,7 @@ export const SelectionButtonsComponent = props => {
             variantInStock={inStock}
             productID={productID}
             variant={variant}
+            setPopUp={setPopUp}
             width={twoButtonWidth}
           ></AddToBagButton>
         )}
@@ -54,21 +55,6 @@ export const SelectionButtonsComponent = props => {
     </Wrapper>
   )
 }
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      toggleShowVariantPicker,
-    },
-    dispatch
-  )
-
-const mapStateToProps = state => {
-  const { productState } = state
-  return { productState }
-}
-
-export const SelectionButtons = connect(mapStateToProps, mapDispatchToProps)(SelectionButtonsComponent)
 
 const VariantSelectionButton = styled.View<{ inStock: boolean }>`
   height: 48;

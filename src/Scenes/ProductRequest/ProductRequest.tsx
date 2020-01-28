@@ -3,8 +3,6 @@ import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { connect } from "react-redux"
-
 import { Box, PopUp, FixedButton, Flex, Sans, Spacer, TextInput, Theme } from "App/Components"
 import { CloseXIcon } from "Assets/icons"
 import { color } from "App/Utils"
@@ -27,43 +25,43 @@ const ADD_PRODUCT_REQUEST = gql`
   }
 `
 
-export const ProductRequestComponent = (props: any) => {
+export const ProductRequest = (props: any) => {
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true)
   const [likeReason, setLikeReason] = useState("")
-  const [showError, setShowError] = useState(false);
+  const [showError, setShowError] = useState(false)
   const [url, setURL] = useState("")
 
   const [addProductRequest] = useMutation(ADD_PRODUCT_REQUEST, {
     onError: error => {
-      console.log(error);
+      console.log(error)
       Keyboard.dismiss()
       setShowError(true)
     },
   })
 
   const onURLChange = val => {
-    setURL(val);
-    setIsNextButtonDisabled(val === "" || likeReason === "");
+    setURL(val)
+    setIsNextButtonDisabled(val === "" || likeReason === "")
   }
 
   const onLikeReasonChange = val => {
-    setLikeReason(val);
-    setIsNextButtonDisabled(url === "" || val === "");
+    setLikeReason(val)
+    setIsNextButtonDisabled(url === "" || val === "")
   }
 
   const handleNextBtnPressed = async () => {
     const result = await addProductRequest({
       variables: {
         reason: likeReason,
-        url
-      }
+        url,
+      },
     })
 
     if (result.data && result.data.addProductRequest) {
       const productRequest = result.data.addProductRequest
       if (productRequest.name) {
         props.navigation.navigate("ProductRequestConfirmation", {
-          productRequest
+          productRequest,
         })
       } else {
         // Means that we failed to scrape the product information from the URL
@@ -74,7 +72,7 @@ export const ProductRequestComponent = (props: any) => {
       Keyboard.dismiss()
       setShowError(true)
     }
-  };
+  }
 
   const insets = useSafeArea()
 
@@ -116,10 +114,7 @@ export const ProductRequestComponent = (props: any) => {
           </Flex>
         </TouchableWithoutFeedback>
         <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0}>
-          <FixedButton
-            disabled={isNextButtonDisabled}
-            variant={"primaryLight"}
-            onPress={handleNextBtnPressed} >
+          <FixedButton disabled={isNextButtonDisabled} variant={"primaryLight"} onPress={handleNextBtnPressed}>
             Next
           </FixedButton>
         </KeyboardAvoidingView>
@@ -150,9 +145,3 @@ const CloseButton = styled(TouchableOpacity)`
   margin-right: 20;
   margin-top: 12;
 `
-
-const mapStateToProps = state => {
-  return {}
-}
-
-export const ProductRequest = connect(mapStateToProps)(ProductRequestComponent)

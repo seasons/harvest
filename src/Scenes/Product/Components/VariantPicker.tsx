@@ -1,16 +1,13 @@
-import { Box, Button, Flex, Spacer } from "App/Components"
-import { setVariant, toggleShowVariantPicker } from "App/Redux/actions"
+import { Box, Button, Flex } from "App/Components"
 import { color } from "App/Utils"
 import React from "react"
 import { ScrollView } from "react-native"
-import { connect } from "react-redux"
-import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
-import { SizePicker } from "./SizePicker"
+import { VariantList } from "./VariantList"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 
-export const VariantPickerComponent = props => {
-  const { productState, setVariant, toggleShowVariantPicker, productID, height } = props
+export const VariantPicker = props => {
+  const { variant, setVariant, toggleShowVariantPicker, productID, height } = props
 
   if (!productID) {
     return null
@@ -27,10 +24,10 @@ export const VariantPickerComponent = props => {
       </FixedButtonWrapper>
       <StyledScrollview>
         <Box px={2}>
-          <SizePicker
-            productID={productID}
+          <VariantList
             setVariant={setVariant}
-            productState={productState}
+            variant={variant}
+            productID={productID}
             onSizeSelected={() => {
               toggleShowVariantPicker(false)
             }}
@@ -41,22 +38,6 @@ export const VariantPickerComponent = props => {
     </Flex>
   )
 }
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      setVariant,
-      toggleShowVariantPicker,
-    },
-    dispatch
-  )
-
-const mapStateToProps = state => {
-  const { productState } = state
-  return { productState }
-}
-
-export const VariantPicker = connect(mapStateToProps, mapDispatchToProps)(VariantPickerComponent)
 
 const LeftCorner = styled(LeftTabCorner)`
   position: absolute;

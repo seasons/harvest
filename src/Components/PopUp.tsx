@@ -1,26 +1,39 @@
 import { color } from "App/Utils"
 import { useComponentSize } from "App/Utils/Hooks/useComponentSize"
-import React from "react"
+import React, { useRef, useEffect, useState } from "react"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-
-import { Box, Sans, Separator, Spacer } from "./"
+import { Box, Sans, Separator, Spacer } from "App/Components"
 import { Button } from "./Button"
+import { Dimensions } from "react-native"
+
+const windowHeight = Dimensions.get("window").height
 
 export interface Props {
-  title: string
+  title?: string
   icon?: JSX.Element
   note?: string
   show: boolean
-  buttonText: string
+  buttonText?: string
   onClose: () => void
   theme: "light" | "dark"
 }
 
 export const PopUp: React.FC<Props> = ({ title, note, show, icon, buttonText, onClose, theme = "light" }) => {
-  if (!(title && note && buttonText)) {
-    return null
-  }
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setTimeout(() => {
+      setMounted(true)
+    })
+  }, [])
+  const [size, onLayout] = useComponentSize()
+
+  const height = size ? size.height + 100 : 240
+
+  const animation = useSpring({
+    translateY: show && mounted ? windowHeight - height : windowHeight,
+    backgroundColor: show && mounted ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0)",
+  })
 
   const colorsForTheme = theme => {
     switch (theme) {
@@ -40,22 +53,16 @@ export const PopUp: React.FC<Props> = ({ title, note, show, icon, buttonText, on
         }
     }
   }
-  const [size, onLayout] = useComponentSize()
-  const height = size ? size.height + 40 : 400
 
-  const popUpAnimation = useSpring({
-    bottom: show ? 0 : -height,
-  })
-
-  const outerWrapperAnimation = useSpring({
-    backgroundColor: show ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0)",
-  })
+  if (!(title && note && buttonText)) {
+    return null
+  }
 
   const colors = colorsForTheme(theme)
 
   return (
     <>
-      <AnimatedPopUp style={popUpAnimation} height={height} color={colors.backgroundColor}>
+      <AnimatedPopUp style={{ transform: [{ translateY: animation.translateY }] }} color={colors.backgroundColor}>
         <Box m={2} onLayout={onLayout}>
           {!!icon && (
             <Box mt={2} mx="auto">
@@ -84,7 +91,7 @@ export const PopUp: React.FC<Props> = ({ title, note, show, icon, buttonText, on
           <Spacer mb={2} />
         </Box>
       </AnimatedPopUp>
-      {show && <AnimatedOuterWrapper style={outerWrapperAnimation} />}
+      {show && <AnimatedOuterWrapper style={{ backgroundColor: animation.backgroundColor }} />}
     </>
   )
 }
@@ -105,7 +112,8 @@ const Container = styled(Box)`
   background-color: ${p => p.color};
   position: absolute;
   width: 100%;
-  bottom: -${p => p.height};
+  height: 100%;
+  bottom: 0;
   left: 0;
   overflow: hidden;
   z-index: 100;

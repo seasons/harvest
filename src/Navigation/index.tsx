@@ -7,7 +7,14 @@ import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
-import { Initializing, ResetPassword, ResetPasswordConfirmation, SignIn, SignInOrApply, Welcome } from "App/Scenes/SignIn"
+import {
+  Initializing,
+  ResetPassword,
+  ResetPasswordConfirmation,
+  SignIn,
+  SignInOrApply,
+  Welcome,
+} from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
 import React, { useState } from "react"
 import { Image } from "react-native"
@@ -15,7 +22,6 @@ import { createAppContainer, createSwitchNavigator } from "react-navigation"
 import { createStackNavigator } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
-import { RequestProduct } from "Scenes/Account/RequestProduct"
 import styled from "styled-components"
 
 import DismissableStackNavigator from "./DismissableStackNavigator"
@@ -57,7 +63,7 @@ MainAuthStack.navigationOptions = () => {
 const ResetPasswordModal = DismissableStackNavigator(
   {
     ResetPassword,
-    ResetPasswordConfirmation
+    ResetPasswordConfirmation,
   },
   {
     headerMode: "none",
@@ -67,10 +73,10 @@ const ResetPasswordModal = DismissableStackNavigator(
 const AuthStack = createStackNavigator(
   {
     MainAuthStack: {
-      screen: MainAuthStack
+      screen: MainAuthStack,
     },
     ResetPasswordModal: {
-      screen: ResetPasswordModal
+      screen: ResetPasswordModal,
     },
   },
   {
@@ -216,9 +222,9 @@ const MainNavigator = createBottomTabNavigator(
         const { routeName } = navigation.state
         if (routeName === "ProductRequest") {
           // Have to navigate in order for screen to pop up modally
-          navigation.navigate('ProductRequestModal');
+          navigation.navigate("ProductRequestModal")
         } else {
-          defaultHandler();
+          defaultHandler()
         }
       },
     }),
@@ -252,8 +258,8 @@ const RootStack = createStackNavigator(
       screen: ReservationModal,
     },
     ProductRequestModal: {
-      screen: ProductRequestModal
-    }
+      screen: ProductRequestModal,
+    },
   },
   {
     mode: "modal",

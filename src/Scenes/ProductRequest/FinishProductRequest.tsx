@@ -2,17 +2,15 @@ import React from "react"
 import { Dimensions } from "react-native"
 import { Image } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { connect } from "react-redux"
-
 import { Box, Container, FixedButton, Sans, Spacer } from "App/Components"
 
-export const FinishProductRequestComponent = (props: any) => {
+export const FinishProductRequest = (props: any) => {
   const handleFinishBtnPressed = () => {
     props.navigation.dismiss()
   }
 
-  const insets = useSafeArea();
-  const dimensions = Dimensions.get('window');
+  const insets = useSafeArea()
+  const dimensions = Dimensions.get("window")
 
   return (
     <Container>
@@ -22,7 +20,7 @@ export const FinishProductRequestComponent = (props: any) => {
           resizeMode="contain"
           source={require("../../../assets/images/SubmitBackground.png")}
         />
-        <Box p={2} mt={insets.top} style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
+        <Box p={2} mt={insets.top} style={{ flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
           <Box>
             <Spacer mb={60} />
             <Sans size="3" color="black">
@@ -33,19 +31,11 @@ export const FinishProductRequestComponent = (props: any) => {
               Thanks for your submission. We’ll take a look and let you know if we carry it.
             </Sans>
           </Box>
-          <FixedButton
-            variant={"primaryDark"}
-            onPress={handleFinishBtnPressed} >
+          <FixedButton variant={"primaryDark"} onPress={handleFinishBtnPressed}>
             Finish
           </FixedButton>
         </Box>
       </>
-    </Container >
+    </Container>
   )
 }
-
-const mapStateToProps = state => {
-  return {}
-}
-
-export const FinishProductRequest = connect(mapStateToProps)(FinishProductRequestComponent)
