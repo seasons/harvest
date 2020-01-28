@@ -66,11 +66,13 @@ export const HomeComponent = (props: any) => {
   const [showLoader, toggleLoader] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const insets = useSafeArea()
+  let categoriesAdded = false
 
   useEffect(() => {
     if (data && data.homepage) {
       const dataSections = data.homepage.sections
-      if (data.categories && dataSections) {
+      if (data.categories && dataSections && !categoriesAdded) {
+        categoriesAdded = true
         dataSections.splice(1, 0, { type: "Categories", results: data.categories })
       }
       setSections(dataSections)
@@ -114,7 +116,7 @@ export const HomeComponent = (props: any) => {
           <BlackBackground />
           <FlatList
             data={sections}
-            keyExtractor={(item, index) => `${index}`}
+            keyExtractor={(item, index) => item.type}
             renderItem={({ item, index }) => {
               const styles =
                 index === sections.length - 1

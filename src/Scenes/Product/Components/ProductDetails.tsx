@@ -17,11 +17,22 @@ const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
     saveProduct(item: $item, save: $save) {
       id
+      productVariant {
+        id
+        isSaved
+      }
     }
   }
 `
 
 export const ProductDetailsComponent = ({ product, productState, togglePopUp }) => {
+  const { variant } = productState
+  const selectedVariant: any = head((product.variants || []).filter(a => a.id === variant.id)) || {
+    isSaved: false,
+    id: "",
+  }
+  const { isSaved } = selectedVariant
+
   const [saveItem] = useMutation(SAVE_ITEM, {
     refetchQueries: [
       {
@@ -46,25 +57,36 @@ export const ProductDetailsComponent = ({ product, productState, togglePopUp }) 
     brand: { name: brandName },
   } = product
 
-  const { variant } = productState
-
-  const selectedVariant = head((product.variants || []).filter(a => a.id === variant.id))
-  const { isSaved } = selectedVariant || product
-
   const handleSaveButton = () => {
+    const updatedState = !isSaved
     saveItem({
       variables: {
         item: variant.id,
-        save: !isSaved,
+        save: updatedState,
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        saveProduct: {
+          __typename: "Product",
+          id: product.id,
+          productVariant: {
+            __typename: "ProductVariant",
+            isSaved: updatedState,
+            id: selectedVariant.id,
+          },
+        },
       },
     })
-    const updateText = isSaved ? "been removed from" : "been added to"
-    togglePopUp(true, {
-      icon: <CircledSaveIcon />,
-      title: "Saved for later",
-      note: `The ${product.name}, size ${variant.size} has ${updateText} your saved items.`,
-      buttonText: "Got It",
-    })
+
+    if (!isSaved) {
+      const updateText = isSaved ? "been removed from" : "been added to"
+      togglePopUp(true, {
+        icon: <CircledSaveIcon />,
+        title: "Saved for later",
+        note: `The ${product.name}, size ${variant.size} has ${updateText} your saved items.`,
+        buttonText: "Got It",
+      })
+    }
   }
 
   return (
@@ -80,7 +102,9 @@ export const ProductDetailsComponent = ({ product, productState, togglePopUp }) 
         </Box>
         <Box>
           <TouchableOpacity onPress={() => handleSaveButton()}>
-            <SaveIcon enabled={isSaved} />
+            <Box pl={2} pb={2}>
+              <SaveIcon enabled={isSaved} />
+            </Box>
           </TouchableOpacity>
         </Box>
       </Flex>

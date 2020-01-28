@@ -161,13 +161,4 @@ const ArrowBackground = styled(Box)`
   top: -1;
 `
 
-const Strikethrough = styled.View`
-  background-color: ${color("lightgray")};
-  height: 2;
-  width: 100%;
-  position: absolute;
-  top: 11;
-  left: 0;
-`
-
 const AnimatedVariantPicker = animated(VariantPickerWrapper)
