@@ -7,7 +7,7 @@ import { VariantList } from "./VariantList"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 
 export const VariantPicker = props => {
-  const { variant, setVariant, toggleShowVariantPicker, productID, height } = props
+  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, productID, height } = props
 
   if (!productID) {
     return null
@@ -25,8 +25,8 @@ export const VariantPicker = props => {
       <StyledScrollview>
         <Box px={2}>
           <VariantList
-            setVariant={setVariant}
-            variant={variant}
+            setSelectedVariant={setSelectedVariant}
+            selectedVariant={selectedVariant}
             productID={productID}
             onSizeSelected={() => {
               toggleShowVariantPicker(false)

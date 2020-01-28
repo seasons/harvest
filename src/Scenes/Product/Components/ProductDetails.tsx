@@ -22,16 +22,15 @@ const SAVE_ITEM = gql`
   }
 `
 
-export const ProductDetails = ({ setPopUp, variant, product }) => {
-  if (!variant) {
+export const ProductDetails = ({ setPopUp, selectedVariant, product }) => {
+  if (!(selectedVariant && selectedVariant.id) || !(product && product.variants)) {
     return <></>
   }
 
-  const selectedVariant: any = head((product.variants || []).filter(a => a.id === variant.id)) || {
-    isSaved: false,
-    id: "",
-  }
-  const { isSaved } = selectedVariant
+  const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
+
+  const { isSaved } = variantToUse
+  console.log("isSaved", isSaved)
 
   const [saveItem] = useMutation(SAVE_ITEM, {
     refetchQueries: [
@@ -59,9 +58,10 @@ export const ProductDetails = ({ setPopUp, variant, product }) => {
 
   const handleSaveButton = () => {
     const updatedState = !isSaved
+    console.log("updatedState", updatedState)
     saveItem({
       variables: {
-        item: variant.id,
+        item: selectedVariant.id,
         save: updatedState,
       },
       optimisticResponse: {
@@ -85,7 +85,7 @@ export const ProductDetails = ({ setPopUp, variant, product }) => {
         data: {
           icon: <CircledSaveIcon />,
           title: "Saved for later",
-          note: `The ${product.name}, size ${variant.size} has ${updateText} your saved items.`,
+          note: `The ${product.name}, size ${selectedVariant.size} has ${updateText} your saved items.`,
           buttonText: "Got It",
         },
       })

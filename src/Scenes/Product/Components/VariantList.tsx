@@ -63,7 +63,7 @@ const sizeDataForVariants = (variants = []) => {
   return sizeData
 }
 
-export const VariantList = ({ productID, setVariant, variant, onSizeSelected }) => {
+export const VariantList = ({ productID, setSelectedVariant, selectedVariant, onSizeSelected }) => {
   const [sizeData, setSizeData] = useState({})
   const { data } = useQuery(GET_PRODUCT, {
     variables: {
@@ -85,7 +85,7 @@ export const VariantList = ({ productID, setVariant, variant, onSizeSelected }) 
 
     // Update size data
     const firstAvailableSize = find(sizeData, (size: Size) => size.stock > 0) || sizeData["M"]
-    setVariant(firstAvailableSize)
+    setSelectedVariant(firstAvailableSize)
   }
 
   const rows = Object.values(sizeData).map((size: Size, i) => {
@@ -93,13 +93,13 @@ export const VariantList = ({ productID, setVariant, variant, onSizeSelected }) 
       <Box key={size.id || i}>
         <TouchableOpacity
           onPress={() => {
-            setVariant(size)
+            setSelectedVariant(size)
             onSizeSelected(size)
           }}
         >
           <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap" my={2}>
             <Flex flexDirection="row" alignItems="center">
-              <Radio selected={variant.id === size.id} />
+              <Radio selected={selectedVariant.id === size.id} />
               <Spacer mr={1} />
               <Sans color={size.stock ? "white" : "gray"} size="1">
                 {capitalize(size.size)}
