@@ -48,7 +48,7 @@ enum BagView {
   Saved = 1,
 }
 
-export const Bag = ({ navigation, removeItemFromBag }) => {
+export const Bag = ({ navigation }) => {
   const [isMutating, setMutating] = useState(false)
   const [showReserveError, displayReserveError] = useState(null)
   const { data, loading, refetch } = useQuery(GET_BAG, {
@@ -70,7 +70,6 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
           },
         },
       })
-      console.log(me, data)
     },
     refetchQueries: [
       {
@@ -137,9 +136,6 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
   const hasActiveReservation = !!get(data, "me.activeReservation")
 
   const handleReserve = async navigation => {
-    if (isMutating) {
-      return
-    }
     setMutating(true)
     try {
       const { data } = await checkItemsAvailability({
@@ -294,7 +290,7 @@ export const Bag = ({ navigation, removeItemFromBag }) => {
         {isBagView && !hasActiveReservation && (
           <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
             <Box mb={0.5}>
-              <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull}>
+              <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull} loading={isMutating}>
                 Reserve
               </FixedButton>
             </Box>

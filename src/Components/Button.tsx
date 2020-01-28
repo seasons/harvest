@@ -207,7 +207,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   onPress = args => {
-    if (this.props.disabled) {
+    if (this.props.disabled || this.props.loading) {
       return
     }
     if (this.props.onPress) {
