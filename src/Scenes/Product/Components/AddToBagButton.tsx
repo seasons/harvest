@@ -1,3 +1,4 @@
+import { GET_BAG } from "App/Apollo/Queries"
 import { Button } from "App/Components"
 import { togglePopUp } from "App/Redux/actions"
 import gql from "graphql-tag"
@@ -32,34 +33,6 @@ const REMOVE_FROM_BAG = gql`
   mutation RemoveFromBag($item: ID!) {
     removeFromBag(item: $item) {
       id
-    }
-  }
-`
-
-const GET_BAG = gql`
-  query GetBag {
-    me {
-      bag {
-        id
-        productVariant {
-          id
-          product {
-            id
-          }
-        }
-        position
-        saved
-      }
-      savedItems {
-        id
-        productVariant {
-          id
-          product {
-            id
-          }
-        }
-        saved
-      }
     }
   }
 `
