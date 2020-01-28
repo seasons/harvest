@@ -1,6 +1,6 @@
 import { Box, Sans, Separator, Spacer, Flex } from "App/Components"
 import { color } from "App/Utils"
-import React, { useState } from "react"
+import React from "react"
 import { GET_BAG, GET_PRODUCT } from "App/Apollo/Queries"
 import { connect } from "react-redux"
 import { ProductInfoItem } from "./ProductInfoItem"
@@ -17,7 +17,7 @@ const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
     saveProduct(item: $item, save: $save) {
       id
-      variant {
+      productVariant {
         id
         isSaved
       }
@@ -34,18 +34,6 @@ export const ProductDetailsComponent = ({ product, productState, togglePopUp }) 
   const { isSaved } = selectedVariant
 
   const [saveItem] = useMutation(SAVE_ITEM, {
-    optimisticResponse: {
-      __typename: "Mutation",
-      saveProduct: {
-        __typename: "Product",
-        id: product.id,
-        variant: {
-          __typename: "ProductVariant",
-          isSaved: !selectedVariant.isSaved,
-          id: selectedVariant.id,
-        },
-      },
-    },
     refetchQueries: [
       {
         query: GET_PRODUCT,
@@ -70,19 +58,35 @@ export const ProductDetailsComponent = ({ product, productState, togglePopUp }) 
   } = product
 
   const handleSaveButton = () => {
+    const updatedState = !isSaved
     saveItem({
       variables: {
         item: variant.id,
-        save: !isSaved,
+        save: updatedState,
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        saveProduct: {
+          __typename: "Product",
+          id: product.id,
+          productVariant: {
+            __typename: "ProductVariant",
+            isSaved: updatedState,
+            id: selectedVariant.id,
+          },
+        },
       },
     })
-    const updateText = isSaved ? "been removed from" : "been added to"
-    togglePopUp(true, {
-      icon: <CircledSaveIcon />,
-      title: "Saved for later",
-      note: `The ${product.name}, size ${variant.size} has ${updateText} your saved items.`,
-      buttonText: "Got It",
-    })
+
+    if (!isSaved) {
+      const updateText = isSaved ? "been removed from" : "been added to"
+      togglePopUp(true, {
+        icon: <CircledSaveIcon />,
+        title: "Saved for later",
+        note: `The ${product.name}, size ${variant.size} has ${updateText} your saved items.`,
+        buttonText: "Got It",
+      })
+    }
   }
 
   return (

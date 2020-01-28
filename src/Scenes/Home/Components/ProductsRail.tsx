@@ -83,11 +83,6 @@ export const ProductsRail: React.FC<ProductsRailProps> = ({ items, title, naviga
               </>
             )}
           </Box>
-          <Box pr={2}>
-            <Button size="small" onPress={() => navigation.navigate("Product", { id: selectedItem.id })}>
-              Reserve
-            </Button>
-          </Box>
         </Flex>
         <Spacer mb={2} />
         <Box pr={2}>
