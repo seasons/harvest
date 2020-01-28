@@ -1,6 +1,6 @@
 import { Box, Sans, Separator, Spacer, Flex } from "App/Components"
 import { color } from "App/Utils"
-import React from "react"
+import React, { useState } from "react"
 import { GET_BAG, GET_PRODUCT } from "App/Apollo/Queries"
 import { connect } from "react-redux"
 import { ProductInfoItem } from "./ProductInfoItem"
@@ -17,12 +17,35 @@ const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
     saveProduct(item: $item, save: $save) {
       id
+      variant {
+        id
+        isSaved
+      }
     }
   }
 `
 
 export const ProductDetailsComponent = ({ product, productState, togglePopUp }) => {
+  const { variant } = productState
+  const selectedVariant: any = head((product.variants || []).filter(a => a.id === variant.id)) || {
+    isSaved: false,
+    id: "",
+  }
+  const { isSaved } = selectedVariant
+
   const [saveItem] = useMutation(SAVE_ITEM, {
+    optimisticResponse: {
+      __typename: "Mutation",
+      saveProduct: {
+        __typename: "Product",
+        id: product.id,
+        variant: {
+          __typename: "ProductVariant",
+          isSaved: !selectedVariant.isSaved,
+          id: selectedVariant.id,
+        },
+      },
+    },
     refetchQueries: [
       {
         query: GET_PRODUCT,
@@ -45,11 +68,6 @@ export const ProductDetailsComponent = ({ product, productState, togglePopUp }) 
     description,
     brand: { name: brandName },
   } = product
-
-  const { variant } = productState
-
-  const selectedVariant = head((product.variants || []).filter(a => a.id === variant.id))
-  const { isSaved } = selectedVariant || product
 
   const handleSaveButton = () => {
     saveItem({
@@ -80,7 +98,9 @@ export const ProductDetailsComponent = ({ product, productState, togglePopUp }) 
         </Box>
         <Box>
           <TouchableOpacity onPress={() => handleSaveButton()}>
-            <SaveIcon enabled={isSaved} />
+            <Box pl={2} pb={2}>
+              <SaveIcon enabled={isSaved} />
+            </Box>
           </TouchableOpacity>
         </Box>
       </Flex>
