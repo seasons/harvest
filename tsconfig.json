@@ -6,6 +6,7 @@
     "lib": ["dom", "esnext"],
     "moduleResolution": "node",
     "noEmit": true,
+    "target": "ES2015",
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "types": ["jest", "react", "react-native"],

@@ -9,6 +9,7 @@ import { Flex } from "./Flex"
 import { Spacer } from "./Spacer"
 import { themeProps } from "./Theme"
 import { Sans } from "./Typography"
+import { Spinner } from "./Spinner"
 
 enum DisplayState {
   Default = "default",
@@ -32,6 +33,7 @@ export interface ButtonProps extends BoxProps {
   disabled?: boolean
   showCheckMark?: boolean
   width?: number
+  loading?: boolean
 }
 
 export type ButtonVariant =
@@ -183,6 +185,16 @@ export class Button extends Component<ButtonProps, ButtonState> {
     current: DisplayState.Default,
   }
 
+  get spinnerColor() {
+    // const { inline, variant } = this.props
+
+    // if (inline) {
+    //   return variant === "primaryWhite" ? "white100" : "black100"
+    // }
+
+    return "white100"
+  }
+
   getSize(): { height: number | string; size: "0" | "1" | "2"; px: number } {
     switch (this.props.size) {
       case "small":
@@ -195,6 +207,9 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   onPress = args => {
+    if (this.props.disabled) {
+      return
+    }
     if (this.props.onPress) {
       // Did someone tap really fast? Flick the highlighted state
       const { current } = this.state
@@ -222,7 +237,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   render() {
-    const { children, showCheckMark, disabled, ...rest } = this.props
+    const { children, showCheckMark, disabled, loading, ...rest } = this.props
     const { px, size, height } = this.getSize()
     const variantColors = getColorsForVariant(this.props.variant)
     const { current, previous } = this.state
@@ -250,15 +265,20 @@ export class Button extends Component<ButtonProps, ButtonState> {
           >
             <Flex flexDirection="row">
               <AnimatedContainer disabled={disabled} {...rest} style={{ ...props, height }} px={px}>
-                <Sans color={to.color} size={size}>
-                  {children}
-                </Sans>
-                {showCheckMark && (
-                  <Flex flexDirection="row" flexWrap="nowrap">
-                    <Spacer mr={0.5} />
-                    <TextCheckSVG color={to.color} />
-                  </Flex>
+                {!loading && (
+                  <>
+                    <Sans color={to.color} size={size}>
+                      {children}
+                    </Sans>
+                    {showCheckMark && (
+                      <Flex flexDirection="row" flexWrap="nowrap">
+                        <Spacer mr={0.5} />
+                        <TextCheckSVG color={to.color} />
+                      </Flex>
+                    )}
+                  </>
                 )}
+                {loading && <Spinner size={this.props.size} color={this.spinnerColor as any} />}
               </AnimatedContainer>
             </Flex>
           </TouchableOpacity>
