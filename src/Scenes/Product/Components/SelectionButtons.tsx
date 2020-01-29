@@ -46,7 +46,7 @@ export const SelectionButtons = props => {
           <AddToBagButton
             variantInStock={inStock}
             productID={productID}
-            variant={variant}
+            selectedVariant={selectedVariant}
             setPopUp={setPopUp}
             width={twoButtonWidth}
           ></AddToBagButton>

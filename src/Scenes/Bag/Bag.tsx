@@ -181,7 +181,6 @@ export const Bag = ({ navigation }) => {
 
   const isBagView = BagView.Bag == currentView
   const isSavedView = BagView.Saved == currentView
-  const isEmpty = items.length === 0
   const bagCount = items.length
   const remainingPieces = BAG_NUM_ITEMS - bagCount
   const bagIsFull = bagCount === BAG_NUM_ITEMS
@@ -279,8 +278,6 @@ export const Bag = ({ navigation }) => {
           }}
           keyExtractor={(_item, index) => String(index)}
           renderItem={item => {
-            if (isSavedView && isEmpty) {
-            }
             return renderItem(item)
           }}
           ListFooterComponent={() => <Spacer mb={96} />}

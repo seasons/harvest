@@ -31,7 +31,7 @@ export const Product = props => {
   })
 
   const product = data && data.product
-  const [variant, setVariant] = useState(
+  const [selectedVariant, setSelectedVariant] = useState(
     (product && product.variant && product.variant.length && product.variant[0]) || {
       id: "",
       abbreviated: "",
@@ -60,7 +60,7 @@ export const Product = props => {
           />
         )
       case "productDetails":
-        return <ProductDetails product={product} setPopUp={setPopUp} variant={variant} />
+        return <ProductDetails product={product} setPopUp={setPopUp} selectedVariant={selectedVariant} />
       case "moreLikeThis":
         return <MoreLikeThis products={images} />
       // case "aboutTheBrand":
@@ -96,13 +96,13 @@ export const Product = props => {
           toggleShowVariantPicker={toggleShowVariantPicker}
           setPopUp={setPopUp}
           showVariantPicker={showVariantPicker}
-          variant={variant}
+          selectedVariant={selectedVariant}
         />
         {showVariantPicker && <Overlay />}
         <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
           <VariantPicker
-            setVariant={setVariant}
-            variant={variant}
+            setSelectedVariant={setSelectedVariant}
+            selectedVariant={selectedVariant}
             height={variantPickerHeight}
             navigation={navigation}
             productID={productID}

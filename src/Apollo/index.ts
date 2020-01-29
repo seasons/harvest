@@ -4,6 +4,7 @@ import { ApolloLink, Observable } from "apollo-link"
 import { setContext } from "apollo-link-context"
 import { onError } from "apollo-link-error"
 import { HttpLink } from "apollo-link-http"
+import unfetch from "unfetch"
 import { getAccessTokenFromSession, getNewToken } from "App/Utils/auth"
 import Config from "react-native-config"
 
@@ -19,6 +20,8 @@ console.log("Monsoon Endpoint:", Config.MONSOON_ENDPOINT)
 
 const link = new HttpLink({
   uri: Config.MONSOON_ENDPOINT || "http://localhost:4000/",
+  // FIXME: unfetch here is being used for this fix https://github.com/jhen0409/react-native-debugger/issues/432
+  fetch: unfetch,
   //   uri: "https://monsoon.seasons.nyc",
   //   uri: "https://monsoon-staging.seasons.nyc",
 })
