@@ -20,7 +20,7 @@ const SAVE_ITEM = gql`
   }
 `
 
-export const SaveProduct: React.FC<{
+export const SaveProductButton: React.FC<{
   selectedVariant: any
   product: any
   setPopUp: ({ show: boolean, data: any }) => void

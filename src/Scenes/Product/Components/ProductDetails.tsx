@@ -2,7 +2,7 @@ import { Box, Sans, Separator, Spacer, Flex } from "App/Components"
 import { color } from "App/Utils"
 import React from "react"
 import { ProductInfoItem } from "./ProductInfoItem"
-import { SaveProduct } from "./SaveProduct"
+import { SaveProductButton } from "./SaveProductButton"
 
 export const ProductDetails = ({ setPopUp, selectedVariant, product }) => {
   if (!(selectedVariant && selectedVariant.id) || !(product && product.variants)) {
@@ -30,7 +30,7 @@ export const ProductDetails = ({ setPopUp, selectedVariant, product }) => {
             {brandName}
           </Sans>
         </Box>
-        <SaveProduct selectedVariant={selectedVariant} product={product} setPopUp={setPopUp} />
+        <SaveProductButton selectedVariant={selectedVariant} product={product} setPopUp={setPopUp} />
       </Flex>
       <Spacer mb={1} />
       <Sans size="1" color="gray" lineHeight={26}>
