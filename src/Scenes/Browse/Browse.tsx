@@ -16,7 +16,7 @@ import { BrowseLoader } from "./Loader"
 const IMAGE_HEIGHT = 240
 
 const GET_PRODUCTS = gql`
-  query getProducts($name: String!, $first: Int!, $skip: Int!) {
+  query GetProducts($name: String!, $first: Int!, $skip: Int!) {
     categories(where: { visible: true }) {
       id
       slug

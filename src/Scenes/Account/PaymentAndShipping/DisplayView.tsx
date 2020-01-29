@@ -8,7 +8,7 @@ import { FixedBackArrow } from "App/Components/FixedBackArrow"
 import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_BILLING_INFO = gql`
-  {
+  query GetBillingInfo {
     me {
       customer {
         detail {

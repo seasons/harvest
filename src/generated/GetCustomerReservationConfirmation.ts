@@ -1,0 +1,83 @@
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetCustomerReservationConfirmation
+// ====================================================
+
+export interface GetCustomerReservationConfirmation_me_user {
+  __typename: "User";
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface GetCustomerReservationConfirmation_me_customer_detail_shippingAddress {
+  __typename: "Location";
+  slug: string;
+  name: string;
+  address1: string;
+  address2: string | null;
+  city: string;
+  state: string;
+  zipCode: string;
+}
+
+export interface GetCustomerReservationConfirmation_me_customer_detail {
+  __typename: "CustomerDetail";
+  phoneNumber: string | null;
+  shippingAddress: GetCustomerReservationConfirmation_me_customer_detail_shippingAddress | null;
+}
+
+export interface GetCustomerReservationConfirmation_me_customer_billingInfo {
+  __typename: "BillingInfo";
+  brand: string;
+  last_digits: string;
+}
+
+export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product {
+  __typename: "Product";
+  id: string;
+}
+
+export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant {
+  __typename: "ProductVariant";
+  id: string;
+  product: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product;
+}
+
+export interface GetCustomerReservationConfirmation_me_customer_reservations_products {
+  __typename: "PhysicalProduct";
+  id: string;
+  productVariant: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant;
+}
+
+export interface GetCustomerReservationConfirmation_me_customer_reservations {
+  __typename: "Reservation";
+  id: string;
+  reservationNumber: number;
+  products: GetCustomerReservationConfirmation_me_customer_reservations_products[] | null;
+}
+
+export interface GetCustomerReservationConfirmation_me_customer {
+  __typename: "Customer";
+  id: string;
+  detail: GetCustomerReservationConfirmation_me_customer_detail | null;
+  billingInfo: GetCustomerReservationConfirmation_me_customer_billingInfo | null;
+  reservations: GetCustomerReservationConfirmation_me_customer_reservations[] | null;
+}
+
+export interface GetCustomerReservationConfirmation_me {
+  __typename: "Me";
+  user: GetCustomerReservationConfirmation_me_user;
+  customer: GetCustomerReservationConfirmation_me_customer;
+}
+
+export interface GetCustomerReservationConfirmation {
+  me: GetCustomerReservationConfirmation_me | null;
+}
+
+export interface GetCustomerReservationConfirmationVariables {
+  reservationID: string;
+}

@@ -1,9 +1,9 @@
 import { GET_BAG } from "App/Apollo/Queries"
 import { Button } from "App/Components"
-import gql from "graphql-tag"
 import { head } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
+import { ADD_TO_BAG } from "App/Scenes/Bag/Bag"
 
 interface Props {
   productID: string
@@ -13,22 +13,6 @@ interface Props {
   variant: any
   setPopUp: ({ show: boolean, data: any }) => void
 }
-
-const ADD_TO_BAG = gql`
-  mutation AddToBag($item: ID!) {
-    addToBag(item: $item) {
-      id
-    }
-  }
-`
-
-const REMOVE_FROM_BAG = gql`
-  mutation RemoveFromBag($item: ID!) {
-    removeFromBag(item: $item) {
-      id
-    }
-  }
-`
 
 export const AddToBagButton: React.FC<Props> = props => {
   const [isMutating, setIsMutating] = useState(false)

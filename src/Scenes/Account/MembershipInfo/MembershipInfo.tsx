@@ -9,7 +9,7 @@ import { NavigationParams, NavigationScreenProp, NavigationState } from "react-n
 import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_MEMBERSHIP_INFO = gql`
-  query getMembershipInfo {
+  query GetMembershipInfo {
     me {
       customer {
         plan

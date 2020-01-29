@@ -14,6 +14,7 @@ This project is the mobile client for Seasons.nyc
 ### Installation
 
 1. Install [Node.js][node], and [Yarn][yarn]: `$ brew install node yarn`
+1. Install Apollo: `$ npm install -g apollo`
 1. Install file watcher used by React Native:
    - `$ brew install watchman`
 1. Install NPM modules: `$ yarn install`

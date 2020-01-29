@@ -9,8 +9,8 @@ import styled from "styled-components/native"
 
 import { BagItem } from "../Bag/Components/BagItem"
 
-const GET_CUSTOMER = gql`
-  query GetCustomer($reservationID: ID!) {
+const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
+  query GetCustomerReservationConfirmation($reservationID: ID!) {
     me {
       user {
         firstName
@@ -55,7 +55,7 @@ const GET_CUSTOMER = gql`
 
 export const ReservationConfirmation = props => {
   const reservationID = get(props, "navigation.state.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
-  const { data, loading, error } = useQuery(GET_CUSTOMER, {
+  const { data, loading, error } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
     variables: {
       reservationID,
     },

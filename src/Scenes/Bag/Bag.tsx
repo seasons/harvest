@@ -24,9 +24,17 @@ const CHECK_ITEMS = gql`
   }
 `
 
+export const ADD_TO_BAG = gql`
+  mutation AddToBag($item: ID!) {
+    addToBag(item: $item) {
+      id
+    }
+  }
+`
+
 const REMOVE_FROM_BAG = gql`
-  mutation RemoveFromBag($id: ID!) {
-    removeFromBag(item: $id) {
+  mutation RemoveFromBag($item: ID!) {
+    removeFromBag(item: $item) {
       id
     }
   }
