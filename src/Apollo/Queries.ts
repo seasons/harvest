@@ -76,6 +76,7 @@ export const GET_BAG = gql`
         id
         productVariant {
           id
+          # ...GET_BAG
           product {
             id
           }

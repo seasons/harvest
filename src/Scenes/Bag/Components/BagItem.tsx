@@ -7,11 +7,11 @@ import React from "react"
 import { Text, TouchableWithoutFeedback } from "react-native"
 import { NavigationDispatch } from "react-navigation"
 import styled from "styled-components/native"
-
 import { useQuery } from "@apollo/react-hooks"
 
-const GET_PRODUCT = gql`
-  query GetProduct($productId: ID!, $variantId: ID!) {
+// FIXME: Make this a fragment on GET_BAG
+const GET_BAG_ITEM = gql`
+  query GetBagItem($productId: ID!, $variantId: ID!) {
     product(where: { id: $productId }) {
       name
       id
@@ -50,7 +50,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   removeItemFromBag,
   removeFromBagAndSaveItem,
 }) => {
-  const { loading, error, data } = useQuery(GET_PRODUCT, {
+  const { loading, error, data } = useQuery(GET_BAG_ITEM, {
     variables: {
       productId: bagItem.productID,
       variantId: bagItem.variantID,
