@@ -1,7 +1,7 @@
 import { Box, Sans, Separator, Spacer, Flex } from "App/Components"
 import { color } from "App/Utils"
 import React from "react"
-import { GET_BAG, GET_PRODUCT } from "App/Apollo/Queries"
+import { GET_PRODUCT, GET_BAG } from "App/Apollo/Queries"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { TouchableOpacity } from "react-native"
 import { SaveIcon } from "Assets/icons"
@@ -30,9 +30,29 @@ export const ProductDetails = ({ setPopUp, selectedVariant, product }) => {
   const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
 
   const { isSaved } = variantToUse
-  console.log("isSaved", isSaved)
+  const productID = product.id
+
+  const updateCache = (cache, { data }) => {
+    const { product } = cache.readQuery({
+      query: GET_PRODUCT,
+      variables: {
+        productID,
+      },
+    })
+    const productVariants = product.variants.slice()
+    const updatedVariants = productVariants.map(variant =>
+      variant.id === selectedVariant.id
+        ? { ...variant, isSaved: data.savedProduct ? data.savedProduct.isSaved : false }
+        : variant
+    )
+    cache.writeQuery({
+      query: GET_PRODUCT,
+      data: { product: { ...product, product: { variants: updatedVariants } } },
+    })
+  }
 
   const [saveItem] = useMutation(SAVE_ITEM, {
+    update: updateCache,
     refetchQueries: [
       {
         query: GET_PRODUCT,
@@ -57,24 +77,10 @@ export const ProductDetails = ({ setPopUp, selectedVariant, product }) => {
   } = product
 
   const handleSaveButton = () => {
-    const updatedState = !isSaved
-    console.log("updatedState", updatedState)
     saveItem({
       variables: {
         item: selectedVariant.id,
-        save: updatedState,
-      },
-      optimisticResponse: {
-        __typename: "Mutation",
-        saveProduct: {
-          __typename: "Product",
-          id: product.id,
-          productVariant: {
-            __typename: "ProductVariant",
-            isSaved: updatedState,
-            id: selectedVariant.id,
-          },
-        },
+        save: !isSaved,
       },
     })
 
