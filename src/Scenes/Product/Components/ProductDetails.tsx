@@ -30,29 +30,8 @@ export const ProductDetails = ({ setPopUp, selectedVariant, product }) => {
   const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
 
   const { isSaved } = variantToUse
-  const productID = product.id
-
-  const updateCache = (cache, { data }) => {
-    const { product } = cache.readQuery({
-      query: GET_PRODUCT,
-      variables: {
-        productID,
-      },
-    })
-    const productVariants = product.variants.slice()
-    const updatedVariants = productVariants.map(variant =>
-      variant.id === selectedVariant.id
-        ? { ...variant, isSaved: data.savedProduct ? data.savedProduct.isSaved : false }
-        : variant
-    )
-    cache.writeQuery({
-      query: GET_PRODUCT,
-      data: { product: { ...product, product: { variants: updatedVariants } } },
-    })
-  }
 
   const [saveItem] = useMutation(SAVE_ITEM, {
-    update: updateCache,
     refetchQueries: [
       {
         query: GET_PRODUCT,
@@ -77,10 +56,23 @@ export const ProductDetails = ({ setPopUp, selectedVariant, product }) => {
   } = product
 
   const handleSaveButton = () => {
+    const updatedState = !isSaved
     saveItem({
       variables: {
         item: selectedVariant.id,
-        save: !isSaved,
+        save: updatedState,
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        saveProduct: {
+          __typename: "Product",
+          id: product.id,
+          productVariant: {
+            __typename: "ProductVariant",
+            isSaved: updatedState,
+            id: selectedVariant.id,
+          },
+        },
       },
     })
 
