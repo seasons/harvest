@@ -44,8 +44,6 @@ export const Product = props => {
     return <Loader />
   }
 
-  console.log("product.variants", product.variants)
-
   if (error) {
     console.error("error: ", error)
   }
