@@ -27,7 +27,7 @@ export const AllCaughtUp: React.FC<{ navigation: NavigationScreenProp<Navigation
         </Sans>
         <Spacer mb={3} />
         <Flex justifyContent="center" flexDirection="row">
-          <Button size="medium" variant="primaryGray" onPress={() => navigation.navigate("Browse")}>
+          <Button size="medium" variant="secondaryBlack" onPress={() => navigation.navigate("Browse")}>
             Browse
           </Button>
         </Flex>

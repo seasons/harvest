@@ -18,7 +18,7 @@ export const VariantPicker = props => {
       <LeftCorner />
       <RightCorner />
       <FixedButtonWrapper>
-        <Button variant="transparentWhite" onPress={() => toggleShowVariantPicker(false)}>
+        <Button variant="primaryWhite" onPress={() => toggleShowVariantPicker(false)}>
           Cancel
         </Button>
       </FixedButtonWrapper>

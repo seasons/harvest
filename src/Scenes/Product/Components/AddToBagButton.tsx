@@ -108,7 +108,7 @@ export const AddToBagButton: React.FC<Props> = props => {
     <Button
       width={width}
       showCheckMark={showCheckMark}
-      variant="secondaryLight"
+      variant="primaryBlack"
       disabled={disabled}
       size="medium"
       onPress={onPress}

@@ -85,7 +85,7 @@ export const PopUp: React.FC<Props> = ({ title, note, show, icon, buttonText, on
           </Box>
           <Spacer mb={2} />
           <Separator color={colors.separator} />
-          <Button variant="secondaryDark" onPress={() => onClose()}>
+          <Button variant="primaryWhite" onPress={() => onClose()}>
             {buttonText}
           </Button>
           <Spacer mb={2} />

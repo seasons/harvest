@@ -72,7 +72,7 @@ export const ResetPassword = (props: any) => {
                 onChangeText={(_, val) => onEmailChange(val)}
               />
               <Spacer mb={4} />
-              <Button onPress={handleSendLink} disabled={!isEmailComplete} variant="primaryLight">
+              <Button onPress={handleSendLink} disabled={!isEmailComplete} variant="primaryBlack">
                 Send Reset Link
               </Button>
             </Box>

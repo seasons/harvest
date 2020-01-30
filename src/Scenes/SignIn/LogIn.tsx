@@ -119,7 +119,7 @@ export const LogIn: React.FC<LogInProps> = props => {
                 </TouchableWithoutFeedback>
               </Text>
               <Spacer mb={4} />
-              <Button onPress={handleLogin} disabled={disabled} variant="primaryLight">
+              <Button onPress={handleLogin} disabled={disabled} variant="primaryBlack">
                 Sign in
               </Button>
             </Box>

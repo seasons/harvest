@@ -30,8 +30,6 @@ export const SelectionButtons = props => {
                 <Sans size="1" color="black">
                   {selectedVariant.size}
                 </Sans>
-                <Spacer mr={1} />
-                <DownChevronIcon color={color("black100")} rotate={showVariantPicker} />
               </Flex>
               {!inStock && (
                 <Sans size="1" color="gray">

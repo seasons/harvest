@@ -114,7 +114,7 @@ export const ProductRequest = (props: any) => {
           </Flex>
         </TouchableWithoutFeedback>
         <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0}>
-          <FixedButton disabled={isNextButtonDisabled} variant={"primaryLight"} onPress={handleNextBtnPressed}>
+          <FixedButton disabled={isNextButtonDisabled} variant={"primaryBlack"} onPress={handleNextBtnPressed}>
             Next
           </FixedButton>
         </KeyboardAvoidingView>
