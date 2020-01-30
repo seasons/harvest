@@ -16,7 +16,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 import { ProfileList } from "./ProfileList"
 
 const GET_USER = gql`
-  query getUser {
+  query GetUser {
     me {
       customer {
         user {

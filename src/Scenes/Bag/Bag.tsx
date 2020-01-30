@@ -1,11 +1,9 @@
-import { GET_BAG } from "App/Apollo/Queries"
 import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/Utils"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
-import gql from "graphql-tag"
 import { assign, fill, get } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
@@ -15,40 +13,19 @@ import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
+import { REMOVE_FROM_BAG, GET_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM, CHECK_ITEMS } from "./BagQueries"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 const SECTION_HEIGHT = 300
-
-const CHECK_ITEMS = gql`
-  mutation CheckItemsAvailability($items: [ID!]!) {
-    checkItemsAvailability(items: $items)
-  }
-`
-
-const REMOVE_FROM_BAG = gql`
-  mutation RemoveFromBag($id: ID!) {
-    removeFromBag(item: $id) {
-      id
-    }
-  }
-`
-
-const REMOVE_FROM_BAG_AND_SAVE_ITEM = gql`
-  mutation RemoveFromBagAndSaveItem($id: ID!) {
-    removeFromBag(item: $id) {
-      id
-    }
-    saveProduct(item: $id, save: true) {
-      id
-    }
-  }
-`
 
 enum BagView {
   Bag = 0,
   Saved = 1,
 }
 
-export const Bag = ({ navigation }) => {
+export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
+  navigation,
+}) => {
   const [isMutating, setMutating] = useState(false)
   const [showReserveError, displayReserveError] = useState(null)
   const { data, loading, refetch } = useQuery(GET_BAG, {
@@ -56,7 +33,7 @@ export const Bag = ({ navigation }) => {
   })
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
-    update(cache, { data, errors }) {
+    update(cache, { data }) {
       const { me } = cache.readQuery({ query: GET_BAG })
       const key = currentView === BagView.Bag ? "bag" : "savedItems"
       const list = me[key]
@@ -77,8 +54,9 @@ export const Bag = ({ navigation }) => {
       },
     ],
   })
+
   const [removeFromBagAndSaveItem] = useMutation(REMOVE_FROM_BAG_AND_SAVE_ITEM, {
-    update(cache, { data, errors }) {
+    update(cache, { data }) {
       const { me } = cache.readQuery({ query: GET_BAG })
       const old = currentView === BagView.Bag ? "bag" : "savedItems"
       const newKey = currentView === BagView.Bag ? "savedItems" : "bag"

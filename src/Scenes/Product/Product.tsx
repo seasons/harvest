@@ -13,6 +13,7 @@ import { BackArrowIcon } from "Assets/icons"
 import { color } from "App/Utils"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
+import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5
 
@@ -21,7 +22,7 @@ export const Product = props => {
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation } = props
   const productID = get(props, "navigation.state.params.id")
-  const { loading, error, data } = useQuery(GET_PRODUCT, {
+  const { data, loading, error } = useQuery<GetProduct>(GET_PRODUCT, {
     variables: {
       productID,
     },
@@ -30,9 +31,9 @@ export const Product = props => {
     translateY: showVariantPicker ? 0 : variantPickerHeight,
   })
 
-  const product = data && data.product
+  const product: GetProduct_product = data && data.product
   const [selectedVariant, setSelectedVariant] = useState(
-    (product && product.variant && product.variant.length && product.variant[0]) || {
+    (product && product.variants && product.variants.length && product.variants[0]) || {
       id: "",
       abbreviated: "",
       size: "",
@@ -60,7 +61,13 @@ export const Product = props => {
           />
         )
       case "productDetails":
-        return <ProductDetails product={product} setPopUp={setPopUp} selectedVariant={selectedVariant} />
+        return (
+          <ProductDetails
+            product={product as GetProduct_product}
+            setPopUp={setPopUp}
+            selectedVariant={selectedVariant}
+          />
+        )
       case "moreLikeThis":
         return <MoreLikeThis products={images} />
       // case "aboutTheBrand":
@@ -92,7 +99,7 @@ export const Product = props => {
           renderItem={item => renderItem(item)}
         />
         <SelectionButtons
-          productID={productID}
+          productID={productID as GetProduct_product["id"]}
           toggleShowVariantPicker={toggleShowVariantPicker}
           setPopUp={setPopUp}
           showVariantPicker={showVariantPicker}
@@ -105,7 +112,7 @@ export const Product = props => {
             selectedVariant={selectedVariant}
             height={variantPickerHeight}
             navigation={navigation}
-            productID={productID}
+            productID={productID as GetProduct_product["id"]}
             toggleShowVariantPicker={toggleShowVariantPicker}
           />
         </AnimatedVariantPicker>

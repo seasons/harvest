@@ -9,10 +9,9 @@ import { DownChevronIcon } from "Assets/icons"
 const twoButtonWidth = Dimensions.get("window").width / 2 - 12
 
 export const SelectionButtons = props => {
-  const { variant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
-  const inStock = variant && !!variant.stock
-
-  if (!variant) {
+  const { selectedVariant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
+  const inStock = selectedVariant && !!selectedVariant.stock
+  if (!selectedVariant) {
     return <></>
   }
 
@@ -29,7 +28,7 @@ export const SelectionButtons = props => {
             >
               <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
                 <Sans size="1" color="black">
-                  {variant.size}
+                  {selectedVariant.size}
                 </Sans>
                 <Spacer mr={1} />
                 <DownChevronIcon color={color("black")} rotate={showVariantPicker} />
@@ -46,9 +45,9 @@ export const SelectionButtons = props => {
           <AddToBagButton
             variantInStock={inStock}
             productID={productID}
-            selectedVariant={selectedVariant}
             setPopUp={setPopUp}
             width={twoButtonWidth}
+            selectedVariant={selectedVariant}
           ></AddToBagButton>
         )}
       </Flex>

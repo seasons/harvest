@@ -10,7 +10,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 
 const GET_PREFERENCES = gql`
-  query getUser {
+  query GetUserPreferences {
     me {
       customer {
         detail {

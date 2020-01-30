@@ -1,6 +1,5 @@
-import { GET_BAG } from "App/Apollo/Queries"
+import { GET_BAG, ADD_TO_BAG, REMOVE_FROM_BAG } from "App/Scenes/Bag/BagQueries"
 import { Button } from "App/Components"
-import gql from "graphql-tag"
 import { head } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
@@ -10,33 +9,17 @@ interface Props {
   disabled?: Boolean
   variantInStock: Boolean
   width: number
-  variant: any
+  selectedVariant: any
   setPopUp: ({ show: boolean, data: any }) => void
 }
 
-const ADD_TO_BAG = gql`
-  mutation AddToBag($item: ID!) {
-    addToBag(item: $item) {
-      id
-    }
-  }
-`
-
-const REMOVE_FROM_BAG = gql`
-  mutation RemoveFromBag($item: ID!) {
-    removeFromBag(item: $item) {
-      id
-    }
-  }
-`
-
 export const AddToBagButton: React.FC<Props> = props => {
   const [isMutating, setIsMutating] = useState(false)
-  const { productID, setPopUp, variantInStock, width, variant } = props
+  const { productID, setPopUp, variantInStock, width, selectedVariant } = props
   const { data } = useQuery(GET_BAG)
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
-      item: variant.id,
+      item: selectedVariant.id,
     },
     refetchQueries: [
       {
@@ -66,7 +49,7 @@ export const AddToBagButton: React.FC<Props> = props => {
 
   const [removeFromBag] = useMutation(REMOVE_FROM_BAG, {
     variables: {
-      item: variant.id,
+      item: selectedVariant.id,
     },
     refetchQueries: [
       {
