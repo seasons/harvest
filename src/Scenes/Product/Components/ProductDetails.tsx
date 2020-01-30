@@ -43,7 +43,7 @@ export const ProductDetails: React.FC<{
       </Sans>
       <Spacer mb={1} />
       <Spacer mb={2} />
-      <Separator color={color("lightGray")} />
+      <Separator color={color("black15")} />
       {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
       {product.modelSize && <ProductInfoItem detailType="Fit" detailValue={`Model size is ${product.modelSize}`} />}
       {product.outerMaterials && (

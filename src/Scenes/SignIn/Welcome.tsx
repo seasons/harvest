@@ -49,5 +49,5 @@ const Wrapper = styled.View`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: ${color("black")};
+  background-color: ${color("black100")};
 `

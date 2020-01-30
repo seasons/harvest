@@ -82,7 +82,7 @@ export const LogIn: React.FC<LogInProps> = props => {
   const disabled = !(emailComplete && password.length)
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color("black") }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color("black100") }}>
       <Theme>
         <>
           <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>

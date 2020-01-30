@@ -78,7 +78,7 @@ export const ProductRequest = (props: any) => {
 
   return (
     <Theme>
-      <Container style={{ paddingTop: insets.top, paddingBottom: insets.bottom, background: color("black") }}>
+      <Container style={{ paddingTop: insets.top, paddingBottom: insets.bottom, background: color("black100") }}>
         <CloseButton onPress={() => props.navigation.dismiss()}>
           <Box p="14px">
             <CloseXIcon />

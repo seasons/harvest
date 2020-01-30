@@ -14,7 +14,7 @@ export const VariantPicker = props => {
   }
 
   return (
-    <Flex style={{ flex: 1, backgroundColor: color("black"), height, position: "relative" }}>
+    <Flex style={{ flex: 1, backgroundColor: color("black100"), height, position: "relative" }}>
       <LeftCorner />
       <RightCorner />
       <FixedButtonWrapper>

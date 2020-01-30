@@ -250,7 +250,7 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
             }
             return (
               <Box>
-                <Separator color={color("lightGray")} />
+                <Separator color={color("black15")} />
               </Box>
             )
           }}

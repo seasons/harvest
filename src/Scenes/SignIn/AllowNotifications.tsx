@@ -6,7 +6,7 @@ import { color } from "App/Utils"
 export class AllowNotifications extends React.Component {
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: color("black") }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: color("black100") }}>
         <Theme>
           <Sans color="white" size="3">
             Allow notification view

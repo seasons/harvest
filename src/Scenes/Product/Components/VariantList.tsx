@@ -110,7 +110,7 @@ export const VariantList = ({ productID, setSelectedVariant, selectedVariant, on
             </Sans>
           </Flex>
         </TouchableOpacity>
-        <Separator color={color("gray")} />
+        <Separator color={color("black50")} />
       </Box>
     )
   })

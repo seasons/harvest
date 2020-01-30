@@ -56,7 +56,7 @@ export const defaultVariant: ButtonVariant = "primaryDark"
  */
 export function getColorsForVariant(variant: ButtonVariant) {
   const {
-    colors: { black, white, gray, mediumGray, darkGray, lightGray },
+    colors: { black, white, gray, black50, black15, black85 },
   } = themeProps
 
   switch (variant) {
@@ -73,26 +73,26 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: black,
         },
         disabled: {
-          backgroundColor: darkGray,
-          borderColor: darkGray,
+          backgroundColor: black85,
+          borderColor: black85,
           color: gray,
         },
       }
     case "primaryGray":
       return {
         default: {
-          backgroundColor: mediumGray,
-          borderColor: mediumGray,
+          backgroundColor: black50,
+          borderColor: black50,
           color: white,
         },
         pressed: {
-          backgroundColor: darkGray,
-          borderColor: darkGray,
+          backgroundColor: black85,
+          borderColor: black85,
           color: gray,
         },
         disabled: {
-          backgroundColor: darkGray,
-          borderColor: darkGray,
+          backgroundColor: black85,
+          borderColor: black85,
           color: gray,
         },
       }
@@ -127,9 +127,9 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: white,
         },
         disabled: {
-          backgroundColor: lightGray,
-          borderColor: lightGray,
-          color: darkGray,
+          backgroundColor: black15,
+          borderColor: black15,
+          color: black85,
         },
       }
     case "secondaryDark":

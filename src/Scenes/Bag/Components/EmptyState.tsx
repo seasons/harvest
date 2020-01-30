@@ -23,7 +23,7 @@ export const EmptyState = ({ remainingPieces, navigation }) => {
             />
           </Flex>
           <Spacer mb={3} />
-          <Sans size="2" color={color("gray")} style={{ textAlign: "center" }}>
+          <Sans size="2" color={color("black50")} style={{ textAlign: "center" }}>
             You haven’t reserved anything yet. When you add an item, it’ll appear here
           </Sans>
           <Spacer mb={3} />

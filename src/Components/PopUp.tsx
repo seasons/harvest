@@ -40,15 +40,15 @@ export const PopUp: React.FC<Props> = ({ title, note, show, icon, buttonText, on
       case "dark":
         return {
           backgroundColor: color("green"),
-          primaryText: color("white"),
+          primaryText: color("white100"),
           secondaryText: color("lightGreen"),
           separator: color("lightGreen"),
         }
       case "light":
         return {
-          backgroundColor: color("white"),
-          primaryText: color("black"),
-          secondaryText: color("gray"),
+          backgroundColor: color("white100"),
+          primaryText: color("black100"),
+          secondaryText: color("black50"),
           separator: "transparent",
         }
     }
