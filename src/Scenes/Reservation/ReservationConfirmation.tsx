@@ -60,7 +60,6 @@ export const ReservationConfirmation = props => {
       reservationID,
     },
   })
-  console.log(data)
   const insets = useSafeArea()
 
   const customer = get(data, "me.customer")

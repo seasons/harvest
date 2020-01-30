@@ -64,41 +64,6 @@ export const GET_COLLECTION = gql`
   }
 `
 
-export const GET_BAG = gql`
-  query GetBagAndSavedItems {
-    me {
-      activeReservation {
-        id
-        shipped
-        createdAt
-      }
-      bag {
-        id
-        productVariant {
-          id
-          # ...GET_BAG
-          product {
-            id
-          }
-        }
-        position
-        saved
-        status
-      }
-      savedItems {
-        id
-        productVariant {
-          id
-          product {
-            id
-          }
-        }
-        saved
-      }
-    }
-  }
-`
-
 export const ACTIVE_RESERVATION = gql`
   query ActiveReservation {
     me {

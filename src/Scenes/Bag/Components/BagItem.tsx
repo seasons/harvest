@@ -2,17 +2,15 @@ import { Box, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
 import gql from "graphql-tag"
-import { get } from "lodash"
+import { get, head } from "lodash"
 import React from "react"
-import { Text, TouchableWithoutFeedback } from "react-native"
-import { NavigationDispatch } from "react-navigation"
+import { Text, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
-import { useQuery } from "@apollo/react-hooks"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
-// FIXME: Make this a fragment on GET_BAG
-const GET_BAG_ITEM = gql`
-  query GetBagItem($productId: ID!, $variantId: ID!) {
-    product(where: { id: $productId }) {
+export const BagItemFragment = gql`
+  fragment BagItemProductVariant on ProductVariant {
+    product {
       name
       id
       modelSize
@@ -20,7 +18,7 @@ const GET_BAG_ITEM = gql`
         name
       }
       images
-      variants(where: { id: $variantId }) {
+      variants {
         id
         size
       }
@@ -29,13 +27,10 @@ const GET_BAG_ITEM = gql`
 `
 
 interface BagItemProps {
-  bagItem: {
-    productID: String
-    variantID: String
-  }
-  index?: Number
-  sectionHeight: Number
-  navigation: NavigationDispatch
+  bagItem: any
+  index?: number
+  sectionHeight: number
+  navigation?: NavigationScreenProp<NavigationState, NavigationParams>
   saved: Boolean
   removeItemFromBag?: Function
   removeFromBagAndSaveItem?: Function
@@ -50,33 +45,21 @@ export const BagItem: React.FC<BagItemProps> = ({
   removeItemFromBag,
   removeFromBagAndSaveItem,
 }) => {
-  const { loading, error, data } = useQuery(GET_BAG_ITEM, {
-    variables: {
-      productId: bagItem.productID,
-      variantId: bagItem.variantID,
-    },
-  })
-
-  if (loading || !data) {
-    return <Box height={310} />
-  }
-
-  if (error) {
-    console.error("error: ", error)
-  }
-
-  const product = data && data.product
-
-  if (!product) {
+  if (!bagItem) {
     return null
   }
-
+  const variantToUse = head(
+    (get(bagItem, "productVariant.product.variants") || []).filter(a => a.id === bagItem.variantID)
+  )
+  const product = get(bagItem, "productVariant.product")
   const imageURL = imageResize(get(product, "images[0].url"), "medium")
-  const size = get(data, "product.variants[0].size")
+  const variantSize = get(variantToUse, "size")
 
   return (
     <Box py={saved ? 1 : 2} key={product.id}>
-      <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
+      <TouchableWithoutFeedback
+        onPress={() => (navigation ? navigation.navigate("Product", { id: product.id }) : null)}
+      >
         <BagItemContainer flexDirection="row">
           <Flex style={{ flex: 2 }} p={2} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
             <Box>
@@ -93,17 +76,19 @@ export const BagItem: React.FC<BagItemProps> = ({
             <Box>
               <Text>
                 <Sans size="2" color="gray">
-                  Size {size}
+                  Size {variantSize}
                 </Sans>
               </Text>
             </Box>
           </Flex>
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
-            <ImageContainer
-              style={{ height: sectionHeight, width: 170 }}
-              resizeMode="contain"
-              source={{ uri: imageURL }}
-            />
+            {!!imageURL && (
+              <ImageContainer
+                style={{ height: sectionHeight, width: 170 }}
+                resizeMode="contain"
+                source={{ uri: imageURL }}
+              />
+            )}
           </Flex>
         </BagItemContainer>
       </TouchableWithoutFeedback>
@@ -111,7 +96,7 @@ export const BagItem: React.FC<BagItemProps> = ({
       {!saved && (
         <Flex flexDirection="row" pt={1}>
           <Box flex={1} pr={1}>
-            <TouchableWithoutFeedback
+            <TouchableOpacity
               onPress={() => {
                 removeItemFromBag({
                   variables: {
@@ -125,10 +110,10 @@ export const BagItem: React.FC<BagItemProps> = ({
                   Remove
                 </Sans>
               </RemoveButton>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           </Box>
           <Box flex={1}>
-            <TouchableWithoutFeedback
+            <TouchableOpacity
               onPress={() => {
                 removeFromBagAndSaveItem({
                   variables: {
@@ -142,7 +127,7 @@ export const BagItem: React.FC<BagItemProps> = ({
                   {!saved ? "Save For Later" : "Add to Bag"}
                 </Sans>
               </SaveForLaterButton>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           </Box>
         </Flex>
       )}

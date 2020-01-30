@@ -3,7 +3,7 @@
     "android": "cd ./android && ./gradlew app:assembleDebug && ./gradlew installDebug",
     "ios": "react-native run-ios",
     "start": "node ./src/schemaQuery.ts && yarn start-servers",
-    "start-servers": "concurrently --kill-others 'yarn start-packager' 'yarn apollo'",
+    "start-servers": "concurrently --kill-others 'yarn start-packager'",
     "test": "jest",
     "jetify": "jetify",
     "web": "expo start --web",

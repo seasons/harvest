@@ -13,12 +13,7 @@ import { BackArrowIcon } from "Assets/icons"
 import { color } from "App/Utils"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
-import {
-  GetProduct,
-  GetProductVariables,
-  GetProduct_product,
-  GetProduct_product_variants,
-} from "App/generated/GetProduct"
+import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5
 
@@ -55,16 +50,14 @@ export const Product = props => {
   }
 
   const renderItem = ({ item: section }) => {
-    const images = product && (product.images as GetProduct_product["images"])
+    const images = product && product.images
     switch (section) {
       case "imageRail":
         return (
           <ImageRail
             images={images}
             showPageDots
-            TextComponent={() => (
-              <VariantSizes size="1" variants={product.variants as GetProduct_product["variants"]} />
-            )}
+            TextComponent={() => <VariantSizes size="1" variants={product.variants} />}
           />
         )
       case "productDetails":

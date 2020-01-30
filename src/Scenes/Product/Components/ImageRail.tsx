@@ -4,11 +4,12 @@ import { imageResize } from "App/helpers/imageResize"
 import React, { useState } from "react"
 import { FlatList } from "react-native"
 import styled from "styled-components/native"
+import { GetProduct_product } from "App/generated/GetProduct"
 
 const IMAGE_WIDTH = 320
 
 export const ImageRail: React.FC<{
-  images: React.ReactElement[]
+  images: GetProduct_product["images"]
   showPageDots: Boolean
   TextComponent?: React.ComponentType
 }> = ({ images, showPageDots, TextComponent }) => {

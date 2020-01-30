@@ -3,9 +3,10 @@ import { Flex, Box, Sans } from "App/Components"
 import { color } from "App/Utils"
 import React from "react"
 import styled from "styled-components/native"
+import { GetProduct_product_variants } from "App/generated/GetProduct"
 
 export const VariantSizes: React.FC<{
-  variants: any
+  variants: GetProduct_product_variants
   size: "0" | "1"
 }> = ({ variants, size }) => {
   const sortedVariants = sortVariants(variants)
