@@ -12,7 +12,7 @@ import { Webview } from "App/Scenes/Webview"
 import React, { useState } from "react"
 import { Image } from "react-native"
 import { createAppContainer, createSwitchNavigator } from "react-navigation"
-import { createStackNavigator } from "react-navigation-stack"
+import { createStackNavigator, TransitionPresets } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import styled from "styled-components"
@@ -138,6 +138,11 @@ const BrowseStack = createStackNavigator(
   {
     mode: "modal",
     headerMode: "none",
+    defaultNavigationOptions: {
+      gestureEnabled: true,
+      cardOverlayEnabled: true,
+      ...TransitionPresets.ModalPresentationIOS,
+    },
   }
 )
 
