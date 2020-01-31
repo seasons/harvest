@@ -66,14 +66,14 @@ export const ResetPassword = (props: any) => {
               </Sans>
               <Spacer mb={32} />
               <TextInput
-                placeholder="Your email goes here"
+                placeholder="Your email"
                 variant="dark"
                 textContentType="email"
                 onChangeText={(_, val) => onEmailChange(val)}
               />
               <Spacer mb={4} />
               <Button onPress={handleSendLink} disabled={!isEmailComplete} variant="primaryBlack">
-                Send Reset Link
+                Send reset link
               </Button>
             </Box>
           </Flex>

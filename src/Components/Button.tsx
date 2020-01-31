@@ -53,7 +53,7 @@ export const defaultVariant: ButtonVariant = "primaryBlack"
  */
 export function getColorsForVariant(variant: ButtonVariant) {
   const {
-    colors: { black100, white100, black65, black50, black15, black85 },
+    colors: { black100, white100, black50, black15, black85 },
   } = themeProps
 
   switch (variant) {
@@ -72,7 +72,7 @@ export function getColorsForVariant(variant: ButtonVariant) {
         disabled: {
           backgroundColor: black15,
           borderColor: black15,
-          color: black100,
+          color: black50,
         },
       }
     case "primaryWhite":
@@ -90,7 +90,7 @@ export function getColorsForVariant(variant: ButtonVariant) {
         disabled: {
           backgroundColor: black15,
           borderColor: black15,
-          color: black100,
+          color: black50,
         },
       }
     case "blur":
@@ -115,12 +115,12 @@ export function getColorsForVariant(variant: ButtonVariant) {
       return {
         default: {
           backgroundColor: black100,
-          borderColor: black65,
+          borderColor: black50,
           color: white100,
         },
         pressed: {
           backgroundColor: black85,
-          borderColor: black65,
+          borderColor: black50,
           color: white100,
         },
         disabled: {
@@ -249,8 +249,10 @@ export class Button extends Component<ButtonProps, ButtonState> {
                       {children}
                     </Sans>
                     {showChevron && (
-                      <Spacer mr={1} />
-                      <DownChevronIcon color={color("black100")} rotate={rotateChevron} />
+                      <>
+                        <Spacer mr={1} />
+                        <DownChevronIcon color={color("black100")} rotate={rotateChevron} />
+                      </>
                     )}
                     {showCheckMark && (
                       <Flex flexDirection="row" flexWrap="nowrap">

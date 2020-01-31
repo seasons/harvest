@@ -15,7 +15,7 @@ import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 
-const variantPickerHeight = Dimensions.get("window").height / 2.5
+const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 
 export const Product = props => {
   const [popUp, setPopUp] = useState({ show: false, data: { title: "", note: "", buttonText: "" } })
@@ -61,13 +61,7 @@ export const Product = props => {
           />
         )
       case "productDetails":
-        return (
-          <ProductDetails
-            product={product as GetProduct_product}
-            setPopUp={setPopUp}
-            selectedVariant={selectedVariant}
-          />
-        )
+        return <ProductDetails product={product} setPopUp={setPopUp} selectedVariant={selectedVariant} />
       case "moreLikeThis":
         return <MoreLikeThis products={images} />
       // case "aboutTheBrand":
@@ -159,7 +153,7 @@ const ArrowBackground = styled(Box)`
   width: 30;
   height: 30;
   position: absolute;
-  background-color: ${p => (p.showVariantPicker ? color("black100") : color("black4"))};
+  background-color: ${p => (p.showVariantPicker ? color("black100") : color("black04"))};
   border-radius: 40;
   left: -6;
   top: -1;

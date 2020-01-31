@@ -3,11 +3,12 @@ import { color } from "App/Utils"
 import React from "react"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
-import { GetProduct_product } from "App/generated/GetProduct"
+import { GetProduct_product, GetProduct_product_variants } from "App/generated/GetProduct"
 
+// FIXME: Fix types here
 export const ProductDetails: React.FC<{
   setPopUp: any
-  selectedVariant: GetProduct_product["variants"][0]
+  selectedVariant: any
   product: GetProduct_product
 }> = ({ setPopUp, selectedVariant, product }) => {
   if (!(selectedVariant && selectedVariant.id) || !(product && product.variants)) {

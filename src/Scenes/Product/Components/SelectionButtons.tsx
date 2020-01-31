@@ -30,6 +30,8 @@ export const SelectionButtons = props => {
                 <Sans size="1" color="black">
                   {selectedVariant.size}
                 </Sans>
+                <Spacer mr={1} />
+                <DownChevronIcon color={color("black")} rotate={showVariantPicker} />
               </Flex>
               {!inStock && (
                 <Sans size="1" color="gray">
@@ -55,7 +57,7 @@ export const SelectionButtons = props => {
 
 const VariantSelectionButton = styled.View<{ inStock: boolean }>`
   height: 48;
-  border: 1px solid ${color("black100")};
+  border: 1px solid ${color("black")};
   border-width: 1;
   border-radius: 28;
   background-color: white;

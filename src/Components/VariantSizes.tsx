@@ -6,13 +6,13 @@ import styled from "styled-components/native"
 import { GetProduct_product_variants } from "App/generated/GetProduct"
 
 export const VariantSizes: React.FC<{
-  variants: GetProduct_product_variants
+  variants: GetProduct_product_variants[]
   size: "0" | "1"
 }> = ({ variants, size }) => {
   const sortedVariants = sortVariants(variants)
   return (
     <Flex flexDirection="row">
-      {sortedVariants.map(variant => {
+      {sortedVariants.map((variant: GetProduct_product_variants) => {
         const reservable = !!variant.reservable
         return (
           <Box key={variant.id} mr={0.5} style={{ position: "relative" }}>

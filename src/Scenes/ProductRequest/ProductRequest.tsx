@@ -57,7 +57,7 @@ export const ProductRequest = (props: any) => {
       },
     })
 
-    if (result.data && result.data.addProductRequest) {
+    if (result && result.data && result.data.addProductRequest) {
       const productRequest = result.data.addProductRequest
       if (productRequest.name) {
         props.navigation.navigate("ProductRequestConfirmation", {
@@ -91,7 +91,7 @@ export const ProductRequest = (props: any) => {
                 Submit an item
               </Sans>
               <Spacer mb={14} />
-              <Sans size="2" color="rgba(255, 255, 255, 0.5)" weight="medium">
+              <Sans size="2" color={color("black50")} weight="medium">
                 Recommend something for us to carry by pasting the link to the item below.
               </Sans>
               <Spacer mb={32} />
@@ -114,7 +114,7 @@ export const ProductRequest = (props: any) => {
           </Flex>
         </TouchableWithoutFeedback>
         <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0}>
-          <FixedButton disabled={isNextButtonDisabled} variant={"primaryBlack"} onPress={handleNextBtnPressed}>
+          <FixedButton disabled={isNextButtonDisabled} variant="primaryWhite" onPress={handleNextBtnPressed}>
             Next
           </FixedButton>
         </KeyboardAvoidingView>

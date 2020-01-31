@@ -1,4 +1,4 @@
-import { Box, Button, Flex } from "App/Components"
+import { Box, Button, Flex, Sans } from "App/Components"
 import { color } from "App/Utils"
 import React from "react"
 import { ScrollView } from "react-native"
@@ -17,8 +17,13 @@ export const VariantPicker = props => {
     <Flex style={{ flex: 1, backgroundColor: color("black100"), height, position: "relative" }}>
       <LeftCorner />
       <RightCorner />
-      <FixedButtonWrapper>
-        <Button variant="primaryWhite" onPress={() => toggleShowVariantPicker(false)}>
+      <Flex justifyContent="center" flexDirection="row" p={2}>
+        <Sans size="1" color={color("white100")}>
+          Select size
+        </Sans>
+      </Flex>
+      <FixedButtonWrapper px={2}>
+        <Button variant="secondaryBlack" onPress={() => toggleShowVariantPicker(false)}>
           Cancel
         </Button>
       </FixedButtonWrapper>

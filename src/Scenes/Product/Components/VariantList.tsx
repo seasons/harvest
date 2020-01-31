@@ -101,7 +101,7 @@ export const VariantList = ({ productID, setSelectedVariant, selectedVariant, on
             <Flex flexDirection="row" alignItems="center">
               <Radio selected={selectedVariant.id === size.id} />
               <Spacer mr={1} />
-              <Sans color={size.stock ? "white" : "gray"} size="1">
+              <Sans color={size.stock ? color("white100") : color("black50")} size="1">
                 {capitalize(size.size)}
               </Sans>
             </Flex>
@@ -110,10 +110,15 @@ export const VariantList = ({ productID, setSelectedVariant, selectedVariant, on
             </Sans>
           </Flex>
         </TouchableOpacity>
-        <Separator color={color("black50")} />
+        <Separator color={color("black85")} />
       </Box>
     )
   })
 
-  return <>{rows}</>
+  return (
+    <>
+      <Separator color={color("black85")} />
+      {rows}
+    </>
+  )
 }
