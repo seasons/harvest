@@ -16,5 +16,5 @@ export interface RemoveFromBag {
 }
 
 export interface RemoveFromBagVariables {
-  item: string;
+  id: string;
 }
