@@ -231,8 +231,8 @@ export const Bag = ({ navigation }) => {
         />
       </Box>
     ) : (
-      <EmptyBagItem navigation={navigation} />
-    )
+        <EmptyBagItem navigation={navigation} />
+      )
   }
 
   const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"

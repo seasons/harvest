@@ -1,11 +1,11 @@
-import { Box, Flex, Sans, VariantSizes, Spacer } from "App/Components"
+import { Box, Button, FixedButton, Flex, Sans, VariantSizes, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import get from "lodash/get"
 import React, { useEffect, useState } from "react"
-import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
+import { Dimensions, FlatList, Text, TouchableWithoutFeedback } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
@@ -106,12 +106,17 @@ export const Browse = (props: any) => {
   const { navigation } = props
   const products = data && data.products
   const categories = (data && data.categories) || []
+  const filtersButtonSize = { height: 36, width: 84 }
 
   const onCategoryPress = item => {
     if (item.slug !== currentCategory) {
       setCurrentCategory(item.slug)
     }
     scrollViewEl.scrollToOffset({ offset: 0, animated: true })
+  }
+
+  const onFilterBtnPress = () => {
+    console.log("CLICKED")
   }
 
   return (
@@ -150,6 +155,15 @@ export const Browse = (props: any) => {
               }
             }}
           />
+          <FixedButtonContainer>
+            <Button
+              borderRadius={3}
+              height={36}
+              width={84}
+              onPress={onFilterBtnPress}>
+              Filters
+            </Button>
+          </FixedButtonContainer>
         </Box>
         <Box height={60} mb={insets.bottom}>
           <CategoryPicker
@@ -177,7 +191,7 @@ export const Browse = (props: any) => {
           />
         </Box>
       </AnimatedFlex>
-    </Container>
+    </Container >
   )
 }
 
@@ -208,4 +222,12 @@ const Category = styled(Box)`
     border-bottom-color: black;
     border-bottom-width: 3px;
   `};
+`
+
+const FixedButtonContainer = styled(Box)`
+  position: absolute; 
+  align-self: center; 
+  bottom: 16; 
+  width: 84; 
+  height: 36;
 `

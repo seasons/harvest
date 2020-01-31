@@ -32,7 +32,9 @@ export interface ButtonProps extends BoxProps {
   onPress?: (e) => void
   disabled?: boolean
   showCheckMark?: boolean
+  height?: number
   width?: number
+  borderRadius?: number
   loading?: boolean
 }
 
@@ -237,8 +239,10 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   render() {
-    const { children, showCheckMark, disabled, loading, ...rest } = this.props
-    const { px, size, height } = this.getSize()
+    let { borderRadius, children, showCheckMark, disabled, loading, ...rest } = this.props
+    borderRadius = borderRadius ?? 28
+    let { px, size, height } = this.getSize()
+    height = this.props.height ?? height
     const variantColors = getColorsForVariant(this.props.variant)
     const { current, previous } = this.state
     const from = disabled ? variantColors[DisplayState.Disabled] : variantColors[previous]
@@ -264,7 +268,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
             disabled={disabled}
           >
             <Flex flexDirection="row">
-              <AnimatedContainer disabled={disabled} {...rest} style={{ ...props, height }} px={px}>
+              <AnimatedContainer disabled={disabled} {...rest} style={{ ...props, borderRadius, height }} px={px}>
                 {!loading && (
                   <>
                     <Sans color={to.color} size={size}>
@@ -288,7 +292,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 }
 
-const Container = styled(Box)<ButtonProps>`
+const Container = styled(Box) <ButtonProps>`
   align-items: center;
   justify-content: center;
   position: relative;
@@ -303,6 +307,7 @@ const Container = styled(Box)<ButtonProps>`
       return p.size === "large" ? "100%" : "auto"
     }
   }};
+  }
 `
 
 const AnimatedContainer = animated(Container)
