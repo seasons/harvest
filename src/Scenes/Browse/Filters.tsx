@@ -1,9 +1,9 @@
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
-import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
+import { Dimensions, Text, Keyboard, SectionList, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { Box, PopUp, FixedButton, Flex, Sans, Spacer, TextInput, Theme } from "../../Components"
+import { Box, Button, PopUp, FixedButton, Flex, Sans, Spacer, TextInput, Theme } from "../../Components"
 import { color } from "../../Utils"
 import styled from "styled-components/native"
 
@@ -23,61 +23,63 @@ export const Filters = (props: any) => {
     setIsNextButtonDisabled(url === "" || val === "")
   }
 
-  const handleNextBtnPressed = async () => {
+  const handleCancelBtnPressed = async () => {
+    props.navigation.dismiss()
   }
 
+  const handleApplyBtnPressed = async () => {
+    props.navigation.dismiss()
+  }
+
+  const filterSections = [
+    {
+      title: 'Sort by',
+      data: ['Alphabetical', 'Recently added']
+    },
+    {
+      title: 'Filter by',
+      data: ['X-Small', 'Small', 'Medium', 'Large', 'X-Large']
+    }
+  ]
+
   const insets = useSafeArea()
+  const screenWidth = Dimensions.get('window').width
+  const buttonBottom = insets.bottom + 40
+  const buttonWidth = (screenWidth - 39) / 2
+
+  const renderSectionHeader = ({ section }) => <Text style={{ color: 'white' }}>{section.title}</Text>
+  const renderItem = ({ item }) => <Text style={{ color: 'white' }}>{item}</Text>
 
   return (
     <Theme>
-      <Container style={{ paddingTop: insets.top, paddingBottom: insets.bottom, background: color("black") }}>
-        <CloseButton onPress={() => props.navigation.dismiss()}>
-          <Box p="14px">
-          </Box>
-        </CloseButton>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-            <Box style={{ marginTop: 8 }} m={2}>
-              <Sans size="3" color="white" weight="medium">
-                Submit an item
+      <Container pl={2} style={{ paddingTop: insets.top + 60, paddingBottom: insets.bottom, background: color("black") }}>
+        <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
+          <Box>
+            <Sans size="3" color="white" weight="medium">
+              Add Filters
               </Sans>
-              <Spacer mb={14} />
-              <Sans size="2" color="rgba(255, 255, 255, 0.5)" weight="medium">
+            <Spacer mb={64} />
+            {/* <Sans size="2" color="rgba(255, 255, 255, 0.5)" weight="medium">
                 Recommend something for us to carry by pasting the link to the item below.
-              </Sans>
-              <Spacer mb={32} />
-              <TextInput
-                placeholder="Your link goes here"
-                variant="dark"
-                textContentType="link"
-                onChangeText={(_, val) => onURLChange(val)}
-              />
-              <Spacer mb={1} />
-              <TextInput
-                style={{ height: 240, paddingTop: 16 }}
-                placeholder="Tell us why you like this"
-                variant="dark"
-                textContentType="whyLike"
-                multiline={true}
-                onChangeText={(_, val) => onLikeReasonChange(val)}
-              />
-            </Box>
-          </Flex>
-        </TouchableWithoutFeedback>
-        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0}>
-          {/* <FixedButton disabled={isNextButtonDisabled} variant={"primaryLight"} onPress={handleNextBtnPressed}>
-            Next
-          </FixedButton> */}
-        </KeyboardAvoidingView>
+              </Sans> */}
+          </Box>
+          <SectionList
+            sections={filterSections}
+            renderItem={renderItem}
+            renderSectionHeader={renderSectionHeader}
+          />
+        </Flex>
+        <Box style={{ position: 'absolute', left: 16, bottom: buttonBottom }}>
+          <Button variant={"secondaryLight"} width={buttonWidth} onPress={handleCancelBtnPressed}>
+            Cancel
+          </Button>
+        </Box>
+        <Box style={{ position: 'absolute', left: screenWidth / 2 + 3.5, bottom: buttonBottom }}>
+          <Button variant={"primaryGray"} width={buttonWidth} onPress={handleApplyBtnPressed}>
+            Apply
+          </Button>
+        </Box>
       </Container>
-      <PopUp
-        buttonText="Got it"
-        note="We couldn’t find anything using this URL. Double check and try again."
-        title="Your link didn’t work!"
-        theme="light"
-        show={showError}
-        onClose={() => setShowError(false)}
-      />
     </Theme>
   )
 }
@@ -85,14 +87,4 @@ export const Filters = (props: any) => {
 const Container = styled(Box)`
   background: black;
   flex: 1;
-`
-
-const CloseButton = styled(TouchableOpacity)`
-  background-color: rgba(255, 255, 255, 0.2);
-  width: 40;
-  height: 40;
-  border-radius: 20;
-  margin-left: auto;
-  margin-right: 20;
-  margin-top: 12;
 `
