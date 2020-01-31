@@ -51,9 +51,25 @@ export interface GetBagAndSavedItems_me_bag {
   status: BagItemStatus;
 }
 
+export interface GetBagAndSavedItems_me_savedItems_productVariant_product_brand {
+  __typename: "Brand";
+  name: string;
+}
+
+export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants {
+  __typename: "ProductVariant";
+  id: string;
+  size: Size;
+}
+
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product {
   __typename: "Product";
+  name: string;
   id: string;
+  modelSize: Size | null;
+  brand: GetBagAndSavedItems_me_savedItems_productVariant_product_brand;
+  images: any;
+  variants: GetBagAndSavedItems_me_savedItems_productVariant_product_variants[] | null;
 }
 
 export interface GetBagAndSavedItems_me_savedItems_productVariant {

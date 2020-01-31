@@ -39,7 +39,7 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
   const slide = slideGroup => {
     return slideGroup.map((brand, index) => {
       const styles =
-        index !== slideGroup.length - 1 ? { borderBottomColor: `${color("lightGray")}`, borderBottomWidth: 1 } : {}
+        index !== slideGroup.length - 1 ? { borderBottomColor: `${color("black15")}`, borderBottomWidth: 1 } : {}
       return (
         <Box key={brand.logo + index} style={styles}>
           <TouchableOpacity onPress={navigateToBrand}>
@@ -94,8 +94,8 @@ const GroupWrapper = styled(Box)`
   display: flex;
   flex-direction: column;
   width: ${cardWidth};
-  background-color: ${color("white")};
-  border: 1px solid ${color("lightGray")};
+  background-color: ${color("white100")};
+  border: 1px solid ${color("black15")};
   border-radius: 10px;
 `
 

@@ -6,17 +6,17 @@ import styled from "styled-components/native"
 import { GetProduct_product_variants } from "App/generated/GetProduct"
 
 export const VariantSizes: React.FC<{
-  variants: GetProduct_product_variants
+  variants: GetProduct_product_variants[]
   size: "0" | "1"
 }> = ({ variants, size }) => {
   const sortedVariants = sortVariants(variants)
   return (
     <Flex flexDirection="row">
-      {sortedVariants.map(variant => {
+      {sortedVariants.map((variant: GetProduct_product_variants) => {
         const reservable = !!variant.reservable
         return (
           <Box key={variant.id} mr={0.5} style={{ position: "relative" }}>
-            <Sans size={size} color={reservable ? "black" : "lightgray"}>
+            <Sans size={size} color={reservable ? "black" : "black15"}>
               {variant.size}
             </Sans>
             {!reservable && <Strikethrough size={size} />}
@@ -28,7 +28,7 @@ export const VariantSizes: React.FC<{
 }
 
 const Strikethrough = styled.View`
-  background-color: ${color("lightgray")};
+  background-color: ${color("black15")};
   height: 2;
   width: 100%;
   position: absolute;

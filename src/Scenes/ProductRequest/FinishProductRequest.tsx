@@ -31,7 +31,7 @@ export const FinishProductRequest = (props: any) => {
               Thanks for your submission. We’ll take a look and let you know if we carry it.
             </Sans>
           </Box>
-          <FixedButton variant={"primaryDark"} onPress={handleFinishBtnPressed}>
+          <FixedButton variant="secondaryBlack" onPress={handleFinishBtnPressed}>
             Finish
           </FixedButton>
         </Box>

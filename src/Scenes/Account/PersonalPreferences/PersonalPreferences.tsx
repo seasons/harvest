@@ -42,7 +42,7 @@ export const AccountSection: React.FC<{ title: string; value: string | [string] 
     <Box key={title} px={2}>
       <Sans size="2">{title}</Sans>
       <Box mb={1} />
-      <Separator color={color("lightGray")} />
+      <Separator color={color("black15")} />
       <Box mb={1} />
       {Array.isArray(value) ? (
         value.map(text => (

@@ -3,11 +3,12 @@ import { color } from "App/Utils"
 import React from "react"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
-import { GetProduct_product } from "App/generated/GetProduct"
+import { GetProduct_product, GetProduct_product_variants } from "App/generated/GetProduct"
 
+// FIXME: Fix types here
 export const ProductDetails: React.FC<{
   setPopUp: any
-  selectedVariant: GetProduct_product["variants"][0]
+  selectedVariant: any
   product: GetProduct_product
 }> = ({ setPopUp, selectedVariant, product }) => {
   if (!(selectedVariant && selectedVariant.id) || !(product && product.variants)) {
@@ -43,7 +44,7 @@ export const ProductDetails: React.FC<{
       </Sans>
       <Spacer mb={1} />
       <Spacer mb={2} />
-      <Separator color={color("lightGray")} />
+      <Separator color={color("black15")} />
       {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
       {product.modelSize && <ProductInfoItem detailType="Fit" detailValue={`Model size is ${product.modelSize}`} />}
       {product.outerMaterials && (

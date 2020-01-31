@@ -16,5 +16,5 @@ export interface AddToBag {
 }
 
 export interface AddToBagVariables {
-  item: string;
+  id: string;
 }

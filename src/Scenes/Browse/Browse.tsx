@@ -15,8 +15,8 @@ import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240
 
-const GET_PRODUCTS = gql`
-  query GetProducts($name: String!, $first: Int!, $skip: Int!) {
+const GET_BROWSE_PRODUCTS = gql`
+  query GetBrowseProducts($name: String!, $first: Int!, $skip: Int!) {
     categories(where: { visible: true }) {
       id
       slug
@@ -84,7 +84,7 @@ const renderItem = ({ item }, i, navigation) => {
 
 export const Browse = (props: any) => {
   const [currentCategory, setCurrentCategory] = useState("all")
-  const { data, loading, fetchMore } = useQuery(GET_PRODUCTS, {
+  const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
     variables: {
       name: currentCategory,
       first: 10,
