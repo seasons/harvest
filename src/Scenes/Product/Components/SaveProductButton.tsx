@@ -3,10 +3,11 @@ import React from "react"
 import gql from "graphql-tag"
 import { head } from "lodash"
 import { useMutation } from "react-apollo"
-import { GET_PRODUCT, GET_BAG } from "App/Apollo/Queries"
+import { GET_PRODUCT } from "App/Apollo/Queries"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { SaveIcon } from "Assets/icons"
 import { CircledSaveIcon } from "Assets/icons/CircledSaveIcon"
+import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 
 const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {

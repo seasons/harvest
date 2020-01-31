@@ -46,7 +46,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   removeFromBagAndSaveItem,
 }) => {
   if (!bagItem) {
-    return null
+    return <></>
   }
   const variantToUse = head(
     (get(bagItem, "productVariant.product.variants") || []).filter(a => a.id === bagItem.variantID)

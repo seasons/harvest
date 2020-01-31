@@ -29,9 +29,7 @@ export const GET_BAG = gql`
         id
         productVariant {
           id
-          product {
-            id
-          }
+          ...BagItemProductVariant
         }
         saved
       }
