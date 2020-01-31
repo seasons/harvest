@@ -1,7 +1,7 @@
 import { Account, PaymentAndShipping } from "App/Scenes/Account"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
-import { Browse } from "App/Scenes/Browse"
+import { Browse, Filters } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
@@ -97,7 +97,7 @@ HomeStack.navigationOptions = ({ navigation }) => {
   }
 }
 
-const BrowseStack = createStackNavigator(
+const MainBrowseStack = createStackNavigator(
   {
     Browse,
     Product,
@@ -110,12 +110,44 @@ const BrowseStack = createStackNavigator(
   }
 )
 
-BrowseStack.navigationOptions = ({ navigation }) => {
+MainBrowseStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarVisible: shouldRenderTabBar(navigation),
     header: null,
   }
 }
+
+const FiltersModal = DismissableStackNavigator(
+  {
+    Filters,
+  },
+  {
+    headerMode: "none",
+  }
+)
+
+const BrowseStack = createStackNavigator(
+  {
+    MainBrowseStack: {
+      screen: MainBrowseStack
+    },
+    FiltersModal: {
+      screen: FiltersModal
+    },
+  },
+  {
+    mode: "modal",
+    headerMode: "none",
+  }
+)
+
+BrowseStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: navigation.state.index === 0,
+    header: null,
+  }
+}
+
 
 const ProductRequestModal = DismissableStackNavigator(
   {

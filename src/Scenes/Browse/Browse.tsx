@@ -116,6 +116,7 @@ export const Browse = (props: any) => {
   }
 
   const onFilterBtnPress = () => {
+    props.navigation.navigate('FiltersModal')
     console.log("CLICKED")
   }
 
