@@ -1,43 +1,40 @@
 import gql from "graphql-tag"
 import React, { useState } from "react"
+import get from "lodash/get"
 import { useMutation } from "react-apollo"
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import { Dimensions, Text, Keyboard, SectionList, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { Box, Button, PopUp, FixedButton, Flex, Sans, Spacer, TextInput, Theme } from "../../Components"
+import { Box, Button, PopUp, FixedButton, Flex, Sans, Radio, Separator, Spacer, TextInput, Theme } from "../../Components"
 import { color } from "../../Utils"
 import styled from "styled-components/native"
+import { size } from "styled-system"
+
+const FILTER_BY = "Filter by"
+const SORT_BY = "Sort by"
 
 export const Filters = (props: any) => {
-  const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true)
-  const [likeReason, setLikeReason] = useState("")
-  const [showError, setShowError] = useState(false)
-  const [url, setURL] = useState("")
-
-  const onURLChange = val => {
-    setURL(val)
-    setIsNextButtonDisabled(val === "" || likeReason === "")
-  }
-
-  const onLikeReasonChange = val => {
-    setLikeReason(val)
-    setIsNextButtonDisabled(url === "" || val === "")
-  }
+  console.log("HEREEE: ", props.navigation)
+  // const onFiltersModalDismiss = get(navigation, "state.params.onFiltersModalDismiss")
+  const [sortFilters, setSortFilters] = useState([])
+  const [sizeFilters, setSizeFilters] = useState([])
 
   const handleCancelBtnPressed = async () => {
     props.navigation.dismiss()
   }
 
   const handleApplyBtnPressed = async () => {
+    // onFiltersModalDismiss(sortFilters, sizeFilters)
     props.navigation.dismiss()
   }
 
   const filterSections = [
     {
-      title: 'Sort by',
+      title: SORT_BY,
       data: ['Alphabetical', 'Recently added']
     },
     {
-      title: 'Filter by',
+      title: FILTER_BY,
       data: ['X-Small', 'Small', 'Medium', 'Large', 'X-Large']
     }
   ]
@@ -46,31 +43,78 @@ export const Filters = (props: any) => {
   const screenWidth = Dimensions.get('window').width
   const buttonBottom = insets.bottom + 40
   const buttonWidth = (screenWidth - 39) / 2
+  const buttonHeight = 48
+  const separatorColor = "#272727"
 
-  const renderSectionHeader = ({ section }) => <Text style={{ color: 'white' }}>{section.title}</Text>
-  const renderItem = ({ item }) => <Text style={{ color: 'white' }}>{item}</Text>
+  const renderSectionHeader = ({ section }) => {
+    return (
+      <>
+        {section.title !== SORT_BY ? <Spacer mt={2} /> : null}
+        <Spacer mt={2} />
+        <Sans color="white" size="1" weight="medium">
+          {section.title}
+        </Sans>
+        <Spacer mt={2} />
+        <Separator color={separatorColor} />
+      </>
+    )
+  }
+
+  const onFilterPress = () => {
+    console.log("CLICK")
+  }
+
+
+  const renderItem = ({ item, section }) => {
+    const filters = section.title === SORT_BY ? sortFilters : sizeFilters
+    return (
+      <TouchableWithoutFeedback onPress={() => {
+        if (section.title === SORT_BY) {
+          setSortFilters([item])
+        } else if (section.title == FILTER_BY) {
+          if (sizeFilters.includes(item)) {
+            setSizeFilters(sizeFilters.filter(f => f !== item))
+          } else {
+            setSizeFilters([...sizeFilters, item])
+          }
+        }
+      }}>
+        <Box>
+          <Spacer mt={20} />
+          <Flex flexDirection="row">
+            <Radio selected={filters.includes(item)} />
+            <Sans color="white" size="1" weight="medium" ml={2}>
+              {item}
+            </Sans>
+          </Flex>
+          <Spacer mt={20} />
+          <Separator color={separatorColor} />
+        </Box>
+      </TouchableWithoutFeedback >
+    )
+  }
 
   return (
     <Theme>
-      <Container pl={2} style={{ paddingTop: insets.top + 60, paddingBottom: insets.bottom, background: color("black") }}>
+      <Container pl={2} pr={2} style={{ paddingTop: insets.top + 60, paddingBottom: insets.bottom }}>
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
           <Box>
             <Sans size="3" color="white" weight="medium">
               Add Filters
               </Sans>
             <Spacer mb={64} />
-            {/* <Sans size="2" color="rgba(255, 255, 255, 0.5)" weight="medium">
-                Recommend something for us to carry by pasting the link to the item below.
-              </Sans> */}
           </Box>
           <SectionList
+            contentContainerStyle={{ paddingBottom: buttonBottom + buttonHeight }}
             sections={filterSections}
+            stickySectionHeadersEnabled={false}
+            keyExtractor={item => item}
             renderItem={renderItem}
             renderSectionHeader={renderSectionHeader}
           />
         </Flex>
         <Box style={{ position: 'absolute', left: 16, bottom: buttonBottom }}>
-          <Button variant={"secondaryLight"} width={buttonWidth} onPress={handleCancelBtnPressed}>
+          <Button size="medium" variant={"secondaryLight"} width={buttonWidth} onPress={handleCancelBtnPressed}>
             Cancel
           </Button>
         </Box>

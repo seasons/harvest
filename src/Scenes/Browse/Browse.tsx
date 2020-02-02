@@ -83,7 +83,10 @@ const renderItem = ({ item }, i, navigation) => {
 }
 
 export const Browse = (props: any) => {
+  console.log("PROPS: ", props)
   const [currentCategory, setCurrentCategory] = useState("all")
+  const [sortFilters, setSortFilters] = useState([])
+  const [sizeFilters, setSizeFilters] = useState([])
   const { data, loading, fetchMore } = useQuery(GET_PRODUCTS, {
     variables: {
       name: currentCategory,
@@ -104,7 +107,20 @@ export const Browse = (props: any) => {
   const loaderStyle = useSpring({ opacity: loading && !data ? 1 : 0 })
   const containerStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
   const { navigation } = props
-  const products = data && data.products
+  let products = data && data.products
+  console.log("SORT: ", sortFilters)
+  // if (props && props.sortFilters && props.sortFilters.length > 0) {
+  //   const sortFilter = props.sortFilters[0]
+  //   if (sortFilter === "Alphabetical") {
+  //     products = [...products].sort((a, b) => {
+  //       const aName = get(a, "brand.name")
+  //       const bName = get(b, "brand.name")
+  //       if (aName > bName) return -1
+  //       if (aName < bName) return 1
+  //       return 0
+  //     })
+  //   }
+  // }
   const categories = (data && data.categories) || []
   const filtersButtonSize = { height: 36, width: 84 }
 
@@ -116,9 +132,14 @@ export const Browse = (props: any) => {
   }
 
   const onFilterBtnPress = () => {
-    props.navigation.navigate('FiltersModal')
-    console.log("CLICKED")
+    const onFiltersModalDismiss = (sortFilters: Array<string>, sizeFilters: Array<string>) => {
+      setSortFilters(sortFilters)
+      setSizeFilters(sizeFilters)
+    }
+    props.navigation.navigate('FiltersModal', { onFiltersModalDismiss })
   }
+
+  // products.forEach(p => { console.log(p); console.log('\n') })
 
   return (
     <Container>
