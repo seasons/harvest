@@ -14,8 +14,7 @@ const FILTER_BY = "Filter by"
 const SORT_BY = "Sort by"
 
 export const Filters = (props: any) => {
-  console.log("HEREEE: ", props.navigation)
-  // const onFiltersModalDismiss = get(navigation, "state.params.onFiltersModalDismiss")
+  const onFiltersModalDismiss = get(props.navigation, "state.params.onFiltersModalDismiss")
   const [sortFilters, setSortFilters] = useState([])
   const [sizeFilters, setSizeFilters] = useState([])
 
@@ -24,7 +23,7 @@ export const Filters = (props: any) => {
   }
 
   const handleApplyBtnPressed = async () => {
-    // onFiltersModalDismiss(sortFilters, sizeFilters)
+    onFiltersModalDismiss(sortFilters, sizeFilters)
     props.navigation.dismiss()
   }
 

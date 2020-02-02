@@ -108,19 +108,34 @@ export const Browse = (props: any) => {
   const containerStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
   const { navigation } = props
   let products = data && data.products
-  // console.log("SORT: ", sortFilters)
-  // if (props && props.sortFilters && props.sortFilters.length > 0) {
-  //   const sortFilter = props.sortFilters[0]
-  //   if (sortFilter === "Alphabetical") {
-  //     products = [...products].sort((a, b) => {
-  //       const aName = get(a, "brand.name")
-  //       const bName = get(b, "brand.name")
-  //       if (aName > bName) return -1
-  //       if (aName < bName) return 1
-  //       return 0
-  //     })
-  //   }
-  // }
+  if (products) {
+    //   console.log(products.map(p => get(p, "brand.name")))
+    console.log("OLD: ")
+    console.log(products.map(p => get(p, "createdAt")))
+    // products.forEach(p => { console.log(p) })
+  }
+  if (sortFilters && sortFilters.length > 0) {
+    const sortFilter = sortFilters[0]
+    if (sortFilter === "Alphabetical") {
+      products = [...products].sort((a, b) => {
+        const aName = get(a, "brand.name")
+        const bName = get(b, "brand.name")
+        if (aName > bName) return 1
+        if (aName < bName) return -1
+        return 0
+      })
+    } else { // Recently Added
+      products = [...products].sort((a, b) => {
+        const aCreatedAt = new Date(get(a, "createdAt"))
+        const bCreatedAt = new Date(get(b, "createdAt"))
+        return bCreatedAt.getTime() - aCreatedAt.getTime()
+      })
+    }
+  }
+  if (products) {
+    console.log("NEW: ")
+    console.log(products.map(p => get(p, "createdAt")))
+  }
   const categories = (data && data.categories) || []
   const filtersButtonSize = { height: 36, width: 84 }
 
@@ -138,8 +153,6 @@ export const Browse = (props: any) => {
     }
     props.navigation.navigate('FiltersModal', { onFiltersModalDismiss })
   }
-
-  // products.forEach(p => { console.log(p); console.log('\n') })
 
   return (
     <Container>
@@ -167,10 +180,10 @@ export const Browse = (props: any) => {
                     }
 
                     if (!fetchMoreResult) {
-                      return prev
+                      return products
                     }
                     return Object.assign({}, prev, {
-                      products: [...prev.products, ...fetchMoreResult.products],
+                      products: [...products, ...fetchMoreResult.products],
                     })
                   },
                 })
