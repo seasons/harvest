@@ -97,7 +97,7 @@ HomeStack.navigationOptions = ({ navigation }) => {
   }
 }
 
-const MainBrowseStack = createStackNavigator(
+const BrowseStack = createStackNavigator(
   {
     Browse,
     Product,
@@ -110,7 +110,7 @@ const MainBrowseStack = createStackNavigator(
   }
 )
 
-MainBrowseStack.navigationOptions = ({ navigation }) => {
+BrowseStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarVisible: shouldRenderTabBar(navigation),
     header: null,
@@ -125,33 +125,6 @@ const FiltersModal = DismissableStackNavigator(
     headerMode: "none",
   }
 )
-
-const BrowseStack = createStackNavigator(
-  {
-    MainBrowseStack: {
-      screen: MainBrowseStack
-    },
-    FiltersModal: {
-      screen: FiltersModal
-    },
-  },
-  {
-    mode: "modal",
-    headerMode: "none",
-    defaultNavigationOptions: {
-      gestureEnabled: true,
-      cardOverlayEnabled: true,
-      ...TransitionPresets.ModalPresentationIOS,
-    },
-  }
-)
-
-BrowseStack.navigationOptions = ({ navigation }) => {
-  return {
-    tabBarVisible: navigation.state.index === 0,
-    header: null,
-  }
-}
 
 
 const ProductRequestModal = DismissableStackNavigator(
@@ -289,10 +262,18 @@ const RootStack = createStackNavigator(
     ProductRequestModal: {
       screen: ProductRequestModal,
     },
+    FiltersModal: {
+      screen: FiltersModal,
+    }
   },
   {
     mode: "modal",
     headerMode: "none",
+    defaultNavigationOptions: {
+      gestureEnabled: true,
+      cardOverlayEnabled: true,
+      ...TransitionPresets.ModalPresentationIOS,
+    },
   }
 )
 

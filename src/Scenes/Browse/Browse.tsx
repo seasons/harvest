@@ -83,7 +83,7 @@ const renderItem = ({ item }, i, navigation) => {
 }
 
 export const Browse = (props: any) => {
-  console.log("PROPS: ", props)
+  // console.log("PROPS: ", props)
   const [currentCategory, setCurrentCategory] = useState("all")
   const [sortFilters, setSortFilters] = useState([])
   const [sizeFilters, setSizeFilters] = useState([])
@@ -108,7 +108,7 @@ export const Browse = (props: any) => {
   const containerStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
   const { navigation } = props
   let products = data && data.products
-  console.log("SORT: ", sortFilters)
+  // console.log("SORT: ", sortFilters)
   // if (props && props.sortFilters && props.sortFilters.length > 0) {
   //   const sortFilter = props.sortFilters[0]
   //   if (sortFilter === "Alphabetical") {
