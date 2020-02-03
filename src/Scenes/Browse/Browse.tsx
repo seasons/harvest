@@ -145,7 +145,8 @@ export const Browse = (props: any) => {
   //   }
   // }
   const categories = (data && data.categories) || []
-  const filtersButtonSize = { height: 36, width: 84 }
+  const filtersButtonBottom = 16
+  const filtersButtonHeight = 36
 
   const onCategoryPress = item => {
     if (item.slug !== currentCategory) {
@@ -170,6 +171,7 @@ export const Browse = (props: any) => {
       <AnimatedFlex flexDirection="column" flex={1} pt={insets.top} style={[containerStyle]}>
         <Box flex={1} flexGrow={1}>
           <FlatList
+            contentContainerStyle={{ paddingBottom: filtersButtonBottom + filtersButtonHeight }}
             data={products}
             ref={ref => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
@@ -198,10 +200,10 @@ export const Browse = (props: any) => {
               }
             }}
           />
-          <FixedButtonContainer>
+          <FixedButtonContainer bottom={filtersButtonBottom}>
             <Button
               borderRadius={3}
-              height={36}
+              height={filtersButtonHeight}
               width={84}
               onPress={onFilterBtnPress}>
               Filters
@@ -270,7 +272,4 @@ const Category = styled(Box)`
 const FixedButtonContainer = styled(Box)`
   position: absolute; 
   align-self: center; 
-  bottom: 16; 
-  width: 84; 
-  height: 36;
 `
