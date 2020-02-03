@@ -13,10 +13,18 @@ import styled from "styled-components/native"
 import { useQuery } from "@apollo/react-hooks"
 import { BrowseLoader } from "./Loader"
 
+const ABBREVIATED_SIZES = {
+  "X-Small": "XS",
+  "Small": "S",
+  "Medium": "M",
+  "Large": "L",
+  "X-Large": "XL",
+  "XX-Large": "XXL"
+}
 const IMAGE_HEIGHT = 240
 
 const GET_PRODUCTS = gql`
-  query getProducts($name: String!, $first: Int!, $skip: Int!) {
+  query getProducts($name: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!, $sizes: [Size!]) {
     categories(where: { visible: true }) {
       id
       slug
@@ -25,7 +33,7 @@ const GET_PRODUCTS = gql`
         slug
       }
     }
-    products(category: $name, first: $first, skip: $skip, where: { status: Available }) {
+    products(category: $name, first: $first, skip: $skip, orderBy: $orderBy, where: { variants_some: { size_in: $sizes }, status: Available }) {
       id
       name
       description
@@ -83,15 +91,25 @@ const renderItem = ({ item }, i, navigation) => {
 }
 
 export const Browse = (props: any) => {
-  // console.log("PROPS: ", props)
   const [currentCategory, setCurrentCategory] = useState("all")
   const [sortFilters, setSortFilters] = useState([])
   const [sizeFilters, setSizeFilters] = useState([])
+  let orderBy = "createdAt_DESC"
+  if (sortFilters && sortFilters.length > 0) {
+    const sortFilter = sortFilters[0]
+    if (sortFilter === "Alphabetical") orderBy = "name_ASC"
+    if (sortFilter === "Recently added") orderBy = "createdAt_DESC"
+  }
+  const sizes = sizeFilters && sizeFilters.length > 0
+    ? sizeFilters.map(s => ABBREVIATED_SIZES[s])
+    : Object.values(ABBREVIATED_SIZES)
   const { data, loading, fetchMore } = useQuery(GET_PRODUCTS, {
     variables: {
       name: currentCategory,
       first: 10,
       skip: 0,
+      orderBy,
+      sizes,
     },
   })
   let scrollViewEl = null
@@ -108,34 +126,24 @@ export const Browse = (props: any) => {
   const containerStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
   const { navigation } = props
   let products = data && data.products
-  if (products) {
-    //   console.log(products.map(p => get(p, "brand.name")))
-    console.log("OLD: ")
-    console.log(products.map(p => get(p, "createdAt")))
-    // products.forEach(p => { console.log(p) })
-  }
-  if (sortFilters && sortFilters.length > 0) {
-    const sortFilter = sortFilters[0]
-    if (sortFilter === "Alphabetical") {
-      products = [...products].sort((a, b) => {
-        const aName = get(a, "brand.name")
-        const bName = get(b, "brand.name")
-        if (aName > bName) return 1
-        if (aName < bName) return -1
-        return 0
-      })
-    } else { // Recently Added
-      products = [...products].sort((a, b) => {
-        const aCreatedAt = new Date(get(a, "createdAt"))
-        const bCreatedAt = new Date(get(b, "createdAt"))
-        return bCreatedAt.getTime() - aCreatedAt.getTime()
-      })
-    }
-  }
-  if (products) {
-    console.log("NEW: ")
-    console.log(products.map(p => get(p, "createdAt")))
-  }
+  // if (sortFilters && sortFilters.length > 0) {
+  //   const sortFilter = sortFilters[0]
+  //   if (sortFilter === "Alphabetical") {
+  //     products = [...products].sort((a, b) => {
+  //       const aName = get(a, "brand.name")
+  //       const bName = get(b, "brand.name")
+  //       if (aName > bName) return 1
+  //       if (aName < bName) return -1
+  //       return 0
+  //     })
+  //   } else { // Recently Added
+  //     products = [...products].sort((a, b) => {
+  //       const aCreatedAt = new Date(get(a, "createdAt"))
+  //       const bCreatedAt = new Date(get(b, "createdAt"))
+  //       return bCreatedAt.getTime() - aCreatedAt.getTime()
+  //     })
+  //   }
+  // }
   const categories = (data && data.categories) || []
   const filtersButtonSize = { height: 36, width: 84 }
 
@@ -180,10 +188,10 @@ export const Browse = (props: any) => {
                     }
 
                     if (!fetchMoreResult) {
-                      return products
+                      return prev
                     }
                     return Object.assign({}, prev, {
-                      products: [...products, ...fetchMoreResult.products],
+                      products: [...prev.products, ...fetchMoreResult.products],
                     })
                   },
                 })

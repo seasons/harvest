@@ -13,6 +13,7 @@ import { size } from "styled-system"
 const FILTER_BY = "Filter by"
 const SORT_BY = "Sort by"
 
+
 export const Filters = (props: any) => {
   const onFiltersModalDismiss = get(props.navigation, "state.params.onFiltersModalDismiss")
   const [sortFilters, setSortFilters] = useState([])
@@ -34,7 +35,7 @@ export const Filters = (props: any) => {
     },
     {
       title: FILTER_BY,
-      data: ['X-Small', 'Small', 'Medium', 'Large', 'X-Large']
+      data: ['X-Small', 'Small', 'Medium', 'Large', 'X-Large', 'XX-Large']
     }
   ]
 
