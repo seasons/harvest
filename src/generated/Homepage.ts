@@ -2,37 +2,14 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { HomePageSectionType } from "./globalTypes";
+import { HomePageSectionType, Size } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: Homepage
 // ====================================================
 
-export interface Homepage_categories_children {
-  __typename: "Category";
-  slug: string;
-}
-
-export interface Homepage_categories {
-  __typename: "Category";
-  id: string;
-  slug: string;
-  name: string;
-  image: any | null;
-  children: Homepage_categories_children[] | null;
-}
-
-export interface Homepage_homepage_sections_results_Category {
-  __typename: "Category" | "Brand";
-}
-
-export interface Homepage_homepage_sections_results_Collection {
-  __typename: "Collection";
-  id: string;
-  slug: string;
-  images: any;
-  title: string | null;
-  subTitle: string | null;
+export interface Homepage_homepage_sections_results_HomepageProductRail {
+  __typename: "HomepageProductRail" | "Collection";
 }
 
 export interface Homepage_homepage_sections_results_Product_brand {
@@ -40,9 +17,11 @@ export interface Homepage_homepage_sections_results_Product_brand {
   name: string;
 }
 
-export interface Homepage_homepage_sections_results_Product_color {
-  __typename: "Color";
-  name: string;
+export interface Homepage_homepage_sections_results_Product_variants {
+  __typename: "ProductVariant";
+  size: Size;
+  id: string;
+  reservable: number;
 }
 
 export interface Homepage_homepage_sections_results_Product {
@@ -50,12 +29,10 @@ export interface Homepage_homepage_sections_results_Product {
   id: string;
   images: any;
   brand: Homepage_homepage_sections_results_Product_brand;
-  name: string;
-  color: Homepage_homepage_sections_results_Product_color;
-  retailPrice: number | null;
+  variants: Homepage_homepage_sections_results_Product_variants[] | null;
 }
 
-export type Homepage_homepage_sections_results = Homepage_homepage_sections_results_Category | Homepage_homepage_sections_results_Collection | Homepage_homepage_sections_results_Product;
+export type Homepage_homepage_sections_results = Homepage_homepage_sections_results_HomepageProductRail | Homepage_homepage_sections_results_Product;
 
 export interface Homepage_homepage_sections {
   __typename: "HomepageSection";
@@ -70,6 +47,5 @@ export interface Homepage_homepage {
 }
 
 export interface Homepage {
-  categories: (Homepage_categories | null)[];
   homepage: Homepage_homepage | null;
 }
