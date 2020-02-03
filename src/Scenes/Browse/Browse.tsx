@@ -160,7 +160,7 @@ export const Browse = (props: any) => {
       setSortFilters(sortFilters)
       setSizeFilters(sizeFilters)
     }
-    props.navigation.navigate('FiltersModal', { onFiltersModalDismiss })
+    props.navigation.navigate('FiltersModal', { onFiltersModalDismiss, sortFilters, sizeFilters })
   }
 
   return (

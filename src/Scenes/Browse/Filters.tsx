@@ -15,9 +15,11 @@ const SORT_BY = "Sort by"
 
 
 export const Filters = (props: any) => {
-  const onFiltersModalDismiss = get(props.navigation, "state.params.onFiltersModalDismiss")
-  const [sortFilters, setSortFilters] = useState([])
-  const [sizeFilters, setSizeFilters] = useState([])
+  const onFiltersModalDismiss = get(props, "navigation.state.params.onFiltersModalDismiss")
+  const currentSortFilters = get(props, "navigation.state.params.sortFilters", [])
+  const currentSizeFilters = get(props, "navigation.state.params.sizeFilters", [])
+  const [sortFilters, setSortFilters] = useState(currentSortFilters)
+  const [sizeFilters, setSizeFilters] = useState(currentSizeFilters)
 
   const handleCancelBtnPressed = async () => {
     props.navigation.dismiss()
