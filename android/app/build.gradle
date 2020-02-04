@@ -141,6 +141,7 @@ android {
 }
 
 dependencies {
+    implementation project(':@segment_analytics-react-native')
     implementation project(':react-native-config')
     implementation project(':@sentry_react-native')
     implementation project(':react-native-webview')
