@@ -1,6 +1,0 @@
-framework module RNAnalyticsIntegration_Google_Analytics {
-  umbrella header "RNAnalyticsIntegration-Google-Analytics-umbrella.h"
-
-  export *
-  module * { export * }
-}
