@@ -185,10 +185,10 @@ export const Browse = (props: any) => {
       <LoaderContainer mt={insets.top} style={[loaderStyle]}>
         <BrowseLoader imageHeight={IMAGE_HEIGHT} />
       </LoaderContainer>
-      <AnimatedFlex flexDirection="column" flex={1} pt={insets.top} style={[containerStyle]}>
+      <AnimatedFlex flexDirection="column" flex={1} style={[containerStyle]}>
         <Box flex={1} flexGrow={1}>
           <FlatList
-            contentContainerStyle={{ paddingBottom: filtersButtonBottom + filtersButtonHeight }}
+            contentContainerStyle={{ paddingTop: insets.top, paddingBottom: filtersButtonBottom + filtersButtonHeight }}
             data={products}
             ref={ref => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
