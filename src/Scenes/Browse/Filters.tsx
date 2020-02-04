@@ -75,7 +75,7 @@ export const Filters = (props: any) => {
           <Spacer mt={20} />
           <Flex flexDirection="row">
             <Radio selected={isSelected} />
-            <Sans color="white" size="1" weight="medium" ml={2}>
+            <Sans color="white" ml={2} size="1" weight="medium">
               {item}
             </Sans>
           </Flex>

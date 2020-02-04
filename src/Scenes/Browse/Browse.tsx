@@ -33,7 +33,16 @@ const GET_PRODUCTS = gql`
         slug
       }
     }
-    products(category: $name, first: $first, skip: $skip, orderBy: $orderBy, where: { variants_some: { size_in: $sizes }, status: Available }) {
+    products(
+      category: $name, 
+      first: $first, 
+      skip: $skip, 
+      orderBy: $orderBy, 
+      where: { 
+        variants_some: { size_in: $sizes }, 
+        status: Available 
+      }
+    ) {
       id
       name
       description
