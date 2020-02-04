@@ -1,0 +1,6 @@
+framework module RNAnalyticsIntegration_Mixpanel {
+  umbrella header "RNAnalyticsIntegration-Mixpanel-umbrella.h"
+
+  export *
+  module * { export * }
+}
