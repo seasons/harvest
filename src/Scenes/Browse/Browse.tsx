@@ -62,6 +62,36 @@ const GET_PRODUCTS = gql`
   }
 `
 
+const GET_PRODUCTS_ALPHABETICALLY = gql`
+  query getProductsAlphabetically($category: String!, $sizes: [Size]!) {
+    productsAlphabetically(category: $category, sizes: $sizes) {
+      id
+      name
+      description
+      images
+      modelSize
+      modelHeight
+      externalURL
+      tags
+      retailPrice
+      status
+      createdAt
+      updatedAt
+      brand {
+        name
+      }
+      variants {
+        id
+        size
+        total
+        reservable
+        nonReservable
+        reserved
+      }
+    }
+  }
+`
+
 const renderItem = ({ item }, i, navigation) => {
   const itemWidth = Dimensions.get("window").width / 2 - 2
   const product = item
@@ -92,14 +122,11 @@ const renderItem = ({ item }, i, navigation) => {
 
 export const Browse = (props: any) => {
   const [currentCategory, setCurrentCategory] = useState("all")
-  const [sortFilters, setSortFilters] = useState([])
+  const [sortFilter, setSortFilter] = useState("Alphabetical")
   const [sizeFilters, setSizeFilters] = useState([])
-  let orderBy = "createdAt_DESC"
-  if (sortFilters && sortFilters.length > 0) {
-    const sortFilter = sortFilters[0]
-    if (sortFilter === "Alphabetical") orderBy = "name_ASC"
-    if (sortFilter === "Recently added") orderBy = "createdAt_DESC"
-  }
+
+  // Get all the sizes that we want to query by.
+  // If no size filter is selected, all sizes are queried.
   const sizes = sizeFilters && sizeFilters.length > 0
     ? sizeFilters.map(s => ABBREVIATED_SIZES[s])
     : Object.values(ABBREVIATED_SIZES)
@@ -108,10 +135,11 @@ export const Browse = (props: any) => {
       name: currentCategory,
       first: 10,
       skip: 0,
-      orderBy,
+      orderBy: "createdAt_DESC",
       sizes,
     },
   })
+
   let scrollViewEl = null
 
   useEffect(() => {
@@ -120,30 +148,25 @@ export const Browse = (props: any) => {
       setCurrentCategory(props.screenProps.browseFilter)
     }
   }, [props.screenProps.browseFilter])
+  let products = data && data.products
+
+  if (sortFilter && sortFilter === "Alphabetical") {
+    //   // Get list of products sorted alphabetically by brand name
+    console.log("Querying with sizes: ", sizes)
+    const getProductsAlphabetically = useQuery(GET_PRODUCTS_ALPHABETICALLY, {
+      variables: {
+        category: currentCategory,
+        sizes
+      }
+    })
+    products = get(getProductsAlphabetically, "data.productsAlphabetically")
+    // console.log(products)
+  }
 
   const insets = useSafeArea()
   const loaderStyle = useSpring({ opacity: loading && !data ? 1 : 0 })
   const containerStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
   const { navigation } = props
-  let products = data && data.products
-  // if (sortFilters && sortFilters.length > 0) {
-  //   const sortFilter = sortFilters[0]
-  //   if (sortFilter === "Alphabetical") {
-  //     products = [...products].sort((a, b) => {
-  //       const aName = get(a, "brand.name")
-  //       const bName = get(b, "brand.name")
-  //       if (aName > bName) return 1
-  //       if (aName < bName) return -1
-  //       return 0
-  //     })
-  //   } else { // Recently Added
-  //     products = [...products].sort((a, b) => {
-  //       const aCreatedAt = new Date(get(a, "createdAt"))
-  //       const bCreatedAt = new Date(get(b, "createdAt"))
-  //       return bCreatedAt.getTime() - aCreatedAt.getTime()
-  //     })
-  //   }
-  // }
   const categories = (data && data.categories) || []
   const filtersButtonBottom = 16
   const filtersButtonHeight = 36
@@ -156,11 +179,12 @@ export const Browse = (props: any) => {
   }
 
   const onFilterBtnPress = () => {
-    const onFiltersModalDismiss = (sortFilters: Array<string>, sizeFilters: Array<string>) => {
-      setSortFilters(sortFilters)
-      setSizeFilters(sizeFilters)
+    const onFiltersModalDismiss = (sortFilter: string, sizeFilters: Array<string>) => {
+      console.log("SETTING SORT FILTER TO: ", sortFilter)
+      setSortFilter(sortFilter)
+      // setSizeFilters(sizeFilters)
     }
-    props.navigation.navigate('FiltersModal', { onFiltersModalDismiss, sortFilters, sizeFilters })
+    props.navigation.navigate('FiltersModal', { onFiltersModalDismiss, sortFilter, sizeFilters })
   }
 
   return (

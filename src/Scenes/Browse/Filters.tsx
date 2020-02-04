@@ -16,9 +16,9 @@ const SORT_BY = "Sort by"
 
 export const Filters = (props: any) => {
   const onFiltersModalDismiss = get(props, "navigation.state.params.onFiltersModalDismiss")
-  const currentSortFilters = get(props, "navigation.state.params.sortFilters", [])
+  const currentSortFilter = get(props, "navigation.state.params.sortFilter")
   const currentSizeFilters = get(props, "navigation.state.params.sizeFilters", [])
-  const [sortFilters, setSortFilters] = useState(currentSortFilters)
+  const [sortFilter, setSortFilter] = useState(currentSortFilter)
   const [sizeFilters, setSizeFilters] = useState(currentSizeFilters)
 
   const handleCancelBtnPressed = async () => {
@@ -26,8 +26,12 @@ export const Filters = (props: any) => {
   }
 
   const handleApplyBtnPressed = async () => {
-    onFiltersModalDismiss(sortFilters, sizeFilters)
+    console.log("CLICKED")
+    console.log("CURRENT:", sortFilter, ",", sizeFilters)
+    onFiltersModalDismiss(sortFilter, sizeFilters)
+    console.log("DISMISSING")
     props.navigation.dismiss()
+    console.log("DISMISSED")
   }
 
   const filterSections = [
@@ -62,17 +66,14 @@ export const Filters = (props: any) => {
     )
   }
 
-  const onFilterPress = () => {
-    console.log("CLICK")
-  }
-
-
   const renderItem = ({ item, section }) => {
-    const filters = section.title === SORT_BY ? sortFilters : sizeFilters
+    const isSelected = section.title === SORT_BY
+      ? sortFilter === item
+      : sizeFilters.includes(item)
     return (
       <TouchableWithoutFeedback onPress={() => {
         if (section.title === SORT_BY) {
-          setSortFilters([item])
+          setSortFilter(sortFilter !== item ? item : "")
         } else if (section.title == FILTER_BY) {
           if (sizeFilters.includes(item)) {
             setSizeFilters(sizeFilters.filter(f => f !== item))
@@ -84,7 +85,7 @@ export const Filters = (props: any) => {
         <Box>
           <Spacer mt={20} />
           <Flex flexDirection="row">
-            <Radio selected={filters.includes(item)} />
+            <Radio selected={isSelected} />
             <Sans color="white" size="1" weight="medium" ml={2}>
               {item}
             </Sans>
