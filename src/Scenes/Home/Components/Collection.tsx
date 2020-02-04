@@ -19,7 +19,7 @@ export const Collection: React.FC<BrandsRailProps> = ({ collection, title, navig
       {collection.subTitle && (
         <>
           <Spacer mb={2} />
-          <Sans color={color("gray")} size="2">
+          <Sans color={color("black50")} size="2">
             {collection.subTitle}
           </Sans>
         </>
@@ -27,7 +27,7 @@ export const Collection: React.FC<BrandsRailProps> = ({ collection, title, navig
       {collection.description && (
         <>
           <Spacer mb={2} />
-          <Sans color={color("gray")} size="2">
+          <Sans color={color("black50")} size="2">
             {collection.description}
           </Sans>
         </>

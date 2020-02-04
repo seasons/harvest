@@ -24,7 +24,7 @@ const ABBREVIATED_SIZES = {
 const IMAGE_HEIGHT = 240
 
 const GET_PRODUCTS = gql`
-  query getProducts($name: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!, $sizes: [Size!]) {
+  query GetBrowseProducts($name: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!, $sizes: [Size!]) {
     categories(where: { visible: true }) {
       id
       slug
@@ -139,7 +139,7 @@ export const Browse = (props: any) => {
   const sizes = sizeFilters && sizeFilters.length > 0
     ? sizeFilters.map(s => ABBREVIATED_SIZES[s])
     : Object.values(ABBREVIATED_SIZES)
-  const { data, loading, fetchMore } = useQuery(GET_PRODUCTS, {
+  const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
     variables: {
       name: currentCategory,
       first: 10,

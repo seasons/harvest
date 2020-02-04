@@ -49,7 +49,7 @@ export const Tabs = props => {
       <AnimatedTray style={{ transform: [{ translateY: animation.trayTranslateY }] }}>
         <LeftCorner />
         <RightCorner />
-        <Box style={{ backgroundColor: color("black") }}>
+        <Box style={{ backgroundColor: color("black100") }}>
           <AnimatedMainTabs style={{ transform: [{ translateY: animation.mainNavTranslateY }] }}>
             {tabs}
           </AnimatedMainTabs>
@@ -83,7 +83,7 @@ const MainTabs = styled(Flex)`
   justify-content: space-between;
   flex-wrap: nowrap;
   flex-direction: row;
-  background-color: ${color("black")};
+  background-color: ${color("black100")};
 `
 
 const AnimatedTray = animated(Box)

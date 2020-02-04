@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "start-packager": "env REACT_DEBUGGER=\"$([ -d '/Applications/React Native Debugger.app' ] && echo \"open 'rndebugger://set-debugger-loc?host=localhost&port=8081' --args\")\" node node_modules/react-native/local-cli/cli.js start",
     "fix-androidx": "bash ./scripts/fix-androidx.sh",
-    "postinstall": "bash ./scripts/fix-androidx.sh"
+    "postinstall": "bash ./scripts/fix-androidx.sh",
+    "apollo": "apollo service:push && rm -rf generated && apollo codegen:generate --excludes=node_modules/* --target typescript --tagName gql --outputFlat src/generated"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.1",

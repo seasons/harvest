@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from "react"
-import { TouchableOpacity } from "react-native-gesture-handler"
+import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
 
@@ -10,6 +10,8 @@ import { Spacer } from "./Spacer"
 import { themeProps } from "./Theme"
 import { Sans } from "./Typography"
 import { Spinner } from "./Spinner"
+import { DownChevronIcon } from "Assets/icons"
+import { color } from "App/Utils"
 
 enum DisplayState {
   Default = "default",
@@ -36,21 +38,16 @@ export interface ButtonProps extends BoxProps {
   width?: number
   borderRadius?: number
   loading?: boolean
+  rotateChevron?: boolean
+  showChevron?: boolean
 }
 
-export type ButtonVariant =
-  | "primaryLight"
-  | "primaryGray"
-  | "secondaryLight"
-  | "primaryDark"
-  | "secondaryOutline"
-  | "secondaryDark"
-  | "transparentWhite"
+export type ButtonVariant = "primaryBlack" | "primaryWhite" | "blur" | "secondaryBlack"
 export type ButtonSize = "small" | "medium" | "large"
 
 /** Default button size */
 export const defaultSize: ButtonSize = "large"
-export const defaultVariant: ButtonVariant = "primaryDark"
+export const defaultVariant: ButtonVariant = "primaryBlack"
 
 /**
  * Returns various colors for each state given a button variant
@@ -58,119 +55,100 @@ export const defaultVariant: ButtonVariant = "primaryDark"
  */
 export function getColorsForVariant(variant: ButtonVariant) {
   const {
-    colors: { black, white, gray, mediumGray, darkGray, lightGray },
+    colors: { black100, white100, black50, black15, black85 },
   } = themeProps
 
   switch (variant) {
-    case "primaryLight":
+    case "primaryBlack":
       return {
         default: {
-          backgroundColor: white,
-          borderColor: white,
-          color: black,
+          backgroundColor: black100,
+          borderColor: black100,
+          color: white100,
         },
         pressed: {
-          backgroundColor: white,
-          borderColor: white,
-          color: black,
+          backgroundColor: black85,
+          borderColor: black85,
+          color: white100,
         },
         disabled: {
-          backgroundColor: darkGray,
-          borderColor: darkGray,
-          color: gray,
+          backgroundColor: black15,
+          borderColor: black15,
+          color: black50,
         },
       }
-    case "primaryGray":
+    case "primaryWhite":
       return {
         default: {
-          backgroundColor: mediumGray,
-          borderColor: mediumGray,
-          color: white,
+          backgroundColor: white100,
+          borderColor: black100,
+          color: black100,
         },
         pressed: {
-          backgroundColor: darkGray,
-          borderColor: darkGray,
-          color: gray,
+          backgroundColor: black50,
+          borderColor: black100,
+          color: black100,
         },
         disabled: {
-          backgroundColor: darkGray,
-          borderColor: darkGray,
-          color: gray,
+          backgroundColor: black15,
+          borderColor: black15,
+          color: black50,
         },
       }
-    case "secondaryLight":
+    case "blur":
       return {
         default: {
-          backgroundColor: black,
-          borderColor: gray,
-          color: white,
+          backgroundColor: white100,
+          borderColor: black100,
+          color: black100,
         },
         pressed: {
-          backgroundColor: black,
-          borderColor: gray,
-          color: white,
+          backgroundColor: black50,
+          borderColor: black100,
+          color: black100,
         },
         disabled: {
-          backgroundColor: black,
-          borderColor: gray,
-          color: gray,
+          backgroundColor: black15,
+          borderColor: black15,
+          color: black100,
         },
       }
-    case "primaryDark":
+    case "secondaryBlack":
       return {
         default: {
-          backgroundColor: black,
-          borderColor: black,
-          color: white,
+          backgroundColor: black100,
+          borderColor: black50,
+          color: white100,
         },
         pressed: {
-          backgroundColor: black,
-          borderColor: black,
-          color: white,
+          backgroundColor: black85,
+          borderColor: black50,
+          color: white100,
         },
         disabled: {
-          backgroundColor: lightGray,
-          borderColor: lightGray,
-          color: darkGray,
-        },
-      }
-    case "secondaryDark":
-      return {
-        default: {
-          backgroundColor: white,
-          borderColor: black,
-          color: black,
-        },
-        pressed: {
-          backgroundColor: white,
-          borderColor: black,
-          color: black,
-        },
-        disabled: {
-          backgroundColor: white,
-          borderColor: black,
-          color: black,
-        },
-      }
-    case "transparentWhite":
-      return {
-        default: {
-          backgroundColor: "rgba(0,0,0,0.4)",
-          borderColor: "rgba(0,0,0,0)",
-          color: white,
-        },
-        pressed: {
-          backgroundColor: "rgba(0,0,0,0)",
-          borderColor: "rgba(0,0,0,0)",
-          color: white,
-        },
-        disabled: {
-          backgroundColor: "rgba(0,0,0,0)",
-          borderColor: "rgba(0,0,0,0)",
-          color: white,
+          backgroundColor: black100,
+          borderColor: black85,
+          color: white100,
         },
       }
     default:
+      return {
+        default: {
+          backgroundColor: black100,
+          borderColor: black100,
+          color: white100,
+        },
+        pressed: {
+          backgroundColor: black85,
+          borderColor: black85,
+          color: white100,
+        },
+        disabled: {
+          backgroundColor: black15,
+          borderColor: black15,
+          color: black100,
+        },
+      }
   }
 }
 
@@ -239,7 +217,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   render() {
-    let { borderRadius, children, showCheckMark, disabled, loading, ...rest } = this.props
+    let { borderRadius, children, showCheckMark, disabled, loading, showChevron, rotateChevron, ...rest } = this.props
     borderRadius = borderRadius ?? 28
     let { px, size, height } = this.getSize()
     height = this.props.height ?? height
@@ -251,7 +229,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
     return (
       <Spring native from={from} to={to}>
         {props => (
-          <TouchableOpacity
+          <TouchableWithoutFeedback
             onPress={this.onPress}
             onPressIn={() => {
               this.setState({
@@ -274,6 +252,12 @@ export class Button extends Component<ButtonProps, ButtonState> {
                     <Sans color={to.color} size={size}>
                       {children}
                     </Sans>
+                    {showChevron && (
+                      <>
+                        <Spacer mr={1} />
+                        <DownChevronIcon color={color("black100")} rotate={rotateChevron} />
+                      </>
+                    )}
                     {showCheckMark && (
                       <Flex flexDirection="row" flexWrap="nowrap">
                         <Spacer mr={0.5} />
@@ -285,7 +269,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
                 {loading && <Spinner size={this.props.size} color={this.spinnerColor as any} />}
               </AnimatedContainer>
             </Flex>
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         )}
       </Spring>
     )

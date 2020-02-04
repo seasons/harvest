@@ -120,16 +120,16 @@ export const Home = (props: any) => {
               const styles =
                 index === sections.length - 1
                   ? {
-                      backgroundColor: color("white"),
+                      backgroundColor: color("white100"),
                       paddingBottom: 30,
                       borderBottomLeftRadius: 30,
                       borderBottomRightRadius: 30,
                     }
-                  : { backgroundColor: color("white") }
+                  : { backgroundColor: color("white100") }
               return <Box style={styles}>{renderItem(item)}</Box>
             }}
             ListHeaderComponent={() => (
-              <Box p={2} style={{ backgroundColor: color("white") }}>
+              <Box p={2} style={{ backgroundColor: color("white100") }}>
                 <Flex flexDirection="row" flexWrap="nowrap" alignContent="center">
                   <SeasonsLogoSVG />
                   <Spacer mr={1} />
@@ -146,7 +146,7 @@ export const Home = (props: any) => {
 }
 
 const BlackBackground = styled(Box)`
-  background-color: ${color("black")};
+  background-color: ${color("black100")};
   height: 80%;
   bottom: 0;
   left: 0;
@@ -155,7 +155,7 @@ const BlackBackground = styled(Box)`
 `
 
 const WhiteBackground = styled(Box)`
-  background-color: ${color("white")};
+  background-color: ${color("white100")};
   height: 100px;
   top: -100px;
   z-index: -1;

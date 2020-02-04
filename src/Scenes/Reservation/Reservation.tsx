@@ -21,7 +21,7 @@ const RESERVE_ITEMS = gql`
 `
 
 const GET_CUSTOMER = gql`
-  {
+  query GetCustomer {
     me {
       user {
         firstName

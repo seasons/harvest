@@ -68,7 +68,7 @@ export class TabBar extends React.Component<TabBarProps, null> {
         onPress={() => onPressHandler(page)}
       >
         <TabButton spaceEvenly={this.props.spaceEvenly} active={isTabActive}>
-          <Sans numberOfLines={1} weight="medium" size="2" color={isTabActive ? "black" : color("gray")}>
+          <Sans numberOfLines={1} weight="medium" size="2" color={isTabActive ? "black" : color("black50")}>
             {name}
           </Sans>
         </TabButton>

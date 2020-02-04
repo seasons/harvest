@@ -28,13 +28,13 @@ export const Welcome = ({ navigation }) => {
             A members only rental subscription service for menswear and streetwear.
           </Sans>
           <Spacer mb={4} />
-          <Button onPress={() => navigation.navigate("SignIn")} variant="primaryLight">
+          <Button onPress={() => navigation.navigate("SignIn")} variant="primaryWhite">
             Sign in
           </Button>
           <Spacer mb={2} />
           <Button
             onPress={() => navigation.navigate("Webview", { uri: "http://signup.seasons.nyc/" })}
-            variant="secondaryLight"
+            variant="secondaryBlack"
           >
             Join the waitlist
           </Button>
@@ -49,5 +49,5 @@ const Wrapper = styled.View`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: ${color("black")};
+  background-color: ${color("black100")};
 `

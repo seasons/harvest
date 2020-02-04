@@ -73,7 +73,7 @@ export const ProductRequestConfirmation: React.FC<{
             <Spacer mb={112} />
           </Box>
         </ScrollView>
-        <FixedButton disabled={false} mb={insets.bottom} variant={"primaryDark"} onPress={handleSubmitBtnPressed}>
+        <FixedButton disabled={false} mb={insets.bottom} variant={"secondaryBlack"} onPress={handleSubmitBtnPressed}>
           Submit
         </FixedButton>
       </>
