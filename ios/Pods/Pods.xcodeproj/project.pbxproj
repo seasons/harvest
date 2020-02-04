@@ -2186,8 +2186,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1BEE828C124E6416179B904A9F66D794;
-			remoteInfo = React;
+			remoteGlobalIDString = D0B273D56D6C8A0C770E79BE693CE2EE;
+			remoteInfo = yoga;
 		};
 		313607EB4102716D67C5A6ABE6F4428E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2249,8 +2249,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = A4F685BE3CAC127BDCE4E0DBBD88D191;
-			remoteInfo = Folly;
+			remoteGlobalIDString = 97C4DE84FA3CC4EC06AA6D8C249949B7;
+			remoteInfo = UMImageLoaderInterface;
 		};
 		4363251BB94708B744A343232C89DA73 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2277,8 +2277,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D0EFEFB685D97280256C559792236873;
-			remoteInfo = glog;
+			remoteGlobalIDString = 014495932E402CA67C37681988047CA2;
+			remoteInfo = UMFontInterface;
 		};
 		48085C27DA12403FE72237E9A1F802EB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2375,8 +2375,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1BEE828C124E6416179B904A9F66D794;
-			remoteInfo = React;
+			remoteGlobalIDString = 0A72FB88825FDC7D301C9DD1F8F96824;
+			remoteInfo = EXPermissions;
 		};
 		6634CB7D270356F66B9663841C974498 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2445,8 +2445,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DBCB1B4965863DDD3B9DED9A0918A526;
-			remoteInfo = UMCore;
+			remoteGlobalIDString = 8F50A15C556FFEAD343B69C7EA54092F;
+			remoteInfo = Analytics;
 		};
 		7425DF39C5D676ED2959B2DD96B1A58F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2473,8 +2473,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1BEE828C124E6416179B904A9F66D794;
-			remoteInfo = React;
+			remoteGlobalIDString = 50188AAB5FAECCA9583327DBA2B0AF2B;
+			remoteInfo = UMTaskManagerInterface;
 		};
 		75AEF0A05BE54B6242E629E382EBE62C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2522,8 +2522,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 0A915EE9D35CA5636731F8763E774951;
-			remoteInfo = UMCameraInterface;
+			remoteGlobalIDString = DBCB1B4965863DDD3B9DED9A0918A526;
+			remoteInfo = UMCore;
 		};
 		80483108A97924F8E5D5BA6531E48C50 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -6155,7 +6155,7 @@
 			children = (
 				A9263C1CA1EDBCCEB9190E5559F2E83C /* EXConstants.podspec */,
 			);
-			name = Pod;
+			name = jsinspector;
 			sourceTree = "<group>";
 		};
 		1C987C809928FCA2751DFB60A7D0B89B /* Pod */ = {
@@ -6252,7 +6252,8 @@
 			children = (
 				D3E2C966CC52C32EE252F94C1B4A47DD /* React-jsi.podspec */,
 			);
-			name = Pod;
+			name = "Support Files";
+			path = "../../../ios/Pods/Target Support Files/UMFontInterface";
 			sourceTree = "<group>";
 		};
 		22A557B924B570B71F2914B8C235F184 /* UMTaskManagerInterface */ = {
@@ -6580,7 +6581,8 @@
 			children = (
 				A48F5A0387B65AD253BC1CD423B5AD86 /* EXPermissions.podspec */,
 			);
-			name = Pod;
+			name = UMConstantsInterface;
+			path = "../../node_modules/unimodules-constants-interface/ios";
 			sourceTree = "<group>";
 		};
 		2C655DB6F7D9FA05A4DDDFCF85C81643 /* UMModuleRegistry */ = {
@@ -6913,7 +6915,39 @@
 				22A557B924B570B71F2914B8C235F184 /* UMTaskManagerInterface */,
 				6547A39F3E702F8104B3BF8AC69FDB69 /* Yoga */,
 			);
-			name = "Development Pods";
+			name = "Support Files";
+			path = "../Target Support Files/glog";
+			sourceTree = "<group>";
+		};
+		FE905225A2AF8DC9361E704E57304233 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2CE4B6165F426953A26419DF02AF0D93 /* libAnalytics.a */,
+				6FFB7B2992BB53405E6B771A5BA1E97D /* libDoubleConversion.a */,
+				A225ED83E33DC48D25B9FF35BA50CCD0 /* libEXAppLoaderProvider.a */,
+				220361FF3B2778F8F38C2C4DCC5B49FD /* libEXConstants.a */,
+				ED1E3FC0DC90F4A787472917BFB6B235 /* libEXFileSystem.a */,
+				B9A8343068CE43CDCE59118C59FBBAF3 /* libEXFont.a */,
+				09B5856105EF7C6447B9EC57E7E36B34 /* libEXKeepAwake.a */,
+				3747AE14E346E991874D53D8D9FC4BA5 /* libEXLinearGradient.a */,
+				A37C597C68757F22BB31CFF6F920A258 /* libEXLocation.a */,
+				72E494917AC5EC2582197F07061A28B0 /* libEXPermissions.a */,
+				1108DC122877B2541D4AFF30154347CA /* libEXSQLite.a */,
+				574E8A849B86DCF8EE5726418D974721 /* libEXWebBrowser.a */,
+				06489499588BFA8FD5E63DD6375CD533 /* libFolly.a */,
+				3CA7A9404CCDD6BA22C97F8348CE3209 /* libglog.a */,
+				1ECB1363E9DFF1FB23D217DF5F1569C6 /* libPods-seasons.a */,
+				0E7C341FA544E64E23E052A68E4A0A5E /* libReact.a */,
+				FE615D58A030F19B5EB89E2F52F5B59A /* libReactNativeNavigation.a */,
+				682D3B6D7124CD3BAF07DEFA788648C7 /* libRNAnalytics.a */,
+				8F65F9361F2069CF9E9D751272968DE4 /* libRNGestureHandler.a */,
+				C777CF2FB1E39A45CBBDB54E8693F471 /* libRNReanimated.a */,
+				90EE8D3C082C157169540FC8F5913DAD /* libRNSVG.a */,
+				AF72FD600DE7E2D330BA50F877993E05 /* libUMCore.a */,
+				3B640835BAA914DD267B5E780D8CFEC7 /* libUMReactNativeAdapter.a */,
+				1FA65622A09E4E5504F80B3610AB78F1 /* libyoga.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		3412CA85837D53851C00B181DE9CB2F9 /* Protocols */ = {

@@ -11,6 +11,7 @@ import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.auth0.react.A0Auth0Package;
+import com.segment.analytics.reactnative.core.RNAnalyticsPackage;
 import com.horcrux.svg.SvgPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.facebook.react.ReactNativeHost;
@@ -77,13 +78,18 @@ public class MainApplication extends Application implements ReactApplication {
 
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            new AsyncStoragePackage(),
-            new A0Auth0Package(),
-            new ReanimatedPackage(),
-            new RNGestureHandlerPackage(),
-            new ModuleRegistryAdapter(mModuleRegistryProvider),
-            new SvgPackage()
+        new MainReactPackage(),
+        new AsyncStoragePackage(),
+        new A0Auth0Package(),
+        new ReanimatedPackage(),
+        new RNGestureHandlerPackage(),
+        new ModuleRegistryAdapter(mModuleRegistryProvider),
+        new SvgPackage(),
+        new RNAnalyticsPackage(),
+        new SvgPackage(),
+        new ReanimatedPackage(),
+        new RNGestureHandlerPackage(),
+        new ModuleRegistryAdapter(mModuleRegistryProvider)
     );
   }
 

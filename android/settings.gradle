@@ -15,6 +15,8 @@ include ':@react-native-community_async-storage'
 project(':@react-native-community_async-storage').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/async-storage/android')
 include ':react-native-auth0'
 project(':react-native-auth0').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-auth0/android')
+include ':@segment_analytics-react-native'
+project(':@segment_analytics-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/@segment/analytics-react-native/android')
 include ':react-native-svg'
 project(':react-native-svg').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-svg/android')
 include ':react-native-reanimated'

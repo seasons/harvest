@@ -1,6 +1,7 @@
 PODS:
   - A0Auth0 (2.1.0):
     - React
+  - Analytics (3.7.0)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - EXAppLoaderProvider (7.0.0)
@@ -277,6 +278,10 @@ PODS:
   - RNReanimated (1.4.0):
     - React
   - RNScreens (2.0.0-alpha.12):
+  - RNAnalytics (1.1.0-beta.2):
+    - Analytics
+    - React
+  - RNGestureHandler (1.3.0):
     - React
   - RNSentry (1.1.0):
     - React

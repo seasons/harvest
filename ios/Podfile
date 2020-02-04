@@ -58,5 +58,6 @@ target 'seasons' do
   # pod 'RNAnalytics', :path => '../node_modules/@segment/analytics-react-native'
   # pod 'RNAnalyticsIntegration-Google-Analytics', :path => '../node_modules/@segment/analytics-react-native-google-analytics'
   # pod 'RNAnalyticsIntegration-Mixpanel', :path => '../node_modules/@segment/analytics-react-native-mixpanel'
+  pod 'RNAnalytics', :path => '../node_modules/@segment/analytics-react-native'
 
 end
