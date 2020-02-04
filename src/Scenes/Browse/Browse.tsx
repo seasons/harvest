@@ -72,7 +72,7 @@ const GET_BROWSE_PRODUCTS = gql`
 `
 
 const GET_PRODUCTS_ALPHABETICALLY = gql`
-  query getProductsAlphabetically($category: String!, $sizes: [Size]!) {
+  query GetProductsAlphabetically($category: String!, $sizes: [Size]!) {
     productsAlphabetically(category: $category, sizes: $sizes) {
       id
       name
