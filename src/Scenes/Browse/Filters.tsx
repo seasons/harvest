@@ -1,22 +1,15 @@
-import gql from "graphql-tag"
-import React, { useState } from "react"
 import get from "lodash/get"
-import { useMutation } from "react-apollo"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
-import { Dimensions, Text, Keyboard, SectionList, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
+import React, { useState } from "react"
+import { Dimensions, SectionList, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { Box, Button, PopUp, FixedButton, Flex, Sans, Radio, Separator, Spacer, TextInput, Theme } from "../../Components"
-import { color } from "../../Utils"
+import { Box, Button, Flex, Radio, Sans, Separator, Spacer, Theme } from "../../Components"
 import styled from "styled-components/native"
-import { size } from "styled-system"
 
 const FILTER_BY = "Filter by"
 const SORT_BY = "Sort by"
 
-
 export const Filters = (props: any) => {
-  const onFiltersModalDismiss = get(props, "navigation.state.params.onFiltersModalDismiss")
-  const currentSortFilter = get(props, "navigation.state.params.sortFilter")
+  const currentSortFilter = get(props, "navigation.state.params.sortFilter", "")
   const currentSizeFilters = get(props, "navigation.state.params.sizeFilters", [])
   const [sortFilter, setSortFilter] = useState(currentSortFilter)
   const [sizeFilters, setSizeFilters] = useState(currentSizeFilters)
@@ -45,6 +38,7 @@ export const Filters = (props: any) => {
   const buttonBottom = insets.bottom + 40
   const buttonWidth = (screenWidth - 39) / 2
   const buttonHeight = 48
+  const isApplyButtonDisabled = !(sortFilter !== "" || sizeFilters.length > 0)
   const separatorColor = "#272727"
 
   const renderSectionHeader = ({ section }) => {
@@ -112,12 +106,20 @@ export const Filters = (props: any) => {
           />
         </Flex>
         <Box style={{ position: 'absolute', left: 16, bottom: buttonBottom }}>
-          <Button size="medium" variant={"secondaryLight"} width={buttonWidth} onPress={handleCancelBtnPressed}>
+          <Button
+            size="medium"
+            variant={"secondaryLight"}
+            width={buttonWidth}
+            onPress={handleCancelBtnPressed}>
             Cancel
           </Button>
         </Box>
         <Box style={{ position: 'absolute', left: screenWidth / 2 + 3.5, bottom: buttonBottom }}>
-          <Button variant={"primaryGray"} width={buttonWidth} onPress={handleApplyBtnPressed}>
+          <Button
+            disabled={isApplyButtonDisabled}
+            variant={"primaryLight"}
+            width={buttonWidth}
+            onPress={handleApplyBtnPressed}>
             Apply
           </Button>
         </Box>
