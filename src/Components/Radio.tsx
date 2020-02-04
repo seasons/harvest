@@ -52,7 +52,7 @@ export const Radio: React.SFC<RadioProps> = props => {
       </TouchableWithoutFeedback>
       {!!label && (
         <Flex flexDirection="row" alignItems="center" ml={1}>
-          <Sans size="2" color="black">
+          <Sans size="2" color={color("black100")}>
             {label}
           </Sans>
         </Flex>
@@ -66,7 +66,7 @@ export const Radio: React.SFC<RadioProps> = props => {
  */
 export const BorderedRadio = styled(Box)<RadioProps>`
   padding: ${space(2)}px;
-  border: 1px solid ${color("gray")};
+  border: 1px solid ${color("black85")};
   transition: background-color 0.14s ease-in-out;
   :not(:first-child) {
     border-top-left-radius: 0;
@@ -101,7 +101,7 @@ const InnerCircle = styled(Box)`
 const RadioButton = styled(Box)<RadioToggleProps>`
   ${borders};
   ${styledSpace};
-  border-color: ${color("gray")};
+  border-color: ${color("black85")};
   border-width: 1;
   width: 24;
   height: 24;

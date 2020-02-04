@@ -1,12 +1,9 @@
-import { GET_BAG } from "App/Apollo/Queries"
 import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { BAG_NUM_ITEMS } from "App/Redux/reducer"
 import { color } from "App/Utils"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
-import gql from "graphql-tag"
 import { assign, fill, get } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
@@ -15,40 +12,20 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
+import { BAG_NUM_ITEMS } from "App/helpers/constants"
+import { REMOVE_FROM_BAG, GET_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM, CHECK_ITEMS } from "./BagQueries"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 const SECTION_HEIGHT = 300
-
-const CHECK_ITEMS = gql`
-  mutation CheckItemsAvailability($items: [ID!]!) {
-    checkItemsAvailability(items: $items)
-  }
-`
-
-const REMOVE_FROM_BAG = gql`
-  mutation RemoveFromBag($id: ID!) {
-    removeFromBag(item: $id) {
-      id
-    }
-  }
-`
-
-const REMOVE_FROM_BAG_AND_SAVE_ITEM = gql`
-  mutation RemoveFromBagAndSaveItem($id: ID!) {
-    removeFromBag(item: $id) {
-      id
-    }
-    saveProduct(item: $id, save: true) {
-      id
-    }
-  }
-`
 
 enum BagView {
   Bag = 0,
   Saved = 1,
 }
 
-export const Bag = ({ navigation }) => {
+export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
+  navigation,
+}) => {
   const [isMutating, setMutating] = useState(false)
   const [showReserveError, displayReserveError] = useState(null)
   const { data, loading, refetch } = useQuery(GET_BAG, {
@@ -56,7 +33,7 @@ export const Bag = ({ navigation }) => {
   })
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
-    update(cache, { data, errors }) {
+    update(cache, { data }) {
       const { me } = cache.readQuery({ query: GET_BAG })
       const key = currentView === BagView.Bag ? "bag" : "savedItems"
       const list = me[key]
@@ -77,8 +54,9 @@ export const Bag = ({ navigation }) => {
       },
     ],
   })
+
   const [removeFromBagAndSaveItem] = useMutation(REMOVE_FROM_BAG_AND_SAVE_ITEM, {
-    update(cache, { data, errors }) {
+    update(cache, { data }) {
       const { me } = cache.readQuery({ query: GET_BAG })
       const old = currentView === BagView.Bag ? "bag" : "savedItems"
       const newKey = currentView === BagView.Bag ? "savedItems" : "bag"
@@ -96,7 +74,6 @@ export const Bag = ({ navigation }) => {
           },
         },
       })
-      console.log(me, data)
     },
     refetchQueries: [
       {
@@ -182,7 +159,6 @@ export const Bag = ({ navigation }) => {
 
   const isBagView = BagView.Bag == currentView
   const isSavedView = BagView.Saved == currentView
-  const isEmpty = items.length === 0
   const bagCount = items.length
   const remainingPieces = BAG_NUM_ITEMS - bagCount
   const bagIsFull = bagCount === BAG_NUM_ITEMS
@@ -261,7 +237,6 @@ export const Bag = ({ navigation }) => {
                 activeTab={currentView}
                 goToPage={page => {
                   setCurrentView(page as BagView)
-                  console.log("page : ", page)
                 }}
               />
             </>
@@ -275,14 +250,12 @@ export const Bag = ({ navigation }) => {
             }
             return (
               <Box>
-                <Separator color={color("lightGray")} />
+                <Separator color={color("black15")} />
               </Box>
             )
           }}
           keyExtractor={(_item, index) => String(index)}
           renderItem={item => {
-            if (isSavedView && isEmpty) {
-            }
             return renderItem(item)
           }}
           ListFooterComponent={() => <Spacer mb={96} />}

@@ -2,13 +2,12 @@ import { Flex, Theme, Box } from "App/Components"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import React, { useState } from "react"
 import { useSafeArea } from "react-native-safe-area-context"
-import { connect } from "react-redux"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { useNavigationState } from "./NavigationState"
 import { color } from "App/Utils"
 
-export const TabsComponent = props => {
+export const Tabs = props => {
   const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation, bag } = props
   const navigationState = useNavigationState()
   const insets = useSafeArea()
@@ -42,15 +41,15 @@ export const TabsComponent = props => {
 
   const animation = useSpring({
     mainNavTranslateY: isProductRoute ? 50 : 0,
-    trayranslateY: isProductRoute ? 0 : -insets.bottom,
+    trayTranslateY: isProductRoute ? 0 : -insets.bottom,
   })
 
   return (
     <Theme>
-      <AnimatedTray style={{ transform: [{ translateY: animation.trayranslateY }] }}>
+      <AnimatedTray style={{ transform: [{ translateY: animation.trayTranslateY }] }}>
         <LeftCorner />
         <RightCorner />
-        <Box style={{ backgroundColor: color("black") }}>
+        <Box style={{ backgroundColor: color("black100") }}>
           <AnimatedMainTabs style={{ transform: [{ translateY: animation.mainNavTranslateY }] }}>
             {tabs}
           </AnimatedMainTabs>
@@ -59,13 +58,6 @@ export const TabsComponent = props => {
     </Theme>
   )
 }
-
-const mapStateToProps = state => {
-  const { productState, bag } = state
-  return { productState, bag }
-}
-
-export const Tabs = connect(mapStateToProps)(TabsComponent)
 
 const TabButton = styled.TouchableOpacity`
   flex: 1;
@@ -91,7 +83,7 @@ const MainTabs = styled(Flex)`
   justify-content: space-between;
   flex-wrap: nowrap;
   flex-direction: row;
-  background-color: ${color("black")};
+  background-color: ${color("black100")};
 `
 
 const AnimatedTray = animated(Box)

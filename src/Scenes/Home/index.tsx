@@ -10,10 +10,7 @@ import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
-import { connect } from "react-redux"
 import styled from "styled-components/native"
-import { track } from "Utils/track"
-
 import { AllCaughtUp } from "./Components/AllCaughtUp"
 import { BrandsRail } from "./Components/BrandsRail"
 import { CategoriesRail } from "./Components/CategoriesRail"
@@ -61,7 +58,7 @@ const GET_HOMEPAGE = gql`
   }
 `
 
-export const HomeComponent = (props: any) => {
+export const Home = (props: any) => {
   const [sections, setSections] = useState([])
   const [showLoader, toggleLoader] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
@@ -70,7 +67,7 @@ export const HomeComponent = (props: any) => {
 
   useEffect(() => {
     if (data && data.homepage) {
-      const dataSections = data.homepage.sections
+      const dataSections = data.homepage.sections.slice()
       if (data.categories && dataSections && !categoriesAdded) {
         categoriesAdded = true
         dataSections.splice(1, 0, { type: "Categories", results: data.categories })
@@ -116,21 +113,23 @@ export const HomeComponent = (props: any) => {
           <BlackBackground />
           <FlatList
             data={sections}
-            keyExtractor={(item, index) => item.type}
+            keyExtractor={item => {
+              return item.type
+            }}
             renderItem={({ item, index }) => {
               const styles =
                 index === sections.length - 1
                   ? {
-                      backgroundColor: color("white"),
+                      backgroundColor: color("white100"),
                       paddingBottom: 30,
                       borderBottomLeftRadius: 30,
                       borderBottomRightRadius: 30,
                     }
-                  : { backgroundColor: color("white") }
+                  : { backgroundColor: color("white100") }
               return <Box style={styles}>{renderItem(item)}</Box>
             }}
             ListHeaderComponent={() => (
-              <Box p={2} style={{ backgroundColor: color("white") }}>
+              <Box p={2} style={{ backgroundColor: color("white100") }}>
                 <Flex flexDirection="row" flexWrap="nowrap" alignContent="center">
                   <SeasonsLogoSVG />
                   <Spacer mr={1} />
@@ -147,7 +146,7 @@ export const HomeComponent = (props: any) => {
 }
 
 const BlackBackground = styled(Box)`
-  background-color: ${color("black")};
+  background-color: ${color("black100")};
   height: 80%;
   bottom: 0;
   left: 0;
@@ -156,7 +155,7 @@ const BlackBackground = styled(Box)`
 `
 
 const WhiteBackground = styled(Box)`
-  background-color: ${color("white")};
+  background-color: ${color("white100")};
   height: 100px;
   top: -100px;
   z-index: -1;
@@ -164,10 +163,3 @@ const WhiteBackground = styled(Box)`
   right: 0;
   position: absolute;
 `
-
-const mapStateToProps = state => {
-  const { bag } = state
-  return { bag }
-}
-
-export const Home = connect(mapStateToProps)(HomeComponent)

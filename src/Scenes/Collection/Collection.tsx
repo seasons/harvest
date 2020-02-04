@@ -83,7 +83,7 @@ export const Collection = props => {
             mb={index === 0 ? 2 : 50}
             mt={index === 0 ? 0 : 30}
             pl={index === 0 ? 50 : 0}
-            styles={{ width: imageWidth, backgroundColor: color("white") }}
+            styles={{ width: imageWidth, backgroundColor: color("white100") }}
           >
             <Image source={{ uri: resizedImage }} style={{ width: imageWidth, height: imageWidth * aspectRatio }} />
           </Box>

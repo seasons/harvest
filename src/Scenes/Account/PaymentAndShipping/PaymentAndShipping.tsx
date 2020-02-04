@@ -10,7 +10,7 @@ import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
 import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_PAYMENT_DATA = gql`
-  query getUser {
+  query GetUserPaymentData {
     me {
       customer {
         detail {

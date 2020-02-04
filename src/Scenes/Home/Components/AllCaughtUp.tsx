@@ -8,7 +8,7 @@ export const AllCaughtUp: React.FC<{ navigation: NavigationScreenProp<Navigation
   navigation,
 }) => {
   return (
-    <Box style={{ backgroundColor: color("black") }}>
+    <Box style={{ backgroundColor: color("black100") }}>
       <Spacer mb={100} />
       <Flex style={{ flex: 1 }} justifyContent="center" flexDirection="column">
         <Flex justifyContent="center" flexDirection="row">
@@ -18,16 +18,16 @@ export const AllCaughtUp: React.FC<{ navigation: NavigationScreenProp<Navigation
           />
         </Flex>
         <Spacer mb={3} />
-        <Sans size="2" color={color("white")} style={{ textAlign: "center" }}>
+        <Sans size="2" color={color("white100")} style={{ textAlign: "center" }}>
           You're all caught up!
         </Sans>
         <Spacer mb={0.5} />
-        <Sans size="2" color={color("gray")} style={{ textAlign: "center" }}>
+        <Sans size="2" color={color("black50")} style={{ textAlign: "center" }}>
           Browse our entire collection
         </Sans>
         <Spacer mb={3} />
         <Flex justifyContent="center" flexDirection="row">
-          <Button size="medium" variant="primaryGray" onPress={() => navigation.navigate("Browse")}>
+          <Button size="medium" variant="secondaryBlack" onPress={() => navigation.navigate("Browse")}>
             Browse
           </Button>
         </Flex>

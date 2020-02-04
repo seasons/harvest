@@ -10,7 +10,7 @@ export const FixedBackArrow = ({ navigation }) => {
     <Wrapper>
       <TouchableOpacity onPress={() => navigation.pop()}>
         <ArrowWrapper>
-          <Arrow color={color("black")} />
+          <Arrow color={color("black100")} />
         </ArrowWrapper>
       </TouchableOpacity>
     </Wrapper>

@@ -1,14 +1,11 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { PopUp, Theme, Box, Spacer, VariantSizes } from "App/Components"
+import { Theme, Box, Spacer, VariantSizes, PopUp } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { setVariant, togglePopUp, toggleShowVariantPicker } from "App/Redux/actions"
 import get from "lodash/get"
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { NavigationActions } from "react-navigation"
 import { Dimensions, FlatList, SafeAreaView, TouchableOpacity } from "react-native"
-import { connect } from "react-redux"
 import { animated, useSpring } from "react-spring"
-import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 import { useQuery } from "@apollo/react-hooks"
 import { ImageRail, MoreLikeThis, ProductDetails } from "./Components"
@@ -16,28 +13,33 @@ import { BackArrowIcon } from "Assets/icons"
 import { color } from "App/Utils"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
+import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 
-const variantPickerHeight = Dimensions.get("window").height / 2.5
+const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 
-export const ProductComponent = props => {
-  const { togglePopUp, popUp, navigation, productState, toggleShowVariantPicker } = props
-  const showVariantSelection = productState && productState.showVariantSelection
-  useEffect(() => {
-    return () => {
-      toggleShowVariantPicker(false)
-    }
-  }, [])
+export const Product = props => {
+  const [popUp, setPopUp] = useState({ show: false, data: { title: "", note: "", buttonText: "" } })
+  const [showVariantPicker, toggleShowVariantPicker] = useState(false)
+  const { navigation } = props
   const productID = get(props, "navigation.state.params.id")
-  const { loading, error, data } = useQuery(GET_PRODUCT, {
+  const { data, loading, error } = useQuery<GetProduct>(GET_PRODUCT, {
     variables: {
       productID,
     },
   })
   const pickerTransition = useSpring({
-    translateY: showVariantSelection ? 0 : variantPickerHeight,
+    translateY: showVariantPicker ? 0 : variantPickerHeight,
   })
 
-  const product = data && data.product
+  const product: GetProduct_product = data && data.product
+  const [selectedVariant, setSelectedVariant] = useState(
+    (product && product.variants && product.variants.length && product.variants[0]) || {
+      id: "",
+      abbreviated: "",
+      size: "",
+      stock: 0,
+    }
+  )
 
   if (loading || !data) {
     return <Loader />
@@ -59,7 +61,7 @@ export const ProductComponent = props => {
           />
         )
       case "productDetails":
-        return <ProductDetails product={product} />
+        return <ProductDetails product={product} setPopUp={setPopUp} selectedVariant={selectedVariant} />
       case "moreLikeThis":
         return <MoreLikeThis products={images} />
       // case "aboutTheBrand":
@@ -80,8 +82,8 @@ export const ProductComponent = props => {
               navigation.dispatch(NavigationActions.back())
             }}
           >
-            <ArrowBackground showVariantSelection={showVariantSelection} />
-            <BackArrowIcon color={showVariantSelection ? color("white100") : color("black100")} />
+            <ArrowBackground showVariantPicker={showVariantPicker} />
+            <BackArrowIcon color={showVariantPicker ? color("white100") : color("black100")} />
           </TouchableOpacity>
         </ArrowWrapper>
         <FlatList
@@ -90,42 +92,38 @@ export const ProductComponent = props => {
           keyExtractor={item => item}
           renderItem={item => renderItem(item)}
         />
-        <SelectionButtons productID={productID} />
-        {showVariantSelection && <Overlay />}
+        <SelectionButtons
+          productID={productID as GetProduct_product["id"]}
+          toggleShowVariantPicker={toggleShowVariantPicker}
+          setPopUp={setPopUp}
+          showVariantPicker={showVariantPicker}
+          selectedVariant={selectedVariant}
+        />
+        {showVariantPicker && <Overlay />}
         <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
-          <VariantPicker height={variantPickerHeight} navigation={navigation} productID={productID} />
+          <VariantPicker
+            setSelectedVariant={setSelectedVariant}
+            selectedVariant={selectedVariant}
+            height={variantPickerHeight}
+            navigation={navigation}
+            productID={productID as GetProduct_product["id"]}
+            toggleShowVariantPicker={toggleShowVariantPicker}
+          />
         </AnimatedVariantPicker>
         <PopUp
-          title={popUp.title}
-          note={popUp.note}
-          buttonText={popUp.buttonText}
-          show={productState.showPopUp}
+          title={popUp.data && popUp.data.title}
+          note={popUp.data && popUp.data.note}
+          buttonText={popUp.data && popUp.data.buttonText}
+          show={popUp.show}
           theme="light"
           onClose={() => {
-            togglePopUp(false)
+            setPopUp({ show: false, data: { title: "", note: "", buttonText: "" } })
           }}
         />
       </SafeAreaView>
     </Theme>
   )
 }
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      setVariant,
-      togglePopUp,
-      toggleShowVariantPicker,
-    },
-    dispatch
-  )
-
-const mapStateToProps = state => {
-  const { bag, productState, popUp } = state
-  return { bag, productState, popUp }
-}
-
-export const Product = connect(mapStateToProps, mapDispatchToProps)(ProductComponent)
 
 const VariantPickerWrapper = styled(Box)`
   position: absolute;
@@ -155,7 +153,7 @@ const ArrowBackground = styled(Box)`
   width: 30;
   height: 30;
   position: absolute;
-  background-color: ${p => (p.showVariantSelection ? color("black100") : color("black4"))};
+  background-color: ${p => (p.showVariantPicker ? color("black100") : color("black04"))};
   border-radius: 40;
   left: -6;
   top: -1;

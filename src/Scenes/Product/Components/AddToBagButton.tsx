@@ -1,49 +1,25 @@
-import { GET_BAG } from "App/Apollo/Queries"
+import { GET_BAG, ADD_TO_BAG, REMOVE_FROM_BAG } from "App/Scenes/Bag/BagQueries"
 import { Button } from "App/Components"
-import { togglePopUp } from "App/Redux/actions"
-import gql from "graphql-tag"
 import { head } from "lodash"
 import React, { useState } from "react"
-import { connect } from "react-redux"
-import { bindActionCreators } from "redux"
-
 import { useMutation, useQuery } from "@apollo/react-hooks"
 
 interface Props {
-  productState: any
   productID: string
-  addItemToBag: (product: any) => void
-  removeItemFromWantItems: (product: any) => void
-  addItemToWantItems: (product: any) => void
-  togglePopUp: (show: boolean, data: any) => void
   disabled?: Boolean
   variantInStock: Boolean
   width: number
+  selectedVariant: any
+  setPopUp: ({ show: boolean, data: any }) => void
 }
 
-const ADD_TO_BAG = gql`
-  mutation AddToBag($item: ID!) {
-    addToBag(item: $item) {
-      id
-    }
-  }
-`
-
-const REMOVE_FROM_BAG = gql`
-  mutation RemoveFromBag($item: ID!) {
-    removeFromBag(item: $item) {
-      id
-    }
-  }
-`
-
-export const AddToBagButtonComponent: React.FC<Props> = props => {
+export const AddToBagButton: React.FC<Props> = props => {
   const [isMutating, setIsMutating] = useState(false)
-  const { productID, productState, togglePopUp, variantInStock, width } = props
+  const { productID, setPopUp, variantInStock, width, selectedVariant } = props
   const { data } = useQuery(GET_BAG)
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
-      item: productState.variant.id,
+      item: selectedVariant.id,
     },
     refetchQueries: [
       {
@@ -59,10 +35,13 @@ export const AddToBagButtonComponent: React.FC<Props> = props => {
         const error = head(err.graphQLErrors)
         console.log("AddToBagButton.tsx: ", error)
 
-        togglePopUp(true, {
-          title: "Your bag is full",
-          note: "Remove one or more items from your bag to continue adding this item.",
-          buttonText: "Got It",
+        setPopUp({
+          show: true,
+          data: {
+            title: "Your bag is full",
+            note: "Remove one or more items from your bag to continue adding this item.",
+            buttonText: "Got It",
+          },
         })
       }
     },
@@ -70,7 +49,7 @@ export const AddToBagButtonComponent: React.FC<Props> = props => {
 
   const [removeFromBag] = useMutation(REMOVE_FROM_BAG, {
     variables: {
-      item: productState.variant.id,
+      item: selectedVariant.id,
     },
     refetchQueries: [
       {
@@ -129,7 +108,7 @@ export const AddToBagButtonComponent: React.FC<Props> = props => {
     <Button
       width={width}
       showCheckMark={showCheckMark}
-      variant="secondaryLight"
+      variant="primaryBlack"
       disabled={disabled}
       size="medium"
       onPress={onPress}
@@ -138,18 +117,3 @@ export const AddToBagButtonComponent: React.FC<Props> = props => {
     </Button>
   )
 }
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      togglePopUp,
-    },
-    dispatch
-  )
-
-const mapStateToProps = state => {
-  const { bag, productState } = state
-  return { bag, productState }
-}
-
-export const AddToBagButton = connect(mapStateToProps, mapDispatchToProps)(AddToBagButtonComponent)

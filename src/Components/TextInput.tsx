@@ -30,34 +30,34 @@ export const defaultVariant: TextInputVariant = "light"
 
 export function getColorsForVariant(variant: TextInputVariant) {
   const {
-    colors: { black, white, gray },
+    colors: { black100, white100, black50 },
   } = themeProps
 
   switch (variant) {
     case "light":
       return {
         active: {
-          backgroundColor: white,
-          borderColor: black,
-          color: black,
+          backgroundColor: white100,
+          borderColor: black100,
+          color: black100,
         },
         inactive: {
-          backgroundColor: white,
-          borderColor: gray,
-          color: gray,
+          backgroundColor: white100,
+          borderColor: black50,
+          color: black50,
         },
       }
     case "dark":
       return {
         active: {
-          backgroundColor: black,
-          borderColor: white,
-          color: white,
+          backgroundColor: black100,
+          borderColor: white100,
+          color: white100,
         },
         inactive: {
-          backgroundColor: black,
-          borderColor: gray,
-          color: white,
+          backgroundColor: black100,
+          borderColor: black50,
+          color: white100,
         },
       }
     default:
@@ -95,7 +95,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
     }
   }
 
-  const height = style && style.height ? style.height : 56;
+  const height = style && style.height ? style.height : 56
 
   return (
     <Box style={{ height: height }}>
@@ -107,7 +107,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
             placeholder={placeholder}
             style={{ ...style, ...props }}
             autoCapitalize="none"
-            placeholderTextColor={color("gray")}
+            placeholderTextColor={color("black50")}
             onChangeText={text => handleOnChangeText(text)}
             value={value}
           />
@@ -117,7 +117,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
   )
 }
 
-const StyledTextInput = styled(RNTextInput) <TextInputProps>`
+const StyledTextInput = styled(RNTextInput)<TextInputProps>`
   border-width: 1;
   height: 56;
   border-radius: 8;

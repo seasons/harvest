@@ -18,12 +18,12 @@ export const SavedEmptyState = ({ navigation }) => {
               />
             </Flex>
             <Spacer mb={3} />
-            <Sans size="2" color={color("gray")} style={{ textAlign: "center" }}>
+            <Sans size="2" color={color("black50")} style={{ textAlign: "center" }}>
               You haven’t saved any pieces yet. Anything you save will appear here
             </Sans>
             <Spacer mb={3} />
             <Flex justifyContent="center" flexDirection="row">
-              <Button size="medium" variant="primaryDark" onPress={() => navigation.navigate("Browse")}>
+              <Button size="medium" variant="secondaryBlack" onPress={() => navigation.navigate("Browse")}>
                 Browse
               </Button>
             </Flex>

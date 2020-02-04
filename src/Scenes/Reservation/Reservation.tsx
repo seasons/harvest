@@ -8,8 +8,6 @@ import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { ScrollView, StatusBar, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { connect } from "react-redux"
-import { bindActionCreators } from "redux"
 import styled from "styled-components/native"
 
 import { BagItem } from "../Bag/Components/BagItem"
@@ -23,7 +21,7 @@ const RESERVE_ITEMS = gql`
 `
 
 const GET_CUSTOMER = gql`
-  {
+  query GetCustomer {
     me {
       user {
         firstName
@@ -75,7 +73,7 @@ const SectionHeader = ({ title }) => {
   )
 }
 
-export const ReservationView = props => {
+export const Reservation = props => {
   const [isMutating, setIsMutating] = useState(false)
   const { data, loading } = useQuery(GET_CUSTOMER)
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
@@ -108,7 +106,6 @@ export const ReservationView = props => {
     zipCode: "",
   })
   const phoneNumber = get(customer, "detail.phoneNumber", "")
-  const lastFourDigits = get(customer, "billingInfo.last_digits", null)
 
   const items =
     (data &&
@@ -214,15 +211,6 @@ export const ReservationView = props => {
   )
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
-
-const mapStateToProps = state => {
-  const { bag } = state
-  return { bag }
-}
-
-export const Reservation = connect(mapStateToProps, mapDispatchToProps)(ReservationView)
-
 const Container = styled(Box)`
   background: black;
   flex: 1;
@@ -243,9 +231,4 @@ const CloseButton = styled(TouchableOpacity)`
   border-radius: 20;
   margin-left: auto;
   margin-right: 20;
-`
-
-const EditButton = styled(Sans)`
-  color: #004eff;
-  align-self: flex-end;
 `

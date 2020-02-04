@@ -3,28 +3,26 @@ import React from "react"
 import { ScrollView } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import { useSafeArea } from "react-native-safe-area-context"
-import { connect } from "react-redux"
-
 import { Box, Container, FixedButton, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
 import { ProductRequestGallery } from "./Components"
 
-export const ProductRequestConfirmationComponent: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
-  navigation,
-}) => {
+export const ProductRequestConfirmation: React.FC<{
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+}> = ({ navigation }) => {
   const productRequest = get(navigation, "state.params.productRequest")
-  const { brand, description, images, name, price, sku } = productRequest;
+  const { brand, description, images, name, price, sku } = productRequest
   const primarySections = [
-    ['Name', name],
-    ['Description', description]
-  ];
+    ["Name", name],
+    ["Description", description],
+  ]
   const miscellaneousSections = [
-    ['Brand', brand],
-    ['SKU', sku],
-    ['Retail Price', `$${price}`]
-  ];
+    ["Brand", brand],
+    ["SKU", sku],
+    ["Retail Price", `$${price}`],
+  ]
 
   const handleSubmitBtnPressed = () => {
-    navigation.navigate('FinishProductRequest');
+    navigation.navigate("FinishProductRequest")
   }
 
   const insets = useSafeArea()
@@ -42,10 +40,9 @@ export const ProductRequestConfirmationComponent: React.FC<{ navigation: Navigat
             <Spacer mb={2} />
             <Separator />
             <Spacer mb={24} />
-            <ProductRequestGallery images={images}>
-            </ProductRequestGallery>
+            <ProductRequestGallery images={images}></ProductRequestGallery>
             <Spacer mb={24} />
-            {primarySections.map(section =>
+            {primarySections.map(section => (
               <>
                 <Sans size="1" color="black">
                   {section[0]}
@@ -55,13 +52,13 @@ export const ProductRequestConfirmationComponent: React.FC<{ navigation: Navigat
                 </Sans>
                 <Spacer mb={16} />
               </>
-            )}
+            ))}
             <Spacer mb={8} />
             <Separator />
-            {miscellaneousSections.map(section =>
+            {miscellaneousSections.map(section => (
               <>
                 <Spacer mb={24} />
-                <Box style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Box style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
                   <Sans size="1" color="black">
                     {section[0]}
                   </Sans>
@@ -72,24 +69,14 @@ export const ProductRequestConfirmationComponent: React.FC<{ navigation: Navigat
                 <Spacer mb={24} />
                 <Separator />
               </>
-            )}
+            ))}
             <Spacer mb={112} />
           </Box>
         </ScrollView>
-        <FixedButton
-          disabled={false}
-          mb={insets.bottom}
-          variant={"primaryDark"}
-          onPress={handleSubmitBtnPressed} >
+        <FixedButton disabled={false} mb={insets.bottom} variant={"secondaryBlack"} onPress={handleSubmitBtnPressed}>
           Submit
         </FixedButton>
       </>
-    </Container >
+    </Container>
   )
 }
-
-const mapStateToProps = state => {
-  return {}
-}
-
-export const ProductRequestConfirmation = connect(mapStateToProps)(ProductRequestConfirmationComponent)
