@@ -88,7 +88,7 @@ export const Filters = (props: any) => {
 
   return (
     <Theme>
-      <Container pl={2} pr={2} style={{ paddingTop: insets.top + 60, paddingBottom: insets.bottom }}>
+      <Container pl={2} pr={2} style={{ paddingTop: insets.top + 60 }}>
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
           <Box>
             <Sans size="3" color="white" weight="medium">
@@ -97,7 +97,7 @@ export const Filters = (props: any) => {
             <Spacer mb={64} />
           </Box>
           <SectionList
-            contentContainerStyle={{ paddingBottom: buttonBottom + buttonHeight }}
+            contentContainerStyle={{ paddingBottom: insets.bottom + buttonBottom + buttonHeight }}
             sections={filterSections}
             stickySectionHeadersEnabled={false}
             keyExtractor={item => item}
@@ -108,7 +108,7 @@ export const Filters = (props: any) => {
         <Box style={{ position: 'absolute', left: 16, bottom: buttonBottom }}>
           <Button
             size="medium"
-            variant={"secondaryLight"}
+            variant={"secondaryBlack"}
             width={buttonWidth}
             onPress={handleCancelBtnPressed}>
             Cancel
@@ -117,7 +117,7 @@ export const Filters = (props: any) => {
         <Box style={{ position: 'absolute', left: screenWidth / 2 + 3.5, bottom: buttonBottom }}>
           <Button
             disabled={isApplyButtonDisabled}
-            variant={"primaryLight"}
+            variant={"primaryWhite"}
             width={buttonWidth}
             onPress={handleApplyBtnPressed}>
             Apply

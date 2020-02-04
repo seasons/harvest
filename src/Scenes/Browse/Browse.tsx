@@ -23,7 +23,7 @@ const ABBREVIATED_SIZES = {
 }
 const IMAGE_HEIGHT = 240
 
-const GET_PRODUCTS = gql`
+const GET_BROWSE_PRODUCTS = gql`
   query GetBrowseProducts($name: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!, $sizes: [Size!]) {
     categories(where: { visible: true }) {
       id
