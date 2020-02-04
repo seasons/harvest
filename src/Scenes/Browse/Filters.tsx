@@ -26,12 +26,7 @@ export const Filters = (props: any) => {
   }
 
   const handleApplyBtnPressed = async () => {
-    console.log("CLICKED")
-    console.log("CURRENT:", sortFilter, ",", sizeFilters)
-    onFiltersModalDismiss(sortFilter, sizeFilters)
-    console.log("DISMISSING")
-    props.navigation.dismiss()
-    console.log("DISMISSED")
+    props.navigation.navigate('Browse', { sortFilter, sizeFilters })
   }
 
   const filterSections = [

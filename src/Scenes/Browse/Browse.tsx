@@ -121,9 +121,9 @@ const renderItem = ({ item }, i, navigation) => {
 }
 
 export const Browse = (props: any) => {
+  const sortFilter = get(props, "navigation.state.params.sortFilter", "")
+  const sizeFilters = get(props, "navigation.state.params.sizeFilters", [])
   const [currentCategory, setCurrentCategory] = useState("all")
-  const [sortFilter, setSortFilter] = useState("Alphabetical")
-  const [sizeFilters, setSizeFilters] = useState([])
 
   // Get all the sizes that we want to query by.
   // If no size filter is selected, all sizes are queried.
@@ -139,6 +139,18 @@ export const Browse = (props: any) => {
       sizes,
     },
   })
+  const getProductsAlphabetically = useQuery(GET_PRODUCTS_ALPHABETICALLY, {
+    variables: {
+      category: currentCategory,
+      sizes
+    }
+  })
+
+  let products = data && data.products
+  if (sortFilter && sortFilter === "Alphabetical") {
+    // Get list of products sorted alphabetically by brand name
+    products = get(getProductsAlphabetically, "data.productsAlphabetically")
+  }
 
   let scrollViewEl = null
 
@@ -148,20 +160,6 @@ export const Browse = (props: any) => {
       setCurrentCategory(props.screenProps.browseFilter)
     }
   }, [props.screenProps.browseFilter])
-  let products = data && data.products
-
-  if (sortFilter && sortFilter === "Alphabetical") {
-    //   // Get list of products sorted alphabetically by brand name
-    console.log("Querying with sizes: ", sizes)
-    const getProductsAlphabetically = useQuery(GET_PRODUCTS_ALPHABETICALLY, {
-      variables: {
-        category: currentCategory,
-        sizes
-      }
-    })
-    products = get(getProductsAlphabetically, "data.productsAlphabetically")
-    // console.log(products)
-  }
 
   const insets = useSafeArea()
   const loaderStyle = useSpring({ opacity: loading && !data ? 1 : 0 })
@@ -179,12 +177,7 @@ export const Browse = (props: any) => {
   }
 
   const onFilterBtnPress = () => {
-    const onFiltersModalDismiss = (sortFilter: string, sizeFilters: Array<string>) => {
-      console.log("SETTING SORT FILTER TO: ", sortFilter)
-      setSortFilter(sortFilter)
-      // setSizeFilters(sizeFilters)
-    }
-    props.navigation.navigate('FiltersModal', { onFiltersModalDismiss, sortFilter, sizeFilters })
+    props.navigation.navigate('FiltersModal', { sortFilter, sizeFilters })
   }
 
   return (
