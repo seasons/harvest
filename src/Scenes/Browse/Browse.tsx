@@ -25,7 +25,7 @@ const ABBREVIATED_SIZES = {
 const IMAGE_HEIGHT = 240
 
 const GET_BROWSE_PRODUCTS = gql`
-  query GetBrowseProducts($name: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!, $sizes: [Size!]) {
+  query GetBrowseProducts($name: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!, $sizes: [Size]!) {
     categories(where: { visible: true }) {
       id
       slug
@@ -36,13 +36,11 @@ const GET_BROWSE_PRODUCTS = gql`
     }
     products(
       category: $name, 
-      first: $first, 
-      skip: $skip, 
-      orderBy: $orderBy, 
-      where: { 
-        variants_some: { size_in: $sizes }, 
-        status: Available 
-      }
+      first: $first,
+      skip: $skip,
+      orderBy: $orderBy,
+      sizes: $sizes,
+      where: { status: Available }
     ) {
       id
       name
@@ -67,36 +65,6 @@ const GET_BROWSE_PRODUCTS = gql`
         nonReservable
         reserved
         isSaved
-      }
-    }
-  }
-`
-
-const GET_PRODUCTS_ALPHABETICALLY = gql`
-  query GetProductsAlphabetically($category: String!, $sizes: [Size]!) {
-    productsAlphabetically(category: $category, sizes: $sizes) {
-      id
-      name
-      description
-      images
-      modelSize
-      modelHeight
-      externalURL
-      tags
-      retailPrice
-      status
-      createdAt
-      updatedAt
-      brand {
-        name
-      }
-      variants {
-        id
-        size
-        total
-        reservable
-        nonReservable
-        reserved
       }
     }
   }
@@ -137,6 +105,8 @@ export const Browse = (props: any) => {
 
   // Get all the sizes that we want to query by.
   // If no size filter is selected, all sizes are queried.
+  const isSortingAlphabetically = sortFilter && sortFilter === "Alphabetical"
+  const orderBy = isSortingAlphabetically ? "name_ASC" : "createdAt_DESC"
   const sizes = sizeFilters && sizeFilters.length > 0
     ? sizeFilters.map(s => ABBREVIATED_SIZES[s])
     : Object.values(ABBREVIATED_SIZES)
@@ -145,23 +115,12 @@ export const Browse = (props: any) => {
       name: currentCategory,
       first: 10,
       skip: 0,
-      orderBy: "createdAt_DESC",
+      orderBy,
       sizes,
     },
   })
-  const getProductsAlphabetically = useQuery(GET_PRODUCTS_ALPHABETICALLY, {
-    variables: {
-      category: currentCategory,
-      sizes
-    }
-  })
 
   let products = data && data.products
-  if (sortFilter && sortFilter === "Alphabetical") {
-    // Get list of products sorted alphabetically by brand name
-    products = get(getProductsAlphabetically, "data.productsAlphabetically")
-  }
-
   let scrollViewEl = null
 
   useEffect(() => {
@@ -195,7 +154,6 @@ export const Browse = (props: any) => {
     filtersButtonText = "Filters"
     filtersButtonTextColor = "black"
   }
-  console.log(filtersButtonVariant)
 
   const onCategoryPress = item => {
     if (item.slug !== currentCategory) {
@@ -224,7 +182,9 @@ export const Browse = (props: any) => {
             numColumns={2}
             onEndReachedThreshold={0.7}
             onEndReached={() => {
-              if (!loading) {
+              // If we are sorting alphabetically, all products are returned so we do not need
+              // to fetch any more
+              if (!loading && !isSortingAlphabetically) {
                 fetchMore({
                   variables: {
                     skip: products.length,
