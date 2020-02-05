@@ -76,6 +76,13 @@ export const ProductRequest = (props: any) => {
 
   const insets = useSafeArea()
 
+  const pupUpData = {
+    buttonText: "Got it",
+    note: "We couldn’t find anything using this URL. Double check and try again.",
+    title: "Your link didn’t work!",
+    onClose: () => setShowError(false),
+  }
+
   return (
     <Theme>
       <Container style={{ paddingTop: insets.top, paddingBottom: insets.bottom, background: color("black100") }}>
@@ -119,14 +126,7 @@ export const ProductRequest = (props: any) => {
           </FixedButton>
         </KeyboardAvoidingView>
       </Container>
-      <PopUp
-        buttonText="Got it"
-        note="We couldn’t find anything using this URL. Double check and try again."
-        title="Your link didn’t work!"
-        theme="light"
-        show={showError}
-        onClose={() => setShowError(false)}
-      />
+      <PopUp data={pupUpData} show={showError} />
     </Theme>
   )
 }

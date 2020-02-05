@@ -88,7 +88,7 @@ export const PopUp: React.FC<PopUpProps> = ({ data, show }) => {
             </Sans>
             {note && (
               <>
-                <Spacer mb={2} />
+                <Spacer mb={0.5} />
                 <Sans size="2" color={colors.secondaryText} textAlign="center">
                   {note}
                 </Sans>

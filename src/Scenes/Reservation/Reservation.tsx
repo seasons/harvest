@@ -116,6 +116,13 @@ export const Reservation = props => {
       }))) ||
     []
 
+  const popUpData = {
+    title: "Sorry!",
+    note: "We couldn't process your order because of an unexpected error, please try again later",
+    buttonText: "Close",
+    onClose: () => setShowError(false),
+  }
+
   const content = (
     <>
       <StatusBar backgroundColor="dark" barStyle="light-content" />
@@ -181,14 +188,7 @@ export const Reservation = props => {
         Place order
       </FixedButton>
 
-      <PopUp
-        theme="light"
-        show={showError}
-        title="Sorry!"
-        note="We couldn't process your order because of an unexpected error, please try again later"
-        buttonText="Close"
-        onClose={() => setShowError(false)}
-      />
+      <PopUp data={popUpData} show={showError} />
     </>
   )
 
