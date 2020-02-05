@@ -114,7 +114,7 @@ export const Filters = (props: any) => {
         <Box style={{ position: 'absolute', left: 16, bottom: buttonBottom }}>
           <Button
             size="medium"
-            variant={"secondaryBlack"}
+            variant="secondaryBlack"
             width={buttonWidth}
             onPress={handleCancelBtnPressed}>
             Cancel
@@ -123,7 +123,8 @@ export const Filters = (props: any) => {
         <Box style={{ position: 'absolute', left: screenWidth / 2 + 3.5, bottom: buttonBottom }}>
           <Button
             disabled={isApplyButtonDisabled}
-            variant={"primaryWhite"}
+            size="medium"
+            variant="primaryWhite"
             width={buttonWidth}
             onPress={handleApplyBtnPressed}>
             Apply
