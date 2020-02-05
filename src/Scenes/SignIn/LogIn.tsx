@@ -39,7 +39,7 @@ export const LogIn: React.FC<LogInProps> = props => {
   const insets = useSafeArea()
   const [login] = useMutation(LOG_IN, {
     onError: error => {
-      console.log(error)
+      console.error(error)
 
       Keyboard.dismiss()
       // TODO: handle different types of errors
@@ -68,7 +68,7 @@ export const LogIn: React.FC<LogInProps> = props => {
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
         props.navigation.navigate("Home")
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     }
   }

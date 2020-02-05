@@ -25,7 +25,7 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
   const insets = useSafeArea()
 
   if (error) {
-    console.log("error MembershipInfo.tsx: ", error)
+    console.error("error MembershipInfo.tsx: ", error)
     return null
   }
 

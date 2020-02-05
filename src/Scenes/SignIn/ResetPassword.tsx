@@ -22,7 +22,7 @@ export const ResetPassword = (props: any) => {
 
   const [resetPassword] = useMutation(RESET_PASSWORD, {
     onError: error => {
-      console.log("SignIn/ResetPassword.tsx: ", error)
+      console.error("SignIn/ResetPassword.tsx: ", error)
       Keyboard.dismiss()
       setShowError(true)
     },

@@ -47,7 +47,6 @@ export const Product = screenTrack(props => {
   const [selectedVariant, setSelectedVariant] = useState(
     (product && product.variants && product.variants.length && product.variants[0]) || {
       id: "",
-      abbreviated: "",
       size: "",
       stock: 0,
     }

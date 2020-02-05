@@ -26,6 +26,9 @@ export const SaveProductButton: React.FC<{
   product: any
   setPopUp: ({ show: boolean, data: any }) => void
 }> = ({ selectedVariant, product, setPopUp }) => {
+  if (!product.variants || product?.variants?.length === 0) {
+    return <></>
+  }
   const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
 
   const { isSaved } = variantToUse

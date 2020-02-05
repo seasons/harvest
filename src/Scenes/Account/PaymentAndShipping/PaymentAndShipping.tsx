@@ -121,7 +121,7 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
   }
 
   if (error) {
-    console.log("error PaymentAndShipping.tsx: ", error)
+    console.error("error PaymentAndShipping.tsx: ", error)
     return <Loader />
   }
 

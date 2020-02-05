@@ -20,5 +20,4 @@ export default analytics
       trackDeepLinks: true,
     },
   })
-  .then(() => console.log("Analytics is ready"))
   .catch(err => console.error("Something went wrong", err))

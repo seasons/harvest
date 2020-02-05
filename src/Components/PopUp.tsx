@@ -89,13 +89,13 @@ export const PopUp: React.FC<PopUpProps> = ({ data, show }) => {
             {note && (
               <>
                 <Spacer mb={0.5} />
-                <Sans size="2" color={colors.secondaryText} textAlign="center">
+                <Sans size="1" color={colors.secondaryText} textAlign="center">
                   {note}
                 </Sans>
               </>
             )}
           </Box>
-          <Spacer mb={2} />
+          <Spacer mb={3} />
           <Separator color={colors.separator} />
           <Flex flexDirection="row">
             {showSecondaryButton && (

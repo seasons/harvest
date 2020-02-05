@@ -125,7 +125,7 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
           },
         ],
         update(cache, { data, errors }) {
-          console.log(data, errors)
+          console.error(data, errors)
         },
       })
       if (data.checkItemsAvailability) {
@@ -134,7 +134,7 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
       setMutating(false)
     } catch (e) {
       const { graphQLErrors } = e
-      console.log(graphQLErrors)
+      console.error(graphQLErrors)
       const error = graphQLErrors.length > 0 ? graphQLErrors[0] : null
       if (error) {
         const { code, exception } = error.extensions
@@ -209,8 +209,8 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
         />
       </Box>
     ) : (
-        <EmptyBagItem navigation={navigation} />
-      )
+      <EmptyBagItem navigation={navigation} />
+    )
   }
 
   const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"

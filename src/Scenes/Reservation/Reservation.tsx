@@ -87,7 +87,7 @@ export const Reservation = props => {
     },
     onError: err => {
       setIsMutating(false)
-      console.log("Error reservation.tsx: ", err)
+      console.error("Error reservation.tsx: ", err)
     },
   })
   const [showError, setShowError] = useState(false)

@@ -20,10 +20,10 @@ export const Tabs = props => {
   if (action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName === "Product" && !isProductRoute) {
     setTimeout(() => setIsProductRoute(true), 75)
   } else if (
-    ((action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName !== "Product") ||
-      action.type === "Navigation/POP_TO_TOP" ||
-      action.type === "Navigation/BACK") &&
-    isProductRoute
+    (action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName !== "Product") ||
+    action.type === "Navigation/POP_TO_TOP" ||
+    action.type === "Navigation/BACK" ||
+    (action.route && action.route !== "Product" && isProductRoute)
   ) {
     setTimeout(() => setIsProductRoute(false), 75)
   }

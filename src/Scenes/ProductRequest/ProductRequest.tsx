@@ -33,7 +33,7 @@ export const ProductRequest = (props: any) => {
 
   const [addProductRequest] = useMutation(ADD_PRODUCT_REQUEST, {
     onError: error => {
-      console.log(error)
+      console.error(error)
       Keyboard.dismiss()
       setShowError(true)
     },
