@@ -1,13 +1,13 @@
 import Config from "react-native-config"
 
 import analytics from "@segment/analytics-react-native"
-import GoogleAnalytics from "@segment/analytics-react-native-google-analytics"
-import Mixpanel from "@segment/analytics-react-native-mixpanel"
+// import GoogleAnalytics from "@segment/analytics-react-native-google-analytics"
+// import Mixpanel from "@segment/analytics-react-native-mixpanel"
 
 export default analytics
-  .setup(Config.SEGMENT_API_KEY, {
-    using: [Mixpanel, GoogleAnalytics],
-    recordScreenViews: true,
+  .setup(Config.SEGMENT_KEY, {
+    // using: [Mixpanel, GoogleAnalytics],
+    // recordScreenViews: true,
     trackAppLifecycleEvents: true,
     trackAttributionData: true,
 

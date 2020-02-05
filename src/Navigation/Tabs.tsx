@@ -8,7 +8,7 @@ import { useNavigationState } from "./NavigationState"
 import { color } from "App/Utils"
 
 export const Tabs = props => {
-  const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation, bag } = props
+  const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation } = props
   const navigationState = useNavigationState()
   const insets = useSafeArea()
 

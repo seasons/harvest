@@ -263,7 +263,9 @@ export const track: Track = _track
  */
 export function screenTrack<P>(trackingInfo: TrackingInfo<PageView, P, null>) {
   return _track(trackingInfo as any, {
-    dispatch: data => analytics.screen(data.contextScreen, data),
+    dispatch: data => {
+      return analytics.screen(data.contextScreen, data)
+    },
     dispatchOnMount: true,
   })
 }

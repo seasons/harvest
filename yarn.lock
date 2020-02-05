@@ -7961,10 +7961,10 @@ react-timer-mixin@^0.13.3, react-timer-mixin@^0.13.4:
   resolved "https://registry.yarnpkg.com/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz#75a00c3c94c13abe29b43d63b4c65a88fc8264d3"
   integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
 
-react-tracking@^7.2.1:
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/react-tracking/-/react-tracking-7.2.1.tgz#36a2636a32a5d2ecdde3664c9440ea7ddc72ae20"
-  integrity sha512-oFQ75Sczqxy34G5AfUGjcnzzwBgbzgj4xpzpW4Yq8ixfTj0IB+IE84XkBk5XWJvPcPQgWHgnxX2tLpDGicFxNw==
+react-tracking@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/react-tracking/-/react-tracking-7.3.0.tgz#7f4bd05b0e333e062d55044d1f58d8b409e22c11"
+  integrity sha512-xDpUyq0NIWltTnyaSyUEMIB+W1Fqk0OXY2aAfbV/wpvUTHvEtLrpOu5flPwkn6h0t1JstG5RYJgfUfEoyT1SiQ==
   dependencies:
     core-js "^3.3.2"
     deepmerge "^4.1.1"
