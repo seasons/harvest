@@ -12,6 +12,7 @@ import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { useQuery } from "@apollo/react-hooks"
 import { BrowseLoader } from "./Loader"
+import { color } from "styled-system"
 
 const ABBREVIATED_SIZES = {
   "X-Small": "XS",
@@ -177,6 +178,24 @@ export const Browse = (props: any) => {
   const categories = (data && data.categories) || []
   const filtersButtonBottom = 16
   const filtersButtonHeight = 36
+  const numFiltersSelected = sizeFilters.length + (sortFilter !== "" ? 1 : 0)
+
+  let filtersButtonVariant
+  let filtersButtonWidth
+  let filtersButtonText
+  let filtersButtonTextColor
+  if (numFiltersSelected > 0) { // Selected filters state
+    filtersButtonVariant = "primaryBlack"
+    filtersButtonWidth = 97
+    filtersButtonText = `Filters +${numFiltersSelected}`
+    filtersButtonTextColor = "white"
+  } else { // No filters selected state
+    filtersButtonVariant = "primaryWhite"
+    filtersButtonWidth = 78
+    filtersButtonText = "Filters"
+    filtersButtonTextColor = "black"
+  }
+  console.log(filtersButtonVariant)
 
   const onCategoryPress = item => {
     if (item.slug !== currentCategory) {
@@ -228,11 +247,14 @@ export const Browse = (props: any) => {
           />
           <FixedButtonContainer bottom={filtersButtonBottom}>
             <Button
-              borderRadius={3}
+              borderRadius={18}
               height={filtersButtonHeight}
-              width={84}
+              width={filtersButtonWidth}
+              variant={filtersButtonVariant}
               onPress={onFilterBtnPress}>
-              Filters
+              <Sans color={color(filtersButtonTextColor)} size="1" weight="medium">
+                {filtersButtonText}
+              </Sans>
             </Button>
           </FixedButtonContainer>
         </Box>
