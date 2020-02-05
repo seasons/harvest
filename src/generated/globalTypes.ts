@@ -13,8 +13,6 @@ export enum BagItemStatus {
 }
 
 export enum HomePageSectionType {
-  Brands = "Brands",
-  Categories = "Categories",
   CollectionGroups = "CollectionGroups",
   HomepageProductRails = "HomepageProductRails",
   Products = "Products",
