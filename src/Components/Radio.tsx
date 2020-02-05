@@ -13,6 +13,8 @@ import { TouchableWithoutFeedback } from "react-native"
  */
 
 export interface RadioProps extends FlexProps {
+  /** The border radius of the radio button */
+  borderRadius?: number
   /** Disable interactions */
   disabled?: boolean
   /** Select the button on render. If the Radio is inside a RadioGroup, use RadioGroup.defaultValue instead. */
@@ -27,7 +29,7 @@ export interface RadioProps extends FlexProps {
   label?: React.ReactNode
 }
 
-export interface RadioToggleProps extends RadioProps, BorderProps, SizeProps, SpaceProps {}
+export interface RadioToggleProps extends RadioProps, BorderProps, SizeProps, SpaceProps { }
 
 /**
  * A Radio button
@@ -35,18 +37,31 @@ export interface RadioToggleProps extends RadioProps, BorderProps, SizeProps, Sp
  * Spec: zpl.io/bAvnwlB
  */
 export const Radio: React.SFC<RadioProps> = props => {
-  const { children, disabled, name, onSelect: _onSelect, selected, value, label, ...others } = props
+  let {
+    borderRadius,
+    children,
+    disabled,
+    name,
+    onSelect: _onSelect,
+    selected,
+    value,
+    label,
+    ...others
+  } = props
+  borderRadius = borderRadius ?? 100
 
   // Ensures that only one call to `onSelect` occurs, regardless of whether the
   // user clicks the radio element or the label.
   const onSelect = _onSelect && debounce(_onSelect, 0)
 
+  const innerComponent = children || <InnerCircle />
+
   return (
     <Flex flexDirection="row" alignItems="center">
       <TouchableWithoutFeedback onPress={() => !disabled && onSelect && onSelect({ selected: !selected, value })}>
         <Container disabled={disabled} alignItems="center" selected={selected} {...others}>
-          <RadioButton role="presentation" border={1} mr={1} selected={selected} disabled={disabled}>
-            {selected && <InnerCircle />}
+          <RadioButton role="presentation" border={1} borderRadius={borderRadius} mr={1} selected={selected} disabled={disabled}>
+            {selected && innerComponent}
           </RadioButton>
         </Container>
       </TouchableWithoutFeedback>
@@ -64,7 +79,7 @@ export const Radio: React.SFC<RadioProps> = props => {
 /**
  * A radio button with a border
  */
-export const BorderedRadio = styled(Box)<RadioProps>`
+export const BorderedRadio = styled(Box) <RadioProps>`
   padding: ${space(2)}px;
   border: 1px solid ${color("black85")};
   transition: background-color 0.14s ease-in-out;
@@ -84,7 +99,7 @@ interface ContainerProps extends FlexProps {
   selected: boolean
 }
 
-const Container = styled(Flex)<ContainerProps>`
+const Container = styled(Flex) <ContainerProps>`
   align-items: flex-start;
 `
 
@@ -92,20 +107,18 @@ const InnerCircle = styled(Box)`
   width: 14;
   height: 14;
   border-radius: 100;
-  position: relative;
-  left: 4;
-  top: 4;
   background-color: ${color("blue")};
 `
 
-const RadioButton = styled(Box)<RadioToggleProps>`
+const RadioButton = styled(Box) <RadioToggleProps>`
   ${borders};
   ${styledSpace};
   border-color: ${color("black85")};
   border-width: 1;
   width: 24;
   height: 24;
-  border-radius: 100;
   min-width: 24;
   min-height: 24;
+  justify-content: center;
+  align-items: center;
 `

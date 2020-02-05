@@ -2,6 +2,7 @@ import get from "lodash/get"
 import React, { useState } from "react"
 import { Dimensions, SectionList, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
+import { WhiteCheck } from "Assets/svgs"
 import { Box, Button, Flex, Radio, Sans, Separator, Spacer, Theme } from "../../Components"
 import styled from "styled-components/native"
 
@@ -56,9 +57,12 @@ export const Filters = (props: any) => {
   }
 
   const renderItem = ({ item, section }) => {
-    const isSelected = section.title === SORT_BY
+    const isSortBySection = section.title === SORT_BY
+    const isSelected = isSortBySection
       ? sortFilter === item
       : sizeFilters.includes(item)
+    // Use the default border radius for the sort by section
+    const radioButtonBorderRadius = isSortBySection ? null : 4
     return (
       <TouchableWithoutFeedback onPress={() => {
         if (section.title === SORT_BY) {
@@ -74,7 +78,9 @@ export const Filters = (props: any) => {
         <Box>
           <Spacer mt={20} />
           <Flex flexDirection="row">
-            <Radio selected={isSelected} />
+            <Radio borderRadius={radioButtonBorderRadius} selected={isSelected} >
+              {!isSortBySection ? <WhiteCheck /> : null}
+            </Radio>
             <Sans color="white" ml={2} size="1" weight="medium">
               {item}
             </Sans>
