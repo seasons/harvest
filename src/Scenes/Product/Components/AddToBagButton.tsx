@@ -1,8 +1,11 @@
 import { GET_BAG, ADD_TO_BAG, REMOVE_FROM_BAG } from "App/Scenes/Bag/BagQueries"
 import { Button } from "App/Components"
 import { head } from "lodash"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
+import { GreenCheck } from "Assets/svgs"
+import { PopUpProps } from "App/Components/PopUp"
 
 interface Props {
   productID: string
@@ -11,12 +14,29 @@ interface Props {
   width: number
   selectedVariant: any
   setPopUp: ({ show: boolean, data: any }) => void
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 export const AddToBagButton: React.FC<Props> = props => {
   const [isMutating, setIsMutating] = useState(false)
-  const { productID, setPopUp, variantInStock, width, selectedVariant } = props
+  const { productID, setPopUp, variantInStock, width, selectedVariant, navigation } = props
   const { data } = useQuery(GET_BAG)
+
+  useEffect(() => {
+    setPopUp({
+      show: true,
+      data: {
+        icon: <GreenCheck />,
+        title: "Added to bag",
+        note: "Your bag is full. Place your reservation.",
+        buttonText: "Got It",
+        secondaryButtonText: "Go to bag",
+        secondaryButtonOnPress: () => navigation.navigate("Bag"),
+        onClose: () => setPopUp({ show: false, data: null }),
+      },
+    })
+  }, [])
+
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
       id: selectedVariant.id,
@@ -28,6 +48,7 @@ export const AddToBagButton: React.FC<Props> = props => {
     ],
     onCompleted: () => {
       setIsMutating(false)
+      console.log("data", data)
     },
     onError: err => {
       setIsMutating(false)
@@ -41,6 +62,7 @@ export const AddToBagButton: React.FC<Props> = props => {
             title: "Your bag is full",
             note: "Remove one or more items from your bag to continue adding this item.",
             buttonText: "Got It",
+            onClose: setPopUp({ show: false, data: null }),
           },
         })
       }

@@ -1,21 +1,12 @@
 import React from "react"
 import { Box, Flex, Sans } from "App/Components"
-import {
-  SavedPiecesIcon,
-  MembershipInfoIcon,
-  PersonalPreferencesIcon,
-  PaymentShippingIcon,
-  OrderHistoryIcon,
-  ChevronIcon,
-} from "Assets/icons"
+import { MembershipInfoIcon, PersonalPreferencesIcon, PaymentShippingIcon, ChevronIcon } from "Assets/icons"
 import { TouchableOpacity } from "react-native"
 
 const lists = [
   { title: "Membership info", icon: <MembershipInfoIcon />, link: "MembershipInfo" },
   { title: "Personal preferences", icon: <PersonalPreferencesIcon />, link: "PersonalPreferences" },
   { title: "Payments & Shipping", icon: <PaymentShippingIcon />, link: "PaymentAndShipping" },
-  // { title: "Saved pieces", icon: <SavedPiecesIcon />, link: "" },
-  // { title: "Order history", icon: <OrderHistoryIcon />, link: "" },
 ]
 
 export class ProfileList extends React.Component<any> {

@@ -2,7 +2,7 @@ import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Theme, Box, Spacer, VariantSizes, PopUp } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import get from "lodash/get"
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { NavigationActions, NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { Dimensions, FlatList, SafeAreaView, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring"
@@ -13,9 +13,9 @@ import { BackArrowIcon } from "Assets/icons"
 import { color } from "App/Utils"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
-import { useTracking } from "react-tracking"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { screenTrack } from "App/Utils/track"
+import { PopUpProps } from "App/Components/PopUp"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 
@@ -30,7 +30,7 @@ export const Product = screenTrack(props => {
     productID,
   }
 })((props: ProductProps) => {
-  const [popUp, setPopUp] = useState({ show: false, data: { title: "", note: "", buttonText: "" } })
+  const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation } = props
   const productID = get(navigation, "state.params.id")
@@ -108,6 +108,7 @@ export const Product = screenTrack(props => {
           setPopUp={setPopUp}
           showVariantPicker={showVariantPicker}
           selectedVariant={selectedVariant}
+          navigation={navigation}
         />
         {showVariantPicker && <Overlay />}
         <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
@@ -120,16 +121,7 @@ export const Product = screenTrack(props => {
             toggleShowVariantPicker={toggleShowVariantPicker}
           />
         </AnimatedVariantPicker>
-        <PopUp
-          title={popUp.data && popUp.data.title}
-          note={popUp.data && popUp.data.note}
-          buttonText={popUp.data && popUp.data.buttonText}
-          show={popUp.show}
-          theme="light"
-          onClose={() => {
-            setPopUp({ show: false, data: { title: "", note: "", buttonText: "" } })
-          }}
-        />
+        <PopUp data={popUp.data} show={popUp.show} />
       </SafeAreaView>
     </Theme>
   )

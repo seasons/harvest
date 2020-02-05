@@ -5,11 +5,21 @@ import styled from "styled-components/native"
 import { TouchableWithoutFeedback, Dimensions } from "react-native"
 import { color } from "App/Utils"
 import { DownChevronIcon } from "Assets/icons"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
+
+interface Props {
+  productID: string
+  toggleShowVariantPicker: (show: boolean) => void
+  showVariantPicker: boolean
+  selectedVariant: any
+  setPopUp: ({ show: boolean, data: any }) => void
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+}
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - 12
 
-export const SelectionButtons = props => {
-  const { selectedVariant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
+export const SelectionButtons: React.FC<Props> = props => {
+  const { navigation, selectedVariant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
   const inStock = selectedVariant && !!selectedVariant.stock
   if (!selectedVariant) {
     return <></>
@@ -48,7 +58,8 @@ export const SelectionButtons = props => {
             setPopUp={setPopUp}
             width={twoButtonWidth}
             selectedVariant={selectedVariant}
-          ></AddToBagButton>
+            navigation={navigation}
+          />
         )}
       </Flex>
     </Wrapper>

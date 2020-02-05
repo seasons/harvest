@@ -18,9 +18,14 @@ export const Tabs = props => {
 
   // Handle routing to the product view
   if (action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName === "Product" && !isProductRoute) {
-    setIsProductRoute(true)
-  } else if ((action.type === "Navigation/POP_TO_TOP" || action.type === "Navigation/BACK") && isProductRoute) {
-    setIsProductRoute(false)
+    setTimeout(() => setIsProductRoute(true), 75)
+  } else if (
+    ((action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName !== "Product") ||
+      action.type === "Navigation/POP_TO_TOP" ||
+      action.type === "Navigation/BACK") &&
+    isProductRoute
+  ) {
+    setTimeout(() => setIsProductRoute(false), 75)
   }
 
   const tabs = routes.map((route, routeIndex) => {
