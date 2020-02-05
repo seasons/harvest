@@ -64,15 +64,13 @@ export const Product = props => {
         return <ProductDetails product={product} setPopUp={setPopUp} selectedVariant={selectedVariant} />
       case "moreLikeThis":
         return <MoreLikeThis products={images} />
-      // case "aboutTheBrand":
-      // FIXME: Hiding this component until it has more content
-      //   return <AboutTheBrand product={product} />
       default:
         return null
     }
   }
 
   const sections = ["imageRail", "productDetails", "aboutTheBrand"]
+
   return (
     <Theme>
       <SafeAreaView style={{ flex: 1 }}>
@@ -93,7 +91,7 @@ export const Product = props => {
           renderItem={item => renderItem(item)}
         />
         <SelectionButtons
-          productID={productID as GetProduct_product["id"]}
+          productID={productID}
           toggleShowVariantPicker={toggleShowVariantPicker}
           setPopUp={setPopUp}
           showVariantPicker={showVariantPicker}
@@ -106,7 +104,7 @@ export const Product = props => {
             selectedVariant={selectedVariant}
             height={variantPickerHeight}
             navigation={navigation}
-            productID={productID as GetProduct_product["id"]}
+            productID={productID}
             toggleShowVariantPicker={toggleShowVariantPicker}
           />
         </AnimatedVariantPicker>
