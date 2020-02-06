@@ -37,8 +37,8 @@ export interface RadioToggleProps extends RadioProps, BorderProps, SizeProps, Sp
  * Spec: zpl.io/bAvnwlB
  */
 export const Radio: React.SFC<RadioProps> = props => {
-  let {
-    borderRadius,
+  const {
+    borderRadius = 100,
     children,
     disabled,
     name,
@@ -48,7 +48,6 @@ export const Radio: React.SFC<RadioProps> = props => {
     label,
     ...others
   } = props
-  borderRadius = borderRadius ?? 100
 
   // Ensures that only one call to `onSelect` occurs, regardless of whether the
   // user clicks the radio element or the label.

@@ -62,7 +62,7 @@ export const Filters = (props: any) => {
       ? sortFilter === item
       : sizeFilters.includes(item)
     // Use the default border radius for the sort by section
-    const radioButtonBorderRadius = isSortBySection ? null : 4
+    const radioButtonBorderRadius = isSortBySection ? undefined : 4
     return (
       <TouchableWithoutFeedback onPress={() => {
         if (section.title === SORT_BY) {

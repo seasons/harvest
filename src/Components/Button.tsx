@@ -217,8 +217,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   render() {
-    let { borderRadius, children, showCheckMark, disabled, loading, showChevron, rotateChevron, ...rest } = this.props
-    borderRadius = borderRadius ?? 28
+    const { borderRadius = 28, children, showCheckMark, disabled, loading, showChevron, rotateChevron, ...rest } = this.props
     let { px, size, height } = this.getSize()
     height = this.props.height ?? height
     const variantColors = getColorsForVariant(this.props.variant)
