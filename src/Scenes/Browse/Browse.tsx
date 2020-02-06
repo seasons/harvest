@@ -131,8 +131,8 @@ export const Browse = (props: any) => {
   }, [props.screenProps.browseFilter])
 
   const insets = useSafeArea()
-  const loaderStyle = useSpring({ opacity: loading && !data ? 1 : 0 })
-  const containerStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
+  const loaderStyle = useSpring({ opacity: loading || !data ? 1 : 0 })
+  const productsBoxStyle = useSpring({ opacity: loading || !data ? 0 : 1 })
   const { navigation } = props
   const categories = (data && data.categories) || []
   const filtersButtonBottom = 16
@@ -171,8 +171,8 @@ export const Browse = (props: any) => {
       <LoaderContainer mt={insets.top} style={[loaderStyle]}>
         <BrowseLoader imageHeight={IMAGE_HEIGHT} />
       </LoaderContainer>
-      <AnimatedFlex flexDirection="column" flex={1} style={[containerStyle]}>
-        <Box flex={1} flexGrow={1}>
+      <Flex flexDirection="column" flex={1} >
+        <AnimatedBox flex={1} flexGrow={1} style={[productsBoxStyle]}>
           <FlatList
             contentContainerStyle={{ paddingTop: insets.top, paddingBottom: filtersButtonBottom + filtersButtonHeight }}
             data={products}
@@ -217,8 +217,8 @@ export const Browse = (props: any) => {
               </Sans>
             </Button>
           </FixedButtonContainer>
-        </Box>
-        <Box height={60} mb={insets.bottom}>
+        </AnimatedBox>
+        <Box height={60} mb={insets.bottom} style={{ opacity: !data ? 0 : 1 }}>
           <CategoryPicker
             data={[{ slug: "all", name: "All" }, ...categories]}
             renderItem={({ item }) => {
@@ -243,7 +243,7 @@ export const Browse = (props: any) => {
             horizontal
           />
         </Box>
-      </AnimatedFlex>
+      </Flex>
     </Container >
   )
 }
@@ -266,7 +266,7 @@ const LoaderContainer = animated(styled(Box)`
   top: 0;
 `)
 
-const AnimatedFlex = animated(Flex)
+const AnimatedBox = animated(Box)
 
 const Category = styled(Box)`
   ${p =>
