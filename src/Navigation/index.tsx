@@ -1,7 +1,7 @@
 import { Account, PaymentAndShipping } from "App/Scenes/Account"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
-import { Browse } from "App/Scenes/Browse"
+import { Browse, Filters } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
@@ -12,7 +12,7 @@ import { Webview } from "App/Scenes/Webview"
 import React, { useState } from "react"
 import { Image } from "react-native"
 import { createAppContainer, createSwitchNavigator } from "react-navigation"
-import { createStackNavigator } from "react-navigation-stack"
+import { createStackNavigator, TransitionPresets } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import styled from "styled-components"
@@ -116,6 +116,16 @@ BrowseStack.navigationOptions = ({ navigation }) => {
     header: null,
   }
 }
+
+const FiltersModal = DismissableStackNavigator(
+  {
+    Filters,
+  },
+  {
+    headerMode: "none",
+  }
+)
+
 
 const ProductRequestModal = DismissableStackNavigator(
   {
@@ -252,10 +262,18 @@ const RootStack = createStackNavigator(
     ProductRequestModal: {
       screen: ProductRequestModal,
     },
+    FiltersModal: {
+      screen: FiltersModal,
+    }
   },
   {
     mode: "modal",
     headerMode: "none",
+    defaultNavigationOptions: {
+      gestureEnabled: true,
+      cardOverlayEnabled: true,
+      ...TransitionPresets.ModalPresentationIOS,
+    },
   }
 )
 

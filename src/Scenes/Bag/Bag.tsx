@@ -209,8 +209,8 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
         />
       </Box>
     ) : (
-      <EmptyBagItem navigation={navigation} />
-    )
+        <EmptyBagItem navigation={navigation} />
+      )
   }
 
   const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"

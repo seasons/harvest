@@ -1,22 +1,31 @@
-import { Box, Flex, Sans, VariantSizes, Spacer } from "App/Components"
+import { Box, Button, FixedButton, Flex, Sans, VariantSizes, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import get from "lodash/get"
 import React, { useEffect, useState } from "react"
-import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
+import { Dimensions, FlatList, Text, TouchableWithoutFeedback } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { useQuery } from "@apollo/react-hooks"
 import { BrowseLoader } from "./Loader"
+import { color } from "styled-system"
 
+const ABBREVIATED_SIZES = {
+  "X-Small": "XS",
+  "Small": "S",
+  "Medium": "M",
+  "Large": "L",
+  "X-Large": "XL",
+  "XX-Large": "XXL"
+}
 const IMAGE_HEIGHT = 240
 
 const GET_BROWSE_PRODUCTS = gql`
-  query GetBrowseProducts($name: String!, $first: Int!, $skip: Int!) {
+  query GetBrowseProducts($name: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!, $sizes: [Size]!) {
     categories(where: { visible: true }) {
       id
       slug
@@ -25,7 +34,14 @@ const GET_BROWSE_PRODUCTS = gql`
         slug
       }
     }
-    products(category: $name, first: $first, skip: $skip, where: { status: Available }) {
+    products(
+      category: $name, 
+      first: $first,
+      skip: $skip,
+      orderBy: $orderBy,
+      sizes: $sizes,
+      where: { status: Available }
+    ) {
       id
       name
       description
@@ -83,14 +99,28 @@ const renderItem = ({ item }, i, navigation) => {
 }
 
 export const Browse = (props: any) => {
+  const sortFilter = get(props, "navigation.state.params.sortFilter", "")
+  const sizeFilters = get(props, "navigation.state.params.sizeFilters", [])
   const [currentCategory, setCurrentCategory] = useState("all")
+
+  // Get all the sizes that we want to query by.
+  // If no size filter is selected, all sizes are queried.
+  const isSortingAlphabetically = sortFilter && sortFilter === "Alphabetical"
+  const orderBy = isSortingAlphabetically ? "name_ASC" : "createdAt_DESC"
+  const sizes = sizeFilters && sizeFilters.length > 0
+    ? sizeFilters.map(s => ABBREVIATED_SIZES[s])
+    : Object.values(ABBREVIATED_SIZES)
   const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
     variables: {
       name: currentCategory,
       first: 10,
       skip: 0,
+      orderBy,
+      sizes,
     },
   })
+
+  let products = data && data.products
   let scrollViewEl = null
 
   useEffect(() => {
@@ -101,11 +131,29 @@ export const Browse = (props: any) => {
   }, [props.screenProps.browseFilter])
 
   const insets = useSafeArea()
-  const loaderStyle = useSpring({ opacity: loading && !data ? 1 : 0 })
-  const containerStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
+  const loaderStyle = useSpring({ opacity: loading || !data ? 1 : 0 })
+  const productsBoxStyle = useSpring({ opacity: loading || !data ? 0 : 1 })
   const { navigation } = props
-  const products = data && data.products
   const categories = (data && data.categories) || []
+  const filtersButtonBottom = 16
+  const filtersButtonHeight = 36
+  const numFiltersSelected = sizeFilters.length + (sortFilter !== "" ? 1 : 0)
+
+  let filtersButtonVariant
+  let filtersButtonWidth
+  let filtersButtonText
+  let filtersButtonTextColor
+  if (numFiltersSelected > 0) { // Selected filters state
+    filtersButtonVariant = "primaryBlack"
+    filtersButtonWidth = 97
+    filtersButtonText = `Filters +${numFiltersSelected}`
+    filtersButtonTextColor = "white"
+  } else { // No filters selected state
+    filtersButtonVariant = "primaryWhite"
+    filtersButtonWidth = 78
+    filtersButtonText = "Filters"
+    filtersButtonTextColor = "black"
+  }
 
   const onCategoryPress = item => {
     if (item.slug !== currentCategory) {
@@ -114,14 +162,19 @@ export const Browse = (props: any) => {
     scrollViewEl.scrollToOffset({ offset: 0, animated: true })
   }
 
+  const onFilterBtnPress = () => {
+    props.navigation.navigate('FiltersModal', { sortFilter, sizeFilters })
+  }
+
   return (
     <Container>
       <LoaderContainer mt={insets.top} style={[loaderStyle]}>
         <BrowseLoader imageHeight={IMAGE_HEIGHT} />
       </LoaderContainer>
-      <AnimatedFlex flexDirection="column" flex={1} pt={insets.top} style={[containerStyle]}>
-        <Box flex={1} flexGrow={1}>
+      <Flex flexDirection="column" flex={1} >
+        <AnimatedBox flex={1} flexGrow={1} style={[productsBoxStyle]}>
           <FlatList
+            contentContainerStyle={{ paddingTop: insets.top, paddingBottom: filtersButtonBottom + filtersButtonHeight }}
             data={products}
             ref={ref => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
@@ -129,7 +182,9 @@ export const Browse = (props: any) => {
             numColumns={2}
             onEndReachedThreshold={0.7}
             onEndReached={() => {
-              if (!loading) {
+              // If we are sorting alphabetically, all products are returned so we do not need
+              // to fetch any more
+              if (!loading && !isSortingAlphabetically) {
                 fetchMore({
                   variables: {
                     skip: products.length,
@@ -150,8 +205,20 @@ export const Browse = (props: any) => {
               }
             }}
           />
-        </Box>
-        <Box height={60} mb={insets.bottom}>
+          <FixedButtonContainer bottom={filtersButtonBottom}>
+            <Button
+              borderRadius={18}
+              height={filtersButtonHeight}
+              width={filtersButtonWidth}
+              variant={filtersButtonVariant}
+              onPress={onFilterBtnPress}>
+              <Sans color={color(filtersButtonTextColor)} size="1" weight="medium">
+                {filtersButtonText}
+              </Sans>
+            </Button>
+          </FixedButtonContainer>
+        </AnimatedBox>
+        <Box height={60} mb={insets.bottom} style={{ opacity: !data ? 0 : 1 }}>
           <CategoryPicker
             data={[{ slug: "all", name: "All" }, ...categories]}
             renderItem={({ item }) => {
@@ -176,8 +243,8 @@ export const Browse = (props: any) => {
             horizontal
           />
         </Box>
-      </AnimatedFlex>
-    </Container>
+      </Flex>
+    </Container >
   )
 }
 
@@ -199,7 +266,7 @@ const LoaderContainer = animated(styled(Box)`
   top: 0;
 `)
 
-const AnimatedFlex = animated(Flex)
+const AnimatedBox = animated(Box)
 
 const Category = styled(Box)`
   ${p =>
@@ -208,4 +275,9 @@ const Category = styled(Box)`
     border-bottom-color: black;
     border-bottom-width: 3px;
   `};
+`
+
+const FixedButtonContainer = styled(Box)`
+  position: absolute; 
+  align-self: center; 
 `
