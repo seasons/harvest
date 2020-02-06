@@ -269,6 +269,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-seasons/Pods-seasons-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/A0Auth0/A0Auth0.framework",
+				"${BUILT_PRODUCTS_DIR}/Analytics/Analytics.framework",
 				"${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework",
 				"${BUILT_PRODUCTS_DIR}/EXAppLoaderProvider/EXAppLoaderProvider.framework",
 				"${BUILT_PRODUCTS_DIR}/EXConstants/EXConstants.framework",
@@ -324,6 +325,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/A0Auth0.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Analytics.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DoubleConversion.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXAppLoaderProvider.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EXConstants.framework",

@@ -162,6 +162,7 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/A0Auth0/A0Auth0.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Analytics/Analytics.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/EXAppLoaderProvider/EXAppLoaderProvider.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/EXConstants/EXConstants.framework"
@@ -216,6 +217,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/A0Auth0/A0Auth0.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Analytics/Analytics.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/EXAppLoaderProvider/EXAppLoaderProvider.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/EXConstants/EXConstants.framework"

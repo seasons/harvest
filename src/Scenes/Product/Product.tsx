@@ -2,8 +2,8 @@ import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Theme, Box, Spacer, VariantSizes, PopUp } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import get from "lodash/get"
-import React, { useState } from "react"
-import { NavigationActions } from "react-navigation"
+import React, { useState, useEffect } from "react"
+import { NavigationActions, NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { Dimensions, FlatList, SafeAreaView, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
@@ -13,15 +13,27 @@ import { BackArrowIcon } from "Assets/icons"
 import { color } from "App/Utils"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
+import { useTracking } from "react-tracking"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
+import { screenTrack } from "App/Utils/track"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 
-export const Product = props => {
+interface ProductProps {
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+}
+
+export const Product = screenTrack(props => {
+  const productID = get(props, "navigation.state.params.id")
+  return {
+    contextScreen: "Product",
+    productID,
+  }
+})((props: ProductProps) => {
   const [popUp, setPopUp] = useState({ show: false, data: { title: "", note: "", buttonText: "" } })
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation } = props
-  const productID = get(props, "navigation.state.params.id")
+  const productID = get(navigation, "state.params.id")
   const { data, loading, error } = useQuery<GetProduct>(GET_PRODUCT, {
     variables: {
       productID,
@@ -64,15 +76,13 @@ export const Product = props => {
         return <ProductDetails product={product} setPopUp={setPopUp} selectedVariant={selectedVariant} />
       case "moreLikeThis":
         return <MoreLikeThis products={images} />
-      // case "aboutTheBrand":
-      // FIXME: Hiding this component until it has more content
-      //   return <AboutTheBrand product={product} />
       default:
         return null
     }
   }
 
   const sections = ["imageRail", "productDetails", "aboutTheBrand"]
+
   return (
     <Theme>
       <SafeAreaView style={{ flex: 1 }}>
@@ -93,7 +103,7 @@ export const Product = props => {
           renderItem={item => renderItem(item)}
         />
         <SelectionButtons
-          productID={productID as GetProduct_product["id"]}
+          productID={productID}
           toggleShowVariantPicker={toggleShowVariantPicker}
           setPopUp={setPopUp}
           showVariantPicker={showVariantPicker}
@@ -106,7 +116,7 @@ export const Product = props => {
             selectedVariant={selectedVariant}
             height={variantPickerHeight}
             navigation={navigation}
-            productID={productID as GetProduct_product["id"]}
+            productID={productID}
             toggleShowVariantPicker={toggleShowVariantPicker}
           />
         </AnimatedVariantPicker>
@@ -123,7 +133,7 @@ export const Product = props => {
       </SafeAreaView>
     </Theme>
   )
-}
+})
 
 const VariantPickerWrapper = styled(Box)`
   position: absolute;

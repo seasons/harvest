@@ -3,17 +3,17 @@ import { Flex, Box, Sans } from "App/Components"
 import { color } from "App/Utils"
 import React from "react"
 import styled from "styled-components/native"
-import { GetProduct_product_variants } from "App/generated/GetProduct"
+import { Homepage_homepage_sections_results_Product_variants } from "App/generated/Homepage"
 
 export const VariantSizes: React.FC<{
-  variants: GetProduct_product_variants[]
+  variants: Homepage_homepage_sections_results_Product_variants[]
   size: "0" | "1"
 }> = ({ variants, size }) => {
   const sortedVariants = sortVariants(variants)
   return (
     <Flex flexDirection="row">
-      {sortedVariants.map((variant: GetProduct_product_variants) => {
-        const reservable = !!variant.reservable
+      {sortedVariants.map((variant: any) => {
+        const reservable = variant.reservable !== null && !!variant.reservable
         return (
           <Box key={variant.id} mr={0.5} style={{ position: "relative" }}>
             <Sans size={size} color={reservable ? "black" : "black15"}>

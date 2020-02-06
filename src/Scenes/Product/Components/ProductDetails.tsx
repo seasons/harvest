@@ -25,6 +25,17 @@ export const ProductDetails: React.FC<{
     brand: { name: brandName },
   } = product
 
+  const modelHeightDisplay = modelHeight => {
+    const height = parseInt(modelHeight)
+    const feet = Math.floor(height / 12)
+    const inches = height % 12
+    if (!!feet && !!inches) {
+      return `${feet}'${inches}"`
+    } else {
+      return `${feet}'`
+    }
+  }
+
   return (
     <Box pt={2} px={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between">
@@ -42,11 +53,15 @@ export const ProductDetails: React.FC<{
       <Sans size="1" color="gray" lineHeight={26}>
         {description}
       </Sans>
-      <Spacer mb={1} />
-      <Spacer mb={2} />
+      <Spacer mb={3} />
       <Separator color={color("black15")} />
       {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
-      {product.modelSize && <ProductInfoItem detailType="Fit" detailValue={`Model size is ${product.modelSize}`} />}
+      {product.modelSize && product.modelHeight && (
+        <ProductInfoItem
+          detailType="Fit"
+          detailValue={`Model is ${modelHeightDisplay(product.modelHeight)} in a ${product.modelSize}`}
+        />
+      )}
       {product.outerMaterials && (
         <ProductInfoItem detailType="Materials" detailValue={product.outerMaterials.join(", ")} />
       )}
