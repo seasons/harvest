@@ -87,22 +87,18 @@ export const Home: React.FC<{
         <Box style={{ position: "relative", backgroundColor: color("white100"), paddingTop: insets.top }}>
           <WhiteBackground />
           <BlackBackground />
+          <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
+            <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
+              <LogoText>SEASONS</LogoText>
+            </Flex>
+          </Box>
+          <Separator />
           <FlatList
             data={sections}
             keyExtractor={(item, index) => {
               return item.type + index
             }}
-            ListHeaderComponent={() => (
-              <>
-                <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
-                  <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
-                    <LogoText>SEASONS</LogoText>
-                  </Flex>
-                </Box>
-                <Separator />
-                <Spacer mb={2} />
-              </>
-            )}
+            ListHeaderComponent={() => <Spacer mb={2} />}
             renderItem={({ item, index }) => {
               const styles =
                 index === sections.length - 1
