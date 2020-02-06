@@ -2,12 +2,13 @@ import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Theme, Box, Spacer, VariantSizes, PopUp } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import get from "lodash/get"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { NavigationActions, NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { Dimensions, FlatList, SafeAreaView, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-import { useQuery } from "@apollo/react-hooks"
+import { useQuery, useMutation } from "@apollo/react-hooks"
+import gql from "graphql-tag"
 import { ImageRail, MoreLikeThis, ProductDetails } from "./Components"
 import { BackArrowIcon } from "Assets/icons"
 import { color } from "App/Utils"
@@ -16,8 +17,18 @@ import { VariantPicker } from "./Components/VariantPicker"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { screenTrack } from "App/Utils/track"
 import { PopUpProps } from "App/Components/PopUp"
+import { GET_HOMEPAGE } from "../Home/Home"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
+
+const ADD_VIEWED_PRODUCT = gql`
+  mutation AddViewedProduct($item: ID!) {
+    addViewedProduct(item: $item) {
+      id
+      viewCount
+    }
+  }
+`
 
 interface ProductProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
@@ -42,6 +53,21 @@ export const Product = screenTrack(props => {
   const pickerTransition = useSpring({
     translateY: showVariantPicker ? 0 : variantPickerHeight,
   })
+  const [addRecentlyViewedItem] = useMutation(ADD_VIEWED_PRODUCT, {
+    refetchQueries: [
+      {
+        query: GET_HOMEPAGE,
+      },
+    ],
+  })
+
+  useEffect(() => {
+    addRecentlyViewedItem({
+      variables: {
+        item: productID,
+      },
+    })
+  }, [])
 
   const product: GetProduct_product = data && data.product
   const [selectedVariant, setSelectedVariant] = useState(
