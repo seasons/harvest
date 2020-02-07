@@ -131,8 +131,8 @@ export const Browse = (props: any) => {
   }, [props.screenProps.browseFilter])
 
   const insets = useSafeArea()
-  const loaderStyle = useSpring({ opacity: loading || !data ? 1 : 0 })
-  const productsBoxStyle = useSpring({ opacity: loading || !data ? 0 : 1 })
+  const loaderStyle = useSpring({ opacity: loading && !data ? 1 : 0 })
+  const productsBoxStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
   const { navigation } = props
   const categories = (data && data.categories) || []
   const filtersButtonBottom = 16

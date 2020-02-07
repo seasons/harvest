@@ -218,8 +218,8 @@ export class Button extends Component<ButtonProps, ButtonState> {
 
   render() {
     const { borderRadius = 28, children, showCheckMark, disabled, loading, showChevron, rotateChevron, ...rest } = this.props
-    let { px, size, height } = this.getSize()
-    height = this.props.height ?? height
+    const { px, size, height } = this.getSize()
+    const buttonHeight = this.props.height ?? height
     const variantColors = getColorsForVariant(this.props.variant)
     const { current, previous } = this.state
     const from = disabled ? variantColors[DisplayState.Disabled] : variantColors[previous]
@@ -245,7 +245,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
             disabled={disabled}
           >
             <Flex flexDirection="row">
-              <AnimatedContainer disabled={disabled} {...rest} style={{ ...props, borderRadius, height }} px={px}>
+              <AnimatedContainer disabled={disabled} {...rest} style={{ ...props, borderRadius, height: buttonHeight }} px={px}>
                 {!loading && (
                   <>
                     <Sans color={to.color} size={size}>

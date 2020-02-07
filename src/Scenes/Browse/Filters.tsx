@@ -15,11 +15,11 @@ export const Filters = (props: any) => {
   const [sortFilter, setSortFilter] = useState(currentSortFilter)
   const [sizeFilters, setSizeFilters] = useState(currentSizeFilters)
 
-  const handleCancelBtnPressed = async () => {
+  const handleCancelBtnPressed = () => {
     props.navigation.dismiss()
   }
 
-  const handleApplyBtnPressed = async () => {
+  const handleApplyBtnPressed = () => {
     props.navigation.navigate('Browse', { sortFilter, sizeFilters })
   }
 
