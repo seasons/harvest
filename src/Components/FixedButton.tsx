@@ -11,9 +11,7 @@ export const FixedButton: React.FC<Props> = props => {
     <Theme>
       <KeyboardAvoidingView behavior="padding">
         <FlexWrapper p={2} alignContent="center" justiftContent="center" flexDirection="row">
-          <Button {...props} size="large">
-            {props.children}
-          </Button>
+          <Button {...props}>{props.children}</Button>
         </FlexWrapper>
       </KeyboardAvoidingView>
     </Theme>

@@ -23,7 +23,7 @@ export const VariantPicker = props => {
         </Sans>
       </Flex>
       <FixedButtonWrapper px={2}>
-        <Button variant="secondaryBlack" onPress={() => toggleShowVariantPicker(false)}>
+        <Button variant="secondaryBlack" width="100%" size="medium" onPress={() => toggleShowVariantPicker(false)}>
           Cancel
         </Button>
       </FixedButtonWrapper>
