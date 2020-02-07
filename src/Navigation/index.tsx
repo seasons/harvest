@@ -5,9 +5,13 @@ import { Browse, Filters } from "App/Scenes/Browse"
 import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
-import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
+import {
+  FinishProductRequest, ProductRequest, ProductRequestConfirmation
+} from "App/Scenes/ProductRequest"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
-import { Initializing, ResetPassword, ResetPasswordConfirmation, SignIn, Welcome } from "App/Scenes/SignIn"
+import {
+  Initializing, ResetPassword, ResetPasswordConfirmation, SignIn, Welcome
+} from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
 import React, { useState } from "react"
 import { Image } from "react-native"
