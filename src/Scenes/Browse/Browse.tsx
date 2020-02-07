@@ -1,17 +1,19 @@
-import { Box, Button, FixedButton, Flex, Sans, Spacer, VariantSizes } from "App/Components"
+import { Box, Button, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import get from "lodash/get"
 import React, { useEffect, useState } from "react"
-import { Dimensions, FlatList, Text, TouchableWithoutFeedback } from "react-native"
+import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
+
 import { useQuery } from "@apollo/react-hooks"
+
 import { BrowseLoader } from "./Loader"
 
 const ABBREVIATED_SIZES = {
@@ -25,7 +27,7 @@ const ABBREVIATED_SIZES = {
 const IMAGE_HEIGHT = 240
 
 const GET_BROWSE_PRODUCTS = gql`
-  query GetBrowseProducts($name: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!, $sizes: [Size]!) {
+  query GetBrowseProducts($name: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!, $sizes: [Size!]) {
     categories(where: { visible: true }) {
       id
       slug
