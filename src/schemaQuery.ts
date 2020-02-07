@@ -29,7 +29,7 @@ const createFragmentTypes = () => {
       result.data.__schema.types = filteredData
       fs.writeFile("./src/fragmentTypes.json", JSON.stringify(result.data), err => {
         if (err) {
-          console.error("Error writing fragmentTypes file", err)
+          console.warn("Error writing fragmentTypes file", err)
         } else {
           console.log("Fragment types successfully extracted!")
         }

@@ -7,9 +7,7 @@ import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, SafeAreaView, TouchableWithoutFeedback } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
-
 import AsyncStorage from "@react-native-community/async-storage"
-import { useSafeArea } from "react-native-safe-area-context"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -36,10 +34,9 @@ export const LogIn: React.FC<LogInProps> = props => {
   const [password, setPassword] = useState("")
   const [emailComplete, setEmailComplete] = useState(false)
   const [showError, setShowError] = useState(false)
-  const insets = useSafeArea()
   const [login] = useMutation(LOG_IN, {
     onError: error => {
-      console.error(error)
+      console.warn(error)
 
       Keyboard.dismiss()
       // TODO: handle different types of errors
@@ -68,7 +65,7 @@ export const LogIn: React.FC<LogInProps> = props => {
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
         props.navigation.navigate("Home")
       } catch (e) {
-        console.error(e)
+        console.log(e)
       }
     }
   }

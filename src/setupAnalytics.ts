@@ -20,4 +20,4 @@ export default analytics
       trackDeepLinks: true,
     },
   })
-  .catch(err => console.error("Something went wrong", err))
+  .catch(err => console.warn("Something went wrong", err))

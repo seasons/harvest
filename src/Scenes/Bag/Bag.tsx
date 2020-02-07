@@ -125,7 +125,7 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
           },
         ],
         update(cache, { data, errors }) {
-          console.error(data, errors)
+          console.warn(data, errors)
         },
       })
       if (data.checkItemsAvailability) {
@@ -134,7 +134,7 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
       setMutating(false)
     } catch (e) {
       const { graphQLErrors } = e
-      console.error(graphQLErrors)
+      console.warn(graphQLErrors)
       const error = graphQLErrors.length > 0 ? graphQLErrors[0] : null
       if (error) {
         const { code, exception } = error.extensions
