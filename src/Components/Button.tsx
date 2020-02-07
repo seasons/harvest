@@ -35,15 +35,16 @@ export interface ButtonProps extends BoxProps {
   disabled?: boolean
   showCheckMark?: boolean
   height?: number
-  width?: number
+  width?: number | string
   borderRadius?: number
   loading?: boolean
   rotateChevron?: boolean
   showChevron?: boolean
+  block?: boolean
 }
 
 export type ButtonVariant = "primaryBlack" | "primaryWhite" | "blur" | "secondaryBlack"
-export type ButtonSize = "small" | "medium" | "large"
+export type ButtonSize = "small" | "large"
 
 /** Default button size */
 export const defaultSize: ButtonSize = "large"
@@ -179,10 +180,10 @@ export class Button extends Component<ButtonProps, ButtonState> {
     switch (this.props.size) {
       case "small":
         return { height: 40, size: "0", px: 2 }
-      case "medium":
-        return { height: 48, size: "1", px: 30 }
       case "large":
-        return { height: 55, size: "2", px: 5 }
+        return { height: 48, size: "1", px: 30 }
+      default:
+        return { height: 48, size: "1", px: 30 }
     }
   }
 
@@ -217,7 +218,16 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   render() {
-    const { borderRadius = 28, children, showCheckMark, disabled, loading, showChevron, rotateChevron, ...rest } = this.props
+    const {
+      borderRadius = 28,
+      children,
+      showCheckMark,
+      disabled,
+      loading,
+      showChevron,
+      rotateChevron,
+      ...rest
+    } = this.props
     const { px, size, height } = this.getSize()
     const buttonHeight = this.props.height ?? height
     const variantColors = getColorsForVariant(this.props.variant)
@@ -245,7 +255,12 @@ export class Button extends Component<ButtonProps, ButtonState> {
             disabled={disabled}
           >
             <Flex flexDirection="row">
-              <AnimatedContainer disabled={disabled} {...rest} style={{ ...props, borderRadius, height: buttonHeight }} px={px}>
+              <AnimatedContainer
+                disabled={disabled}
+                {...rest}
+                style={{ ...props, borderRadius, height: buttonHeight }}
+                px={px}
+              >
                 {!loading && (
                   <>
                     <Sans color={to.color} size={size}>
@@ -275,7 +290,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 }
 
-const Container = styled(Box) <ButtonProps>`
+const Container = styled(Box)<ButtonProps>`
   align-items: center;
   justify-content: center;
   position: relative;
@@ -287,7 +302,7 @@ const Container = styled(Box) <ButtonProps>`
     if (p.width) {
       return p.width
     } else {
-      return p.size === "large" ? "100%" : "auto"
+      return p.block ? "100%" : "auto"
     }
   }};
   }

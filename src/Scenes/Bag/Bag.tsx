@@ -263,7 +263,7 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
         {isBagView && !hasActiveReservation && (
           <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
             <Box mb={0.5}>
-              <FixedButton onPress={() => handleReserve(navigation)} disabled={!bagIsFull} loading={isMutating}>
+              <FixedButton block onPress={() => handleReserve(navigation)} disabled={!bagIsFull} loading={isMutating}>
                 Reserve
               </FixedButton>
             </Box>

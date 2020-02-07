@@ -1,15 +1,9 @@
 import { GET_BAG, ADD_TO_BAG, REMOVE_FROM_BAG } from "App/Scenes/Bag/BagQueries"
 import { Button } from "App/Components"
 import { head } from "lodash"
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
-import {
-  NavigationScreenProp,
-  NavigationState,
-  NavigationParams,
-  StackActions,
-  NavigationActions,
-} from "react-navigation"
+import { NavigationScreenProp, NavigationState, NavigationParams, StackActions } from "react-navigation"
 import { GreenCheck } from "Assets/svgs"
 
 interface Props {
@@ -131,14 +125,7 @@ export const AddToBagButton: React.FC<Props> = props => {
   }
 
   return (
-    <Button
-      width={width}
-      showCheckMark={showCheckMark}
-      variant="primaryBlack"
-      disabled={disabled}
-      size="medium"
-      onPress={onPress}
-    >
+    <Button width={width} showCheckMark={showCheckMark} variant="primaryBlack" disabled={disabled} onPress={onPress}>
       {text}
     </Button>
   )
