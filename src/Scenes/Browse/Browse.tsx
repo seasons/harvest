@@ -140,7 +140,7 @@ export const Browse = (props: any) => {
   const categories = (data && data.categories) || []
   const filtersButtonBottom = 16
   const filtersButtonHeight = 36
-  const numFiltersSelected = sizeFilters.length + (sortFilter !== "" ? 1 : 0)
+  const numFiltersSelected = sizeFilters.length
 
   let filtersButtonVariant
   let filtersButtonWidth
@@ -211,13 +211,7 @@ export const Browse = (props: any) => {
             }}
           />
           <FixedButtonContainer bottom={filtersButtonBottom}>
-            <Button
-              borderRadius={18}
-              height={filtersButtonHeight}
-              width={filtersButtonWidth}
-              variant={filtersButtonVariant}
-              onPress={onFilterBtnPress}
-            >
+            <Button size="small" variant={filtersButtonVariant} onPress={onFilterBtnPress}>
               <Sans color={color(filtersButtonTextColor)} size="1" weight="medium">
                 {filtersButtonText}
               </Sans>

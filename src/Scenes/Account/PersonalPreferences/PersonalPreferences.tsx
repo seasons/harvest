@@ -152,7 +152,7 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
   }
 
   if (error) {
-    console.log("error PersonalPreferences.tsx: ", error)
+    console.error("error PersonalPreferences.tsx: ", error)
     return null
   }
 

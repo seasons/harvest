@@ -130,18 +130,12 @@ export const Filters = (props: any) => {
           </Box>
         </Flex>
         <Box style={{ position: "absolute", left: 16, bottom: buttonBottom }}>
-          <Button size="medium" variant="secondaryBlack" width={buttonWidth} onPress={handleCancelBtnPressed}>
+          <Button variant="secondaryBlack" width={buttonWidth} onPress={handleCancelBtnPressed}>
             Cancel
           </Button>
         </Box>
         <Box style={{ position: "absolute", left: screenWidth / 2 + 3.5, bottom: buttonBottom }}>
-          <Button
-            disabled={isApplyButtonDisabled}
-            size="medium"
-            variant="primaryWhite"
-            width={buttonWidth}
-            onPress={handleApplyBtnPressed}
-          >
+          <Button variant="primaryWhite" width={buttonWidth} onPress={handleApplyBtnPressed}>
             Apply
           </Button>
         </Box>

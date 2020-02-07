@@ -3,6 +3,8 @@ import { Button } from "App/Components"
 import { head } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
+import { NavigationScreenProp, NavigationState, NavigationParams, StackActions } from "react-navigation"
+import { GreenCheck } from "Assets/svgs"
 
 interface Props {
   productID: string
@@ -11,12 +13,14 @@ interface Props {
   width: number
   selectedVariant: any
   setPopUp: ({ show: boolean, data: any }) => void
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 export const AddToBagButton: React.FC<Props> = props => {
   const [isMutating, setIsMutating] = useState(false)
-  const { productID, setPopUp, variantInStock, width, selectedVariant } = props
+  const { productID, setPopUp, variantInStock, width, selectedVariant, navigation } = props
   const { data } = useQuery(GET_BAG)
+
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
       id: selectedVariant.id,
@@ -28,19 +32,35 @@ export const AddToBagButton: React.FC<Props> = props => {
     ],
     onCompleted: () => {
       setIsMutating(false)
+      if (data?.me?.bag?.length >= 2) {
+        setPopUp({
+          show: true,
+          data: {
+            icon: <GreenCheck />,
+            title: "Added to bag",
+            note: "Your bag is full. Place your reservation.",
+            buttonText: "Got It",
+            secondaryButtonText: "Go to bag",
+            secondaryButtonOnPress: () => {
+              setPopUp({ show: false, data: null })
+              navigation.dispatch(StackActions.popToTop())
+              navigation.navigate("Bag")
+            },
+            onClose: () => setPopUp({ show: false, data: null }),
+          },
+        })
+      }
     },
     onError: err => {
       setIsMutating(false)
       if (err && err.graphQLErrors) {
-        const error = head(err.graphQLErrors)
-        console.log("AddToBagButton.tsx: ", error)
-
         setPopUp({
           show: true,
           data: {
             title: "Your bag is full",
             note: "Remove one or more items from your bag to continue adding this item.",
             buttonText: "Got It",
+            onClose: () => setPopUp({ show: false, data: null }),
           },
         })
       }
@@ -63,7 +83,7 @@ export const AddToBagButton: React.FC<Props> = props => {
       setIsMutating(false)
       if (err && err.graphQLErrors) {
         const error = head(err.graphQLErrors)
-        console.log("AddToBagButton.tsx: ", error)
+        console.error("AddToBagButton.tsx: ", error)
       }
     },
   })
@@ -105,14 +125,7 @@ export const AddToBagButton: React.FC<Props> = props => {
   }
 
   return (
-    <Button
-      width={width}
-      showCheckMark={showCheckMark}
-      variant="primaryBlack"
-      disabled={disabled}
-      size="medium"
-      onPress={onPress}
-    >
+    <Button width={width} showCheckMark={showCheckMark} variant="primaryBlack" disabled={disabled} onPress={onPress}>
       {text}
     </Button>
   )

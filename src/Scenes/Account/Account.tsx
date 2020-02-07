@@ -104,7 +104,6 @@ export function Account(props) {
                   </Sans>
                 )}
               </Flex>
-
               <ImageContainer source={require(`../../../assets/images/smiley.png`)} />
             </Flex>
             <Spacer m={2} />

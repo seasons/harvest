@@ -12,7 +12,6 @@ export interface Size {
   name: string
   stock: number
   size: string
-  abbreviated: string
 }
 
 const sizeToName = size => {
@@ -42,7 +41,6 @@ const sizeDataForVariants = (variants = []) => {
     sizeData[size] = {
       id: size,
       size: sizeToName(size),
-      abbreviated: size,
       stock: 0,
     }
   }
@@ -54,7 +52,6 @@ const sizeDataForVariants = (variants = []) => {
       sizeData[size] = {
         id,
         size: sizeToName(size),
-        abbreviated: size,
         stock: reservable,
       }
     }

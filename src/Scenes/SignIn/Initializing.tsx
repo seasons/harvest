@@ -23,7 +23,6 @@ export class Initializing extends React.Component<Props> {
         navigation.navigate("Auth")
       }
     } catch (err) {
-      console.log("error: ", err)
       navigation.navigate("Auth")
     }
   }

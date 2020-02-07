@@ -1,25 +1,37 @@
-import { color } from "App/Utils"
+import { color, space } from "App/Utils"
 import { useComponentSize } from "App/Utils/Hooks/useComponentSize"
-import React, { useRef, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-import { Box, Sans, Separator, Spacer } from "App/Components"
+import { Box, Sans, Separator, Spacer, Flex } from "App/Components"
 import { Button } from "./Button"
 import { Dimensions } from "react-native"
 
-const windowHeight = Dimensions.get("window").height
+const windowDimensions = Dimensions.get("window")
+const windowHeight = windowDimensions.height
+const twoButtonWidth = windowDimensions.width / 2 - (space(2) + space(0.5))
 
-export interface Props {
+export interface PopUpData {
   title?: string
   icon?: JSX.Element
   note?: string
-  show: boolean
   buttonText?: string
-  onClose: () => void
-  theme: "light" | "dark"
+  onClose: any
+  theme?: "light" | "dark"
+  secondaryButtonText?: string
+  secondaryButtonOnPress?: () => void
 }
 
-export const PopUp: React.FC<Props> = ({ title, note, show, icon, buttonText, onClose, theme = "light" }) => {
+export interface PopUpProps {
+  show: boolean
+  data?: PopUpData
+}
+
+export const PopUp: React.FC<PopUpProps> = ({ data, show }) => {
+  if (!data) {
+    return <></>
+  }
+  const { icon, buttonText, onClose, theme = "light", title, note, secondaryButtonText, secondaryButtonOnPress } = data
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setTimeout(() => {
@@ -27,7 +39,6 @@ export const PopUp: React.FC<Props> = ({ title, note, show, icon, buttonText, on
     })
   }, [])
   const [size, onLayout] = useComponentSize()
-
   const height = size ? size.height + 100 : 240
 
   const animation = useSpring({
@@ -55,10 +66,11 @@ export const PopUp: React.FC<Props> = ({ title, note, show, icon, buttonText, on
   }
 
   if (!(title && note && buttonText)) {
-    return null
+    return <></>
   }
 
   const colors = colorsForTheme(theme)
+  const showSecondaryButton = !!secondaryButtonText && !!secondaryButtonOnPress
 
   return (
     <>
@@ -76,18 +88,32 @@ export const PopUp: React.FC<Props> = ({ title, note, show, icon, buttonText, on
             </Sans>
             {note && (
               <>
-                <Spacer mb={2} />
-                <Sans size="2" color={colors.secondaryText} textAlign="center">
+                <Spacer mb={0.5} />
+                <Sans size="1" color={colors.secondaryText} textAlign="center">
                   {note}
                 </Sans>
               </>
             )}
           </Box>
-          <Spacer mb={2} />
+          <Spacer mb={3} />
           <Separator color={colors.separator} />
-          <Button variant="primaryWhite" onPress={() => onClose()}>
-            {buttonText}
-          </Button>
+          <Flex flexDirection="row">
+            {showSecondaryButton && (
+              <>
+                <Button width={twoButtonWidth} variant="primaryWhite" onPress={secondaryButtonOnPress}>
+                  {secondaryButtonText}
+                </Button>
+                <Spacer mr={1} />
+              </>
+            )}
+            <Button
+              width={showSecondaryButton ? twoButtonWidth : null}
+              variant="primaryBlack"
+              onPress={() => onClose()}
+            >
+              {buttonText}
+            </Button>
+          </Flex>
           <Spacer mb={2} />
         </Box>
       </AnimatedPopUp>
@@ -120,5 +146,4 @@ const Container = styled(Box)`
 `
 
 const AnimatedPopUp = animated(Container)
-
 const AnimatedOuterWrapper = animated(OuterWrapper)

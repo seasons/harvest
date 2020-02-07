@@ -39,9 +39,9 @@ export const ProductRequestConfirmation: React.FC<{
             </Sans>
             <Spacer mb={2} />
             <Separator />
-            <Spacer mb={24} />
+            <Spacer mb={3} />
             <ProductRequestGallery images={images}></ProductRequestGallery>
-            <Spacer mb={24} />
+            <Spacer mb={3} />
             {primarySections.map(section => (
               <>
                 <Sans size="1" color="black">
@@ -57,7 +57,7 @@ export const ProductRequestConfirmation: React.FC<{
             <Separator />
             {miscellaneousSections.map(section => (
               <>
-                <Spacer mb={24} />
+                <Spacer mb={3} />
                 <Box style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
                   <Sans size="1" color="black">
                     {section[0]}
@@ -66,14 +66,20 @@ export const ProductRequestConfirmation: React.FC<{
                     {section[1]}
                   </Sans>
                 </Box>
-                <Spacer mb={24} />
+                <Spacer mb={3} />
                 <Separator />
               </>
             ))}
             <Spacer mb={112} />
           </Box>
         </ScrollView>
-        <FixedButton disabled={false} mb={insets.bottom} variant={"secondaryBlack"} onPress={handleSubmitBtnPressed}>
+        <FixedButton
+          block
+          disabled={false}
+          mb={insets.bottom}
+          variant="secondaryBlack"
+          onPress={handleSubmitBtnPressed}
+        >
           Submit
         </FixedButton>
       </>
