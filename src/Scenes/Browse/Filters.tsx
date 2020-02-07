@@ -62,24 +62,24 @@ export const Filters = (props: any) => {
     const isSelected = isSortBySection ? sortFilter === item : sizeFilters.includes(item)
     // Use the default border radius for the sort by section
     const radioButtonBorderRadius = isSortBySection ? undefined : 4
+    const handlePress = () => {
+      if (section.title === SORT_BY) {
+        setSortFilter(sortFilter !== item ? item : "")
+      } else if (section.title == FILTER_BY) {
+        if (sizeFilters.includes(item)) {
+          setSizeFilters(sizeFilters.filter(f => f !== item))
+        } else {
+          setSizeFilters([...sizeFilters, item])
+        }
+      }
+    }
+
     return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          if (section.title === SORT_BY) {
-            setSortFilter(sortFilter !== item ? item : "")
-          } else if (section.title == FILTER_BY) {
-            if (sizeFilters.includes(item)) {
-              setSizeFilters(sizeFilters.filter(f => f !== item))
-            } else {
-              setSizeFilters([...sizeFilters, item])
-            }
-          }
-        }}
-      >
+      <TouchableWithoutFeedback onPress={handlePress}>
         <Box>
           <Spacer mt={20} />
           <Flex flexDirection="row">
-            <Radio borderRadius={radioButtonBorderRadius} selected={isSelected}>
+            <Radio borderRadius={radioButtonBorderRadius} selected={isSelected} onSelect={handlePress}>
               {!isSortBySection ? <WhiteCheck /> : null}
             </Radio>
             <Sans color="white" ml={2} size="1" weight="medium">
@@ -95,22 +95,23 @@ export const Filters = (props: any) => {
 
   return (
     <Theme>
-      <Container pl={2} pr={2} style={{ paddingTop: insets.top + 60 }}>
+      <Container style={{ paddingTop: insets.top }}>
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-          <Box>
-            <Sans size="3" color="white" weight="medium">
+          <HeaderContainer px={2}>
+            <Sans size="3" color="white" weight="medium" py={2}>
               Add Filters
             </Sans>
-            <Spacer mb={64} />
+          </HeaderContainer>
+          <Box px={2}>
+            <SectionList
+              contentContainerStyle={{ paddingBottom: insets.bottom + buttonBottom + buttonHeight }}
+              sections={filterSections}
+              stickySectionHeadersEnabled={false}
+              keyExtractor={item => item}
+              renderItem={renderItem}
+              renderSectionHeader={renderSectionHeader}
+            />
           </Box>
-          <SectionList
-            contentContainerStyle={{ paddingBottom: insets.bottom + buttonBottom + buttonHeight }}
-            sections={filterSections}
-            stickySectionHeadersEnabled={false}
-            keyExtractor={item => item}
-            renderItem={renderItem}
-            renderSectionHeader={renderSectionHeader}
-          />
         </Flex>
         <Box style={{ position: "absolute", left: 16, bottom: buttonBottom }}>
           <Button size="medium" variant="secondaryBlack" width={buttonWidth} onPress={handleCancelBtnPressed}>
@@ -136,4 +137,13 @@ export const Filters = (props: any) => {
 const Container = styled(Box)`
   background: black;
   flex: 1;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+`
+
+const HeaderContainer = styled(Box)`
+  border-color: #272727;
+  border-style: solid;
+  border-bottom-width: 1px;
 `
