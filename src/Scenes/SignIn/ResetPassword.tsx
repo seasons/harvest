@@ -22,7 +22,7 @@ export const ResetPassword = (props: any) => {
 
   const [resetPassword] = useMutation(RESET_PASSWORD, {
     onError: error => {
-      console.log("SignIn/ResetPassword.tsx: ", error)
+      console.error("SignIn/ResetPassword.tsx: ", error)
       Keyboard.dismiss()
       setShowError(true)
     },
@@ -49,6 +49,13 @@ export const ResetPassword = (props: any) => {
   }
 
   const insets = useSafeArea()
+
+  const popUpData = {
+    title: "Your email didn’t work!",
+    note: "We couldn’t find an account tied to this email. Double check and try again.",
+    buttonText: "Got it",
+    onClose: () => setShowError(false),
+  }
 
   return (
     <Theme>
@@ -79,14 +86,7 @@ export const ResetPassword = (props: any) => {
           </Flex>
         </TouchableWithoutFeedback>
       </Container>
-      <PopUp
-        buttonText="Got it"
-        note="We couldn’t find an account tied to this email. Double check and try again."
-        title="Your email didn’t work!"
-        theme="light"
-        show={showError}
-        onClose={() => setShowError(false)}
-      />
+      <PopUp data={popUpData} show={showError} />
     </Theme>
   )
 }

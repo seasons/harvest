@@ -3,7 +3,7 @@ import { color } from "App/Utils"
 import React from "react"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
-import { GetProduct_product, GetProduct_product_variants } from "App/generated/GetProduct"
+import { GetProduct_product } from "App/generated/GetProduct"
 
 // FIXME: Fix types here
 export const ProductDetails: React.FC<{

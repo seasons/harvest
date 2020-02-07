@@ -33,7 +33,7 @@ export const ProductRequest = (props: any) => {
 
   const [addProductRequest] = useMutation(ADD_PRODUCT_REQUEST, {
     onError: error => {
-      console.log(error)
+      console.error(error)
       Keyboard.dismiss()
       setShowError(true)
     },
@@ -75,6 +75,13 @@ export const ProductRequest = (props: any) => {
   }
 
   const insets = useSafeArea()
+
+  const pupUpData = {
+    buttonText: "Got it",
+    note: "We couldn’t find anything using this URL. Double check and try again.",
+    title: "Your link didn’t work!",
+    onClose: () => setShowError(false),
+  }
 
   return (
     <Theme>
@@ -119,14 +126,7 @@ export const ProductRequest = (props: any) => {
           </FixedButton>
         </KeyboardAvoidingView>
       </Container>
-      <PopUp
-        buttonText="Got it"
-        note="We couldn’t find anything using this URL. Double check and try again."
-        title="Your link didn’t work!"
-        theme="light"
-        show={showError}
-        onClose={() => setShowError(false)}
-      />
+      <PopUp data={pupUpData} show={showError} />
     </Theme>
   )
 }

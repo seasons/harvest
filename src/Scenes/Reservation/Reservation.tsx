@@ -87,7 +87,7 @@ export const Reservation = props => {
     },
     onError: err => {
       setIsMutating(false)
-      console.log("Error reservation.tsx: ", err)
+      console.error("Error reservation.tsx: ", err)
     },
   })
   const [showError, setShowError] = useState(false)
@@ -115,6 +115,13 @@ export const Reservation = props => {
         productID: item.productVariant.product.id,
       }))) ||
     []
+
+  const popUpData = {
+    title: "Sorry!",
+    note: "We couldn't process your order because of an unexpected error, please try again later",
+    buttonText: "Close",
+    onClose: () => setShowError(false),
+  }
 
   const content = (
     <>
@@ -181,14 +188,7 @@ export const Reservation = props => {
         Place order
       </FixedButton>
 
-      <PopUp
-        theme="light"
-        show={showError}
-        title="Sorry!"
-        note="We couldn't process your order because of an unexpected error, please try again later"
-        buttonText="Close"
-        onClose={() => setShowError(false)}
-      />
+      <PopUp data={popUpData} show={showError} />
     </>
   )
 
