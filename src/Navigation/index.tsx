@@ -20,9 +20,9 @@ import { createStackNavigator, TransitionPresets } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import styled from "styled-components"
-
 import DismissableStackNavigator from "./DismissableStackNavigator"
 import { Tabs } from "./Tabs"
+import { color } from "App/Utils"
 
 const shouldRenderTabBar = navigation => {
   let renderTabs = true
@@ -91,6 +91,10 @@ const HomeStack = createStackNavigator(
     initialRouteName: "Home",
     defaultNavigationOptions: {
       header: null,
+      cardStyle: {
+        backgroundColor: color("white100"),
+        opacity: 1,
+      },
     },
   }
 )
@@ -110,6 +114,10 @@ const BrowseStack = createStackNavigator(
     initialRouteName: "Browse",
     defaultNavigationOptions: {
       header: null,
+      cardStyle: {
+        backgroundColor: color("white100"),
+        opacity: 1,
+      },
     },
   }
 )
@@ -118,6 +126,10 @@ BrowseStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarVisible: shouldRenderTabBar(navigation),
     header: null,
+    cardStyle: {
+      backgroundColor: color("white100"),
+      opacity: 1,
+    },
   }
 }
 
@@ -151,6 +163,10 @@ const BagStack = createStackNavigator(
     initialRouteName: "Bag",
     defaultNavigationOptions: {
       header: null,
+      cardStyle: {
+        backgroundColor: color("white100"),
+        opacity: 1,
+      },
     },
   }
 )
@@ -174,6 +190,10 @@ const AccountStack = createStackNavigator(
     initialRouteName: "Account",
     defaultNavigationOptions: {
       header: null,
+      cardStyle: {
+        backgroundColor: color("white100"),
+        opacity: 1,
+      },
     },
   }
 )
@@ -292,7 +312,7 @@ const SwitchNavigator = createSwitchNavigator(
 )
 
 const NavigationContainer = styled.View`
-  background-color: black;
+  background-color: ${color("black100")};
 `
 
 export const AppContainer = createAppContainer(SwitchNavigator)
