@@ -1,4 +1,4 @@
-import { Box, Button, FixedButton, Flex, Sans, VariantSizes, Spacer } from "App/Components"
+import { Box, Button, FixedButton, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
 import { Container } from "Components/Container"
@@ -10,17 +10,19 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-import { useQuery } from "@apollo/react-hooks"
-import { BrowseLoader } from "./Loader"
 import { color } from "styled-system"
+
+import { useQuery } from "@apollo/react-hooks"
+
+import { BrowseLoader } from "./Loader"
 
 const ABBREVIATED_SIZES = {
   "X-Small": "XS",
-  "Small": "S",
-  "Medium": "M",
-  "Large": "L",
+  Small: "S",
+  Medium: "M",
+  Large: "L",
   "X-Large": "XL",
-  "XX-Large": "XXL"
+  "XX-Large": "XXL",
 }
 const IMAGE_HEIGHT = 240
 
@@ -35,11 +37,11 @@ const GET_BROWSE_PRODUCTS = gql`
       }
     }
     products(
-      category: $name, 
-      first: $first,
-      skip: $skip,
-      orderBy: $orderBy,
-      sizes: $sizes,
+      category: $name
+      first: $first
+      skip: $skip
+      orderBy: $orderBy
+      sizes: $sizes
       where: { status: Available }
     ) {
       id
@@ -107,9 +109,10 @@ export const Browse = (props: any) => {
   // If no size filter is selected, all sizes are queried.
   const isSortingAlphabetically = sortFilter && sortFilter === "Alphabetical"
   const orderBy = isSortingAlphabetically ? "name_ASC" : "createdAt_DESC"
-  const sizes = sizeFilters && sizeFilters.length > 0
-    ? sizeFilters.map(s => ABBREVIATED_SIZES[s])
-    : Object.values(ABBREVIATED_SIZES)
+  const sizes =
+    sizeFilters && sizeFilters.length > 0
+      ? sizeFilters.map(s => ABBREVIATED_SIZES[s])
+      : Object.values(ABBREVIATED_SIZES)
   const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
     variables: {
       name: currentCategory,
@@ -143,12 +146,14 @@ export const Browse = (props: any) => {
   let filtersButtonWidth
   let filtersButtonText
   let filtersButtonTextColor
-  if (numFiltersSelected > 0) { // Selected filters state
+  if (numFiltersSelected > 0) {
+    // Selected filters state
     filtersButtonVariant = "primaryBlack"
     filtersButtonWidth = 97
     filtersButtonText = `Filters +${numFiltersSelected}`
     filtersButtonTextColor = "white"
-  } else { // No filters selected state
+  } else {
+    // No filters selected state
     filtersButtonVariant = "primaryWhite"
     filtersButtonWidth = 78
     filtersButtonText = "Filters"
@@ -163,7 +168,7 @@ export const Browse = (props: any) => {
   }
 
   const onFilterBtnPress = () => {
-    props.navigation.navigate('FiltersModal', { sortFilter, sizeFilters })
+    props.navigation.navigate("FiltersModal", { sortFilter, sizeFilters })
   }
 
   return (
@@ -171,7 +176,7 @@ export const Browse = (props: any) => {
       <LoaderContainer mt={insets.top} style={[loaderStyle]}>
         <BrowseLoader imageHeight={IMAGE_HEIGHT} />
       </LoaderContainer>
-      <Flex flexDirection="column" flex={1} >
+      <Flex flexDirection="column" flex={1}>
         <AnimatedBox flex={1} flexGrow={1} style={[productsBoxStyle]}>
           <FlatList
             contentContainerStyle={{ paddingTop: insets.top, paddingBottom: filtersButtonBottom + filtersButtonHeight }}
@@ -211,7 +216,8 @@ export const Browse = (props: any) => {
               height={filtersButtonHeight}
               width={filtersButtonWidth}
               variant={filtersButtonVariant}
-              onPress={onFilterBtnPress}>
+              onPress={onFilterBtnPress}
+            >
               <Sans color={color(filtersButtonTextColor)} size="1" weight="medium">
                 {filtersButtonText}
               </Sans>
@@ -244,7 +250,7 @@ export const Browse = (props: any) => {
           />
         </Box>
       </Flex>
-    </Container >
+    </Container>
   )
 }
 
@@ -254,7 +260,7 @@ const CategoryPicker = styled.FlatList`
   width: 100%;
   bottom: 0;
   left: 0;
-  border-top-color: #e5e5e5;
+  border-top-color: black;
   border-style: solid;
   border-top-width: 1px;
 `
@@ -278,6 +284,6 @@ const Category = styled(Box)`
 `
 
 const FixedButtonContainer = styled(Box)`
-  position: absolute; 
-  align-self: center; 
+  position: absolute;
+  align-self: center;
 `
