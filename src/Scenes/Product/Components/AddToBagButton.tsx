@@ -19,7 +19,7 @@ export const AddToBagButton: React.FC<Props> = props => {
   const { data } = useQuery(GET_BAG)
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
-      item: selectedVariant.id,
+      id: selectedVariant.id,
     },
     refetchQueries: [
       {
