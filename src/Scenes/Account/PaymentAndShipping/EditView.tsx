@@ -46,7 +46,7 @@ export class EditView extends React.Component {
       this.setState({ isLoading: false })
       this.props.navigator.pop()
     } catch (error) {
-      console.error("CreditCardForm.tsx", error)
+      console.warn("CreditCardForm.tsx", error)
       this.setState({ isError: true, isLoading: false })
     }
   }

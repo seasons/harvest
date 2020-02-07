@@ -24,11 +24,6 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
   const { loading, error, data } = useQuery(GET_MEMBERSHIP_INFO)
   const insets = useSafeArea()
 
-  if (error) {
-    console.error("error MembershipInfo.tsx: ", error)
-    return null
-  }
-
   const plan = get(data, "me.customer.plan")
   let planInfo = null
 
