@@ -84,9 +84,14 @@ export const Home: React.FC<{
   return (
     <Container>
       <Animatable.View animation="fadeIn" duration={300}>
-        <Box style={{ position: "relative", backgroundColor: color("white100"), paddingTop: insets.top }}>
-          <WhiteBackground />
-          <BlackBackground />
+        <Box
+          style={{
+            position: "relative",
+            backgroundColor: color("white100"),
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+          }}
+        >
           <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
             <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
               <LogoText>SEASONS</LogoText>
@@ -99,18 +104,7 @@ export const Home: React.FC<{
               return item.type + index
             }}
             ListHeaderComponent={() => <Spacer mb={2} />}
-            renderItem={({ item, index }) => {
-              const styles =
-                index === sections.length - 1
-                  ? {
-                      backgroundColor: color("white100"),
-                      paddingBottom: 30,
-                      borderBottomLeftRadius: 30,
-                      borderBottomRightRadius: 30,
-                    }
-                  : { backgroundColor: color("white100") }
-              return <Box style={styles}>{renderItem(item)}</Box>
-            }}
+            renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
             ListFooterComponent={() => <AllCaughtUp navigation={navigation} />}
           />
         </Box>
@@ -118,22 +112,3 @@ export const Home: React.FC<{
     </Container>
   )
 }
-
-const BlackBackground = styled(Box)`
-  background-color: ${color("black100")};
-  height: 80%;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  position: absolute;
-`
-
-const WhiteBackground = styled(Box)`
-  background-color: ${color("white100")};
-  height: 100px;
-  top: -100px;
-  z-index: -1;
-  left: 0;
-  right: 0;
-  position: absolute;
-`
