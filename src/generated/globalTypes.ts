@@ -51,6 +51,7 @@ export enum Material {
   GooseDown = "GooseDown",
   LambLeather = "LambLeather",
   LambSkin = "LambSkin",
+  Lambswool = "Lambswool",
   Leather = "Leather",
   Lyocell = "Lyocell",
   MerinoWool = "MerinoWool",
@@ -94,6 +95,35 @@ export enum PhysicalProductStatus {
 export enum Plan {
   AllAccess = "AllAccess",
   Essential = "Essential",
+}
+
+export enum ProductOrderByInput {
+  createdAt_ASC = "createdAt_ASC",
+  createdAt_DESC = "createdAt_DESC",
+  description_ASC = "description_ASC",
+  description_DESC = "description_DESC",
+  externalURL_ASC = "externalURL_ASC",
+  externalURL_DESC = "externalURL_DESC",
+  id_ASC = "id_ASC",
+  id_DESC = "id_DESC",
+  images_ASC = "images_ASC",
+  images_DESC = "images_DESC",
+  modelHeight_ASC = "modelHeight_ASC",
+  modelHeight_DESC = "modelHeight_DESC",
+  modelSize_ASC = "modelSize_ASC",
+  modelSize_DESC = "modelSize_DESC",
+  name_ASC = "name_ASC",
+  name_DESC = "name_DESC",
+  retailPrice_ASC = "retailPrice_ASC",
+  retailPrice_DESC = "retailPrice_DESC",
+  slug_ASC = "slug_ASC",
+  slug_DESC = "slug_DESC",
+  status_ASC = "status_ASC",
+  status_DESC = "status_DESC",
+  tags_ASC = "tags_ASC",
+  tags_DESC = "tags_DESC",
+  updatedAt_ASC = "updatedAt_ASC",
+  updatedAt_DESC = "updatedAt_DESC",
 }
 
 export enum ProductStatus {

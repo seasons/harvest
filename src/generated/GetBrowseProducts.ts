@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { Size, ProductStatus } from "./globalTypes";
+import { ProductOrderByInput, Size, ProductStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBrowseProducts
@@ -64,4 +64,6 @@ export interface GetBrowseProductsVariables {
   name: string;
   first: number;
   skip: number;
+  orderBy: ProductOrderByInput;
+  sizes?: Size[] | null;
 }

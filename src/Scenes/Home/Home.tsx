@@ -9,12 +9,11 @@ import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
-import styled from "styled-components/native"
 import { AllCaughtUp } from "./Components/AllCaughtUp"
 import { ProductsRail } from "./Components/ProductsRail"
 import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
-const GET_HOMEPAGE = gql`
+export const GET_HOMEPAGE = gql`
   query Homepage {
     homepage {
       sections {
@@ -46,15 +45,10 @@ export const Home: React.FC<{
   const [showLoader, toggleLoader] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const insets = useSafeArea()
-  let categoriesAdded = false
 
   useEffect(() => {
     if (data && data.homepage) {
-      const dataSections = data.homepage.sections.slice()
-      if (data.categories && dataSections && !categoriesAdded) {
-        categoriesAdded = true
-        dataSections.splice(1, 0, { type: "Categories", results: data.categories })
-      }
+      const dataSections = data.homepage.sections.filter(section => section?.results?.length)
       setSections(dataSections)
     }
   }, [data])
