@@ -1,33 +1,31 @@
-import React from "react"
-import { Box, Spacer, Button, Container } from "App/Components"
+import React, { useRef, useState } from "react"
+import { Box, Spacer, Button, Container, Flex } from "App/Components"
 import { Sans } from "Components/Typography"
 import styled from "styled-components/native"
 import { SeasonsLogoSVG } from "Assets/svgs"
-import { color } from "App/Utils"
-import LottieView from "lottie-react-native"
-import { Dimensions } from "react-native"
+import { Image, TouchableOpacity, Dimensions, Linking } from "react-native"
+import { color, space } from "App/Utils"
+
+const buttonWidth = (Dimensions.get("window").width - space(4)) / 2 - 1
 
 export const Welcome = ({ navigation }) => {
-  const dimensions = Dimensions.get("window")
+  const imageRef = useRef(null)
+  const [imageLoaded, setImageLoaded] = useState(null)
   return (
     <Container>
       <Wrapper>
-        <LottieView
-          source={require("../../../assets/animations/welcome.json")}
-          autoPlay
-          loop
-          style={{ height: dimensions.height, width: dimensions.width, alignSelf: "center", position: "absolute" }}
-        />
         <Box p={2}>
           <SeasonsLogoSVG width={40} height={40} />
           <Spacer mb={4} />
           <Sans color="white" size="3">
             This is Seasons
           </Sans>
-          <Sans size="3" color="gray">
-            A members only rental subscription service for menswear and streetwear.
-          </Sans>
-          <Spacer mb={4} />
+          <Box pr={3}>
+            <Sans size="3" color="gray">
+              A members only rental subscription service for menswear and streetwear.
+            </Sans>
+            <Spacer mb={4} />
+          </Box>
           <Button block onPress={() => navigation.navigate("SignIn")} variant="primaryWhite">
             Sign in
           </Button>
@@ -35,20 +33,50 @@ export const Welcome = ({ navigation }) => {
           <Button
             block
             onPress={() => navigation.navigate("Webview", { uri: "http://signup.seasons.nyc/" })}
-            variant="secondaryBlack"
+            variant="black85"
           >
             Join the waitlist
           </Button>
+          <Spacer mb={4} />
+          <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" alignItem="center">
+            <TouchableOpacity onPress={() => Linking.openURL(`mailto:membership@seasons.nyc`)}>
+              <Flex style={{ width: buttonWidth }} flexDirection="row" justifyContent="center">
+                <Sans size="2" color={color("black50")}>
+                  Contact
+                </Sans>
+              </Flex>
+            </TouchableOpacity>
+            <Box style={{ height: 28, width: 2, backgroundColor: color("black50") }} />
+            <TouchableOpacity onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc" })}>
+              <Flex style={{ width: buttonWidth }} flexDirection="row" justifyContent="center">
+                <Sans size="2" color={color("black50")}>
+                  Learn More
+                </Sans>
+              </Flex>
+            </TouchableOpacity>
+          </Flex>
         </Box>
+        <Spacer mb={100} />
       </Wrapper>
+      <ImageContainer
+        onLoadEnd={() => setImageLoaded(imageRef)}
+        source={require(`../../../assets/images/WelcomeViewBackground.png`)}
+        ref={imageRef}
+      />
     </Container>
   )
 }
 
 const Wrapper = styled.View`
   flex: 1;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   flex-direction: column;
-  background-color: ${color("black100")};
+`
+
+const ImageContainer = styled(Image)`
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: -1;
 `

@@ -1,11 +1,11 @@
-import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, Theme } from "App/Components"
+import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, Theme, CloseButton } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { color } from "App/Utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
-import { Keyboard, TouchableWithoutFeedback } from "react-native"
+import { Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import AsyncStorage from "@react-native-community/async-storage"
 import { useSafeArea } from "react-native-safe-area-context"
@@ -66,10 +66,6 @@ export const LogIn: React.FC<LogInProps> = props => {
     }
   }
 
-  const handleJoinWaitlist = () => {
-    props.navigation.navigate("Webview", { uri: "http://signup.seasons.nyc/" })
-  }
-
   const handleResetPassword = () => {
     props.navigation.navigate("ResetPasswordModal")
   }
@@ -84,61 +80,62 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   return (
-    <Theme>
-      <Box style={{ paddingTop: insets.top, flex: 1, backgroundColor: color("black100") }}>
-        <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-          <Box p={2} mt={6}>
-            <Sans color="white" size="3">
-              Welcome
-            </Sans>
-            <Spacer mb={2} />
-            <TextInput
-              placeholder="Email"
-              variant="dark"
-              textContentType="Email"
-              inputKey="email"
-              onChangeText={(_, val) => onEmailChange(val)}
-            />
-            <Spacer mb={2} />
-            <TextInput
-              secureTextEntry
-              placeholder="Password"
-              variant="dark"
-              inputKey="password"
-              textContentType="Password"
-              onChangeText={(_, val) => setPassword(val)}
-            />
-            <Spacer mb={2} />
-            <Text>
-              <Sans size="2" color="gray">
-                Forget password?
-              </Sans>{" "}
-              <TouchableWithoutFeedback onPress={handleResetPassword}>
-                <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
-                  Reset
+    <SafeAreaView style={{ flex: 1, backgroundColor: color("white100") }}>
+      <Theme>
+        <>
+          <Spacer mb={3} />
+          <CloseButton navigation={props.navigation} variant="light" />
+          <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
+            <Box p={2} mt={6}>
+              <Sans color={color("black100")} size="3">
+                Welcome
+              </Sans>
+              <Spacer mb={3} />
+              <TextInput
+                placeholder="Email"
+                variant="light"
+                textContentType="Email"
+                inputKey="email"
+                onChangeText={(_, val) => onEmailChange(val)}
+              />
+              <Spacer mb={2} />
+              <TextInput
+                secureTextEntry
+                placeholder="Password"
+                variant="light"
+                inputKey="password"
+                textContentType="Password"
+                onChangeText={(_, val) => setPassword(val)}
+              />
+              <Spacer mb={4} />
+              <Button block onPress={handleLogin} disabled={disabled} variant="primaryWhite">
+                Sign in
+              </Button>
+              <Spacer mb={3} />
+              <Flex flexDirection="row" justifyContent="center">
+                <Text>
+                  <Sans size="2" color="gray">
+                    Forget password?
+                  </Sans>{" "}
+                  <TouchableWithoutFeedback onPress={handleResetPassword}>
+                    <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("black50")}>
+                      Reset
+                    </Sans>
+                  </TouchableWithoutFeedback>
+                </Text>
+              </Flex>
+            </Box>
+            <Box p={4} pb={6}>
+              <Text style={{ textAlign: "center" }}>
+                <Sans size="2" color="gray">
+                  Sign in using the same emial and password you used for the wailist.
                 </Sans>
-              </TouchableWithoutFeedback>
-            </Text>
-            <Spacer mb={4} />
-            <Button block onPress={handleLogin} disabled={disabled} variant="primaryWhite">
-              Sign in
-            </Button>
-          </Box>
-          <Box p={2}>
-            <Text style={{ textAlign: "center" }}>
-              <Sans size="2" color="gray">
-                Not a member?
-              </Sans>{" "}
-              <TouchableWithoutFeedback onPress={handleJoinWaitlist}>
-                <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
-                  Join the waitlist
-                </Sans>
-              </TouchableWithoutFeedback>
-            </Text>
-          </Box>
-        </Flex>
-        <PopUp data={popUpData} show={showError} />
-      </Box>
-    </Theme>
+              </Text>
+            </Box>
+          </Flex>
+          <PopUp data={popUpData} show={showError} />
+        </>
+      </Theme>
+    </SafeAreaView>
   )
 }
