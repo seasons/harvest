@@ -1,5 +1,4 @@
 import { Box, Flex, Sans, Separator, Spacer, Toggle } from "App/Components"
-import { FadeInImage } from "App/Components/FadeInImage"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React from "react"
@@ -89,9 +88,11 @@ export function Account(props) {
           <Box p={2} mt={insets.top}>
             <Box mb={5} />
             <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
-              <LoaderContainer style={loaderStyles}>
-                <UserProfileLoader />
-              </LoaderContainer>
+              {loading && (
+                <LoaderContainer style={loaderStyles}>
+                  <UserProfileLoader />
+                </LoaderContainer>
+              )}
               <Flex>
                 {!!firstName && !!lastName && (
                   <Sans size="3" color="black">
