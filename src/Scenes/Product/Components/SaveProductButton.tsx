@@ -1,13 +1,13 @@
-import { Box } from "App/Components"
-import React from "react"
-import gql from "graphql-tag"
-import { head } from "lodash"
-import { useMutation } from "react-apollo"
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { TouchableOpacity } from "react-native-gesture-handler"
+import { Box } from "App/Components"
+import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { SaveIcon } from "Assets/icons"
 import { CircledSaveIcon } from "Assets/icons/CircledSaveIcon"
-import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import gql from "graphql-tag"
+import { head } from "lodash"
+import React from "react"
+import { useMutation } from "react-apollo"
+import { TouchableOpacity } from "react-native-gesture-handler"
 
 const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
@@ -77,6 +77,7 @@ export const SaveProductButton: React.FC<{
           title: "Saved for later",
           note: `The ${product.name}, size ${selectedVariant.size} has ${updateText} your saved items.`,
           buttonText: "Got It",
+          onClose: () => setPopUp({ show: false, data: null }),
         },
       })
     }

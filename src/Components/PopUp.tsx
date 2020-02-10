@@ -1,11 +1,12 @@
+import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
 import { color, space } from "App/Utils"
 import { useComponentSize } from "App/Utils/Hooks/useComponentSize"
 import React, { useEffect, useState } from "react"
+import { Dimensions } from "react-native"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-import { Box, Sans, Separator, Spacer, Flex } from "App/Components"
+
 import { Button } from "./Button"
-import { Dimensions } from "react-native"
 
 const windowDimensions = Dimensions.get("window")
 const windowHeight = windowDimensions.height
@@ -110,7 +111,7 @@ export const PopUp: React.FC<PopUpProps> = ({ data, show }) => {
               width={showSecondaryButton ? twoButtonWidth : null}
               variant="primaryBlack"
               block={!showSecondaryButton}
-              onPress={() => onClose()}
+              onPress={() => onClose?.()}
             >
               {buttonText}
             </Button>
