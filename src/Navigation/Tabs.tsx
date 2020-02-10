@@ -1,11 +1,12 @@
-import { Flex, Theme, Box } from "App/Components"
+import { Box, Flex, Theme } from "App/Components"
+import { color } from "App/Utils"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import React, { useState } from "react"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
+
 import { useNavigationState } from "./NavigationState"
-import { color } from "App/Utils"
 
 export const Tabs = props => {
   const { renderIcon, activeTintColor, inactiveTintColor, onTabPress, navigation } = props
@@ -20,10 +21,12 @@ export const Tabs = props => {
   if (action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName === "Product" && !isProductRoute) {
     setTimeout(() => setIsProductRoute(true), 75)
   } else if (
-    (action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName !== "Product") ||
-    action.type === "Navigation/POP_TO_TOP" ||
-    action.type === "Navigation/BACK" ||
-    (action.route && action.route !== "Product" && isProductRoute)
+    ((action.type === "Navigation/NAVIGATE" && action.routeName && action.routeName !== "Product") ||
+      action.type === "Navigation/POP_TO_TOP" ||
+      action.type === "Navigation/POP" ||
+      action.type === "Navigation/BACK" ||
+      (action.route && action.route !== "Product")) &&
+    isProductRoute
   ) {
     setTimeout(() => setIsProductRoute(false), 75)
   }

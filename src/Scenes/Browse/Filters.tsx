@@ -27,10 +27,6 @@ export const Filters = (props: any) => {
 
   const filterSections = [
     {
-      title: SORT_BY,
-      data: ["Alphabetical", RECENTLY_ADDED],
-    },
-    {
       title: FILTER_BY,
       data: ["X-Small", "Small", "Medium", "Large", "X-Large", "XX-Large"],
     },
@@ -47,8 +43,6 @@ export const Filters = (props: any) => {
   const renderSectionHeader = ({ section }) => {
     return (
       <>
-        {section.title !== SORT_BY ? <Spacer mt={2} /> : null}
-        <Spacer mt={2} />
         <Sans color="white" size="1" weight="medium">
           {section.title}
         </Sans>
@@ -102,7 +96,7 @@ export const Filters = (props: any) => {
           <HeaderContainer px={2}>
             <Flex flexDirection="row" alignItems="center">
               <Sans size="3" color="white" weight="medium" py={2}>
-                Add Filters
+                Filter By
               </Sans>
               <Box ml="auto">
                 <TouchableOpacity
@@ -118,14 +112,13 @@ export const Filters = (props: any) => {
               </Box>
             </Flex>
           </HeaderContainer>
-          <Box px={2}>
+          <Box px={2} flex={1}>
             <SectionList
               contentContainerStyle={{ paddingBottom: insets.bottom + buttonBottom + buttonHeight }}
               sections={filterSections}
               stickySectionHeadersEnabled={false}
               keyExtractor={item => item}
               renderItem={renderItem}
-              renderSectionHeader={renderSectionHeader}
             />
           </Box>
         </Flex>

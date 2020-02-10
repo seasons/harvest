@@ -9,6 +9,7 @@ import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import { Initializing, ResetPassword, ResetPasswordConfirmation, SignIn, Welcome } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
+import { color } from "App/Utils"
 import React, { useState } from "react"
 import { Image } from "react-native"
 import { createAppContainer, createSwitchNavigator } from "react-navigation"
@@ -16,9 +17,9 @@ import { createStackNavigator, TransitionPresets } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import styled from "styled-components"
+
 import DismissableStackNavigator from "./DismissableStackNavigator"
 import { Tabs } from "./Tabs"
-import { color } from "App/Utils"
 
 const shouldRenderTabBar = navigation => {
   let renderTabs = true
