@@ -28,11 +28,12 @@ export const Welcome = ({ navigation }) => {
             A members only rental subscription service for menswear and streetwear.
           </Sans>
           <Spacer mb={4} />
-          <Button onPress={() => navigation.navigate("SignIn")} variant="primaryWhite">
+          <Button block onPress={() => navigation.navigate("SignIn")} variant="primaryWhite">
             Sign in
           </Button>
           <Spacer mb={2} />
           <Button
+            block
             onPress={() => navigation.navigate("Webview", { uri: "http://signup.seasons.nyc/" })}
             variant="secondaryBlack"
           >

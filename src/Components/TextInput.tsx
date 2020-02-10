@@ -102,6 +102,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
       <Spring native from={from} to={to}>
         {props => (
           <AnimatedTextInput
+            blurOnSubmit
             multiline={multiline || false}
             secureTextEntry={secureTextEntry}
             placeholder={placeholder}

@@ -35,12 +35,9 @@ export const LogIn: React.FC<LogInProps> = props => {
   const [emailComplete, setEmailComplete] = useState(false)
   const [showError, setShowError] = useState(false)
   const [login] = useMutation(LOG_IN, {
-    onError: error => {
-      console.warn(error)
-
-      Keyboard.dismiss()
-      // TODO: handle different types of errors
+    onError: err => {
       setShowError(true)
+      Keyboard.dismiss()
     },
   })
 
@@ -51,21 +48,18 @@ export const LogIn: React.FC<LogInProps> = props => {
 
   const handleLogin = async () => {
     if (emailComplete && password.length) {
-      try {
-        const result = await login({
-          variables: {
-            email,
-            password,
-          },
-        })
-
+      const result = await login({
+        variables: {
+          email,
+          password,
+        },
+      })
+      if (result?.data) {
         const {
           data: { login: userSession },
         } = result
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
         props.navigation.navigate("Home")
-      } catch (e) {
-        console.log(e)
       }
     }
   }
@@ -90,7 +84,7 @@ export const LogIn: React.FC<LogInProps> = props => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color("black100") }}>
       <Theme>
-        <Flex style={{ flex: 1 }}>
+        <>
           <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
             <Box p={2} mt={6}>
               <Sans color="white" size="3">
@@ -125,7 +119,7 @@ export const LogIn: React.FC<LogInProps> = props => {
                 </TouchableWithoutFeedback>
               </Text>
               <Spacer mb={4} />
-              <Button onPress={handleLogin} disabled={disabled} variant="primaryWhite">
+              <Button block onPress={handleLogin} disabled={disabled} variant="primaryWhite">
                 Sign in
               </Button>
             </Box>
@@ -143,7 +137,7 @@ export const LogIn: React.FC<LogInProps> = props => {
             </Box>
           </Flex>
           <PopUp data={popUpData} show={showError} />
-        </Flex>
+        </>
       </Theme>
     </SafeAreaView>
   )

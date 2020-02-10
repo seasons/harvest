@@ -109,6 +109,7 @@ export const PopUp: React.FC<PopUpProps> = ({ data, show }) => {
             <Button
               width={showSecondaryButton ? twoButtonWidth : null}
               variant="primaryBlack"
+              block={!showSecondaryButton}
               onPress={() => onClose()}
             >
               {buttonText}
