@@ -13,6 +13,7 @@ import {
   Initializing, ResetPassword, ResetPasswordConfirmation, SignIn, Welcome
 } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
+import { color } from "App/Utils"
 import React, { useState } from "react"
 import { Image } from "react-native"
 import { createAppContainer, createSwitchNavigator } from "react-navigation"
@@ -20,9 +21,9 @@ import { createStackNavigator, TransitionPresets } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import styled from "styled-components"
+
 import DismissableStackNavigator from "./DismissableStackNavigator"
 import { Tabs } from "./Tabs"
-import { color } from "App/Utils"
 
 const shouldRenderTabBar = navigation => {
   let renderTabs = true
@@ -45,7 +46,7 @@ const MainAuthStack = createStackNavigator(
   {
     initialRouteName: "Welcome",
     defaultNavigationOptions: {
-      header: null,
+      headerShown: false,
     },
   }
 )
@@ -90,7 +91,7 @@ const HomeStack = createStackNavigator(
   {
     initialRouteName: "Home",
     defaultNavigationOptions: {
-      header: null,
+      headerShown: false,
       cardStyle: {
         backgroundColor: color("white100"),
         opacity: 1,
@@ -113,7 +114,7 @@ const BrowseStack = createStackNavigator(
   {
     initialRouteName: "Browse",
     defaultNavigationOptions: {
-      header: null,
+      headerShown: false,
       cardStyle: {
         backgroundColor: color("white100"),
         opacity: 1,
@@ -125,7 +126,7 @@ const BrowseStack = createStackNavigator(
 BrowseStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarVisible: shouldRenderTabBar(navigation),
-    header: null,
+    headerShown: false,
     cardStyle: {
       backgroundColor: color("white100"),
       opacity: 1,
@@ -162,7 +163,7 @@ const BagStack = createStackNavigator(
   {
     initialRouteName: "Bag",
     defaultNavigationOptions: {
-      header: null,
+      headerShown: false,
       cardStyle: {
         backgroundColor: color("white100"),
         opacity: 1,
@@ -174,7 +175,7 @@ const BagStack = createStackNavigator(
 BagStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarVisible: shouldRenderTabBar(navigation),
-    header: null,
+    headerShown: false,
   }
 }
 
@@ -189,7 +190,7 @@ const AccountStack = createStackNavigator(
   {
     initialRouteName: "Account",
     defaultNavigationOptions: {
-      header: null,
+      headerShown: false,
       cardStyle: {
         backgroundColor: color("white100"),
         opacity: 1,
@@ -201,7 +202,7 @@ const AccountStack = createStackNavigator(
 AccountStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarVisible: shouldRenderTabBar(navigation),
-    header: null,
+    headerShown: false,
   }
 }
 
