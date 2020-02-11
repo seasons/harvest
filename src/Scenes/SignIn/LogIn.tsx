@@ -1,9 +1,9 @@
-import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, Theme, CloseButton } from "App/Components"
+import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, Theme, FixedBackArrow } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { color } from "App/Utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
@@ -34,12 +34,14 @@ export const LogIn: React.FC<LogInProps> = props => {
   const insets = useSafeArea()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const emailRef = useRef(null)
+  const passwordRef = useRef(null)
   const [emailComplete, setEmailComplete] = useState(false)
   const [showError, setShowError] = useState(false)
   const [login] = useMutation(LOG_IN, {
     onError: err => {
+      console.log("err", err)
       setShowError(true)
-      Keyboard.dismiss()
     },
   })
 
@@ -49,20 +51,19 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   const handleLogin = async () => {
-    if (emailComplete && password.length) {
-      const result = await login({
-        variables: {
-          email,
-          password,
-        },
-      })
-      if (result?.data) {
-        const {
-          data: { login: userSession },
-        } = result
-        AsyncStorage.setItem("userSession", JSON.stringify(userSession))
-        props.navigation.navigate("Home")
-      }
+    Keyboard.dismiss()
+    const result = await login({
+      variables: {
+        email,
+        password,
+      },
+    })
+    if (result?.data) {
+      const {
+        data: { login: userSession },
+      } = result
+      AsyncStorage.setItem("userSession", JSON.stringify(userSession))
+      props.navigation.navigate("Home")
     }
   }
 
@@ -80,11 +81,11 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color("white100") }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Theme>
-        <>
+        <FixedBackArrow navigation={props.navigation} variant="whiteBackground" />
+        <Flex style={{ flex: 1 }}>
           <Spacer mb={3} />
-          <CloseButton navigation={props.navigation} variant="light" />
           <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
             <Box p={2} mt={6}>
               <Sans color={color("black100")} size="3">
@@ -92,6 +93,7 @@ export const LogIn: React.FC<LogInProps> = props => {
               </Sans>
               <Spacer mb={3} />
               <TextInput
+                reference={emailRef}
                 placeholder="Email"
                 variant="light"
                 textContentType="Email"
@@ -100,6 +102,7 @@ export const LogIn: React.FC<LogInProps> = props => {
               />
               <Spacer mb={2} />
               <TextInput
+                reference={passwordRef}
                 secureTextEntry
                 placeholder="Password"
                 variant="light"
@@ -108,7 +111,7 @@ export const LogIn: React.FC<LogInProps> = props => {
                 onChangeText={(_, val) => setPassword(val)}
               />
               <Spacer mb={4} />
-              <Button block onPress={handleLogin} disabled={disabled} variant="primaryWhite">
+              <Button block onPress={handleLogin} disabled={disabled} variant="primaryBlack">
                 Sign in
               </Button>
               <Spacer mb={3} />
@@ -128,13 +131,13 @@ export const LogIn: React.FC<LogInProps> = props => {
             <Box p={4} pb={6}>
               <Text style={{ textAlign: "center" }}>
                 <Sans size="2" color="gray">
-                  Sign in using the same emial and password you used for the wailist.
+                  Sign in using the same email and password you used for the wailist.
                 </Sans>
               </Text>
             </Box>
           </Flex>
           <PopUp data={popUpData} show={showError} />
-        </>
+        </Flex>
       </Theme>
     </SafeAreaView>
   )

@@ -163,7 +163,7 @@ export const PersonalPreferences: React.FC<{ navigation: NavigationScreenProp<Na
   return (
     <Container>
       <>
-        <FixedBackArrow navigation={navigation} />
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <FlatList
           data={sections}
           ListHeaderComponent={() => (

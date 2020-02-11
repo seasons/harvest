@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React from "react"
 import { Box, Spacer, Button, Container, Flex } from "App/Components"
 import { Sans } from "Components/Typography"
 import styled from "styled-components/native"
@@ -9,8 +9,6 @@ import { color, space } from "App/Utils"
 const buttonWidth = (Dimensions.get("window").width - space(4)) / 2 - 1
 
 export const Welcome = ({ navigation }) => {
-  const imageRef = useRef(null)
-  const [imageLoaded, setImageLoaded] = useState(null)
   return (
     <Container>
       <Wrapper>
@@ -58,11 +56,7 @@ export const Welcome = ({ navigation }) => {
         </Box>
         <Spacer mb={100} />
       </Wrapper>
-      <ImageContainer
-        onLoadEnd={() => setImageLoaded(imageRef)}
-        source={require(`../../../assets/images/WelcomeViewBackground.png`)}
-        ref={imageRef}
-      />
+      <ImageContainer source={require(`../../../assets/images/WelcomeViewBackground.png`)} />
     </Container>
   )
 }

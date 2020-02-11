@@ -18,8 +18,10 @@ export interface TextInputProps {
   textContentType?: string
   inputKey?: string
   multiline?: boolean
+  reference?: any
   onChangeText?: (inputKey: string, text: string) => void
 }
+
 enum DisplayState {
   Active = "active",
   Inactive = "inactive",
@@ -64,7 +66,7 @@ export function getColorsForVariant(variant: TextInputVariant) {
   }
 }
 
-export const TextInput: React.SFC<TextInputProps> = ({
+export const TextInput: React.FC<TextInputProps> = ({
   variant = defaultVariant,
   placeholder,
   secureTextEntry,
@@ -72,6 +74,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
   style,
   inputKey,
   multiline,
+  reference,
 }) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
   const [current, setCurrent] = React.useState(DisplayState.Inactive)
@@ -102,6 +105,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
       <Spring native from={from} to={to}>
         {props => (
           <AnimatedTextInput
+            ref={reference}
             blurOnSubmit
             multiline={multiline || false}
             secureTextEntry={secureTextEntry}

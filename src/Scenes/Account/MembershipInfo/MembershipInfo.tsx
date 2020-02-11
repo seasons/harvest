@@ -55,7 +55,7 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
   return (
     <Container>
       <>
-        <FixedBackArrow navigation={navigation} />
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <ScrollView>
           <Box p={2} mt={insets.top}>
             <Spacer mb={60} />

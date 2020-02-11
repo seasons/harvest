@@ -43,6 +43,10 @@ const MainAuthStack = createStackNavigator(
     initialRouteName: "Welcome",
     defaultNavigationOptions: {
       headerShown: false,
+      cardStyle: {
+        backgroundColor: color("white100"),
+        opacity: 1,
+      },
     },
   }
 )
