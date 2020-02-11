@@ -18,7 +18,6 @@ export interface TextInputProps {
   textContentType?: string
   inputKey?: string
   multiline?: boolean
-  reference?: any
   onChangeText?: (inputKey: string, text: string) => void
 }
 
@@ -74,7 +73,6 @@ export const TextInput: React.FC<TextInputProps> = ({
   style,
   inputKey,
   multiline,
-  reference,
 }) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
   const [current, setCurrent] = React.useState(DisplayState.Inactive)
@@ -105,7 +103,6 @@ export const TextInput: React.FC<TextInputProps> = ({
       <Spring native from={from} to={to}>
         {props => (
           <AnimatedTextInput
-            ref={reference}
             blurOnSubmit
             multiline={multiline || false}
             secureTextEntry={secureTextEntry}

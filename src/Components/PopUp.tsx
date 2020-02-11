@@ -119,9 +119,7 @@ export const PopUp: React.FC<PopUpProps> = ({ data, show, insetsBottom }) => {
           <Spacer mb={insetsBottom ? 6 : 2} />
         </Box>
       </AnimatedPopUp>
-      {show && (
-        <AnimatedOuterWrapper style={{ backgroundColor: animation.backgroundColor }} onPress={Keyboard.dismiss} />
-      )}
+      {show && <AnimatedOuterWrapper style={{ backgroundColor: animation.backgroundColor }} />}
     </>
   )
 }

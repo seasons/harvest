@@ -34,14 +34,17 @@ export const LogIn: React.FC<LogInProps> = props => {
   const insets = useSafeArea()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const emailRef = useRef(null)
-  const passwordRef = useRef(null)
+  const [isMutating, setIsMutating] = useState(false)
   const [emailComplete, setEmailComplete] = useState(false)
   const [showError, setShowError] = useState(false)
   const [login] = useMutation(LOG_IN, {
+    onCompleted: () => {
+      setIsMutating(false)
+    },
     onError: err => {
       console.log("err", err)
       setShowError(true)
+      setIsMutating(false)
     },
   })
 
@@ -51,19 +54,22 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   const handleLogin = async () => {
-    Keyboard.dismiss()
-    const result = await login({
-      variables: {
-        email,
-        password,
-      },
-    })
-    if (result?.data) {
-      const {
-        data: { login: userSession },
-      } = result
-      AsyncStorage.setItem("userSession", JSON.stringify(userSession))
-      props.navigation.navigate("Home")
+    if (!isMutating) {
+      Keyboard.dismiss()
+      setIsMutating(true)
+      const result = await login({
+        variables: {
+          email,
+          password,
+        },
+      })
+      if (result?.data) {
+        const {
+          data: { login: userSession },
+        } = result
+        AsyncStorage.setItem("userSession", JSON.stringify(userSession))
+        props.navigation.navigate("Home")
+      }
     }
   }
 
@@ -93,7 +99,6 @@ export const LogIn: React.FC<LogInProps> = props => {
               </Sans>
               <Spacer mb={3} />
               <TextInput
-                reference={emailRef}
                 placeholder="Email"
                 variant="light"
                 textContentType="Email"
@@ -102,7 +107,6 @@ export const LogIn: React.FC<LogInProps> = props => {
               />
               <Spacer mb={2} />
               <TextInput
-                reference={passwordRef}
                 secureTextEntry
                 placeholder="Password"
                 variant="light"
@@ -111,7 +115,7 @@ export const LogIn: React.FC<LogInProps> = props => {
                 onChangeText={(_, val) => setPassword(val)}
               />
               <Spacer mb={4} />
-              <Button block onPress={handleLogin} disabled={disabled} variant="primaryBlack">
+              <Button loading={isMutating} block onPress={handleLogin} disabled={disabled} variant="primaryBlack">
                 Sign in
               </Button>
               <Spacer mb={3} />
