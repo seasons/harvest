@@ -1,17 +1,19 @@
 import { Platform } from "react-native"
-// Import module
+import Config from "react-native-config"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 
 // Get your interest
 const donutsInterest = "debug-donuts"
 
 // Initialize notifications
-export const init = () => {
+export const init = navigation => {
   // Set your app key and register for push
-  RNPusherPushNotifications.setInstanceId("e3bd12d7-8f4e-471b-a0e8-88d9bb929dd8")
+  RNPusherPushNotifications.setInstanceId(Config.RN_PUSHER_ID, navigation)
 
   // Init interests after registration
   RNPusherPushNotifications.on("registered", () => {
+    console.log("registered!!")
+    navigation.navigate("Home")
     subscribe(donutsInterest)
   })
 
@@ -21,7 +23,7 @@ export const init = () => {
 
 // Handle notifications received
 const handleNotification = notification => {
-  console.log(notification)
+  console.log("notification", notification)
 
   // iOS app specific handling
   if (Platform.OS === "ios") {
@@ -44,6 +46,7 @@ const handleNotification = notification => {
 
 // Subscribe to an interest
 const subscribe = interest => {
+  console.log("subscribe", interest)
   // Note that only Android devices will respond to success/error callbacks
   RNPusherPushNotifications.subscribe(
     interest,

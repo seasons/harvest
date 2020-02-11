@@ -9,6 +9,7 @@ import { Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import AsyncStorage from "@react-native-community/async-storage"
 import { useSafeArea } from "react-native-safe-area-context"
+import { checkNotifications } from "react-native-permissions"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -53,6 +54,19 @@ export const LogIn: React.FC<LogInProps> = props => {
     setEmailComplete(isValidEmail(val))
   }
 
+  const checkPermissions = () => {
+    checkNotifications()
+      .then(({ status, settings }) => {
+        console.log("status", status)
+        console.log("settings", settings)
+        props.navigation.navigate("AllowNotifications")
+      })
+      .catch(error => {
+        console.log("error checking for permission", error)
+        props.navigation.navigate("Home")
+      })
+  }
+
   const handleLogin = async () => {
     if (!isMutating) {
       Keyboard.dismiss()
@@ -68,7 +82,7 @@ export const LogIn: React.FC<LogInProps> = props => {
           data: { login: userSession },
         } = result
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
-        props.navigation.navigate("Home")
+        checkPermissions()
       }
     }
   }
