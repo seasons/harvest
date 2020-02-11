@@ -61,6 +61,7 @@ PODS:
   - lottie-react-native (3.3.2):
     - lottie-ios (~> 3.1.3)
     - React
+  - PushNotifications (3.0.4)
   - RCTRequired (0.61.5)
   - RCTTypeSafety (0.61.5):
     - FBLazyVector (= 0.61.5)
@@ -226,7 +227,10 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-config (0.12.0):
     - React
-  - react-native-safe-area-context (0.6.0):
+  - react-native-pusher-push-notifications (2.4.0):
+    - PushNotifications (>= 2.1.2)
+    - React
+  - react-native-safe-area-context (0.6.4):
     - React
   - react-native-splash-screen (3.2.0):
     - React
@@ -332,6 +336,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - lottie-ios (from `../node_modules/lottie-ios`)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
+  - PushNotifications (~> 3.0.4)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -344,6 +349,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-config (from `../node_modules/react-native-config`)
+  - react-native-pusher-push-notifications (from `../node_modules/react-native-pusher-push-notifications`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -385,6 +391,7 @@ SPEC REPOS:
     - Analytics
     - boost-for-react-native
     - libwebp
+    - PushNotifications
     - SDWebImage
     - SDWebImageWebPCoder
     - Sentry
@@ -456,6 +463,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-config:
     :path: "../node_modules/react-native-config"
+  react-native-pusher-push-notifications:
+    :path: "../node_modules/react-native-pusher-push-notifications"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
@@ -559,6 +568,7 @@ SPEC CHECKSUMS:
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   lottie-ios: 496ac5cea1bbf1a7bd1f1f472f3232eb1b8d744b
   lottie-react-native: 2a1a82bb326ae51331a5520de0cf706733c6db69
+  PushNotifications: 6e3d148e5e129af9d4a9279b288c934f9a7f9066
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
   React: b6a59ef847b2b40bb6e0180a97d0ca716969ac78
@@ -569,7 +579,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
-  react-native-safe-area-context: d288138da2c800caa111f9352e9333f186a06ead
+  react-native-pusher-push-notifications: 2ed16a965a4ade4d2e51ecc632b47a7f41e7f7c6
+  react-native-safe-area-context: 52342d2d80ea8faadd0ffa76d83b6051f20c5329
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webview: 82d6456dfae1b3ef70c3939135536342afc96373
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
@@ -607,6 +618,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 1e70fe58b872355f0ecb44fb81bb1a16484047f0
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 344bb528bf9139ea756e823b17c90119120a6994
+PODFILE CHECKSUM: da7182d533be764c208b1f38d715eb2e93e00078
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.8.3
