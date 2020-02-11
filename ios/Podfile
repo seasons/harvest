@@ -60,5 +60,4 @@ target 'seasons' do
   # pod 'RNAnalyticsIntegration-Mixpanel', :path => '../node_modules/@segment/analytics-react-native-mixpanel' 
   pod 'react-native-pusher-push-notifications', :path => '../node_modules/react-native-pusher-push-notifications'
 
-  pod 'PushNotifications', '~> 3.0.4'
 end
