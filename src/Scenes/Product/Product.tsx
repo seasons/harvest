@@ -4,7 +4,7 @@ import { Loader } from "App/Components/Loader"
 import get from "lodash/get"
 import React, { useState, useEffect } from "react"
 import { NavigationActions, NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
-import { Dimensions, FlatList, SafeAreaView, TouchableOpacity } from "react-native"
+import { Dimensions, FlatList, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { useQuery, useMutation } from "@apollo/react-hooks"
@@ -18,6 +18,7 @@ import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { screenTrack } from "App/Utils/track"
 import { PopUpProps } from "App/Components/PopUp"
 import { GET_HOMEPAGE } from "../Home/Home"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 
@@ -41,6 +42,7 @@ export const Product = screenTrack(props => {
     productID,
   }
 })((props: ProductProps) => {
+  const insets = useSafeArea()
   const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation } = props
@@ -110,7 +112,7 @@ export const Product = screenTrack(props => {
 
   return (
     <Theme>
-      <SafeAreaView style={{ flex: 1 }}>
+      <Box style={{ paddingTop: insets.top, paddingBottom: insets.bottom, flex: 1 }}>
         <ArrowWrapper>
           <TouchableOpacity
             onPress={() => {
@@ -147,7 +149,7 @@ export const Product = screenTrack(props => {
           />
         </AnimatedVariantPicker>
         <PopUp data={popUp.data} show={popUp.show} />
-      </SafeAreaView>
+      </Box>
     </Theme>
   )
 })

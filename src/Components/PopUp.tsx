@@ -24,11 +24,12 @@ export interface PopUpData {
 }
 
 export interface PopUpProps {
+  insetsBottom?: boolean
   show: boolean
   data?: PopUpData
 }
 
-export const PopUp: React.FC<PopUpProps> = ({ data, show }) => {
+export const PopUp: React.FC<PopUpProps> = ({ data, show, insetsBottom }) => {
   if (!data) {
     return <></>
   }
@@ -116,7 +117,7 @@ export const PopUp: React.FC<PopUpProps> = ({ data, show }) => {
               {buttonText}
             </Button>
           </Flex>
-          <Spacer mb={2} />
+          <Spacer mb={insetsBottom ? 6 : 2} />
         </Box>
       </AnimatedPopUp>
       {show && <AnimatedOuterWrapper style={{ backgroundColor: animation.backgroundColor }} />}
