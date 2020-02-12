@@ -57,6 +57,7 @@ const GET_BROWSE_PRODUCTS = gql`
       createdAt
       updatedAt
       brand {
+        id
         name
       }
       variants {

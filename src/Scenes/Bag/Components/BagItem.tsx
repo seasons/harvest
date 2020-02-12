@@ -4,9 +4,9 @@ import { imageResize } from "App/helpers/imageResize"
 import gql from "graphql-tag"
 import { get, head } from "lodash"
 import React from "react"
-import { Text, TouchableWithoutFeedback, TouchableOpacity } from "react-native"
+import { Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import styled from "styled-components/native"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -15,6 +15,7 @@ export const BagItemFragment = gql`
       id
       modelSize
       brand {
+        id
         name
       }
       images
@@ -52,6 +53,10 @@ export const BagItem: React.FC<BagItemProps> = ({
     (get(bagItem, "productVariant.product.variants") || []).filter(a => a.id === bagItem.variantID)
   )
   const product = get(bagItem, "productVariant.product")
+  if (!product) {
+    return null
+  }
+
   const imageURL = imageResize(get(product, "images[0].url"), "medium")
   const variantSize = get(variantToUse, "size")
 

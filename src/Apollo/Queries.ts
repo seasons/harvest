@@ -10,12 +10,15 @@ export const GET_PRODUCT = gql`
       modelSize
       modelHeight
       color {
+        id
         name
       }
       secondaryColor {
+        id
         name
       }
       brand {
+        id
         name
         logo
         since

@@ -10,7 +10,7 @@ import { ScrollView, StatusBar, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 
-import { BagItem } from "../Bag/Components/BagItem"
+import { BagItem, BagItemFragment } from "../Bag/Components/BagItem"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
@@ -32,9 +32,7 @@ const GET_CUSTOMER = gql`
         id
         productVariant {
           id
-          product {
-            id
-          }
+          ...BagItemProductVariant
         }
       }
       customer {
@@ -57,6 +55,7 @@ const GET_CUSTOMER = gql`
       }
     }
   }
+  ${BagItemFragment}
 `
 
 const SectionHeader = ({ title }) => {
@@ -75,6 +74,7 @@ const SectionHeader = ({ title }) => {
 
 export const Reservation = props => {
   const [isMutating, setIsMutating] = useState(false)
+  const insets = useSafeArea()
   const { data, loading } = useQuery(GET_CUSTOMER)
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
@@ -91,7 +91,6 @@ export const Reservation = props => {
     },
   })
   const [showError, setShowError] = useState(false)
-  const insets = useSafeArea()
 
   if (loading) {
     return <Loader />
@@ -106,15 +105,7 @@ export const Reservation = props => {
     zipCode: "",
   })
   const phoneNumber = get(customer, "detail.phoneNumber", "")
-
-  const items =
-    (data &&
-      data.me &&
-      data.me.bag.map(item => ({
-        variantID: item.productVariant.id,
-        productID: item.productVariant.product.id,
-      }))) ||
-    []
+  const items = data?.me?.bag ?? []
 
   const popUpData = {
     title: "Sorry!",
@@ -149,13 +140,20 @@ export const Reservation = props => {
           <Box mb={5}>
             <SectionHeader title="Items" />
             <Box mt={2} mb="80">
-              {items.map((item, i) => {
-                return (
-                  <Box key={item.productID}>
-                    <BagItem sectionHeight={200} index={i} bagItem={item} navigation={props.navigation} saved={true} />
-                  </Box>
-                )
-              })}
+              {!!items &&
+                items.map((item, i) => {
+                  return (
+                    <Box key={item.productID}>
+                      <BagItem
+                        sectionHeight={200}
+                        index={i}
+                        bagItem={item}
+                        navigation={props.navigation}
+                        saved={true}
+                      />
+                    </Box>
+                  )
+                })}
             </Box>
           </Box>
         </ScrollView>
@@ -171,7 +169,7 @@ export const Reservation = props => {
           try {
             const { data } = await reserveItems({
               variables: {
-                items: items.map(item => item.variantID),
+                items: items?.map(item => item?.productVariant?.id),
               },
             })
             if (data.reserveItems) {
@@ -184,6 +182,7 @@ export const Reservation = props => {
             setIsMutating(false)
           }
         }}
+        block
       >
         Place order
       </FixedButton>

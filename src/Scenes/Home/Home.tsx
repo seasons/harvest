@@ -1,4 +1,4 @@
-import { Box, Flex, Spacer, Separator } from "App/Components"
+import { Box, Flex, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/Utils"
 import { Container } from "Components/Container"
@@ -9,9 +9,10 @@ import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
+
 import { AllCaughtUp } from "./Components/AllCaughtUp"
 import { ProductsRail } from "./Components/ProductsRail"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -24,6 +25,7 @@ export const GET_HOMEPAGE = gql`
             id
             images
             brand {
+              id
               name
             }
             variants {
