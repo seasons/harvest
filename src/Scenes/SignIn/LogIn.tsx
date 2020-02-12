@@ -85,9 +85,7 @@ export const LogIn: React.FC<LogInProps> = props => {
 
   return (
     <Theme>
-      <Box
-        style={{ paddingTop: insets.top, paddingBottom: insets.bottom, flex: 1, backgroundColor: color("black100") }}
-      >
+      <Box style={{ paddingTop: insets.top, flex: 1, backgroundColor: color("black100") }}>
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
           <Box p={2} mt={6}>
             <Sans color="white" size="3">
