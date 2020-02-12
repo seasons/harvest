@@ -169,28 +169,25 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
   const bagSubtitle = hasActiveReservation ? "Your current rotation" : remainingPiecesDisplay
 
   const ErrorMessage = () => {
+    const popUpData = {
+      title: "",
+      note: "We couldn't process your order because of an unexpected error, please try again later",
+      buttonText: "Got it",
+      onClose: () => displayReserveError(false),
+    }
+
     if (showReserveError) {
       const { code, data } = showReserveError
-      let title, description
       if (code === "511") {
-        title = "One or more items have been reserved already"
-        description =
+        popUpData.title = "One or more items have been reserved already"
+        popUpData.note =
           "Sorry, some of the items you had selected were confirmed before you, please replace them with available items"
       } else {
-        title = "Sorry!"
-        description = "We couldn't process your order because of an unexpected error, please try again later"
+        popUpData.title = "Sorry!"
+        popUpData.note = "We couldn't process your order because of an unexpected error, please try again later"
       }
 
-      return (
-        <PopUp
-          theme="light"
-          buttonText="Got it"
-          title={title}
-          note={description}
-          show={showReserveError}
-          onClose={() => displayReserveError(false)}
-        />
-      )
+      return <PopUp data={popUpData} show={showReserveError} />
     }
 
     return null

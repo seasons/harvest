@@ -186,8 +186,6 @@ export const Reservation = props => {
       >
         Place order
       </FixedButton>
-
-      <PopUp data={popUpData} show={showError} />
     </>
   )
 
@@ -205,6 +203,7 @@ export const Reservation = props => {
           </Sans>
         </Box>
         <Content>{content}</Content>
+        <PopUp data={popUpData} show={showError} />
       </Container>
     </Theme>
   )
