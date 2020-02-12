@@ -74,7 +74,8 @@ const SectionHeader = ({ title }) => {
 
 export const Reservation = props => {
   const [isMutating, setIsMutating] = useState(false)
-  const getCustomerQuery = useQuery(GET_CUSTOMER)
+  const insets = useSafeArea()
+  const { data, loading } = useQuery(GET_CUSTOMER)
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
       {
@@ -90,10 +91,7 @@ export const Reservation = props => {
     },
   })
   const [showError, setShowError] = useState(false)
-  const insets = useSafeArea()
-  const { data, loading } = getCustomerQuery
 
-  console.log(getCustomerQuery, data)
   if (loading) {
     return <Loader />
   }
