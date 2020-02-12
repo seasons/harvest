@@ -43,7 +43,17 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
             productVariant {
               id
               product {
+                name
                 id
+                modelSize
+                brand {
+                  name
+                }
+                images
+                variants {
+                  id
+                  size
+                }
               }
             }
           }
@@ -55,7 +65,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
 
 export const ReservationConfirmation = props => {
   const reservationID = get(props, "navigation.state.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
-  const { data, loading, error } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
+  const { data } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
     variables: {
       reservationID,
     },

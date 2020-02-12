@@ -1,5 +1,6 @@
 import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { BAG_NUM_ITEMS } from "App/helpers/constants"
 import { color } from "App/Utils"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
@@ -9,12 +10,12 @@ import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
+
+import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
-import { BAG_NUM_ITEMS } from "App/helpers/constants"
-import { REMOVE_FROM_BAG, GET_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM, CHECK_ITEMS } from "./BagQueries"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 const SECTION_HEIGHT = 300
 
@@ -125,7 +126,7 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
           },
         ],
         update(cache, { data, errors }) {
-          console.warn(data, errors)
+          console.log(data, errors)
         },
       })
       if (data.checkItemsAvailability) {
