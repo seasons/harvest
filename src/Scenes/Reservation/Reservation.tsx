@@ -1,6 +1,9 @@
-import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { Box, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme, CloseButton } from "App/Components"
+import {
+  Box, CloseButton, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme
+} from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { color } from "App/Utils"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React, { useState } from "react"
@@ -10,7 +13,6 @@ import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 
 import { BagItem, BagItemFragment } from "../Bag/Components/BagItem"
-import { color } from "App/Utils"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
