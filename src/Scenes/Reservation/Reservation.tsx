@@ -1,12 +1,14 @@
-import { Box, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme } from "App/Components"
+import {
+  Box, CloseButton, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme
+} from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { CloseXIcon } from "Assets/icons"
+import { color } from "App/Utils"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import { ScrollView, StatusBar, TouchableOpacity } from "react-native"
+import { ScrollView, StatusBar } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 
@@ -186,34 +188,24 @@ export const Reservation = props => {
       >
         Place order
       </FixedButton>
-
-      <PopUp data={popUpData} show={showError} />
     </>
   )
 
   return (
     <Theme>
-      <Container style={{ paddingTop: insets.top }}>
-        <CloseButton onPress={() => props.navigation.dismiss()}>
-          <Box p="14px">
-            <CloseXIcon />
-          </Box>
-        </CloseButton>
+      <Box style={{ paddingTop: insets.top, flex: 1, backgroundColor: color("black100") }}>
+        <CloseButton navigation={props.navigation} />
         <Box style={{ marginTop: 60 }} m={2}>
           <Sans size="3" color="white">
             Review your order
           </Sans>
         </Box>
         <Content>{content}</Content>
-      </Container>
+        <PopUp data={popUpData} show={showError} insetsBottom />
+      </Box>
     </Theme>
   )
 }
-
-const Container = styled(Box)`
-  background: black;
-  flex: 1;
-`
 
 const Content = styled(Box)`
   background: white;
@@ -221,13 +213,4 @@ const Content = styled(Box)`
   border-top-right-radius: 30;
   overflow: hidden;
   flex: 1;
-`
-
-const CloseButton = styled(TouchableOpacity)`
-  background-color: rgba(255, 255, 255, 0.2);
-  width: 40;
-  height: 40;
-  border-radius: 20;
-  margin-left: auto;
-  margin-right: 20;
 `

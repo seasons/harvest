@@ -49,7 +49,7 @@ export const Home: React.FC<{
   const insets = useSafeArea()
 
   useEffect(() => {
-    if (data && data.homepage) {
+    if (data?.homepage?.sections?.length) {
       const dataSections = data.homepage.sections.filter(section => section?.results?.length)
       setSections(dataSections)
     }

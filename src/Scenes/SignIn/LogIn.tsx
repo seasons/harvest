@@ -5,9 +5,10 @@ import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
-import { Keyboard, SafeAreaView, TouchableWithoutFeedback } from "react-native"
+import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import AsyncStorage from "@react-native-community/async-storage"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -30,6 +31,7 @@ interface LogInProps {
 }
 
 export const LogIn: React.FC<LogInProps> = props => {
+  const insets = useSafeArea()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [emailComplete, setEmailComplete] = useState(false)
@@ -82,63 +84,63 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color("black100") }}>
-      <Theme>
-        <>
-          <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-            <Box p={2} mt={6}>
-              <Sans color="white" size="3">
-                Welcome
-              </Sans>
-              <Spacer mb={2} />
-              <TextInput
-                placeholder="Email"
-                variant="dark"
-                textContentType="Email"
-                inputKey="email"
-                onChangeText={(_, val) => onEmailChange(val)}
-              />
-              <Spacer mb={2} />
-              <TextInput
-                secureTextEntry
-                placeholder="Password"
-                variant="dark"
-                inputKey="password"
-                textContentType="Password"
-                onChangeText={(_, val) => setPassword(val)}
-              />
-              <Spacer mb={2} />
-              <Text>
-                <Sans size="2" color="gray">
-                  Forget password?
-                </Sans>{" "}
-                <TouchableWithoutFeedback onPress={handleResetPassword}>
-                  <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
-                    Reset
-                  </Sans>
-                </TouchableWithoutFeedback>
-              </Text>
-              <Spacer mb={4} />
-              <Button block onPress={handleLogin} disabled={disabled} variant="primaryWhite">
-                Sign in
-              </Button>
-            </Box>
-            <Box p={2}>
-              <Text style={{ textAlign: "center" }}>
-                <Sans size="2" color="gray">
-                  Not a member?
-                </Sans>{" "}
-                <TouchableWithoutFeedback onPress={handleJoinWaitlist}>
-                  <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
-                    Join the waitlist
-                  </Sans>
-                </TouchableWithoutFeedback>
-              </Text>
-            </Box>
-          </Flex>
-          <PopUp data={popUpData} show={showError} />
-        </>
-      </Theme>
-    </SafeAreaView>
+    <Theme>
+      <Box
+        style={{ paddingTop: insets.top, paddingBottom: insets.bottom, flex: 1, backgroundColor: color("black100") }}
+      >
+        <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
+          <Box p={2} mt={6}>
+            <Sans color="white" size="3">
+              Welcome
+            </Sans>
+            <Spacer mb={2} />
+            <TextInput
+              placeholder="Email"
+              variant="dark"
+              textContentType="Email"
+              inputKey="email"
+              onChangeText={(_, val) => onEmailChange(val)}
+            />
+            <Spacer mb={2} />
+            <TextInput
+              secureTextEntry
+              placeholder="Password"
+              variant="dark"
+              inputKey="password"
+              textContentType="Password"
+              onChangeText={(_, val) => setPassword(val)}
+            />
+            <Spacer mb={2} />
+            <Text>
+              <Sans size="2" color="gray">
+                Forget password?
+              </Sans>{" "}
+              <TouchableWithoutFeedback onPress={handleResetPassword}>
+                <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
+                  Reset
+                </Sans>
+              </TouchableWithoutFeedback>
+            </Text>
+            <Spacer mb={4} />
+            <Button block onPress={handleLogin} disabled={disabled} variant="primaryWhite">
+              Sign in
+            </Button>
+          </Box>
+          <Box p={2}>
+            <Text style={{ textAlign: "center" }}>
+              <Sans size="2" color="gray">
+                Not a member?
+              </Sans>{" "}
+              <TouchableWithoutFeedback onPress={handleJoinWaitlist}>
+                <Sans style={{ textDecorationLine: "underline" }} size="2" color="white">
+                  Join the waitlist
+                </Sans>
+              </TouchableWithoutFeedback>
+            </Text>
+          </Box>
+        </Flex>
+        <PopUp data={popUpData} show={showError} />
+      </Box>
+    </Theme>
   )
 }
