@@ -1,6 +1,6 @@
-import { GET_BAG } from "App/Apollo/Queries"
 import { Box, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { CloseXIcon } from "Assets/icons"
 import gql from "graphql-tag"
 import { get } from "lodash"
@@ -143,7 +143,7 @@ export const Reservation = props => {
               {!!items &&
                 items.map((item, i) => {
                   return (
-                    <Box key={item.productID}>
+                    <Box key={item.id}>
                       <BagItem
                         sectionHeight={200}
                         index={i}

@@ -47,6 +47,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
                 id
                 modelSize
                 brand {
+                  id
                   name
                 }
                 images
@@ -83,13 +84,7 @@ export const ReservationConfirmation = props => {
   const billingInfo = get(customer, "detail.billingInfo", { brand: "", last_digits: "" })
   const reservation = get(data, "me.customer.reservations[0]", { reservationNumber: "", products: [] })
 
-  const items =
-    (reservation &&
-      reservation.products.map(item => ({
-        variantID: item.productVariant.id,
-        productID: item.productVariant.product.id,
-      }))) ||
-    []
+  const items = reservation?.products ?? []
 
   const SectionHeader = ({ title }) => {
     return (
@@ -156,7 +151,7 @@ export const ReservationConfirmation = props => {
             <Box mt={2} mb="80">
               {items.map((item, i) => {
                 return (
-                  <Box key={item.productID}>
+                  <Box key={item.id}>
                     <BagItem removeItemFromBag={() => null} sectionHeight={200} index={i} bagItem={item} saved={true} />
                   </Box>
                 )
@@ -171,6 +166,7 @@ export const ReservationConfirmation = props => {
             props.navigation.navigate("Bag", { reservationID: reservationID })
             props.navigation.dismiss()
           }}
+          block
         >
           Done
         </FixedButton>

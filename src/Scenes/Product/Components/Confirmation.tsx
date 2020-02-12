@@ -1,11 +1,12 @@
-import { GET_BAG } from "App/Apollo/Queries"
 import { Flex, Sans, Spacer } from "App/Components"
+import { BAG_NUM_ITEMS } from "App/helpers/constants"
+import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { GreenCheck } from "Assets/svgs"
 import { get } from "lodash"
 import React from "react"
 import styled from "styled-components/native"
+
 import { useQuery } from "@apollo/react-hooks"
-import { BAG_NUM_ITEMS } from "App/helpers/constants"
 
 export const Confirmation = ({ type }) => {
   const { data } = useQuery(GET_BAG, {
