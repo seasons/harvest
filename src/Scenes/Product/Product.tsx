@@ -112,7 +112,7 @@ export const Product = screenTrack(props => {
 
   return (
     <Theme>
-      <Box style={{ paddingTop: insets.top, paddingBottom: insets.bottom, flex: 1 }}>
+      <Box style={{ paddingTop: insets.top, flex: 1 }}>
         <ArrowWrapper>
           <TouchableOpacity
             onPress={() => {
