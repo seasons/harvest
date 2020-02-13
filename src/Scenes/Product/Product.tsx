@@ -83,6 +83,7 @@ export const Product = screenTrack(props => {
   if (loading || !data) {
     return <Loader />
   }
+  console.log("productID", data.product.variants)
 
   if (error) {
     console.error("error: ", error)

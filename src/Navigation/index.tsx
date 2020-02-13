@@ -225,20 +225,26 @@ const MainNavigator = createBottomTabNavigator(
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state
         let URL
+        let testID
 
         if (routeName === "Home") {
+          testID = "nav-homeButton"
           URL = require(`../../assets/images/Home.png`)
         } else if (routeName === "Browse") {
+          testID = "nav-browseButton"
           URL = require(`../../assets/images/Browse.png`)
         } else if (routeName === "ProductRequest") {
+          testID = "nav-productButton"
           URL = require(`../../assets/images/Submit.png`)
         } else if (routeName === "Bag") {
+          testID = "nav-bagButton"
           URL = require(`../../assets/images/Bag.png`)
         } else if (routeName === "Account") {
+          testID = "nav-accountButton"
           URL = require(`../../assets/images/Account.png`)
         }
 
-        return <Image source={URL} style={{ opacity: focused ? 1.0 : 0.3 }} />
+        return <Image testID={testID} source={URL} style={{ opacity: focused ? 1.0 : 0.3 }} />
       },
       tabBarOnPress: ({ navigation, defaultHandler }) => {
         const { routeName } = navigation.state

@@ -41,6 +41,7 @@ export interface ButtonProps extends BoxProps {
   rotateChevron?: boolean
   showChevron?: boolean
   block?: boolean
+  testID?: string
 }
 
 export type ButtonVariant = "primaryBlack" | "primaryWhite" | "blur" | "secondaryBlack"
@@ -226,6 +227,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
       loading,
       showChevron,
       rotateChevron,
+      testID,
       ...rest
     } = this.props
     const { px, size, height } = this.getSize()
@@ -239,6 +241,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
       <Spring native from={from} to={to}>
         {props => (
           <TouchableWithoutFeedback
+            testID={testID}
             onPress={this.onPress}
             onPressIn={() => {
               this.setState({

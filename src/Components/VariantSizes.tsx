@@ -13,7 +13,7 @@ export const VariantSizes: React.FC<{
   return (
     <Flex flexDirection="row">
       {sortedVariants.map((variant: any) => {
-        const reservable = variant.reservable !== null && !!variant.reservable
+        const reservable = variant.reservable !== null && variant.reservable > 0
         return (
           <Box key={variant.id} mr={0.5} style={{ position: "relative" }}>
             <Sans size={size} color={reservable ? "black" : "black15"}>

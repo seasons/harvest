@@ -73,14 +73,13 @@ const GET_BROWSE_PRODUCTS = gql`
   }
 `
 
-const renderItem = ({ item }, i, navigation) => {
+const renderItem = (item, index, navigation) => {
+  const testID = `browse-inStockItem-${index}`
   const itemWidth = Dimensions.get("window").width / 2 - 2
   const product = item
-
   const image = get(product, "images[0]", { url: "" })
   const resizedImage = imageResize(image.url, "large")
-  const isLeft = i % 2 === 0
-
+  const isLeft = index % 2 !== 0
   const brandName = get(product, "brand.name")
 
   if (!product) {
@@ -88,8 +87,8 @@ const renderItem = ({ item }, i, navigation) => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
-      <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
+    <TouchableWithoutFeedback testID={testID} onPress={() => navigation.navigate("Product", { id: product.id })}>
+      <Box mr={isLeft ? 0.0 : 0.5} mb={0.5} width={itemWidth}>
         <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
         <Box my={0.5} mx={1}>
           {brandName && <Sans size="0">{brandName}</Sans>}
@@ -144,19 +143,16 @@ export const Browse = (props: any) => {
   const numFiltersSelected = sizeFilters.length
 
   let filtersButtonVariant
-  let filtersButtonWidth
   let filtersButtonText
   let filtersButtonTextColor
   if (numFiltersSelected > 0) {
     // Selected filters state
     filtersButtonVariant = "primaryBlack"
-    filtersButtonWidth = 97
     filtersButtonText = `Filters +${numFiltersSelected}`
     filtersButtonTextColor = "white"
   } else {
     // No filters selected state
     filtersButtonVariant = "primaryWhite"
-    filtersButtonWidth = 78
     filtersButtonText = "Filters"
     filtersButtonTextColor = "black"
   }
@@ -182,9 +178,10 @@ export const Browse = (props: any) => {
           <FlatList
             contentContainerStyle={{ paddingTop: insets.top, paddingBottom: filtersButtonBottom + filtersButtonHeight }}
             data={products}
+            testID="browse-flatlist"
             ref={ref => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
-            renderItem={(item, i) => renderItem(item, i, navigation)}
+            renderItem={({ item, index }) => renderItem(item, index, navigation)}
             numColumns={2}
             onEndReachedThreshold={0.7}
             onEndReached={() => {

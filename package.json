@@ -77,6 +77,7 @@
     "babel-plugin-module-resolver": "^3.2.0",
     "babel-preset-expo": "^7.0.0",
     "concurrently": "2.2.0",
+    "detox": "^15.2.0",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.13.0",
     "jest": "^24.9.0",
@@ -88,6 +89,19 @@
     "remote-redux-devtools": "^0.5.16",
     "snapshot-diff": "0.2.2",
     "typescript": "^3.7.0"
+  },
+  "detox": {
+    "configurations": {
+      "ios.sim.debug": {
+        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/seasons.app",
+        "build": "xcodebuild -workspace ios/seasons.xcworkspace -scheme seasons -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
+        "type": "ios.simulator",
+        "device": {
+          "type": "iPhone 11"
+        }
+      }
+    },
+    "test-runner": "jest"
   },
   "jest": {
     "preset": "react-native",

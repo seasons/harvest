@@ -93,6 +93,7 @@ export const LogIn: React.FC<LogInProps> = props => {
             </Sans>
             <Spacer mb={2} />
             <TextInput
+              testID="logIn-emailInput"
               placeholder="Email"
               variant="dark"
               textContentType="Email"
@@ -101,6 +102,7 @@ export const LogIn: React.FC<LogInProps> = props => {
             />
             <Spacer mb={2} />
             <TextInput
+              testID="logIn-passwordInput"
               secureTextEntry
               placeholder="Password"
               variant="dark"
@@ -120,7 +122,7 @@ export const LogIn: React.FC<LogInProps> = props => {
               </TouchableWithoutFeedback>
             </Text>
             <Spacer mb={4} />
-            <Button block onPress={handleLogin} disabled={disabled} variant="primaryWhite">
+            <Button block testID="logIn-signInButton" onPress={handleLogin} disabled={disabled} variant="primaryWhite">
               Sign in
             </Button>
           </Box>

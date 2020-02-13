@@ -19,6 +19,7 @@ export interface TextInputProps {
   inputKey?: string
   multiline?: boolean
   onChangeText?: (inputKey: string, text: string) => void
+  testID?: string
 }
 enum DisplayState {
   Active = "active",
@@ -72,6 +73,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
   style,
   inputKey,
   multiline,
+  testID,
 }) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
   const [current, setCurrent] = React.useState(DisplayState.Inactive)
@@ -102,6 +104,7 @@ export const TextInput: React.SFC<TextInputProps> = ({
       <Spring native from={from} to={to}>
         {props => (
           <AnimatedTextInput
+            testID={testID}
             blurOnSubmit
             multiline={multiline || false}
             secureTextEntry={secureTextEntry}
