@@ -2,7 +2,6 @@ import React, { Component, ReactNode } from "react"
 import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
-
 import { TextCheckSVG } from "../../assets/svgs"
 import { Box, BoxProps } from "./Box"
 import { Flex } from "./Flex"
@@ -43,7 +42,7 @@ export interface ButtonProps extends BoxProps {
   block?: boolean
 }
 
-export type ButtonVariant = "primaryBlack" | "primaryWhite" | "blur" | "secondaryBlack"
+export type ButtonVariant = "primaryBlack" | "primaryWhite" | "black85" | "secondaryBlack"
 export type ButtonSize = "small" | "large"
 
 /** Default button size */
@@ -96,22 +95,22 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: black50,
         },
       }
-    case "blur":
+    case "black85":
       return {
         default: {
-          backgroundColor: white100,
-          borderColor: black100,
-          color: black100,
+          backgroundColor: black85,
+          borderColor: black85,
+          color: white100,
         },
         pressed: {
-          backgroundColor: black50,
+          backgroundColor: black100,
           borderColor: black100,
-          color: black100,
+          color: white100,
         },
         disabled: {
           backgroundColor: black15,
           borderColor: black15,
-          color: black100,
+          color: white100,
         },
       }
     case "secondaryBlack":
@@ -305,7 +304,6 @@ const Container = styled(Box)<ButtonProps>`
       return p.block ? "100%" : "auto"
     }
   }};
-  }
 `
 
 const AnimatedContainer = animated(Container)

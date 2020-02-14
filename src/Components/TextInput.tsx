@@ -20,6 +20,7 @@ export interface TextInputProps {
   multiline?: boolean
   onChangeText?: (inputKey: string, text: string) => void
 }
+
 enum DisplayState {
   Active = "active",
   Inactive = "inactive",
@@ -64,7 +65,7 @@ export function getColorsForVariant(variant: TextInputVariant) {
   }
 }
 
-export const TextInput: React.SFC<TextInputProps> = ({
+export const TextInput: React.FC<TextInputProps> = ({
   variant = defaultVariant,
   placeholder,
   secureTextEntry,

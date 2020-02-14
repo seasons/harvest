@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react"
 import { Dimensions } from "react-native"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-
 import { Button } from "./Button"
 
 const windowDimensions = Dimensions.get("window")

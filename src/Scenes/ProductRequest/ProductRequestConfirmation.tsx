@@ -30,7 +30,7 @@ export const ProductRequestConfirmation: React.FC<{
   return (
     <Container>
       <>
-        <FixedBackArrow navigation={navigation} />
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <ScrollView>
           <Box p={2} mt={insets.top} mb={insets.bottom}>
             <Spacer mb={60} />

@@ -37,20 +37,7 @@ export const Filters = (props: any) => {
   const buttonBottom = insets.bottom + 40
   const buttonWidth = (screenWidth - 39) / 2
   const buttonHeight = 48
-  const isApplyButtonDisabled = !(sortFilter !== currentSortFilter || sizeFilters.length > 0)
   const separatorColor = "#272727"
-
-  const renderSectionHeader = ({ section }) => {
-    return (
-      <>
-        <Sans color="white" size="1" weight="medium">
-          {section.title}
-        </Sans>
-        <Spacer mt={2} />
-        <Separator color={separatorColor} />
-      </>
-    )
-  }
 
   const renderItem = ({ item, section }) => {
     const isSortBySection = section.title === SORT_BY

@@ -132,7 +132,7 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
   return (
     <Container>
       <>
-        <FixedBackArrow navigation={navigation} />
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <FlatList
           data={sections}
           ListHeaderComponent={() => (
