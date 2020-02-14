@@ -1,19 +1,25 @@
 import { Platform } from "react-native"
 import Config from "react-native-config"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
+import { requestNotifications } from "react-native-permissions"
 
 // Get your interest
 const donutsInterest = "debug-donuts"
 
 // Initialize notifications
 export const init = navigation => {
+  requestNotifications(["alert", "sound", "badge", "criticalAlert"]).then(({ status }) => {
+    if (status === "granted") {
+      RNPusherPushNotifications.setInstanceId(Config.RN_PUSHER_ID, navigation)
+      navigation.navigate("Home")
+    } else {
+      navigation.navigate("Home")
+    }
+  })
   // Set your app key and register for push
-  RNPusherPushNotifications.setInstanceId(Config.RN_PUSHER_ID, navigation)
 
   // Init interests after registration
   RNPusherPushNotifications.on("registered", () => {
-    console.log("registered!!")
-    navigation.navigate("Home")
     subscribe(donutsInterest)
   })
 
@@ -23,8 +29,6 @@ export const init = navigation => {
 
 // Handle notifications received
 const handleNotification = notification => {
-  console.log("notification", notification)
-
   // iOS app specific handling
   if (Platform.OS === "ios") {
     switch (notification.appState) {

@@ -3,12 +3,11 @@ import { isValidEmail } from "App/helpers/regex"
 import { color } from "App/Utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
-import React, { useState, useRef } from "react"
+import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import AsyncStorage from "@react-native-community/async-storage"
-import { useSafeArea } from "react-native-safe-area-context"
 import { checkNotifications } from "react-native-permissions"
 
 const LOG_IN = gql`
@@ -32,7 +31,6 @@ interface LogInProps {
 }
 
 export const LogIn: React.FC<LogInProps> = props => {
-  const insets = useSafeArea()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isMutating, setIsMutating] = useState(false)
@@ -56,10 +54,12 @@ export const LogIn: React.FC<LogInProps> = props => {
 
   const checkPermissions = () => {
     checkNotifications()
-      .then(({ status, settings }) => {
-        console.log("status", status)
-        console.log("settings", settings)
-        props.navigation.navigate("AllowNotifications")
+      .then(({ status }) => {
+        if (status === "denied") {
+          props.navigation.navigate("AllowNotifications")
+        } else {
+          props.navigation.navigate("Home")
+        }
       })
       .catch(error => {
         console.log("error checking for permission", error)
