@@ -8,7 +8,8 @@ require_relative '../node_modules/react-native-unimodules/cocoapods'
 target 'seasons' do
   # Pods for seasons
   use_unimodules!
-  use_frameworks!
+
+  permissions_path = '../node_modules/react-native-permissions/ios'
 
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
@@ -59,5 +60,7 @@ target 'seasons' do
   # pod 'RNAnalyticsIntegration-Google-Analytics', :path => '../node_modules/@segment/analytics-react-native-google-analytics'
   # pod 'RNAnalyticsIntegration-Mixpanel', :path => '../node_modules/@segment/analytics-react-native-mixpanel' 
   pod 'react-native-pusher-push-notifications', :path => '../node_modules/react-native-pusher-push-notifications'
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
 
 end

@@ -1,4 +1,4 @@
-framework module Pods_seasons {
+module Pods_seasons {
   umbrella header "Pods-seasons-umbrella.h"
 
   export *
