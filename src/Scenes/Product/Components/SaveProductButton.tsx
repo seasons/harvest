@@ -31,6 +31,9 @@ export const SaveProductButton: React.FC<{
   }
   const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
 
+  if (!variantToUse) {
+    return <></>
+  }
   const { isSaved } = variantToUse
 
   const [saveItem] = useMutation(SAVE_ITEM, {

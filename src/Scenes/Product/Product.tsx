@@ -1,5 +1,5 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Theme, Box, Spacer, VariantSizes, PopUp } from "App/Components"
+import { Theme, Box, Sans, Spacer, VariantSizes, PopUp } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import get from "lodash/get"
 import React, { useState, useEffect } from "react"
@@ -9,8 +9,9 @@ import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { ImageRail, MoreLikeThis, ProductDetails } from "./Components"
+import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { BackArrowIcon } from "Assets/icons"
+import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { color } from "App/Utils"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
@@ -148,6 +149,7 @@ export const Product = screenTrack(props => {
             toggleShowVariantPicker={toggleShowVariantPicker}
           />
         </AnimatedVariantPicker>
+        <VariantWant />
         <PopUp data={popUp.data} show={popUp.show} />
       </Box>
     </Theme>
@@ -167,7 +169,7 @@ const Overlay = styled.View`
   background-color: rgba(0, 0, 0, 0.6);
   top: 0;
   left: 0;
-  bottom: 0;
+  bottom: 52;
   right: 0;
 `
 
@@ -189,3 +191,15 @@ const ArrowBackground = styled(Box)`
 `
 
 const AnimatedVariantPicker = animated(VariantPickerWrapper)
+
+const LeftCorner = styled(LeftTabCorner)`
+  position: absolute;
+  bottom: 100;
+  left: 0;
+`
+
+const RightCorner = styled(RightTabCorner)`
+  position: absolute;
+  bottom: 10;
+  right: 0;
+`

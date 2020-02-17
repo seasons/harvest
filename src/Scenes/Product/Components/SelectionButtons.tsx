@@ -25,8 +25,10 @@ export const SelectionButtons: React.FC<Props> = props => {
     return <></>
   }
 
+  const bottom = inStock ? 0 : 52
+
   return (
-    <Wrapper>
+    <Wrapper style={{ bottom }}>
       <Flex px={8} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
         <TouchableWithoutFeedback onPress={() => toggleShowVariantPicker(!showVariantPicker)}>
           <VariantSelectionButton p={2} inStock={inStock}>
@@ -81,7 +83,6 @@ const VariantSelectionButton = styled.View<{ inStock: boolean }>`
 
 const Wrapper = styled.View`
   position: absolute;
-  bottom: 0;
   left: 0;
   height: 48;
   width: 100%;
