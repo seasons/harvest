@@ -33,6 +33,7 @@ const ADD_VIEWED_PRODUCT = gql`
 `
 
 interface ProductProps {
+  route: any
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
@@ -45,8 +46,8 @@ export const Product = screenTrack(props => {
 })((props: ProductProps) => {
   const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
-  const { navigation } = props
-  const productID = get(navigation, "state.params.id")
+  const { navigation, route } = props
+  const productID = get(route, "params.id")
   const { data, loading, error } = useQuery<GetProduct>(GET_PRODUCT, {
     variables: {
       productID,
@@ -136,7 +137,7 @@ export const Product = screenTrack(props => {
       <ArrowWrapper>
         <TouchableOpacity
           onPress={() => {
-            navigation.dispatch(NavigationActions.back())
+            navigation.goBack()
           }}
         >
           <ArrowBackground showVariantPicker={showVariantPicker} />

@@ -18,7 +18,6 @@ export const Container: React.FC<{ children: any; backgroundColor?: "black100" |
         style={{
           flex: 1,
           paddingTop: insets.top,
-          paddingBottom: insets.bottom,
           backgroundColor: color(backgroundColor),
         }}
       >

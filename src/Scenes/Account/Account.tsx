@@ -85,7 +85,7 @@ export function Account(props) {
     <Container>
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
-          <Box p={2}>
+          <Box px={2} pt={2}>
             <Box mb={5} />
             <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
               {loading && (
@@ -134,14 +134,14 @@ export function Account(props) {
             <TouchableOpacity
               onPress={async () => {
                 await AsyncStorage.removeItem("userSession")
-                props.navigation.navigate("Auth")
+                props.navigation.navigate("Home")
               }}
             >
               <Sans size="2" color="red">
                 Sign out
               </Sans>
             </TouchableOpacity>
-            <Spacer m={2} />
+            <Spacer mb={2} />
           </Box>
         </ScrollView>
       </Animatable.View>

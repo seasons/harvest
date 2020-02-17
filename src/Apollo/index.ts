@@ -26,26 +26,28 @@ const link = new HttpLink({
 
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
-  try {
-    const accessToken = await getAccessTokenFromSession()
-    // return the headers to the context so httpLink can read them
+  const accessToken = await getAccessTokenFromSession()
+  if (accessToken) {
     return {
       headers: {
         ...headers,
         authorization: accessToken ? `Bearer ${accessToken}` : "",
       },
     }
-  } catch (e) {
+  } else {
     return {
       headers,
     }
   }
+  // return the headers to the context so httpLink can read them
 })
 
 const errorLink = onError(({ networkError, operation, forward }) => {
   if (networkError) {
+    console.log("networkError", networkError)
     // User access token has expired
     if (networkError.statusCode === 401) {
+      // FIXME:
       // We assume we have both tokens needed to run the async request
       // Let's refresh token through async request
       return new Observable(observer => {

@@ -164,7 +164,7 @@ export const ReservationConfirmation = props => {
         <FixedButton
           onPress={() => {
             props.navigation.navigate("Bag", { reservationID: reservationID })
-            props.navigation.dismiss()
+            props.navigation.goBack()
           }}
           block
         >

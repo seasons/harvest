@@ -18,7 +18,7 @@ export class Initializing extends React.Component<Props> {
       let userSession = await getUserSession()
 
       if (userSession && userSession.token) {
-        navigation.navigate("Home")
+        navigation.navigate("Root", { screen: "Home" })
       } else {
         navigation.navigate("Auth")
       }

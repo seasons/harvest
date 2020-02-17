@@ -88,7 +88,7 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   const handleResetPassword = () => {
-    props.navigation.navigate("ResetPasswordModal")
+    props.navigation.navigate("ResetPasswordModal", { screen: "FiltersModal" })
   }
 
   const disabled = !(emailComplete && password.length)

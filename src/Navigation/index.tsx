@@ -2,9 +2,9 @@ import { Account, PaymentAndShipping } from "App/Scenes/Account"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
 import { Browse, Filters } from "App/Scenes/Browse"
-import { Collection } from "App/Scenes/Collection"
 import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
+import SplashScreen from "react-native-splash-screen"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import {
@@ -17,291 +17,152 @@ import {
 } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
 import { color } from "App/Utils"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Image } from "react-native"
-import { createAppContainer, createSwitchNavigator } from "react-navigation"
-import { createStackNavigator, TransitionPresets } from "react-navigation-stack"
-import { createBottomTabNavigator } from "react-navigation-tabs"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
-import styled from "styled-components"
+import { NavigationContainer } from "@react-navigation/native"
+import { createStackNavigator } from "@react-navigation/stack"
+import { TabBar } from "./TabBar"
+import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
 
-import DismissableStackNavigator from "./DismissableStackNavigator"
-import { Tabs } from "./Tabs"
+const ModalStack = createStackNavigator()
+const RootStack = createStackNavigator()
+const HomeStack = createStackNavigator()
+const BagStack = createStackNavigator()
+const AccountStack = createStackNavigator()
+const BrowseStack = createStackNavigator()
+const Tab = createBottomTabNavigator()
 
-const shouldRenderTabBar = navigation => {
-  let renderTabs = true
-  if (navigation.state.routes.length > 1) {
-    navigation.state.routes.map(route => {
-      if (route.routeName === "Product") {
-        renderTabs = true
-      }
-    })
-  }
-  return renderTabs
+const defaultOptions = {
+  headerShown: false,
+  cardStyle: {
+    backgroundColor: color("white100"),
+    opacity: 1,
+  },
 }
 
-const MainAuthStack = createStackNavigator(
-  {
-    SignIn,
-    Welcome,
-    AllowNotifications,
-    Webview,
-  },
-  {
-    initialRouteName: "Welcome",
-    defaultNavigationOptions: {
-      headerShown: false,
-      cardStyle: {
-        backgroundColor: color("white100"),
-        opacity: 1,
-      },
-    },
-  }
-)
+const getActiveRouteName = state => {
+  const route = state.routes[state.index]
 
-MainAuthStack.navigationOptions = () => {
-  return {
-    tabBarVisible: false,
+  if (route.state) {
+    // Dive into nested navigators
+    return getActiveRouteName(route.state)
   }
+
+  return route.name
 }
 
-const ResetPasswordModal = DismissableStackNavigator(
-  {
-    ResetPassword,
-    ResetPasswordConfirmation,
-  },
-  {
-    headerMode: "none",
-  }
-)
-
-const AuthStack = createStackNavigator(
-  {
-    MainAuthStack: {
-      screen: MainAuthStack,
-    },
-    ResetPasswordModal: {
-      screen: ResetPasswordModal,
-    },
-  },
-  {
-    mode: "modal",
-    headerMode: "none",
-  }
-)
-
-const HomeStack = createStackNavigator(
-  {
-    Home,
-    Product,
-    Collection,
-  },
-  {
-    initialRouteName: "Home",
-    defaultNavigationOptions: {
-      headerShown: false,
-      cardStyle: {
-        backgroundColor: color("white100"),
-        opacity: 1,
-      },
-    },
-  }
-)
-
-HomeStack.navigationOptions = ({ navigation }) => {
-  return {
-    tabBarVisible: shouldRenderTabBar(navigation),
-  }
-}
-
-const BrowseStack = createStackNavigator(
-  {
-    Browse,
-    Product,
-  },
-  {
-    initialRouteName: "Browse",
-    defaultNavigationOptions: {
-      headerShown: false,
-      cardStyle: {
-        backgroundColor: color("white100"),
-        opacity: 1,
-      },
-    },
-  }
-)
-
-BrowseStack.navigationOptions = ({ navigation }) => {
-  return {
-    tabBarVisible: shouldRenderTabBar(navigation),
-    headerShown: false,
-    cardStyle: {
-      backgroundColor: color("white100"),
-      opacity: 1,
-    },
-  }
-}
-
-const FiltersModal = DismissableStackNavigator(
-  {
-    Filters,
-  },
-  {
-    headerMode: "none",
-  }
-)
-
-const BagStack = createStackNavigator(
-  {
-    Bag,
-    Product,
-    CurrentRotation,
-  },
-  {
-    initialRouteName: "Bag",
-    defaultNavigationOptions: {
-      headerShown: false,
-      cardStyle: {
-        backgroundColor: color("white100"),
-        opacity: 1,
-      },
-    },
-  }
-)
-
-BagStack.navigationOptions = ({ navigation }) => {
-  return {
-    tabBarVisible: shouldRenderTabBar(navigation),
-    headerShown: false,
-  }
-}
-
-const AccountStack = createStackNavigator(
-  {
-    Account,
-    MembershipInfo,
-    PaymentAndShipping,
-    PersonalPreferences,
-    Webview,
-    ProductRequest,
-    ProductRequestConfirmation,
-    FinishProductRequest,
-  },
-  {
-    initialRouteName: "Account",
-    defaultNavigationOptions: {
-      headerShown: false,
-      cardStyle: {
-        backgroundColor: color("white100"),
-        opacity: 1,
-      },
-    },
-  }
-)
-
-AccountStack.navigationOptions = ({ navigation }) => {
-  return {
-    tabBarVisible: shouldRenderTabBar(navigation),
-    headerShown: false,
-  }
-}
-
-const ReservationModal = DismissableStackNavigator(
-  {
-    Reservation,
-    ReservationConfirmation,
-  },
-  {
-    headerMode: "none",
-  }
-)
-
-const MainNavigator = createBottomTabNavigator(
-  {
-    Home: HomeStack,
-    Browse: BrowseStack,
-    Bag: BagStack,
-    Account: AccountStack,
-  },
-  {
-    defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused }) => {
-        const { routeName } = navigation.state
-        let URL
-
-        if (routeName === "Home") {
-          URL = require(`../../assets/images/Home.png`)
-        } else if (routeName === "Browse") {
-          URL = require(`../../assets/images/Browse.png`)
-        } else if (routeName === "Bag") {
-          URL = require(`../../assets/images/Bag.png`)
-        } else if (routeName === "Account") {
-          URL = require(`../../assets/images/Account.png`)
-        }
-
-        return <Image source={URL} style={{ opacity: focused ? 1.0 : 0.3 }} />
-      },
-      tabBarOnPress: ({ navigation, defaultHandler }) => {
-        defaultHandler()
-      },
-    }),
-    tabBarComponent: Tabs,
-  }
-)
-
-const CustomNavigator = props => {
-  const [browseFilter, setBrowseFilter] = useState("all")
-  const [isReserved, setIsReserved] = useState(false)
-
-  const { navigation } = props
-  const screenProps = { browseFilter, setBrowseFilter, isReserved, setIsReserved }
+export const AppContainer = () => {
+  const routeNameRef = React.useRef()
+  const navigationRef = React.useRef()
+  const [currentScreen, setCurrentScreen] = useState("Home")
+  useEffect(() => {
+    SplashScreen.hide()
+  }, [])
 
   return (
-    <NavigationContainer style={{ flex: 1 }}>
-      <MainNavigator navigation={navigation} screenProps={screenProps} />
+    <NavigationContainer
+      ref={navigationRef}
+      onStateChange={state => {
+        const previousRouteName = routeNameRef.current
+        const currentRouteName = getActiveRouteName(state)
+
+        if (previousRouteName !== currentRouteName) {
+          setCurrentScreen(currentRouteName)
+        }
+
+        routeNameRef.current = currentRouteName
+      }}
+    >
+      <RootStack.Navigator mode="modal" initialRouteName="Main" screenOptions={{ ...defaultOptions }}>
+        <RootStack.Screen name="Main" options={{ headerShown: false }}>
+          {() => <TabsStack currentScreen={currentScreen} />}
+        </RootStack.Screen>
+        <RootStack.Screen name="Modal" component={ModalStackScreen} />
+      </RootStack.Navigator>
     </NavigationContainer>
   )
 }
-CustomNavigator.router = {
-  ...MainNavigator.router,
+
+const TabsStack = ({ currentScreen }) => {
+  return (
+    <Tab.Navigator
+      initialRouteName="Home"
+      tabBarOptions={{
+        // https://reactnavigation.org/docs/en/bottom-tab-navigator.html
+        // @ts-ignore
+        safeAreaInset: { bottom: "never" },
+      }}
+      tabBar={props => <TabBar {...props} currentScreen={currentScreen} />}
+    >
+      <Tab.Screen name="Home" component={HomeStackScreen} />
+      <Tab.Screen name="Browse" component={BrowseStackScreen} />
+      <Tab.Screen name="Bag" component={BagStackScreen} />
+      <Tab.Screen name="Account" component={AccountStackScreen} />
+    </Tab.Navigator>
+  )
 }
 
-const RootStack = createStackNavigator(
-  {
-    Main: {
-      screen: CustomNavigator,
-    },
-    ReservationModal: {
-      screen: ReservationModal,
-    },
-    FiltersModal: {
-      screen: FiltersModal,
-    },
-  },
-  {
-    mode: "modal",
-    headerMode: "none",
-    defaultNavigationOptions: {
-      gestureEnabled: true,
-      cardOverlayEnabled: true,
-      ...TransitionPresets.ModalPresentationIOS,
-    },
-  }
-)
+const HomeStackScreen = () => {
+  return (
+    <HomeStack.Navigator initialRouteName="Home" screenOptions={{ ...defaultOptions }}>
+      <HomeStack.Screen name="Home" component={Home} />
+      <HomeStack.Screen name="Product" component={Product} />
+    </HomeStack.Navigator>
+  )
+}
 
-const SwitchNavigator = createSwitchNavigator(
-  {
-    Initializing,
-    Auth: AuthStack,
-    Root: RootStack,
-  },
-  {
-    initialRouteName: "Initializing",
-  }
-)
+const BrowseStackScreen = () => {
+  return (
+    <BrowseStack.Navigator initialRouteName="Browse" screenOptions={{ ...defaultOptions }}>
+      <BrowseStack.Screen name="Browse" component={Browse} />
+      <BrowseStack.Screen name="Product" component={Product} />
+    </BrowseStack.Navigator>
+  )
+}
 
-const NavigationContainer = styled.View`
-  background-color: ${color("black100")};
-`
+const BagStackScreen = () => {
+  return (
+    <BagStack.Navigator initialRouteName="Bag" screenOptions={{ ...defaultOptions }}>
+      <BagStack.Screen name="Bag" component={Bag} />
+      <BagStack.Screen name="Product" component={Product} />
+      <BagStack.Screen name="CurrentRotation" component={CurrentRotation} />
+    </BagStack.Navigator>
+  )
+}
 
-export const AppContainer = createAppContainer(SwitchNavigator)
+const AccountStackScreen = () => {
+  return (
+    <AccountStack.Navigator initialRouteName="Account" screenOptions={{ ...defaultOptions }}>
+      <AccountStack.Screen name="Account" component={Account} />
+      <AccountStack.Screen name="MembershipInfo" component={MembershipInfo} />
+      <AccountStack.Screen name="PaymentAndShipping" component={PaymentAndShipping} />
+      <AccountStack.Screen name="PersonalPreferences" component={PersonalPreferences} />
+      <AccountStack.Screen name="Webview" component={Webview} />
+      <AccountStack.Screen name="ProductRequest" component={ProductRequest} />
+      <AccountStack.Screen name="ProductRequestConfirmation" component={ProductRequestConfirmation} />
+      <AccountStack.Screen name="ProductRequestGallery" component={ProductRequestGallery} />
+    </AccountStack.Navigator>
+  )
+}
+
+const ModalStackScreen = () => {
+  return (
+    <ModalStack.Navigator mode="modal" screenOptions={{ headerShown: false }}>
+      <ModalStack.Screen name="FiltersModal" component={Filters} />
+      <ModalStack.Screen name="ResetPasswordModal" component={ResetPassword} />
+      <ModalStack.Screen name="ResetPasswordConfirmationModal" component={ResetPasswordConfirmation} />
+    </ModalStack.Navigator>
+  )
+}
+
+// const ReservationModal = DismissableStackNavigator(
+//   {
+//     Reservation,
+//     ReservationConfirmation,
+//   },
+//   {
+//     headerMode: "none",
+//   }
+// )

@@ -121,12 +121,12 @@ export const Browse = (props: any) => {
   let products = data && data.products
   let scrollViewEl = null
 
-  useEffect(() => {
-    const browseFilter = props && props.screenProps && props.screenProps.browseFilter
-    if (browseFilter && browseFilter !== currentCategory) {
-      setCurrentCategory(props.screenProps.browseFilter)
-    }
-  }, [props.screenProps.browseFilter])
+  // useEffect(() => {
+  //   const browseFilter = props && props.screenProps && props.screenProps.browseFilter
+  //   if (browseFilter && browseFilter !== currentCategory) {
+  //     setCurrentCategory(props.screenProps.browseFilter)
+  //   }
+  // }, [props.screenProps.browseFilter])
 
   const insets = useSafeArea()
   const loaderStyle = useSpring({ opacity: loading && !data ? 1 : 0 })
@@ -162,7 +162,7 @@ export const Browse = (props: any) => {
   }
 
   const onFilterBtnPress = () => {
-    props.navigation.navigate("FiltersModal", { sortFilter, sizeFilters })
+    props.navigation.navigate("Modal", { screen: "FiltersModal" }, { sortFilter, sizeFilters })
   }
 
   return (

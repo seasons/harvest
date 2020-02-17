@@ -1,8 +1,7 @@
-import { color, space } from "App/Utils"
+import { color } from "App/Utils"
 import React from "react"
 import { Animated, TouchableWithoutFeedback, View } from "react-native"
 import styled from "styled-components/native"
-
 import { Box, Sans } from "./"
 
 /**
