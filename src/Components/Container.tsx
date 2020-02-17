@@ -1,13 +1,29 @@
 import React from "react"
-import { StatusBar, View } from "react-native"
-
+import { StatusBar } from "react-native"
 import { Theme } from "./Theme"
+import { Flex } from "./Flex"
+import { useSafeArea } from "react-native-safe-area-context"
+import { color } from "App/Utils"
 
-export const Container = ({ children }) => {
+export const Container: React.FC<{ children: any; backgroundColor?: "black100" | "white100" }> = ({
+  children,
+  backgroundColor = "white100",
+}) => {
+  const insets = useSafeArea()
+
   return (
     <Theme>
-      <StatusBar backgroundColor="black" barStyle="dark-content" />
-      <View style={{ flex: 1 }}>{children}</View>
+      <StatusBar backgroundColor={color(backgroundColor)} barStyle="dark-content" />
+      <Flex
+        style={{
+          flex: 1,
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          backgroundColor: color(backgroundColor),
+        }}
+      >
+        {children}
+      </Flex>
     </Theme>
   )
 }

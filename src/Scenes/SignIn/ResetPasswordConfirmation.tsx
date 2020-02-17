@@ -1,37 +1,25 @@
 import React from "react"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
-
-import { Box, Flex, ModalCloseButton, Sans, Spacer, Theme } from "../../Components"
-import styled from "styled-components/native"
+import { Box, Flex, ModalCloseButton, Sans, Spacer, Container } from "../../Components"
+import { color } from "App/Utils"
 
 export const ResetPasswordConfirmation = (props: any) => {
-  const insets = useSafeArea()
-
   return (
-    <Theme>
-      <Container px={2} pt={insets.top}>
-        <ModalCloseButton navigation={props.navigation} />
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-            <Box style={{ marginTop: 8 }} m={2}>
-              <Sans size="3" color="white" weight="medium">
-                Reset Password Link Sent
-              </Sans>
-              <Spacer mb={14} />
-              <Sans size="2" color="rgba(255, 255, 255, 0.5)" weight="medium">
-                Check your email for a link to reset your password.
-              </Sans>
-              <Spacer mb={4} />
-            </Box>
-          </Flex>
-        </TouchableWithoutFeedback>
-      </Container>
-    </Theme>
+    <Container backgroundColor="black100">
+      <ModalCloseButton navigation={props.navigation} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <Flex flexDirection="column" style={{ flex: 1 }}>
+          <Box px={2} pt={2}>
+            <Sans size="3" color={color("white100")} weight="medium">
+              Reset Password Link Sent
+            </Sans>
+            <Spacer mb={1} />
+            <Sans size="2" color={color("black15")} weight="medium">
+              Check your email for a link to reset your password.
+            </Sans>
+          </Box>
+        </Flex>
+      </TouchableWithoutFeedback>
+    </Container>
   )
 }
-
-const Container = styled(Box)`
-  background: black;
-  flex: 1;
-`

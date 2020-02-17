@@ -1,5 +1,5 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Theme, Box, Spacer, VariantSizes, PopUp } from "App/Components"
+import { Box, Spacer, VariantSizes, PopUp, Container } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import get from "lodash/get"
 import React, { useState, useEffect } from "react"
@@ -42,7 +42,6 @@ export const Product = screenTrack(props => {
     productID,
   }
 })((props: ProductProps) => {
-  const insets = useSafeArea()
   const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation } = props
@@ -111,46 +110,44 @@ export const Product = screenTrack(props => {
   const sections = ["imageRail", "productDetails", "aboutTheBrand"]
 
   return (
-    <Theme>
-      <Box style={{ paddingTop: insets.top, flex: 1 }}>
-        <ArrowWrapper>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.dispatch(NavigationActions.back())
-            }}
-          >
-            <ArrowBackground showVariantPicker={showVariantPicker} />
-            <BackArrowIcon color={showVariantPicker ? color("white100") : color("black100")} />
-          </TouchableOpacity>
-        </ArrowWrapper>
-        <FlatList
-          data={sections}
-          ListFooterComponent={() => <Spacer mb={58} />}
-          keyExtractor={item => item}
-          renderItem={item => renderItem(item)}
-        />
-        <SelectionButtons
+    <Container>
+      <ArrowWrapper>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.dispatch(NavigationActions.back())
+          }}
+        >
+          <ArrowBackground showVariantPicker={showVariantPicker} />
+          <BackArrowIcon color={showVariantPicker ? color("white100") : color("black100")} />
+        </TouchableOpacity>
+      </ArrowWrapper>
+      <FlatList
+        data={sections}
+        ListFooterComponent={() => <Spacer mb={58} />}
+        keyExtractor={item => item}
+        renderItem={item => renderItem(item)}
+      />
+      <SelectionButtons
+        productID={productID}
+        toggleShowVariantPicker={toggleShowVariantPicker}
+        setPopUp={setPopUp}
+        showVariantPicker={showVariantPicker}
+        selectedVariant={selectedVariant}
+        navigation={navigation}
+      />
+      {showVariantPicker && <Overlay />}
+      <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
+        <VariantPicker
+          setSelectedVariant={setSelectedVariant}
+          selectedVariant={selectedVariant}
+          height={variantPickerHeight}
+          navigation={navigation}
           productID={productID}
           toggleShowVariantPicker={toggleShowVariantPicker}
-          setPopUp={setPopUp}
-          showVariantPicker={showVariantPicker}
-          selectedVariant={selectedVariant}
-          navigation={navigation}
         />
-        {showVariantPicker && <Overlay />}
-        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
-          <VariantPicker
-            setSelectedVariant={setSelectedVariant}
-            selectedVariant={selectedVariant}
-            height={variantPickerHeight}
-            navigation={navigation}
-            productID={productID}
-            toggleShowVariantPicker={toggleShowVariantPicker}
-          />
-        </AnimatedVariantPicker>
-        <PopUp data={popUp.data} show={popUp.show} />
-      </Box>
-    </Theme>
+      </AnimatedVariantPicker>
+      <PopUp data={popUp.data} show={popUp.show} />
+    </Container>
   )
 })
 

@@ -2,11 +2,13 @@ import React from "react"
 import { Box, Flex, Sans } from "App/Components"
 import { MembershipInfoIcon, PersonalPreferencesIcon, PaymentShippingIcon, ChevronIcon } from "Assets/icons"
 import { TouchableOpacity } from "react-native"
+import { Shirt } from "Assets/svgs"
 
 const lists = [
   { title: "Membership info", icon: <MembershipInfoIcon />, link: "MembershipInfo" },
   { title: "Personal preferences", icon: <PersonalPreferencesIcon />, link: "PersonalPreferences" },
-  { title: "Payments & Shipping", icon: <PaymentShippingIcon />, link: "PaymentAndShipping" },
+  { title: "Payments & shipping", icon: <PaymentShippingIcon />, link: "PaymentAndShipping" },
+  { title: "Submit an item", icon: <Shirt />, link: "ProductRequest" },
 ]
 
 export class ProfileList extends React.Component<any> {
