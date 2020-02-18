@@ -17,8 +17,8 @@ const ADD_PRODUCT_VARIANT_WANT = gql`
 const THANKS_MESSAGE = " Thanks! We'll let you know"
 
 interface VariantWantProps {
-  variantID: string
   isWanted: boolean
+  variantID: string
 }
 
 export const VariantWant = (props: VariantWantProps) => {
