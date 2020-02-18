@@ -129,7 +129,7 @@ export const Product = screenTrack(props => {
   const selectedVariantAsAny: any = selectedVariant
   const inStock = selectedVariantAsAny && selectedVariantAsAny.stock > 0
   const productVariantExists = !productVariantLoading && !productVariantError && productVariantData
-  let shouldShowVariantWant = productVariantExists && !inStock
+  const shouldShowVariantWant = productVariantExists && !inStock
 
   const selectionButtonsBottom = shouldShowVariantWant ? 52 : 0
   const listFooterSpacing = selectionButtonsBottom + 58
