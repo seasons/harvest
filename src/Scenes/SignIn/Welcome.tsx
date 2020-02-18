@@ -10,7 +10,7 @@ const buttonWidth = (Dimensions.get("window").width - space(4)) / 2 - 1
 
 export const Welcome = ({ navigation }) => {
   return (
-    <Container>
+    <Container backgroundColor="black100">
       <Wrapper>
         <Box p={2}>
           <SeasonsLogoSVG width={40} height={40} />
@@ -69,8 +69,13 @@ const Wrapper = styled.View`
 `
 
 const ImageContainer = styled(Image)`
-  height: 100%;
-  width: 100%;
   position: absolute;
   z-index: -1;
+  flex: 1;
+  height: undefined;
+  width: undefined;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
 `

@@ -131,21 +131,19 @@ export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<Nav
 
   return (
     <Container>
-      <>
-        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-        <FlatList
-          data={sections}
-          ListHeaderComponent={() => (
-            <Box px={2} mt={insets.top}>
-              <Spacer mb={80} />
-              <Sans size="3">Payment & Shipping</Sans>
-              <Spacer mb={3} />
-            </Box>
-          )}
-          keyExtractor={item => item.title}
-          renderItem={({ item }) => renderItem(item)}
-        />
-      </>
+      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+      <FlatList
+        data={sections}
+        ListHeaderComponent={() => (
+          <Box px={2} mt={insets.top}>
+            <Spacer mb={2} />
+            <Sans size="3">Payment & Shipping</Sans>
+            <Spacer mb={3} />
+          </Box>
+        )}
+        keyExtractor={item => item.title}
+        renderItem={({ item }) => renderItem(item)}
+      />
     </Container>
   )
 }

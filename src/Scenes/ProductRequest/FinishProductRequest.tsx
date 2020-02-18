@@ -1,41 +1,29 @@
 import React from "react"
-import { Dimensions } from "react-native"
-import { Image } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
 import { Box, Container, FixedButton, Sans, Spacer } from "App/Components"
+import { color } from "App/Utils"
+import { StackActions } from "react-navigation"
 
 export const FinishProductRequest = (props: any) => {
   const handleFinishBtnPressed = () => {
-    props.navigation.dismiss()
+    props.navigation.dispatch(StackActions.popToTop())
   }
-
-  const insets = useSafeArea()
-  const dimensions = Dimensions.get("window")
 
   return (
     <Container>
-      <>
-        <Image
-          style={{ width: dimensions.width, height: 517, bottom: 0, position: "absolute" }}
-          resizeMode="contain"
-          source={require("../../../assets/images/SubmitBackground.png")}
-        />
-        <Box p={2} mt={insets.top} style={{ flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
-          <Box>
-            <Spacer mb={60} />
-            <Sans size="3" color="black">
-              We're on it!
-            </Sans>
-            <Spacer mb={14} />
-            <Sans size="2" color="gray">
-              Thanks for your submission. We’ll take a look and let you know if we carry it.
-            </Sans>
-          </Box>
-          <FixedButton variant="secondaryBlack" onPress={handleFinishBtnPressed}>
-            Finish
-          </FixedButton>
+      <Box px={2} style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}>
+        <Box>
+          <Sans size="3" color={color("black100")} textAlign="center">
+            We're on it!
+          </Sans>
+          <Spacer mb={14} />
+          <Sans size="2" color={color("black50")} textAlign="center">
+            Thanks for your submission. We’ll take a look and let you know if we carry it.
+          </Sans>
         </Box>
-      </>
+      </Box>
+      <FixedButton block variant="primaryWhite" onPress={handleFinishBtnPressed}>
+        Finish
+      </FixedButton>
     </Container>
   )
 }

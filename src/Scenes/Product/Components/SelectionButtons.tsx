@@ -3,7 +3,7 @@ import { AddToBagButton } from "App/Scenes/Product/Components"
 import React from "react"
 import styled from "styled-components/native"
 import { TouchableWithoutFeedback, Dimensions } from "react-native"
-import { color } from "App/Utils"
+import { color, space } from "App/Utils"
 import { DownChevronIcon } from "Assets/icons"
 import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
@@ -16,7 +16,7 @@ interface Props {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
-const twoButtonWidth = Dimensions.get("window").width / 2 - 12
+const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
 
 export const SelectionButtons: React.FC<Props> = props => {
   const { navigation, selectedVariant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
@@ -27,7 +27,7 @@ export const SelectionButtons: React.FC<Props> = props => {
 
   return (
     <Wrapper>
-      <Flex px={8} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
+      <Flex px={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
         <TouchableWithoutFeedback onPress={() => toggleShowVariantPicker(!showVariantPicker)}>
           <VariantSelectionButton p={2} inStock={inStock}>
             <Flex
@@ -85,5 +85,5 @@ const Wrapper = styled.View`
   left: 0;
   height: 48;
   width: 100%;
-  margin-bottom: 8;
+  margin-bottom: ${space(2)};
 `

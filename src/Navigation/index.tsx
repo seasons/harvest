@@ -151,17 +151,6 @@ const FiltersModal = DismissableStackNavigator(
   }
 )
 
-const ProductRequestModal = DismissableStackNavigator(
-  {
-    ProductRequest,
-    ProductRequestConfirmation,
-    FinishProductRequest,
-  },
-  {
-    headerMode: "none",
-  }
-)
-
 const BagStack = createStackNavigator(
   {
     Bag,
@@ -194,6 +183,9 @@ const AccountStack = createStackNavigator(
     PaymentAndShipping,
     PersonalPreferences,
     Webview,
+    ProductRequest,
+    ProductRequestConfirmation,
+    FinishProductRequest,
   },
   {
     initialRouteName: "Account",
@@ -228,7 +220,6 @@ const MainNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Browse: BrowseStack,
-    ProductRequest: ProductRequestModal,
     Bag: BagStack,
     Account: AccountStack,
   },
@@ -242,8 +233,6 @@ const MainNavigator = createBottomTabNavigator(
           URL = require(`../../assets/images/Home.png`)
         } else if (routeName === "Browse") {
           URL = require(`../../assets/images/Browse.png`)
-        } else if (routeName === "ProductRequest") {
-          URL = require(`../../assets/images/Submit.png`)
         } else if (routeName === "Bag") {
           URL = require(`../../assets/images/Bag.png`)
         } else if (routeName === "Account") {
@@ -253,13 +242,7 @@ const MainNavigator = createBottomTabNavigator(
         return <Image source={URL} style={{ opacity: focused ? 1.0 : 0.3 }} />
       },
       tabBarOnPress: ({ navigation, defaultHandler }) => {
-        const { routeName } = navigation.state
-        if (routeName === "ProductRequest") {
-          // Have to navigate in order for screen to pop up modally
-          navigation.navigate("ProductRequestModal")
-        } else {
-          defaultHandler()
-        }
+        defaultHandler()
       },
     }),
     tabBarComponent: Tabs,
@@ -290,9 +273,6 @@ const RootStack = createStackNavigator(
     },
     ReservationModal: {
       screen: ReservationModal,
-    },
-    ProductRequestModal: {
-      screen: ProductRequestModal,
     },
     FiltersModal: {
       screen: FiltersModal,

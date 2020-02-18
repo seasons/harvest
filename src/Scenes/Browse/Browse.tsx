@@ -15,6 +15,7 @@ import { color } from "styled-system"
 import { useQuery } from "@apollo/react-hooks"
 
 import { BrowseLoader } from "./Loader"
+import { space } from "App/Utils"
 
 const ABBREVIATED_SIZES = {
   "X-Small": "XS",
@@ -139,7 +140,6 @@ export const Browse = (props: any) => {
   const productsBoxStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
   const { navigation } = props
   const categories = (data && data.categories) || []
-  const filtersButtonBottom = 16
   const filtersButtonHeight = 36
   const numFiltersSelected = sizeFilters.length
 
@@ -180,7 +180,7 @@ export const Browse = (props: any) => {
       <Flex flexDirection="column" flex={1}>
         <AnimatedBox flex={1} flexGrow={1} style={[productsBoxStyle]}>
           <FlatList
-            contentContainerStyle={{ paddingTop: insets.top, paddingBottom: filtersButtonBottom + filtersButtonHeight }}
+            contentContainerStyle={{ paddingBottom: filtersButtonHeight }}
             data={products}
             ref={ref => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
@@ -211,7 +211,7 @@ export const Browse = (props: any) => {
               }
             }}
           />
-          <FixedButtonContainer bottom={filtersButtonBottom}>
+          <FixedButtonContainer bottom={space(2)}>
             <Button size="small" variant={filtersButtonVariant} onPress={onFilterBtnPress}>
               <Sans color={color(filtersButtonTextColor)} size="1" weight="medium">
                 {filtersButtonText}
@@ -219,7 +219,7 @@ export const Browse = (props: any) => {
             </Button>
           </FixedButtonContainer>
         </AnimatedBox>
-        <Box height={60} mb={insets.bottom} style={{ opacity: !data ? 0 : 1 }}>
+        <Box height={60} style={{ opacity: !data ? 0 : 1 }}>
           <CategoryPicker
             data={[{ slug: "all", name: "All" }, ...categories]}
             renderItem={({ item }) => {

@@ -84,7 +84,6 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
   })
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
-  const insets = useSafeArea()
 
   if (loading) {
     return <Loader />
@@ -216,58 +215,54 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
 
   return (
     <Container>
-      <Box style={{ flex: 1, paddingTop: insets.top }}>
-        <FlatList
-          data={currentView === BagView.Bag ? paddedItems : savedItems}
-          ListHeaderComponent={() => (
-            <>
-              <Box p={2}>
-                <Sans size="3" color="black">
-                  {headerTitle}
-                </Sans>
-                <Sans size="2" color="gray">
-                  {headerSubtitle}
-                </Sans>
-              </Box>
-              <TabBar
-                spaceEvenly
-                tabs={["Bag", "Saved"]}
-                activeTab={currentView}
-                goToPage={page => {
-                  setCurrentView(page as BagView)
-                }}
-              />
-            </>
-          )}
-          ListEmptyComponent={() => {
-            return <SavedEmptyState navigation={navigation} />
-          }}
-          ItemSeparatorComponent={() => {
-            if (isSavedView) {
-              return null
-            }
-            return (
-              <Box>
-                <Separator color={color("black15")} />
-              </Box>
-            )
-          }}
-          keyExtractor={(_item, index) => String(index)}
-          renderItem={item => {
-            return renderItem(item)
-          }}
-          ListFooterComponent={() => <Spacer mb={96} />}
-        />
-        {isBagView && !hasActiveReservation && (
-          <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
-            <Box mb={0.5}>
-              <FixedButton block onPress={() => handleReserve(navigation)} disabled={!bagIsFull} loading={isMutating}>
-                Reserve
-              </FixedButton>
+      <FlatList
+        data={currentView === BagView.Bag ? paddedItems : savedItems}
+        ListHeaderComponent={() => (
+          <>
+            <Box p={2}>
+              <Sans size="3" color="black">
+                {headerTitle}
+              </Sans>
+              <Sans size="2" color="gray">
+                {headerSubtitle}
+              </Sans>
             </Box>
-          </TouchableWithoutFeedback>
+            <TabBar
+              spaceEvenly
+              tabs={["Bag", "Saved"]}
+              activeTab={currentView}
+              goToPage={page => {
+                setCurrentView(page as BagView)
+              }}
+            />
+          </>
         )}
-      </Box>
+        ListEmptyComponent={() => {
+          return <SavedEmptyState navigation={navigation} />
+        }}
+        ItemSeparatorComponent={() => {
+          if (isSavedView) {
+            return null
+          }
+          return (
+            <Box>
+              <Separator color={color("black15")} />
+            </Box>
+          )
+        }}
+        keyExtractor={(_item, index) => String(index)}
+        renderItem={item => {
+          return renderItem(item)
+        }}
+        ListFooterComponent={() => <Spacer mb={96} />}
+      />
+      {isBagView && !hasActiveReservation && (
+        <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
+          <FixedButton block onPress={() => handleReserve(navigation)} disabled={!bagIsFull} loading={isMutating}>
+            Reserve
+          </FixedButton>
+        </TouchableWithoutFeedback>
+      )}
       <ErrorMessage />
     </Container>
   )
