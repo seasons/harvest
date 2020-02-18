@@ -1,5 +1,5 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Theme, Box, Sans, Spacer, VariantSizes, PopUp } from "App/Components"
+import { Theme, Box, Spacer, VariantSizes, PopUp } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import get from "lodash/get"
 import React, { useState, useEffect } from "react"
@@ -130,13 +130,16 @@ export const Product = screenTrack(props => {
   const selectedVariantAsAny: any = selectedVariant
   const inStock = selectedVariantAsAny && selectedVariantAsAny.stock > 0
   let shouldShowVariantWant = false
+  let productVariantWantExists = false
   if (
     !inStock &&
     !productVariantWantExistsLoading &&
     !productVariantWantExistsError &&
     productVariantWantExistsData
   ) {
-    shouldShowVariantWant = !(productVariantWantExistsData.productVariantWantExists.exists)
+    // Only show VariantWant view if no errors occurred while looking up product variant
+    shouldShowVariantWant = true
+    productVariantWantExists = productVariantWantExistsData.productVariantWantExists.exists
   }
 
   const selectionButtonsBottom = shouldShowVariantWant ? 52 : 0
@@ -182,7 +185,12 @@ export const Product = screenTrack(props => {
             toggleShowVariantPicker={toggleShowVariantPicker}
           />
         </AnimatedVariantPicker>
-        {shouldShowVariantWant && <VariantWant variantID={selectedVariant.id} />}
+        {shouldShowVariantWant &&
+          <VariantWant
+            productVariantWantExists={productVariantWantExists}
+            variantID={selectedVariant.id}
+          />
+        }
         <PopUp data={popUp.data} show={popUp.show} />
       </Box>
     </Theme>

@@ -1,12 +1,11 @@
-import { Box, Button, Flex, PopUp, Sans, Theme } from "App/Components"
-import { color } from "App/Utils"
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import React, { useState } from "react"
-import { Dimensions, Image, ScrollView, Text, TouchableWithoutFeedback } from "react-native"
+import { Dimensions, Text, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { VariantList } from "./VariantList"
 import { SmallGreenCheck, LeftTabCorner, RightTabCorner } from "Assets/svgs"
+import { Flex, PopUp, Sans, Theme } from "App/Components"
+import { color } from "App/Utils"
 
 const ADD_PRODUCT_VARIANT_WANT = gql`
   mutation AddProductVariantWant($variantID: ID!) {
@@ -15,15 +14,20 @@ const ADD_PRODUCT_VARIANT_WANT = gql`
     }
   }
 `
+const THANKS_MESSAGE = " Thanks! We'll let you know"
 
 interface VariantWantProps {
   variantID: string
+  productVariantWantExists: boolean
 }
 
 export const VariantWant = (props: VariantWantProps) => {
-  const [shouldShowGreenCheck, setShouldShowGreenCheck] = useState(false)
-  const [plainText, setPlainText] = useState("Want this item? ")
-  const [underlinedText, setUnderlinedText] = useState("Let us know!")
+  const { productVariantWantExists, variantID } = props
+  const [shouldShowGreenCheck, setShouldShowGreenCheck] = useState(productVariantWantExists)
+  const [plainText, setPlainText] = useState(
+    productVariantWantExists ? THANKS_MESSAGE : "Want this item? "
+  )
+  const [underlinedText, setUnderlinedText] = useState(productVariantWantExists ? "" : "Let us know!")
   const [showError, setShowError] = useState(false)
 
   const [addProductVariantWant] = useMutation(ADD_PRODUCT_VARIANT_WANT, {
@@ -33,18 +37,16 @@ export const VariantWant = (props: VariantWantProps) => {
     },
   })
 
-  const { width } = Dimensions.get("window")
-
   const handleWantVariant = async () => {
     try {
       const result = await addProductVariantWant({
         variables: {
-          variantID: props.variantID
+          variantID
         }
       })
       if (result && result.data && result.data.addProductVariantWant) {
         setShouldShowGreenCheck(true)
-        setPlainText(" Thanks! We'll let you know")
+        setPlainText(THANKS_MESSAGE)
         setUnderlinedText("")
       } else {
         setShowError(true)
@@ -54,6 +56,7 @@ export const VariantWant = (props: VariantWantProps) => {
     }
   }
 
+  const { width } = Dimensions.get("window")
   const popUpData = {
     buttonText: "Got it",
     note: "We couldn’t save that you want this item! Try again.",
