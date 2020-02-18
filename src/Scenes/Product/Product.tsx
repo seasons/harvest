@@ -11,7 +11,6 @@ import { useQuery, useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { BackArrowIcon } from "Assets/icons"
-import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { color } from "App/Utils"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
@@ -232,15 +231,3 @@ const ArrowBackground = styled(Box)`
 `
 
 const AnimatedVariantPicker = animated(VariantPickerWrapper)
-
-const LeftCorner = styled(LeftTabCorner)`
-  position: absolute;
-  bottom: 100;
-  left: 0;
-`
-
-const RightCorner = styled(RightTabCorner)`
-  position: absolute;
-  bottom: 10;
-  right: 0;
-`
