@@ -73,11 +73,11 @@ export const VariantWant = (props: VariantWantProps) => {
           <TextContainer>
             {shouldShowGreenCheck && <SmallGreenCheck />}
             <Text>
-              <Sans size="2" color="white">
+              <Sans size="2" color={color("white100")}>
                 {plainText}
               </Sans>
               <TouchableWithoutFeedback onPress={handleWantVariant}>
-                <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("white")}>
+                <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("white100")}>
                   {underlinedText}
                 </Sans>
               </TouchableWithoutFeedback>
@@ -92,7 +92,7 @@ export const VariantWant = (props: VariantWantProps) => {
 
 const Container = styled(Flex)`
   position: absolute;
-  background: black;
+  background: ${color("black100")};
   bottom: 0;
   height: 52;
 `
