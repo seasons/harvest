@@ -80,30 +80,21 @@ export const Home: React.FC<{
   return (
     <Container>
       <Animatable.View animation="fadeIn" duration={300}>
-        <Box
-          style={{
-            position: "relative",
-            backgroundColor: color("white100"),
-            paddingTop: insets.top,
-            paddingBottom: insets.bottom,
-          }}
-        >
-          <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
-            <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
-              <LogoText>SEASONS</LogoText>
-            </Flex>
-          </Box>
-          <Separator />
-          <FlatList
-            data={sections}
-            keyExtractor={(item, index) => {
-              return item.type + index
-            }}
-            ListHeaderComponent={() => <Spacer mb={2} />}
-            renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
-            ListFooterComponent={() => <AllCaughtUp navigation={navigation} />}
-          />
+        <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
+          <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
+            <LogoText>SEASONS</LogoText>
+          </Flex>
         </Box>
+        <Separator />
+        <FlatList
+          data={sections}
+          keyExtractor={(item, index) => {
+            return item.type + index
+          }}
+          ListHeaderComponent={() => <Spacer mb={2} />}
+          renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
+          ListFooterComponent={() => <AllCaughtUp navigation={navigation} />}
+        />
       </Animatable.View>
     </Container>
   )

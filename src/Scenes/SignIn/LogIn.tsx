@@ -1,11 +1,11 @@
-import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, Theme, FixedBackArrow } from "App/Components"
+import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, Theme, FixedBackArrow, Container } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { color } from "App/Utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
-import { Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native"
+import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import AsyncStorage from "@react-native-community/async-storage"
 import { checkNotifications } from "react-native-permissions"
@@ -101,62 +101,60 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Theme>
-        <FixedBackArrow navigation={props.navigation} variant="whiteBackground" />
-        <Flex style={{ flex: 1 }}>
-          <Spacer mb={3} />
-          <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-            <Box p={2} mt={6}>
-              <Sans color={color("black100")} size="3">
-                Welcome
-              </Sans>
-              <Spacer mb={3} />
-              <TextInput
-                placeholder="Email"
-                variant="light"
-                textContentType="Email"
-                inputKey="email"
-                onChangeText={(_, val) => onEmailChange(val)}
-              />
-              <Spacer mb={2} />
-              <TextInput
-                secureTextEntry
-                placeholder="Password"
-                variant="light"
-                inputKey="password"
-                textContentType="Password"
-                onChangeText={(_, val) => setPassword(val)}
-              />
-              <Spacer mb={4} />
-              <Button loading={isMutating} block onPress={handleLogin} disabled={disabled} variant="primaryBlack">
-                Sign in
-              </Button>
-              <Spacer mb={3} />
-              <Flex flexDirection="row" justifyContent="center">
-                <Text>
-                  <Sans size="2" color="gray">
-                    Forget password?
-                  </Sans>{" "}
-                  <TouchableWithoutFeedback onPress={handleResetPassword}>
-                    <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("black50")}>
-                      Reset
-                    </Sans>
-                  </TouchableWithoutFeedback>
-                </Text>
-              </Flex>
-            </Box>
-            <Box p={4} pb={6}>
-              <Text style={{ textAlign: "center" }}>
+    <Container>
+      <FixedBackArrow navigation={props.navigation} variant="whiteBackground" />
+      <Flex style={{ flex: 1 }}>
+        <Spacer mb={3} />
+        <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
+          <Box p={2} mt={6}>
+            <Sans color={color("black100")} size="3">
+              Welcome
+            </Sans>
+            <Spacer mb={3} />
+            <TextInput
+              placeholder="Email"
+              variant="light"
+              textContentType="Email"
+              inputKey="email"
+              onChangeText={(_, val) => onEmailChange(val)}
+            />
+            <Spacer mb={2} />
+            <TextInput
+              secureTextEntry
+              placeholder="Password"
+              variant="light"
+              inputKey="password"
+              textContentType="Password"
+              onChangeText={(_, val) => setPassword(val)}
+            />
+            <Spacer mb={4} />
+            <Button loading={isMutating} block onPress={handleLogin} disabled={disabled} variant="primaryBlack">
+              Sign in
+            </Button>
+            <Spacer mb={3} />
+            <Flex flexDirection="row" justifyContent="center">
+              <Text>
                 <Sans size="2" color="gray">
-                  Sign in using the same email and password you used for the wailist.
-                </Sans>
+                  Forget password?
+                </Sans>{" "}
+                <TouchableWithoutFeedback onPress={handleResetPassword}>
+                  <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("black50")}>
+                    Reset
+                  </Sans>
+                </TouchableWithoutFeedback>
               </Text>
-            </Box>
-          </Flex>
-          <PopUp data={popUpData} show={showError} />
+            </Flex>
+          </Box>
+          <Box p={4} pb={6}>
+            <Text style={{ textAlign: "center" }}>
+              <Sans size="2" color="gray">
+                Sign in using the same email and password you used for the wailist.
+              </Sans>
+            </Text>
+          </Box>
         </Flex>
-      </Theme>
-    </SafeAreaView>
+        <PopUp data={popUpData} show={showError} />
+      </Flex>
+    </Container>
   )
 }

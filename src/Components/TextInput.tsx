@@ -109,7 +109,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             placeholder={placeholder}
             style={{ ...style, ...props }}
             autoCapitalize="none"
-            placeholderTextColor={color("black50")}
+            placeholderTextColor={variant === "light" ? color("black50") : color("black15")}
             onChangeText={text => handleOnChangeText(text)}
             value={value}
           />

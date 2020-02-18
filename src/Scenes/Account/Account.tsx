@@ -85,7 +85,7 @@ export function Account(props) {
     <Container>
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
-          <Box p={2} mt={insets.top}>
+          <Box p={2}>
             <Box mb={5} />
             <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
               {loading && (

@@ -13,7 +13,7 @@ export const AllCaughtUp: React.FC<{ navigation: NavigationScreenProp<Navigation
       <Spacer mt={3} />
       <LeftCorner />
       <RightCorner />
-      <Box style={{ backgroundColor: color("black100"), height: 350, overflow: "visible" }}>
+      <Box style={{ backgroundColor: color("black100"), height: 330, overflow: "visible" }}>
         <Spacer mb={60} />
         <Flex justifyContent="center" flexDirection="column">
           <Sans size="2" color={color("white100")} style={{ textAlign: "center" }}>

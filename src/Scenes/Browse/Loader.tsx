@@ -3,7 +3,7 @@ import ContentLoader, { Rect } from "react-content-loader/native"
 import { Dimensions } from "react-native"
 import Svg, { Defs, G, Path, Use } from "react-native-svg"
 
-export const BrowseItemLoader = props => (
+export const BrowseItemLoader = () => (
   <G>
     <Rect x="0" y="0" width="240" height="184" />
     <Rect x="0" y="5" width="120" height="8" />

@@ -54,44 +54,42 @@ export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<Navigat
   }
   return (
     <Container>
-      <>
-        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-        <ScrollView>
-          <Box p={2} mt={insets.top}>
-            <Spacer mb={60} />
-            <Sans size="3" color="black">
-              Membership info
-            </Sans>
-            <Spacer mb={2} />
-            <Separator />
-            <Spacer mb={6} />
-            {!!planInfo.price && (
-              <>
-                <Sans size="4" color="black">
-                  {`$${planInfo.price}`}
-                </Sans>
-                <Sans size="2" color="gray">
-                  per month
-                </Sans>
-              </>
-            )}
-            {!!planInfo.whatsIncluded && (
-              <>
-                <Spacer mb={6} />
-                <Sans size="3">Whats included</Sans>
-                <Spacer mb={2} />
-                <Separator />
-                {planInfo.whatsIncluded.map(text => (
-                  <Box key={text}>
-                    <Spacer mb={3} />
-                    <Sans size="2">{text}</Sans>
-                  </Box>
-                ))}
-              </>
-            )}
-          </Box>
-        </ScrollView>
-      </>
+      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+      <ScrollView>
+        <Box px={2} mt={insets.top}>
+          <Spacer mb={2} />
+          <Sans size="3" color="black">
+            Membership info
+          </Sans>
+          <Spacer mb={2} />
+          <Separator />
+          <Spacer mb={6} />
+          {!!planInfo.price && (
+            <>
+              <Sans size="4" color="black">
+                {`$${planInfo.price}`}
+              </Sans>
+              <Sans size="2" color="gray">
+                per month
+              </Sans>
+            </>
+          )}
+          {!!planInfo.whatsIncluded && (
+            <>
+              <Spacer mb={6} />
+              <Sans size="3">Whats included</Sans>
+              <Spacer mb={2} />
+              <Separator />
+              {planInfo.whatsIncluded.map(text => (
+                <Box key={text}>
+                  <Spacer mb={3} />
+                  <Sans size="2">{text}</Sans>
+                </Box>
+              ))}
+            </>
+          )}
+        </Box>
+      </ScrollView>
     </Container>
   )
 }
