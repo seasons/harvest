@@ -179,7 +179,6 @@ export const Product = screenTrack(props => {
           toggleShowVariantPicker={toggleShowVariantPicker}
         />
       </AnimatedVariantPicker>
-      {showVariantPicker && <Overlay />}
       <PopUp data={popUp.data} show={popUp.show} />
     </Container>
   )
