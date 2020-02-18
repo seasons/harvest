@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 //==============================================================
@@ -22,13 +23,6 @@ export enum InventoryStatus {
   NonReservable = "NonReservable",
   Reservable = "Reservable",
   Reserved = "Reserved",
-}
-
-export enum LocationType {
-  Cleaner = "Cleaner",
-  Customer = "Customer",
-  Office = "Office",
-  Warehouse = "Warehouse",
 }
 
 export enum Material {

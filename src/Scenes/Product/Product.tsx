@@ -30,11 +30,10 @@ const ADD_VIEWED_PRODUCT = gql`
     }
   }
 `
-
-const PRODUCT_VARIANT_WANT_EXISTS = gql`
-  query ProductVariantWantExists($variantID: ID!) {
-    productVariantWantExists(variantID: $variantID) {
-      exists
+const GET_PRODUCT_VARIANT = gql`
+  query GetProductVariant($variantID: ID!) {
+    productVariant(where: { id: $variantID }) {
+      id
     }
   }
 `
@@ -85,17 +84,18 @@ export const Product = screenTrack(props => {
       id: "",
       size: "",
       stock: 0,
+      isWanted: false,
     }
   )
 
   const {
-    data: productVariantWantExistsData,
-    loading: productVariantWantExistsLoading,
-    error: productVariantWantExistsError
-  } = useQuery(PRODUCT_VARIANT_WANT_EXISTS, {
+    data: productVariantData,
+    loading: productVariantLoading,
+    error: productVariantError
+  } = useQuery(GET_PRODUCT_VARIANT, {
     variables: {
-      variantID: selectedVariant.id,
-    },
+      variantID: selectedVariant.id
+    }
   })
 
   if (loading || !data) {
@@ -128,18 +128,8 @@ export const Product = screenTrack(props => {
 
   const selectedVariantAsAny: any = selectedVariant
   const inStock = selectedVariantAsAny && selectedVariantAsAny.stock > 0
-  let shouldShowVariantWant = false
-  let productVariantWantExists = false
-  if (
-    !inStock &&
-    !productVariantWantExistsLoading &&
-    !productVariantWantExistsError &&
-    productVariantWantExistsData
-  ) {
-    // Only show VariantWant view if no errors occurred while looking up product variant
-    shouldShowVariantWant = true
-    productVariantWantExists = productVariantWantExistsData.productVariantWantExists.exists
-  }
+  const productVariantExists = !productVariantLoading && !productVariantError && productVariantData
+  let shouldShowVariantWant = productVariantExists && !inStock
 
   const selectionButtonsBottom = shouldShowVariantWant ? 52 : 0
   const listFooterSpacing = selectionButtonsBottom + 58
@@ -186,7 +176,7 @@ export const Product = screenTrack(props => {
         </AnimatedVariantPicker>
         {shouldShowVariantWant &&
           <VariantWant
-            productVariantWantExists={productVariantWantExists}
+            isWanted={selectedVariant.isWanted}
             variantID={selectedVariant.id}
           />
         }

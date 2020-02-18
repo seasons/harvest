@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 import { Size, Material } from "./globalTypes";
@@ -10,16 +11,19 @@ import { Size, Material } from "./globalTypes";
 
 export interface GetProduct_product_color {
   __typename: "Color";
+  id: string;
   name: string;
 }
 
 export interface GetProduct_product_secondaryColor {
   __typename: "Color";
+  id: string;
   name: string;
 }
 
 export interface GetProduct_product_brand {
   __typename: "Brand";
+  id: string;
   name: string;
   logo: any | null;
   since: any | null;
@@ -34,6 +38,7 @@ export interface GetProduct_product_variants {
   nonReservable: number;
   reserved: number;
   isSaved: boolean;
+  isWanted: boolean;
 }
 
 export interface GetProduct_product {

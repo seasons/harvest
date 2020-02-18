@@ -18,16 +18,16 @@ const THANKS_MESSAGE = " Thanks! We'll let you know"
 
 interface VariantWantProps {
   variantID: string
-  productVariantWantExists: boolean
+  isWanted: boolean
 }
 
 export const VariantWant = (props: VariantWantProps) => {
-  const { productVariantWantExists, variantID } = props
-  const [shouldShowGreenCheck, setShouldShowGreenCheck] = useState(productVariantWantExists)
+  const { isWanted, variantID } = props
+  const [shouldShowGreenCheck, setShouldShowGreenCheck] = useState(isWanted)
   const [plainText, setPlainText] = useState(
-    productVariantWantExists ? THANKS_MESSAGE : "Want this item? "
+    isWanted ? THANKS_MESSAGE : "Want this item? "
   )
-  const [underlinedText, setUnderlinedText] = useState(productVariantWantExists ? "" : "Let us know!")
+  const [underlinedText, setUnderlinedText] = useState(isWanted ? "" : "Let us know!")
   const [showError, setShowError] = useState(false)
 
   const [addProductVariantWant] = useMutation(ADD_PRODUCT_VARIANT_WANT, {

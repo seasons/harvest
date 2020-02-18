@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 import { Size, BagItemStatus } from "./globalTypes";
@@ -17,6 +18,7 @@ export interface GetBagAndSavedItems_me_activeReservation {
 
 export interface GetBagAndSavedItems_me_bag_productVariant_product_brand {
   __typename: "Brand";
+  id: string;
   name: string;
 }
 
@@ -53,6 +55,7 @@ export interface GetBagAndSavedItems_me_bag {
 
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_brand {
   __typename: "Brand";
+  id: string;
   name: string;
 }
 

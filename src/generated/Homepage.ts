@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 import { HomePageSectionType, Size } from "./globalTypes";
@@ -14,6 +15,7 @@ export interface Homepage_homepage_sections_results_HomepageProductRail {
 
 export interface Homepage_homepage_sections_results_Product_brand {
   __typename: "Brand";
+  id: string;
   name: string;
 }
 
