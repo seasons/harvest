@@ -38,7 +38,6 @@ export interface GetProduct_product_variants {
   nonReservable: number;
   reserved: number;
   isSaved: boolean;
-  isWanted: boolean;
 }
 
 export interface GetProduct_product {

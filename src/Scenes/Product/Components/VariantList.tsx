@@ -12,7 +12,6 @@ export interface Size {
   name: string
   stock: number
   size: string
-  isWanted: boolean
 }
 
 const sizeToName = size => {
@@ -48,11 +47,10 @@ const sizeDataForVariants = (variants = []) => {
 
   if (variants) {
     for (let variant of variants) {
-      const { id, isWanted, size, reservable } = variant
+      const { id, size, reservable } = variant
 
       sizeData[size] = {
         id,
-        isWanted,
         size: sizeToName(size),
         stock: reservable,
       }

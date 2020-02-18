@@ -35,7 +35,6 @@ export const GET_PRODUCT = gql`
         nonReservable
         reserved
         isSaved
-        isWanted
       }
     }
   }
