@@ -32,6 +32,14 @@ const ADD_VIEWED_PRODUCT = gql`
   }
 `
 
+const PRODUCT_VARIANT_WANT_EXISTS = gql`
+  query ProductVariantWantExists($variantID: ID!) {
+    productVariantWantExists(variantID: $variantID) {
+      exists
+    }
+  }
+`
+
 interface ProductProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
@@ -81,6 +89,16 @@ export const Product = screenTrack(props => {
     }
   )
 
+  const {
+    data: productVariantWantExistsData,
+    loading: productVariantWantExistsLoading,
+    error: productVariantWantExistsError
+  } = useQuery(PRODUCT_VARIANT_WANT_EXISTS, {
+    variables: {
+      variantID: selectedVariant.id,
+    },
+  })
+
   if (loading || !data) {
     return <Loader />
   }
@@ -109,6 +127,20 @@ export const Product = screenTrack(props => {
     }
   }
 
+  const selectedVariantAsAny: any = selectedVariant
+  const inStock = selectedVariantAsAny && selectedVariantAsAny.stock > 0
+  let shouldShowVariantWant = false
+  if (
+    !inStock &&
+    !productVariantWantExistsLoading &&
+    !productVariantWantExistsError &&
+    productVariantWantExistsData
+  ) {
+    shouldShowVariantWant = !(productVariantWantExistsData.productVariantWantExists.exists)
+  }
+
+  const selectionButtonsBottom = shouldShowVariantWant ? 52 : 0
+  const listFooterSpacing = selectionButtonsBottom + 58
   const sections = ["imageRail", "productDetails", "aboutTheBrand"]
 
   return (
@@ -126,11 +158,12 @@ export const Product = screenTrack(props => {
         </ArrowWrapper>
         <FlatList
           data={sections}
-          ListFooterComponent={() => <Spacer mb={58} />}
+          ListFooterComponent={() => <Spacer mb={listFooterSpacing} />}
           keyExtractor={item => item}
           renderItem={item => renderItem(item)}
         />
         <SelectionButtons
+          bottom={selectionButtonsBottom}
           productID={productID}
           toggleShowVariantPicker={toggleShowVariantPicker}
           setPopUp={setPopUp}
@@ -149,7 +182,7 @@ export const Product = screenTrack(props => {
             toggleShowVariantPicker={toggleShowVariantPicker}
           />
         </AnimatedVariantPicker>
-        <VariantWant />
+        {shouldShowVariantWant && <VariantWant variantID={selectedVariant.id} />}
         <PopUp data={popUp.data} show={popUp.show} />
       </Box>
     </Theme>

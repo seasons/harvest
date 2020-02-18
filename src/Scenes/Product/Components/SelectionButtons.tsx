@@ -14,18 +14,17 @@ interface Props {
   selectedVariant: any
   setPopUp: ({ show: boolean, data: any }) => void
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  bottom?: number
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - 12
 
 export const SelectionButtons: React.FC<Props> = props => {
-  const { navigation, selectedVariant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
+  const { bottom = 0, navigation, selectedVariant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
   const inStock = selectedVariant && !!selectedVariant.stock
   if (!selectedVariant) {
     return <></>
   }
-
-  const bottom = inStock ? 0 : 52
 
   return (
     <Wrapper style={{ bottom }}>
