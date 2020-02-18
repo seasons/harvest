@@ -163,6 +163,12 @@ export const Product = screenTrack(props => {
           selectedVariant={selectedVariant}
           navigation={navigation}
         />
+        {shouldShowVariantWant &&
+          <VariantWant
+            isWanted={selectedVariant.isWanted}
+            variantID={selectedVariant.id}
+          />
+        }
         {showVariantPicker && <Overlay />}
         <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
           <VariantPicker
@@ -174,12 +180,6 @@ export const Product = screenTrack(props => {
             toggleShowVariantPicker={toggleShowVariantPicker}
           />
         </AnimatedVariantPicker>
-        {shouldShowVariantWant &&
-          <VariantWant
-            isWanted={selectedVariant.isWanted}
-            variantID={selectedVariant.id}
-          />
-        }
         <PopUp data={popUp.data} show={popUp.show} />
       </Box>
     </Theme>
