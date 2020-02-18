@@ -44,7 +44,7 @@ export const VariantWant = (props: VariantWantProps) => {
           variantID
         }
       })
-      if (result && result.data && result.data.addProductVariantWant) {
+      if (result?.data?.addProductVariantWant) {
         setShouldShowGreenCheck(true)
         setPlainText(THANKS_MESSAGE)
         setUnderlinedText("")

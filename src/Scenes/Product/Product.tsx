@@ -34,6 +34,7 @@ const GET_PRODUCT_VARIANT = gql`
   query GetProductVariant($variantID: ID!) {
     productVariant(where: { id: $variantID }) {
       id
+      isWanted
     }
   }
 `
@@ -165,7 +166,7 @@ export const Product = screenTrack(props => {
         />
         {shouldShowVariantWant &&
           <VariantWant
-            isWanted={selectedVariant.isWanted}
+            isWanted={productVariantData?.productVariant?.isWanted}
             variantID={selectedVariant.id}
           />
         }
