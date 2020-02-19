@@ -166,7 +166,7 @@ export const Browse = (props: any) => {
   }
 
   return (
-    <Container>
+    <Container insetsTop>
       <LoaderContainer mt={insets.top} style={[loaderStyle]}>
         <BrowseLoader imageHeight={IMAGE_HEIGHT} />
       </LoaderContainer>

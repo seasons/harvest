@@ -11,12 +11,8 @@ export const ProductDetails: React.FC<{
   selectedVariant: any
   product: GetProduct_product
 }> = ({ setPopUp, selectedVariant, product }) => {
-  if (!(selectedVariant && selectedVariant.id) || !(product && product.variants)) {
+  if (!product || !product.variants) {
     return <></>
-  }
-
-  if (!product) {
-    return null
   }
 
   const {
@@ -36,6 +32,8 @@ export const ProductDetails: React.FC<{
     }
   }
 
+  console.log("selectedVariant", selectedVariant)
+
   return (
     <Box pt={2} px={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between">
@@ -47,7 +45,9 @@ export const ProductDetails: React.FC<{
             {brandName}
           </Sans>
         </Box>
-        <SaveProductButton selectedVariant={selectedVariant} product={product} setPopUp={setPopUp} />
+        {!!(selectedVariant && selectedVariant.id) && (
+          <SaveProductButton selectedVariant={selectedVariant} product={product} setPopUp={setPopUp} />
+        )}
       </Flex>
       <Spacer mb={1} />
       <Sans size="1" color="gray" lineHeight={26}>

@@ -4,6 +4,7 @@ import { getUserSession } from "App/Utils/auth"
 import { TabsStack, ModalStackScreen } from "./Stacks"
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
 import { color } from "App/Utils"
+import AsyncStorage from "@react-native-community/async-storage"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -19,14 +20,14 @@ const defaultOptions = {
 }
 
 export const AuthProvider = ({ currentScreen, navigationRef }) => {
-  const [state, dispatch] = React.useReducer(
+  const [authState, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
         case "RESTORE_TOKEN":
           return {
             ...prevState,
             userSession: action.token,
-            isLoading: false,
+            authInitializing: false,
           }
         case "SIGN_IN":
           return {
@@ -43,69 +44,47 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
       }
     },
     {
-      isLoading: true,
+      authInitializing: true,
       isSignout: false,
       userSession: null,
     }
   )
 
   React.useEffect(() => {
-    const navigation = navigationRef.current
-    // Fetch the token from storage then navigate to our appropriate place
+    // const navigation = navigationRef.current
     const bootstrapAsync = async () => {
-      let userSession
-
       try {
-        userSession = getUserSession()
-
+        const userSession = await getUserSession()
+        console.log("userSession", userSession)
         if (userSession && userSession.token) {
-          //   navigation.navigate("Main", { screen: "Home" })
-        } else {
-          //   navigation.navigate("Auth")
-          //   navigation.navigate("Main", { screen: "Home" })
+          dispatch({ type: "RESTORE_TOKEN", token: userSession.token })
         }
       } catch (e) {
-        // navigation.navigate("Main", { screen: "Home" })
-        // Restoring token failed
+        console.log("Restoring token failed: ", e)
       }
-
-      // After restoring token, we may need to validate it in production apps
-
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
-      dispatch({ type: "RESTORE_TOKEN", token: userSession })
     }
 
     bootstrapAsync()
   }, [])
 
-  if (!state.isLoading) {
-    SplashScreen.hide()
+  console.log("authState", authState)
+
+  //   if (!authState.authInitializing) {
+  SplashScreen.hide()
+  //   }
+
+  const authContext = {
+    signIn: async ({ session }) => {
+      console.log("session in auth", session)
+      dispatch({ type: "SIGN_IN", token: session })
+    },
+    signOut: async () => {
+      await AsyncStorage.removeItem("userSession")
+      dispatch({ type: "SIGN_OUT" })
+    },
+    authState,
+    userSession: authState.userSession,
   }
-
-  const authContext = React.useMemo(
-    () => ({
-      signIn: async data => {
-        console.log("data", data)
-        // In a production app, we need to send some data (usually username, password) to server and get a token
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using `AsyncStorage`
-        // In the example, we'll use a dummy token
-
-        dispatch({ type: "SIGN_IN", token: "dummy-auth-token" })
-      },
-      signOut: () => dispatch({ type: "SIGN_OUT" }),
-      signUp: async data => {
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using `AsyncStorage`
-        // In the example, we'll use a dummy token
-
-        dispatch({ type: "SIGN_IN", token: "dummy-auth-token" })
-      },
-    }),
-    []
-  )
 
   return (
     <AuthContext.Provider value={authContext}>
@@ -115,6 +94,7 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
         screenOptions={{
           ...defaultOptions,
           gestureEnabled: true,
+          cardOverlayEnabled: true,
           headerShown: false,
           ...TransitionPresets.ModalPresentationIOS,
         }}

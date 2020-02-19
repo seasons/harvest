@@ -15,6 +15,7 @@ import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } 
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
+import { AuthContext } from "App/Navigation/AuthProvider"
 
 const SECTION_HEIGHT = 300
 
@@ -23,10 +24,15 @@ enum BagView {
   Saved = 1,
 }
 
-export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
-  navigation,
-}) => {
-  return <BagGuestView navigation={navigation} />
+export const Bag = props => {
+  const { authState } = React.useContext(AuthContext)
+  const { navigation } = props
+
+  if (!authState?.userSession) {
+    console.log("authState, authState", authState)
+    return <BagGuestView navigation={navigation} />
+  }
+
   const [isMutating, setMutating] = useState(false)
   const [showReserveError, displayReserveError] = useState(null)
   const { data, loading, refetch } = useQuery(GET_BAG, {
@@ -214,7 +220,7 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
   const headerSubtitle = currentView === BagView.Bag ? bagSubtitle : "Tucked away for later"
 
   return (
-    <Container>
+    <Container insetsTop>
       <FlatList
         data={currentView === BagView.Bag ? paddedItems : savedItems}
         ListHeaderComponent={() => (

@@ -9,10 +9,8 @@ import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-
-import AsyncStorage from "@react-native-community/async-storage"
-
 import { ProfileList } from "./ProfileList"
+import { AuthContext } from "App/Navigation/AuthProvider"
 
 const GET_USER = gql`
   query GetUser {
@@ -35,7 +33,6 @@ const GET_USER = gql`
 
 export function Account(props) {
   const { loading, error, data } = useQuery(GET_USER)
-  const insets = useSafeArea()
   const loaderStyles = useSpring({
     opacity: loading ? 1 : 0,
   })
@@ -60,6 +57,8 @@ export function Account(props) {
     },
   }
 
+  const { signOut } = React.useContext(AuthContext)
+
   const renderOrderUpdates = () => {
     return null
     // FIXME: When push notifiations, re-enable
@@ -82,7 +81,7 @@ export function Account(props) {
   }
 
   return (
-    <Container>
+    <Container insetsTop>
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
           <Box px={2} pt={2}>
@@ -131,12 +130,7 @@ export function Account(props) {
               <Sans size="2">Terms of Service</Sans>
             </TouchableOpacity>
             <Spacer m={2} />
-            <TouchableOpacity
-              onPress={async () => {
-                await AsyncStorage.removeItem("userSession")
-                props.navigation.navigate("Home")
-              }}
-            >
+            <TouchableOpacity onPress={() => signOut()}>
               <Sans size="2" color="red">
                 Sign out
               </Sans>
