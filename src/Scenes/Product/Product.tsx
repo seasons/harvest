@@ -83,6 +83,7 @@ export const Product = screenTrack(props => {
     (product && product.variants && product.variants.length && product.variants[0]) || {
       id: "",
       size: "",
+      reservable: 0,
       stock: 0,
       isWanted: false,
     }
@@ -126,8 +127,7 @@ export const Product = screenTrack(props => {
     }
   }
 
-  const selectedVariantAsAny: any = selectedVariant
-  const inStock = selectedVariantAsAny && selectedVariantAsAny.stock > 0
+  const inStock = selectedVariant && selectedVariant.reservable > 0
   const productVariantExists = !productVariantLoading && !productVariantError && productVariantData
   const shouldShowVariantWant = productVariantExists && !inStock
 
