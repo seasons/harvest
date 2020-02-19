@@ -1,6 +1,4 @@
-import {
-  Box, CloseButton, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme
-} from "App/Components"
+import { Box, CloseButton, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { color } from "App/Utils"
@@ -175,9 +173,11 @@ export const Reservation = props => {
               },
             })
             if (data.reserveItems) {
-              props.navigation.navigate("ReservationConfirmation", {
-                reservationID: data.reserveItems.id,
-              })
+              props.navigation.navigate(
+                "Modal",
+                { screen: "ReservationConfirmationModal" },
+                { reservationID: data.reserveItems.id }
+              )
             }
           } catch (e) {
             setShowError(true)

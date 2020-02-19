@@ -9,6 +9,7 @@ import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import AsyncStorage from "@react-native-community/async-storage"
 import { checkNotifications } from "react-native-permissions"
+import { AuthContext } from "App/Navigation"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -47,6 +48,10 @@ export const LogIn: React.FC<LogInProps> = props => {
     },
   })
 
+  const { signIn } = React.useContext(AuthContext)
+
+  console.log("signIn", signIn)
+
   const onEmailChange = val => {
     setEmail(val)
     setEmailComplete(isValidEmail(val))
@@ -77,6 +82,7 @@ export const LogIn: React.FC<LogInProps> = props => {
           password,
         },
       })
+      signIn({ email, password })
       if (result?.data) {
         const {
           data: { login: userSession },
