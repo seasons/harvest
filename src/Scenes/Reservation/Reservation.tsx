@@ -1,16 +1,15 @@
-import { Box, CloseButton, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme } from "App/Components"
+import { Box, CloseButton, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme, Container } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { color } from "App/Utils"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { ScrollView, StatusBar } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 
 import { BagItem, BagItemFragment } from "../Bag/Components/BagItem"
+import { space } from "App/Utils"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
@@ -74,7 +73,6 @@ const SectionHeader = ({ title }) => {
 
 export const Reservation = props => {
   const [isMutating, setIsMutating] = useState(false)
-  const insets = useSafeArea()
   const { data, loading } = useQuery(GET_CUSTOMER)
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
@@ -158,7 +156,20 @@ export const Reservation = props => {
           </Box>
         </ScrollView>
       </Flex>
+    </>
+  )
+
+  return (
+    <Container insetsTop backgroundColor="black100">
+      <CloseButton navigation={props.navigation} />
+      <Box px={2} pb={3}>
+        <Sans size="3" color="white">
+          Review your order
+        </Sans>
+      </Box>
+      <Content>{content}</Content>
       <FixedButton
+        positionBottom={space(4)}
         loading={isMutating}
         disabled={isMutating}
         onPress={async () => {
@@ -188,22 +199,8 @@ export const Reservation = props => {
       >
         Place order
       </FixedButton>
-    </>
-  )
-
-  return (
-    <Theme>
-      <Box style={{ paddingTop: insets.top, flex: 1, backgroundColor: color("black100") }}>
-        <CloseButton navigation={props.navigation} />
-        <Box style={{ marginTop: 60 }} m={2}>
-          <Sans size="3" color="white">
-            Review your order
-          </Sans>
-        </Box>
-        <Content>{content}</Content>
-        <PopUp data={popUpData} show={showError} insetsBottom />
-      </Box>
-    </Theme>
+      <PopUp data={popUpData} show={showError} insetsBottom />
+    </Container>
   )
 }
 

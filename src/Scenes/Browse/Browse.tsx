@@ -5,7 +5,7 @@ import { imageResize } from "App/helpers/imageResize"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import get from "lodash/get"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useSafeArea } from "react-native-safe-area-context"
@@ -121,13 +121,6 @@ export const Browse = (props: any) => {
   let products = data && data.products
   let scrollViewEl = null
 
-  // useEffect(() => {
-  //   const browseFilter = props && props.screenProps && props.screenProps.browseFilter
-  //   if (browseFilter && browseFilter !== currentCategory) {
-  //     setCurrentCategory(props.screenProps.browseFilter)
-  //   }
-  // }, [props.screenProps.browseFilter])
-
   const insets = useSafeArea()
   const loaderStyle = useSpring({ opacity: loading && !data ? 1 : 0 })
   const productsBoxStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
@@ -136,23 +129,9 @@ export const Browse = (props: any) => {
   const filtersButtonHeight = 36
   const numFiltersSelected = sizeFilters.length
 
-  let filtersButtonVariant
-  let filtersButtonWidth
-  let filtersButtonText
-  let filtersButtonTextColor
-  if (numFiltersSelected > 0) {
-    // Selected filters state
-    filtersButtonVariant = "primaryBlack"
-    filtersButtonWidth = 97
-    filtersButtonText = `Filters +${numFiltersSelected}`
-    filtersButtonTextColor = "white"
-  } else {
-    // No filters selected state
-    filtersButtonVariant = "primaryWhite"
-    filtersButtonWidth = 78
-    filtersButtonText = "Filters"
-    filtersButtonTextColor = "black"
-  }
+  const filtersButtonVariant = numFiltersSelected > 0 ? "primaryBlack" : "primaryWhite"
+  const filtersButtonText = numFiltersSelected > 0 ? `Filters +${numFiltersSelected}` : "Filters"
+  const filtersButtonTextColor = numFiltersSelected > 0 ? "white100" : "black100"
 
   const onCategoryPress = item => {
     if (item.slug !== currentCategory) {

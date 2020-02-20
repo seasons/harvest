@@ -9,12 +9,12 @@ import { assign, fill, get } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
-import { BagGuestView } from "./BagGuestView"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
 import { AuthContext } from "App/Navigation/AuthProvider"
+import { GuestView } from "App/Components/GuestView"
 
 const SECTION_HEIGHT = 300
 
@@ -28,7 +28,7 @@ export const Bag = props => {
   const { navigation } = props
 
   if (!authState?.userSession) {
-    return <BagGuestView navigation={navigation} />
+    return <GuestView navigation={navigation} />
   }
 
   const [isMutating, setMutating] = useState(false)

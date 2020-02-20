@@ -92,6 +92,7 @@ const BagStackScreen = () => {
   return (
     <BagStack.Navigator initialRouteName="Bag" screenOptions={{ ...defaultOptions }}>
       <BagStack.Screen name="Bag" component={Bag} />
+      <AccountStack.Screen name="Webview" component={Webview} />
       <BagStack.Screen name="Product" component={Product} />
       <BagStack.Screen name="CurrentRotation" component={CurrentRotation} />
     </BagStack.Navigator>

@@ -1,13 +1,13 @@
-import { Box, FixedButton, Flex, Sans, Separator, Spacer, Theme } from "App/Components"
+import { Box, FixedButton, Flex, Sans, Separator, Spacer, Container, CloseButton } from "App/Components"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 
 import { BagItem } from "../Bag/Components/BagItem"
+import { space } from "App/Utils"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -71,7 +71,6 @@ export const ReservationConfirmation = props => {
       reservationID,
     },
   })
-  const insets = useSafeArea()
 
   const customer = get(data, "me.customer")
   const address = get(customer, "detail.shippingAddress", {
@@ -160,41 +159,33 @@ export const ReservationConfirmation = props => {
           </Box>
         </ScrollView>
       </Flex>
-      <Box mb={insets.bottom}>
-        <FixedButton
-          onPress={() => {
-            props.navigation.navigate("Bag", { reservationID: reservationID })
-            props.navigation.goBack()
-          }}
-          block
-        >
-          Done
-        </FixedButton>
-      </Box>
     </>
   )
 
   return (
-    <Theme>
-      <Container style={{ paddingTop: insets.top }}>
-        <Box style={{ marginTop: 60 }} m={2}>
-          <Sans size="3" color="white">
-            We've got your order!
-          </Sans>
-          <Sans size="1" color="gray">
-            We've emailed you a confirmation and we'll notify you when its out for delivery.
-          </Sans>
-        </Box>
-        <Content>{content}</Content>
-      </Container>
-    </Theme>
+    <Container insetsTop backgroundColor="black100">
+      <CloseButton navigation={props.navigation} />
+      <Box style={{ marginTop: 60 }} m={2}>
+        <Sans size="3" color="white">
+          We've got your order!
+        </Sans>
+        <Sans size="1" color="gray">
+          We've emailed you a confirmation and we'll notify you when its out for delivery.
+        </Sans>
+      </Box>
+      <Content>{content}</Content>
+      <FixedButton
+        positionBottom={space(4)}
+        onPress={() => {
+          props.navigation.navigate("Bag", { reservationID: reservationID })
+        }}
+        block
+      >
+        Done
+      </FixedButton>
+    </Container>
   )
 }
-
-const Container = styled(Box)`
-  background: black;
-  flex: 1;
-`
 
 const Content = styled(Box)`
   background: white;

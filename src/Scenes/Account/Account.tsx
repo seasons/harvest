@@ -1,4 +1,4 @@
-import { Box, Flex, Sans, Separator, Spacer, Toggle } from "App/Components"
+import { Box, Flex, Sans, Separator, Spacer, Toggle, GuestView } from "App/Components"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React from "react"
@@ -6,7 +6,6 @@ import { useQuery } from "react-apollo"
 import ContentLoader, { Rect } from "react-content-loader/native"
 import { Image, Linking, ScrollView, TouchableOpacity } from "react-native"
 import * as Animatable from "react-native-animatable"
-import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { ProfileList } from "./ProfileList"
@@ -32,6 +31,13 @@ const GET_USER = gql`
 `
 
 export function Account(props) {
+  const { authState } = React.useContext(AuthContext)
+  const { navigation } = props
+
+  if (!authState?.userSession) {
+    return <GuestView navigation={navigation} />
+  }
+
   const { loading, error, data } = useQuery(GET_USER)
   const loaderStyles = useSpring({
     opacity: loading ? 1 : 0,
@@ -119,13 +125,13 @@ export function Account(props) {
             </TouchableOpacity>
             <Spacer m={2} />
             <TouchableOpacity
-              onPress={() => props.navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })}
+              onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })}
             >
               <Sans size="2">Privacy Policy</Sans>
             </TouchableOpacity>
             <Spacer m={2} />
             <TouchableOpacity
-              onPress={() => props.navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })}
+              onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })}
             >
               <Sans size="2">Terms of Service</Sans>
             </TouchableOpacity>
