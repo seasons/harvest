@@ -22,7 +22,7 @@ export const AllowNotifications = ({ navigation }) => {
           Allow
         </Button>
         <Spacer mb={2} />
-        <Button block onPress={() => navigation.navigate("Home")} variant="primaryWhite">
+        <Button block onPress={() => navigation.navigate("Main")} variant="primaryWhite">
           Maybe Later
         </Button>
         <Spacer mb={3} />

@@ -10,6 +10,7 @@ import { NavigationParams, NavigationScreenProp, NavigationState } from "react-n
 import AsyncStorage from "@react-native-community/async-storage"
 import { checkNotifications } from "react-native-permissions"
 import { AuthContext } from "App/Navigation/AuthProvider"
+import { StackNavigationProp } from "@react-navigation/stack"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -28,7 +29,7 @@ const LOG_IN = gql`
 
 interface LogInProps {
   onAuth: (credentials, profile) => void
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
 }
 
 export const LogIn: React.FC<LogInProps> = props => {
@@ -59,14 +60,15 @@ export const LogIn: React.FC<LogInProps> = props => {
     checkNotifications()
       .then(({ status }) => {
         if (status === "denied") {
+          props.navigation.popToTop()
           props.navigation.navigate("Modal", { screen: "AllowNotificationsModal" })
         } else {
-          props.navigation.navigate("Home")
+          props.navigation.navigate("Main")
         }
       })
       .catch(error => {
         console.log("error checking for permission", error)
-        props.navigation.navigate("Home")
+        props.navigation.navigate("Main")
       })
   }
 
@@ -84,7 +86,7 @@ export const LogIn: React.FC<LogInProps> = props => {
         const {
           data: { login: userSession },
         } = result
-        signIn({ userSession })
+        signIn(userSession)
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
         checkPermissions()
       }

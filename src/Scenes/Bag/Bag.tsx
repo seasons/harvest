@@ -9,7 +9,6 @@ import { assign, fill, get } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import { BagGuestView } from "./BagGuestView"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
@@ -29,7 +28,6 @@ export const Bag = props => {
   const { navigation } = props
 
   if (!authState?.userSession) {
-    console.log("authState, authState", authState)
     return <BagGuestView navigation={navigation} />
   }
 

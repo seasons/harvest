@@ -32,8 +32,6 @@ export const ProductDetails: React.FC<{
     }
   }
 
-  console.log("selectedVariant", selectedVariant)
-
   return (
     <Box pt={2} px={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between">

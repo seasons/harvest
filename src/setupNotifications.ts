@@ -11,9 +11,9 @@ export const init = navigation => {
   requestNotifications(["alert", "sound", "badge", "criticalAlert"]).then(({ status }) => {
     if (status === "granted") {
       RNPusherPushNotifications.setInstanceId(Config.RN_PUSHER_ID, navigation)
-      navigation.navigate("Home")
+      navigation.navigate("Main")
     } else {
-      navigation.navigate("Home")
+      navigation.navigate("Main")
     }
   })
   // Set your app key and register for push

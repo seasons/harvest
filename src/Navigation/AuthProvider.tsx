@@ -55,7 +55,6 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
     const bootstrapAsync = async () => {
       try {
         const userSession = await getUserSession()
-        console.log("userSession", userSession)
         if (userSession && userSession.token) {
           dispatch({ type: "RESTORE_TOKEN", token: userSession.token })
         }
@@ -65,18 +64,12 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
     }
 
     bootstrapAsync()
+    SplashScreen.hide()
   }, [])
 
-  console.log("authState", authState)
-
-  //   if (!authState.authInitializing) {
-  SplashScreen.hide()
-  //   }
-
   const authContext = {
-    signIn: async ({ session }) => {
-      console.log("session in auth", session)
-      dispatch({ type: "SIGN_IN", token: session })
+    signIn: async session => {
+      dispatch({ type: "SIGN_IN", token: session.token })
     },
     signOut: async () => {
       await AsyncStorage.removeItem("userSession")

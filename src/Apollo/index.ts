@@ -47,7 +47,6 @@ const errorLink = onError(({ networkError, operation, forward }) => {
     console.log("networkError", networkError)
     // User access token has expired
     if (networkError.statusCode === 401) {
-      // FIXME:
       // We assume we have both tokens needed to run the async request
       // Let's refresh token through async request
       return new Observable(observer => {

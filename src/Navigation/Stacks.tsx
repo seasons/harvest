@@ -11,7 +11,7 @@ import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
 import { Webview } from "App/Scenes/Webview"
 import React from "react"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
-import { TabBar } from "./TabBar"
+import { NavBar } from "./NavBar"
 import { createStackNavigator } from "@react-navigation/stack"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { color } from "App/Utils"
@@ -41,7 +41,7 @@ export const TabsStack = ({ currentScreen }) => {
         // @ts-ignore
         safeAreaInset: { bottom: "never" },
       }}
-      tabBar={props => <TabBar {...props} currentScreen={currentScreen} />}
+      tabBar={props => <NavBar {...props} currentScreen={currentScreen} />}
     >
       <Tab.Screen name="Home" component={HomeStackScreen} />
       <Tab.Screen name="Browse" component={BrowseStackScreen} />
