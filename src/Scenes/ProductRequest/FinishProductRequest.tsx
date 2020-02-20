@@ -1,13 +1,8 @@
 import React from "react"
 import { Box, Container, FixedButton, Sans, Spacer } from "App/Components"
 import { color } from "App/Utils"
-import { StackActions } from "react-navigation"
 
 export const FinishProductRequest = (props: any) => {
-  const handleFinishBtnPressed = () => {
-    props.navigation.dispatch(StackActions.popToTop())
-  }
-
   return (
     <Container>
       <Box px={2} style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}>
@@ -21,7 +16,7 @@ export const FinishProductRequest = (props: any) => {
           </Sans>
         </Box>
       </Box>
-      <FixedButton block variant="primaryWhite" onPress={handleFinishBtnPressed}>
+      <FixedButton block variant="primaryWhite" onPress={() => props.navigation.popToTop()}>
         Finish
       </FixedButton>
     </Container>

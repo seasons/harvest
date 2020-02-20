@@ -1,15 +1,11 @@
 import { get } from "lodash"
 import React from "react"
 import { ScrollView } from "react-native"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
-import { useSafeArea } from "react-native-safe-area-context"
 import { Box, Container, FixedButton, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
 import { ProductRequestGallery } from "./Components"
 
-export const ProductRequestConfirmation: React.FC<{
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
-}> = ({ navigation }) => {
-  const productRequest = get(navigation, "state.params.productRequest")
+export const ProductRequestConfirmation = ({ navigation, route }) => {
+  const productRequest = get(route, "params.productRequest")
   const { brand, description, images, name, price, sku } = productRequest
   const primarySections = [
     ["Name", name],
@@ -25,10 +21,8 @@ export const ProductRequestConfirmation: React.FC<{
     navigation.navigate("FinishProductRequest")
   }
 
-  const insets = useSafeArea()
-
   return (
-    <Container>
+    <Container insetsTop>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <ScrollView>
         <Box px={2}>
