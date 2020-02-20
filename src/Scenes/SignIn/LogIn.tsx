@@ -6,11 +6,9 @@ import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import AsyncStorage from "@react-native-community/async-storage"
 import { checkNotifications } from "react-native-permissions"
 import { AuthContext } from "App/Navigation/AuthProvider"
-import { StackNavigationProp } from "@react-navigation/stack"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {

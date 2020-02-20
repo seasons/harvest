@@ -2,10 +2,8 @@ import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
-import { Box, Button, PopUp, Flex, ModalCloseButton, Sans, Spacer, TextInput, Theme, Container } from "../../Components"
+import { Box, Button, PopUp, Flex, ModalCloseButton, Sans, Spacer, TextInput, Container } from "../../Components"
 import { isValidEmail } from "../../helpers/regex"
-import styled from "styled-components/native"
 
 const RESET_PASSWORD = gql`
   mutation ResetPassword($email: String!) {
@@ -40,8 +38,9 @@ export const ResetPassword = (props: any) => {
       },
     })
 
-    if (result.data && result.data.resetPassword) {
-      props.navigation.navigate("ResetPasswordConfirmation")
+    if (result && result.data && result.data.resetPassword) {
+      props.navigation.pop()
+      props.navigation.navigate("Modal", { screen: "ResetPasswordConfirmationModal" })
     } else {
       Keyboard.dismiss()
       setShowError(true)
@@ -56,7 +55,7 @@ export const ResetPassword = (props: any) => {
   }
 
   return (
-    <Container backgroundColor="black100">
+    <Container backgroundColor="black100" insetsTop>
       <ModalCloseButton navigation={props.navigation} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
@@ -72,7 +71,8 @@ export const ResetPassword = (props: any) => {
             <TextInput
               placeholder="Your email"
               variant="dark"
-              textContentType="email"
+              textContentType="Email"
+              inputKey="email"
               onChangeText={(_, val) => onEmailChange(val)}
             />
             <Spacer mb={4} />
@@ -82,7 +82,7 @@ export const ResetPassword = (props: any) => {
           </Box>
         </Flex>
       </TouchableWithoutFeedback>
-      <PopUp data={popUpData} show={showError} />
+      <PopUp data={popUpData} show={showError} insetsBottom />
     </Container>
   )
 }
