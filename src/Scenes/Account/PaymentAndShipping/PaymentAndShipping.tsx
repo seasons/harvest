@@ -4,8 +4,6 @@ import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
-
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
 import { useSafeArea } from "react-native-safe-area-context"
 
@@ -78,9 +76,7 @@ export const createBillingAddress = billingInfo => {
   return addressArray
 }
 
-export const PaymentAndShipping: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
-  navigation,
-}) => {
+export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }) => {
   const insets = useSafeArea()
   const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)

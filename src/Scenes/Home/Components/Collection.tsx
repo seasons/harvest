@@ -1,14 +1,13 @@
 import React from "react"
 import { Box, Sans, Spacer } from "App/Components"
 import { Image } from "react-native"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { color } from "App/Utils"
 import { ProductsRail } from "../Components/ProductsRail"
 
 interface BrandsRailProps {
   collection: any
   title?: string
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
 }
 
 export const Collection: React.FC<BrandsRailProps> = ({ collection, title, navigation }) => {

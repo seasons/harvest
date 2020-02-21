@@ -5,7 +5,6 @@ import gql from "graphql-tag"
 import { get, head } from "lodash"
 import React from "react"
 import { Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import styled from "styled-components/native"
 
 export const BagItemFragment = gql`
@@ -31,7 +30,7 @@ interface BagItemProps {
   bagItem: any
   index?: number
   sectionHeight: number
-  navigation?: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation?: any
   saved: Boolean
   removeItemFromBag?: Function
   removeFromBagAndSaveItem?: Function

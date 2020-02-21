@@ -3,7 +3,6 @@ import { Button } from "App/Components"
 import { head } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
-import { NavigationScreenProp, NavigationState, NavigationParams, StackActions } from "react-navigation"
 import { GreenCheck } from "Assets/svgs"
 
 interface Props {
@@ -13,7 +12,7 @@ interface Props {
   width: number
   selectedVariant: any
   setPopUp: ({ show: boolean, data: any }) => void
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
 }
 
 export const AddToBagButton: React.FC<Props> = props => {
@@ -43,7 +42,7 @@ export const AddToBagButton: React.FC<Props> = props => {
             secondaryButtonText: "Go to bag",
             secondaryButtonOnPress: () => {
               setPopUp({ show: false, data: null })
-              navigation.dispatch(StackActions.popToTop())
+              navigation.popToTop()
               navigation.navigate("Bag")
             },
             onClose: () => setPopUp({ show: false, data: null }),
