@@ -3,7 +3,7 @@ import gql from "graphql-tag"
 import React from "react"
 import { Dimensions, Text, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { SmallGreenCheck, LeftTabCorner, RightTabCorner } from "Assets/svgs"
+import { GreenCheck, LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Flex, Sans, Theme } from "App/Components"
 import { color } from "App/Utils"
@@ -52,7 +52,6 @@ export const VariantWant = (props: VariantWantProps) => {
     ],
   })
 
-
   const handleWantVariant = async () => {
     try {
       const result = await addProductVariantWant({
@@ -71,27 +70,23 @@ export const VariantWant = (props: VariantWantProps) => {
   const { width } = Dimensions.get("window")
 
   return (
-    <>
-      <Theme>
-        <Container style={{ width }}>
-          <LeftCorner />
-          <RightCorner />
-          <TextContainer>
-            {shouldShowGreenCheck && <SmallGreenCheck />}
-            <Text>
-              <Sans size="2" color={color("white100")}>
-                {plainText}
-              </Sans>
-              <TouchableWithoutFeedback onPress={handleWantVariant}>
-                <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("white100")}>
-                  {underlinedText}
-                </Sans>
-              </TouchableWithoutFeedback>
-            </Text>
-          </TextContainer>
-        </Container>
-      </Theme>
-    </>
+    <Container style={{ width }}>
+      <LeftCorner />
+      <RightCorner />
+      <TextContainer>
+        {shouldShowGreenCheck && <GreenCheck width={16} height={16} />}
+        <Text>
+          <Sans size="2" color={color("white100")}>
+            {plainText}
+          </Sans>
+          <TouchableWithoutFeedback onPress={handleWantVariant}>
+            <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("white100")}>
+              {underlinedText}
+            </Sans>
+          </TouchableWithoutFeedback>
+        </Text>
+      </TextContainer>
+    </Container>
   )
 }
 
