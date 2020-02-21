@@ -1,7 +1,8 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box, Spacer, VariantSizes, PopUp, Container } from "App/Components"
+import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { Loader } from "App/Components/Loader"
-import get from "lodash/get"
+import { find, get } from "lodash"
 import React, { useState, useEffect } from "react"
 import { NavigationActions, NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { Dimensions, FlatList, TouchableOpacity } from "react-native"
@@ -28,14 +29,6 @@ const ADD_VIEWED_PRODUCT = gql`
     addViewedProduct(item: $item) {
       id
       viewCount
-    }
-  }
-`
-const GET_PRODUCT_VARIANT = gql`
-  query GetProductVariant($variantID: ID!) {
-    productVariant(where: { id: $variantID }) {
-      id
-      isWanted
     }
   }
 `
@@ -89,19 +82,19 @@ export const Product = screenTrack(props => {
     }
   )
 
-  const {
-    data: productVariantData,
-    loading: productVariantLoading,
-    error: productVariantError
-  } = useQuery(GET_PRODUCT_VARIANT, {
-    variables: {
-      variantID: selectedVariant.id
+  let selectedVariantIsWanted = false
+  if (product?.variants?.length > 0 && selectedVariant.size) {
+    const selectedVariantData = find(product.variants, (variant) =>
+      variant.size === get(ABBREVIATED_SIZES, selectedVariant.size) ||
+      variant.size === selectedVariant.size
+    )
+    if (selectedVariantData?.isWanted) {
+      selectedVariantIsWanted = selectedVariantData.isWanted
     }
-  })
+  }
 
   const inStock = selectedVariant && selectedVariant.reservable > 0
-  const productVariantExists = !productVariantLoading && !productVariantError && productVariantData
-  const shouldShowVariantWant = productVariantExists && !inStock
+  const shouldShowVariantWant = !inStock
 
   const variantWantTransition = useSpring({
     translateY: shouldShowVariantWant ? 0 : VARIANT_WANT_HEIGHT,
@@ -169,7 +162,8 @@ export const Product = screenTrack(props => {
       <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
         {shouldShowVariantWant &&
           <VariantWant
-            isWanted={productVariantData?.productVariant?.isWanted}
+            isWanted={selectedVariantIsWanted}
+            productID={productID}
             variantID={selectedVariant.id}
           />
         }

@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import { Dimensions, Text, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { SmallGreenCheck, LeftTabCorner, RightTabCorner } from "Assets/svgs"
+import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Flex, PopUp, Sans, Theme } from "App/Components"
 import { color } from "App/Utils"
 
@@ -19,16 +20,15 @@ const THANKS_MESSAGE = " Thanks! We'll let you know"
 
 interface VariantWantProps {
   isWanted: boolean
+  productID: string
   variantID: string
 }
 
 export const VariantWant = (props: VariantWantProps) => {
-  const { isWanted, variantID } = props
-  const [shouldShowGreenCheck, setShouldShowGreenCheck] = useState(isWanted)
-  const [plainText, setPlainText] = useState(
-    isWanted ? THANKS_MESSAGE : "Want this item? "
-  )
-  const [underlinedText, setUnderlinedText] = useState(isWanted ? "" : "Let us know!")
+  const { isWanted, productID, variantID } = props
+  const shouldShowGreenCheck = isWanted
+  const plainText = isWanted ? THANKS_MESSAGE : "Want this item? "
+  const underlinedText = isWanted ? "" : "Let us know!"
   const [showError, setShowError] = useState(false)
 
   const [addProductVariantWant] = useMutation(ADD_PRODUCT_VARIANT_WANT, {
@@ -36,6 +36,14 @@ export const VariantWant = (props: VariantWantProps) => {
       console.error("error VariantWant.tsx: ", error)
       setShowError(true)
     },
+    refetchQueries: [
+      {
+        query: GET_PRODUCT,
+        variables: {
+          productID
+        }
+      },
+    ],
   })
 
   const handleWantVariant = async () => {
@@ -45,11 +53,7 @@ export const VariantWant = (props: VariantWantProps) => {
           variantID
         }
       })
-      if (result?.data?.addProductVariantWant) {
-        setShouldShowGreenCheck(true)
-        setPlainText(THANKS_MESSAGE)
-        setUnderlinedText("")
-      } else {
+      if (!result?.data?.addProductVariantWant) {
         setShowError(true)
       }
     } catch (e) {

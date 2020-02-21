@@ -59,7 +59,6 @@ const sizeDataForVariants = (variants = []) => {
       }
     }
   }
-
   return sizeData
 }
 
