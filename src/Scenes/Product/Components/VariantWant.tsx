@@ -14,6 +14,7 @@ const ADD_PRODUCT_VARIANT_WANT = gql`
     }
   }
 `
+const VARIANT_WANT_HEIGHT = 52
 const THANKS_MESSAGE = " Thanks! We'll let you know"
 
 interface VariantWantProps {
@@ -94,7 +95,7 @@ const Container = styled(Flex)`
   position: absolute;
   background: ${color("black100")};
   bottom: 0;
-  height: 52;
+  height: ${VARIANT_WANT_HEIGHT};
 `
 
 const TextContainer = styled(Flex)`
@@ -107,12 +108,12 @@ const TextContainer = styled(Flex)`
 
 const LeftCorner = styled(LeftTabCorner)`
   position: absolute;
-  bottom: 52;
+  bottom: ${VARIANT_WANT_HEIGHT};
   left: 0;
 `
 
 const RightCorner = styled(RightTabCorner)`
   position: absolute;
-  bottom: 52;
+  bottom: ${VARIANT_WANT_HEIGHT};
   right: 0;
 `

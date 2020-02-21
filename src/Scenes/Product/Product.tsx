@@ -21,6 +21,7 @@ import { GET_HOMEPAGE } from "../Home/Home"
 import { useSafeArea } from "react-native-safe-area-context"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
+const VARIANT_WANT_HEIGHT = 52
 
 const ADD_VIEWED_PRODUCT = gql`
   mutation AddViewedProduct($item: ID!) {
@@ -82,10 +83,9 @@ export const Product = screenTrack(props => {
   const [selectedVariant, setSelectedVariant] = useState(
     (product && product.variants && product.variants.length && product.variants[0]) || {
       id: "",
-      size: "",
       reservable: 0,
+      size: "",
       stock: 0,
-      isWanted: false,
     }
   )
 
@@ -97,6 +97,14 @@ export const Product = screenTrack(props => {
     variables: {
       variantID: selectedVariant.id
     }
+  })
+
+  const inStock = selectedVariant && selectedVariant.reservable > 0
+  const productVariantExists = !productVariantLoading && !productVariantError && productVariantData
+  const shouldShowVariantWant = productVariantExists && !inStock
+
+  const variantWantTransition = useSpring({
+    translateY: shouldShowVariantWant ? 0 : VARIANT_WANT_HEIGHT,
   })
 
   if (loading || !data) {
@@ -127,11 +135,7 @@ export const Product = screenTrack(props => {
     }
   }
 
-  const inStock = selectedVariant && selectedVariant.reservable > 0
-  const productVariantExists = !productVariantLoading && !productVariantError && productVariantData
-  const shouldShowVariantWant = productVariantExists && !inStock
-
-  const selectionButtonsBottom = shouldShowVariantWant ? 52 : 0
+  const selectionButtonsBottom = shouldShowVariantWant ? VARIANT_WANT_HEIGHT : 0
   const listFooterSpacing = selectionButtonsBottom + 58
   const sections = ["imageRail", "productDetails", "aboutTheBrand"]
 
@@ -162,12 +166,12 @@ export const Product = screenTrack(props => {
         selectedVariant={selectedVariant}
         navigation={navigation}
       />
-      {shouldShowVariantWant &&
+      <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
         <VariantWant
           isWanted={productVariantData?.productVariant?.isWanted}
           variantID={selectedVariant.id}
         />
-      }
+      </AnimatedVariantWantWrapper>
       {showVariantPicker && <Overlay />}
       <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
         <VariantPicker
@@ -197,7 +201,7 @@ const Overlay = styled.View`
   background-color: rgba(0, 0, 0, 0.6);
   top: 0;
   left: 0;
-  bottom: 52;
+  bottom: ${VARIANT_WANT_HEIGHT};
   right: 0;
 `
 
@@ -217,5 +221,15 @@ const ArrowBackground = styled(Box)`
   left: -6;
   top: -1;
 `
+
+const VariantWantWrapper = styled(Box)`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: ${VARIANT_WANT_HEIGHT};
+`
+
+const AnimatedVariantWantWrapper = animated(VariantWantWrapper)
 
 const AnimatedVariantPicker = animated(VariantPickerWrapper)
