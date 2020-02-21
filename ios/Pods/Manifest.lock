@@ -232,7 +232,7 @@ PODS:
   - react-native-pusher-push-notifications (2.4.0):
     - PushNotifications (>= 2.1.2)
     - React
-  - react-native-safe-area-context (0.7.3):
+  - react-native-safe-area-context (0.6.4):
     - React
   - react-native-splash-screen (3.2.0):
     - React
@@ -288,7 +288,7 @@ PODS:
     - React
   - RNReanimated (1.4.0):
     - React
-  - RNScreens (2.0.0-beta.6):
+  - RNScreens (2.0.0-alpha.12):
     - React
   - RNSentry (1.1.0):
     - React
@@ -590,7 +590,7 @@ SPEC CHECKSUMS:
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
   react-native-pusher-push-notifications: 2ed16a965a4ade4d2e51ecc632b47a7f41e7f7c6
-  react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
+  react-native-safe-area-context: 52342d2d80ea8faadd0ffa76d83b6051f20c5329
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webview: 82d6456dfae1b3ef70c3939135536342afc96373
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
@@ -609,7 +609,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 946a7691e41df61e2c4b1884deab41a4cdc3afff
   RNPermissions: 2f74237e97b08beda01e914301e12524ddddf5b8
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
-  RNScreens: c2c8bdde0146f16eb6bf092dd7485534851f2711
+  RNScreens: 254da4b84f25971cbb30ed3ddc84131f23cac812
   RNSentry: 932ac1c8b2f581b1c8be5812f88ff556c99e7fb7
   RNSVG: f6177f8d7c095fada7cfee2e4bb7388ba426064c
   SDWebImage: 1245d058b7b8f59adef7a6da6bbafd4f1ab67041
@@ -631,4 +631,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c6d338c289a9fb7eeea128e6564476e0d8a96db7
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.8.3
