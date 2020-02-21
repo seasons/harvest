@@ -56,7 +56,7 @@ export const ProductDetails: React.FC<{
       <Spacer mb={3} />
       <Separator color={color("black15")} />
       {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
-      {product.modelSize && product.modelHeight && (
+      {!!product.modelSize && !!product.modelHeight && (
         <ProductInfoItem
           detailType="Fit"
           detailValue={`Model is ${modelHeightDisplay(product.modelHeight)} in a ${product.modelSize}`}

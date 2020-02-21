@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 //==============================================================
@@ -24,13 +25,6 @@ export enum InventoryStatus {
   Reserved = "Reserved",
 }
 
-export enum LocationType {
-  Cleaner = "Cleaner",
-  Customer = "Customer",
-  Office = "Office",
-  Warehouse = "Warehouse",
-}
-
 export enum Material {
   Acetate = "Acetate",
   Acrylic = "Acrylic",
@@ -43,6 +37,7 @@ export enum Material {
   CowLeather = "CowLeather",
   Cupro = "Cupro",
   Denim = "Denim",
+  DuckDown = "DuckDown",
   DuckFeathers = "DuckFeathers",
   Elastane = "Elastane",
   Esterlane = "Esterlane",
@@ -75,6 +70,7 @@ export enum Material {
   Suede = "Suede",
   Taffeta = "Taffeta",
   Tartan = "Tartan",
+  Triacetate = "Triacetate",
   Velcro = "Velcro",
   VirginWool = "VirginWool",
   Viscose = "Viscose",

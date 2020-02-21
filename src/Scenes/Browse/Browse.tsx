@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
+import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { imageResize } from "App/helpers/imageResize"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
@@ -17,14 +18,6 @@ import { useQuery } from "@apollo/react-hooks"
 import { BrowseLoader } from "./Loader"
 import { space } from "App/Utils"
 
-const ABBREVIATED_SIZES = {
-  "X-Small": "XS",
-  Small: "S",
-  Medium: "M",
-  Large: "L",
-  "X-Large": "XL",
-  "XX-Large": "XXL",
-}
 const IMAGE_HEIGHT = 240
 
 const GET_BROWSE_PRODUCTS = gql`

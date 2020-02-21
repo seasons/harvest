@@ -1,7 +1,8 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box, Spacer, VariantSizes, PopUp, Container } from "App/Components"
+import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { Loader } from "App/Components/Loader"
-import get from "lodash/get"
+import { find, get } from "lodash"
 import React, { useState, useEffect } from "react"
 import { NavigationActions, NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { Dimensions, FlatList, TouchableOpacity } from "react-native"
@@ -9,7 +10,7 @@ import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { ImageRail, MoreLikeThis, ProductDetails } from "./Components"
+import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { BackArrowIcon } from "Assets/icons"
 import { color } from "App/Utils"
 import { SelectionButtons } from "./Components/SelectionButtons"
@@ -18,9 +19,9 @@ import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { screenTrack } from "App/Utils/track"
 import { PopUpProps } from "App/Components/PopUp"
 import { GET_HOMEPAGE } from "../Home/Home"
-import { useSafeArea } from "react-native-safe-area-context"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
+const VARIANT_WANT_HEIGHT = 52
 
 const ADD_VIEWED_PRODUCT = gql`
   mutation AddViewedProduct($item: ID!) {
@@ -74,10 +75,29 @@ export const Product = screenTrack(props => {
   const [selectedVariant, setSelectedVariant] = useState(
     (product && product.variants && product.variants.length && product.variants[0]) || {
       id: "",
+      reservable: 0,
       size: "",
       stock: 0,
     }
   )
+
+  let selectedVariantIsWanted = false
+  if (product?.variants?.length > 0 && selectedVariant.size) {
+    const selectedVariantData = find(product.variants, (variant) =>
+      variant.size === get(ABBREVIATED_SIZES, selectedVariant.size) ||
+      variant.size === selectedVariant.size
+    )
+    if (selectedVariantData?.isWanted) {
+      selectedVariantIsWanted = selectedVariantData.isWanted
+    }
+  }
+
+  const inStock = selectedVariant && selectedVariant.reservable > 0
+  const shouldShowVariantWant = !inStock
+
+  const variantWantTransition = useSpring({
+    translateY: shouldShowVariantWant ? 0 : VARIANT_WANT_HEIGHT,
+  })
 
   if (loading || !data) {
     return <Loader />
@@ -107,6 +127,8 @@ export const Product = screenTrack(props => {
     }
   }
 
+  const selectionButtonsBottom = shouldShowVariantWant ? VARIANT_WANT_HEIGHT : 0
+  const listFooterSpacing = selectionButtonsBottom + 58
   const sections = ["imageRail", "productDetails", "aboutTheBrand"]
 
   return (
@@ -123,11 +145,12 @@ export const Product = screenTrack(props => {
       </ArrowWrapper>
       <FlatList
         data={sections}
-        ListFooterComponent={() => <Spacer mb={58} />}
+        ListFooterComponent={() => <Spacer mb={listFooterSpacing} />}
         keyExtractor={item => item}
         renderItem={item => renderItem(item)}
       />
       <SelectionButtons
+        bottom={selectionButtonsBottom}
         productID={productID}
         toggleShowVariantPicker={toggleShowVariantPicker}
         setPopUp={setPopUp}
@@ -135,6 +158,16 @@ export const Product = screenTrack(props => {
         selectedVariant={selectedVariant}
         navigation={navigation}
       />
+      <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
+        {shouldShowVariantWant &&
+          <VariantWant
+            isWanted={selectedVariantIsWanted}
+            productID={productID}
+            setPopUp={setPopUp}
+            variantID={selectedVariant.id}
+          />
+        }
+      </AnimatedVariantWantWrapper>
       {showVariantPicker && <Overlay />}
       <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
         <VariantPicker
@@ -164,7 +197,7 @@ const Overlay = styled.View`
   background-color: rgba(0, 0, 0, 0.6);
   top: 0;
   left: 0;
-  bottom: 0;
+  bottom: ${VARIANT_WANT_HEIGHT};
   right: 0;
 `
 
@@ -184,5 +217,15 @@ const ArrowBackground = styled(Box)`
   left: -6;
   top: -1;
 `
+
+const VariantWantWrapper = styled(Box)`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: ${VARIANT_WANT_HEIGHT};
+`
+
+const AnimatedVariantWantWrapper = animated(VariantWantWrapper)
 
 const AnimatedVariantPicker = animated(VariantPickerWrapper)

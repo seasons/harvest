@@ -1,6 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
+
+import { Size } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetCustomer
@@ -13,9 +16,26 @@ export interface GetCustomer_me_user {
   email: string;
 }
 
+export interface GetCustomer_me_bag_productVariant_product_brand {
+  __typename: "Brand";
+  id: string;
+  name: string;
+}
+
+export interface GetCustomer_me_bag_productVariant_product_variants {
+  __typename: "ProductVariant";
+  id: string;
+  size: Size;
+}
+
 export interface GetCustomer_me_bag_productVariant_product {
   __typename: "Product";
+  name: string;
   id: string;
+  modelSize: Size | null;
+  brand: GetCustomer_me_bag_productVariant_product_brand;
+  images: any;
+  variants: GetCustomer_me_bag_productVariant_product_variants[] | null;
 }
 
 export interface GetCustomer_me_bag_productVariant {

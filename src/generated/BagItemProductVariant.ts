@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 import { Size } from "./globalTypes";
@@ -10,6 +11,7 @@ import { Size } from "./globalTypes";
 
 export interface BagItemProductVariant_product_brand {
   __typename: "Brand";
+  id: string;
   name: string;
 }
 

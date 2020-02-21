@@ -14,19 +14,20 @@ interface Props {
   selectedVariant: any
   setPopUp: ({ show: boolean, data: any }) => void
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  bottom?: number
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
 
 export const SelectionButtons: React.FC<Props> = props => {
-  const { navigation, selectedVariant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
+  const { bottom = 0, navigation, selectedVariant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
   const inStock = selectedVariant && !!selectedVariant.stock
   if (!selectedVariant) {
     return <></>
   }
 
   return (
-    <Wrapper>
+    <Wrapper style={{ bottom }}>
       <Flex px={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
         <TouchableWithoutFeedback onPress={() => toggleShowVariantPicker(!showVariantPicker)}>
           <VariantSelectionButton p={2} inStock={inStock}>
@@ -81,7 +82,6 @@ const VariantSelectionButton = styled.View<{ inStock: boolean }>`
 
 const Wrapper = styled.View`
   position: absolute;
-  bottom: 0;
   left: 0;
   height: 48;
   width: 100%;

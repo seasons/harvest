@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 import { ProductOrderByInput, Size, ProductStatus } from "./globalTypes";
@@ -23,6 +24,7 @@ export interface GetBrowseProducts_categories {
 
 export interface GetBrowseProducts_products_brand {
   __typename: "Brand";
+  id: string;
   name: string;
 }
 

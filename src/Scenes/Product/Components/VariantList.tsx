@@ -10,8 +10,9 @@ import { useQuery } from "@apollo/react-hooks"
 export interface Size {
   id: string
   name: string
-  stock: number
+  reservable: number
   size: string
+  stock: number
 }
 
 const sizeToName = size => {
@@ -41,6 +42,7 @@ const sizeDataForVariants = (variants = []) => {
     sizeData[size] = {
       id: size,
       size: sizeToName(size),
+      reservable: 0,
       stock: 0,
     }
   }
@@ -52,11 +54,11 @@ const sizeDataForVariants = (variants = []) => {
       sizeData[size] = {
         id,
         size: sizeToName(size),
+        reservable,
         stock: reservable,
       }
     }
   }
-
   return sizeData
 }
 
