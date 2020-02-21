@@ -7,7 +7,7 @@ import { FlatList } from "react-native"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
 import { useSafeArea } from "react-native-safe-area-context"
 
-const GET_PAYMENT_DATA = gql`
+export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
     me {
       customer {
@@ -82,7 +82,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
 
   useEffect(() => {
-    if (data && data.me && data.me.customer) {
+    if (data?.me?.customer) {
       const sectionsArray = []
       const customer = data.me.customer
       const details = customer.detail

@@ -11,7 +11,7 @@ import styled from "styled-components/native"
 import { ProfileList } from "./ProfileList"
 import { AuthContext } from "App/Navigation/AuthProvider"
 
-const GET_USER = gql`
+export const GET_USER = gql`
   query GetUser {
     me {
       customer {

@@ -216,7 +216,6 @@ export const Bag = props => {
 
   const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"
   const headerSubtitle = currentView === BagView.Bag ? bagSubtitle : "Tucked away for later"
-
   return (
     <Container insetsTop>
       <FlatList

@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from "react"
-import { TouchableWithoutFeedback } from "react-native-gesture-handler"
+import { TouchableWithoutFeedback } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
 import { TextCheckSVG } from "../../assets/svgs"
