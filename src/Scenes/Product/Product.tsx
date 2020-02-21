@@ -167,10 +167,12 @@ export const Product = screenTrack(props => {
         navigation={navigation}
       />
       <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
-        <VariantWant
-          isWanted={productVariantData?.productVariant?.isWanted}
-          variantID={selectedVariant.id}
-        />
+        {shouldShowVariantWant &&
+          <VariantWant
+            isWanted={productVariantData?.productVariant?.isWanted}
+            variantID={selectedVariant.id}
+          />
+        }
       </AnimatedVariantWantWrapper>
       {showVariantPicker && <Overlay />}
       <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
