@@ -19,7 +19,6 @@ import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { screenTrack } from "App/Utils/track"
 import { PopUpProps } from "App/Components/PopUp"
 import { GET_HOMEPAGE } from "../Home/Home"
-import { useSafeArea } from "react-native-safe-area-context"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
