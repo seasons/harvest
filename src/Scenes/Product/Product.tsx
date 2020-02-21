@@ -163,6 +163,7 @@ export const Product = screenTrack(props => {
           <VariantWant
             isWanted={selectedVariantIsWanted}
             productID={productID}
+            setPopUp={setPopUp}
             variantID={selectedVariant.id}
           />
         }
