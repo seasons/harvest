@@ -1,7 +1,6 @@
 import React from "react"
 import { Box, Sans, Spacer, VariantSizes } from "App/Components"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { space } from "App/Utils"
 import * as Animatable from "react-native-animatable"
 import { FadeInImage } from "App/Components/FadeInImage"
@@ -13,7 +12,7 @@ const slideWidth = 144
 export const ProductsRail: React.FC<{
   items: Homepage_homepage_sections_results[]
   title?: string
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
 }> = ({ items, title, navigation }) => {
   return (
     <Box mb={2} pl={2} style={{ position: "relative" }}>

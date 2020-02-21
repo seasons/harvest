@@ -9,8 +9,6 @@ import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
-
 import { AllCaughtUp } from "./Components/AllCaughtUp"
 import { ProductsRail } from "./Components/ProductsRail"
 
@@ -41,12 +39,11 @@ export const GET_HOMEPAGE = gql`
 `
 
 export const Home: React.FC<{
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
 }> = ({ navigation }) => {
   const [sections, setSections] = useState([])
   const [showLoader, toggleLoader] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
-  const insets = useSafeArea()
 
   useEffect(() => {
     if (data?.homepage?.sections?.length) {
