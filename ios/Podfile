@@ -63,4 +63,13 @@ target 'seasons' do
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
 
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|  
+      target.build_configurations.each do |config|
+        # CocoaPods setting the deployment target to be less than the actual deployable target is causing many Xcode warnings. This silences them. See: https://github.com/CocoaPods/CocoaPods/issues/7314
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '10.0'
+      end
+    end
+  end
+
 end
