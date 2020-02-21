@@ -4,12 +4,11 @@ import { Box } from "./Box"
 import { CloseXSVG } from "../../assets/svgs"
 import { TouchableOpacity } from "react-native"
 import { color } from "App/Utils"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 export type CloseButtonVariant = "light" | "dark"
 
 export const CloseButton: React.FC<{
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
   variant?: CloseButtonVariant
 }> = ({ navigation, variant }) => {
   return (

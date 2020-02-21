@@ -3,14 +3,13 @@ import styled from "styled-components/native"
 import { Flex } from "./Flex"
 import { BackArrowIcon } from "../../assets/icons"
 import { TouchableOpacity } from "react-native"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { Box } from "./Box"
 import { themeProps } from "./Theme"
 
 type FixedBackArrowVariant = "blackBackground" | "whiteBackground"
 
 export const FixedBackArrow: React.FC<{
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
   variant?: FixedBackArrowVariant
 }> = ({ navigation, variant }) => {
   const getColorsForVariant = (variant: FixedBackArrowVariant) => {

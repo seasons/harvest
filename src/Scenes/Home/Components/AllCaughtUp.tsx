@@ -2,12 +2,9 @@ import { Box, Button, Flex, Sans, Spacer } from "App/Components"
 import { color } from "App/Utils"
 import React from "react"
 import styled from "styled-components/native"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 
-export const AllCaughtUp: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
-  navigation,
-}) => {
+export const AllCaughtUp: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <>
       <Spacer mt={3} />

@@ -5,7 +5,6 @@ import { get } from "lodash"
 import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_MEMBERSHIP_INFO = gql`
@@ -18,9 +17,7 @@ const GET_MEMBERSHIP_INFO = gql`
   }
 `
 
-export const MembershipInfo: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
-  navigation,
-}) => {
+export const MembershipInfo: React.FC<{ navigation: any }> = ({ navigation }) => {
   const { loading, error, data } = useQuery(GET_MEMBERSHIP_INFO)
   const insets = useSafeArea()
 

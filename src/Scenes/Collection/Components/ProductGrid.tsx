@@ -6,12 +6,11 @@ import { Image } from "react-native"
 import styled from "styled-components/native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { TouchableWithoutFeedback } from "react-native-gesture-handler"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 export const ProductGrid: React.FC<{
   products: any
   windowWidth: number
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
 }> = ({ products, windowWidth, navigation }) => {
   return (
     <Flex style={{ flex: 1 }} flexDirection="row" flexWrap="wrap">

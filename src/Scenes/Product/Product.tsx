@@ -4,7 +4,6 @@ import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { Loader } from "App/Components/Loader"
 import { find, get } from "lodash"
 import React, { useState, useEffect } from "react"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { Dimensions, FlatList, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
@@ -35,7 +34,7 @@ const ADD_VIEWED_PRODUCT = gql`
 
 interface ProductProps {
   route: any
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
 }
 
 export const Product = screenTrack(props => {

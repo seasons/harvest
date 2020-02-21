@@ -5,7 +5,6 @@ import styled from "styled-components/native"
 import { TouchableWithoutFeedback, Dimensions } from "react-native"
 import { color, space } from "App/Utils"
 import { DownChevronIcon } from "Assets/icons"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 
 interface Props {
   productID: string
@@ -13,14 +12,22 @@ interface Props {
   showVariantPicker: boolean
   selectedVariant: any
   setPopUp: ({ show: boolean, data: any }) => void
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
   bottom?: number
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
 
 export const SelectionButtons: React.FC<Props> = props => {
-  const { bottom = 0, navigation, selectedVariant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
+  const {
+    bottom = 0,
+    navigation,
+    selectedVariant,
+    showVariantPicker,
+    toggleShowVariantPicker,
+    productID,
+    setPopUp,
+  } = props
   const inStock = selectedVariant && !!selectedVariant.stock
   if (!selectedVariant) {
     return <></>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"
 import { Box, Sans, Spacer, Flex, RailPositionIndicator } from "App/Components"
 import { FlatList, TouchableOpacity, Image } from "react-native"
 import styled from "styled-components/native"
-import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { space, color } from "App/Utils"
 import { Dimensions } from "react-native"
 import { chunk } from "lodash"
@@ -10,7 +9,7 @@ import { chunk } from "lodash"
 interface BrandsRailProps {
   items: any
   title?: string
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
 }
 
 const cardWidth = 240
