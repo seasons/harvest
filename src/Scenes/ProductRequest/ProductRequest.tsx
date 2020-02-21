@@ -79,7 +79,7 @@ export const ProductRequest = (props: any) => {
   }
 
   return (
-    <Container backgroundColor="black100">
+    <Container backgroundColor="black100" insetsTop>
       <FixedBackArrow navigation={props.navigation} variant="blackBackground" />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>

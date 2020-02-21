@@ -1,24 +1,20 @@
-import { Box, FixedBackArrow } from "App/Components"
+import { FixedBackArrow, Container } from "App/Components"
 import { get } from "lodash"
 import React from "react"
-import { useSafeArea } from "react-native-safe-area-context"
 import { WebView } from "react-native-webview"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
-import styled from "styled-components/native"
 
-export const WebviewComponent: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
-  navigation,
-}) => {
-  const insets = useSafeArea()
-  const uri = get(navigation, "state.params.uri")
+type WebviewVariant = "whiteBackground" | "blackBackground"
+
+export const WebviewComponent: React.FC<{
+  navigation: any
+  route: any
+}> = ({ navigation, route }) => {
+  const uri = get(route, "params.uri")
+  const variant = get(route, "params.variant") as WebviewVariant
   return (
-    <Container style={{ flex: 1, marginTop: insets.top }}>
-      <FixedBackArrow navigation={navigation} />
+    <Container insetsTop backgroundColor={variant === "whiteBackground" ? "white100" : "black100"}>
+      <FixedBackArrow navigation={navigation} variant={variant ? variant : "blackBackground"} />
       <WebView source={{ uri }} />
     </Container>
   )
 }
-
-const Container = styled(Box)`
-  background: black;
-`

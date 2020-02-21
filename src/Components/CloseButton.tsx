@@ -25,7 +25,7 @@ export const CloseButton: React.FC<{
 
 const Wrapper = styled(Box)`
   position: absolute;
-  top: 60;
+  top: 40;
   right: 20;
   z-index: 100;
 `

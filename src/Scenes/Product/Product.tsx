@@ -4,7 +4,7 @@ import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { Loader } from "App/Components/Loader"
 import { find, get } from "lodash"
 import React, { useState, useEffect } from "react"
-import { NavigationActions, NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
+import { NavigationScreenProp, NavigationState, NavigationParams } from "react-navigation"
 import { Dimensions, FlatList, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
@@ -19,6 +19,7 @@ import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { screenTrack } from "App/Utils/track"
 import { PopUpProps } from "App/Components/PopUp"
 import { GET_HOMEPAGE } from "../Home/Home"
+import { AuthContext } from "App/Navigation/AuthProvider"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -33,6 +34,7 @@ const ADD_VIEWED_PRODUCT = gql`
 `
 
 interface ProductProps {
+  route: any
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
@@ -43,10 +45,12 @@ export const Product = screenTrack(props => {
     productID,
   }
 })((props: ProductProps) => {
+  const { authState } = React.useContext(AuthContext)
+  const userHasSession = !!authState?.session
   const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
-  const { navigation } = props
-  const productID = get(navigation, "state.params.id")
+  const { navigation, route } = props
+  const productID = get(route, "params.id")
   const { data, loading, error } = useQuery<GetProduct>(GET_PRODUCT, {
     variables: {
       productID,
@@ -64,11 +68,13 @@ export const Product = screenTrack(props => {
   })
 
   useEffect(() => {
-    addRecentlyViewedItem({
-      variables: {
-        item: productID,
-      },
-    })
+    if (userHasSession) {
+      addRecentlyViewedItem({
+        variables: {
+          item: productID,
+        },
+      })
+    }
   }, [])
 
   const product: GetProduct_product = data && data.product
@@ -83,9 +89,9 @@ export const Product = screenTrack(props => {
 
   let selectedVariantIsWanted = false
   if (product?.variants?.length > 0 && selectedVariant.size) {
-    const selectedVariantData = find(product.variants, (variant) =>
-      variant.size === get(ABBREVIATED_SIZES, selectedVariant.size) ||
-      variant.size === selectedVariant.size
+    const selectedVariantData = find(
+      product.variants,
+      variant => variant.size === get(ABBREVIATED_SIZES, selectedVariant.size) || variant.size === selectedVariant.size
     )
     if (selectedVariantData?.isWanted) {
       selectedVariantIsWanted = selectedVariantData.isWanted
@@ -136,7 +142,7 @@ export const Product = screenTrack(props => {
       <ArrowWrapper>
         <TouchableOpacity
           onPress={() => {
-            navigation.dispatch(NavigationActions.back())
+            navigation.goBack()
           }}
         >
           <ArrowBackground showVariantPicker={showVariantPicker} />
@@ -149,36 +155,41 @@ export const Product = screenTrack(props => {
         keyExtractor={item => item}
         renderItem={item => renderItem(item)}
       />
-      <SelectionButtons
-        bottom={selectionButtonsBottom}
-        productID={productID}
-        toggleShowVariantPicker={toggleShowVariantPicker}
-        setPopUp={setPopUp}
-        showVariantPicker={showVariantPicker}
-        selectedVariant={selectedVariant}
-        navigation={navigation}
-      />
-      <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
-        {shouldShowVariantWant &&
-          <VariantWant
-            isWanted={selectedVariantIsWanted}
+      {userHasSession && (
+        <>
+          {" "}
+          <SelectionButtons
+            bottom={selectionButtonsBottom}
             productID={productID}
+            toggleShowVariantPicker={toggleShowVariantPicker}
             setPopUp={setPopUp}
-            variantID={selectedVariant.id}
+            showVariantPicker={showVariantPicker}
+            selectedVariant={selectedVariant}
+            navigation={navigation}
           />
-        }
-      </AnimatedVariantWantWrapper>
-      {showVariantPicker && <Overlay />}
-      <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
-        <VariantPicker
-          setSelectedVariant={setSelectedVariant}
-          selectedVariant={selectedVariant}
-          height={variantPickerHeight}
-          navigation={navigation}
-          productID={productID}
-          toggleShowVariantPicker={toggleShowVariantPicker}
-        />
-      </AnimatedVariantPicker>
+          <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
+            {shouldShowVariantWant && (
+              <VariantWant
+                isWanted={selectedVariantIsWanted}
+                productID={productID}
+                setPopUp={setPopUp}
+                variantID={selectedVariant.id}
+              />
+            )}
+          </AnimatedVariantWantWrapper>
+          {showVariantPicker && <Overlay />}
+          <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
+            <VariantPicker
+              setSelectedVariant={setSelectedVariant}
+              selectedVariant={selectedVariant}
+              height={variantPickerHeight}
+              navigation={navigation}
+              productID={productID}
+              toggleShowVariantPicker={toggleShowVariantPicker}
+            />
+          </AnimatedVariantPicker>
+        </>
+      )}
       <PopUp data={popUp.data} show={popUp.show} />
     </Container>
   )
@@ -227,5 +238,4 @@ const VariantWantWrapper = styled(Box)`
 `
 
 const AnimatedVariantWantWrapper = animated(VariantWantWrapper)
-
 const AnimatedVariantPicker = animated(VariantPickerWrapper)

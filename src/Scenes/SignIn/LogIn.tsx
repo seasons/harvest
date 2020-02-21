@@ -1,4 +1,4 @@
-import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, Theme, FixedBackArrow, Container } from "App/Components"
+import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, CloseButton, Container } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { color } from "App/Utils"
 import { Text } from "Components/Typography"
@@ -6,9 +6,9 @@ import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
 import AsyncStorage from "@react-native-community/async-storage"
 import { checkNotifications } from "react-native-permissions"
+import { AuthContext } from "App/Navigation/AuthProvider"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -27,7 +27,7 @@ const LOG_IN = gql`
 
 interface LogInProps {
   onAuth: (credentials, profile) => void
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: any
 }
 
 export const LogIn: React.FC<LogInProps> = props => {
@@ -47,6 +47,8 @@ export const LogIn: React.FC<LogInProps> = props => {
     },
   })
 
+  const { signIn } = React.useContext(AuthContext)
+
   const onEmailChange = val => {
     setEmail(val)
     setEmailComplete(isValidEmail(val))
@@ -56,14 +58,15 @@ export const LogIn: React.FC<LogInProps> = props => {
     checkNotifications()
       .then(({ status }) => {
         if (status === "denied") {
-          props.navigation.navigate("AllowNotifications")
+          props.navigation.popToTop()
+          props.navigation.navigate("Modal", { screen: "AllowNotificationsModal" })
         } else {
-          props.navigation.navigate("Home")
+          props.navigation.navigate("Main")
         }
       })
       .catch(error => {
         console.log("error checking for permission", error)
-        props.navigation.navigate("Home")
+        props.navigation.navigate("Main")
       })
   }
 
@@ -81,6 +84,7 @@ export const LogIn: React.FC<LogInProps> = props => {
         const {
           data: { login: userSession },
         } = result
+        signIn(userSession)
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
         checkPermissions()
       }
@@ -88,7 +92,7 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   const handleResetPassword = () => {
-    props.navigation.navigate("ResetPasswordModal")
+    props.navigation.navigate("ResetPasswordModal", { screen: "FiltersModal" })
   }
 
   const disabled = !(emailComplete && password.length)
@@ -102,7 +106,7 @@ export const LogIn: React.FC<LogInProps> = props => {
 
   return (
     <Container>
-      <FixedBackArrow navigation={props.navigation} variant="whiteBackground" />
+      <CloseButton navigation={props.navigation} />
       <Flex style={{ flex: 1 }}>
         <Spacer mb={3} />
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
@@ -151,6 +155,7 @@ export const LogIn: React.FC<LogInProps> = props => {
                 Sign in using the same email and password you used for the wailist.
               </Sans>
             </Text>
+            <Spacer mb={2} />
           </Box>
         </Flex>
         <PopUp data={popUpData} show={showError} />

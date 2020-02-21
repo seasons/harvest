@@ -1,4 +1,4 @@
-import { Box, Flex, Sans, Separator, Spacer, Toggle } from "App/Components"
+import { Box, Flex, Sans, Separator, Spacer, Toggle, GuestView } from "App/Components"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React from "react"
@@ -6,13 +6,10 @@ import { useQuery } from "react-apollo"
 import ContentLoader, { Rect } from "react-content-loader/native"
 import { Image, Linking, ScrollView, TouchableOpacity } from "react-native"
 import * as Animatable from "react-native-animatable"
-import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-
-import AsyncStorage from "@react-native-community/async-storage"
-
 import { ProfileList } from "./ProfileList"
+import { AuthContext } from "App/Navigation/AuthProvider"
 
 const GET_USER = gql`
   query GetUser {
@@ -34,8 +31,14 @@ const GET_USER = gql`
 `
 
 export function Account(props) {
+  const { authState } = React.useContext(AuthContext)
+  const { navigation } = props
+
+  if (!authState?.userSession) {
+    return <GuestView navigation={navigation} />
+  }
+
   const { loading, error, data } = useQuery(GET_USER)
-  const insets = useSafeArea()
   const loaderStyles = useSpring({
     opacity: loading ? 1 : 0,
   })
@@ -60,6 +63,8 @@ export function Account(props) {
     },
   }
 
+  const { signOut } = React.useContext(AuthContext)
+
   const renderOrderUpdates = () => {
     return null
     // FIXME: When push notifiations, re-enable
@@ -82,10 +87,10 @@ export function Account(props) {
   }
 
   return (
-    <Container>
+    <Container insetsTop>
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
-          <Box p={2}>
+          <Box px={2} pt={2}>
             <Box mb={5} />
             <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
               {loading && (
@@ -120,28 +125,23 @@ export function Account(props) {
             </TouchableOpacity>
             <Spacer m={2} />
             <TouchableOpacity
-              onPress={() => props.navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })}
+              onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })}
             >
               <Sans size="2">Privacy Policy</Sans>
             </TouchableOpacity>
             <Spacer m={2} />
             <TouchableOpacity
-              onPress={() => props.navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })}
+              onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })}
             >
               <Sans size="2">Terms of Service</Sans>
             </TouchableOpacity>
             <Spacer m={2} />
-            <TouchableOpacity
-              onPress={async () => {
-                await AsyncStorage.removeItem("userSession")
-                props.navigation.navigate("Auth")
-              }}
-            >
+            <TouchableOpacity onPress={() => signOut()}>
               <Sans size="2" color="red">
                 Sign out
               </Sans>
             </TouchableOpacity>
-            <Spacer m={2} />
+            <Spacer mb={2} />
           </Box>
         </ScrollView>
       </Animatable.View>

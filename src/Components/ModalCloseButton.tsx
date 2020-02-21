@@ -6,7 +6,7 @@ import { TouchableOpacity } from "react-native"
 
 export const ModalCloseButton = ({ navigation }) => {
   return (
-    <CloseButton onPress={() => navigation.dismiss()}>
+    <CloseButton onPress={() => navigation.goBack()}>
       <Box p="14px">
         <CloseXIcon />
       </Box>

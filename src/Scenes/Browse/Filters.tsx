@@ -18,7 +18,7 @@ export const Filters = (props: any) => {
   const [sizeFilters, setSizeFilters] = useState(currentSizeFilters)
 
   const handleCancelBtnPressed = () => {
-    props.navigation.dismiss()
+    props.navigation.goBack()
   }
 
   const handleApplyBtnPressed = () => {

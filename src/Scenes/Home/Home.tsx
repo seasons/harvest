@@ -78,7 +78,7 @@ export const Home: React.FC<{
   }
 
   return (
-    <Container>
+    <Container insetsTop>
       <Animatable.View animation="fadeIn" duration={300}>
         <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
           <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">

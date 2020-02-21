@@ -9,13 +9,12 @@ import { assign, fill, get } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation"
-
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
+import { AuthContext } from "App/Navigation/AuthProvider"
+import { GuestView } from "App/Components/GuestView"
 
 const SECTION_HEIGHT = 300
 
@@ -24,9 +23,14 @@ enum BagView {
   Saved = 1,
 }
 
-export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, NavigationParams> }> = ({
-  navigation,
-}) => {
+export const Bag = props => {
+  const { authState } = React.useContext(AuthContext)
+  const { navigation } = props
+
+  if (!authState?.userSession) {
+    return <GuestView navigation={navigation} />
+  }
+
   const [isMutating, setMutating] = useState(false)
   const [showReserveError, displayReserveError] = useState(null)
   const { data, loading, refetch } = useQuery(GET_BAG, {
@@ -129,7 +133,7 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
         },
       })
       if (data.checkItemsAvailability) {
-        navigation.navigate("ReservationModal")
+        navigation.navigate("Modal", { screen: "ReservationModal" })
       }
       setMutating(false)
     } catch (e) {
@@ -214,7 +218,7 @@ export const Bag: React.FC<{ navigation: NavigationScreenProp<NavigationState, N
   const headerSubtitle = currentView === BagView.Bag ? bagSubtitle : "Tucked away for later"
 
   return (
-    <Container>
+    <Container insetsTop>
       <FlatList
         data={currentView === BagView.Bag ? paddedItems : savedItems}
         ListHeaderComponent={() => (
