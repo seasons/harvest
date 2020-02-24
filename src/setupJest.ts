@@ -13,6 +13,14 @@ jest.mock("react-native-safe-area-context", () => ({
   }),
 }))
 
+jest.mock("@segment/analytics-react-native", () => ({
+  setup: jest.fn(),
+}))
+
+jest.mock("react-native-config", () => ({
+  SEGMENT_KEY: "1234",
+}))
+
 Enzyme.configure({ adapter: new Adapter() })
 
 // Waiting on https://github.com/thymikee/snapshot-diff/pull/17

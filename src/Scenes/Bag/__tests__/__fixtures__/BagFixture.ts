@@ -408,3 +408,371 @@ export const BagFixture = {
     savedItems: [],
   },
 }
+
+export const BagFixtureWithReservation = {
+  me: {
+    bag: [],
+    savedItems: [],
+    activeReservation: {
+      id: "ck6jsqpv6g7bm07030k261a68",
+      shipped: false,
+      createdAt: "2020-02-12T20:58:29.105Z",
+      products: [
+        {
+          id: "ck2zeef4o104d0734k7nx0yq7",
+          seasonsUID: "JOEL-GRY-MM-006-01",
+          inventoryStatus: "Reserved",
+          productStatus: "New",
+          productVariant: {
+            size: "M",
+            product: {
+              name: "Down Nicasio Parka",
+              retailPrice: 1200,
+              brand: {
+                name: "John Elliott",
+              },
+              images: [
+                {
+                  id: "attJzOO36MX4sAq4M",
+                  url:
+                    "https://dl.airtable.com/.attachments/ed40cd99997fa178fc3f9cc6b62f8b59/f13b37a3/JohnElliott-Down-NicasioParka-Front.png",
+                  filename: "JohnElliott-Down- NicasioParka-Front.png",
+                  size: 10230330,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/d396cc39d89e868dc88b60b538d0c36f/9f6eb2ba",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/d52c8546b8da259c89228b65dcf3e75a/195e1b4d",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/f0097e7bd971ef60a58d4006017d2980/2d704b9b",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+                {
+                  id: "att9bHT2CTrfry2Tm",
+                  url:
+                    "https://dl.airtable.com/.attachments/7a070eb855cc708ae4e680e98c1a6571/109c8e9b/JohnElliott-DownNicasioParka-CloseUP.png",
+                  filename: "JohnElliott-DownNicasioParka-CloseUP.png",
+                  size: 5841384,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/a2800696af19441ad763b8d6e68a543a/b73944ee",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/2069a94941ae4d876e6d5c3c06079bf6/8bb6d9dc",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/73d31778f06c948345168896dc7987e6/ca8bcc2d",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+                {
+                  id: "attYzmJkXyAVlVwVf",
+                  url:
+                    "https://dl.airtable.com/.attachments/24958cf93c0d3cd37d34ab0d35d0b6f2/116d4aae/JohnElliott-DownNicasioParka-Jacket-Back.png",
+                  filename: "JohnElliott-DownNicasioParka-Jacket-Back.png",
+                  size: 7815131,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/4cd9367d0cae29be61f6c1109af41301/a85bdb63",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/b4c5fdb2376a95ec44ab486ab5a390d0/978e1ade",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/914c54e43c0427766c9ab8ff0fbdf8b8/fb128e7b",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+                {
+                  id: "attr4Cgd1023LjaNZ",
+                  url:
+                    "https://dl.airtable.com/.attachments/3d1576b52608ceec791eb6634aab4a3f/32763719/JohnElliott-DownNicasioParka-Side.png",
+                  filename: "JohnElliott-DownNicasioParka-Side.png",
+                  size: 6898849,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/f3c02b71d40bbbc15ae7cd6389e7f48c/119555a2",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/2eb9af781967aaf512b316cde5aa21e9/01da18e9",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/e29b098b903909908873cd52fc2d195d/4f9f15d2",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        {
+          id: "ck3t6v7nz1tty070781zt0ujn",
+          seasonsUID: "DVNN-BLU-MM-006-01",
+          inventoryStatus: "Reserved",
+          productStatus: "New",
+          productVariant: {
+            size: "M",
+            product: {
+              name: "Vester Belted Coat",
+              retailPrice: 1640,
+              brand: {
+                name: "Dries Van Noten",
+              },
+              images: [
+                {
+                  id: "attIhGXuw6NyrvNQs",
+                  url:
+                    "https://dl.airtable.com/.attachments/52b85078c145edca522b95d6b1e0e488/83673196/DriesVanNoten-Pea-Coat-Front.png",
+                  filename: "DriesVanNoten-Pea-Coat-Front.png",
+                  size: 3245948,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/51a8f3afb29b395414321522bd0b763e/3595ab8d",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/0a2e5a8fa29386712cb8f65be21f3785/e4593b5c",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/ea079d625b97174d2f245c2a375426ae/042649df",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+                {
+                  id: "attKpBScFs4XiZAnj",
+                  url:
+                    "https://dl.airtable.com/.attachments/1615c892bfddd7ed30b7349e9c4d47fc/6c0c890b/DriesVanNoten-Pea-Coat-CloseUp.png",
+                  filename: "DriesVanNoten-Pea-Coat-CloseUp.png",
+                  size: 5858409,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/d7a6d2f835be70345a5d49f9dfe944b8/16ac1ca0",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/9f8195a5c7e144f295d18e1b5e4fd99e/706eed0f",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/ab019aa6277a2c23d47939fc259abb0c/f6fe5347",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+                {
+                  id: "atthMi2RRPEjvDkTk",
+                  url:
+                    "https://dl.airtable.com/.attachments/84e0140978eb90fd2d16b0afbd2b7a15/b28e2584/DriesVanNoten-Pea-Coat-Back.png",
+                  filename: "DriesVanNoten-Pea-Coat-Back.png",
+                  size: 5010843,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/492703bc6cac1c115d0346a352cd6704/eb77f989",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/198f96177bd7b1f0d5a75de5ce96fce2/3d3126e4",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/df60575d1fd07d2feb65ec206e4107b7/502cac8d",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+                {
+                  id: "atttcNIqlqijHf50M",
+                  url:
+                    "https://dl.airtable.com/.attachments/214513e026725813a30216f9c4a763cf/7f800143/DriesVanNoten-Pea-Coat-Side.png",
+                  filename: "DriesVanNoten-Pea-Coat-Side.png",
+                  size: 5676968,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/edefeac6f5e5563743282c823dc6ffb2/ba52403a",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/b4c7bc725c1fe5bbc89cdcc5315fff0a/9ae7ec24",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/dc1089123bb9f972842bdbb4fb56c089/0784c057",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        {
+          id: "ck52yu2msetus0715plobbvj5",
+          seasonsUID: "NIKE-BLU-MM-001-01",
+          inventoryStatus: "Reserved",
+          productStatus: "New",
+          productVariant: {
+            size: "M",
+            product: {
+              name: "Fur Jacket",
+              retailPrice: 1150,
+              brand: {
+                name: "Nike",
+              },
+              images: [
+                {
+                  id: "attzIBbAVI0hDKrtG",
+                  url:
+                    "https://dl.airtable.com/.attachments/a1ed90b048b9e253b294b7ebead1edd6/88f04cf6/NIKExAMBUSH-Swoosh-Jacket-Front.png",
+                  filename: "NIKExAMBUSH-Swoosh-Jacket-Front.png",
+                  size: 11247657,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/8bb6b8c468653153ab386be409aac788/751369b1",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/36a171d7cbf90f58c7a4f5ece4bacbb6/16366a07",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/ac545e7d57e1351dd10f20071ac6eed1/c5a8737b",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+                {
+                  id: "attHTVs9nUod0BCOf",
+                  url:
+                    "https://dl.airtable.com/.attachments/27e12eb0038f85cea8e907ad20b72d14/3b5e7cd9/NIKExAMBUSH-Swoosh-Jacket-CloseUp.png",
+                  filename: "NIKExAMBUSH-Swoosh-Jacket-CloseUp.png",
+                  size: 10585897,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/8b5f625d9e816b1f6f8034580b0237de/3743df2f",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/d96d5af8c66f58fb0c0ff085f7a058a8/41d895bb",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/5a287e8b3e61697139b251666547bb56/59393314",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+                {
+                  id: "attuVFqh2NQj872H0",
+                  url:
+                    "https://dl.airtable.com/.attachments/9f0f978e68989a64579cd4dbd429776d/145226d6/NIKExAMBUSH-Swoosh-Jacket-Back.png",
+                  filename: "NIKExAMBUSH-Swoosh-Jacket-Back.png",
+                  size: 13622432,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/ce5398acb2aa15f5bcdca8aa461d2f4d/97996a63",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/443a5dbb997797694da5044a8cd44efd/1c68fff2",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/547959907beb15d7b2a649ab44fa3359/9abb8c24",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+                {
+                  id: "attKvTqIi5fg7IKob",
+                  url:
+                    "https://dl.airtable.com/.attachments/ed48add1710dc1c6aa8c54fda0df9b14/10cc6c16/NIKExAMBUSH-Swoosh-Jacket-Side.png",
+                  filename: "NIKExAMBUSH-Swoosh-Jacket-Side.png",
+                  size: 6831333,
+                  type: "image/png",
+                  thumbnails: {
+                    small: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/dcc41b3ffc19f61ced9c92865a5686c5/d51440a6",
+                      width: 29,
+                      height: 36,
+                    },
+                    large: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/995ca982bf979a62b77ba965c46c7d46/45d01f5f",
+                      width: 512,
+                      height: 640,
+                    },
+                    full: {
+                      url: "https://dl.airtable.com/.attachmentThumbnails/ed2a33798d7c23f0a98ecccdae1adf4c/69b3c96e",
+                      width: 3000,
+                      height: 3000,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  },
+}

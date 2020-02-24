@@ -3,10 +3,16 @@ import Config from "react-native-config"
 
 import AsyncStorage from "@react-native-community/async-storage"
 
-export const auth0 = new Auth0({
-  domain: Config.AUTH0_DOMAIN,
-  clientId: Config.AUTH0_CLIENT_ID,
-})
+const auth0 = () => {
+  if (Config.AUTH0_DOMAIN && Config.AUTH0_CLIENT_ID) {
+    return new Auth0({
+      domain: Config.AUTH0_DOMAIN,
+      clientId: Config.AUTH0_CLIENT_ID,
+    })
+  } else {
+    return null
+  }
+}
 
 export interface UserSession {
   token: string

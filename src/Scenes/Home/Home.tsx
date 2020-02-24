@@ -8,7 +8,6 @@ import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
-import { useSafeArea } from "react-native-safe-area-context"
 import { AllCaughtUp } from "./Components/AllCaughtUp"
 import { ProductsRail } from "./Components/ProductsRail"
 

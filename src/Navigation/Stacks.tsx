@@ -15,6 +15,7 @@ import { NavBar } from "./NavBar"
 import { createStackNavigator } from "@react-navigation/stack"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { color } from "App/Utils"
+import { Faq } from "App/Scenes/Faq"
 
 const HomeStack = createStackNavigator()
 const BagStack = createStackNavigator()
@@ -92,9 +93,10 @@ const BagStackScreen = () => {
   return (
     <BagStack.Navigator initialRouteName="Bag" screenOptions={{ ...defaultOptions }}>
       <BagStack.Screen name="Bag" component={Bag} />
-      <AccountStack.Screen name="Webview" component={Webview} />
+      <BagStack.Screen name="Webview" component={Webview} />
       <BagStack.Screen name="Product" component={Product} />
       <BagStack.Screen name="CurrentRotation" component={CurrentRotation} />
+      <BagStack.Screen name="Faq" component={Faq} />
     </BagStack.Navigator>
   )
 }
@@ -111,6 +113,7 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name="FinishProductRequest" component={FinishProductRequest} />
       <AccountStack.Screen name="ProductRequestConfirmation" component={ProductRequestConfirmation} />
       <AccountStack.Screen name="ProductRequestGallery" component={ProductRequestGallery} />
+      <AccountStack.Screen name="Faq" component={Faq} />
     </AccountStack.Navigator>
   )
 }

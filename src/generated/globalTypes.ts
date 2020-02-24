@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-// @generated
 // This file was automatically generated and should not be edited.
 
 //==============================================================
@@ -34,6 +33,7 @@ export enum Material {
   CamelHair = "CamelHair",
   Cashmere = "Cashmere",
   Cotton = "Cotton",
+  CottonPoplin = "CottonPoplin",
   CowLeather = "CowLeather",
   Cupro = "Cupro",
   Denim = "Denim",
@@ -56,6 +56,8 @@ export enum Material {
   Nylon = "Nylon",
   OrganicCotton = "OrganicCotton",
   PVC = "PVC",
+  PolyAcetate = "PolyAcetate",
+  PolySatin = "PolySatin",
   Polyamide = "Polyamide",
   Polyester = "Polyester",
   Polyethylene = "Polyethylene",
