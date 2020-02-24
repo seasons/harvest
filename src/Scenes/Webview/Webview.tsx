@@ -12,7 +12,7 @@ export const WebviewComponent: React.FC<{
   const uri = get(route, "params.uri")
   const variant = get(route, "params.variant") as WebviewVariant
   return (
-    <Container insetsTop backgroundColor={variant === "whiteBackground" ? "white100" : "black100"}>
+    <Container insetsTop insetsBottom={false} backgroundColor={variant === "whiteBackground" ? "white100" : "black100"}>
       <FixedBackArrow navigation={navigation} variant={variant ? variant : "blackBackground"} />
       <WebView source={{ uri }} />
     </Container>

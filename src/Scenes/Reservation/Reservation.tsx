@@ -160,7 +160,7 @@ export const Reservation = props => {
   )
 
   return (
-    <Container insetsTop backgroundColor="black100">
+    <Container insetsTop insetsBottom={false} backgroundColor="black100">
       <CloseButton navigation={props.navigation} />
       <Box px={2} pb={3}>
         <Sans size="3" color="white">

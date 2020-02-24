@@ -105,7 +105,7 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   return (
-    <Container>
+    <Container insetsBottom={false} insetsTop={false}>
       <CloseButton navigation={props.navigation} />
       <Flex style={{ flex: 1 }}>
         <Spacer mb={3} />
