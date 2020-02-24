@@ -7,7 +7,7 @@ import gql from "graphql-tag"
 import { head } from "lodash"
 import React from "react"
 import { useMutation } from "react-apollo"
-import { TouchableOpacity } from "react-native-gesture-handler"
+import { TouchableOpacity } from "react-native"
 
 const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {

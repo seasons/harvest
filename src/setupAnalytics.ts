@@ -4,20 +4,18 @@ import analytics from "@segment/analytics-react-native"
 // import GoogleAnalytics from "@segment/analytics-react-native-google-analytics"
 // import Mixpanel from "@segment/analytics-react-native-mixpanel"
 
-export default analytics
-  .setup(Config.SEGMENT_KEY, {
-    // using: [Mixpanel, GoogleAnalytics],
-    // recordScreenViews: true,
-    trackAppLifecycleEvents: true,
-    trackAttributionData: true,
+export default analytics.setup(Config.SEGMENT_KEY, {
+  // using: [Mixpanel, GoogleAnalytics],
+  // recordScreenViews: true,
+  trackAppLifecycleEvents: true,
+  trackAttributionData: true,
 
-    android: {
-      flushInterval: 60,
-      collectDeviceId: true,
-    },
-    ios: {
-      trackAdvertising: true,
-      trackDeepLinks: true,
-    },
-  })
-  .catch(err => console.warn("Something went wrong", err))
+  android: {
+    flushInterval: 60,
+    collectDeviceId: true,
+  },
+  ios: {
+    trackAdvertising: true,
+    trackDeepLinks: true,
+  },
+})

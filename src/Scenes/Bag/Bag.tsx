@@ -8,7 +8,7 @@ import { Sans } from "Components/Typography"
 import { assign, fill, get } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import { FlatList, TouchableWithoutFeedback } from "react-native"
+import { FlatList } from "react-native"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
@@ -259,12 +259,23 @@ export const Bag = props => {
         }}
         ListFooterComponent={() => <Spacer mb={96} />}
       />
-      {isBagView && !hasActiveReservation && (
-        <TouchableWithoutFeedback onPress={() => (!bagIsFull ? displayReserveError(true) : null)}>
-          <FixedButton block onPress={() => handleReserve(navigation)} disabled={!bagIsFull} loading={isMutating}>
-            Reserve
-          </FixedButton>
-        </TouchableWithoutFeedback>
+      {isBagView && (
+        <>
+          {!hasActiveReservation ? (
+            <FixedButton
+              block
+              onPress={() => (!bagIsFull ? displayReserveError(true) : handleReserve(navigation))}
+              disabled={!bagIsFull}
+              loading={isMutating}
+            >
+              Reserve
+            </FixedButton>
+          ) : (
+            <FixedButton block onPress={() => navigation.navigate("Faq")}>
+              FAQ
+            </FixedButton>
+          )}
+        </>
       )}
       <ErrorMessage />
     </Container>

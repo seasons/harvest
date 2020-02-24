@@ -3,7 +3,7 @@ import { Box, Flex, Radio, Sans, Separator, Spacer } from "App/Components"
 import { color } from "App/Utils"
 import { capitalize, find, get } from "lodash"
 import React, { useEffect, useState } from "react"
-import { TouchableOpacity } from "react-native-gesture-handler"
+import { TouchableOpacity } from "react-native"
 
 import { useQuery } from "@apollo/react-hooks"
 
