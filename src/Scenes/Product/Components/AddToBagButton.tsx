@@ -1,9 +1,12 @@
-import { GET_BAG, ADD_TO_BAG, REMOVE_FROM_BAG } from "App/Scenes/Bag/BagQueries"
 import { Button } from "App/Components"
-import { head } from "lodash"
-import React, { useState } from "react"
-import { useMutation, useQuery } from "@apollo/react-hooks"
+import { AuthContext } from "App/Navigation/AuthProvider"
+import { ADD_TO_BAG, GET_BAG, REMOVE_FROM_BAG } from "App/Scenes/Bag/BagQueries"
 import { GreenCheck } from "Assets/svgs"
+import { head } from "lodash"
+import React, { useContext, useState } from "react"
+
+import { useMutation, useQuery } from "@apollo/react-hooks"
+import { useNavigation } from "@react-navigation/native"
 
 interface Props {
   productID: string
@@ -12,12 +15,16 @@ interface Props {
   width: number
   selectedVariant: any
   setPopUp: ({ show: boolean, data: any }) => void
-  navigation: any
 }
 
 export const AddToBagButton: React.FC<Props> = props => {
   const [isMutating, setIsMutating] = useState(false)
-  const { productID, setPopUp, variantInStock, width, selectedVariant, navigation } = props
+  const { productID, setPopUp, variantInStock, width, selectedVariant } = props
+
+  const navigation = useNavigation()
+  const { authState } = useContext(AuthContext)
+  const userHasSession = authState?.isSignedIn
+
   const { data } = useQuery(GET_BAG)
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
@@ -89,8 +96,12 @@ export const AddToBagButton: React.FC<Props> = props => {
 
   const handleReserve = () => {
     if (!isMutating) {
-      setIsMutating(true)
-      addToBag()
+      if (userHasSession) {
+        setIsMutating(true)
+        addToBag()
+      } else {
+        navigation.navigate("Modal", { screen: "SignInModal" })
+      }
     }
   }
 
@@ -112,12 +123,7 @@ export const AddToBagButton: React.FC<Props> = props => {
 
   if (itemInBag) {
     text = "Added"
-    onPress = () => {
-      if (!isMutating) {
-        setIsMutating(true)
-        removeFromBag()
-      }
-    }
+    onPress = () => handleReserve()
     showCheckMark = true
   } else if (!variantInStock) {
     disabled = true
