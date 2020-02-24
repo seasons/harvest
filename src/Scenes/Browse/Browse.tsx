@@ -2,6 +2,7 @@ import { Box, Button, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { imageResize } from "App/helpers/imageResize"
+import { space } from "App/Utils"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import get from "lodash/get"
@@ -16,7 +17,6 @@ import { color } from "styled-system"
 import { useQuery } from "@apollo/react-hooks"
 
 import { BrowseLoader } from "./Loader"
-import { space } from "App/Utils"
 
 const IMAGE_HEIGHT = 240
 
@@ -145,7 +145,7 @@ export const Browse = (props: any) => {
   }
 
   return (
-    <Container insetsTop>
+    <Container insetsBottom={false}>
       <LoaderContainer mt={insets.top} style={[loaderStyle]}>
         <BrowseLoader imageHeight={IMAGE_HEIGHT} />
       </LoaderContainer>

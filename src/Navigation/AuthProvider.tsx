@@ -1,10 +1,12 @@
+import { color } from "App/Utils"
+import { getUserSession } from "App/Utils/auth"
 import React from "react"
 import SplashScreen from "react-native-splash-screen"
-import { getUserSession } from "App/Utils/auth"
-import { TabsStack, ModalStackScreen } from "./Stacks"
-import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
-import { color } from "App/Utils"
+
 import AsyncStorage from "@react-native-community/async-storage"
+import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
+
+import { ModalStackScreen, TabsStack } from "./Stacks"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -32,20 +34,20 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
         case "SIGN_IN":
           return {
             ...prevState,
-            isSignout: false,
+            isSignedIn: true,
             userSession: action.token,
           }
         case "SIGN_OUT":
           return {
             ...prevState,
-            isSignout: true,
+            isSignedIn: false,
             userSession: null,
           }
       }
     },
     {
       authInitializing: true,
-      isSignout: false,
+      isSignedIn: false,
       userSession: null,
     }
   )

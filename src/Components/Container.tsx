@@ -1,9 +1,10 @@
+import { color } from "App/Utils"
 import React from "react"
 import { StatusBar } from "react-native"
-import { Theme } from "./Theme"
-import { Flex } from "./Flex"
 import { useSafeArea } from "react-native-safe-area-context"
-import { color } from "App/Utils"
+
+import { Flex } from "./Flex"
+import { Theme } from "./Theme"
 
 export const Container: React.FC<{
   children: any
@@ -11,7 +12,7 @@ export const Container: React.FC<{
   insetsBottom?: boolean
   insetsTop?: boolean
   backgroundColor?: "black100" | "white100"
-}> = ({ children, backgroundColor = "white100", insetsBottom, insetsTop, style }) => {
+}> = ({ children, backgroundColor = "white100", insetsBottom = true, insetsTop = true, style }) => {
   const insets = useSafeArea()
 
   return (

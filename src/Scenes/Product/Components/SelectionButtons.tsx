@@ -1,10 +1,10 @@
-import { Flex, Spacer, Sans } from "App/Components"
+import { Flex, Sans, Spacer } from "App/Components"
 import { AddToBagButton } from "App/Scenes/Product/Components"
-import React from "react"
-import styled from "styled-components/native"
-import { TouchableWithoutFeedback, Dimensions } from "react-native"
 import { color, space } from "App/Utils"
 import { DownChevronIcon } from "Assets/icons"
+import React from "react"
+import { Dimensions, TouchableWithoutFeedback } from "react-native"
+import styled from "styled-components/native"
 
 interface Props {
   productID: string
@@ -66,7 +66,6 @@ export const SelectionButtons: React.FC<Props> = props => {
             setPopUp={setPopUp}
             width={twoButtonWidth}
             selectedVariant={selectedVariant}
-            navigation={navigation}
           />
         )}
       </Flex>

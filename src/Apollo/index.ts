@@ -17,8 +17,10 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 const cache = new InMemoryCache({ fragmentMatcher })
 
 const link = new HttpLink({
-  uri: Config.MONSOON_ENDPOINT || "http://localhost:4000/",
+  // uri: Config.MONSOON_ENDPOINT || "http://localhost:4000/",
+  uri: "http://localhost:4000",
   // FIXME: unfetch here is being used for this fix https://github.com/jhen0409/react-native-debugger/issues/432
+
   fetch: unfetch,
   //   uri: "https://monsoon.seasons.nyc",
   //   uri: "https://monsoon-staging.seasons.nyc",
