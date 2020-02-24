@@ -2,10 +2,9 @@ import React from "react"
 import { Flex, Box, Sans, Spacer } from "App/Components"
 import get from "lodash/get"
 import { imageResize } from "App/helpers/imageResize"
-import { Image } from "react-native"
+import { Image, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
-import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 
 export const ProductGrid: React.FC<{
   products: any

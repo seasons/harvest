@@ -1,17 +1,17 @@
-// re: https://github.com/facebook/react-native/issues/19955
-// and https://github.com/facebook/metro/pull/198
-//
-// import applyDecoratedDescriptor from "@babel/runtime/helpers/applyDecoratedDescriptor"
-// import initializerDefineProperty from "@babel/runtime/helpers/initializerDefineProperty"
-// declare var babelHelpers: any
-// Object.assign(babelHelpers, { applyDecoratedDescriptor, initializerDefineProperty })
-// import "@babel/runtime"
-
 import chalk from "chalk"
 import Enzyme from "enzyme"
 import Adapter from "enzyme-adapter-react-16"
 import expect from "expect"
 import { format } from "util"
+import mockAsyncStorage from "@react-native-community/async-storage/jest/async-storage-mock"
+
+jest.mock("@react-native-community/async-storage", () => mockAsyncStorage)
+jest.mock("react-native-safe-area-context", () => ({
+  useSafeArea: () => ({
+    bottom: 0,
+    top: 0,
+  }),
+}))
 
 Enzyme.configure({ adapter: new Adapter() })
 
