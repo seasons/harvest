@@ -32,7 +32,7 @@ export const Faq = ({ navigation }) => {
   }
 
   return (
-    <Container insetsTop>
+    <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Flex style={{ flex: 1 }}>
         <FlatList

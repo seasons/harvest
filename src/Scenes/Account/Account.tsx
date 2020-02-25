@@ -87,7 +87,7 @@ export function Account(props) {
   }
 
   return (
-    <Container insetsTop>
+    <Container insetsBottom={false}>
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
           <Box px={2} pt={2}>

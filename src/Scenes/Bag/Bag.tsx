@@ -15,6 +15,7 @@ import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
 import { AuthContext } from "App/Navigation/AuthProvider"
 import { GuestView } from "App/Components/GuestView"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const SECTION_HEIGHT = 300
 
@@ -31,6 +32,7 @@ export const Bag = props => {
     return <GuestView navigation={navigation} />
   }
 
+  const insets = useSafeArea()
   const [isMutating, setMutating] = useState(false)
   const [showReserveError, displayReserveError] = useState(null)
   const { data, loading, refetch } = useQuery(GET_BAG, {
@@ -217,11 +219,12 @@ export const Bag = props => {
   const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"
   const headerSubtitle = currentView === BagView.Bag ? bagSubtitle : "Tucked away for later"
   return (
-    <Container insetsTop>
+    <Container insetsBottom={false} insetsTop={false}>
       <FlatList
         data={currentView === BagView.Bag ? paddedItems : savedItems}
         ListHeaderComponent={() => (
           <>
+            <Spacer mb={insets.bottom} />
             <Box p={2}>
               <Sans size="3" color="black">
                 {headerTitle}
@@ -271,7 +274,7 @@ export const Bag = props => {
               Reserve
             </FixedButton>
           ) : (
-            <FixedButton block onPress={() => navigation.navigate("Faq")}>
+            <FixedButton block variant="primaryWhite" onPress={() => navigation.navigate("Faq")}>
               FAQ
             </FixedButton>
           )}

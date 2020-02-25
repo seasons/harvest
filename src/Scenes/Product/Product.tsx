@@ -14,9 +14,7 @@ import React, { useEffect, useState } from "react"
 import { Dimensions, FlatList, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-
 import { useMutation, useQuery } from "@apollo/react-hooks"
-
 import { GET_HOMEPAGE } from "../Home/Home"
 import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
@@ -156,40 +154,36 @@ export const Product = screenTrack(props => {
         keyExtractor={item => item}
         renderItem={item => renderItem(item)}
       />
-
-      <>
-        <SelectionButtons
-          bottom={selectionButtonsBottom}
+      <SelectionButtons
+        bottom={selectionButtonsBottom}
+        productID={productID}
+        toggleShowVariantPicker={toggleShowVariantPicker}
+        setPopUp={setPopUp}
+        showVariantPicker={showVariantPicker}
+        selectedVariant={selectedVariant}
+        navigation={navigation}
+      />
+      <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
+        {shouldShowVariantWant && (
+          <VariantWant
+            isWanted={selectedVariantIsWanted}
+            productID={productID}
+            setPopUp={setPopUp}
+            variantID={selectedVariant.id}
+          />
+        )}
+      </AnimatedVariantWantWrapper>
+      {showVariantPicker && <Overlay />}
+      <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
+        <VariantPicker
+          setSelectedVariant={setSelectedVariant}
+          selectedVariant={selectedVariant}
+          height={variantPickerHeight}
+          navigation={navigation}
           productID={productID}
           toggleShowVariantPicker={toggleShowVariantPicker}
-          setPopUp={setPopUp}
-          showVariantPicker={showVariantPicker}
-          selectedVariant={selectedVariant}
-          navigation={navigation}
         />
-        <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
-          {shouldShowVariantWant && (
-            <VariantWant
-              isWanted={selectedVariantIsWanted}
-              productID={productID}
-              setPopUp={setPopUp}
-              variantID={selectedVariant.id}
-            />
-          )}
-        </AnimatedVariantWantWrapper>
-        {showVariantPicker && <Overlay />}
-        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
-          <VariantPicker
-            setSelectedVariant={setSelectedVariant}
-            selectedVariant={selectedVariant}
-            height={variantPickerHeight}
-            navigation={navigation}
-            productID={productID}
-            toggleShowVariantPicker={toggleShowVariantPicker}
-          />
-        </AnimatedVariantPicker>
-      </>
-
+      </AnimatedVariantPicker>
       <PopUp data={popUp.data} show={popUp.show} />
     </Container>
   )

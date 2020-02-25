@@ -22,11 +22,11 @@ export const ProductRequestConfirmation = ({ navigation, route }) => {
   }
 
   return (
-    <Container insetsTop>
+    <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <ScrollView>
         <Box px={2}>
-          <Spacer mb={60} />
+          <Spacer mb={80} />
           <Sans size="3" color="black">
             Review Your Link
           </Sans>
