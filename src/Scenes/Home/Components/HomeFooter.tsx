@@ -4,21 +4,21 @@ import React from "react"
 import styled from "styled-components/native"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 
-export const AllCaughtUp: React.FC<{ navigation: any }> = ({ navigation }) => {
+export const HomeFooter: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <>
       <Spacer mt={3} />
       <LeftCorner />
       <RightCorner />
-      <Box style={{ backgroundColor: color("black100"), height: 330, overflow: "visible" }}>
+      <Box style={{ backgroundColor: color("black100"), height: 320, overflow: "visible" }}>
         <Spacer mb={60} />
         <Flex justifyContent="center" flexDirection="column">
           <Sans size="2" color={color("white100")} style={{ textAlign: "center" }}>
-            You're all caught up!
+            Browse our entire collection
           </Sans>
           <Spacer mb={0.5} />
           <Sans size="2" color={color("black50")} style={{ textAlign: "center" }}>
-            Browse our entire collection
+            See all categories, brands and sizes.
           </Sans>
           <Spacer mb={3} />
           <Flex justifyContent="center" flexDirection="row">

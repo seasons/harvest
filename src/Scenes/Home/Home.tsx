@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
-import { AllCaughtUp } from "./Components/AllCaughtUp"
+import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
 
 export const GET_HOMEPAGE = gql`
@@ -89,7 +89,7 @@ export const Home: React.FC<{
           }}
           ListHeaderComponent={() => <Spacer mb={2} />}
           renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
-          ListFooterComponent={() => <AllCaughtUp navigation={navigation} />}
+          ListFooterComponent={() => <HomeFooter navigation={navigation} />}
         />
       </Animatable.View>
     </Container>

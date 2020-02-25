@@ -10,6 +10,7 @@ import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { ProfileList } from "./ProfileList"
 import { AuthContext } from "App/Navigation/AuthProvider"
+import { color } from "styled-system"
 
 export const GET_USER = gql`
   query GetUser {
@@ -86,13 +87,26 @@ export function Account(props) {
     )
   }
 
+  const bottomList = [
+    { text: "Support", onPress: () => Linking.openURL(`mailto:membership@seasons.nyc?subject=Help`) },
+    {
+      text: "Privacy policy",
+      onPress: () => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" }),
+    },
+    {
+      text: "Terms of Service",
+      onPress: () => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" }),
+    },
+    { text: "Log out", onPress: () => signOut() },
+  ]
+
   return (
     <Container insetsBottom={false}>
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
-          <Box px={2} pt={2}>
+          <Box pt={2}>
             <Box mb={5} />
-            <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
+            <Flex flexDirection="row" justifyContent="space-between" alignItems="center" flexWrap="nowrap" px={2}>
               {loading && (
                 <LoaderContainer style={loaderStyles}>
                   <UserProfileLoader />
@@ -114,34 +128,25 @@ export function Account(props) {
             </Flex>
             <Spacer m={2} />
             <Separator />
-            <Spacer m={2} />
-            <ProfileList {...props} />
-            <Spacer m={2} />
+            <Box px={2} py={4}>
+              <ProfileList {...props} />
+            </Box>
             {renderOrderUpdates()}
             <Separator />
-            <Spacer m={2} />
-            <TouchableOpacity onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject=Help`)}>
-              <Sans size="2">Support</Sans>
-            </TouchableOpacity>
-            <Spacer m={2} />
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })}
-            >
-              <Sans size="2">Privacy Policy</Sans>
-            </TouchableOpacity>
-            <Spacer m={2} />
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })}
-            >
-              <Sans size="2">Terms of Service</Sans>
-            </TouchableOpacity>
-            <Spacer m={2} />
-            <TouchableOpacity onPress={() => signOut()}>
-              <Sans size="2" color="red">
-                Sign out
-              </Sans>
-            </TouchableOpacity>
-            <Spacer mb={2} />
+            <Box px={2} pt={4}>
+              {bottomList.map(listItem => {
+                return (
+                  <>
+                    <TouchableOpacity onPress={listItem.onPress}>
+                      <Sans size="2" color={listItem.text === "Log out" ? "red" : color("black100")}>
+                        {listItem.text}
+                      </Sans>
+                    </TouchableOpacity>
+                    <Spacer m={2} />
+                  </>
+                )
+              })}
+            </Box>
           </Box>
         </ScrollView>
       </Animatable.View>
