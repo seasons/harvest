@@ -19,6 +19,7 @@ import { GET_HOMEPAGE } from "../Home/Home"
 import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -38,14 +39,15 @@ interface ProductProps {
 }
 
 export const Product = screenTrack(props => {
-  const productID = get(props, "navigation.state.params.id")
+  const productID = get(props, "route.params.id")
   return {
     contextScreen: "Product",
     productID,
   }
 })((props: ProductProps) => {
   const { authState } = React.useContext(AuthContext)
-  const userHasSession = authState?.isSignedIn
+  const insets = useSafeArea()
+  const userHasSession = !!authState?.userSession
   const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation, route } = props
@@ -137,7 +139,7 @@ export const Product = screenTrack(props => {
   const sections = ["imageRail", "productDetails", "aboutTheBrand"]
 
   return (
-    <Container>
+    <Container insetsTop={false}>
       <ArrowWrapper>
         <TouchableOpacity
           onPress={() => {
@@ -149,6 +151,7 @@ export const Product = screenTrack(props => {
         </TouchableOpacity>
       </ArrowWrapper>
       <FlatList
+        ListHeaderComponent={() => <Spacer mb={insets.top} />}
         data={sections}
         ListFooterComponent={() => <Spacer mb={listFooterSpacing} />}
         keyExtractor={item => item}

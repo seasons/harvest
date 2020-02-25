@@ -6,7 +6,7 @@ import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
 import { assign, fill, get } from "lodash"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
@@ -34,10 +34,13 @@ export const Bag = props => {
 
   const insets = useSafeArea()
   const [isMutating, setMutating] = useState(false)
-  const [showReserveError, displayReserveError] = useState(null)
+  const [showReserveError, displayReserveError] = useState(false)
   const { data, loading, refetch } = useQuery(GET_BAG, {
     fetchPolicy: "cache-and-network",
   })
+  useEffect(() => {
+    return displayReserveError(false)
+  }, [])
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {

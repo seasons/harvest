@@ -65,7 +65,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
 `
 
 export const ReservationConfirmation = props => {
-  const reservationID = get(props, "navigation.state.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
+  const reservationID = get(props, "route.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
   const { data } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
     variables: {
       reservationID,

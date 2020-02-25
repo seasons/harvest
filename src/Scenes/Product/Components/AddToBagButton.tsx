@@ -23,7 +23,7 @@ export const AddToBagButton: React.FC<Props> = props => {
 
   const navigation = useNavigation()
   const { authState } = useContext(AuthContext)
-  const userHasSession = authState?.isSignedIn
+  const userHasSession = authState?.userSession
 
   const { data } = useQuery(GET_BAG)
 

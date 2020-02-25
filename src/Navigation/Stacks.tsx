@@ -42,12 +42,15 @@ export const TabsStack = ({ currentScreen }) => {
         // @ts-ignore
         safeAreaInset: { bottom: "never" },
       }}
-      tabBar={props => <NavBar {...props} currentScreen={currentScreen} />}
+      tabBar={props => {
+        console.log("tabBar props", props)
+        return <NavBar {...props} currentScreen={currentScreen} />
+      }}
     >
-      <Tab.Screen name="Home" component={HomeStackScreen} />
-      <Tab.Screen name="Browse" component={BrowseStackScreen} />
-      <Tab.Screen name="Bag" component={BagStackScreen} />
-      <Tab.Screen name="Account" component={AccountStackScreen} />
+      <Tab.Screen name="HomeStack" component={HomeStackScreen} />
+      <Tab.Screen name="BrowseStack" component={BrowseStackScreen} />
+      <Tab.Screen name="BagStack" component={BagStackScreen} />
+      <Tab.Screen name="AccountStack" component={AccountStackScreen} />
     </Tab.Navigator>
   )
 }
@@ -83,7 +86,7 @@ const HomeStackScreen = () => {
 const BrowseStackScreen = () => {
   return (
     <BrowseStack.Navigator initialRouteName="Browse" screenOptions={{ ...defaultOptions }}>
-      <BrowseStack.Screen name="Browse" component={Browse} />
+      <BrowseStack.Screen name="Browse" component={Browse} initialParams={{ sizeFilters: [] }} />
       <BrowseStack.Screen name="Product" component={Product} />
     </BrowseStack.Navigator>
   )
