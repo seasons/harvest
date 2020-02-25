@@ -94,7 +94,6 @@ const renderItem = ({ item }, i, navigation) => {
 }
 
 export const Browse = (props: any) => {
-  console.log("in browse", props)
   const sizeFilters = get(props, "route.params.sizeFilters") || []
   const [currentCategory, setCurrentCategory] = useState("all")
 
