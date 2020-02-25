@@ -97,9 +97,10 @@ export const TextInput: React.FC<TextInputProps> = ({
   }
 
   const height = style && style.height ? style.height : 56
+  const flex = style && style.flex
 
   return (
-    <Box style={{ height: height }}>
+    <Box style={{ height, flex }}>
       <Spring native from={from} to={to}>
         {props => (
           <AnimatedTextInput
@@ -119,7 +120,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   )
 }
 
-const StyledTextInput = styled(RNTextInput)<TextInputProps>`
+const StyledTextInput = styled(RNTextInput) <TextInputProps>`
   border-width: 1;
   height: 56;
   border-radius: 8;

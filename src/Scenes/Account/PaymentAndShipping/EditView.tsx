@@ -1,7 +1,8 @@
-import { Box, Flex, Radio, Sans, Spacer, TextInput } from "App/Components"
-import stripe, { PaymentCardTextField, StripeToken } from "tipsi-stripe"
+import React, { useEffect, useState } from "react"
 import { FlatList } from "react-native"
-import React from "react"
+import { useSafeArea } from "react-native-safe-area-context"
+import stripe, { PaymentCardTextField, StripeToken } from "tipsi-stripe"
+import { Box, Flex, Radio, Sans, Spacer, TextInput } from "App/Components"
 
 interface CreditCardFormProps {
   navigator?: NavigatorIOS
@@ -9,56 +10,43 @@ interface CreditCardFormProps {
   onSubmit: (t: StripeToken, p: PaymentCardTextFieldParams) => void
 }
 
-export class EditView extends React.Component {
-  private paymentInfo: PaymentCardTextField
+interface EditViewProps {
+  paymentInfo?: PaymentCardTextField
+}
 
-  state = {
-    sameAsDeliveryRadioSelected: false,
+export const EditView: React.FC<EditViewProps> = ({ paymentInfo }) => {
+  const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
+
+  // if (paymentInfo?.value) {
+  //   paymentInfo.value.setParams(this.state.params)
+  //   paymentInfo.value.focus()
+  // }
+
+  const handleSameAsDeliveryAddress = () => {
+    setSameAsDeliveryRadioSelected(!sameAsDeliveryRadioSelected)
   }
 
-  componentDidMount() {
-    if (this.paymentInfo.value) {
-      this.paymentInfo.value.setParams(this.state.params)
-      this.paymentInfo.value.focus()
-    }
-  }
+  const sections = ["Delivery address", "Billing address", "Payment information"]
 
-  handleSameAsDeliveryAddress = () => {
-    this.setState({
-      sameAsDeliveryRadioSelected: !this.state.sameAsDeliveryRadioSelected,
-    })
-  }
+  // const tokenizeCardAndSubmit = async () => {
+  //   this.setState({ isLoading: true, isError: false })
 
-  sections = () => {
-    const sections = ["Header", "Delivery address", "Billing address", "Payment information"]
+  //   const { params } = this.state
 
-    return sections
-  }
+  //   try {
+  //     const token = await stripe.createTokenWithCard({ ...params })
+  //     this.props.onSubmit(token, this.state.params)
+  //     this.setState({ isLoading: false })
+  //     this.props.navigator.pop()
+  //   } catch (error) {
+  //     console.warn("CreditCardForm.tsx", error)
+  //     this.setState({ isError: true, isLoading: false })
+  //   }
+  // }
 
-  tokenizeCardAndSubmit = async () => {
-    this.setState({ isLoading: true, isError: false })
+  const renderItem = ({ item: section }) => {
 
-    const { params } = this.state
-
-    try {
-      const token = await stripe.createTokenWithCard({ ...params })
-      this.props.onSubmit(token, this.state.params)
-      this.setState({ isLoading: false })
-      this.props.navigator.pop()
-    } catch (error) {
-      console.warn("CreditCardForm.tsx", error)
-      this.setState({ isError: true, isLoading: false })
-    }
-  }
-
-  renderItem = ({ item: section }) => {
     switch (section) {
-      case "Header":
-        return (
-          <Box px={2} mt={100}>
-            <Sans size="3">Payment & shipping</Sans>
-          </Box>
-        )
       case "Delivery address":
         return (
           <Box px={2}>
@@ -66,16 +54,16 @@ export class EditView extends React.Component {
             <Spacer mb={1} />
             <TextInput placeholder="Address" textContentType="fullStreetAddress" key="deliveryAddress" />
             <Spacer mb={1} />
-            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput placeholder="Unit" textContentType="streetAddressLine2" />
+            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
+              <TextInput placeholder="Address 2" textContentType="streetAddressLine2" style={{ flex: 1 }} />
               <Spacer ml={1} />
-              <TextInput placeholder="Zipcode" textContentType="postalCode" />
+              <TextInput placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} />
             </Flex>
             <Spacer mb={1} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput placeholder="City" textContentType="addressCity" />
+              <TextInput placeholder="City" textContentType="addressCity" style={{ flex: 1 }} />
               <Spacer ml={1} />
-              <TextInput placeholder="State" textContentType="addressState" />
+              <TextInput placeholder="State" textContentType="addressState" style={{ flex: 1 }} />
             </Flex>
           </Box>
         )
@@ -85,25 +73,25 @@ export class EditView extends React.Component {
             <Sans size="2">Billing address</Sans>
             <Spacer mb={2} />
             <Radio
-              selected={this.state.sameAsDeliveryRadioSelected}
-              onSelect={() => this.handleSameAsDeliveryAddress()}
+              selected={sameAsDeliveryRadioSelected}
+              onSelect={handleSameAsDeliveryAddress}
               label="Same as Delivery Address"
             />
-            {!this.state.sameAsDeliveryRadioSelected && (
+            {!sameAsDeliveryRadioSelected && (
               <>
                 <Spacer mb={2} />
                 <TextInput placeholder="Address" textContentType="fullStreetAddress" />
                 <Spacer mb={1} />
                 <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-                  <TextInput placeholder="Unit" textContentType="streetAddressLine2" />
+                  <TextInput placeholder="Unit" textContentType="streetAddressLine2" style={{ flex: 1 }} />
                   <Spacer ml={1} />
-                  <TextInput placeholder="Zipcode" textContentType="postalCode" />
+                  <TextInput placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} />
                 </Flex>
                 <Spacer mb={1} />
                 <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-                  <TextInput placeholder="City" textContentType="addressCity" />
+                  <TextInput placeholder="City" textContentType="addressCity" style={{ flex: 1 }} />
                   <Spacer ml={1} />
-                  <TextInput placeholder="State" textContentType="addressState" />
+                  <TextInput placeholder="State" textContentType="addressState" style={{ flex: 1 }} />
                 </Flex>
               </>
             )}
@@ -119,9 +107,9 @@ export class EditView extends React.Component {
             <TextInput placeholder="Card number" textContentType="creditCardNumber" />
             <Spacer mb={1} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput placeholder="Expiration date" />
+              <TextInput placeholder="Expiration date" style={{ flex: 1 }} />
               <Spacer ml={1} />
-              <TextInput placeholder="Zipcode" textContentType="postalCode" />
+              <TextInput placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} />
             </Flex>
           </Box>
         )
@@ -130,15 +118,21 @@ export class EditView extends React.Component {
     }
   }
 
-  render() {
-    return (
-      <FlatList
-        data={this.sections()}
-        ItemSeparatorComponent={() => <Spacer mb={3} />}
-        keyExtractor={(item, index) => item + String(index)}
-        renderItem={item => this.renderItem(item)}
-        ListFooterComponent={() => <Spacer mb={100} />}
-      />
-    )
-  }
+  const insets = useSafeArea()
+  return (
+    <FlatList
+      data={sections}
+      ListHeaderComponent={() => (
+        <Box px={2} mt={insets.top}>
+          <Spacer mb={2} />
+          <Sans size="3">Payment & Shipping</Sans>
+          <Spacer mb={3} />
+        </Box>
+      )}
+      ItemSeparatorComponent={() => <Spacer mb={3} />}
+      keyExtractor={(item, index) => item + String(index)}
+      renderItem={renderItem}
+      ListFooterComponent={() => <Spacer mb={100} />}
+    />
+  )
 }

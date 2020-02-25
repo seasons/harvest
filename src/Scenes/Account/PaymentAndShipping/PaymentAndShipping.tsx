@@ -4,6 +4,7 @@ import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
+import { EditView } from "./EditView"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
 import { useSafeArea } from "react-native-safe-area-context"
 
@@ -128,7 +129,8 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   return (
     <Container>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      <FlatList
+      <EditView />
+      {/* <FlatList
         data={sections}
         ListHeaderComponent={() => (
           <Box px={2} mt={insets.top}>
@@ -139,7 +141,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
         )}
         keyExtractor={item => item.title}
         renderItem={({ item }) => renderItem(item)}
-      />
+      /> */}
     </Container>
   )
 }
