@@ -4,7 +4,6 @@ import { Loader } from "App/Components/Loader"
 import { PopUpProps } from "App/Components/PopUp"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
-import { AuthContext } from "App/Navigation/AuthProvider"
 import { color } from "App/Utils"
 import { screenTrack } from "App/Utils/track"
 import { BackArrowIcon } from "Assets/icons"
@@ -20,6 +19,7 @@ import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Componen
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 import { useSafeArea } from "react-native-safe-area-context"
+import { useAuthContext } from "App/Navigation/AuthContext"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -45,7 +45,7 @@ export const Product = screenTrack(props => {
     productID,
   }
 })((props: ProductProps) => {
-  const { authState } = React.useContext(AuthContext)
+  const { authState } = useAuthContext()
   const insets = useSafeArea()
   const userHasSession = !!authState?.userSession
   const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)

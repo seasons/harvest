@@ -9,8 +9,8 @@ import * as Animatable from "react-native-animatable"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { ProfileList } from "./ProfileList"
-import { AuthContext } from "App/Navigation/AuthProvider"
 import { color } from "styled-system"
+import { useAuthContext } from "App/Navigation/AuthContext"
 
 export const GET_USER = gql`
   query GetUser {
@@ -32,7 +32,7 @@ export const GET_USER = gql`
 `
 
 export function Account(props) {
-  const { authState } = React.useContext(AuthContext)
+  const { authState, signOut } = useAuthContext()
   const { navigation } = props
 
   if (!authState?.userSession) {
@@ -63,8 +63,6 @@ export function Account(props) {
       },
     },
   }
-
-  const { signOut } = React.useContext(AuthContext)
 
   const renderOrderUpdates = () => {
     return null

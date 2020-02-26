@@ -32,7 +32,6 @@ export const GET_PAYMENT_DATA = gql`
         }
       }
       activeReservation {
-        id
         customer {
           billingInfo {
             last_digits

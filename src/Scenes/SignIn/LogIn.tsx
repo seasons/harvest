@@ -8,7 +8,7 @@ import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import AsyncStorage from "@react-native-community/async-storage"
 import { checkNotifications } from "react-native-permissions"
-import { AuthContext } from "App/Navigation/AuthProvider"
+import { useAuthContext } from "App/Navigation/AuthContext"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -47,7 +47,7 @@ export const LogIn: React.FC<LogInProps> = props => {
     },
   })
 
-  const { signIn } = React.useContext(AuthContext)
+  const { signIn } = useAuthContext()
 
   const onEmailChange = val => {
     setEmail(val)

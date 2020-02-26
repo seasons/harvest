@@ -7,18 +7,7 @@ import { BagFixture, BagFixtureWithReservation } from "./__fixtures__/BagFixture
 import { BagItem } from "../Components/BagItem"
 import { waitForLoad } from "App/testUtils/waitForLoad"
 import { FixedButton } from "App/Components"
-
-// jest.mock("App/Navigation/AuthProvider", () => {
-//   AuthContext: null
-// })
-
-jest.doMock("../../Navigation/AuthProvider", () => {
-  return {
-    AuthContext: {
-      Consumer: props => props.children(null),
-    },
-  }
-})
+import * as AuthContext from "App/Navigation/AuthContext"
 
 const mocks = [
   {
@@ -45,6 +34,16 @@ const mockWithReservation = [
     },
   },
 ]
+
+beforeEach(() => {
+  const authContextValues = {
+    signIn: () => null,
+    signOut: () => null,
+    userSession: null,
+    authState: { authInitializing: true, isSignedIn: false, userSession: "1234" },
+  }
+  jest.spyOn(AuthContext, "useAuthContext").mockImplementation(() => authContextValues)
+})
 
 describe("Bag", () => {
   it("renders properly", async () => {

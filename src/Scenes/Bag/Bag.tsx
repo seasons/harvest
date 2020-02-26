@@ -13,9 +13,9 @@ import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } 
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
-import { AuthContext } from "App/Navigation/AuthProvider"
 import { GuestView } from "App/Components/GuestView"
 import { useSafeArea } from "react-native-safe-area-context"
+import { useAuthContext } from "App/Navigation/AuthContext"
 
 const SECTION_HEIGHT = 300
 
@@ -25,7 +25,7 @@ enum BagView {
 }
 
 export const Bag = props => {
-  const { authState } = React.useContext(AuthContext)
+  const { authState } = useAuthContext()
   const { navigation } = props
 
   if (!authState?.userSession) {
