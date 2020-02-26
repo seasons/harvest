@@ -18,6 +18,7 @@ export interface TextInputProps {
   textContentType?: string
   inputKey?: string
   multiline?: boolean
+  defaultValue?: string
   onChangeText?: (inputKey: string, text: string) => void
 }
 
@@ -73,10 +74,11 @@ export const TextInput: React.FC<TextInputProps> = ({
   style,
   inputKey,
   multiline,
+  defaultValue = "",
 }) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
-  const [current, setCurrent] = React.useState(DisplayState.Inactive)
-  const [value, setValue] = React.useState("")
+  const [current, setCurrent] = React.useState(defaultValue ? DisplayState.Active : DisplayState.Inactive)
+  const [value, setValue] = React.useState(defaultValue)
   const variantColors = getColorsForVariant(variant)
 
   const from = variantColors[previous]

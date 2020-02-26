@@ -26,6 +26,7 @@ export const GET_PAYMENT_DATA = gql`
           }
         }
         billingInfo {
+          name
           last_digits
           street1
           street2
@@ -81,40 +82,7 @@ export const createBillingAddress = billingInfo => {
 export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }) => {
   const insets = useSafeArea()
   const [isEditing, setIsEditing] = useState(false)
-  const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
-
-  useEffect(() => {
-    if (data?.me?.customer) {
-      const sectionsArray = []
-      const customer = data.me.customer
-      const details = customer.detail
-      const activeReservation = data.me.activeReservation
-      console.log(details)
-
-      if (details && details.shippingAddress) {
-        sectionsArray.push({ title: "Shipping address", value: createShippingAddress(details.shippingAddress) })
-      }
-
-      if (customer && customer.billingInfo) {
-        sectionsArray.push({
-          title: "Billing address",
-          value: createBillingAddress(customer.billingInfo),
-        })
-
-        sectionsArray.push({
-          title: "Payment info",
-          value: customer.billingInfo.last_digits,
-        })
-      }
-
-      if (details && details.phoneNumber) {
-        sectionsArray.push({ title: "Phone number", value: details.phoneNumber })
-      }
-
-      setSections(sectionsArray)
-    }
-  }, [data])
 
   if (loading) {
     return <Loader />
@@ -125,15 +93,42 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
     return <Loader />
   }
 
+  let sections = []
+  let shippingAddress = null
+  let billingInfo = null
+  if (data?.me?.customer) {
+    const customer = data.me.customer
+    const details = customer.detail
+    console.log(details)
+
+    if (details?.shippingAddress) {
+      shippingAddress = details.shippingAddress
+      sections.push({ title: "Shipping address", value: createShippingAddress(details.shippingAddress) })
+    }
+
+    if (customer?.billingInfo) {
+      billingInfo = customer.billingInfo
+      sections.push({
+        title: "Billing address",
+        value: createBillingAddress(customer.billingInfo),
+      })
+
+      sections.push({
+        title: "Payment info",
+        value: customer.billingInfo.last_digits,
+      })
+    }
+
+    if (details?.phoneNumber) {
+      sections.push({ title: "Phone number", value: details.phoneNumber })
+    }
+  }
+
   const handleEditBtnPressed = () => {
     setIsEditing(!isEditing)
   }
 
-  const handleCancelBtnPressed = () => {
-    setIsEditing(false)
-  }
-
-  const handleSaveBtnPressed = () => {
+  const onFinishedEditing = () => {
     setIsEditing(false)
   }
 
@@ -146,7 +141,11 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       {isEditing
         ?
-        <EditView onCancelBtnPressed={handleCancelBtnPressed} onSaveBtnPressed={handleSaveBtnPressed} />
+        <EditView
+          billingInfo={billingInfo}
+          shippingAddress={shippingAddress}
+          onFinishedEditing={onFinishedEditing}
+        />
         :
         <>
           <FlatList

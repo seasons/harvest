@@ -4,6 +4,11 @@ import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import stripe, { PaymentCardTextField, StripeToken } from "tipsi-stripe"
 import { Box, Button, Flex, Radio, Sans, Spacer, TextInput } from "App/Components"
+import {
+  GetUserPaymentData_me_customer_detail,
+  GetUserPaymentData_me_customer_billingInfo,
+  GetUserPaymentData_me_customer_detail_shippingAddress
+} from "src/generated/getUserPaymentData"
 import { useMutation } from "react-apollo"
 
 interface CreditCardFormProps {
@@ -12,6 +17,13 @@ interface CreditCardFormProps {
   onSubmit: (t: StripeToken, p: PaymentCardTextFieldParams) => void
 }
 
+const UPDATE_CUSTOMER_INFO = gql`
+  mutation updateCustomerInfo($billingInfo: BillingInfoCreateInput, $detail: CustomerDetailCreateInput) {
+    updateCustomerInfo(billingInfo: $billingInfo, detail: $detail) {
+      id
+    }
+  }
+`
 const VALIDATE_ADDRESS = gql`
   mutation validateAddress($input: ValidateAddressInput!) {
     validateAddress(input: $input) {
@@ -27,12 +39,18 @@ const FINISH_BUTTONS = "Finish buttons"
 const PAYMENT_INFORMATION = "Payment information"
 
 interface EditViewProps {
-  onCancelBtnPressed: () => void,
-  onSaveBtnPressed: () => void,
+  billingInfo?: GetUserPaymentData_me_customer_billingInfo,
+  shippingAddress?: GetUserPaymentData_me_customer_detail_shippingAddress,
+  onFinishedEditing: () => void,
 }
 
 export const EditView: React.FC<EditViewProps> = (props) => {
-  const { onCancelBtnPressed, onSaveBtnPressed } = props
+  const { billingInfo, shippingAddress, onCancelBtnPressed, onSaveBtnPressed } = props
+  const [shippingAddress1, setShippingAddress1] = useState(shippingAddress?.address1)
+  const [shippingAddress2, setShippingAddress2] = useState(shippingAddress?.address2)
+  const [shippingCity, setShippingCity] = useState(shippingAddress?.city)
+  const [shippingState, setShippingState] = useState(shippingAddress?.state)
+  const [shippingZipCode, setShippingZipCode] = useState(shippingAddress?.zipCode)
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
 
   const [validateAddress] = useMutation(VALIDATE_ADDRESS, {
@@ -66,6 +84,10 @@ export const EditView: React.FC<EditViewProps> = (props) => {
     console.log(result)
   }
 
+  const handleSaveBtnPressed = async () => {
+
+  }
+
   const sections = [DELIVERY_ADDRESS, BILLING_ADDRESS, PAYMENT_INFORMATION, FINISH_BUTTONS]
 
   // const tokenizeCardAndSubmit = async () => {
@@ -94,18 +116,18 @@ export const EditView: React.FC<EditViewProps> = (props) => {
           <>
             <Sans size="1">{DELIVERY_ADDRESS}</Sans>
             <Spacer mb={2} />
-            <TextInput placeholder="Address" textContentType="fullStreetAddress" key="deliveryAddress" />
+            <TextInput defaultValue={shippingAddress1} placeholder="Address" textContentType="fullStreetAddress" key="deliveryAddress" />
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
-              <TextInput placeholder="Address 2" textContentType="streetAddressLine2" style={{ flex: 1 }} />
+              <TextInput defaultValue={shippingAddress2} placeholder="Address 2" textContentType="streetAddressLine2" style={{ flex: 1 }} />
               <Spacer ml={1} />
-              <TextInput placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} />
+              <TextInput defaultValue={shippingZipCode} placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} />
             </Flex>
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput placeholder="City" textContentType="addressCity" style={{ flex: 1 }} />
+              <TextInput defaultValue={shippingCity} placeholder="City" textContentType="addressCity" style={{ flex: 1 }} />
               <Spacer ml={1} />
-              <TextInput placeholder="State" textContentType="addressState" style={{ flex: 1 }} />
+              <TextInput defaultValue={shippingState} placeholder="State" textContentType="addressState" style={{ flex: 1 }} />
             </Flex>
           </>
         )
@@ -163,7 +185,7 @@ export const EditView: React.FC<EditViewProps> = (props) => {
             <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={onCancelBtnPressed}>
               Cancel
             </Button>
-            <Button variant="secondaryBlack" size="large" width={buttonWidth} onPress={onSaveBtnPressed}>
+            <Button variant="secondaryBlack" size="large" width={buttonWidth} onPress={handleSaveBtnPressed}>
               Save
             </Button>
           </Flex>
