@@ -1,14 +1,30 @@
+import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
-import { FlatList } from "react-native"
+import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import stripe, { PaymentCardTextField, StripeToken } from "tipsi-stripe"
-import { Box, Flex, Radio, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, Flex, Radio, Sans, Spacer, TextInput } from "App/Components"
+import { useMutation } from "react-apollo"
 
 interface CreditCardFormProps {
   navigator?: NavigatorIOS
   params?: PaymentCardTextFieldParams
   onSubmit: (t: StripeToken, p: PaymentCardTextFieldParams) => void
 }
+
+const VALIDATE_ADDRESS = gql`
+  mutation validateAddress($input: ValidateAddressInput!) {
+    validateAddress(input: $input) {
+      code
+      isValid
+      text
+    }
+  }
+`
+const BILLING_ADDRESS = "Billing address"
+const DELIVERY_ADDRESS = "Delivery address"
+const FINISH_BUTTONS = "Finish buttons"
+const PAYMENT_INFORMATION = "Payment information"
 
 interface EditViewProps {
   paymentInfo?: PaymentCardTextField
@@ -17,16 +33,46 @@ interface EditViewProps {
 export const EditView: React.FC<EditViewProps> = ({ paymentInfo }) => {
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
 
+  const [validateAddress] = useMutation(VALIDATE_ADDRESS, {
+    onError: error => {
+      console.error("error EditView.tsx: ", error)
+    },
+  })
+
   // if (paymentInfo?.value) {
   //   paymentInfo.value.setParams(this.state.params)
   //   paymentInfo.value.focus()
   // }
 
-  const handleSameAsDeliveryAddress = () => {
+  const handleSameAsDeliveryAddress = async () => {
     setSameAsDeliveryRadioSelected(!sameAsDeliveryRadioSelected)
+
+    const result = await validateAddress({
+      variables: {
+        input: {
+          location: {
+            slug: "Kevin's Address",
+            name: "Kevin's Address",
+            address1: "6420 15th Ave",
+            city: "Brooklyn",
+            state: "NY",
+            zipCode: "11219"
+          }
+        }
+      }
+    })
+    console.log(result)
   }
 
-  const sections = ["Delivery address", "Billing address", "Payment information"]
+  const handleCancelBtnPressed = () => {
+
+  }
+
+  const handleSaveBtnPressed = () => {
+
+  }
+
+  const sections = [DELIVERY_ADDRESS, BILLING_ADDRESS, PAYMENT_INFORMATION, FINISH_BUTTONS]
 
   // const tokenizeCardAndSubmit = async () => {
   //   this.setState({ isLoading: true, isError: false })
@@ -43,34 +89,36 @@ export const EditView: React.FC<EditViewProps> = ({ paymentInfo }) => {
   //     this.setState({ isError: true, isLoading: false })
   //   }
   // }
+  const screenWidth = Dimensions.get("window").width
+  const buttonWidth = (screenWidth - 40) / 2
 
   const renderItem = ({ item: section }) => {
 
     switch (section) {
-      case "Delivery address":
+      case DELIVERY_ADDRESS:
         return (
-          <Box px={2}>
-            <Sans size="2">Delivery address</Sans>
-            <Spacer mb={1} />
+          <>
+            <Sans size="1">{DELIVERY_ADDRESS}</Sans>
+            <Spacer mb={2} />
             <TextInput placeholder="Address" textContentType="fullStreetAddress" key="deliveryAddress" />
-            <Spacer mb={1} />
+            <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
               <TextInput placeholder="Address 2" textContentType="streetAddressLine2" style={{ flex: 1 }} />
               <Spacer ml={1} />
               <TextInput placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} />
             </Flex>
-            <Spacer mb={1} />
+            <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
               <TextInput placeholder="City" textContentType="addressCity" style={{ flex: 1 }} />
               <Spacer ml={1} />
               <TextInput placeholder="State" textContentType="addressState" style={{ flex: 1 }} />
             </Flex>
-          </Box>
+          </>
         )
-      case "Billing address":
+      case BILLING_ADDRESS:
         return (
-          <Box px={2}>
-            <Sans size="2">Billing address</Sans>
+          <>
+            <Sans size="1">{BILLING_ADDRESS}</Sans>
             <Spacer mb={2} />
             <Radio
               selected={sameAsDeliveryRadioSelected}
@@ -81,13 +129,13 @@ export const EditView: React.FC<EditViewProps> = ({ paymentInfo }) => {
               <>
                 <Spacer mb={2} />
                 <TextInput placeholder="Address" textContentType="fullStreetAddress" />
-                <Spacer mb={1} />
+                <Spacer mb={2} />
                 <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
                   <TextInput placeholder="Unit" textContentType="streetAddressLine2" style={{ flex: 1 }} />
                   <Spacer ml={1} />
                   <TextInput placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} />
                 </Flex>
-                <Spacer mb={1} />
+                <Spacer mb={2} />
                 <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
                   <TextInput placeholder="City" textContentType="addressCity" style={{ flex: 1 }} />
                   <Spacer ml={1} />
@@ -95,23 +143,34 @@ export const EditView: React.FC<EditViewProps> = ({ paymentInfo }) => {
                 </Flex>
               </>
             )}
-          </Box>
+          </>
         )
-      case "Payment information":
+      case PAYMENT_INFORMATION:
         return (
-          <Box px={2}>
-            <Sans size="2">Payment information</Sans>
-            <Spacer mb={1} />
+          <>
+            <Sans size="1">{PAYMENT_INFORMATION}</Sans>
+            <Spacer mb={2} />
             <TextInput placeholder="Full name" textContentType="name" />
-            <Spacer mb={1} />
+            <Spacer mb={2} />
             <TextInput placeholder="Card number" textContentType="creditCardNumber" />
-            <Spacer mb={1} />
+            <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
               <TextInput placeholder="Expiration date" style={{ flex: 1 }} />
               <Spacer ml={1} />
               <TextInput placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} />
             </Flex>
-          </Box>
+          </>
+        )
+      case FINISH_BUTTONS:
+        return (
+          <Flex flexDirection="row" justifyContent="space-between">
+            <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
+              Cancel
+            </Button>
+            <Button variant="secondaryBlack" size="large" width={buttonWidth} onPress={handleSaveBtnPressed}>
+              Save
+            </Button>
+          </Flex>
         )
       default:
         return null
@@ -120,19 +179,22 @@ export const EditView: React.FC<EditViewProps> = ({ paymentInfo }) => {
 
   const insets = useSafeArea()
   return (
-    <FlatList
-      data={sections}
-      ListHeaderComponent={() => (
-        <Box px={2} mt={insets.top}>
-          <Spacer mb={2} />
-          <Sans size="3">Payment & Shipping</Sans>
-          <Spacer mb={3} />
-        </Box>
-      )}
-      ItemSeparatorComponent={() => <Spacer mb={3} />}
-      keyExtractor={(item, index) => item + String(index)}
-      renderItem={renderItem}
-      ListFooterComponent={() => <Spacer mb={100} />}
-    />
+    <Box px={2}>
+      <FlatList
+        data={sections}
+        ListHeaderComponent={() => (
+          <Box mt={insets.top}>
+            <Spacer mb={2} />
+            <Sans size="3">Payment & Shipping</Sans>
+            <Spacer mb={6} />
+          </Box>
+        )}
+        ItemSeparatorComponent={() => <Spacer mb={6} />}
+        keyExtractor={(item, index) => item + String(index)}
+        renderItem={renderItem}
+        ListFooterComponent={() => <Spacer mb={2} />}
+        showsVerticalScrollIndicator={false}
+      />
+    </Box>
   )
 }
