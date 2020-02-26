@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
-import { useSafeArea } from "react-native-safe-area-context"
 
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
@@ -33,6 +32,7 @@ export const GET_PAYMENT_DATA = gql`
         }
       }
       activeReservation {
+        id
         customer {
           billingInfo {
             last_digits
@@ -77,7 +77,6 @@ export const createBillingAddress = billingInfo => {
 }
 
 export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const insets = useSafeArea()
   const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
 
@@ -86,7 +85,6 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
       const sectionsArray = []
       const customer = data.me.customer
       const details = customer.detail
-      const activeReservation = data.me.activeReservation
 
       if (details && details.shippingAddress) {
         sectionsArray.push({ title: "Shipping address", value: createShippingAddress(details.shippingAddress) })
