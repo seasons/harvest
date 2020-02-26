@@ -110,7 +110,7 @@ export const LogIn: React.FC<LogInProps> = props => {
       <Flex style={{ flex: 1 }}>
         <Spacer mb={3} />
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-          <Box p={2} mt={6}>
+          <Box p={2} mt={5}>
             <Sans color={color("black100")} size="3">
               Welcome
             </Sans>
@@ -149,7 +149,7 @@ export const LogIn: React.FC<LogInProps> = props => {
               </Text>
             </Flex>
           </Box>
-          <Box p={4} pb={6}>
+          <Box p={4} pb={5}>
             <Text style={{ textAlign: "center" }}>
               <Sans size="2" color="gray">
                 Sign in using the same email and password you used for the wailist.
