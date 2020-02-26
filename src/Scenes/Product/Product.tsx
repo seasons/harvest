@@ -205,7 +205,7 @@ const Overlay = styled.View`
   background-color: rgba(0, 0, 0, 0.6);
   top: 0;
   left: 0;
-  bottom: ${VARIANT_WANT_HEIGHT};
+  bottom: 0;
   right: 0;
 `
 

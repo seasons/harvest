@@ -50,7 +50,7 @@ export const AddToBagButton: React.FC<Props> = props => {
             secondaryButtonOnPress: () => {
               setPopUp({ show: false, data: null })
               navigation.popToTop()
-              navigation.navigate("Bag")
+              navigation.navigate("BagStack")
             },
             onClose: () => setPopUp({ show: false, data: null }),
           },

@@ -267,7 +267,11 @@ export const Bag = props => {
       />
       {isBagView && (
         <>
-          {!hasActiveReservation ? (
+          {hasActiveReservation ? (
+            <FixedButton block variant="primaryWhite" onPress={() => navigation.navigate("Faq")}>
+              FAQ
+            </FixedButton>
+          ) : (
             <FixedButton
               block
               onPress={() => (!bagIsFull ? displayReserveError(true) : handleReserve(navigation))}
@@ -275,10 +279,6 @@ export const Bag = props => {
               loading={isMutating}
             >
               Reserve
-            </FixedButton>
-          ) : (
-            <FixedButton block variant="primaryWhite" onPress={() => navigation.navigate("Faq")}>
-              FAQ
             </FixedButton>
           )}
         </>

@@ -184,11 +184,10 @@ export const Reservation = props => {
               },
             })
             if (data.reserveItems) {
-              props.navigation.navigate(
-                "Modal",
-                { screen: "ReservationConfirmationModal" },
-                { reservationID: data.reserveItems.id }
-              )
+              props.navigation.navigate("Modal", {
+                screen: "ReservationConfirmationModal",
+                params: { reservationID: data.reserveItems.id },
+              })
             }
           } catch (e) {
             setShowError(true)

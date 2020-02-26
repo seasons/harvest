@@ -108,9 +108,11 @@ export function Account(props) {
             <Box mb={5} />
             <Flex flexDirection="row" justifyContent="space-between" alignItems="center" flexWrap="nowrap" px={2}>
               {loading && (
-                <LoaderContainer style={loaderStyles}>
-                  <UserProfileLoader />
-                </LoaderContainer>
+                <Box px={2}>
+                  <LoaderContainer style={loaderStyles}>
+                    <UserProfileLoader />
+                  </LoaderContainer>
+                </Box>
               )}
               <Flex>
                 {!!firstName && !!lastName && (
@@ -136,14 +138,14 @@ export function Account(props) {
             <Box px={2} pt={4}>
               {bottomList.map(listItem => {
                 return (
-                  <>
+                  <Box key={listItem.text}>
                     <TouchableOpacity onPress={listItem.onPress}>
                       <Sans size="2" color={listItem.text === "Log out" ? "red" : color("black100")}>
                         {listItem.text}
                       </Sans>
                     </TouchableOpacity>
                     <Spacer m={2} />
-                  </>
+                  </Box>
                 )
               })}
             </Box>

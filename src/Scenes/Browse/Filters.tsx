@@ -10,7 +10,6 @@ import { Box, Button, Flex, Radio, Sans, Separator, Spacer, Theme } from "../../
 const FILTER_BY = "Filter by"
 
 export const Filters = (props: any) => {
-  console.log("props filters", props)
   const currentSizeFilters = get(props, "route.params.sizeFilters", [])
   const [sizeFilters, setSizeFilters] = useState(currentSizeFilters)
 

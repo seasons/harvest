@@ -43,7 +43,6 @@ export const TabsStack = ({ currentScreen }) => {
         safeAreaInset: { bottom: "never" },
       }}
       tabBar={props => {
-        console.log("tabBar props", props)
         return <NavBar {...props} currentScreen={currentScreen} />
       }}
     >

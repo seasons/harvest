@@ -49,7 +49,7 @@ export const BagItem: React.FC<BagItemProps> = ({
     return <></>
   }
   const variantToUse = head(
-    (get(bagItem, "productVariant.product.variants") || []).filter(a => a.id === bagItem.variantID)
+    (get(bagItem, "productVariant.product.variants") || []).filter(a => a.id === bagItem.productVariant.id)
   )
   const product = get(bagItem, "productVariant.product")
   if (!product) {
