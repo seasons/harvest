@@ -18,7 +18,7 @@ export const CurrentRotation = props => {
 
   useEffect(() => {
     refetch()
-  }, [get(props, "navigation.state.params.reservationID", "")])
+  }, [get(props, "route.params.reservationID", "")])
 
   if (loading) {
     return <Loader />

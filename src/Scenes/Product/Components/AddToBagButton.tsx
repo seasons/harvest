@@ -23,7 +23,7 @@ export const AddToBagButton: React.FC<Props> = props => {
 
   const navigation = useNavigation()
   const { authState } = useContext(AuthContext)
-  const userHasSession = authState?.isSignedIn
+  const userHasSession = authState?.userSession
 
   const { data } = useQuery(GET_BAG)
 
@@ -50,7 +50,7 @@ export const AddToBagButton: React.FC<Props> = props => {
             secondaryButtonOnPress: () => {
               setPopUp({ show: false, data: null })
               navigation.popToTop()
-              navigation.navigate("Bag")
+              navigation.navigate("BagStack")
             },
             onClose: () => setPopUp({ show: false, data: null }),
           },

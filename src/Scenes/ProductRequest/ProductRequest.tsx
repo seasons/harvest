@@ -79,12 +79,12 @@ export const ProductRequest = (props: any) => {
   }
 
   return (
-    <Container backgroundColor="black100" insetsTop>
+    <Container backgroundColor="black100" insetsBottom={false}>
       <FixedBackArrow navigation={props.navigation} variant="blackBackground" />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-          <Box p={2}>
-            <Spacer mb={50} />
+          <Box px={2}>
+            <Spacer mb={80} />
             <Sans size="3" color="white" weight="medium">
               Submit an item
             </Sans>

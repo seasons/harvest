@@ -6,7 +6,7 @@ import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
 import { assign, fill, get } from "lodash"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
@@ -15,6 +15,7 @@ import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
 import { AuthContext } from "App/Navigation/AuthProvider"
 import { GuestView } from "App/Components/GuestView"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const SECTION_HEIGHT = 300
 
@@ -31,11 +32,15 @@ export const Bag = props => {
     return <GuestView navigation={navigation} />
   }
 
+  const insets = useSafeArea()
   const [isMutating, setMutating] = useState(false)
-  const [showReserveError, displayReserveError] = useState(null)
+  const [showReserveError, displayReserveError] = useState(false)
   const { data, loading, refetch } = useQuery(GET_BAG, {
     fetchPolicy: "cache-and-network",
   })
+  useEffect(() => {
+    return displayReserveError(false)
+  }, [])
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {
@@ -217,11 +222,12 @@ export const Bag = props => {
   const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"
   const headerSubtitle = currentView === BagView.Bag ? bagSubtitle : "Tucked away for later"
   return (
-    <Container insetsTop>
+    <Container insetsBottom={false} insetsTop={false}>
       <FlatList
         data={currentView === BagView.Bag ? paddedItems : savedItems}
         ListHeaderComponent={() => (
           <>
+            <Spacer mb={insets.bottom} />
             <Box p={2}>
               <Sans size="3" color="black">
                 {headerTitle}
@@ -261,7 +267,11 @@ export const Bag = props => {
       />
       {isBagView && (
         <>
-          {!hasActiveReservation ? (
+          {hasActiveReservation ? (
+            <FixedButton block variant="primaryWhite" onPress={() => navigation.navigate("Faq")}>
+              FAQ
+            </FixedButton>
+          ) : (
             <FixedButton
               block
               onPress={() => (!bagIsFull ? displayReserveError(true) : handleReserve(navigation))}
@@ -269,10 +279,6 @@ export const Bag = props => {
               loading={isMutating}
             >
               Reserve
-            </FixedButton>
-          ) : (
-            <FixedButton block onPress={() => navigation.navigate("Faq")}>
-              FAQ
             </FixedButton>
           )}
         </>

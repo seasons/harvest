@@ -36,7 +36,7 @@ export const SaveProductButton: React.FC<{
   }
   const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
   const { authState } = useContext(AuthContext)
-  const userHasSession = authState?.isSignedIn
+  const userHasSession = !!authState?.userSession
 
   if (!variantToUse) {
     return <></>

@@ -6,16 +6,14 @@ import { space } from "App/Utils"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import get from "lodash/get"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
 import { TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
-
 import { useQuery } from "@apollo/react-hooks"
-
 import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240
@@ -96,14 +94,11 @@ const renderItem = ({ item }, i, navigation) => {
 }
 
 export const Browse = (props: any) => {
-  const sortFilter = get(props, "navigation.state.params.sortFilter", "")
-  const sizeFilters = get(props, "navigation.state.params.sizeFilters", [])
+  const sizeFilters = get(props, "route.params.sizeFilters") || []
   const [currentCategory, setCurrentCategory] = useState("all")
 
   // Get all the sizes that we want to query by.
   // If no size filter is selected, all sizes are queried.
-  const isSortingAlphabetically = sortFilter && sortFilter === "Alphabetical"
-  const orderBy = isSortingAlphabetically ? "name_ASC" : "createdAt_DESC"
   const sizes =
     sizeFilters && sizeFilters.length > 0
       ? sizeFilters.map(s => ABBREVIATED_SIZES[s])
@@ -113,7 +108,7 @@ export const Browse = (props: any) => {
       name: currentCategory,
       first: 10,
       skip: 0,
-      orderBy,
+      orderBy: "createdAt_DESC",
       sizes,
     },
   })
@@ -141,7 +136,7 @@ export const Browse = (props: any) => {
   }
 
   const onFilterBtnPress = () => {
-    props.navigation.navigate("Modal", { screen: "FiltersModal" }, { sortFilter, sizeFilters })
+    props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
   }
 
   return (
@@ -162,7 +157,7 @@ export const Browse = (props: any) => {
             onEndReached={() => {
               // If we are sorting alphabetically, all products are returned so we do not need
               // to fetch any more
-              if (!loading && !isSortingAlphabetically) {
+              if (!loading) {
                 fetchMore({
                   variables: {
                     skip: products.length,

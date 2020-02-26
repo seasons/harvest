@@ -14,13 +14,12 @@ import React, { useEffect, useState } from "react"
 import { Dimensions, FlatList, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-
 import { useMutation, useQuery } from "@apollo/react-hooks"
-
 import { GET_HOMEPAGE } from "../Home/Home"
 import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
+import { useSafeArea } from "react-native-safe-area-context"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -40,14 +39,15 @@ interface ProductProps {
 }
 
 export const Product = screenTrack(props => {
-  const productID = get(props, "navigation.state.params.id")
+  const productID = get(props, "route.params.id")
   return {
     contextScreen: "Product",
     productID,
   }
 })((props: ProductProps) => {
   const { authState } = React.useContext(AuthContext)
-  const userHasSession = authState?.isSignedIn
+  const insets = useSafeArea()
+  const userHasSession = !!authState?.userSession
   const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation, route } = props
@@ -139,7 +139,7 @@ export const Product = screenTrack(props => {
   const sections = ["imageRail", "productDetails", "aboutTheBrand"]
 
   return (
-    <Container>
+    <Container insetsTop={false}>
       <ArrowWrapper>
         <TouchableOpacity
           onPress={() => {
@@ -151,45 +151,42 @@ export const Product = screenTrack(props => {
         </TouchableOpacity>
       </ArrowWrapper>
       <FlatList
+        ListHeaderComponent={() => <Spacer mb={insets.top} />}
         data={sections}
         ListFooterComponent={() => <Spacer mb={listFooterSpacing} />}
         keyExtractor={item => item}
         renderItem={item => renderItem(item)}
       />
-
-      <>
-        <SelectionButtons
-          bottom={selectionButtonsBottom}
+      <SelectionButtons
+        bottom={selectionButtonsBottom}
+        productID={productID}
+        toggleShowVariantPicker={toggleShowVariantPicker}
+        setPopUp={setPopUp}
+        showVariantPicker={showVariantPicker}
+        selectedVariant={selectedVariant}
+        navigation={navigation}
+      />
+      <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
+        {shouldShowVariantWant && (
+          <VariantWant
+            isWanted={selectedVariantIsWanted}
+            productID={productID}
+            setPopUp={setPopUp}
+            variantID={selectedVariant.id}
+          />
+        )}
+      </AnimatedVariantWantWrapper>
+      {showVariantPicker && <Overlay />}
+      <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
+        <VariantPicker
+          setSelectedVariant={setSelectedVariant}
+          selectedVariant={selectedVariant}
+          height={variantPickerHeight}
+          navigation={navigation}
           productID={productID}
           toggleShowVariantPicker={toggleShowVariantPicker}
-          setPopUp={setPopUp}
-          showVariantPicker={showVariantPicker}
-          selectedVariant={selectedVariant}
-          navigation={navigation}
         />
-        <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
-          {shouldShowVariantWant && (
-            <VariantWant
-              isWanted={selectedVariantIsWanted}
-              productID={productID}
-              setPopUp={setPopUp}
-              variantID={selectedVariant.id}
-            />
-          )}
-        </AnimatedVariantWantWrapper>
-        {showVariantPicker && <Overlay />}
-        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
-          <VariantPicker
-            setSelectedVariant={setSelectedVariant}
-            selectedVariant={selectedVariant}
-            height={variantPickerHeight}
-            navigation={navigation}
-            productID={productID}
-            toggleShowVariantPicker={toggleShowVariantPicker}
-          />
-        </AnimatedVariantPicker>
-      </>
-
+      </AnimatedVariantPicker>
       <PopUp data={popUp.data} show={popUp.show} />
     </Container>
   )
@@ -208,7 +205,7 @@ const Overlay = styled.View`
   background-color: rgba(0, 0, 0, 0.6);
   top: 0;
   left: 0;
-  bottom: ${VARIANT_WANT_HEIGHT};
+  bottom: 0;
   right: 0;
 `
 
