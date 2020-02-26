@@ -99,11 +99,12 @@ export function Account(props) {
   ]
 
   return (
-    <Container insetsBottom={false}>
+    <Container insetsBottom={false} insetsTop={false}>
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
           <Box pt={2}>
-            <Box mb={5} />
+            <Spacer mb={6} />
+
             <Flex flexDirection="row" justifyContent="space-between" alignItems="center" flexWrap="nowrap" px={2}>
               {loading && (
                 <Box px={2}>

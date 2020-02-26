@@ -227,8 +227,8 @@ export const Bag = props => {
         data={currentView === BagView.Bag ? paddedItems : savedItems}
         ListHeaderComponent={() => (
           <>
-            <Spacer mb={insets.bottom} />
-            <Box p={2}>
+            <Spacer mb={insets.top} />
+            <Box px={2} pt={3}>
               <Sans size="3" color="black">
                 {headerTitle}
               </Sans>
