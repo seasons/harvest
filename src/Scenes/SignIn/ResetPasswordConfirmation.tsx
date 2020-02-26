@@ -8,6 +8,7 @@ export const ResetPasswordConfirmation = (props: any) => {
       <CloseButton navigation={props.navigation} />
       <Flex flexDirection="column" style={{ flex: 1 }}>
         <Box px={2} pt={2}>
+          <Spacer mb={3} />
           <Sans size="3" color={color("white100")} weight="medium">
             Reset Password Link Sent
           </Sans>
