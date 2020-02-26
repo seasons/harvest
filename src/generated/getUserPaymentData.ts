@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 // ====================================================
@@ -25,6 +26,7 @@ export interface GetUserPaymentData_me_customer_detail {
 
 export interface GetUserPaymentData_me_customer_billingInfo {
   __typename: "BillingInfo";
+  name: string | null;
   last_digits: string;
   street1: string | null;
   street2: string | null;
