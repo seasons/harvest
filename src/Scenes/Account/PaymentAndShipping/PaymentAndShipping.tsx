@@ -26,13 +26,15 @@ export const GET_PAYMENT_DATA = gql`
           }
         }
         billingInfo {
-          name
+          city
+          expiration_month
+          expiration_year
           last_digits
+          name
+          postal_code
+          state
           street1
           street2
-          city
-          state
-          postal_code
         }
       }
       activeReservation {
@@ -99,7 +101,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   if (data?.me?.customer) {
     const customer = data.me.customer
     const details = customer.detail
-    console.log(details)
+    // console.log(details)
 
     if (details?.shippingAddress) {
       shippingAddress = details.shippingAddress

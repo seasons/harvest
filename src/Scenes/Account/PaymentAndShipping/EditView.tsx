@@ -45,14 +45,33 @@ interface EditViewProps {
 }
 
 export const EditView: React.FC<EditViewProps> = (props) => {
-  const { billingInfo, shippingAddress, onCancelBtnPressed, onSaveBtnPressed } = props
-  const [shippingAddress1, setShippingAddress1] = useState(shippingAddress?.address1)
-  const [shippingAddress2, setShippingAddress2] = useState(shippingAddress?.address2)
-  const [shippingCity, setShippingCity] = useState(shippingAddress?.city)
-  const [shippingState, setShippingState] = useState(shippingAddress?.state)
-  const [shippingZipCode, setShippingZipCode] = useState(shippingAddress?.zipCode)
+  const { billingInfo, shippingAddress, onFinishedEditing } = props
+  const [shippingAddress1, setShippingAddress1] = useState(shippingAddress?.address1 || "")
+  const [shippingAddress2, setShippingAddress2] = useState(shippingAddress?.address2 || "")
+  const [shippingCity, setShippingCity] = useState(shippingAddress?.city || "")
+  const [shippingState, setShippingState] = useState(shippingAddress?.state || "")
+  const [shippingZipCode, setShippingZipCode] = useState(shippingAddress?.zipCode || "")
+
+  const [billingAddress1, setBillingAddress1] = useState(billingInfo?.street1 || "")
+  const [billingAddress2, setBillingAddress2] = useState(billingInfo?.street2 || "")
+  const [billingCity, setBillingCity] = useState(billingInfo?.city || "")
+  const [billingState, setBillingState] = useState(billingInfo?.state || "")
+  const [billingZipCode, setBillingZipCode] = useState(billingInfo?.postal_code || "")
+
+  const [name, setName] = useState(billingInfo?.name || "")
+  const [cardNumber, setCardNumber] = useState(billingInfo?.last_digits ? `**** **** **** ${billingInfo?.last_digits}` : "")
+  const [expirationDate, setExpriationDate] = useState(
+    billingInfo?.expiration_month && billingInfo?.expiration_year
+      ? `${billingInfo?.expiration_month}/${billingInfo?.expiration_year}`
+      : ""
+  )
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
 
+  const [updateCustomerInfo] = useMutation(UPDATE_CUSTOMER_INFO, {
+    onError: error => {
+      console.error("error EditView.tsx: ", error)
+    },
+  })
   const [validateAddress] = useMutation(VALIDATE_ADDRESS, {
     onError: error => {
       console.error("error EditView.tsx: ", error)
@@ -84,8 +103,48 @@ export const EditView: React.FC<EditViewProps> = (props) => {
     console.log(result)
   }
 
-  const handleSaveBtnPressed = async () => {
+  const getExpirationMonthAndYear = (expirationDate) => {
+    const expirationDateInfo = expirationDate.split("/")
+    console.log(expirationDateInfo)
+    if (expirationDateInfo.length != 2) return null
 
+    const expirationMonth = parseInt(expirationDateInfo[0])
+    const expirationYear = parseInt(expirationDateInfo[1])
+
+    if (isNaN(expirationMonth) || isNaN(expirationYear)) return null
+
+    return {
+      expirationMonth,
+      expirationYear
+    }
+  }
+
+  const handleSaveBtnPressed = async () => {
+    // console.log(name, cardNumber, expirationDate, billingZipCode)
+    console.log(billingAddress1, billingAddress2, billingZipCode, billingCity, billingState, name, cardNumber, expirationDate)
+    if (billingAddress1 && billingZipCode && billingCity && billingState && name && cardNumber && expirationDate) {
+      const expirationDateInfo = getExpirationMonthAndYear(expirationDate)
+      console.log(expirationDateInfo)
+      if (expirationDateInfo) {
+        const result = await updateCustomerInfo({
+          variables: {
+            billingInfo: {
+              name,
+              last_digits: cardNumber,
+              expiration_month: expirationDateInfo.expirationMonth,
+              expiration_year: expirationDateInfo.expirationYear,
+              postal_code: billingZipCode,
+              street1: billingAddress1,
+              street2: billingAddress2,
+              city: billingCity,
+              state: billingState,
+            }
+          }
+        })
+        console.log(result)
+      }
+    }
+    // onFinishedEditing()
   }
 
   const sections = [DELIVERY_ADDRESS, BILLING_ADDRESS, PAYMENT_INFORMATION, FINISH_BUTTONS]
@@ -107,7 +166,6 @@ export const EditView: React.FC<EditViewProps> = (props) => {
   // }
   const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 40) / 2
-
   const renderItem = ({ item: section }) => {
 
     switch (section) {
@@ -116,7 +174,7 @@ export const EditView: React.FC<EditViewProps> = (props) => {
           <>
             <Sans size="1">{DELIVERY_ADDRESS}</Sans>
             <Spacer mb={2} />
-            <TextInput defaultValue={shippingAddress1} placeholder="Address" textContentType="fullStreetAddress" key="deliveryAddress" />
+            <TextInput defaultValue={shippingAddress1} placeholder="Address 1" textContentType="streetAddressLine1" key="deliveryAddress" />
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
               <TextInput defaultValue={shippingAddress2} placeholder="Address 2" textContentType="streetAddressLine2" style={{ flex: 1 }} />
@@ -146,18 +204,18 @@ export const EditView: React.FC<EditViewProps> = (props) => {
             {!sameAsDeliveryRadioSelected && (
               <>
                 <Spacer mb={2} />
-                <TextInput placeholder="Address" textContentType="fullStreetAddress" />
+                <TextInput placeholder="Address 1" textContentType="streetAddressLine1" onChangeText={(inputKey, text) => { setBillingAddress1(text) }} />
                 <Spacer mb={2} />
                 <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-                  <TextInput placeholder="Unit" textContentType="streetAddressLine2" style={{ flex: 1 }} />
+                  <TextInput placeholder="Address 2" textContentType="streetAddressLine2" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingAddress2(text)} />
                   <Spacer ml={1} />
-                  <TextInput placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} />
+                  <TextInput placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingZipCode(text)} />
                 </Flex>
                 <Spacer mb={2} />
                 <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-                  <TextInput placeholder="City" textContentType="addressCity" style={{ flex: 1 }} />
+                  <TextInput placeholder="City" textContentType="addressCity" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingCity(text)} />
                   <Spacer ml={1} />
-                  <TextInput placeholder="State" textContentType="addressState" style={{ flex: 1 }} />
+                  <TextInput placeholder="State" textContentType="addressState" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingState(text)} />
                 </Flex>
               </>
             )}
@@ -168,21 +226,21 @@ export const EditView: React.FC<EditViewProps> = (props) => {
           <>
             <Sans size="1">{PAYMENT_INFORMATION}</Sans>
             <Spacer mb={2} />
-            <TextInput placeholder="Full name" textContentType="name" />
+            <TextInput defaultValue={name} placeholder="Full name" textContentType="name" onChangeText={(inputKey, text) => setName(text)} />
             <Spacer mb={2} />
-            <TextInput placeholder="Card number" textContentType="creditCardNumber" />
+            <TextInput defaultValue={cardNumber} placeholder="Card number" textContentType="creditCardNumber" onChangeText={(inputKey, text) => setCardNumber(text)} />
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput placeholder="Expiration date" style={{ flex: 1 }} />
+              <TextInput defaultValue={expirationDate} placeholder="Expiration date" style={{ flex: 1 }} onChangeText={(inputKey, text) => setExpriationDate(text)} />
               <Spacer ml={1} />
-              <TextInput placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} />
+              <TextInput defaultValue={billingZipCode} placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingZipCode(text)} />
             </Flex>
           </>
         )
       case FINISH_BUTTONS:
         return (
           <Flex flexDirection="row" justifyContent="space-between">
-            <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={onCancelBtnPressed}>
+            <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={onFinishedEditing}>
               Cancel
             </Button>
             <Button variant="secondaryBlack" size="large" width={buttonWidth} onPress={handleSaveBtnPressed}>
