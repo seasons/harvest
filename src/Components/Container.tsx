@@ -9,8 +9,8 @@ import { Theme } from "./Theme"
 export const Container: React.FC<{
   children: any
   style?: any
-  insetsBottom?: boolean
-  insetsTop?: boolean
+  insetsBottom?: number
+  insetsTop?: number
   backgroundColor?: "black100" | "white100"
 }> = ({ children, backgroundColor = "white100", insetsBottom = true, insetsTop = true, style }) => {
   const insets = useSafeArea()

@@ -1,4 +1,4 @@
-import { Box, Container, FixedBackArrow, Flex, Sans, Spacer } from "App/Components"
+import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
@@ -7,6 +7,7 @@ import { FlatList } from "react-native"
 import { EditView } from "./EditView"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
 import { useSafeArea } from "react-native-safe-area-context"
+import { space } from "styled-system"
 
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
@@ -79,6 +80,7 @@ export const createBillingAddress = billingInfo => {
 
 export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }) => {
   const insets = useSafeArea()
+  const [isEditing, setIsEditing] = useState(false)
   const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
 
@@ -88,6 +90,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
       const customer = data.me.customer
       const details = customer.detail
       const activeReservation = data.me.activeReservation
+      console.log(details)
 
       if (details && details.shippingAddress) {
         sectionsArray.push({ title: "Shipping address", value: createShippingAddress(details.shippingAddress) })
@@ -122,26 +125,47 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
     return <Loader />
   }
 
+  const handleEditBtnPressed = () => {
+    setIsEditing(!isEditing)
+  }
+
+  const handleCancelBtnPressed = () => {
+    setIsEditing(false)
+  }
+
+  const handleSaveBtnPressed = () => {
+    setIsEditing(false)
+  }
+
   const renderItem = item => {
     return <AccountSection title={item.title} value={item.value} />
   }
 
   return (
-    <Container>
+    <Container insetsBottom={0}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      <EditView />
-      {/* <FlatList
-        data={sections}
-        ListHeaderComponent={() => (
-          <Box px={2} mt={insets.top}>
-            <Spacer mb={2} />
-            <Sans size="3">Payment & Shipping</Sans>
-            <Spacer mb={3} />
-          </Box>
-        )}
-        keyExtractor={item => item.title}
-        renderItem={({ item }) => renderItem(item)}
-      /> */}
+      {isEditing
+        ?
+        <EditView onCancelBtnPressed={handleCancelBtnPressed} onSaveBtnPressed={handleSaveBtnPressed} />
+        :
+        <>
+          <FlatList
+            data={sections}
+            ListHeaderComponent={() => (
+              <Box px={2} mt={insets.top}>
+                <Spacer mb={2} />
+                <Sans size="3">Payment & Shipping</Sans>
+                <Spacer mb={3} />
+              </Box>
+            )}
+            keyExtractor={item => item.title}
+            renderItem={({ item }) => renderItem(item)}
+          />
+          <FixedButton block variant="primaryWhite" onPress={handleEditBtnPressed}>
+            Edit
+          </FixedButton>
+        </>
+      }
     </Container>
   )
 }

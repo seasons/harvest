@@ -27,10 +27,12 @@ const FINISH_BUTTONS = "Finish buttons"
 const PAYMENT_INFORMATION = "Payment information"
 
 interface EditViewProps {
-  paymentInfo?: PaymentCardTextField
+  onCancelBtnPressed: () => void,
+  onSaveBtnPressed: () => void,
 }
 
-export const EditView: React.FC<EditViewProps> = ({ paymentInfo }) => {
+export const EditView: React.FC<EditViewProps> = (props) => {
+  const { onCancelBtnPressed, onSaveBtnPressed } = props
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
 
   const [validateAddress] = useMutation(VALIDATE_ADDRESS, {
@@ -62,14 +64,6 @@ export const EditView: React.FC<EditViewProps> = ({ paymentInfo }) => {
       }
     })
     console.log(result)
-  }
-
-  const handleCancelBtnPressed = () => {
-
-  }
-
-  const handleSaveBtnPressed = () => {
-
   }
 
   const sections = [DELIVERY_ADDRESS, BILLING_ADDRESS, PAYMENT_INFORMATION, FINISH_BUTTONS]
@@ -121,9 +115,11 @@ export const EditView: React.FC<EditViewProps> = ({ paymentInfo }) => {
             <Sans size="1">{BILLING_ADDRESS}</Sans>
             <Spacer mb={2} />
             <Radio
+              borderRadius={4}
               selected={sameAsDeliveryRadioSelected}
               onSelect={handleSameAsDeliveryAddress}
               label="Same as Delivery Address"
+              labelSize="1"
             />
             {!sameAsDeliveryRadioSelected && (
               <>
@@ -164,10 +160,10 @@ export const EditView: React.FC<EditViewProps> = ({ paymentInfo }) => {
       case FINISH_BUTTONS:
         return (
           <Flex flexDirection="row" justifyContent="space-between">
-            <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
+            <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={onCancelBtnPressed}>
               Cancel
             </Button>
-            <Button variant="secondaryBlack" size="large" width={buttonWidth} onPress={handleSaveBtnPressed}>
+            <Button variant="secondaryBlack" size="large" width={buttonWidth} onPress={onSaveBtnPressed}>
               Save
             </Button>
           </Flex>
