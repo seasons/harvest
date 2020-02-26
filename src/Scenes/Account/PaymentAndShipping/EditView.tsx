@@ -54,7 +54,7 @@ export const EditView: React.FC<EditViewProps> = (props) => {
 
   const [billingAddress1, setBillingAddress1] = useState(billingInfo?.street1 || "")
   const [billingAddress2, setBillingAddress2] = useState(billingInfo?.street2 || "")
-  const [billingCity, setBillingCity] = useState(billingInfo?.city || "")
+  const [billingCity, setBillingCity] = useState("")
   const [billingState, setBillingState] = useState(billingInfo?.state || "")
   const [billingZipCode, setBillingZipCode] = useState(billingInfo?.postal_code || "")
 
@@ -67,6 +67,8 @@ export const EditView: React.FC<EditViewProps> = (props) => {
   )
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
 
+  // console.log("SHIPPING CITY:", shippingCity, ",BILLING CITY:", billingCity)
+
   const [updateCustomerInfo] = useMutation(UPDATE_CUSTOMER_INFO, {
     onError: error => {
       console.error("error EditView.tsx: ", error)
@@ -78,29 +80,38 @@ export const EditView: React.FC<EditViewProps> = (props) => {
     },
   })
 
-  // if (paymentInfo?.value) {
-  //   paymentInfo.value.setParams(this.state.params)
-  //   paymentInfo.value.focus()
-  // }
-
-  const handleSameAsDeliveryAddress = async () => {
+  const handleSameAsDeliveryAddress = () => {
+    if (sameAsDeliveryRadioSelected) {
+      setBillingAddress1("")
+      setBillingAddress2("")
+      setBillingZipCode("")
+      setBillingCity("")
+      setBillingState("")
+    } else {
+      setBillingAddress1(shippingAddress1)
+      setBillingAddress2(shippingAddress2)
+      setBillingZipCode(shippingZipCode)
+      setBillingCity(shippingCity)
+      setBillingState(shippingState)
+      console.log("SET BILLING CITY:", shippingCity)
+    }
     setSameAsDeliveryRadioSelected(!sameAsDeliveryRadioSelected)
 
-    const result = await validateAddress({
-      variables: {
-        input: {
-          location: {
-            slug: "Kevin's Address",
-            name: "Kevin's Address",
-            address1: "6420 15th Ave",
-            city: "Brooklyn",
-            state: "NY",
-            zipCode: "11219"
-          }
-        }
-      }
-    })
-    console.log(result)
+    // const result = await validateAddress({
+    //   variables: {
+    //     input: {
+    //       location: {
+    //         slug: "Kevin's Address",
+    //         name: "Kevin's Address",
+    //         address1: "6420 15th Ave",
+    //         city: "Brooklyn",
+    //         state: "NY",
+    //         zipCode: "11219"
+    //       }
+    //     }
+    //   }
+    // })
+    // console.log(result)
   }
 
   const getExpirationMonthAndYear = (expirationDate) => {
@@ -174,18 +185,18 @@ export const EditView: React.FC<EditViewProps> = (props) => {
           <>
             <Sans size="1">{DELIVERY_ADDRESS}</Sans>
             <Spacer mb={2} />
-            <TextInput defaultValue={shippingAddress1} placeholder="Address 1" textContentType="streetAddressLine1" key="deliveryAddress" />
+            <TextInput currentValue={shippingAddress1} placeholder="Address 1" onChangeText={(inputKey, text) => { setShippingAddress1(text) }} />
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
-              <TextInput defaultValue={shippingAddress2} placeholder="Address 2" textContentType="streetAddressLine2" style={{ flex: 1 }} />
+              <TextInput currentValue={shippingAddress2} placeholder="Address 2" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingAddress2(text) }} />
               <Spacer ml={1} />
-              <TextInput defaultValue={shippingZipCode} placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} />
+              <TextInput currentValue={shippingZipCode} placeholder="Zipcode" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingZipCode(text) }} />
             </Flex>
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput defaultValue={shippingCity} placeholder="City" textContentType="addressCity" style={{ flex: 1 }} />
+              <TextInput currentValue={shippingCity} placeholder="City" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingCity(text) }} />
               <Spacer ml={1} />
-              <TextInput defaultValue={shippingState} placeholder="State" textContentType="addressState" style={{ flex: 1 }} />
+              <TextInput currentValue={shippingState} placeholder="State" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingState(text) }} />
             </Flex>
           </>
         )
@@ -201,24 +212,20 @@ export const EditView: React.FC<EditViewProps> = (props) => {
               label="Same as Delivery Address"
               labelSize="1"
             />
-            {!sameAsDeliveryRadioSelected && (
-              <>
-                <Spacer mb={2} />
-                <TextInput placeholder="Address 1" textContentType="streetAddressLine1" onChangeText={(inputKey, text) => { setBillingAddress1(text) }} />
-                <Spacer mb={2} />
-                <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-                  <TextInput placeholder="Address 2" textContentType="streetAddressLine2" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingAddress2(text)} />
-                  <Spacer ml={1} />
-                  <TextInput placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingZipCode(text)} />
-                </Flex>
-                <Spacer mb={2} />
-                <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-                  <TextInput placeholder="City" textContentType="addressCity" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingCity(text)} />
-                  <Spacer ml={1} />
-                  <TextInput placeholder="State" textContentType="addressState" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingState(text)} />
-                </Flex>
-              </>
-            )}
+            <Spacer mb={2} />
+            <TextInput currentValue={billingAddress1} placeholder="Address 1" onChangeText={(inputKey, text) => { setBillingAddress1(text) }} />
+            <Spacer mb={2} />
+            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
+              <TextInput currentValue={billingAddress2} placeholder="Address 2" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingAddress2(text)} />
+              <Spacer ml={1} />
+              <TextInput currentValue={billingZipCode} placeholder="Zipcode" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingZipCode(text)} />
+            </Flex>
+            <Spacer mb={2} />
+            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
+              <TextInput currentValue={billingCity} placeholder="City" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingCity(text)} />
+              <Spacer ml={1} />
+              <TextInput currentValue={billingState} placeholder="State" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingState(text)} />
+            </Flex>
           </>
         )
       case PAYMENT_INFORMATION:
@@ -226,14 +233,14 @@ export const EditView: React.FC<EditViewProps> = (props) => {
           <>
             <Sans size="1">{PAYMENT_INFORMATION}</Sans>
             <Spacer mb={2} />
-            <TextInput defaultValue={name} placeholder="Full name" textContentType="name" onChangeText={(inputKey, text) => setName(text)} />
+            <TextInput currentValue={name} placeholder="Full name" onChangeText={(inputKey, text) => setName(text)} />
             <Spacer mb={2} />
-            <TextInput defaultValue={cardNumber} placeholder="Card number" textContentType="creditCardNumber" onChangeText={(inputKey, text) => setCardNumber(text)} />
+            <TextInput currentValue={cardNumber} placeholder="Card number" onChangeText={(inputKey, text) => setCardNumber(text)} />
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput defaultValue={expirationDate} placeholder="Expiration date" style={{ flex: 1 }} onChangeText={(inputKey, text) => setExpriationDate(text)} />
+              <TextInput currentValue={expirationDate} placeholder="Expiration date" style={{ flex: 1 }} onChangeText={(inputKey, text) => setExpriationDate(text)} />
               <Spacer ml={1} />
-              <TextInput defaultValue={billingZipCode} placeholder="Zipcode" textContentType="postalCode" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingZipCode(text)} />
+              <TextInput currentValue={billingZipCode} placeholder="CVV" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingZipCode(text)} />
             </Flex>
           </>
         )

@@ -1,5 +1,5 @@
 import { color } from "App/Utils"
-import React from "react"
+import React, { useEffect } from "react"
 import { TextInput as RNTextInput, ViewStyle } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
@@ -18,7 +18,7 @@ export interface TextInputProps {
   textContentType?: string
   inputKey?: string
   multiline?: boolean
-  defaultValue?: string
+  currentValue?: string
   onChangeText?: (inputKey: string, text: string) => void
 }
 
@@ -74,15 +74,21 @@ export const TextInput: React.FC<TextInputProps> = ({
   style,
   inputKey,
   multiline,
-  defaultValue = "",
+  currentValue,
 }) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
-  const [current, setCurrent] = React.useState(defaultValue ? DisplayState.Active : DisplayState.Inactive)
-  const [value, setValue] = React.useState(defaultValue)
+  const [current, setCurrent] = React.useState(currentValue ? DisplayState.Active : DisplayState.Inactive)
+  const [value, setValue] = React.useState(currentValue)
   const variantColors = getColorsForVariant(variant)
 
   const from = variantColors[previous]
   const to = variantColors[current]
+
+  useEffect(() => {
+    if (currentValue !== undefined) {
+      handleOnChangeText(currentValue)
+    }
+  })
 
   const handleOnChangeText = text => {
     setValue(text)
