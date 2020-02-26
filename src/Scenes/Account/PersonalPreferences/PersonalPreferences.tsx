@@ -60,7 +60,6 @@ export const AccountSection: React.FC<{ title: string; value: string | [string] 
 }
 
 export const PersonalPreferences: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const insets = useSafeArea()
   const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_PREFERENCES)
 

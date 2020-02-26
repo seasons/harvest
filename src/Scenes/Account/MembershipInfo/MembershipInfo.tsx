@@ -58,7 +58,7 @@ export const MembershipInfo: React.FC<{ navigation: any }> = ({ navigation }) =>
           </Sans>
           <Spacer mb={2} />
           <Separator />
-          <Spacer mb={6} />
+          <Spacer mb={5} />
           {!!planInfo.price && (
             <>
               <Sans size="4" color="black">
@@ -71,7 +71,7 @@ export const MembershipInfo: React.FC<{ navigation: any }> = ({ navigation }) =>
           )}
           {!!planInfo.whatsIncluded && (
             <>
-              <Spacer mb={6} />
+              <Spacer mb={5} />
               <Sans size="3">Whats included</Sans>
               <Spacer mb={2} />
               <Separator />
