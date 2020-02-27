@@ -3,7 +3,6 @@ import { ADD_TO_BAG, GET_BAG, REMOVE_FROM_BAG } from "App/Scenes/Bag/BagQueries"
 import { GreenCheck } from "Assets/svgs"
 import { head } from "lodash"
 import React, { useState } from "react"
-
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"

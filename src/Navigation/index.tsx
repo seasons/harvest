@@ -15,7 +15,7 @@ const getActiveRouteName = state => {
 export const AppContainer = () => {
   const routeNameRef = React.useRef()
   const navigationRef = React.useRef()
-  const [currentScreen, setCurrentScreen] = useState("Home")
+  const [currentScreen, setCurrentScreen] = useState("HomeStack")
 
   return (
     <NavigationContainer

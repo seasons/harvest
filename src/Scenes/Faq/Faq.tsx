@@ -40,7 +40,7 @@ export const Faq = ({ navigation }) => {
           data={data?.faq?.sections}
           keyExtractor={item => item.title}
           renderItem={({ item }) => renderItem(item)}
-          ListFooterComponent={() => <Spacer mb={4} />}
+          ListFooterComponent={() => <Spacer mb={100} />}
         />
       </Flex>
       <FixedButton

@@ -28,7 +28,7 @@ export const EmptyState = ({ remainingPieces, navigation }) => {
           </Sans>
           <Spacer mb={3} />
           <Flex justifyContent="center" flexDirection="row">
-            <Button variant="secondaryBlack" onPress={() => navigation.navigate("Browse")}>
+            <Button variant="secondaryBlack" onPress={() => navigation.navigate("BrowseStack")}>
               Browse
             </Button>
           </Flex>
