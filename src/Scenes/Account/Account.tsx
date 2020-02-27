@@ -11,6 +11,7 @@ import styled from "styled-components/native"
 import { ProfileList } from "./ProfileList"
 import { color } from "styled-system"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { space } from "App/Utils"
 
 export const GET_USER = gql`
   query GetUser {
@@ -107,11 +108,9 @@ export function Account(props) {
 
             <Flex flexDirection="row" justifyContent="space-between" alignItems="center" flexWrap="nowrap" px={2}>
               {loading && (
-                <Box px={2}>
-                  <LoaderContainer style={loaderStyles}>
-                    <UserProfileLoader />
-                  </LoaderContainer>
-                </Box>
+                <LoaderContainer style={loaderStyles}>
+                  <UserProfileLoader />
+                </LoaderContainer>
               )}
               <Flex>
                 {!!firstName && !!lastName && (
@@ -163,6 +162,8 @@ const ImageContainer = styled(Image)`
 `
 
 const LoaderContainer = animated(styled(Box)`
+  top: 3;
+  left: ${space(2)};
   height: 100;
   position: absolute;
 `)
