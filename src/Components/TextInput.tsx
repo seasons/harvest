@@ -85,7 +85,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   const to = variantColors[current]
 
   useEffect(() => {
-    if (currentValue !== undefined) {
+    if (currentValue !== undefined && currentValue !== value) {
       handleOnChangeText(currentValue)
     }
   })
