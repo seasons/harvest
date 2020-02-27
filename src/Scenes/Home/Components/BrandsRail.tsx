@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react"
-import { Box, Sans, Spacer, Flex, RailPositionIndicator } from "App/Components"
-import { FlatList, TouchableOpacity, Image } from "react-native"
-import styled from "styled-components/native"
-import { space, color } from "App/Utils"
-import { Dimensions } from "react-native"
+import { Box, Sans, Flex, Spacer } from "App/Components"
+import { FlatList, TouchableOpacity, ScrollView } from "react-native"
 import { chunk } from "lodash"
 
 interface BrandsRailProps {
@@ -12,92 +9,46 @@ interface BrandsRailProps {
   navigation: any
 }
 
-const cardWidth = 240
-
 export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation }) => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const [slideGroups, createSlideGroups] = useState([])
+  const [rowGroups, createRowGroups] = useState([])
 
   useEffect(() => {
-    const cards = chunk(items, 6)
-    createSlideGroups(cards)
+    const rows = chunk(items, 5)
+    createRowGroups(rows)
   }, [])
 
-  const onScroll = e => {
-    const newPageNum = Math.round(e.nativeEvent.contentOffset.x / cardWidth + 1)
-
-    if (newPageNum !== currentPage) {
-      setCurrentPage(newPageNum)
-    }
-  }
-
-  const navigateToBrand = () => {
-    // FIXME: Navigate to brand
-  }
-
-  const slide = slideGroup => {
-    return slideGroup.map((brand, index) => {
-      const styles =
-        index !== slideGroup.length - 1 ? { borderBottomColor: `${color("black15")}`, borderBottomWidth: 1 } : {}
+  const row = rowGroup => {
+    return rowGroup.map(brand => {
       return (
-        <Box key={brand.logo + index} style={styles}>
-          <TouchableOpacity onPress={navigateToBrand}>
-            <Flex flexDirection="column">
-              <ImageContainer source={{ uri: brand.logo }} resizeMode="contain" />
-            </Flex>
+        <Flex flexDirection="row" key={brand.name}>
+          <TouchableOpacity onPress={() => navigation.navigate("Brand", { id: brand?.id })}>
+            <Sans size="2" style={{ textDecorationLine: "underline" }}>
+              {brand.name}
+            </Sans>
           </TouchableOpacity>
-        </Box>
+          <Spacer mr={2} />
+        </Flex>
       )
     })
   }
 
-  const negativeSpace = Math.round(Dimensions.get("window").width) - (cardWidth + 10)
   return (
-    <Box mb={3} pl={2} style={{ position: "relative" }}>
-      <Sans size="2">{title}</Sans>
-      <Box mt={2}>
-        <FlatList
-          data={slideGroups}
-          renderItem={({ item, index }) => {
-            return (
-              <>
-                <Box mr={2}>
-                  <GroupWrapper>{slide(item)}</GroupWrapper>
+    <Box pl={2} mb={3}>
+      <Sans size="1">{title}</Sans>
+      <Box>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <Flex flexDirection="column">
+            {rowGroups.map((rowItem, index) => {
+              return (
+                <Box key={index}>
+                  <Spacer mb={1} />
+                  <Flex flexDirection="row">{row(rowItem)}</Flex>
                 </Box>
-                {index === items.length - 1 ? <Spacer mr={negativeSpace} /> : null}
-              </>
-            )
-          }}
-          keyExtractor={(item, index) => "brand" + index}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          overScrollMode="always"
-          snapToAlignment="start"
-          decelerationRate="fast"
-          onScroll={onScroll}
-          scrollEventThrottle={299}
-          directionalLockEnabled={true}
-          snapToInterval={cardWidth + space(1)}
-        />
-        <Spacer mb={2} />
-        <Box pr={2}>
-          <RailPositionIndicator length={slideGroups.length} currentPage={currentPage} />
-        </Box>
+              )
+            })}
+          </Flex>
+        </ScrollView>
       </Box>
     </Box>
   )
 }
-
-const GroupWrapper = styled(Box)`
-  background: rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  width: ${cardWidth};
-  background-color: ${color("white100")};
-  border: 1px solid ${color("black15")};
-  border-radius: 10px;
-`
-
-const ImageContainer = styled(Image)`
-  height: 70;
-`

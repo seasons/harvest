@@ -56,7 +56,6 @@ export interface GetUserPaymentData_me_activeReservation_customer {
 
 export interface GetUserPaymentData_me_activeReservation {
   __typename: "Reservation";
-  id: string;
   customer: GetUserPaymentData_me_activeReservation_customer;
 }
 

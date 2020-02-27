@@ -60,10 +60,6 @@ export const Brand = (props: any) => {
     },
   })
 
-  if (loading || !data) {
-    return <Loader />
-  }
-
   const renderItem = ({ item }, i, navigation) => {
     const itemWidth = Dimensions.get("window").width / 2 - 2
     const product = item
@@ -126,8 +122,6 @@ export const Brand = (props: any) => {
         numColumns={2}
         onEndReachedThreshold={0.7}
         onEndReached={() => {
-          // If we are sorting alphabetically, all products are returned so we do not need
-          // to fetch any more
           if (!loading) {
             fetchMore({
               variables: {
@@ -137,17 +131,17 @@ export const Brand = (props: any) => {
                 if (!prev) {
                   return []
                 }
-                console.log("fetchMoreResult", fetchMoreResult)
-                console.log("prev", prev)
 
                 if (!fetchMoreResult) {
                   return prev
                 }
 
-                return prev
-                // return Object.assign({}, prev, {
-                //   brand: { products: [...prev.brand.products, ...fetchMoreResult.brand.products] },
-                // })
+                return Object.assign({}, prev, {
+                  brand: {
+                    ...prev.brand,
+                    products: [...prev.brand.products, ...fetchMoreResult.brand.products],
+                  },
+                })
               },
             })
           }

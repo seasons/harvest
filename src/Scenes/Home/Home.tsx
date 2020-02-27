@@ -10,6 +10,7 @@ import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
+import { BrandsRail } from "./Components/BrandsRail"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -18,6 +19,11 @@ export const GET_HOMEPAGE = gql`
         title
         type
         results {
+          ... on Brand {
+            id
+            name
+            since
+          }
           ... on Product {
             id
             images
@@ -44,6 +50,8 @@ export const Home: React.FC<{
   const [showLoader, toggleLoader] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
 
+  console.log("data", data)
+
   useEffect(() => {
     if (data?.homepage?.sections?.length) {
       const dataSections = data.homepage.sections.filter(section => section?.results?.length)
@@ -67,6 +75,8 @@ export const Home: React.FC<{
 
   const renderItem = item => {
     switch (item.type) {
+      case "Brands":
+        return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
       case "Products":
       case "HomepageProductRails":
         return <ProductsRail title={item.title} navigation={navigation} items={item.results} />

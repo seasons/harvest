@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { Size, ProductStatus } from "./globalTypes";
+import { ProductOrderByInput, Size, ProductStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBrand
@@ -51,4 +51,7 @@ export interface GetBrand {
 
 export interface GetBrandVariables {
   brandID: string;
+  first: number;
+  skip: number;
+  orderBy: ProductOrderByInput;
 }
