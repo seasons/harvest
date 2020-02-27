@@ -165,6 +165,7 @@ export interface SansProps extends Partial<TextProps> {
    * to `regular`.
    */
   weight?: null | "thin" | "medium"
+  onPress?: () => void
 }
 
 /**
