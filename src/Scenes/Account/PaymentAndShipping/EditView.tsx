@@ -19,7 +19,7 @@ interface CreditCardFormProps {
 
 const UPDATE_CUSTOMER_INFO = gql`
   mutation updateCustomerInfo($currentBillingInfo: BillingInfoCreateInput, $detail: CustomerDetailCreateInput) {
-    updateCustomerInfo(currentBillingInfo: $currentBillingInfo, detail: $detail) {
+    updateCustomerInfo(billingInfo: $currentBillingInfo, detail: $detail) {
       id
     }
   }
@@ -45,12 +45,19 @@ interface EditViewProps {
 }
 
 export const EditView: React.FC<EditViewProps> = (props) => {
-  const { billingInfo: currentBillingInfo, shippingAddress, onFinishedEditing } = props
-  const [shippingAddress1, setShippingAddress1] = useState(shippingAddress?.address1 || "")
-  const [shippingAddress2, setShippingAddress2] = useState(shippingAddress?.address2 || "")
-  const [shippingCity, setShippingCity] = useState(shippingAddress?.city || "")
-  const [shippingState, setShippingState] = useState(shippingAddress?.state || "")
-  const [shippingZipCode, setShippingZipCode] = useState(shippingAddress?.zipCode || "")
+  const {
+    billingInfo: currentBillingInfo,
+    shippingAddress: currnetShippingAddress,
+    onFinishedEditing
+  } = props
+
+  const [shippingAddress, setShippingAddress] = useState({
+    address1: currnetShippingAddress?.address1 || "",
+    address2: currnetShippingAddress?.address2 || "",
+    city: currnetShippingAddress?.city || "",
+    state: currnetShippingAddress?.state || "",
+    zipCode: currnetShippingAddress?.zipCode || ""
+  })
 
   const [billingInfo, setBillingInfo] = useState({
     address1: currentBillingInfo?.street1 || "",
@@ -62,9 +69,28 @@ export const EditView: React.FC<EditViewProps> = (props) => {
       : "",
     name: currentBillingInfo?.name || "",
     state: currentBillingInfo?.state || "",
-    zipCode: currentBillingInfo?.postal_code || "",
+    zipCode: currentBillingInfo?.postal_code || ""
   })
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
+
+  const {
+    address1: shippingAddress1,
+    address2: shippingAddress2,
+    city: shippingCity,
+    state: shippingState,
+    zipCode: shippingZipCode,
+  } = shippingAddress
+
+  const {
+    address1: billingAddress1,
+    address2: billingAddress2,
+    cardNumber,
+    city: billingCity,
+    expirationDate,
+    name,
+    state: billingState,
+    zipCode: billingZipCode,
+  } = billingInfo
 
   const [updateCustomerInfo] = useMutation(UPDATE_CUSTOMER_INFO, {
     onError: error => {
@@ -135,42 +161,40 @@ export const EditView: React.FC<EditViewProps> = (props) => {
     }
   }
 
-  const {
-    address1: billingAddress1,
-    address2: billingAddress2,
-    cardNumber,
-    city: billingCity,
-    expirationDate,
-    name,
-    state: billingState,
-    zipCode: billingZipCode,
-  } = billingInfo
-
   const handleSaveBtnPressed = async () => {
+    if (!billingAddress1 || !billingZipCode || !billingCity || !billingState || !name || !cardNumber || !expirationDate) {
+      return
+    }
+
+    // Make sure card number has correct number of digits
+    const formattedCardNumber = cardNumber.replace(" ", "")
+    if (formattedCardNumber.length !== 16) return
+
+    // Make sure expiration date is correctly formatted
+    const expirationDateInfo = getExpirationMonthAndYear(expirationDate)
+    if (!expirationDateInfo) return
+
+    const result = await updateCustomerInfo({
+      variables: {
+        currentBillingInfo: {
+          brand: "Visa",
+          name,
+          last_digits: formattedCardNumber.substring(12),
+          expiration_month: expirationDateInfo.expirationMonth,
+          expiration_year: expirationDateInfo.expirationYear,
+          postal_code: billingZipCode,
+          street1: billingAddress1,
+          street2: billingAddress2,
+          city: billingCity,
+          state: billingState,
+        }
+      }
+    })
+    console.log(result)
+
     // console.log(name, cardNumber, expirationDate, billingZipCode)
     // console.log(billingAddress1, billingAddress2, billingZipCode, billingCity, billingState, name, cardNumber, expirationDate)
-    if (billingAddress1 && billingZipCode && billingCity && billingState && name && cardNumber && expirationDate) {
-      const expirationDateInfo = getExpirationMonthAndYear(expirationDate)
-      console.log(expirationDateInfo)
-      if (expirationDateInfo) {
-        const result = await updateCustomerInfo({
-          variables: {
-            currentBillingInfo: {
-              name,
-              last_digits: cardNumber,
-              expiration_month: expirationDateInfo.expirationMonth,
-              expiration_year: expirationDateInfo.expirationYear,
-              postal_code: billingZipCode,
-              street1: billingAddress1,
-              street2: billingAddress2,
-              city: billingCity,
-              state: billingState,
-            }
-          }
-        })
-        console.log(result)
-      }
-    }
+
     // onFinishedEditing()
   }
 
@@ -201,18 +225,18 @@ export const EditView: React.FC<EditViewProps> = (props) => {
           <>
             <Sans size="1">{DELIVERY_ADDRESS}</Sans>
             <Spacer mb={2} />
-            <TextInput currentValue={shippingAddress1} placeholder="Address 1" onChangeText={(inputKey, text) => { setShippingAddress1(text) }} />
+            <TextInput currentValue={shippingAddress1} placeholder="Address 1" onChangeText={(inputKey, text) => setShippingAddress({ ...shippingAddress, address1: text })} />
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
-              <TextInput currentValue={shippingAddress2} placeholder="Address 2" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingAddress2(text) }} />
+              <TextInput currentValue={shippingAddress2} placeholder="Address 2" style={{ flex: 1 }} onChangeText={(inputKey, text) => setShippingAddress({ ...shippingAddress, address2: text })} />
               <Spacer ml={1} />
-              <TextInput currentValue={shippingZipCode} placeholder="Zipcode" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingZipCode(text) }} />
+              <TextInput currentValue={shippingZipCode} placeholder="Zipcode" style={{ flex: 1 }} onChangeText={(inputKey, text) => setShippingAddress({ ...shippingAddress, zipCode: text })} />
             </Flex>
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput currentValue={shippingCity} placeholder="City" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingCity(text) }} />
+              <TextInput currentValue={shippingCity} placeholder="City" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingAddress({ ...shippingAddress, city: text }) }} />
               <Spacer ml={1} />
-              <TextInput currentValue={shippingState} placeholder="State" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingState(text) }} />
+              <TextInput currentValue={shippingState} placeholder="State" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingAddress({ ...shippingAddress, state: text }) }} />
             </Flex>
           </>
         )
