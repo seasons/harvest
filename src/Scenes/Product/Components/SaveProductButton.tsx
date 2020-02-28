@@ -27,7 +27,6 @@ const SAVE_ITEM = gql`
 export const SaveProductButton: React.FC<{
   selectedVariant: any
   product: any
-  navigation: any
   setPopUp: ({ show: boolean, data: any }) => void
 }> = ({ selectedVariant, product, setPopUp }) => {
   const navigation = useNavigation()
@@ -100,7 +99,7 @@ export const SaveProductButton: React.FC<{
   return (
     <Box>
       <TouchableOpacity onPress={() => handleSaveButton()}>
-        <Box pl={2} pb={2}>
+        <Box p={2}>
           <SaveIcon enabled={isSaved} />
         </Box>
       </TouchableOpacity>
