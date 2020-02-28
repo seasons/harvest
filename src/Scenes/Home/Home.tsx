@@ -50,8 +50,6 @@ export const Home: React.FC<{
   const [showLoader, toggleLoader] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
 
-  console.log("data", data)
-
   useEffect(() => {
     if (data?.homepage?.sections?.length) {
       const dataSections = data.homepage.sections.filter(section => section?.results?.length)

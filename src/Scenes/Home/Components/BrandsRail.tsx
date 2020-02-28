@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Box, Sans, Flex, Spacer } from "App/Components"
-import { FlatList, TouchableOpacity, ScrollView } from "react-native"
+import { TouchableOpacity, ScrollView } from "react-native"
 import { chunk } from "lodash"
 
 interface BrandsRailProps {
@@ -34,7 +34,14 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
 
   return (
     <Box pl={2} mb={3}>
-      <Sans size="1">{title}</Sans>
+      <Flex flexDirection="row" justifyContent="space-between" pr={2}>
+        <Sans size="1">{title}</Sans>
+        <TouchableOpacity onPress={() => navigation.navigate("Brands")}>
+          <Sans size="1" style={{ textDecorationLine: "underline" }}>
+            View all
+          </Sans>
+        </TouchableOpacity>
+      </Flex>
       <Box>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Flex flexDirection="column">

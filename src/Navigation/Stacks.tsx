@@ -17,6 +17,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { color } from "App/Utils"
 import { Faq } from "App/Scenes/Faq"
 import { Brand } from "App/Scenes/Brand"
+import { Brands } from "App/Scenes/Brands"
 
 const HomeStack = createStackNavigator()
 const BagStack = createStackNavigator()
@@ -80,6 +81,7 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name="Home" component={Home} />
       <HomeStack.Screen name="Product" component={Product} initialParams={{ id: "" }} />
       <BrowseStack.Screen name="Brand" component={Brand} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name="Brands" component={Brands} />
     </HomeStack.Navigator>
   )
 }

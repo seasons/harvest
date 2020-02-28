@@ -1,7 +1,7 @@
 import React from "react"
 import { Box, Sans, Spacer } from "App/Components"
 import { FlatList } from "react-native"
-import { styled } from "App/Components/platform/primitives"
+import styled from "styled-components/native"
 
 export const MoreLikeThis = ({ products }) => {
   return (

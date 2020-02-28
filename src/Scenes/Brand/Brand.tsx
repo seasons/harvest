@@ -2,7 +2,6 @@ import React from "react"
 import gql from "graphql-tag"
 import { useQuery } from "@apollo/react-hooks"
 import { Container, Sans, Box, VariantSizes, Spacer, FixedBackArrow } from "App/Components"
-import { Loader } from "App/Components/Loader"
 import { GetBrand } from "App/generated/GetBrand"
 import { FlatList, Dimensions, TouchableWithoutFeedback } from "react-native"
 import { get } from "lodash"
@@ -14,7 +13,7 @@ import { ReadMore } from "App/Components/ReadMore"
 const IMAGE_HEIGHT = 240
 
 const GET_BRAND = gql`
-  query GetBrand($brandID: ID!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!) {
+  query GetBrandAndProducts($brandID: ID!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!) {
     brand(where: { id: $brandID }) {
       id
       name
@@ -54,7 +53,7 @@ export const Brand = (props: any) => {
   const { data, loading, fetchMore } = useQuery<GetBrand>(GET_BRAND, {
     variables: {
       brandID,
-      first: 4,
+      first: 10,
       skip: 0,
       orderBy: "createdAt_DESC",
     },

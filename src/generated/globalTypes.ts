@@ -12,6 +12,35 @@ export enum BagItemStatus {
   Reserved = "Reserved",
 }
 
+export enum BrandOrderByInput {
+  basedIn_ASC = "basedIn_ASC",
+  basedIn_DESC = "basedIn_DESC",
+  brandCode_ASC = "brandCode_ASC",
+  brandCode_DESC = "brandCode_DESC",
+  createdAt_ASC = "createdAt_ASC",
+  createdAt_DESC = "createdAt_DESC",
+  description_ASC = "description_ASC",
+  description_DESC = "description_DESC",
+  id_ASC = "id_ASC",
+  id_DESC = "id_DESC",
+  isPrimaryBrand_ASC = "isPrimaryBrand_ASC",
+  isPrimaryBrand_DESC = "isPrimaryBrand_DESC",
+  logo_ASC = "logo_ASC",
+  logo_DESC = "logo_DESC",
+  name_ASC = "name_ASC",
+  name_DESC = "name_DESC",
+  since_ASC = "since_ASC",
+  since_DESC = "since_DESC",
+  slug_ASC = "slug_ASC",
+  slug_DESC = "slug_DESC",
+  tier_ASC = "tier_ASC",
+  tier_DESC = "tier_DESC",
+  updatedAt_ASC = "updatedAt_ASC",
+  updatedAt_DESC = "updatedAt_DESC",
+  websiteUrl_ASC = "websiteUrl_ASC",
+  websiteUrl_DESC = "websiteUrl_DESC",
+}
+
 export enum HomePageSectionType {
   Brands = "Brands",
   CollectionGroups = "CollectionGroups",
