@@ -145,6 +145,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
         ?
         <EditView
           billingInfo={billingInfo}
+          navigation={navigation}
           shippingAddress={shippingAddress}
           onFinishedEditing={onFinishedEditing}
         />

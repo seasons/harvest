@@ -2,20 +2,16 @@ import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
+import { useIsFocused } from '@react-navigation/native';
 import stripe, { PaymentCardTextField, StripeToken } from "tipsi-stripe"
 import { Box, Button, Flex, Radio, Sans, Spacer, TextInput } from "App/Components"
+import { get } from "lodash"
 import {
   GetUserPaymentData_me_customer_detail,
   GetUserPaymentData_me_customer_billingInfo,
   GetUserPaymentData_me_customer_detail_shippingAddress
 } from "src/generated/getUserPaymentData"
-import { useMutation } from "react-apollo"
-
-interface CreditCardFormProps {
-  navigator?: NavigatorIOS
-  params?: PaymentCardTextFieldParams
-  onSubmit: (t: StripeToken, p: PaymentCardTextFieldParams) => void
-}
+import { useMutation, useQuery } from "react-apollo"
 
 const UPDATE_CUSTOMER_INFO = gql`
   mutation updateCustomerInfo($currentBillingInfo: BillingInfoCreateInput, $detail: CustomerDetailCreateInput) {
@@ -24,6 +20,43 @@ const UPDATE_CUSTOMER_INFO = gql`
     }
   }
 `
+
+const ACKNOWLEDGE_COMPLETED_CHARGEBEE = gql`
+  mutation acknowledgeCompletedChargebeeHostedCheckout($hostedPageID: String!) {
+    acknowledgeCompletedChargebeeHostedCheckout(hostedPageID: $hostedPageID) { 
+      billingInfo {
+        city
+        expiration_month
+        expiration_year
+        last_digits
+        name
+        postal_code
+        state
+        street1
+        street2
+      }
+      plan
+    }
+  }
+`
+
+const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
+  query chargebeeUpdatePaymentPage($planID: PlanID!) {
+    chargebeeUpdatePaymentPage(planID: $planID) {
+      created_at
+      embed
+      expires_at
+      id
+      object
+      resource_version
+      state
+      type
+      updated_at
+      url
+    }
+  }
+`
+
 const VALIDATE_ADDRESS = gql`
   mutation validateAddress($input: ValidateAddressInput!) {
     validateAddress(input: $input) {
@@ -35,11 +68,13 @@ const VALIDATE_ADDRESS = gql`
 `
 const BILLING_ADDRESS = "Billing address"
 const DELIVERY_ADDRESS = "Delivery address"
+const EDIT_BILLING_INFO = "Edit billing info"
 const FINISH_BUTTONS = "Finish buttons"
 const PAYMENT_INFORMATION = "Payment information"
 
 interface EditViewProps {
   billingInfo?: GetUserPaymentData_me_customer_billingInfo,
+  navigation: any
   shippingAddress?: GetUserPaymentData_me_customer_detail_shippingAddress,
   onFinishedEditing: () => void,
 }
@@ -47,6 +82,7 @@ interface EditViewProps {
 export const EditView: React.FC<EditViewProps> = (props) => {
   const {
     billingInfo: currentBillingInfo,
+    navigation,
     shippingAddress: currnetShippingAddress,
     onFinishedEditing
   } = props
@@ -73,6 +109,8 @@ export const EditView: React.FC<EditViewProps> = (props) => {
   })
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
 
+  const isFocused = useIsFocused()
+
   const {
     address1: shippingAddress1,
     address2: shippingAddress2,
@@ -97,11 +135,45 @@ export const EditView: React.FC<EditViewProps> = (props) => {
       console.error("error EditView.tsx: ", error)
     },
   })
+  const [acknowledgeCompletedChargebee] = useMutation(ACKNOWLEDGE_COMPLETED_CHARGEBEE, {
+    onError: error => {
+      console.error("error EditView.tsx: ", error)
+    },
+  })
+
   const [validateAddress] = useMutation(VALIDATE_ADDRESS, {
     onError: error => {
       console.error("error EditView.tsx: ", error)
     },
   })
+
+  const { data, loading, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE, {
+    variables: {
+      planID: "Essential",
+    },
+  })
+
+  if (data) {
+    console.log("IS FOCUSED:", isFocused)
+    console.log("CHARGEBEE:", data)
+  }
+
+  // useEffect(() => {
+  //   async function acknowledgeChargebee() {
+  //     const chargebeeHostedPageID = get(data, "chargebeeUpdatePaymentPage.id")
+  //     console.log("ACKNOWLEDGING")
+  //     if (chargebeeHostedPageID && isFocused) {
+  //       const result = await acknowledgeCompletedChargebee({
+  //         variables: {
+  //           hostedPageID: chargebeeHostedPageID
+  //         }
+  //       })
+  //       console.log("ACKNOWLEDGED RESULT:", result)
+  //     }
+  //   }
+
+  //   acknowledgeChargebee()
+  // })
 
   const handleSameAsDeliveryAddress = () => {
     if (sameAsDeliveryRadioSelected) {
@@ -162,59 +234,56 @@ export const EditView: React.FC<EditViewProps> = (props) => {
   }
 
   const handleSaveBtnPressed = async () => {
-    if (!billingAddress1 || !billingZipCode || !billingCity || !billingState || !name || !cardNumber || !expirationDate) {
-      return
-    }
-
-    // Make sure card number has correct number of digits
-    const formattedCardNumber = cardNumber.replace(" ", "")
-    if (formattedCardNumber.length !== 16) return
-
-    // Make sure expiration date is correctly formatted
-    const expirationDateInfo = getExpirationMonthAndYear(expirationDate)
-    if (!expirationDateInfo) return
-
-    const result = await updateCustomerInfo({
-      variables: {
-        currentBillingInfo: {
-          brand: "Visa",
-          name,
-          last_digits: formattedCardNumber.substring(12),
-          expiration_month: expirationDateInfo.expirationMonth,
-          expiration_year: expirationDateInfo.expirationYear,
-          postal_code: billingZipCode,
-          street1: billingAddress1,
-          street2: billingAddress2,
-          city: billingCity,
-          state: billingState,
+    const chargebeeHostedPageID = get(data, "chargebeeUpdatePaymentPage.id")
+    console.log("ACKNOWLEDGING")
+    if (chargebeeHostedPageID && isFocused) {
+      const result = await acknowledgeCompletedChargebee({
+        variables: {
+          hostedPageID: chargebeeHostedPageID
         }
-      }
-    })
-    console.log(result)
+      })
+      console.log("ACKNOWLEDGED RESULT:", result)
+    }
+    // if (!billingAddress1 || !billingZipCode || !billingCity || !billingState || !name || !cardNumber || !expirationDate) {
+    //   return
+    // }
 
-    // console.log(name, cardNumber, expirationDate, billingZipCode)
-    // console.log(billingAddress1, billingAddress2, billingZipCode, billingCity, billingState, name, cardNumber, expirationDate)
+    // // Make sure card number has correct number of digits
+    // const formattedCardNumber = cardNumber.replace(" ", "")
+    // if (formattedCardNumber.length !== 16) return
 
-    // onFinishedEditing()
+    // // Make sure expiration date is correctly formatted
+    // const expirationDateInfo = getExpirationMonthAndYear(expirationDate)
+    // if (!expirationDateInfo) return
+
+    // const result = await updateCustomerInfo({
+    //   variables: {
+    //     currentBillingInfo: {
+    //       brand: "Visa",
+    //       name,
+    //       last_digits: formattedCardNumber.substring(12),
+    //       expiration_month: expirationDateInfo.expirationMonth,
+    //       expiration_year: expirationDateInfo.expirationYear,
+    //       postal_code: billingZipCode,
+    //       street1: billingAddress1,
+    //       street2: billingAddress2,
+    //       city: billingCity,
+    //       state: billingState,
+    //     }
+    //   }
+    // })
+    // console.log(result)
   }
 
-  const sections = [DELIVERY_ADDRESS, BILLING_ADDRESS, PAYMENT_INFORMATION, FINISH_BUTTONS]
+  const handleEditBillingInfoBtnPressed = () => {
+    const chargebeeHostedPageURL = get(data, "chargebeeUpdatePaymentPage.url")
+    if (chargebeeHostedPageURL) {
+      navigation.navigate("Webview", { uri: chargebeeHostedPageURL, variant: "whiteBackground" })
+    }
+  }
 
-  // const tokenizeCardAndSubmit = async () => {
-  //   this.setState({ isLoading: true, isError: false })
+  const sections = [DELIVERY_ADDRESS, BILLING_ADDRESS, PAYMENT_INFORMATION, EDIT_BILLING_INFO, FINISH_BUTTONS]
 
-  //   const { params } = this.state
-
-  //   try {
-  //     const token = await stripe.createTokenWithCard({ ...params })
-  //     this.props.onSubmit(token, this.state.params)
-  //     this.setState({ isLoading: false })
-  //     this.props.navigator.pop()
-  //   } catch (error) {
-  //     console.warn("CreditCardForm.tsx", error)
-  //     this.setState({ isError: true, isLoading: false })
-  //   }
-  // }
   const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 40) / 2
   const renderItem = ({ item: section }) => {
@@ -283,6 +352,14 @@ export const EditView: React.FC<EditViewProps> = (props) => {
               <TextInput currentValue={billingZipCode} placeholder="CVV" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingInfo({ ...billingInfo })} />
             </Flex>
           </>
+        )
+      case EDIT_BILLING_INFO:
+        return (
+          <Flex flexDirection="row" justifyContent="space-between">
+            <Button variant="secondaryBlack" size="large" width={buttonWidth} onPress={handleEditBillingInfoBtnPressed}>
+              Edit Billing Info
+            </Button>
+          </Flex>
         )
       case FINISH_BUTTONS:
         return (

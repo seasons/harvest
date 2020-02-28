@@ -19,6 +19,6 @@ export interface updateCustomerInfo {
 }
 
 export interface updateCustomerInfoVariables {
-  billingInfo?: BillingInfoCreateInput | null;
+  currentBillingInfo?: BillingInfoCreateInput | null;
   detail?: CustomerDetailCreateInput | null;
 }
