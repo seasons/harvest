@@ -129,7 +129,14 @@ export const AddToBagButton: React.FC<Props> = props => {
   }
 
   return (
-    <Button width={width} showCheckMark={showCheckMark} variant="primaryBlack" disabled={disabled} onPress={onPress}>
+    <Button
+      width={width}
+      loading={isMutating}
+      showCheckMark={showCheckMark}
+      variant="primaryBlack"
+      disabled={disabled}
+      onPress={onPress}
+    >
       {text}
     </Button>
   )

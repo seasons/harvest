@@ -15,6 +15,7 @@ import styled from "styled-components/native"
 import { color } from "styled-system"
 import { useQuery } from "@apollo/react-hooks"
 import { BrowseLoader } from "./Loader"
+import { Spinner } from "App/Components/Spinner"
 
 const IMAGE_HEIGHT = 240
 
@@ -153,6 +154,15 @@ export const Browse = (props: any) => {
             keyExtractor={(item, index) => item.id + index}
             renderItem={(item, i) => renderItem(item, i, navigation)}
             numColumns={2}
+            ListFooterComponent={() => (
+              <>
+                {loading && (
+                  <Flex style={{ height: 40 }} flexDirection="row" justifyContent="center">
+                    <Spinner />
+                  </Flex>
+                )}
+              </>
+            )}
             onEndReachedThreshold={0.7}
             onEndReached={() => {
               // If we are sorting alphabetically, all products are returned so we do not need

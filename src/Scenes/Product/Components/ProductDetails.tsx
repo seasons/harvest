@@ -1,8 +1,9 @@
 import { Box, Sans, Separator, Spacer, Flex } from "App/Components"
-import { color } from "App/Utils"
+import { color, space } from "App/Utils"
 import React from "react"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
+import styled from "styled-components/native"
 import { GetProduct_product } from "App/generated/GetProduct"
 import { TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native"
@@ -49,7 +50,9 @@ export const ProductDetails: React.FC<{
           </TouchableOpacity>
         </Box>
         {!!(selectedVariant && selectedVariant.id) && (
-          <SaveProductButton selectedVariant={selectedVariant} product={product} setPopUp={setPopUp} />
+          <SaveButtonWrapper>
+            <SaveProductButton selectedVariant={selectedVariant} product={product} setPopUp={setPopUp} />
+          </SaveButtonWrapper>
         )}
       </Flex>
       <Spacer mb={1} />
@@ -73,3 +76,8 @@ export const ProductDetails: React.FC<{
     </Box>
   )
 }
+
+const SaveButtonWrapper = styled(Box)`
+  top: -${space(2)};
+  right: -${space(2)};
+`

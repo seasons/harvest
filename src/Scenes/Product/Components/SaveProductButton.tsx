@@ -98,7 +98,7 @@ export const SaveProductButton: React.FC<{
   return (
     <Box>
       <TouchableOpacity onPress={() => handleSaveButton()}>
-        <Box pl={2} pb={2}>
+        <Box p={2}>
           <SaveIcon enabled={isSaved} />
         </Box>
       </TouchableOpacity>

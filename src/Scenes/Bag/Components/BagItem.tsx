@@ -128,7 +128,7 @@ export const BagItem: React.FC<BagItemProps> = ({
             >
               <SaveForLaterButton>
                 <Sans size="1" textAlign="center">
-                  {!saved ? "Save For Later" : "Add to Bag"}
+                  {!saved ? "Save for later" : "Add to bag"}
                 </Sans>
               </SaveForLaterButton>
             </TouchableOpacity>
@@ -143,7 +143,7 @@ const RemoveButton = styled(Box)`
   background: #f6f6f6;
   border-radius: 5px;
   height: 48px;
-  padding: 10px;
+  padding: 11px 8px 8px;
 `
 
 const SaveForLaterButton = styled(Box)`
@@ -152,7 +152,7 @@ const SaveForLaterButton = styled(Box)`
   border: 1px;
   border-color: #e5e5e5;
   background: transparent;
-  padding: 10px;
+  padding: 11px 8px 8px;
 `
 
 const BagItemContainer = styled(Box)`
