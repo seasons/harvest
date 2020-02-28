@@ -16,6 +16,8 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { color } from "App/Utils"
 import { Faq } from "App/Scenes/Faq"
+import { Brand } from "App/Scenes/Brand"
+import { Brands } from "App/Scenes/Brands"
 
 const HomeStack = createStackNavigator()
 const BagStack = createStackNavigator()
@@ -77,7 +79,9 @@ const HomeStackScreen = () => {
   return (
     <HomeStack.Navigator initialRouteName="Home" screenOptions={{ ...defaultOptions }}>
       <HomeStack.Screen name="Home" component={Home} />
-      <HomeStack.Screen name="Product" component={Product} />
+      <HomeStack.Screen name="Product" component={Product} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name="Brand" component={Brand} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name="Brands" component={Brands} />
     </HomeStack.Navigator>
   )
 }
@@ -86,7 +90,8 @@ const BrowseStackScreen = () => {
   return (
     <BrowseStack.Navigator initialRouteName="Browse" screenOptions={{ ...defaultOptions }}>
       <BrowseStack.Screen name="Browse" component={Browse} initialParams={{ sizeFilters: [] }} />
-      <BrowseStack.Screen name="Product" component={Product} />
+      <BrowseStack.Screen name="Product" component={Product} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name="Brand" component={Brand} initialParams={{ id: "" }} />
     </BrowseStack.Navigator>
   )
 }
@@ -96,7 +101,8 @@ const BagStackScreen = () => {
     <BagStack.Navigator initialRouteName="Bag" screenOptions={{ ...defaultOptions }}>
       <BagStack.Screen name="Bag" component={Bag} />
       <BagStack.Screen name="Webview" component={Webview} />
-      <BagStack.Screen name="Product" component={Product} />
+      <BagStack.Screen name="Product" component={Product} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name="Brand" component={Brand} initialParams={{ id: "" }} />
       <BagStack.Screen name="CurrentRotation" component={CurrentRotation} />
       <BagStack.Screen name="Faq" component={Faq} />
     </BagStack.Navigator>

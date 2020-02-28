@@ -8,7 +8,6 @@ import { head } from "lodash"
 import React from "react"
 import { useMutation } from "react-apollo"
 import { TouchableOpacity } from "react-native"
-
 import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
 
@@ -27,7 +26,6 @@ const SAVE_ITEM = gql`
 export const SaveProductButton: React.FC<{
   selectedVariant: any
   product: any
-  navigation: any
   setPopUp: ({ show: boolean, data: any }) => void
 }> = ({ selectedVariant, product, setPopUp }) => {
   const navigation = useNavigation()

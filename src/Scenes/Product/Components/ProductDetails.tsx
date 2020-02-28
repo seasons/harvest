@@ -4,6 +4,8 @@ import React from "react"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
 import { GetProduct_product } from "App/generated/GetProduct"
+import { TouchableOpacity } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 
 // FIXME: Fix types here
 export const ProductDetails: React.FC<{
@@ -11,6 +13,7 @@ export const ProductDetails: React.FC<{
   selectedVariant: any
   product: GetProduct_product
 }> = ({ setPopUp, selectedVariant, product }) => {
+  const navigation = useNavigation()
   if (!product || !product.variants) {
     return <></>
   }
@@ -36,19 +39,21 @@ export const ProductDetails: React.FC<{
     <Box pt={2} px={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between">
         <Box>
-          <Sans size="1" color="black">
+          <Sans size="1" color={color("black100")}>
             {name}
           </Sans>
-          <Sans size="1" color="gray">
-            {brandName}
-          </Sans>
+          <TouchableOpacity onPress={() => navigation.navigate("Brand", { id: product?.brand?.id })}>
+            <Sans size="1" color={color("black50")} style={{ textDecorationLine: "underline" }}>
+              {brandName}
+            </Sans>
+          </TouchableOpacity>
         </Box>
         {!!(selectedVariant && selectedVariant.id) && (
           <SaveProductButton selectedVariant={selectedVariant} product={product} setPopUp={setPopUp} />
         )}
       </Flex>
       <Spacer mb={1} />
-      <Sans size="1" color="gray" lineHeight={26}>
+      <Sans size="1" color={color("black50")} lineHeight={26}>
         {description}
       </Sans>
       <Spacer mb={3} />
