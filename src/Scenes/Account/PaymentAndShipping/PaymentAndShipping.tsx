@@ -5,7 +5,6 @@ import { get } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
-import { EditView } from "./EditView"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
 import { useSafeArea } from "react-native-safe-area-context"
 import { space } from "styled-system"
@@ -71,23 +70,6 @@ const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
   }
 `
 
-const GET_CHARGEBEE_CHECKOUT = gql`
-  query chargebeeCheckout($planID: PlanID!, $userIDHash: String!) {
-    chargebeeCheckout(planID: $planID, userIDHash: $userIDHash) {
-      created_at
-      embed
-      expires_at
-      id
-      object
-      resource_version
-      state
-      type
-      updated_at
-      url
-    }
-  }
-`
-
 export const createShippingAddress = shippingAddress => {
   const addressArray = []
   if (shippingAddress.address1) {
@@ -118,7 +100,6 @@ export const createBillingAddress = billingInfo => {
 
 export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }) => {
   const insets = useSafeArea()
-  const [isEditing, setIsEditing] = useState(false)
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
   const {
     data: chargebeeUpdatePaymentData,
@@ -130,28 +111,16 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
     },
   })
 
-  const {
-    data: chargebeeCheckoutData,
-    loading: chargebeeCheckoutLoading,
-    error: chargebeeCheckoutError
-  } = useQuery(GET_CHARGEBEE_CHECKOUT, {
-    variables: {
-      planID: "Essential",
-      userIDHash: "hello"
-    },
-  })
-
-  if (loading || chargebeeUpdatePaymentLoading || chargebeeCheckoutLoading) {
+  if (loading || chargebeeUpdatePaymentLoading) {
     return <Loader />
   }
 
-  if (error || chargebeeUpdatePaymentError || chargebeeCheckoutError) {
+  if (error || chargebeeUpdatePaymentError) {
     console.error("error PaymentAndShipping.tsx: ", error)
     return <Loader />
   }
 
   const chargebeeUpdatePaymentHostedPage = get(chargebeeUpdatePaymentData, "chargebeeUpdatePaymentPage")
-  const chargebeeCheckoutHostedPage = get(chargebeeCheckoutData, "chargebeeCheckout")
 
   console.log("UPDATE PAYMENT HOSTED PAGE:", chargebeeUpdatePaymentData)
 
@@ -188,11 +157,11 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   }
 
   const handleEditBtnPressed = () => {
-    setIsEditing(!isEditing)
-  }
-
-  const onFinishedEditing = () => {
-    setIsEditing(false)
+    navigation.navigate("EditPaymentAndShipping", {
+      billingInfo,
+      chargebeeUpdatePaymentHostedPage,
+      shippingAddress
+    })
   }
 
   const renderItem = item => {
@@ -202,35 +171,21 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   return (
     <Container insetsBottom={0}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      {isEditing && chargebeeUpdatePaymentHostedPage && chargebeeCheckoutHostedPage
-        ?
-        <EditView
-          billingInfo={billingInfo}
-          chargebeeCheckoutHostedPage={chargebeeCheckoutHostedPage}
-          chargebeeUpdatePaymentHostedPage={chargebeeUpdatePaymentHostedPage}
-          navigation={navigation}
-          shippingAddress={shippingAddress}
-          onFinishedEditing={onFinishedEditing}
-        />
-        :
-        <>
-          <FlatList
-            data={sections}
-            ListHeaderComponent={() => (
-              <Box px={2} mt={insets.top}>
-                <Spacer mb={2} />
-                <Sans size="3">Payment & Shipping</Sans>
-                <Spacer mb={3} />
-              </Box>
-            )}
-            keyExtractor={item => item.title}
-            renderItem={({ item }) => renderItem(item)}
-          />
-          <FixedButton block variant="primaryWhite" onPress={handleEditBtnPressed}>
-            Edit
-          </FixedButton>
-        </>
-      }
+      <FlatList
+        data={sections}
+        ListHeaderComponent={() => (
+          <Box px={2} mt={insets.top}>
+            <Spacer mb={2} />
+            <Sans size="3">Payment & Shipping</Sans>
+            <Spacer mb={3} />
+          </Box>
+        )}
+        keyExtractor={item => item.title}
+        renderItem={({ item }) => renderItem(item)}
+      />
+      <FixedButton block variant="primaryWhite" onPress={handleEditBtnPressed}>
+        Edit
+      </FixedButton>
     </Container>
   )
 }
