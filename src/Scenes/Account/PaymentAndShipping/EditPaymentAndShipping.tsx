@@ -4,6 +4,7 @@ import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, PopUp, Radio, Sans, Spacer, TextInput } from "App/Components"
 import { get } from "lodash"
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage } from "src/generated/chargebeeUpdatePaymentPage"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
 import {
@@ -228,7 +229,7 @@ export const EditPaymentAndShipping: React.FC<{
     <Container insetsBottom={0}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Box px={2}>
-        <FlatList
+        <KeyboardAwareFlatList
           data={sections}
           ListHeaderComponent={() => (
             <Box mt={insets.top}>
