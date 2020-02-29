@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, PopUp, Radio, Sans, Spacer, TextInput } from "App/Components"
+import { PopUpProps } from "App/Components/PopUp"
 import { get } from "lodash"
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage } from "src/generated/chargebeeUpdatePaymentPage"
@@ -32,7 +33,7 @@ export const EditPaymentAndShipping: React.FC<{
   const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage = get(route, "params.chargebeeUpdatePaymentHostedPage")
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = get(route, "params.shippingAddress")
 
-  const [showError, setShowError] = useState(false)
+  const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [isMutating, setIsMutating] = useState(false)
   const [shippingAddress, setShippingAddress] = useState({
     address1: currentShippingAddress?.address1 || "",
@@ -69,7 +70,20 @@ export const EditPaymentAndShipping: React.FC<{
 
   const [updatePaymentAndShipping] = useMutation(UPDATE_PAYMENT_AND_SHIPPING, {
     onError: error => {
-      setShowError(true)
+      let popUpData = {
+        buttonText: "Got it",
+        note: "Make sure your shipping and billing address are valid.",
+        title: "Something went wrong!",
+        onClose: () => setPopUp({ show: false, data: null })
+      }
+      if (error.message.includes("SHIPPING_ADDRESS_NOT_NYC")) {
+        popUpData = {
+          ...popUpData,
+          note: "Unfortunately we only ship to Manhattan, Queens, The Bronx, and Brooklyn right now.",
+          title: "Uh oh. That’s not NYC"
+        }
+      }
+      setPopUp({ show: true, data: popUpData })
       console.log("error EditView.tsx: ", error)
     },
   })
@@ -217,12 +231,6 @@ export const EditPaymentAndShipping: React.FC<{
     }
   }
 
-  const popUpData = {
-    buttonText: "Got it",
-    note: "Make sure your shipping and billing address are valid.",
-    title: "Something went wrong!",
-    onClose: () => setShowError(false)
-  }
 
   const insets = useSafeArea()
   return (
@@ -245,7 +253,7 @@ export const EditPaymentAndShipping: React.FC<{
           showsVerticalScrollIndicator={false}
         />
       </Box>
-      <PopUp data={popUpData} show={showError} insetsBottom={true} />
+      <PopUp data={popUp.data} show={popUp.show} insetsBottom={true} />
     </Container>
   )
 }
