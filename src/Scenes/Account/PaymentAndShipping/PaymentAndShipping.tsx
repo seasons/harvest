@@ -26,6 +26,7 @@ export const GET_PAYMENT_DATA = gql`
           }
         }
         billingInfo {
+          brand
           city
           expiration_month
           expiration_year
@@ -147,7 +148,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
 
       sections.push({
         title: "Payment info",
-        value: customer.billingInfo.last_digits,
+        value: `${customer.billingInfo.brand.toUpperCase()} ${customer.billingInfo.last_digits}`,
       })
     }
 
@@ -177,7 +178,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
           <Box px={2} mt={insets.top}>
             <Spacer mb={2} />
             <Sans size="3">Payment & Shipping</Sans>
-            <Spacer mb={3} />
+            <Spacer mb={4} />
           </Box>
         )}
         keyExtractor={item => item.title}

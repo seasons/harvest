@@ -19,7 +19,7 @@ const UPDATE_PAYMENT_AND_SHIPPING = gql`
 `
 
 const BILLING_ADDRESS = "Billing address"
-const DELIVERY_ADDRESS = "Delivery address"
+const SHIPPING_ADDRESS = "Shipping address"
 const EDIT_BILLING_INFO = "Edit billing info"
 const FINISH_BUTTONS = "Finish buttons"
 
@@ -90,7 +90,6 @@ export const EditPaymentAndShipping: React.FC<{
         state: shippingState,
         zipCode: shippingZipCode,
       })
-      console.log("SET BILLING CITY:", shippingCity)
     }
     setSameAsDeliveryRadioSelected(!sameAsDeliveryRadioSelected)
   }
@@ -120,7 +119,6 @@ export const EditPaymentAndShipping: React.FC<{
         }
       ]
     })
-    console.log("UPDATED INFO:", result)
     setIsMutating(false)
     if (result) {
       navigation.pop()
@@ -140,16 +138,16 @@ export const EditPaymentAndShipping: React.FC<{
     navigation.pop()
   }
 
-  const sections = [DELIVERY_ADDRESS, BILLING_ADDRESS, EDIT_BILLING_INFO, FINISH_BUTTONS]
+  const sections = [SHIPPING_ADDRESS, BILLING_ADDRESS, EDIT_BILLING_INFO, FINISH_BUTTONS]
 
   const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 40) / 2
   const renderItem = ({ item: section }) => {
     switch (section) {
-      case DELIVERY_ADDRESS:
+      case SHIPPING_ADDRESS:
         return (
           <>
-            <Sans size="1">{DELIVERY_ADDRESS}</Sans>
+            <Sans size="1">{SHIPPING_ADDRESS}</Sans>
             <Spacer mb={2} />
             <TextInput currentValue={shippingAddress1} placeholder="Address 1" onChangeText={(inputKey, text) => setShippingAddress({ ...shippingAddress, address1: text })} />
             <Spacer mb={2} />
@@ -236,7 +234,7 @@ export const EditPaymentAndShipping: React.FC<{
             <Box mt={insets.top}>
               <Spacer mb={2} />
               <Sans size="3">Payment & Shipping</Sans>
-              <Spacer mb={6} />
+              <Spacer mb={4} />
             </Box>
           )}
           ItemSeparatorComponent={() => <Spacer mb={6} />}

@@ -26,6 +26,7 @@ export interface GetUserPaymentData_me_customer_detail {
 
 export interface GetUserPaymentData_me_customer_billingInfo {
   __typename: "BillingInfo";
+  brand: string;
   city: string | null;
   expiration_month: number;
   expiration_year: number;
