@@ -10,7 +10,7 @@ import { PlanID } from "./globalTypes";
 // ====================================================
 
 export interface chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage {
-  __typename: "ChargebeeCheckout";
+  __typename: "ChargebeeHostedPagePayload";
   created_at: any;
   embed: boolean;
   expires_at: number;
