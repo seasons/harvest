@@ -7,7 +7,6 @@ import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
 import { useSafeArea } from "react-native-safe-area-context"
-import { space } from "styled-system"
 
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
@@ -122,8 +121,6 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   }
 
   const chargebeeUpdatePaymentHostedPage = get(chargebeeUpdatePaymentData, "chargebeeUpdatePaymentPage")
-
-  console.log("UPDATE PAYMENT HOSTED PAGE:", chargebeeUpdatePaymentData)
 
   let sections = []
   let shippingAddress = null

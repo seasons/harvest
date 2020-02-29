@@ -1,18 +1,18 @@
 import gql from "graphql-tag"
-import React, { useEffect, useState } from "react"
-import { Dimensions, FlatList } from "react-native"
+import { get } from "lodash"
+import React, { useState } from "react"
+import { useMutation } from "react-apollo"
+import { Dimensions } from "react-native"
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { useSafeArea } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, PopUp, Radio, Sans, Spacer, TextInput } from "App/Components"
 import { PopUpProps } from "App/Components/PopUp"
-import { get } from "lodash"
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
-import { chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage } from "src/generated/chargebeeUpdatePaymentPage"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
+import { chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage } from "src/generated/chargebeeUpdatePaymentPage"
 import {
   GetUserPaymentData_me_customer_billingInfo,
   GetUserPaymentData_me_customer_detail_shippingAddress
 } from "src/generated/getUserPaymentData"
-import { useMutation, useQuery } from "react-apollo"
 
 const UPDATE_PAYMENT_AND_SHIPPING = gql`
   mutation updatePaymentAndShipping($billingAddress: AddressInput!, $shippingAddress: AddressInput!) {
@@ -33,8 +33,8 @@ export const EditPaymentAndShipping: React.FC<{
   const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage = get(route, "params.chargebeeUpdatePaymentHostedPage")
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = get(route, "params.shippingAddress")
 
-  const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [isMutating, setIsMutating] = useState(false)
+  const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [shippingAddress, setShippingAddress] = useState({
     address1: currentShippingAddress?.address1 || "",
     address2: currentShippingAddress?.address2 || "",
@@ -42,7 +42,6 @@ export const EditPaymentAndShipping: React.FC<{
     state: currentShippingAddress?.state || "",
     zipCode: currentShippingAddress?.zipCode || ""
   })
-
   const [billingAddress, setBillingAddress] = useState({
     address1: billingInfo?.street1 || "",
     address2: billingInfo?.street2 || "",
@@ -230,7 +229,6 @@ export const EditPaymentAndShipping: React.FC<{
         return null
     }
   }
-
 
   const insets = useSafeArea()
   return (
