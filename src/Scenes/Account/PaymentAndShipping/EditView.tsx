@@ -6,12 +6,16 @@ import { useIsFocused } from '@react-navigation/native';
 import stripe, { PaymentCardTextField, StripeToken } from "tipsi-stripe"
 import { Box, Button, Flex, Radio, Sans, Spacer, TextInput } from "App/Components"
 import { get } from "lodash"
+import { chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage } from "src/generated/chargebeeUpdatePaymentPage"
+import { chargebeeCheckout_chargebeeCheckout } from "src/generated/chargebeeCheckout"
+import { GET_PAYMENT_DATA } from "../PaymentAndShipping/PaymentAndShipping"
 import {
   GetUserPaymentData_me_customer_detail,
   GetUserPaymentData_me_customer_billingInfo,
   GetUserPaymentData_me_customer_detail_shippingAddress
 } from "src/generated/getUserPaymentData"
 import { useMutation, useQuery } from "react-apollo"
+import { check } from "react-native-permissions";
 
 const UPDATE_CUSTOMER_INFO = gql`
   mutation updateCustomerInfo($currentBillingInfo: BillingInfoCreateInput, $detail: CustomerDetailCreateInput) {
@@ -40,9 +44,15 @@ const ACKNOWLEDGE_COMPLETED_CHARGEBEE = gql`
   }
 `
 
-const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
-  query chargebeeUpdatePaymentPage($planID: PlanID!) {
-    chargebeeUpdatePaymentPage(planID: $planID) {
+const CHECK_CHARGEBEE_UPDATE = gql`
+  mutation checkChargebeeUpdate {
+    checkChargebeeUpdate
+  }
+`
+
+const GET_CHARGEBEE_HOSTED_PAGE = gql`
+  query chargebeeHostedPage($hostedPageID: String!) {
+    chargebeeHostedPage(hostedPageID: $hostedPageID) {
       created_at
       embed
       expires_at
@@ -56,6 +66,7 @@ const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
     }
   }
 `
+
 
 const VALIDATE_ADDRESS = gql`
   mutation validateAddress($input: ValidateAddressInput!) {
@@ -74,6 +85,8 @@ const PAYMENT_INFORMATION = "Payment information"
 
 interface EditViewProps {
   billingInfo?: GetUserPaymentData_me_customer_billingInfo,
+  chargebeeCheckoutHostedPage: chargebeeCheckout_chargebeeCheckout,
+  chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage,
   navigation: any
   shippingAddress?: GetUserPaymentData_me_customer_detail_shippingAddress,
   onFinishedEditing: () => void,
@@ -82,6 +95,8 @@ interface EditViewProps {
 export const EditView: React.FC<EditViewProps> = (props) => {
   const {
     billingInfo: currentBillingInfo,
+    chargebeeCheckoutHostedPage,
+    chargebeeUpdatePaymentHostedPage,
     navigation,
     shippingAddress: currnetShippingAddress,
     onFinishedEditing
@@ -130,6 +145,17 @@ export const EditView: React.FC<EditViewProps> = (props) => {
     zipCode: billingZipCode,
   } = billingInfo
 
+  const { loading, error, data } = useQuery(GET_CHARGEBEE_HOSTED_PAGE, {
+    variables: {
+      hostedPageID: chargebeeUpdatePaymentHostedPage.id
+    },
+    fetchPolicy: "network-only"
+  })
+
+  if (data) {
+    console.log("RETRIEVED HOSTED PAGE:", data)
+  }
+
   const [updateCustomerInfo] = useMutation(UPDATE_CUSTOMER_INFO, {
     onError: error => {
       console.error("error EditView.tsx: ", error)
@@ -141,22 +167,17 @@ export const EditView: React.FC<EditViewProps> = (props) => {
     },
   })
 
+
+  const [checkChargebeeUpdate] = useMutation(CHECK_CHARGEBEE_UPDATE, {
+    onError: error => {
+      console.error("error EditView.tsx: ", error)
+    },
+  })
   const [validateAddress] = useMutation(VALIDATE_ADDRESS, {
     onError: error => {
       console.error("error EditView.tsx: ", error)
     },
   })
-
-  const { data, loading, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE, {
-    variables: {
-      planID: "Essential",
-    },
-  })
-
-  if (data) {
-    console.log("IS FOCUSED:", isFocused)
-    console.log("CHARGEBEE:", data)
-  }
 
   // useEffect(() => {
   //   async function acknowledgeChargebee() {
@@ -234,16 +255,57 @@ export const EditView: React.FC<EditViewProps> = (props) => {
   }
 
   const handleSaveBtnPressed = async () => {
-    const chargebeeHostedPageID = get(data, "chargebeeUpdatePaymentPage.id")
-    console.log("ACKNOWLEDGING")
-    if (chargebeeHostedPageID && isFocused) {
-      const result = await acknowledgeCompletedChargebee({
-        variables: {
-          hostedPageID: chargebeeHostedPageID
-        }
-      })
-      console.log("ACKNOWLEDGED RESULT:", result)
-    }
+    const result = await checkChargebeeUpdate({
+      refetchQueries: [{
+        query: GET_PAYMENT_DATA
+      }]
+    })
+    console.log("UPDATE:", result)
+    onFinishedEditing()
+    // const result = await validateAddress({
+    //   variables: {
+    //     input: {
+    //       location: {
+    //         slug: "Kevin's Address",
+    //         name: "Kevin's Address",
+    //         address1: "6420 15th Ave",
+    //         city: "Brooklyn",
+    //         state: "NY",
+    //         zipCode: "11219"
+    //       },
+    //       email: "kevinchan159@gmail.com"
+    //     }
+    //   },
+    //   refetchQueries: [
+    //     {
+    //       query: GET_CHARGEBEE_HOSTED_PAGE,
+    //       variables: {
+    //         hostedPageID: chargebeeUpdatePaymentHostedPage.id
+    //       },
+    //     }
+    //   ]
+    // })
+    // console.log(result)
+
+    // console.log("ACKNOWLEDGING")
+    // if (chargebeeUpdatePaymentHostedPage.id && isFocused) {
+    //   const result = await acknowledgeCompletedChargebee({
+    //     variables: {
+    //       hostedPageID: chargebeeUpdatePaymentHostedPage.id
+    //     }
+    //   })
+    //   console.log("ACKNOWLEDGED RESULT:", result)
+    // }
+
+    // if (chargebeeCheckoutHostedPage.id && isFocused) {
+    //   const result = await acknowledgeCompletedChargebee({
+    //     variables: {
+    //       hostedPageID: chargebeeCheckoutHostedPage.id
+    //     }
+    //   })
+    //   console.log("ACKNOWLEDGED RESULT:", result)
+    // }
+
     // if (!billingAddress1 || !billingZipCode || !billingCity || !billingState || !name || !cardNumber || !expirationDate) {
     //   return
     // }
@@ -276,9 +338,20 @@ export const EditView: React.FC<EditViewProps> = (props) => {
   }
 
   const handleEditBillingInfoBtnPressed = () => {
-    const chargebeeHostedPageURL = get(data, "chargebeeUpdatePaymentPage.url")
-    if (chargebeeHostedPageURL) {
-      navigation.navigate("Webview", { uri: chargebeeHostedPageURL, variant: "whiteBackground" })
+    if (chargebeeUpdatePaymentHostedPage.url) {
+      navigation.navigate("Webview", {
+        uri: chargebeeUpdatePaymentHostedPage.url,
+        variant: "whiteBackground"
+      })
+    }
+  }
+
+  const handleCheckoutBtnPressed = () => {
+    if (chargebeeCheckoutHostedPage.url) {
+      navigation.navigate("Webview", {
+        uri: chargebeeCheckoutHostedPage.url,
+        variant: "whiteBackground"
+      })
     }
   }
 
@@ -358,6 +431,9 @@ export const EditView: React.FC<EditViewProps> = (props) => {
           <Flex flexDirection="row" justifyContent="space-between">
             <Button variant="secondaryBlack" size="large" width={buttonWidth} onPress={handleEditBillingInfoBtnPressed}>
               Edit Billing Info
+            </Button>
+            <Button variant="secondaryBlack" size="large" width={buttonWidth} onPress={handleCheckoutBtnPressed}>
+              Checkout
             </Button>
           </Flex>
         )

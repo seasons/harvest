@@ -6,10 +6,10 @@
 import { PlanID } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: chargebeeUpdatePaymentPage
+// GraphQL query operation: chargebeeCheckout
 // ====================================================
 
-export interface chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage {
+export interface chargebeeCheckout_chargebeeCheckout {
   __typename: "ChargebeeCheckout";
   created_at: any;
   embed: boolean;
@@ -23,10 +23,11 @@ export interface chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage {
   url: string;
 }
 
-export interface chargebeeUpdatePaymentPage {
-  chargebeeUpdatePaymentPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage | null;
+export interface chargebeeCheckout {
+  chargebeeCheckout: chargebeeCheckout_chargebeeCheckout | null;
 }
 
-export interface chargebeeUpdatePaymentPageVariables {
+export interface chargebeeCheckoutVariables {
   planID: PlanID;
+  userIDHash: string;
 }

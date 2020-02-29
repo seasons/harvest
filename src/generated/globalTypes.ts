@@ -115,6 +115,11 @@ export enum Plan {
   Essential = "Essential",
 }
 
+export enum PlanID {
+  AllAccess = "AllAccess",
+  Essential = "Essential",
+}
+
 export enum ProductOrderByInput {
   createdAt_ASC = "createdAt_ASC",
   createdAt_DESC = "createdAt_DESC",

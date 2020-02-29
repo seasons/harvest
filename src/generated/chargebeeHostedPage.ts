@@ -3,13 +3,11 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PlanID } from "./globalTypes";
-
 // ====================================================
-// GraphQL query operation: chargebeeUpdatePaymentPage
+// GraphQL query operation: chargebeeHostedPage
 // ====================================================
 
-export interface chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage {
+export interface chargebeeHostedPage_chargebeeHostedPage {
   __typename: "ChargebeeCheckout";
   created_at: any;
   embed: boolean;
@@ -23,10 +21,10 @@ export interface chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage {
   url: string;
 }
 
-export interface chargebeeUpdatePaymentPage {
-  chargebeeUpdatePaymentPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage | null;
+export interface chargebeeHostedPage {
+  chargebeeHostedPage: chargebeeHostedPage_chargebeeHostedPage | null;
 }
 
-export interface chargebeeUpdatePaymentPageVariables {
-  planID: PlanID;
+export interface chargebeeHostedPageVariables {
+  hostedPageID: string;
 }

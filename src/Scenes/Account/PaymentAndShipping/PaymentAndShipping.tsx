@@ -1,6 +1,7 @@
 import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
+import { get } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
@@ -53,6 +54,40 @@ export const GET_PAYMENT_DATA = gql`
   }
 `
 
+const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
+  query chargebeeUpdatePaymentPage($planID: PlanID!) {
+    chargebeeUpdatePaymentPage(planID: $planID) {
+      created_at
+      embed
+      expires_at
+      id
+      object
+      resource_version
+      state
+      type
+      updated_at
+      url
+    }
+  }
+`
+
+const GET_CHARGEBEE_CHECKOUT = gql`
+  query chargebeeCheckout($planID: PlanID!, $userIDHash: String!) {
+    chargebeeCheckout(planID: $planID, userIDHash: $userIDHash) {
+      created_at
+      embed
+      expires_at
+      id
+      object
+      resource_version
+      state
+      type
+      updated_at
+      url
+    }
+  }
+`
+
 export const createShippingAddress = shippingAddress => {
   const addressArray = []
   if (shippingAddress.address1) {
@@ -85,15 +120,40 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   const insets = useSafeArea()
   const [isEditing, setIsEditing] = useState(false)
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
+  const {
+    data: chargebeeUpdatePaymentData,
+    loading: chargebeeUpdatePaymentLoading,
+    error: chargebeeUpdatePaymentError
+  } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE, {
+    variables: {
+      planID: "Essential",
+    },
+  })
 
-  if (loading) {
+  const {
+    data: chargebeeCheckoutData,
+    loading: chargebeeCheckoutLoading,
+    error: chargebeeCheckoutError
+  } = useQuery(GET_CHARGEBEE_CHECKOUT, {
+    variables: {
+      planID: "Essential",
+      userIDHash: "hello"
+    },
+  })
+
+  if (loading || chargebeeUpdatePaymentLoading || chargebeeCheckoutLoading) {
     return <Loader />
   }
 
-  if (error) {
+  if (error || chargebeeUpdatePaymentError || chargebeeCheckoutError) {
     console.error("error PaymentAndShipping.tsx: ", error)
     return <Loader />
   }
+
+  const chargebeeUpdatePaymentHostedPage = get(chargebeeUpdatePaymentData, "chargebeeUpdatePaymentPage")
+  const chargebeeCheckoutHostedPage = get(chargebeeCheckoutData, "chargebeeCheckout")
+
+  console.log("UPDATE PAYMENT HOSTED PAGE:", chargebeeUpdatePaymentData)
 
   let sections = []
   let shippingAddress = null
@@ -102,6 +162,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
     const customer = data.me.customer
     const details = customer.detail
     // console.log(details)
+    console.log(customer.billingInfo)
 
     if (details?.shippingAddress) {
       shippingAddress = details.shippingAddress
@@ -141,10 +202,12 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   return (
     <Container insetsBottom={0}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      {isEditing
+      {isEditing && chargebeeUpdatePaymentHostedPage && chargebeeCheckoutHostedPage
         ?
         <EditView
           billingInfo={billingInfo}
+          chargebeeCheckoutHostedPage={chargebeeCheckoutHostedPage}
+          chargebeeUpdatePaymentHostedPage={chargebeeUpdatePaymentHostedPage}
           navigation={navigation}
           shippingAddress={shippingAddress}
           onFinishedEditing={onFinishedEditing}
