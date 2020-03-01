@@ -3,8 +3,6 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PlanID } from "./globalTypes";
-
 // ====================================================
 // GraphQL query operation: chargebeeUpdatePaymentPage
 // ====================================================
@@ -25,8 +23,4 @@ export interface chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage {
 
 export interface chargebeeUpdatePaymentPage {
   chargebeeUpdatePaymentPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage | null;
-}
-
-export interface chargebeeUpdatePaymentPageVariables {
-  planID: PlanID;
 }

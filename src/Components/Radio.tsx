@@ -1,9 +1,9 @@
 import debounce from "lodash/debounce"
 import React from "react"
 import styled from "styled-components/native"
-import { Flex, FlexProps } from "./Flex"
 import { SansSize } from "App/Components"
 import { color, space } from "App/Utils"
+import { Flex, FlexProps } from "./Flex"
 
 import { BorderProps, borders, SizeProps, space as styledSpace, SpaceProps } from "styled-system"
 import { Box, Sans } from "App/Components"

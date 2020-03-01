@@ -6,6 +6,7 @@ import { Dimensions } from "react-native"
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { useSafeArea } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, PopUp, Radio, Sans, Spacer, TextInput } from "App/Components"
+import { Loader } from "App/Components/Loader"
 import { PopUpProps } from "App/Components/PopUp"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
 import { chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage } from "src/generated/chargebeeUpdatePaymentPage"
@@ -13,11 +14,10 @@ import {
   GetUserPaymentData_me_customer_billingInfo,
   GetUserPaymentData_me_customer_detail_shippingAddress
 } from "src/generated/getUserPaymentData"
-import { Loader } from "App/Components/Loader"
 
 const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
-  query chargebeeUpdatePaymentPage($planID: PlanID!) {
-    chargebeeUpdatePaymentPage(planID: $planID) {
+  query chargebeeUpdatePaymentPage {
+    chargebeeUpdatePaymentPage {
       created_at
       embed
       expires_at
@@ -39,9 +39,9 @@ const UPDATE_PAYMENT_AND_SHIPPING = gql`
 `
 
 const BILLING_ADDRESS = "Billing address"
-const SHIPPING_ADDRESS = "Shipping address"
 const EDIT_BILLING_INFO = "Edit billing info"
 const FINISH_BUTTONS = "Finish buttons"
+const SHIPPING_ADDRESS = "Shipping address"
 
 export const EditPaymentAndShipping: React.FC<{
   navigation: any
@@ -88,11 +88,7 @@ export const EditPaymentAndShipping: React.FC<{
     },
   })
 
-  const { data, loading, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE, {
-    variables: {
-      planID: "Essential",
-    },
-  })
+  const { data, loading, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE)
 
   if (loading) {
     return <Loader />
@@ -174,17 +170,15 @@ export const EditPaymentAndShipping: React.FC<{
   }
 
   const handleEditBillingInfoBtnPressed = () => {
-    if (chargebeeUpdatePaymentHostedPage.url) {
+    if (chargebeeUpdatePaymentHostedPage?.url) {
       navigation.navigate("Webview", {
-        uri: chargebeeUpdatePaymentHostedPage.url,
+        uri: chargebeeUpdatePaymentHostedPage?.url,
         variant: "whiteBackground"
       })
     }
   }
 
-  const handleCancelBtnPressed = () => {
-    navigation.pop()
-  }
+  const handleCancelBtnPressed = () => navigation.pop()
 
   const sections = [SHIPPING_ADDRESS, BILLING_ADDRESS, EDIT_BILLING_INFO, FINISH_BUTTONS]
 
