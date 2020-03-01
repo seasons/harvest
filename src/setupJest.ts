@@ -13,6 +13,14 @@ jest.mock("react-native-safe-area-context", () => ({
   }),
 }))
 
+jest.mock("react-native-permissions", () => ({
+  checkNotifications: () => jest.fn(),
+}))
+
+jest.mock("react-native-pusher-push-notifications", () => ({
+  RNPusherPushNotifications: () => jest.fn(),
+}))
+
 jest.mock("@segment/analytics-react-native", () => ({
   setup: jest.fn(),
 }))

@@ -5,7 +5,7 @@ import { Dimensions, Text, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { GreenCheck, LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Flex, Sans, Theme } from "App/Components"
+import { Flex, Sans } from "App/Components"
 import { color } from "App/Utils"
 
 const ADD_PRODUCT_VARIANT_WANT = gql`
@@ -46,8 +46,8 @@ export const VariantWant = (props: VariantWantProps) => {
       {
         query: GET_PRODUCT,
         variables: {
-          productID
-        }
+          productID,
+        },
       },
     ],
   })
@@ -56,8 +56,8 @@ export const VariantWant = (props: VariantWantProps) => {
     try {
       const result = await addProductVariantWant({
         variables: {
-          variantID
-        }
+          variantID,
+        },
       })
       if (!result?.data?.addProductVariantWant) {
         setPopUp({ show: true, data: popUpData })
@@ -74,7 +74,7 @@ export const VariantWant = (props: VariantWantProps) => {
       <LeftCorner />
       <RightCorner />
       <TextContainer>
-        {shouldShowGreenCheck && <GreenCheck width={16} height={16} />}
+        {shouldShowGreenCheck && <GreenCheck width={16} height={16} strokeWidth={6} />}
         <Text>
           <Sans size="2" color={color("white100")}>
             {plainText}

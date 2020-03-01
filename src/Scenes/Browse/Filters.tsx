@@ -8,22 +8,10 @@ import styled from "styled-components/native"
 import { Box, Button, Flex, Radio, Sans, Separator, Spacer, Theme } from "../../Components"
 
 const FILTER_BY = "Filter by"
-const SORT_BY = "Sort by"
-const RECENTLY_ADDED = "Recently added"
 
 export const Filters = (props: any) => {
-  const currentSortFilter = get(props, "navigation.state.params.sortFilter", "") || RECENTLY_ADDED
-  const currentSizeFilters = get(props, "navigation.state.params.sizeFilters", [])
-  const [sortFilter, setSortFilter] = useState(currentSortFilter)
+  const currentSizeFilters = get(props, "route.params.sizeFilters", [])
   const [sizeFilters, setSizeFilters] = useState(currentSizeFilters)
-
-  const handleCancelBtnPressed = () => {
-    props.navigation.goBack()
-  }
-
-  const handleApplyBtnPressed = () => {
-    props.navigation.navigate("Browse", { sortFilter, sizeFilters })
-  }
 
   const filterSections = [
     {
@@ -39,20 +27,14 @@ export const Filters = (props: any) => {
   const buttonHeight = 48
   const separatorColor = "#272727"
 
-  const renderItem = ({ item, section }) => {
-    const isSortBySection = section.title === SORT_BY
-    const isSelected = isSortBySection ? sortFilter === item : sizeFilters.includes(item)
+  const renderItem = ({ item }) => {
+    const isSelected = sizeFilters.includes(item)
     // Use the default border radius for the sort by section
-    const radioButtonBorderRadius = isSortBySection ? undefined : 4
     const handlePress = () => {
-      if (section.title === SORT_BY) {
-        setSortFilter(sortFilter !== item ? item : "")
-      } else if (section.title == FILTER_BY) {
-        if (sizeFilters.includes(item)) {
-          setSizeFilters(sizeFilters.filter(f => f !== item))
-        } else {
-          setSizeFilters([...sizeFilters, item])
-        }
+      if (sizeFilters.includes(item)) {
+        setSizeFilters(sizeFilters.filter(f => f !== item))
+      } else {
+        setSizeFilters([...sizeFilters, item])
       }
     }
 
@@ -61,8 +43,8 @@ export const Filters = (props: any) => {
         <Box>
           <Spacer mt={20} />
           <Flex flexDirection="row">
-            <Radio borderRadius={radioButtonBorderRadius} selected={isSelected} onSelect={handlePress}>
-              {!isSortBySection ? <WhiteCheck /> : null}
+            <Radio borderRadius={4} selected={isSelected} onSelect={handlePress}>
+              <WhiteCheck />
             </Radio>
             <Sans color="white" ml={2} size="1" weight="medium">
               {item}
@@ -88,7 +70,6 @@ export const Filters = (props: any) => {
               <Box ml="auto">
                 <TouchableOpacity
                   onPress={() => {
-                    setSortFilter("Recently added")
                     setSizeFilters([])
                   }}
                 >
@@ -110,12 +91,18 @@ export const Filters = (props: any) => {
           </Box>
         </Flex>
         <Box style={{ position: "absolute", left: 16, bottom: buttonBottom }}>
-          <Button variant="secondaryBlack" width={buttonWidth} onPress={handleCancelBtnPressed}>
+          <Button variant="secondaryBlack" width={buttonWidth} onPress={() => props.navigation.goBack()}>
             Cancel
           </Button>
         </Box>
         <Box style={{ position: "absolute", left: screenWidth / 2 + 3.5, bottom: buttonBottom }}>
-          <Button variant="primaryWhite" width={buttonWidth} onPress={handleApplyBtnPressed}>
+          <Button
+            variant="primaryWhite"
+            width={buttonWidth}
+            onPress={() => {
+              props.navigation.navigate("Browse", { sizeFilters })
+            }}
+          >
             Apply
           </Button>
         </Box>

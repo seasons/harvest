@@ -1,16 +1,15 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box } from "App/Components"
-import { AuthContext } from "App/Navigation/AuthProvider"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { SaveIcon } from "Assets/icons"
 import { CircledSaveIcon } from "Assets/icons/CircledSaveIcon"
 import gql from "graphql-tag"
 import { head } from "lodash"
-import React, { useContext } from "react"
+import React from "react"
 import { useMutation } from "react-apollo"
 import { TouchableOpacity } from "react-native"
-
 import { useNavigation } from "@react-navigation/native"
+import { useAuthContext } from "App/Navigation/AuthContext"
 
 const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
@@ -27,7 +26,6 @@ const SAVE_ITEM = gql`
 export const SaveProductButton: React.FC<{
   selectedVariant: any
   product: any
-  navigation: any
   setPopUp: ({ show: boolean, data: any }) => void
 }> = ({ selectedVariant, product, setPopUp }) => {
   const navigation = useNavigation()
@@ -35,8 +33,8 @@ export const SaveProductButton: React.FC<{
     return <></>
   }
   const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
-  const { authState } = useContext(AuthContext)
-  const userHasSession = authState?.isSignedIn
+  const { authState } = useAuthContext()
+  const userHasSession = !!authState?.userSession
 
   if (!variantToUse) {
     return <></>
@@ -100,7 +98,7 @@ export const SaveProductButton: React.FC<{
   return (
     <Box>
       <TouchableOpacity onPress={() => handleSaveButton()}>
-        <Box pl={2} pb={2}>
+        <Box p={2}>
           <SaveIcon enabled={isSaved} />
         </Box>
       </TouchableOpacity>

@@ -113,7 +113,8 @@
     "testEnvironment": "jsdom",
     "testURL": "http://localhost/",
     "setupFilesAfterEnv": [
-      "./src/setupJest.ts"
+      "./src/setupJest.ts",
+      "./node_modules/react-native-gesture-handler/jestSetup.js"
     ],
     "cacheDirectory": ".jest/cache",
     "transform": {

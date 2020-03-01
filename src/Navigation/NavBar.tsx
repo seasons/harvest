@@ -24,13 +24,13 @@ export const NavBar = ({ state, descriptors, navigation, currentScreen }) => {
     }
 
     let URL
-    if (routeName === "Home") {
+    if (routeName === "HomeStack") {
       URL = require(`../../assets/images/Home.png`)
-    } else if (routeName === "Browse") {
+    } else if (routeName === "BrowseStack") {
       URL = require(`../../assets/images/Browse.png`)
-    } else if (routeName === "Bag") {
+    } else if (routeName === "BagStack") {
       URL = require(`../../assets/images/Bag.png`)
-    } else if (routeName === "Account") {
+    } else if (routeName === "AccountStack") {
       URL = require(`../../assets/images/Account.png`)
     }
 

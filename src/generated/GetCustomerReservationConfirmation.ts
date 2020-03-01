@@ -33,12 +33,6 @@ export interface GetCustomerReservationConfirmation_me_customer_detail {
   shippingAddress: GetCustomerReservationConfirmation_me_customer_detail_shippingAddress | null;
 }
 
-export interface GetCustomerReservationConfirmation_me_customer_billingInfo {
-  __typename: "BillingInfo";
-  brand: string;
-  last_digits: string;
-}
-
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_brand {
   __typename: "Brand";
   id: string;
@@ -84,7 +78,6 @@ export interface GetCustomerReservationConfirmation_me_customer {
   __typename: "Customer";
   id: string;
   detail: GetCustomerReservationConfirmation_me_customer_detail | null;
-  billingInfo: GetCustomerReservationConfirmation_me_customer_billingInfo | null;
   reservations: GetCustomerReservationConfirmation_me_customer_reservations[] | null;
 }
 

@@ -5,7 +5,6 @@ import { get } from "lodash"
 import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
 
 const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
@@ -19,7 +18,6 @@ const GET_MEMBERSHIP_INFO = gql`
 
 export const MembershipInfo: React.FC<{ navigation: any }> = ({ navigation }) => {
   const { loading, error, data } = useQuery(GET_MEMBERSHIP_INFO)
-  const insets = useSafeArea()
 
   const plan = get(data, "me.customer.plan")
   let planInfo = null
@@ -50,17 +48,17 @@ export const MembershipInfo: React.FC<{ navigation: any }> = ({ navigation }) =>
     return <Loader />
   }
   return (
-    <Container>
+    <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <ScrollView>
-        <Box px={2} mt={insets.top}>
-          <Spacer mb={2} />
+        <Box px={2}>
+          <Spacer mb={80} />
           <Sans size="3" color="black">
             Membership info
           </Sans>
           <Spacer mb={2} />
           <Separator />
-          <Spacer mb={6} />
+          <Spacer mb={5} />
           {!!planInfo.price && (
             <>
               <Sans size="4" color="black">
@@ -73,7 +71,7 @@ export const MembershipInfo: React.FC<{ navigation: any }> = ({ navigation }) =>
           )}
           {!!planInfo.whatsIncluded && (
             <>
-              <Spacer mb={6} />
+              <Spacer mb={5} />
               <Sans size="3">Whats included</Sans>
               <Spacer mb={2} />
               <Separator />

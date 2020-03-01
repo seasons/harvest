@@ -6,6 +6,17 @@ import { GetPaymentDataFixture } from "./__fixtures__/AccountFixture"
 import { waitForLoad } from "App/testUtils/waitForLoad"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
 import { GET_PAYMENT_DATA } from "../PaymentAndShipping/PaymentAndShipping"
+import * as AuthContext from "App/Navigation/AuthContext"
+
+beforeEach(() => {
+  const authContextValues = {
+    signIn: () => null,
+    signOut: () => null,
+    userSession: null,
+    authState: { authInitializing: true, isSignedIn: false, userSession: "1234" },
+  }
+  jest.spyOn(AuthContext, "useAuthContext").mockImplementation(() => authContextValues)
+})
 
 describe("PaymentAndShipping", () => {
   const paymentAndShippingMocks = [

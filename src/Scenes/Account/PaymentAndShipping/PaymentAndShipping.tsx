@@ -6,7 +6,6 @@ import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
-import { useSafeArea } from "react-native-safe-area-context"
 
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
@@ -99,7 +98,6 @@ export const createBillingAddress = billingInfo => {
 }
 
 export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const insets = useSafeArea()
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
   const {
     data: chargebeeUpdatePaymentData,
@@ -167,13 +165,13 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   }
 
   return (
-    <Container insetsBottom={0}>
+    <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <FlatList
         data={sections}
         ListHeaderComponent={() => (
-          <Box px={2} mt={insets.top}>
-            <Spacer mb={2} />
+          <Box px={2}>
+            <Spacer mb={80} />
             <Sans size="3">Payment & Shipping</Sans>
             <Spacer mb={4} />
           </Box>

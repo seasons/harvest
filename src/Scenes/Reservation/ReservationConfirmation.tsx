@@ -31,10 +31,6 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
             zipCode
           }
         }
-        billingInfo {
-          brand
-          last_digits
-        }
         reservations(where: { id: $reservationID }) {
           id
           reservationNumber
@@ -65,7 +61,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
 `
 
 export const ReservationConfirmation = props => {
-  const reservationID = get(props, "navigation.state.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
+  const reservationID = get(props, "route.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
   const { data } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
     variables: {
       reservationID,
@@ -80,7 +76,6 @@ export const ReservationConfirmation = props => {
     state: "",
     zipCode: "",
   })
-  const billingInfo = get(customer, "detail.billingInfo", { brand: "", last_digits: "" })
   const reservation = get(data, "me.customer.reservations[0]", { reservationNumber: "", products: [] })
 
   const items = reservation?.products ?? []

@@ -2,7 +2,7 @@ import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
-import { Box, Button, PopUp, Flex, ModalCloseButton, Sans, Spacer, TextInput, Container } from "../../Components"
+import { Box, Button, PopUp, Flex, CloseButton, Sans, Spacer, TextInput, Container } from "../../Components"
 import { isValidEmail } from "../../helpers/regex"
 
 const RESET_PASSWORD = gql`
@@ -55,11 +55,12 @@ export const ResetPassword = (props: any) => {
   }
 
   return (
-    <Container backgroundColor="black100" insetsTop>
-      <ModalCloseButton navigation={props.navigation} />
+    <Container backgroundColor="black100" insetsBottom={false}>
+      <CloseButton navigation={props.navigation} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-          <Box style={{ marginTop: 8 }} m={2}>
+          <Box px={2}>
+            <Spacer mb={5} />
             <Sans size="3" color="white" weight="medium">
               Reset Password
             </Sans>

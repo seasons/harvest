@@ -9,8 +9,15 @@ import { HomePageSectionType, Size } from "./globalTypes";
 // GraphQL query operation: Homepage
 // ====================================================
 
-export interface Homepage_homepage_sections_results_HomepageProductRail {
-  __typename: "HomepageProductRail" | "Collection";
+export interface Homepage_homepage_sections_results_Collection {
+  __typename: "Collection";
+}
+
+export interface Homepage_homepage_sections_results_Brand {
+  __typename: "Brand";
+  id: string;
+  name: string;
+  since: any | null;
 }
 
 export interface Homepage_homepage_sections_results_Product_brand {
@@ -34,7 +41,7 @@ export interface Homepage_homepage_sections_results_Product {
   variants: Homepage_homepage_sections_results_Product_variants[] | null;
 }
 
-export type Homepage_homepage_sections_results = Homepage_homepage_sections_results_HomepageProductRail | Homepage_homepage_sections_results_Product;
+export type Homepage_homepage_sections_results = Homepage_homepage_sections_results_Collection | Homepage_homepage_sections_results_Brand | Homepage_homepage_sections_results_Product;
 
 export interface Homepage_homepage_sections {
   __typename: "HomepageSection";

@@ -32,7 +32,7 @@ export const Faq = ({ navigation }) => {
   }
 
   return (
-    <Container insetsTop>
+    <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Flex style={{ flex: 1 }}>
         <FlatList
@@ -40,6 +40,7 @@ export const Faq = ({ navigation }) => {
           data={data?.faq?.sections}
           keyExtractor={item => item.title}
           renderItem={({ item }) => renderItem(item)}
+          ListFooterComponent={() => <Spacer mb={100} />}
         />
       </Flex>
       <FixedButton

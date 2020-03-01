@@ -14,7 +14,7 @@ export const EmptyBagItem = props => {
       <EmptyBagItemContainer>
         <Flex flex={1} pt="84px" flexDirection="column" alignItems="center">
           <Flex flexWrap="nowrap" flexDirection="column" alignItems="center" alignSelf="center">
-            <TouchableOpacity onPress={() => navigation.navigate("Browse")}>
+            <TouchableOpacity onPress={() => navigation.navigate("BrowseStack")}>
               <Box>
                 <Box my={1} mx="auto">
                   <BagPlus />
