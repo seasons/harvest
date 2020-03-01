@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React, { useState } from "react"
-import { useMutation } from "react-apollo"
+import { useMutation, useQuery } from "react-apollo"
 import { Dimensions } from "react-native"
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { useSafeArea } from "react-native-safe-area-context"
@@ -13,6 +13,24 @@ import {
   GetUserPaymentData_me_customer_billingInfo,
   GetUserPaymentData_me_customer_detail_shippingAddress
 } from "src/generated/getUserPaymentData"
+import { Loader } from "App/Components/Loader"
+
+const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
+  query chargebeeUpdatePaymentPage($planID: PlanID!) {
+    chargebeeUpdatePaymentPage(planID: $planID) {
+      created_at
+      embed
+      expires_at
+      id
+      object
+      resource_version
+      state
+      type
+      updated_at
+      url
+    }
+  }
+`
 
 const UPDATE_PAYMENT_AND_SHIPPING = gql`
   mutation updatePaymentAndShipping($billingAddress: AddressInput!, $shippingAddress: AddressInput!) {
@@ -30,7 +48,6 @@ export const EditPaymentAndShipping: React.FC<{
   route: any
 }> = ({ navigation, route }) => {
   const billingInfo: GetUserPaymentData_me_customer_billingInfo = get(route, "params.billingInfo")
-  const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage = get(route, "params.chargebeeUpdatePaymentHostedPage")
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = get(route, "params.shippingAddress")
 
   const [isMutating, setIsMutating] = useState(false)
@@ -51,22 +68,6 @@ export const EditPaymentAndShipping: React.FC<{
   })
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
 
-  const {
-    address1: shippingAddress1,
-    address2: shippingAddress2,
-    city: shippingCity,
-    state: shippingState,
-    zipCode: shippingZipCode,
-  } = shippingAddress
-
-  const {
-    address1: billingAddress1,
-    address2: billingAddress2,
-    city: billingCity,
-    state: billingState,
-    zipCode: billingZipCode,
-  } = billingAddress
-
   const [updatePaymentAndShipping] = useMutation(UPDATE_PAYMENT_AND_SHIPPING, {
     onError: error => {
       let popUpData = {
@@ -86,6 +87,39 @@ export const EditPaymentAndShipping: React.FC<{
       console.log("error EditView.tsx: ", error)
     },
   })
+
+  const { data, loading, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE, {
+    variables: {
+      planID: "Essential",
+    },
+  })
+
+  if (loading) {
+    return <Loader />
+  }
+
+  if (error) {
+    console.error("error EditPaymentAndShipping.tsx: ", error)
+    return <Loader />
+  }
+
+  const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage = get(data, "chargebeeUpdatePaymentPage")
+
+  const {
+    address1: shippingAddress1,
+    address2: shippingAddress2,
+    city: shippingCity,
+    state: shippingState,
+    zipCode: shippingZipCode,
+  } = shippingAddress
+
+  const {
+    address1: billingAddress1,
+    address2: billingAddress2,
+    city: billingCity,
+    state: billingState,
+    zipCode: billingZipCode,
+  } = billingAddress
 
   const handleSameAsDeliveryAddress = () => {
     if (sameAsDeliveryRadioSelected) {
@@ -232,7 +266,7 @@ export const EditPaymentAndShipping: React.FC<{
 
   const insets = useSafeArea()
   return (
-    <Container insetsBottom={0}>
+    <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Box px={2}>
         <KeyboardAwareFlatList

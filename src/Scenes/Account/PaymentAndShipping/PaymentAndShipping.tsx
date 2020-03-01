@@ -52,23 +52,6 @@ export const GET_PAYMENT_DATA = gql`
   }
 `
 
-const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
-  query chargebeeUpdatePaymentPage($planID: PlanID!) {
-    chargebeeUpdatePaymentPage(planID: $planID) {
-      created_at
-      embed
-      expires_at
-      id
-      object
-      resource_version
-      state
-      type
-      updated_at
-      url
-    }
-  }
-`
-
 export const createShippingAddress = shippingAddress => {
   const addressArray = []
   if (shippingAddress.address1) {
@@ -99,26 +82,15 @@ export const createBillingAddress = billingInfo => {
 
 export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }) => {
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
-  const {
-    data: chargebeeUpdatePaymentData,
-    loading: chargebeeUpdatePaymentLoading,
-    error: chargebeeUpdatePaymentError
-  } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE, {
-    variables: {
-      planID: "Essential",
-    },
-  })
 
-  if (loading || chargebeeUpdatePaymentLoading) {
+  if (loading) {
     return <Loader />
   }
 
-  if (error || chargebeeUpdatePaymentError) {
+  if (error) {
     console.error("error PaymentAndShipping.tsx: ", error)
     return <Loader />
   }
-
-  const chargebeeUpdatePaymentHostedPage = get(chargebeeUpdatePaymentData, "chargebeeUpdatePaymentPage")
 
   let sections = []
   let shippingAddress = null
@@ -155,7 +127,6 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   const handleEditBtnPressed = () => {
     navigation.navigate("EditPaymentAndShipping", {
       billingInfo,
-      chargebeeUpdatePaymentHostedPage,
       shippingAddress
     })
   }
