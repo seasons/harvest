@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo, useState } from "react"
 import gql from "graphql-tag"
 import { useQuery } from "@apollo/react-hooks"
 import { Container, Sans, Box, VariantSizes, Spacer, FixedBackArrow } from "App/Components"
@@ -7,7 +7,7 @@ import { FlatList, Dimensions, TouchableWithoutFeedback } from "react-native"
 import { get } from "lodash"
 import { imageResize } from "App/helpers/imageResize"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { color } from "App/Utils"
+import { color, space } from "App/Utils"
 import { ReadMore } from "App/Components/ReadMore"
 
 const IMAGE_HEIGHT = 240
@@ -48,6 +48,7 @@ const GET_BRAND = gql`
 
 export const Brand = (props: any) => {
   const { navigation, route } = props
+  const [readMoreExpanded, setReadMoreExpanded] = useState(false)
   const brandID = route?.params?.id
 
   const { data, loading, fetchMore } = useQuery<GetBrand>(GET_BRAND, {
@@ -58,6 +59,10 @@ export const Brand = (props: any) => {
       orderBy: "createdAt_DESC",
     },
   })
+
+  const products = data?.brand?.products
+  const basedIn = data?.brand?.basedIn
+  const description = data?.brand?.description
 
   const renderItem = ({ item }, i, navigation) => {
     const itemWidth = Dimensions.get("window").width / 2 - 2
@@ -87,10 +92,6 @@ export const Brand = (props: any) => {
     )
   }
 
-  const products = data?.brand?.products
-  const basedIn = data?.brand?.basedIn
-  const description = data?.brand?.description
-
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
@@ -111,12 +112,18 @@ export const Brand = (props: any) => {
                 <Spacer mb={3} />
                 <Sans size="2">About</Sans>
                 <Spacer mb={0.5} />
-                <ReadMore content={description} maxChars={100} />
+                <ReadMore
+                  readMoreExpanded={readMoreExpanded}
+                  setReadMoreExpanded={setReadMoreExpanded}
+                  content={description}
+                  maxChars={100}
+                />
               </>
             )}
             <Spacer mb={3} />
           </Box>
         )}
+        ListFooterComponent={() => <Spacer mb={space(2)} />}
         data={products}
         numColumns={2}
         onEndReachedThreshold={0.7}
