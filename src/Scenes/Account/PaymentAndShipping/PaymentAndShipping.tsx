@@ -92,15 +92,12 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
     return <Loader />
   }
 
-  let sections = []
+  const sections = []
   let shippingAddress = null
   let billingInfo = null
-  if (data?.me?.customer) {
-    const customer = data.me.customer
+  const customer = data?.me?.customer
+  if (customer) {
     const details = customer.detail
-    // console.log(details)
-    console.log(customer.billingInfo)
-
     if (details?.shippingAddress) {
       shippingAddress = details.shippingAddress
       sections.push({ title: "Shipping address", value: createShippingAddress(details.shippingAddress) })

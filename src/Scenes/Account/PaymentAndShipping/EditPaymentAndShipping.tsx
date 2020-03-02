@@ -47,9 +47,10 @@ export const EditPaymentAndShipping: React.FC<{
   navigation: any
   route: any
 }> = ({ navigation, route }) => {
-  const billingInfo: GetUserPaymentData_me_customer_billingInfo = get(route, "params.billingInfo")
-  const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = get(route, "params.shippingAddress")
+  const billingInfo: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
+  const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
 
+  const insets = useSafeArea()
   const [isMutating, setIsMutating] = useState(false)
   const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [shippingAddress, setShippingAddress] = useState({
@@ -99,7 +100,7 @@ export const EditPaymentAndShipping: React.FC<{
     return <Loader />
   }
 
-  const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage = get(data, "chargebeeUpdatePaymentPage")
+  const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage = data?.chargebeeUpdatePaymentPage
 
   const {
     address1: shippingAddress1,
@@ -258,7 +259,6 @@ export const EditPaymentAndShipping: React.FC<{
     }
   }
 
-  const insets = useSafeArea()
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
