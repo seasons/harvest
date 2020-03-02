@@ -15,6 +15,9 @@ const GET_BRANDS = gql`
     brands(orderBy: $orderBy) {
       id
       name
+      products {
+        id
+      }
     }
   }
 `
