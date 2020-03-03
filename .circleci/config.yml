@@ -43,7 +43,7 @@ workflows:
           build_configuration: Release
           device: iPhone X
           name: build_ios_release
-          project_path: ios/seasons.xcodeproj
+          project_path: ios/seasons.xcworkspace
           requires:
             - analyse_js
           scheme: seasons
@@ -51,7 +51,7 @@ workflows:
           build_configuration: Release
           detox_configuration: ios.sim.release
           device: iPhone X
-          project_path: ios/seasons.xcodeproj
+          project_path: ios/seasons.xcworkspace
           requires:
             - analyse_js
           scheme: seasons
