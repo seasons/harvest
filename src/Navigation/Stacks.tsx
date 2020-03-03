@@ -1,4 +1,4 @@
-import { Account, PaymentAndShipping } from "App/Scenes/Account"
+import { Account, EditPaymentAndShipping, PaymentAndShipping } from "App/Scenes/Account"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
 import { Browse, Filters } from "App/Scenes/Browse"
@@ -16,6 +16,8 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { color } from "App/Utils"
 import { Faq } from "App/Scenes/Faq"
+import { Brand } from "App/Scenes/Brand"
+import { Brands } from "App/Scenes/Brands"
 
 const HomeStack = createStackNavigator()
 const BagStack = createStackNavigator()
@@ -42,12 +44,14 @@ export const TabsStack = ({ currentScreen }) => {
         // @ts-ignore
         safeAreaInset: { bottom: "never" },
       }}
-      tabBar={props => <NavBar {...props} currentScreen={currentScreen} />}
+      tabBar={props => {
+        return <NavBar {...props} currentScreen={currentScreen} />
+      }}
     >
-      <Tab.Screen name="Home" component={HomeStackScreen} />
-      <Tab.Screen name="Browse" component={BrowseStackScreen} />
-      <Tab.Screen name="Bag" component={BagStackScreen} />
-      <Tab.Screen name="Account" component={AccountStackScreen} />
+      <Tab.Screen name="HomeStack" component={HomeStackScreen} />
+      <Tab.Screen name="BrowseStack" component={BrowseStackScreen} />
+      <Tab.Screen name="BagStack" component={BagStackScreen} />
+      <Tab.Screen name="AccountStack" component={AccountStackScreen} />
     </Tab.Navigator>
   )
 }
@@ -75,7 +79,9 @@ const HomeStackScreen = () => {
   return (
     <HomeStack.Navigator initialRouteName="Home" screenOptions={{ ...defaultOptions }}>
       <HomeStack.Screen name="Home" component={Home} />
-      <HomeStack.Screen name="Product" component={Product} />
+      <HomeStack.Screen name="Product" component={Product} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name="Brand" component={Brand} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name="Brands" component={Brands} />
     </HomeStack.Navigator>
   )
 }
@@ -83,8 +89,9 @@ const HomeStackScreen = () => {
 const BrowseStackScreen = () => {
   return (
     <BrowseStack.Navigator initialRouteName="Browse" screenOptions={{ ...defaultOptions }}>
-      <BrowseStack.Screen name="Browse" component={Browse} />
-      <BrowseStack.Screen name="Product" component={Product} />
+      <BrowseStack.Screen name="Browse" component={Browse} initialParams={{ sizeFilters: [] }} />
+      <BrowseStack.Screen name="Product" component={Product} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name="Brand" component={Brand} initialParams={{ id: "" }} />
     </BrowseStack.Navigator>
   )
 }
@@ -94,7 +101,8 @@ const BagStackScreen = () => {
     <BagStack.Navigator initialRouteName="Bag" screenOptions={{ ...defaultOptions }}>
       <BagStack.Screen name="Bag" component={Bag} />
       <BagStack.Screen name="Webview" component={Webview} />
-      <BagStack.Screen name="Product" component={Product} />
+      <BagStack.Screen name="Product" component={Product} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name="Brand" component={Brand} initialParams={{ id: "" }} />
       <BagStack.Screen name="CurrentRotation" component={CurrentRotation} />
       <BagStack.Screen name="Faq" component={Faq} />
     </BagStack.Navigator>
@@ -107,6 +115,7 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name="Account" component={Account} />
       <AccountStack.Screen name="MembershipInfo" component={MembershipInfo} />
       <AccountStack.Screen name="PaymentAndShipping" component={PaymentAndShipping} />
+      <AccountStack.Screen name="EditPaymentAndShipping" component={EditPaymentAndShipping} />
       <AccountStack.Screen name="PersonalPreferences" component={PersonalPreferences} />
       <AccountStack.Screen name="Webview" component={Webview} />
       <AccountStack.Screen name="ProductRequest" component={ProductRequest} />

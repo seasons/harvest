@@ -8,8 +8,9 @@ import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
-import { AllCaughtUp } from "./Components/AllCaughtUp"
+import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
+import { BrandsRail } from "./Components/BrandsRail"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -18,6 +19,11 @@ export const GET_HOMEPAGE = gql`
         title
         type
         results {
+          ... on Brand {
+            id
+            name
+            since
+          }
           ... on Product {
             id
             images
@@ -67,6 +73,8 @@ export const Home: React.FC<{
 
   const renderItem = item => {
     switch (item.type) {
+      case "Brands":
+        return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
       case "Products":
       case "HomepageProductRails":
         return <ProductsRail title={item.title} navigation={navigation} items={item.results} />
@@ -74,7 +82,7 @@ export const Home: React.FC<{
   }
 
   return (
-    <Container insetsTop>
+    <Container insetsBottom={false}>
       <Animatable.View animation="fadeIn" duration={300}>
         <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
           <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
@@ -89,7 +97,7 @@ export const Home: React.FC<{
           }}
           ListHeaderComponent={() => <Spacer mb={2} />}
           renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
-          ListFooterComponent={() => <AllCaughtUp navigation={navigation} />}
+          ListFooterComponent={() => <HomeFooter navigation={navigation} />}
         />
       </Animatable.View>
     </Container>

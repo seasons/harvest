@@ -116,7 +116,7 @@ export const PopUp: React.FC<PopUpProps> = ({ data, show, insetsBottom }) => {
               {buttonText}
             </Button>
           </Flex>
-          <Spacer mb={insetsBottom ? 6 : 2} />
+          <Spacer mb={insetsBottom ? 4 : 0} />
         </Box>
       </AnimatedPopUp>
       {show && <AnimatedOuterWrapper style={{ backgroundColor: animation.backgroundColor }} />}
@@ -127,9 +127,9 @@ export const PopUp: React.FC<PopUpProps> = ({ data, show, insetsBottom }) => {
 const OuterWrapper = styled(Box)`
   position: absolute;
   flex: 1;
-  height: 100%;
-  width: 100%;
+  top: 0;
   bottom: 0;
+  right: 0;
   left: 0;
   z-index: 99;
 `

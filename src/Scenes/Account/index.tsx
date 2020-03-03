@@ -1,2 +1,2 @@
 export { Account } from "./Account"
-export { PaymentAndShipping } from "./PaymentAndShipping"
+export { EditPaymentAndShipping, PaymentAndShipping } from "./PaymentAndShipping"

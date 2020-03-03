@@ -13,7 +13,7 @@ import { Loader } from "App/Components/Loader"
 
 export const Collection = props => {
   const [sections, setSections] = useState([])
-  const collectionID = get(props, "navigation.state.params.id")
+  const collectionID = get(props, "route.params.id")
   const { loading, error, data } = useQuery(GET_COLLECTION, {
     variables: {
       collectionID,

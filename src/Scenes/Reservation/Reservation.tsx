@@ -160,7 +160,7 @@ export const Reservation = props => {
   )
 
   return (
-    <Container insetsTop backgroundColor="black100">
+    <Container insetsTop insetsBottom={false} backgroundColor="black100">
       <CloseButton navigation={props.navigation} />
       <Box px={2} pb={3}>
         <Sans size="3" color="white">
@@ -184,11 +184,10 @@ export const Reservation = props => {
               },
             })
             if (data.reserveItems) {
-              props.navigation.navigate(
-                "Modal",
-                { screen: "ReservationConfirmationModal" },
-                { reservationID: data.reserveItems.id }
-              )
+              props.navigation.navigate("Modal", {
+                screen: "ReservationConfirmationModal",
+                params: { reservationID: data.reserveItems.id },
+              })
             }
           } catch (e) {
             setShowError(true)

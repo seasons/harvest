@@ -51,7 +51,9 @@ export const themeProps = {
     /** Equivalent to 32px  */
     4: 32,
     /** Equivalent to 40px  */
-    6: 40,
+    5: 40,
+    /** Equivalent to 48px  */
+    6: 48,
   },
 
   typeSizes: {

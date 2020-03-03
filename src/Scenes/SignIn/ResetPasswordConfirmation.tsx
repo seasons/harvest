@@ -1,13 +1,14 @@
 import React from "react"
-import { Box, Flex, ModalCloseButton, Sans, Spacer, Container, Button } from "../../Components"
+import { Box, Flex, CloseButton, Sans, Spacer, Container, Button } from "../../Components"
 import { color } from "App/Utils"
 
 export const ResetPasswordConfirmation = (props: any) => {
   return (
     <Container backgroundColor="black100" insetsTop>
-      <ModalCloseButton navigation={props.navigation} />
+      <CloseButton navigation={props.navigation} />
       <Flex flexDirection="column" style={{ flex: 1 }}>
         <Box px={2} pt={2}>
+          <Spacer mb={3} />
           <Sans size="3" color={color("white100")} weight="medium">
             Reset Password Link Sent
           </Sans>

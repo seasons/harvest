@@ -1,10 +1,9 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Box, Container, PopUp, Spacer, VariantSizes } from "App/Components"
+import { Box, Container, PopUp, Spacer, VariantSizes, FixedBackArrow } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { PopUpProps } from "App/Components/PopUp"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
-import { AuthContext } from "App/Navigation/AuthProvider"
 import { color } from "App/Utils"
 import { screenTrack } from "App/Utils/track"
 import { BackArrowIcon } from "Assets/icons"
@@ -14,13 +13,13 @@ import React, { useEffect, useState } from "react"
 import { Dimensions, FlatList, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-
 import { useMutation, useQuery } from "@apollo/react-hooks"
-
 import { GET_HOMEPAGE } from "../Home/Home"
 import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
+import { useSafeArea } from "react-native-safe-area-context"
+import { useAuthContext } from "App/Navigation/AuthContext"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -40,14 +39,15 @@ interface ProductProps {
 }
 
 export const Product = screenTrack(props => {
-  const productID = get(props, "navigation.state.params.id")
+  const productID = get(props, "route.params.id")
   return {
     contextScreen: "Product",
     productID,
   }
 })((props: ProductProps) => {
-  const { authState } = React.useContext(AuthContext)
-  const userHasSession = authState?.isSignedIn
+  const { authState } = useAuthContext()
+  const insets = useSafeArea()
+  const userHasSession = !!authState?.userSession
   const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation, route } = props
@@ -139,57 +139,45 @@ export const Product = screenTrack(props => {
   const sections = ["imageRail", "productDetails", "aboutTheBrand"]
 
   return (
-    <Container>
-      <ArrowWrapper>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack()
-          }}
-        >
-          <ArrowBackground showVariantPicker={showVariantPicker} />
-          <BackArrowIcon color={showVariantPicker ? color("white100") : color("black100")} />
-        </TouchableOpacity>
-      </ArrowWrapper>
+    <Container insetsTop={false}>
+      <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "black04Background"} />
       <FlatList
+        ListHeaderComponent={() => <Spacer mb={insets.top} />}
         data={sections}
         ListFooterComponent={() => <Spacer mb={listFooterSpacing} />}
         keyExtractor={item => item}
         renderItem={item => renderItem(item)}
       />
-
-      <>
-        <SelectionButtons
-          bottom={selectionButtonsBottom}
+      <SelectionButtons
+        bottom={selectionButtonsBottom}
+        productID={productID}
+        toggleShowVariantPicker={toggleShowVariantPicker}
+        setPopUp={setPopUp}
+        showVariantPicker={showVariantPicker}
+        selectedVariant={selectedVariant}
+        navigation={navigation}
+      />
+      <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
+        {shouldShowVariantWant && (
+          <VariantWant
+            isWanted={selectedVariantIsWanted}
+            productID={productID}
+            setPopUp={setPopUp}
+            variantID={selectedVariant.id}
+          />
+        )}
+      </AnimatedVariantWantWrapper>
+      {showVariantPicker && <Overlay />}
+      <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
+        <VariantPicker
+          setSelectedVariant={setSelectedVariant}
+          selectedVariant={selectedVariant}
+          height={variantPickerHeight}
+          navigation={navigation}
           productID={productID}
           toggleShowVariantPicker={toggleShowVariantPicker}
-          setPopUp={setPopUp}
-          showVariantPicker={showVariantPicker}
-          selectedVariant={selectedVariant}
-          navigation={navigation}
         />
-        <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
-          {shouldShowVariantWant && (
-            <VariantWant
-              isWanted={selectedVariantIsWanted}
-              productID={productID}
-              setPopUp={setPopUp}
-              variantID={selectedVariant.id}
-            />
-          )}
-        </AnimatedVariantWantWrapper>
-        {showVariantPicker && <Overlay />}
-        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
-          <VariantPicker
-            setSelectedVariant={setSelectedVariant}
-            selectedVariant={selectedVariant}
-            height={variantPickerHeight}
-            navigation={navigation}
-            productID={productID}
-            toggleShowVariantPicker={toggleShowVariantPicker}
-          />
-        </AnimatedVariantPicker>
-      </>
-
+      </AnimatedVariantPicker>
       <PopUp data={popUp.data} show={popUp.show} />
     </Container>
   )
@@ -201,6 +189,7 @@ const VariantPickerWrapper = styled(Box)`
   left: 0;
   width: 100%;
   height: ${variantPickerHeight};
+  z-index: 4;
 `
 
 const Overlay = styled.View`
@@ -208,25 +197,8 @@ const Overlay = styled.View`
   background-color: rgba(0, 0, 0, 0.6);
   top: 0;
   left: 0;
-  bottom: ${VARIANT_WANT_HEIGHT};
+  bottom: 0;
   right: 0;
-`
-
-const ArrowWrapper = styled(Box)`
-  position: absolute;
-  top: 60;
-  left: 20;
-  z-index: 1000;
-`
-
-const ArrowBackground = styled(Box)`
-  width: 30;
-  height: 30;
-  position: absolute;
-  background-color: ${p => (p.showVariantPicker ? color("black100") : color("black04"))};
-  border-radius: 40;
-  left: -6;
-  top: -1;
 `
 
 const VariantWantWrapper = styled(Box)`

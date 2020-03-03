@@ -2,16 +2,14 @@ import { color } from "App/Utils"
 import { getUserSession } from "App/Utils/auth"
 import React from "react"
 import SplashScreen from "react-native-splash-screen"
-
+import AuthContext from "./AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
-
 import { ModalStackScreen, TabsStack } from "./Stacks"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
 const RootStack = createStackNavigator()
-export const AuthContext = React.createContext(null)
 
 const defaultOptions = {
   headerShown: false,

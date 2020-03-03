@@ -31,12 +31,16 @@ export const GetPaymentDataFixture = {
         },
       },
       billingInfo: {
+        brand: "VISA",
+        city: "Brooklyn",
+        expiration_month: 1,
+        expiration_year: 2025,
         last_digits: "4242",
+        name: "Santa Claus",
+        postal_code: "11211",
+        state: "New York",
         street1: "1 Bedford Avenue",
         street2: "Brooklyn",
-        city: "Brooklyn",
-        state: "New York",
-        postal_code: "11211",
       },
     },
     activeReservation: {
@@ -52,4 +56,20 @@ export const GetPaymentDataFixture = {
       },
     },
   },
+}
+
+export const GetChargebeeUpdatePaymentPageDataFixture = {
+  chargebeeUpdatePaymentPage: {
+    __typename: "ChargebeeHostedPagePayload",
+    "created_at": 1583200000,
+    "embed": false,
+    "expires_at": 1583300000,
+    "id": "alsdjfaklsjdfkladsjf",
+    "object": "hosted_page",
+    "resource_version": 1583300000,
+    "state": "created",
+    "type": "manage_payment_sources",
+    "updated_at": 1583300000,
+    "url": "https://chargebee.com/pages/v3/alsdjfaklsjdfkladsjf/"
+  }
 }

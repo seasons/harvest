@@ -1,12 +1,11 @@
 import { Button } from "App/Components"
-import { AuthContext } from "App/Navigation/AuthProvider"
 import { ADD_TO_BAG, GET_BAG, REMOVE_FROM_BAG } from "App/Scenes/Bag/BagQueries"
 import { GreenCheck } from "Assets/svgs"
 import { head } from "lodash"
-import React, { useContext, useState } from "react"
-
+import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import { useNavigation } from "@react-navigation/native"
+import { useAuthContext } from "App/Navigation/AuthContext"
 
 interface Props {
   productID: string
@@ -22,8 +21,8 @@ export const AddToBagButton: React.FC<Props> = props => {
   const { productID, setPopUp, variantInStock, width, selectedVariant } = props
 
   const navigation = useNavigation()
-  const { authState } = useContext(AuthContext)
-  const userHasSession = authState?.isSignedIn
+  const { authState } = useAuthContext()
+  const userHasSession = authState?.userSession
 
   const { data } = useQuery(GET_BAG)
 
@@ -50,7 +49,7 @@ export const AddToBagButton: React.FC<Props> = props => {
             secondaryButtonOnPress: () => {
               setPopUp({ show: false, data: null })
               navigation.popToTop()
-              navigation.navigate("Bag")
+              navigation.navigate("BagStack")
             },
             onClose: () => setPopUp({ show: false, data: null }),
           },
@@ -130,7 +129,14 @@ export const AddToBagButton: React.FC<Props> = props => {
   }
 
   return (
-    <Button width={width} showCheckMark={showCheckMark} variant="primaryBlack" disabled={disabled} onPress={onPress}>
+    <Button
+      width={width}
+      loading={isMutating}
+      showCheckMark={showCheckMark}
+      variant="primaryBlack"
+      disabled={disabled}
+      onPress={onPress}
+    >
       {text}
     </Button>
   )

@@ -15,8 +15,8 @@ export const ProductsRail: React.FC<{
   navigation: any
 }> = ({ items, title, navigation }) => {
   return (
-    <Box mb={2} pl={2} style={{ position: "relative" }}>
-      <Sans size="2">{title}</Sans>
+    <Box mb={3} pl={2}>
+      <Sans size="1">{title}</Sans>
       <Spacer mt={1} />
       <FlatList
         data={items}
