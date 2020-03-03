@@ -68,6 +68,7 @@ target 'seasons' do
       target.build_configurations.each do |config|
         # CocoaPods setting the deployment target to be less than the actual deployable target is causing many Xcode warnings. This silences them. See: https://github.com/CocoaPods/CocoaPods/issues/7314
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '10.0'
+        config.build_settings['SWIFT_VERSION'] = '4.2'
       end
     end
   end
