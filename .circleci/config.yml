@@ -1,30 +1,66 @@
 # .circleci/config.yml
 
-version: 2
+version: 2.1
+
+orbs:
+  rn: react-native-community/react-native@3.0.1
+
 jobs:
-  build:
-    macos:
-      xcode: "10.3.0"
-    working_directory: /Users/distiller/project
-    environment:
-      FL_OUTPUT_DIR: output
-      FASTLANE_LANE: test
-    shell: /bin/bash --login -o pipefail
+  analyse_js:
+    executor: rn/linux_js
+    steps:
+      - attach_workspace:
+          at: .
+      - rn/yarn_install
+      - run:
+          command: yarn eslint
+          name: Run ESLint
+      - run:
+          command: yarn flow
+          name: Flow
+      - run:
+          command: yarn jest
+          name: Jest
+  checkout_code:
+    executor: rn/linux_js
     steps:
       - checkout
-      - restore_cache:
-          key: 1-gems-{{ checksum "Gemfile.lock" }}
-      - run: bundle check || bundle install --path vendor/bundle
-      - save_cache:
-          key: 1-gems-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
+      - persist_to_workspace:
+          paths: .
+          root: .
+  fastlane_release:
+    executor: rn/linux_js
+    steps:
+      - attach_workspace:
+          at: .
+      - rn/yarn_install
       - run:
-          name: Run Tests
-          command: yarn test
-          name: fastlane
-          command: bundle exec fastlane $FASTLANE_LANE
-      - store_artifacts:
-          path: output
-      - store_test_results:
-          path: output/scan
+          command: bundle exec fastlane ios release
+          name: Run Fastlane
+
+workflows:
+  test:
+    jobs:
+      - checkout_code
+      - analyse_js:
+          requires:
+            - checkout_code
+      - rn/ios_build:
+          build_configuration: Release
+          device: iPhone X
+          name: build_ios_release
+          project_path: ios/seasons.xcodeproj
+          requires:
+            - analyse_js
+          scheme: Example
+      - rn/ios_build_and_test:
+          build_configuration: Release
+          detox_configuration: ios.sim.release
+          device: iPhone X
+          project_path: ios/seasons.xcodeproj
+          requires:
+            - analyse_js
+          scheme: Example
+      - fastlane_release:
+          requires:
+            - rn/ios_build_and_test
