@@ -13,12 +13,6 @@ jobs:
           at: .
       - rn/yarn_install
       - run:
-          command: yarn eslint
-          name: Run ESLint
-      - run:
-          command: yarn flow
-          name: Flow
-      - run:
           command: yarn jest
           name: Jest
   checkout_code:
@@ -35,7 +29,7 @@ jobs:
           at: .
       - rn/yarn_install
       - run:
-          command: bundle exec fastlane ios release
+          command: bundle exec fastlane ios beta
           name: Run Fastlane
 
 workflows:
@@ -52,7 +46,7 @@ workflows:
           project_path: ios/seasons.xcodeproj
           requires:
             - analyse_js
-          scheme: Example
+          scheme: seasons
       - rn/ios_build_and_test:
           build_configuration: Release
           detox_configuration: ios.sim.release
@@ -60,7 +54,7 @@ workflows:
           project_path: ios/seasons.xcodeproj
           requires:
             - analyse_js
-          scheme: Example
+          scheme: seasons
       - fastlane_release:
           requires:
             - rn/ios_build_and_test
