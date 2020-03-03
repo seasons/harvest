@@ -6,7 +6,7 @@ import { TouchableOpacity } from "react-native"
 import { Box } from "./Box"
 import { themeProps } from "./Theme"
 
-type FixedBackArrowVariant = "blackBackground" | "whiteBackground"
+type FixedBackArrowVariant = "blackBackground" | "whiteBackground" | "black04Background"
 
 export const FixedBackArrow: React.FC<{
   navigation: any
@@ -14,7 +14,7 @@ export const FixedBackArrow: React.FC<{
 }> = ({ navigation, variant }) => {
   const getColorsForVariant = (variant: FixedBackArrowVariant) => {
     const {
-      colors: { black100, white100, black15 },
+      colors: { black100, white100, black15, black04 },
     } = themeProps
 
     switch (variant) {
@@ -26,6 +26,11 @@ export const FixedBackArrow: React.FC<{
       case "whiteBackground":
         return {
           backgroundColor: white100,
+          arrowColor: black100,
+        }
+      case "black04Background":
+        return {
+          backgroundColor: black04,
           arrowColor: black100,
         }
       default:
@@ -57,7 +62,7 @@ const Wrapper = styled(Box)`
   position: absolute;
   top: 50;
   left: 7;
-  z-index: 100;
+  z-index: 50;
 `
 
 const ArrowWrapper = styled(Flex)`
