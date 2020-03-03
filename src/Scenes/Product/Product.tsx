@@ -1,5 +1,5 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Box, Container, PopUp, Spacer, VariantSizes } from "App/Components"
+import { Box, Container, PopUp, Spacer, VariantSizes, FixedBackArrow } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { PopUpProps } from "App/Components/PopUp"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
@@ -140,16 +140,7 @@ export const Product = screenTrack(props => {
 
   return (
     <Container insetsTop={false}>
-      <ArrowWrapper>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack()
-          }}
-        >
-          <ArrowBackground showVariantPicker={showVariantPicker} />
-          <BackArrowIcon color={showVariantPicker ? color("white100") : color("black100")} />
-        </TouchableOpacity>
-      </ArrowWrapper>
+      <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "black04Background"} />
       <FlatList
         ListHeaderComponent={() => <Spacer mb={insets.top} />}
         data={sections}
@@ -198,6 +189,7 @@ const VariantPickerWrapper = styled(Box)`
   left: 0;
   width: 100%;
   height: ${variantPickerHeight};
+  z-index: 4;
 `
 
 const Overlay = styled.View`
@@ -207,23 +199,6 @@ const Overlay = styled.View`
   left: 0;
   bottom: 0;
   right: 0;
-`
-
-const ArrowWrapper = styled(Box)`
-  position: absolute;
-  top: 60;
-  left: 20;
-  z-index: 1000;
-`
-
-const ArrowBackground = styled(Box)`
-  width: 30;
-  height: 30;
-  position: absolute;
-  background-color: ${p => (p.showVariantPicker ? color("black100") : color("black04"))};
-  border-radius: 40;
-  left: -6;
-  top: -1;
 `
 
 const VariantWantWrapper = styled(Box)`
