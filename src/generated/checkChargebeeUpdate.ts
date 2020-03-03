@@ -4,13 +4,9 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: CheckItemsAvailability
+// GraphQL mutation operation: checkChargebeeUpdate
 // ====================================================
 
-export interface CheckItemsAvailability {
-  checkItemsAvailability: boolean;
-}
-
-export interface CheckItemsAvailabilityVariables {
-  items: string[];
+export interface checkChargebeeUpdate {
+  checkChargebeeUpdate: boolean | null;
 }

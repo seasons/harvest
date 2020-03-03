@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 import { BrandOrderByInput } from "./globalTypes";
@@ -19,7 +20,5 @@ export interface GetBrands {
 }
 
 export interface GetBrandsVariables {
-  first: number;
-  skip: number;
   orderBy: BrandOrderByInput;
 }

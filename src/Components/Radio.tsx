@@ -1,8 +1,9 @@
 import debounce from "lodash/debounce"
 import React from "react"
 import styled from "styled-components/native"
-import { Flex, FlexProps } from "./Flex"
+import { SansSize } from "App/Components"
 import { color, space } from "App/Utils"
+import { Flex, FlexProps } from "./Flex"
 
 import { BorderProps, borders, SizeProps, space as styledSpace, SpaceProps } from "styled-system"
 import { Box, Sans } from "App/Components"
@@ -27,6 +28,7 @@ export interface RadioProps extends FlexProps {
   name?: string
   /** The label content, if not specified the children will be used  */
   label?: React.ReactNode
+  labelSize?: SansSize
 }
 
 export interface RadioToggleProps extends RadioProps, BorderProps, SizeProps, SpaceProps { }
@@ -46,6 +48,7 @@ export const Radio: React.SFC<RadioProps> = props => {
     selected,
     value,
     label,
+    labelSize = "2",
     ...others
   } = props
 
@@ -53,7 +56,7 @@ export const Radio: React.SFC<RadioProps> = props => {
   // user clicks the radio element or the label.
   const onSelect = _onSelect && debounce(_onSelect, 0)
 
-  const innerComponent = children || <InnerCircle />
+  const innerComponent = children || <InnerCircle style={{ borderRadius }} />
 
   return (
     <Flex flexDirection="row" alignItems="center">
@@ -66,7 +69,7 @@ export const Radio: React.SFC<RadioProps> = props => {
       </TouchableWithoutFeedback>
       {!!label && (
         <Flex flexDirection="row" alignItems="center" ml={1}>
-          <Sans size="2" color={color("black100")}>
+          <Sans size={labelSize} color={color("black100")}>
             {label}
           </Sans>
         </Flex>
@@ -105,7 +108,6 @@ const Container = styled(Flex) <ContainerProps>`
 const InnerCircle = styled(Box)`
   width: 14;
   height: 14;
-  border-radius: 100;
   background-color: ${color("blue")};
 `
 

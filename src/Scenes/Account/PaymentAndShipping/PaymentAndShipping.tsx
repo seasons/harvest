@@ -1,7 +1,7 @@
-import { Box, Container, FixedBackArrow, Flex, Sans, Spacer } from "App/Components"
+import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
@@ -23,12 +23,16 @@ export const GET_PAYMENT_DATA = gql`
           }
         }
         billingInfo {
+          brand
+          city
+          expiration_month
+          expiration_year
           last_digits
+          name
+          postal_code
+          state
           street1
           street2
-          city
-          state
-          postal_code
         }
       }
       activeReservation {
@@ -76,38 +80,7 @@ export const createBillingAddress = billingInfo => {
 }
 
 export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
-
-  useEffect(() => {
-    if (data?.me?.customer) {
-      const sectionsArray = []
-      const customer = data.me.customer
-      const details = customer.detail
-
-      if (details && details.shippingAddress) {
-        sectionsArray.push({ title: "Shipping address", value: createShippingAddress(details.shippingAddress) })
-      }
-
-      if (customer && customer.billingInfo) {
-        sectionsArray.push({
-          title: "Billing address",
-          value: createBillingAddress(customer.billingInfo),
-        })
-
-        sectionsArray.push({
-          title: "Payment info",
-          value: customer.billingInfo.last_digits,
-        })
-      }
-
-      if (details && details.phoneNumber) {
-        sectionsArray.push({ title: "Phone number", value: details.phoneNumber })
-      }
-
-      setSections(sectionsArray)
-    }
-  }, [data])
 
   if (loading) {
     return <Loader />
@@ -116,6 +89,45 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   if (error) {
     console.error("error PaymentAndShipping.tsx: ", error)
     return <Loader />
+  }
+
+  const sections = []
+  let shippingAddress = null
+  let billingInfo = null
+  let phoneNumber = null
+  const customer = data?.me?.customer
+  if (customer) {
+    const details = customer.detail
+    if (details?.shippingAddress) {
+      shippingAddress = details.shippingAddress
+      sections.push({ title: "Shipping address", value: createShippingAddress(details.shippingAddress) })
+    }
+
+    if (customer?.billingInfo) {
+      billingInfo = customer.billingInfo
+      sections.push({
+        title: "Billing address",
+        value: createBillingAddress(customer.billingInfo),
+      })
+
+      sections.push({
+        title: "Payment info",
+        value: `${customer.billingInfo.brand.toUpperCase()} ${customer.billingInfo.last_digits}`,
+      })
+    }
+
+    if (details?.phoneNumber) {
+      phoneNumber = details?.phoneNumber
+      sections.push({ title: "Phone number", value: details.phoneNumber })
+    }
+  }
+
+  const handleEditBtnPressed = () => {
+    navigation.navigate("EditPaymentAndShipping", {
+      billingInfo,
+      phoneNumber,
+      shippingAddress
+    })
   }
 
   const renderItem = item => {
@@ -131,12 +143,15 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
           <Box px={2}>
             <Spacer mb={80} />
             <Sans size="3">Payment & Shipping</Sans>
-            <Spacer mb={3} />
+            <Spacer mb={4} />
           </Box>
         )}
         keyExtractor={item => item.title}
         renderItem={({ item }) => renderItem(item)}
       />
+      <FixedButton block variant="primaryWhite" onPress={handleEditBtnPressed}>
+        Edit
+      </FixedButton>
     </Container>
   )
 }

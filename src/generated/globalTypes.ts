@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 //==============================================================
@@ -166,6 +167,14 @@ export enum Size {
   XL = "XL",
   XS = "XS",
   XXL = "XXL",
+}
+
+export interface AddressInput {
+  city: string;
+  postalCode: string;
+  state: string;
+  street1: string;
+  street2?: string | null;
 }
 
 export interface ReserveItemsOptions {

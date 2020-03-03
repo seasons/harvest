@@ -1,4 +1,4 @@
-import { Account, PaymentAndShipping } from "App/Scenes/Account"
+import { Account, EditPaymentAndShipping, PaymentAndShipping } from "App/Scenes/Account"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
 import { Browse, Filters } from "App/Scenes/Browse"
@@ -115,6 +115,7 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name="Account" component={Account} />
       <AccountStack.Screen name="MembershipInfo" component={MembershipInfo} />
       <AccountStack.Screen name="PaymentAndShipping" component={PaymentAndShipping} />
+      <AccountStack.Screen name="EditPaymentAndShipping" component={EditPaymentAndShipping} />
       <AccountStack.Screen name="PersonalPreferences" component={PersonalPreferences} />
       <AccountStack.Screen name="Webview" component={Webview} />
       <AccountStack.Screen name="ProductRequest" component={ProductRequest} />

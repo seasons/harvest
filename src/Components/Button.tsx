@@ -179,8 +179,6 @@ export class Button extends Component<ButtonProps, ButtonState> {
     switch (this.props.size) {
       case "small":
         return { height: 40, size: "0", px: 2 }
-      case "large":
-        return { height: 48, size: "1", px: 30 }
       default:
         return { height: 48, size: "1", px: 30 }
     }
@@ -289,7 +287,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 }
 
-const Container = styled(Box)<ButtonProps>`
+const Container = styled(Box) <ButtonProps>`
   align-items: center;
   justify-content: center;
   position: relative;
