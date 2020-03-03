@@ -57,3 +57,19 @@ export const GetPaymentDataFixture = {
     },
   },
 }
+
+export const GetChargebeeUpdatePaymentPageDataFixture = {
+  chargebeeUpdatePaymentPage: {
+    __typename: "ChargebeeHostedPagePayload",
+    "created_at": 1583200000,
+    "embed": false,
+    "expires_at": 1583300000,
+    "id": "alsdjfaklsjdfkladsjf",
+    "object": "hosted_page",
+    "resource_version": 1583300000,
+    "state": "created",
+    "type": "manage_payment_sources",
+    "updated_at": 1583300000,
+    "url": "https://chargebee.com/pages/v3/alsdjfaklsjdfkladsjf/"
+  }
+}

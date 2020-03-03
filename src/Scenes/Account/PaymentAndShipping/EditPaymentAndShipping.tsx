@@ -15,7 +15,7 @@ import {
   GetUserPaymentData_me_customer_detail_shippingAddress
 } from "src/generated/getUserPaymentData"
 
-const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
+export const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
   query chargebeeUpdatePaymentPage {
     chargebeeUpdatePaymentPage {
       created_at
