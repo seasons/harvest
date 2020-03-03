@@ -43,7 +43,7 @@ describe("PaymentAndShipping", () => {
 
     expect(component.find(AccountSection).length).toEqual(4)
     expect(component.text()).toContain(
-      "Payment & ShippingShipping address1 Bedford AvenueApt 5ABROOKLYN, New York, 11211Billing address1 Bedford AvenueBrooklynBrooklyn, New York, 11211Payment info4242Phone number123-456-1234"
+      "Payment & ShippingShipping address1 Bedford AvenueApt 5ABROOKLYN, New York, 11211Billing address1 Bedford AvenueBrooklynBrooklyn, New York, 11211Payment infoVISA 4242Phone number123-456-1234Edit"
     )
     expect(component).toMatchSnapshot()
   })
