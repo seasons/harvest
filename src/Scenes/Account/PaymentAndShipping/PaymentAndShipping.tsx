@@ -95,6 +95,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   const sections = []
   let shippingAddress = null
   let billingInfo = null
+  let phoneNumber = null
   const customer = data?.me?.customer
   if (customer) {
     const details = customer.detail
@@ -117,6 +118,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
     }
 
     if (details?.phoneNumber) {
+      phoneNumber = details?.phoneNumber
       sections.push({ title: "Phone number", value: details.phoneNumber })
     }
   }
@@ -124,6 +126,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
   const handleEditBtnPressed = () => {
     navigation.navigate("EditPaymentAndShipping", {
       billingInfo,
+      phoneNumber,
       shippingAddress
     })
   }

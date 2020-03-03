@@ -33,14 +33,23 @@ const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
 `
 
 const UPDATE_PAYMENT_AND_SHIPPING = gql`
-  mutation updatePaymentAndShipping($billingAddress: AddressInput!, $shippingAddress: AddressInput!) {
-    updatePaymentAndShipping(billingAddress: $billingAddress, shippingAddress: $shippingAddress) 
+  mutation updatePaymentAndShipping(
+    $billingAddress: AddressInput!, 
+    $shippingAddress: AddressInput!, 
+    $phoneNumber: String!
+  ) {
+    updatePaymentAndShipping(
+      billingAddress: $billingAddress, 
+      shippingAddress: $shippingAddress, 
+      phoneNumber: $phoneNumber
+    ) 
   }
 `
 
 const BILLING_ADDRESS = "Billing address"
 const EDIT_BILLING_INFO = "Edit billing info"
 const FINISH_BUTTONS = "Finish buttons"
+const PHONE_NUMBER = "Phone number"
 const SHIPPING_ADDRESS = "Shipping address"
 
 export const EditPaymentAndShipping: React.FC<{
@@ -49,6 +58,7 @@ export const EditPaymentAndShipping: React.FC<{
 }> = ({ navigation, route }) => {
   const billingInfo: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
+  const currentPhoneNumber = route?.params?.phoneNumber
 
   const insets = useSafeArea()
   const [isMutating, setIsMutating] = useState(false)
@@ -68,6 +78,7 @@ export const EditPaymentAndShipping: React.FC<{
     zipCode: billingInfo?.postal_code || ""
   })
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState(currentPhoneNumber)
 
   const [updatePaymentAndShipping] = useMutation(UPDATE_PAYMENT_AND_SHIPPING, {
     onError: error => {
@@ -150,6 +161,7 @@ export const EditPaymentAndShipping: React.FC<{
           street1: billingAddress1,
           street2: billingAddress2
         },
+        phoneNumber,
         shippingAddress: {
           city: shippingCity,
           postalCode: shippingZipCode,
@@ -181,7 +193,7 @@ export const EditPaymentAndShipping: React.FC<{
 
   const handleCancelBtnPressed = () => navigation.pop()
 
-  const sections = [SHIPPING_ADDRESS, BILLING_ADDRESS, EDIT_BILLING_INFO, FINISH_BUTTONS]
+  const sections = [SHIPPING_ADDRESS, BILLING_ADDRESS, PHONE_NUMBER, EDIT_BILLING_INFO, FINISH_BUTTONS]
 
   const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 40) / 2
@@ -233,6 +245,14 @@ export const EditPaymentAndShipping: React.FC<{
               <Spacer ml={1} />
               <TextInput currentValue={billingState} placeholder="State" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, state: text })} />
             </Flex>
+          </>
+        )
+      case PHONE_NUMBER:
+        return (
+          <>
+            <Sans size="1">{PHONE_NUMBER}</Sans>
+            <Spacer mb={2} />
+            <TextInput currentValue={phoneNumber} placeholder="Phone number" onChangeText={(inputKey, text) => setPhoneNumber(text)} />
           </>
         )
       case EDIT_BILLING_INFO:
