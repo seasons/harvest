@@ -9,12 +9,12 @@ interface Props {
   content: string
   maxChars: number
   textColor?: Color
+  readMoreExpanded: boolean
+  setReadMoreExpanded: (set: boolean) => void
 }
 
-export const ReadMore = React.memo(({ content, maxChars, textColor }: Props) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-
-  const isAlreadyExpanded = isExpanded || content.length <= maxChars
+export const ReadMore = React.memo(({ content, maxChars, textColor, readMoreExpanded, setReadMoreExpanded }: Props) => {
+  const isAlreadyExpanded = readMoreExpanded || content?.length <= maxChars
 
   const root = (
     <Sans size="1" color={textColor ? textColor : color("black50")}>
@@ -31,7 +31,7 @@ export const ReadMore = React.memo(({ content, maxChars, textColor }: Props) => 
           root,
           maxChars,
           onExpand: () => {
-            setIsExpanded(true)
+            setReadMoreExpanded(true)
           },
         })}
       </Sans>
