@@ -12,6 +12,9 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
+      - run:
+          name: Test suites
+          command: yarn test
       - restore_cache:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
       - run: bundle check || bundle install --path vendor/bundle
@@ -20,8 +23,6 @@ jobs:
           paths:
             - vendor/bundle
       - run:
-          name: Run Tests
-          command: yarn test
           name: fastlane
           command: bundle exec fastlane $FASTLANE_LANE
       - store_artifacts:
