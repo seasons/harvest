@@ -23,9 +23,6 @@ jobs:
       - run:
           - name: Bundle install
           - command: bundle check || bundle install
-      - run:
-          - name: Install Pods
-          - command: bundle exec pod check || bundle exec pod install
       - save_cache:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
           paths:

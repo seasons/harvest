@@ -10,14 +10,14 @@ export const seasonsNotifInterest = "debug-kieran-test"
 export const requestPermission = (navigation, beamsToken, email) => {
   requestNotifications(["alert", "sound", "badge", "criticalAlert"]).then(({ status }) => {
     if (status === "granted") {
-      notificationsInit(email, beamsToken)
+      notificationsInit(email, beamsToken, navigation)
     }
     navigation ? navigation.navigate("Main") : null
   })
   // Set your app key and register for push
 }
 
-export const notificationsInit = (email, beamsToken) => {
+export const notificationsInit = (email, beamsToken, navigation) => {
   console.log("Config.RN_PUSHER_ID", Config.RN_PUSHER_ID)
   RNPusherPushNotifications.setInstanceId(Config.RN_PUSHER_ID)
   // Init interests after registration
@@ -27,11 +27,12 @@ export const notificationsInit = (email, beamsToken) => {
   })
 
   // Setup notification listeners
-  RNPusherPushNotifications.on("notification", handleNotification)
+  RNPusherPushNotifications.on("notification", handleNotification, navigation)
 }
 
 // Handle notifications received
 const handleNotification = (notification, navigation) => {
+  console.log("notification", notification)
   // iOS app specific handling
   if (Platform.OS === "ios") {
     switch (notification.appState) {
