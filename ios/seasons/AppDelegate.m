@@ -66,6 +66,12 @@
 #endif
 }
 
+- (void)applicationWillEnterForeground:(UIApplication *)application
+
+{
+  [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+}
+
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
   NSLog(@"Registered for remote with token: %@", deviceToken);
   [[RNPusherPushNotifications alloc] setDeviceToken:deviceToken];
