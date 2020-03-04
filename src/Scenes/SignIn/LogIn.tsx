@@ -85,10 +85,12 @@ export const LogIn: React.FC<LogInProps> = props => {
         const {
           data: { login: userSession },
         } = result
-        console.log("result", result)
         signIn(userSession)
+        const beamsToken = result?.data?.login?.beamsToken
+        const beamsData = { beamsToken, email }
+        AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
-        checkPermissions(result?.data?.login?.beamsToken)
+        checkPermissions(beamsToken)
       }
     }
   }

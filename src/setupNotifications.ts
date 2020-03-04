@@ -8,22 +8,21 @@ const debugBag = "debug-kieran-test"
 
 // Initialize notifications
 export const requestPermission = (navigation, beamsToken, email) => {
-  console.log("email2", email, "beamsToken2", beamsToken)
   requestNotifications(["alert", "sound", "badge", "criticalAlert"]).then(({ status }) => {
     if (status === "granted") {
-      notificationsInit()
-      setUserId(email, beamsToken, setUserIdOnError, setUserIdOnSuccess)
+      notificationsInit(email, beamsToken)
     }
     navigation ? navigation.navigate("Main") : null
   })
   // Set your app key and register for push
 }
 
-export const notificationsInit = () => {
+export const notificationsInit = (email, beamsToken) => {
   console.log("Config.RN_PUSHER_ID", Config.RN_PUSHER_ID)
   RNPusherPushNotifications.setInstanceId(Config.RN_PUSHER_ID)
   // Init interests after registration
   RNPusherPushNotifications.on("registered", () => {
+    setUserId(email, beamsToken, setUserIdOnError, setUserIdOnSuccess)
     subscribe(debugBag)
   })
 

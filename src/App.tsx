@@ -5,12 +5,17 @@ import { ApolloProvider } from "@apollo/react-hooks"
 import { apolloClient } from "./Apollo"
 import { checkNotifications } from "react-native-permissions"
 import { notificationsInit } from "./setupNotifications"
+import AsyncStorage from "@react-native-community/async-storage"
 
 export const App = () => {
   checkNotifications()
-    .then(({ status }) => {
+    .then(async ({ status }) => {
       if (status === "granted") {
-        notificationsInit()
+        const beamsData = await AsyncStorage.getItem("beamsData")
+        if (beamsData) {
+          const { beamsToken, email } = JSON.parse(beamsData)
+          notificationsInit(email, beamsToken)
+        }
       }
     })
     .catch(error => {

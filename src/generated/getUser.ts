@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 // ====================================================
@@ -33,7 +34,6 @@ export interface GetUser_me_customer {
 export interface GetUser_me {
   __typename: "Me";
   customer: GetUser_me_customer;
-  beamsToken: string;
 }
 
 export interface GetUser {

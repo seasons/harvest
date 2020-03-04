@@ -1,4 +1,4 @@
-import { Box, Flex, Sans, Separator, Spacer, Toggle, GuestView } from "App/Components"
+import { Box, Flex, Sans, Separator, Spacer, GuestView } from "App/Components"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React from "react"
@@ -30,7 +30,6 @@ export const GET_USER = gql`
           }
         }
       }
-      beamsToken
     }
   }
 `
@@ -82,7 +81,6 @@ export function Account(props) {
   ]
 
   const email = data?.me?.customer?.user?.email
-  const beamsToken = data?.me?.beamsToken
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -116,7 +114,7 @@ export function Account(props) {
             <Box px={2} py={4}>
               <ProfileList {...props} />
             </Box>
-            <NotificationToggle beamsToken={beamsToken} email={email} />
+            <NotificationToggle email={email} />
             <Separator />
             <Box px={2} pt={4}>
               {bottomList.map(listItem => {

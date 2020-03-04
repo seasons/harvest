@@ -4,7 +4,7 @@ import { color } from "App/Utils"
 import { checkNotifications } from "react-native-permissions"
 import { unsubscribe, requestPermission } from "App/setupNotifications"
 
-export const NotificationToggle: React.FC<{ beamsToken: string; email: string }> = ({ beamsToken, email }) => {
+export const NotificationToggle: React.FC<{ email: string }> = ({ email }) => {
   const [selected, setSelected] = useState(false)
   useEffect(() => {
     checkNotifications()
@@ -20,7 +20,8 @@ export const NotificationToggle: React.FC<{ beamsToken: string; email: string }>
 
   const onChange = bool => {
     if (bool) {
-      requestPermission(null, beamsToken, email)
+      // FIXME: Add beamsToken from asyncStorage
+      requestPermission(null, null, email)
     } else {
       // FIXME: what do we do for removing request
       unsubscribe(null)

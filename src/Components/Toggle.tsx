@@ -17,11 +17,11 @@ export interface ToggleProps extends FlexProps, BorderProps, SizeProps, SpacePro
  * A Toggle button
  */
 export const Toggle: React.SFC<ToggleProps> = props => {
-  const { children, disabled, onChange, selected, setSelected } = props
+  const { disabled, onChange, selected, setSelected } = props
   const toggleSwitch = newValue => {
     setSelected(newValue)
     onChange(newValue)
   }
 
-  return <Switch onValueChange={debounce(toggleSwitch, 100)} value={selected} />
+  return <Switch disabled={disabled} onValueChange={debounce(toggleSwitch, 100)} value={selected} />
 }
