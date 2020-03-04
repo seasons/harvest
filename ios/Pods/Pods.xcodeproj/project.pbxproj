@@ -5562,13 +5562,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A1D77384F48D73CFF592553E1CDC57A3 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A87ABC3B0F8BEE62346423911D961700 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -11653,14 +11646,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C196B521B9FF902640A5FA601BC24044 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B1C27A884D5F18745A6601D4965ED8F3 /* ReactNativeConfig.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		CA08E1126E2EED28DC45A14AE3200DDD /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -12648,25 +12633,6 @@
 			productReference = B3DD4468EF372D977659FA36E28EFD79 /* libPermission-Notifications.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		B6422EB0A585557ED42A07B5D023BD98 /* react-native-config */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = BF9F65CEC1740AEADD6CDD8BA42E8534 /* Build configuration list for PBXNativeTarget "react-native-config" */;
-			buildPhases = (
-				C196B521B9FF902640A5FA601BC24044 /* Headers */,
-				C833B788E329DEECD7FE461EEFD5BD48 /* [CP-User] Config codegen */,
-				0584FF3C5C014FF5594209C327EEAF6D /* Sources */,
-				A1D77384F48D73CFF592553E1CDC57A3 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				024447AF5398FB18A1A18A87E2A4D6D1 /* PBXTargetDependency */,
-			);
-			name = "react-native-config";
-			productName = "react-native-config";
-			productReference = 3566E29624F4738A4953CE7ABF635C5E /* libreact-native-config.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		B6D5DD49633DFF0657B8C3F08EB3ABA9 /* ReactCommon */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B3E76B1390AF20A46D319CDCE2224F68 /* Build configuration list for PBXNativeTarget "ReactCommon" */;
@@ -13052,7 +13018,6 @@
 				FA877ADC442CB19CF61793D234C8B131 /* React-jsi */,
 				DA0709CAAD589C6E7963495210438021 /* React-jsiexecutor */,
 				F7D033C4C128EECAA020990641FA985F /* React-jsinspector */,
-				B6422EB0A585557ED42A07B5D023BD98 /* react-native-config */,
 				0234F73756A266CACF0A6ED2965A3E73 /* react-native-pusher-push-notifications */,
 				BD9A27D8398DEB3205D3F8937B0672A0 /* react-native-safe-area-context */,
 				1467B2CB665E9E6A20029045D066FDE4 /* react-native-splash-screen */,
@@ -13169,32 +13134,9 @@
 			shellPath = /bin/sh;
 			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/PushNotifications/PushNotifications.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/PushNotifications/PushNotifications-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
 		};
-		C833B788E329DEECD7FE461EEFD5BD48 /* [CP-User] Config codegen */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/ReactNativeConfig/BuildDotenvConfig.rb",
-			);
-			name = "[CP-User] Config codegen";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\nset -ex\nHOST_PATH=\"$SRCROOT/../..\"\n\"${PODS_TARGET_SRCROOT}/ios/ReactNativeConfig/BuildDotenvConfig.rb\" \"$HOST_PATH\" \"${PODS_TARGET_SRCROOT}/ios/ReactNativeConfig\"\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		0584FF3C5C014FF5594209C327EEAF6D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4749E11E09731ED7ADA161A28B8A616D /* GeneratedDotEnv.m in Sources */,
-				8A8B0DD2438ADCD1BA803B7C39191960 /* react-native-config-dummy.m in Sources */,
-				54AC516F6917ED0D4C70BC3287780C29 /* ReactNativeConfig.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		0D04F7B2FDA3C5867739ECDACD182F71 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -14589,12 +14531,6 @@
 			target = 1BEE828C124E6416179B904A9F66D794 /* React */;
 			targetProxy = 10AC45DE3E2B4156F4C1D366EC6D4CD3 /* PBXContainerItemProxy */;
 		};
-		024447AF5398FB18A1A18A87E2A4D6D1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = React;
-			target = 1BEE828C124E6416179B904A9F66D794 /* React */;
-			targetProxy = 888603B6AF13F7C6B5A1480B7B3840D2 /* PBXContainerItemProxy */;
-		};
 		026B688255C46FE0D25C8635E2CD66F4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "react-native-webview";
@@ -15576,7 +15512,6 @@
 		E7FC44B7D9C110454067D1ABFCF8169B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "react-native-config";
-			target = B6422EB0A585557ED42A07B5D023BD98 /* react-native-config */;
 			targetProxy = 504130E874253CFD429B507B7D252057 /* PBXContainerItemProxy */;
 		};
 		EBD2747901D5FC7405ED730AC9B00D66 /* PBXTargetDependency */ = {
@@ -19659,15 +19594,6 @@
 			buildConfigurations = (
 				EBA0B1070341697F5EF0F7DE3F991AC8 /* Debug */,
 				2FAA9EFC645F5CC455B28583D2C13E1E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		BF9F65CEC1740AEADD6CDD8BA42E8534 /* Build configuration list for PBXNativeTarget "react-native-config" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				31DC65C95E2D72D240208ACA7012DB5D /* Debug */,
-				FA33CD687CEB84083B1BC09AE28788F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

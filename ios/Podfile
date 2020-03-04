@@ -70,7 +70,13 @@ target 'seasons' do
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '10.0'
         config.build_settings['SWIFT_VERSION'] = '4.2'
       end
+
+      if target.name == "react-native-config"
+        target.remove_from_project
+      end  
     end
   end
+
+
 
 end
