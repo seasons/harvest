@@ -4,7 +4,7 @@ import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 import { requestNotifications } from "react-native-permissions"
 
 // Get your interest
-const debugBag = "debug-kieran-test"
+export const seasonsNotifInterest = "debug-kieran-test"
 
 // Initialize notifications
 export const requestPermission = (navigation, beamsToken, email) => {
@@ -23,7 +23,7 @@ export const notificationsInit = (email, beamsToken) => {
   // Init interests after registration
   RNPusherPushNotifications.on("registered", () => {
     setUserId(email, beamsToken, setUserIdOnError, setUserIdOnSuccess)
-    subscribe(debugBag)
+    subscribe(seasonsNotifInterest)
   })
 
   // Setup notification listeners

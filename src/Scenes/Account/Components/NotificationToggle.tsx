@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react"
 import { Separator, Spacer, Flex, Box, Toggle, Sans } from "App/Components"
 import { color } from "App/Utils"
 import { checkNotifications } from "react-native-permissions"
-import { unsubscribe, requestPermission } from "App/setupNotifications"
+import { unsubscribe, requestPermission, seasonsNotifInterest } from "App/setupNotifications"
+import AsyncStorage from "@react-native-community/async-storage"
 
 export const NotificationToggle: React.FC<{ email: string }> = ({ email }) => {
   const [selected, setSelected] = useState(false)
@@ -18,13 +19,18 @@ export const NotificationToggle: React.FC<{ email: string }> = ({ email }) => {
       })
   }, [])
 
-  const onChange = bool => {
+  const onChange = async bool => {
     if (bool) {
-      // FIXME: Add beamsToken from asyncStorage
-      requestPermission(null, null, email)
+      const beamsData = await AsyncStorage.getItem("beamsData")
+      try {
+        const { beamsToken, email } = JSON.parse(beamsData)
+        requestPermission(null, beamsToken, email)
+      } catch (e) {
+        console.error("No beamsData in async storage ", e)
+        setSelected(false)
+      }
     } else {
-      // FIXME: what do we do for removing request
-      unsubscribe(null)
+      unsubscribe(seasonsNotifInterest)
     }
   }
 
