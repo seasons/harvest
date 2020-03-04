@@ -13,18 +13,26 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Set Ruby Version
+          command: echo "ruby-2.5.0" > ~/.ruby-version
+      - run:
           name: Install dependencies
           command: yarn install
-      - run:
-          name: Test suites
-          command: yarn test
       - restore_cache:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
-      - run: bundle check || bundle install
+      - run:
+          - name: Bundle install
+          - command: bundle check || bundle install
+      - run:
+          - name: Install Pods
+          - command: bundle exec pod check || bundle exec pod install
       - save_cache:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
+      - run:
+          name: Test suites
+          command: yarn test
       - run:
           name: fastlane
           command: bundle exec fastlane $FASTLANE_LANE
