@@ -13,9 +13,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Set Ruby Version
-          command: echo "2.5.0" > ~/.ruby-version
-      - run:
           name: Install dependencies
           command: yarn install
       - restore_cache:
