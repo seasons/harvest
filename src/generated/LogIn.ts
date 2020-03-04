@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-// @generated
 // This file was automatically generated and should not be edited.
 
 // ====================================================
@@ -20,6 +19,7 @@ export interface LogIn_login {
   token: string;
   refreshToken: string;
   expiresIn: number;
+  beamsToken: string;
 }
 
 export interface LogIn {

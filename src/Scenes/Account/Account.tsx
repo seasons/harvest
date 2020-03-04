@@ -12,6 +12,7 @@ import { ProfileList } from "./ProfileList"
 import { color } from "styled-system"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { space } from "App/Utils"
+import { NotificationToggle } from "./Components/NotificationToggle"
 
 export const GET_USER = gql`
   query GetUser {
@@ -20,6 +21,7 @@ export const GET_USER = gql`
         user {
           firstName
           lastName
+          email
         }
         detail {
           shippingAddress {
@@ -28,6 +30,7 @@ export const GET_USER = gql`
           }
         }
       }
+      beamsToken
     }
   }
 `
@@ -65,27 +68,6 @@ export function Account(props) {
     },
   }
 
-  const renderOrderUpdates = () => {
-    return null
-    // FIXME: When push notifiations, re-enable
-    return (
-      <>
-        <Separator />
-        <Spacer m={2} />
-        <Flex flexDirection="row" justifyContent="space-between">
-          <Box>
-            <Sans size="2">Order updates</Sans>
-            <Sans size="2" color="gray">
-              Send me push notifications
-            </Sans>
-          </Box>
-          <Toggle />
-        </Flex>
-        <Spacer m={2} />
-      </>
-    )
-  }
-
   const bottomList = [
     { text: "Support", onPress: () => Linking.openURL(`mailto:membership@seasons.nyc?subject=Help`) },
     {
@@ -98,6 +80,9 @@ export function Account(props) {
     },
     { text: "Log out", onPress: () => signOut() },
   ]
+
+  const email = data?.me?.customer?.user?.email
+  const beamsToken = data?.me?.beamsToken
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -131,7 +116,7 @@ export function Account(props) {
             <Box px={2} py={4}>
               <ProfileList {...props} />
             </Box>
-            {renderOrderUpdates()}
+            <NotificationToggle beamsToken={beamsToken} email={email} />
             <Separator />
             <Box px={2} pt={4}>
               {bottomList.map(listItem => {

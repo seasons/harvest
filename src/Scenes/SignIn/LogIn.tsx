@@ -21,6 +21,7 @@ const LOG_IN = gql`
       token
       refreshToken
       expiresIn
+      beamsToken
     }
   }
 `
@@ -54,12 +55,12 @@ export const LogIn: React.FC<LogInProps> = props => {
     setEmailComplete(isValidEmail(val))
   }
 
-  const checkPermissions = () => {
+  const checkPermissions = beamsToken => {
     checkNotifications()
       .then(({ status }) => {
         if (status === "denied") {
           props.navigation.popToTop()
-          props.navigation.navigate("Modal", { screen: "AllowNotificationsModal" })
+          props.navigation.navigate("Modal", { screen: "AllowNotificationsModal", params: { beamsToken, email } })
         } else {
           props.navigation.navigate("Main")
         }
@@ -84,9 +85,10 @@ export const LogIn: React.FC<LogInProps> = props => {
         const {
           data: { login: userSession },
         } = result
+        console.log("result", result)
         signIn(userSession)
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
-        checkPermissions()
+        checkPermissions(result?.data?.login?.beamsToken)
       }
     }
   }

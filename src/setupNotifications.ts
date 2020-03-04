@@ -4,23 +4,27 @@ import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 import { requestNotifications } from "react-native-permissions"
 
 // Get your interest
-const donutsInterest = "debug-donuts"
+const debugBag = "debug-kieran-test"
 
 // Initialize notifications
-export const init = navigation => {
+export const requestPermission = (navigation, beamsToken, email) => {
+  console.log("email2", email, "beamsToken2", beamsToken)
   requestNotifications(["alert", "sound", "badge", "criticalAlert"]).then(({ status }) => {
     if (status === "granted") {
-      RNPusherPushNotifications.setInstanceId(Config.RN_PUSHER_ID, navigation)
-      navigation.navigate("Main")
-    } else {
-      navigation.navigate("Main")
+      notificationsInit()
+      setUserId(email, beamsToken, setUserIdOnError, setUserIdOnSuccess)
     }
+    navigation ? navigation.navigate("Main") : null
   })
   // Set your app key and register for push
+}
 
+export const notificationsInit = () => {
+  console.log("Config.RN_PUSHER_ID", Config.RN_PUSHER_ID)
+  RNPusherPushNotifications.setInstanceId(Config.RN_PUSHER_ID)
   // Init interests after registration
   RNPusherPushNotifications.on("registered", () => {
-    subscribe(donutsInterest)
+    subscribe(debugBag)
   })
 
   // Setup notification listeners
@@ -28,11 +32,12 @@ export const init = navigation => {
 }
 
 // Handle notifications received
-const handleNotification = notification => {
+const handleNotification = (notification, navigation) => {
   // iOS app specific handling
   if (Platform.OS === "ios") {
     switch (notification.appState) {
       case "inactive":
+        navigation.navigate("Main")
       // inactive: App came in foreground by clicking on notification.
       //           Use notification.userInfo for redirecting to specific view controller
       case "background":
@@ -64,7 +69,7 @@ const subscribe = interest => {
 }
 
 // Unsubscribe from an interest
-const unsubscribe = interest => {
+export const unsubscribe = interest => {
   RNPusherPushNotifications.unsubscribe(
     interest,
     (statusCode, response) => {
@@ -74,4 +79,22 @@ const unsubscribe = interest => {
       console.log("Success")
     }
   )
+}
+
+const setUserId = (userId, token, onError, onSuccess) => {
+  console.log("userID", userId)
+  console.log("token", token)
+  if (Platform.OS === "ios") {
+    RNPusherPushNotifications.setUserId(userId, token, onError)
+  } else {
+    RNPusherPushNotifications.setUserId(userId, token, onError, onSuccess)
+  }
+}
+
+const setUserIdOnError = () => {
+  console.log("error setting using ID")
+}
+
+const setUserIdOnSuccess = () => {
+  console.log("success setting using ID")
 }
