@@ -22,6 +22,7 @@ export const GET_USER = gql`
           firstName
           lastName
           email
+          pushNotifications
         }
         detail {
           shippingAddress {
@@ -36,16 +37,16 @@ export const GET_USER = gql`
 
 export function Account(props) {
   const { authState, signOut } = useAuthContext()
+  const { loading, error, data } = useQuery(GET_USER)
+  const loaderStyles = useSpring({
+    opacity: loading ? 1 : 0,
+  })
+
   const { navigation } = props
 
   if (!authState?.userSession) {
     return <GuestView navigation={navigation} />
   }
-
-  const { loading, error, data } = useQuery(GET_USER)
-  const loaderStyles = useSpring({
-    opacity: loading ? 1 : 0,
-  })
 
   const {
     me: {
@@ -80,7 +81,7 @@ export function Account(props) {
     { text: "Log out", onPress: () => signOut() },
   ]
 
-  const email = data?.me?.customer?.user?.email
+  const pushNotifications = data?.me?.customer?.user?.pushNotifications
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -114,7 +115,7 @@ export function Account(props) {
             <Box px={2} py={4}>
               <ProfileList {...props} />
             </Box>
-            <NotificationToggle email={email} />
+            <NotificationToggle userNotificationStatus={pushNotifications} />
             <Separator />
             <Box px={2} pt={4}>
               {bottomList.map(listItem => {

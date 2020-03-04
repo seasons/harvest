@@ -7,18 +7,19 @@ import { requestNotifications } from "react-native-permissions"
 export const seasonsNotifInterest = "debug-kieran-test"
 
 // Initialize notifications
-export const requestPermission = (navigation, beamsToken, email) => {
+export const requestPermission = (navigation, beamsToken, email, onAccepted, onDenied) => {
   requestNotifications(["alert", "sound", "badge", "criticalAlert"]).then(({ status }) => {
     if (status === "granted") {
       notificationsInit(email, beamsToken, navigation)
+      onAccepted ? onAccepted() : null
+    } else {
+      onDenied ? onDenied() : null
     }
-    navigation ? navigation.navigate("Main") : null
   })
   // Set your app key and register for push
 }
 
 export const notificationsInit = (email, beamsToken, navigation) => {
-  console.log("Config.RN_PUSHER_ID", Config.RN_PUSHER_ID)
   RNPusherPushNotifications.setInstanceId(Config.RN_PUSHER_ID)
   // Init interests after registration
   RNPusherPushNotifications.on("registered", () => {
@@ -27,17 +28,27 @@ export const notificationsInit = (email, beamsToken, navigation) => {
   })
 
   // Setup notification listeners
-  RNPusherPushNotifications.on("notification", handleNotification, navigation)
+  RNPusherPushNotifications.on("notification", notification => {
+    handleNotification(notification, navigation)
+  })
 }
 
 // Handle notifications received
 const handleNotification = (notification, navigation) => {
-  console.log("notification", notification)
+  const route = notification?.userInfo?.data?.route
+  const screen = notification?.userInfo?.data?.screen
+  const params = notification?.userInfo?.data?.params
   // iOS app specific handling
   if (Platform.OS === "ios") {
     switch (notification.appState) {
       case "inactive":
-        navigation.navigate("Main")
+        if (route && screen && params) {
+          navigation.navigate(route, { screen, params })
+        } else if (route && params) {
+          navigation.navigate(route, params)
+        } else if (route) {
+          navigation.navigate(route)
+        }
       // inactive: App came in foreground by clicking on notification.
       //           Use notification.userInfo for redirecting to specific view controller
       case "background":
@@ -55,7 +66,6 @@ const handleNotification = (notification, navigation) => {
 
 // Subscribe to an interest
 const subscribe = interest => {
-  console.log("subscribe", interest)
   // Note that only Android devices will respond to success/error callbacks
   RNPusherPushNotifications.subscribe(
     interest,
@@ -82,8 +92,6 @@ export const unsubscribe = interest => {
 }
 
 const setUserId = (userId, token, onError, onSuccess) => {
-  console.log("userID", userId)
-  console.log("token", token)
   if (Platform.OS === "ios") {
     RNPusherPushNotifications.setUserId(userId, token, onError)
   } else {

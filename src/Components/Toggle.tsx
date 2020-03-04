@@ -9,7 +9,6 @@ export interface ToggleProps extends FlexProps, BorderProps, SizeProps, SpacePro
   disabled?: boolean
   /** Callback when selected */
   onChange: (selected: boolean) => void
-  setSelected: (selected: boolean) => void
   selected: boolean
 }
 
@@ -17,9 +16,8 @@ export interface ToggleProps extends FlexProps, BorderProps, SizeProps, SpacePro
  * A Toggle button
  */
 export const Toggle: React.SFC<ToggleProps> = props => {
-  const { disabled, onChange, selected, setSelected } = props
+  const { disabled, onChange, selected } = props
   const toggleSwitch = newValue => {
-    setSelected(newValue)
     onChange(newValue)
   }
 
