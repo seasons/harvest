@@ -21,8 +21,8 @@ jobs:
       - restore_cache:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
       - run:
-          - name: Bundle install
-          - command: bundle check || bundle install
+          name: Bundle install
+          command: bundle check || bundle install
       - save_cache:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
           paths:
