@@ -4,7 +4,7 @@ import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 import { requestNotifications } from "react-native-permissions"
 
 // Get your interest
-export const seasonsNotifInterest = "debug-kieran-test"
+export const seasonsNotifInterest = "seasons-general-notifications"
 
 // Initialize notifications
 export const requestPermission = (navigation, beamsToken, email, onAccepted, onDenied) => {

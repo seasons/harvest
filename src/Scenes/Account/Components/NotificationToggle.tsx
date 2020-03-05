@@ -65,7 +65,7 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
       <Separator />
       <Spacer m={2} />
       <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-        <Box>
+        <Box style={{ maxWidth: 300 }}>
           <Sans size="2">Order updates</Sans>
           {disabled ? (
             <Sans size="2" color={color("black50")}>
@@ -83,7 +83,6 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
               Send me push notifications
             </Sans>
           )}
-          <Spacer mr={4} />
         </Box>
         <Toggle disabled={disabled || isMutating} onChange={onChange} selected={selected} />
       </Flex>
