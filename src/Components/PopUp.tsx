@@ -77,20 +77,16 @@ export const PopUp: React.FC<PopUpProps> = ({ data, show, insetsBottom }) => {
     <>
       <AnimatedPopUp style={{ transform: [{ translateY: animation.translateY }] }} color={colors.backgroundColor}>
         <Box m={2} onLayout={onLayout}>
-          {!!icon && (
-            <Box mt={2} mx="auto">
-              {icon}
-            </Box>
-          )}
+          {!!icon && <Box mt={2}>{icon}</Box>}
           <Spacer mt={2} />
           <Box>
-            <Sans size="2" color={colors.primaryText} textAlign="center">
+            <Sans size="2" color={colors.primaryText}>
               {title}
             </Sans>
             {note && (
               <>
                 <Spacer mb={0.5} />
-                <Sans size="1" color={colors.secondaryText} textAlign="center">
+                <Sans size="1" color={colors.secondaryText}>
                   {note}
                 </Sans>
               </>
