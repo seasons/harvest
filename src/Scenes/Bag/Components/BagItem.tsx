@@ -105,6 +105,7 @@ export const BagItem: React.FC<BagItemProps> = ({
                 removeItemFromBag({
                   variables: {
                     id: bagItem.variantID,
+                    saved: false,
                   },
                 })
               }}
@@ -122,6 +123,7 @@ export const BagItem: React.FC<BagItemProps> = ({
                 removeFromBagAndSaveItem({
                   variables: {
                     id: bagItem.variantID,
+                    saved: false,
                   },
                 })
               }}
