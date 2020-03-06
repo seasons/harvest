@@ -89,7 +89,6 @@ export function Account(props) {
         <ScrollView>
           <Box pt={2}>
             <Spacer mb={6} />
-
             <Flex flexDirection="row" justifyContent="space-between" alignItems="center" flexWrap="nowrap" px={2}>
               {loading && (
                 <LoaderContainer style={loaderStyles}>

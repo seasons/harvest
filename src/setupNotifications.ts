@@ -11,9 +11,9 @@ export const requestPermission = (navigation, beamsToken, email, onAccepted, onD
   requestNotifications(["alert", "sound", "badge", "criticalAlert"]).then(({ status }) => {
     if (status === "granted") {
       notificationsInit(email, beamsToken, navigation)
-      onAccepted ? onAccepted() : null
+      onAccepted?.()
     } else {
-      onDenied ? onDenied() : null
+      onDenied?.()
     }
   })
   // Set your app key and register for push

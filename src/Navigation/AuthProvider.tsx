@@ -74,6 +74,7 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
     },
     signOut: async () => {
       await AsyncStorage.removeItem("userSession")
+      await AsyncStorage.removeItem("beamsData")
       dispatch({ type: "SIGN_OUT" })
     },
     authState,
