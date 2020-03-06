@@ -217,7 +217,6 @@ export const Bag = props => {
           <BagItem
             removeItemFromBag={deleteBagItem}
             removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-            saved={BagView.Saved == currentView || item.status !== "Added"}
             sectionHeight={SECTION_HEIGHT}
             index={index}
             bagItem={item}

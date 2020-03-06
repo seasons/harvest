@@ -97,6 +97,7 @@ const renderItem = ({ item }, i, navigation) => {
 export const Browse = (props: any) => {
   const sizeFilters = get(props, "route.params.sizeFilters") || []
   const [currentCategory, setCurrentCategory] = useState("all")
+  const insets = useSafeArea()
 
   // Get all the sizes that we want to query by.
   // If no size filter is selected, all sizes are queried.
@@ -114,12 +115,12 @@ export const Browse = (props: any) => {
     },
   })
 
-  let products = data && data.products
-  let scrollViewEl = null
+  const products = data && data.products
 
-  const insets = useSafeArea()
   const loaderStyle = useSpring({ opacity: loading && !data ? 1 : 0 })
   const productsBoxStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
+
+  let scrollViewEl = null
   const { navigation } = props
   const categories = (data && data.categories) || []
   const filtersButtonHeight = 36

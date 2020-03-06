@@ -1,10 +1,9 @@
 import { Box, Flex, Sans, Button, Separator, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
-import gql from "graphql-tag"
 import { get, head } from "lodash"
-import React from "react"
-import { Text, TouchableWithoutFeedback } from "react-native"
+import React, { useState, useEffect } from "react"
+import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { color } from "App/Utils"
 
@@ -16,6 +15,7 @@ interface BagItemProps {
 }
 
 export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navigation, removeItemFromBag }) => {
+  const [isMutating, setIsMutating] = useState(false)
   if (!bagItem) {
     return <></>
   }
@@ -29,8 +29,6 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navi
 
   const imageURL = imageResize(get(product, "images[0].url"), "medium")
   const variantSize = get(variantToUse, "size")
-
-  console.log("variant,", variantToUse.id)
 
   return (
     <Box py={1} key={product.id}>
@@ -49,7 +47,12 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navi
               </Sans>
             </Box>
             <Button
+              width={91}
               onPress={() => {
+                if (isMutating) {
+                  return
+                }
+                setIsMutating(true)
                 removeItemFromBag({
                   variables: {
                     id: variantToUse.id,
@@ -59,6 +62,8 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navi
               }}
               variant="secondaryWhite"
               size="small"
+              disabled={isMutating}
+              loading={isMutating}
             >
               Remove
             </Button>
