@@ -6,6 +6,7 @@ import AuthContext from "./AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
 import { ModalStackScreen, TabsStack } from "./Stacks"
+import { Notifications } from "App/Notifications"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -73,6 +74,7 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
     },
     signOut: async () => {
       await AsyncStorage.removeItem("userSession")
+      await AsyncStorage.removeItem("beamsData")
       dispatch({ type: "SIGN_OUT" })
     },
     authState,
@@ -93,7 +95,11 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
         }}
       >
         <RootStack.Screen name="Main" options={{ headerShown: false }}>
-          {() => <TabsStack currentScreen={currentScreen} />}
+          {() => (
+            <Notifications>
+              <TabsStack currentScreen={currentScreen} />
+            </Notifications>
+          )}
         </RootStack.Screen>
         <RootStack.Screen name="Modal" component={ModalStackScreen} />
       </RootStack.Navigator>

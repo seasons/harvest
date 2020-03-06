@@ -1,4 +1,4 @@
-import { Box, Flex, Sans, Separator, Spacer, Toggle, GuestView } from "App/Components"
+import { Box, Flex, Sans, Separator, Spacer, GuestView } from "App/Components"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React from "react"
@@ -12,6 +12,7 @@ import { ProfileList } from "./ProfileList"
 import { color } from "styled-system"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { space } from "App/Utils"
+import { NotificationToggle } from "./Components/NotificationToggle"
 
 export const GET_USER = gql`
   query GetUser {
@@ -20,6 +21,8 @@ export const GET_USER = gql`
         user {
           firstName
           lastName
+          email
+          pushNotifications
         }
         detail {
           shippingAddress {
@@ -34,16 +37,16 @@ export const GET_USER = gql`
 
 export function Account(props) {
   const { authState, signOut } = useAuthContext()
+  const { loading, error, data } = useQuery(GET_USER)
+  const loaderStyles = useSpring({
+    opacity: loading ? 1 : 0,
+  })
+
   const { navigation } = props
 
   if (!authState?.userSession) {
     return <GuestView navigation={navigation} />
   }
-
-  const { loading, error, data } = useQuery(GET_USER)
-  const loaderStyles = useSpring({
-    opacity: loading ? 1 : 0,
-  })
 
   const {
     me: {
@@ -65,27 +68,6 @@ export function Account(props) {
     },
   }
 
-  const renderOrderUpdates = () => {
-    return null
-    // FIXME: When push notifiations, re-enable
-    return (
-      <>
-        <Separator />
-        <Spacer m={2} />
-        <Flex flexDirection="row" justifyContent="space-between">
-          <Box>
-            <Sans size="2">Order updates</Sans>
-            <Sans size="2" color="gray">
-              Send me push notifications
-            </Sans>
-          </Box>
-          <Toggle />
-        </Flex>
-        <Spacer m={2} />
-      </>
-    )
-  }
-
   const bottomList = [
     { text: "Support", onPress: () => Linking.openURL(`mailto:membership@seasons.nyc?subject=Help`) },
     {
@@ -99,13 +81,14 @@ export function Account(props) {
     { text: "Log out", onPress: () => signOut() },
   ]
 
+  const pushNotifications = data?.me?.customer?.user?.pushNotifications
+
   return (
     <Container insetsBottom={false} insetsTop={false}>
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
           <Box pt={2}>
             <Spacer mb={6} />
-
             <Flex flexDirection="row" justifyContent="space-between" alignItems="center" flexWrap="nowrap" px={2}>
               {loading && (
                 <LoaderContainer style={loaderStyles}>
@@ -131,7 +114,7 @@ export function Account(props) {
             <Box px={2} py={4}>
               <ProfileList {...props} />
             </Box>
-            {renderOrderUpdates()}
+            <NotificationToggle userNotificationStatus={pushNotifications} />
             <Separator />
             <Box px={2} pt={4}>
               {bottomList.map(listItem => {

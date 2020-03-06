@@ -4,13 +4,11 @@ import { Loader } from "App/Components/Loader"
 import { PopUpProps } from "App/Components/PopUp"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
-import { color } from "App/Utils"
 import { screenTrack } from "App/Utils/track"
-import { BackArrowIcon } from "Assets/icons"
 import gql from "graphql-tag"
 import { find, get } from "lodash"
 import React, { useEffect, useState } from "react"
-import { Dimensions, FlatList, TouchableOpacity } from "react-native"
+import { Dimensions, FlatList } from "react-native"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { useMutation, useQuery } from "@apollo/react-hooks"
@@ -39,7 +37,7 @@ interface ProductProps {
 }
 
 export const Product = screenTrack(props => {
-  const productID = get(props, "route.params.id")
+  const productID = props?.route?.params?.id
   return {
     contextScreen: "Product",
     productID,
@@ -51,7 +49,7 @@ export const Product = screenTrack(props => {
   const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation, route } = props
-  const productID = get(route, "params.id")
+  const productID = route?.params?.id
   const { data, loading, error } = useQuery<GetProduct>(GET_PRODUCT, {
     variables: {
       productID,

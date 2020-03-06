@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { PushNotificationStatus } from "./globalTypes";
+
 // ====================================================
 // GraphQL query operation: GetUser
 // ====================================================
@@ -11,6 +13,8 @@ export interface GetUser_me_customer_user {
   __typename: "User";
   firstName: string;
   lastName: string;
+  email: string;
+  pushNotifications: PushNotificationStatus;
 }
 
 export interface GetUser_me_customer_detail_shippingAddress {

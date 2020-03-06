@@ -160,6 +160,12 @@ export enum ProductStatus {
   NotAvailable = "NotAvailable",
 }
 
+export enum PushNotificationStatus {
+  Blocked = "Blocked",
+  Denied = "Denied",
+  Granted = "Granted",
+}
+
 export enum Size {
   L = "L",
   M = "M",

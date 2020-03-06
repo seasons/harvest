@@ -20,6 +20,7 @@ export interface LogIn_login {
   token: string;
   refreshToken: string;
   expiresIn: number;
+  beamsToken: string;
 }
 
 export interface LogIn {
