@@ -8,7 +8,7 @@ import { Sans } from "Components/Typography"
 import { assign, fill, get } from "lodash"
 import React, { useState, useEffect } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import { FlatList } from "react-native"
+import { FlatList, RefreshControl } from "react-native"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
 import { SavedItem } from "./Components/SavedItem"
@@ -35,14 +35,20 @@ export const Bag = props => {
 
   const insets = useSafeArea()
   const [isMutating, setMutating] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [showReserveError, displayReserveError] = useState(false)
+  const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+  const [refreshing, setRefreshing] = useState(false)
+
   const { data, loading, refetch } = useQuery(GET_BAG, {
     fetchPolicy: "cache-and-network",
   })
   useEffect(() => {
+    if (data) {
+      setIsLoading(false)
+    }
     return displayReserveError(false)
-  }, [])
-  const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+  }, [data])
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {
       const { me } = cache.readQuery({ query: GET_BAG })
@@ -95,8 +101,14 @@ export const Bag = props => {
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
 
-  if (loading) {
+  if (isLoading) {
     return <Loader />
+  }
+
+  const onRefresh = () => {
+    setRefreshing(true)
+    refetch()
+    setRefreshing(false)
   }
 
   const items =
@@ -235,6 +247,7 @@ export const Bag = props => {
   return (
     <Container insetsBottom={false} insetsTop={false}>
       <FlatList
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         data={currentView === BagView.Bag ? paddedItems : savedItems}
         ListHeaderComponent={() => (
           <>

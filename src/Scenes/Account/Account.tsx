@@ -19,6 +19,7 @@ export const GET_USER = gql`
     me {
       customer {
         user {
+          id
           firstName
           lastName
           email
@@ -81,6 +82,7 @@ export function Account(props) {
   ]
 
   const pushNotifications = data?.me?.customer?.user?.pushNotifications
+  const userID = data?.me?.customer?.user?.id
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -107,12 +109,13 @@ export function Account(props) {
                 )}
               </Flex>
             </Box>
-            <Spacer m={2} />
+            <Spacer mb={2} />
             <Separator />
             <Box px={2} py={4}>
               <ProfileList {...props} />
             </Box>
-            <NotificationToggle userNotificationStatus={pushNotifications} />
+            <Separator />
+            <NotificationToggle userID={userID} userNotificationStatus={pushNotifications} />
             <Separator />
             <Box px={2} pt={4}>
               {bottomList.map(listItem => {

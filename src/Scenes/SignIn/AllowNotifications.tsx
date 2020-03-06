@@ -6,12 +6,11 @@ import { color } from "App/Utils"
 import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
 import { GET_USER } from "../Account/Account"
-import { PushNotificationStatus } from "App/generated/globalTypes"
 
 export const UPDATE_USER_PUSH_NOTIFICATIONS = gql`
   mutation UpdateUserPushNotifications($pushNotificationsStatus: String!) {
     updateUserPushNotifications(pushNotificationsStatus: $pushNotificationsStatus) {
-      id
+      pushNotifications
     }
   }
 `

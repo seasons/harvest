@@ -11,8 +11,9 @@ import { UPDATE_USER_PUSH_NOTIFICATIONS } from "App/Scenes/SignIn/AllowNotificat
 import { PushNotificationStatus } from "App/generated/globalTypes"
 import { checkNotifications } from "react-native-permissions"
 
-export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotificationStatus }> = ({
+export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotificationStatus; userID: string }> = ({
   userNotificationStatus,
+  userID,
 }) => {
   const [isMutating, setIsMutating] = useState(false)
   const navigation = useNavigation()
@@ -22,6 +23,12 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
         query: GET_USER,
       },
     ],
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: () => {
+      setIsMutating(false)
+    },
   })
 
   const handleRequestNotifications = async () => {
@@ -57,12 +64,19 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
   }, [navigation])
 
   const setUserNotifs = async status => {
+    console.log("userID", userID)
     await updateUserPushNotifications({
       variables: {
         pushNotificationsStatus: status,
       },
+      optimisticResponse: {
+        __typename: "Mutation",
+        updateUserPushNotifications: {
+          __typename: "User",
+          pushNotifications: status,
+        },
+      },
     })
-    setIsMutating(false)
   }
 
   const onChange = async () => {
@@ -83,7 +97,6 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
 
   return (
     <Box px={2}>
-      <Separator />
       <Spacer m={2} />
       <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
         <Box style={{ maxWidth: 300 }}>
