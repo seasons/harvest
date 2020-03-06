@@ -1,7 +1,7 @@
 import { Box, Flex, Sans, Separator, Spacer, GuestView } from "App/Components"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
-import React from "react"
+import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
 import ContentLoader, { Rect } from "react-content-loader/native"
 import { Image, Linking, ScrollView, TouchableOpacity } from "react-native"
@@ -37,11 +37,10 @@ export const GET_USER = gql`
 
 export function Account(props) {
   const { authState, signOut } = useAuthContext()
-  const { loading, error, data } = useQuery(GET_USER)
+  const { loading, error, data, refetch } = useQuery(GET_USER)
   const loaderStyles = useSpring({
     opacity: loading ? 1 : 0,
   })
-
   const { navigation } = props
 
   if (!authState?.userSession) {

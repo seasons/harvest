@@ -4,11 +4,12 @@ import { color } from "App/Utils"
 import { unsubscribe, requestPermission, seasonsNotifInterest } from "App/setupNotifications"
 import AsyncStorage from "@react-native-community/async-storage"
 import { useMutation } from "react-apollo"
-import { Text, Linking } from "react-native"
+import { Text, Linking, AppState } from "react-native"
 import { GET_USER } from "../Account"
 import { useNavigation } from "@react-navigation/native"
 import { UPDATE_USER_PUSH_NOTIFICATIONS } from "App/Scenes/SignIn/AllowNotifications"
 import { PushNotificationStatus } from "App/generated/globalTypes"
+import { checkNotifications } from "react-native-permissions"
 
 export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotificationStatus }> = ({
   userNotificationStatus,
@@ -22,6 +23,38 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
       },
     ],
   })
+
+  const handleRequestNotifications = async () => {
+    const beamsData = await AsyncStorage.getItem("beamsData")
+    try {
+      const { beamsToken, email } = JSON.parse(beamsData)
+      requestPermission(
+        navigation,
+        beamsToken,
+        email,
+        () => setUserNotifs("Granted"),
+        () => setUserNotifs("Blocked")
+      )
+    } catch (e) {
+      console.error("No beamsData in async storage ", e)
+    }
+  }
+
+  useEffect(() => {
+    // If user leaves the app to turn on notifications in the settings recheck status
+    const unsubscribe = AppState.addEventListener("change", userNotificationStatus => {
+      checkNotifications()
+        .then(async ({ status }) => {
+          if (userNotificationStatus && status !== userNotificationStatus?.toLowerCase()) {
+            handleRequestNotifications()
+          }
+        })
+        .catch(error => {
+          console.log("error checking for permission", error)
+        })
+    })
+    return unsubscribe
+  }, [navigation])
 
   const setUserNotifs = async status => {
     await updateUserPushNotifications({
@@ -38,19 +71,7 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
     }
     setIsMutating(true)
     if (userNotificationStatus === "Denied") {
-      const beamsData = await AsyncStorage.getItem("beamsData")
-      try {
-        const { beamsToken, email } = JSON.parse(beamsData)
-        requestPermission(
-          navigation,
-          beamsToken,
-          email,
-          () => setUserNotifs("Granted"),
-          () => setUserNotifs("Blocked")
-        )
-      } catch (e) {
-        console.error("No beamsData in async storage ", e)
-      }
+      handleRequestNotifications()
     } else {
       setUserNotifs("Denied")
       unsubscribe(seasonsNotifInterest)
