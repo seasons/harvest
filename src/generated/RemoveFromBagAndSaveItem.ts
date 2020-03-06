@@ -24,4 +24,5 @@ export interface RemoveFromBagAndSaveItem {
 
 export interface RemoveFromBagAndSaveItemVariables {
   id: string;
+  saved: boolean;
 }

@@ -89,7 +89,7 @@ export function Account(props) {
         <ScrollView>
           <Box pt={2}>
             <Spacer mb={6} />
-            <Flex flexDirection="row" justifyContent="space-between" alignItems="center" flexWrap="nowrap" px={2}>
+            <Box px={2} style={{ height: 60 }}>
               {loading && (
                 <LoaderContainer style={loaderStyles}>
                   <UserProfileLoader />
@@ -107,8 +107,7 @@ export function Account(props) {
                   </Sans>
                 )}
               </Flex>
-              <ImageContainer source={require(`../../../assets/images/smiley.png`)} />
-            </Flex>
+            </Box>
             <Spacer m={2} />
             <Separator />
             <Box px={2} py={4}>
@@ -136,13 +135,6 @@ export function Account(props) {
     </Container>
   )
 }
-
-const ImageContainer = styled(Image)`
-  height: 64;
-  width: 64;
-  border-radius: 32;
-  overflow: hidden;
-`
 
 const LoaderContainer = animated(styled(Box)`
   top: 3;

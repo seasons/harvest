@@ -31,7 +31,6 @@ interface BagItemProps {
   index?: number
   sectionHeight: number
   navigation?: any
-  saved: Boolean
   removeItemFromBag?: Function
   removeFromBagAndSaveItem?: Function
 }
@@ -41,7 +40,6 @@ export const BagItem: React.FC<BagItemProps> = ({
   index,
   sectionHeight,
   navigation,
-  saved,
   removeItemFromBag,
   removeFromBagAndSaveItem,
 }) => {
@@ -60,18 +58,16 @@ export const BagItem: React.FC<BagItemProps> = ({
   const variantSize = get(variantToUse, "size")
 
   return (
-    <Box py={saved ? 1 : 2} key={product.id}>
+    <Box py={2} key={product.id}>
       <TouchableWithoutFeedback
         onPress={() => (navigation ? navigation.navigate("Product", { id: product.id }) : null)}
       >
         <BagItemContainer flexDirection="row">
           <Flex style={{ flex: 2 }} p={2} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
             <Box>
-              {!saved && (
-                <Sans size="3" pb={1}>
-                  {index + 1}
-                </Sans>
-              )}
+              <Sans size="3" pb={1}>
+                {index + 1}
+              </Sans>
               <Sans size="2">{product.brand.name}</Sans>
               <Sans size="2" color="gray">
                 {product.name}
@@ -96,45 +92,44 @@ export const BagItem: React.FC<BagItemProps> = ({
           </Flex>
         </BagItemContainer>
       </TouchableWithoutFeedback>
-
-      {!saved && (
-        <Flex flexDirection="row" pt={1}>
-          <Box flex={1} pr={1}>
-            <TouchableOpacity
-              onPress={() => {
-                removeItemFromBag({
-                  variables: {
-                    id: bagItem.variantID,
-                  },
-                })
-              }}
-            >
-              <RemoveButton>
-                <Sans size="1" textAlign="center">
-                  Remove
-                </Sans>
-              </RemoveButton>
-            </TouchableOpacity>
-          </Box>
-          <Box flex={1}>
-            <TouchableOpacity
-              onPress={() => {
-                removeFromBagAndSaveItem({
-                  variables: {
-                    id: bagItem.variantID,
-                  },
-                })
-              }}
-            >
-              <SaveForLaterButton>
-                <Sans size="1" textAlign="center">
-                  {!saved ? "Save for later" : "Add to bag"}
-                </Sans>
-              </SaveForLaterButton>
-            </TouchableOpacity>
-          </Box>
-        </Flex>
-      )}
+      <Flex flexDirection="row" pt={1}>
+        <Box flex={1} pr={1}>
+          <TouchableOpacity
+            onPress={() => {
+              removeItemFromBag({
+                variables: {
+                  id: bagItem.variantID,
+                  saved: false,
+                },
+              })
+            }}
+          >
+            <RemoveButton>
+              <Sans size="1" textAlign="center">
+                Remove
+              </Sans>
+            </RemoveButton>
+          </TouchableOpacity>
+        </Box>
+        <Box flex={1}>
+          <TouchableOpacity
+            onPress={() => {
+              removeFromBagAndSaveItem({
+                variables: {
+                  id: bagItem.variantID,
+                  saved: false,
+                },
+              })
+            }}
+          >
+            <SaveForLaterButton>
+              <Sans size="1" textAlign="center">
+                Save for later
+              </Sans>
+            </SaveForLaterButton>
+          </TouchableOpacity>
+        </Box>
+      </Flex>
     </Box>
   )
 }

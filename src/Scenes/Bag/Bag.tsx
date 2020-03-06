@@ -11,6 +11,7 @@ import { useMutation, useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
+import { SavedItem } from "./Components/SavedItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
 import { GuestView } from "App/Components/GuestView"
@@ -202,17 +203,26 @@ export const Bag = props => {
   }
 
   const renderItem = ({ item, index }) => {
+    const showSavedItems = BagView.Saved == currentView || item.status !== "Added"
     return item.productID.length ? (
-      <Box mx={2} mt={isSavedView && index === 0 ? 1 : 0}>
-        <BagItem
-          removeItemFromBag={deleteBagItem}
-          removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-          saved={BagView.Saved == currentView || item.status !== "Added"}
-          sectionHeight={SECTION_HEIGHT}
-          index={index}
-          bagItem={item}
-          navigation={navigation}
-        />
+      <Box mx={showSavedItems ? 0 : 2} mt={isSavedView && index === 0 ? 1 : 0}>
+        {showSavedItems ? (
+          <SavedItem
+            removeItemFromBag={deleteBagItem}
+            sectionHeight={SECTION_HEIGHT}
+            bagItem={item}
+            navigation={navigation}
+          />
+        ) : (
+          <BagItem
+            removeItemFromBag={deleteBagItem}
+            removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+            sectionHeight={SECTION_HEIGHT}
+            index={index}
+            bagItem={item}
+            navigation={navigation}
+          />
+        )}
       </Box>
     ) : (
       <EmptyBagItem navigation={navigation} />
@@ -220,6 +230,7 @@ export const Bag = props => {
   }
 
   const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"
+  const footerMarginBottom = currentView === BagView.Bag ? 96 : 2
   const headerSubtitle = currentView === BagView.Bag ? bagSubtitle : "Tucked away for later"
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -263,7 +274,7 @@ export const Bag = props => {
         renderItem={item => {
           return renderItem(item)
         }}
-        ListFooterComponent={() => <Spacer mb={96} />}
+        ListFooterComponent={() => <Spacer mb={footerMarginBottom} />}
       />
       {isBagView && (
         <>

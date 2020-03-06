@@ -42,7 +42,7 @@ export interface ButtonProps extends BoxProps {
   block?: boolean
 }
 
-export type ButtonVariant = "primaryBlack" | "primaryWhite" | "black85" | "secondaryBlack"
+export type ButtonVariant = "primaryBlack" | "secondaryWhite" | "primaryWhite" | "black85" | "secondaryBlack"
 export type ButtonSize = "small" | "large"
 
 /** Default button size */
@@ -87,6 +87,24 @@ export function getColorsForVariant(variant: ButtonVariant) {
         pressed: {
           backgroundColor: black50,
           borderColor: black100,
+          color: black100,
+        },
+        disabled: {
+          backgroundColor: black15,
+          borderColor: black15,
+          color: black50,
+        },
+      }
+    case "secondaryWhite":
+      return {
+        default: {
+          backgroundColor: white100,
+          borderColor: black15,
+          color: black100,
+        },
+        pressed: {
+          backgroundColor: black50,
+          borderColor: black15,
           color: black100,
         },
         disabled: {
@@ -178,7 +196,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   getSize(): { height: number | string; size: "0" | "1" | "2"; px: number } {
     switch (this.props.size) {
       case "small":
-        return { height: 40, size: "0", px: 2 }
+        return { height: 32, size: "1", px: 2 }
       default:
         return { height: 48, size: "1", px: 30 }
     }
@@ -287,7 +305,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 }
 
-const Container = styled(Box) <ButtonProps>`
+const Container = styled(Box)<ButtonProps>`
   align-items: center;
   justify-content: center;
   position: relative;
