@@ -48,9 +48,9 @@ export const setupApolloClient = async () => {
       if (networkError.statusCode === 401) {
         // We assume we have both tokens needed to run the async request
         // Let's refresh token through async request
-        return new Observable(observer => {
+        return new Observable((observer) => {
           getNewToken()
-            .then(userSession => {
+            .then((userSession) => {
               operation.setContext(({ headers = {} }) => ({
                 headers: {
                   // Re-add old headers
@@ -70,7 +70,7 @@ export const setupApolloClient = async () => {
               // Retry last failed request
               forward(operation).subscribe(subscriber)
             })
-            .catch(error => {
+            .catch((error) => {
               // No refresh or client token available, we force user to login
               observer.error(error)
             })

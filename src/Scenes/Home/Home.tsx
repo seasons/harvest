@@ -10,10 +10,10 @@ import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import SplashScreen from "react-native-splash-screen"
-
 import { BrandsRail } from "./Components/BrandsRail"
 import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
+import { ReviewPopUp } from "./Components/ReviewPopUp"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -57,7 +57,7 @@ export const Home = screenTrack()(({ navigation }) => {
 
   useEffect(() => {
     if (data?.homepage?.sections?.length) {
-      const dataSections = data.homepage.sections.filter(section => section?.results?.length)
+      const dataSections = data.homepage.sections.filter((section) => section?.results?.length)
       setSections(dataSections)
     }
   }, [data])
@@ -80,7 +80,7 @@ export const Home = screenTrack()(({ navigation }) => {
     return <Loader />
   }
 
-  const renderItem = item => {
+  const renderItem = (item) => {
     switch (item.type) {
       case "Brands":
         return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
@@ -108,6 +108,7 @@ export const Home = screenTrack()(({ navigation }) => {
           renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
           ListFooterComponent={() => <HomeFooter navigation={navigation} />}
         />
+        <ReviewPopUp show={true} />
       </Animatable.View>
     </Container>
   )
