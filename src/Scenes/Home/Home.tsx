@@ -8,9 +8,10 @@ import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
+import { BrandsRail } from "./Components/BrandsRail"
 import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
-import { BrandsRail } from "./Components/BrandsRail"
+import { ReviewPopUp } from "./Components/ReviewPopUp"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -99,6 +100,7 @@ export const Home: React.FC<{
           renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
           ListFooterComponent={() => <HomeFooter navigation={navigation} />}
         />
+        <ReviewPopUp show={true} />
       </Animatable.View>
     </Container>
   )
