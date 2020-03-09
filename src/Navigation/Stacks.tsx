@@ -12,7 +12,7 @@ import { Webview } from "App/Scenes/Webview"
 import React from "react"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { NavBar } from "./NavBar"
-import { createStackNavigator } from "@react-navigation/stack"
+import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { color } from "App/Utils"
 import { Faq } from "App/Scenes/Faq"
@@ -24,6 +24,7 @@ const BagStack = createStackNavigator()
 const AccountStack = createStackNavigator()
 const BrowseStack = createStackNavigator()
 const ModalStack = createStackNavigator()
+const ModalAndMainStack = createStackNavigator()
 
 const Tab = createBottomTabNavigator()
 
@@ -35,7 +36,28 @@ const defaultOptions = {
   },
 }
 
-export const TabsStack = ({ currentScreen }) => {
+export const ModalAndMainScreens = ({ currentScreen }) => {
+  return (
+    <ModalAndMainStack.Navigator
+      mode="modal"
+      initialRouteName="Main"
+      screenOptions={{
+        ...defaultOptions,
+        gestureEnabled: true,
+        cardOverlayEnabled: true,
+        headerShown: false,
+        ...TransitionPresets.ModalPresentationIOS,
+      }}
+    >
+      <ModalAndMainStack.Screen name="Main" options={{ headerShown: false }}>
+        {() => <TabsStack currentScreen={currentScreen} />}
+      </ModalAndMainStack.Screen>
+      <ModalAndMainStack.Screen name="Modal" component={ModalStackScreen} />
+    </ModalAndMainStack.Navigator>
+  )
+}
+
+const TabsStack = ({ currentScreen }) => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -56,7 +78,7 @@ export const TabsStack = ({ currentScreen }) => {
   )
 }
 
-export const ModalStackScreen = () => {
+const ModalStackScreen = () => {
   return (
     <ModalStack.Navigator
       mode="modal"

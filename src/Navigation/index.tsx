@@ -32,9 +32,7 @@ export const AppContainer = () => {
         routeNameRef.current = currentRouteName
       }}
     >
-      <NotificationsProvider navigation={navigationRef}>
-        <AuthProvider currentScreen={currentScreen} navigationRef={navigationRef} />
-      </NotificationsProvider>
+      <AuthProvider currentScreen={currentScreen} navigationRef={navigationRef} />
     </NavigationContainer>
   )
 }

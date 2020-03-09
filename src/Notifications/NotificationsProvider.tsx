@@ -8,9 +8,10 @@ import NotificationsContext from "./NotificationsContext"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 import { useMutation } from "react-apollo"
 import { GET_USER } from "App/Scenes/Account/Account"
+import { useNavigation } from "@react-navigation/native"
 
 // Get your interest
-export const seasonsNotifInterest = "debug-seasons-general-notifications"
+export const seasonsNotifInterest = "seasons-general-notifications"
 
 export const UPDATE_USER_PUSH_NOTIFICATIONS = gql`
   mutation UpdateUserPushNotifications($pushNotificationsStatus: String!) {
@@ -19,37 +20,6 @@ export const UPDATE_USER_PUSH_NOTIFICATIONS = gql`
     }
   }
 `
-
-// Handle notifications received
-const handleNotification = (notification, navigation) => {
-  const route = notification?.userInfo?.data?.route
-  const screen = notification?.userInfo?.data?.screen
-  const params = notification?.userInfo?.data?.params
-  // iOS app specific handling
-  if (Platform.OS === "ios") {
-    switch (notification.appState) {
-      case "inactive":
-        if (route && screen && params) {
-          navigation.navigate(route, { screen, params })
-        } else if (route && params) {
-          navigation.navigate(route, params)
-        } else if (route) {
-          navigation.navigate(route)
-        }
-      // inactive: App came in foreground by clicking on notification.
-      //           Use notification.userInfo for redirecting to specific view controller
-      case "background":
-      // background: App is in background and notification is received.
-      //             You can fetch required data here don't do anything with UI
-      case "active":
-      // App is foreground and notification is received. Show a alert or something.
-      default:
-        break
-    }
-  } else {
-    console.log("android handled notification...")
-  }
-}
 
 const setUserId = (userId, token) => {
   const setUserIdOnError = () => {
@@ -67,7 +37,8 @@ const setUserId = (userId, token) => {
   }
 }
 
-export const NotificationsProvider = ({ children, navigation }) => {
+export const NotificationsProvider = ({ children }) => {
+  const navigation = useNavigation()
   const [updateUserPushNotifications] = useMutation(UPDATE_USER_PUSH_NOTIFICATIONS, {
     refetchQueries: [
       {
@@ -95,6 +66,36 @@ export const NotificationsProvider = ({ children, navigation }) => {
     }
   )
 
+  const handleNotification = notification => {
+    const route = notification?.userInfo?.data?.route
+    const screen = notification?.userInfo?.data?.screen
+    const params = notification?.userInfo?.data?.params
+    // iOS app specific handling
+    if (Platform.OS === "ios") {
+      switch (notification.appState) {
+        case "inactive":
+          if (route && screen && params) {
+            navigation?.navigate(route, { screen, params })
+          } else if (route && params) {
+            navigation?.navigate(route, params)
+          } else if (route) {
+            navigation?.navigate(route)
+          }
+        // inactive: App came in foreground by clicking on notification.
+        //           Use notification.userInfo for redirecting to specific view controller
+        case "background":
+        // background: App is in background and notification is received.
+        //             You can fetch required data here don't do anything with UI
+        case "active":
+        // App is foreground and notification is received. Show a alert or something.
+        default:
+          break
+      }
+    } else {
+      console.log("android handled notification...")
+    }
+  }
+
   const attachListeners = (email, beamsToken) => {
     RNPusherPushNotifications.setInstanceId(Config.RN_PUSHER_ID)
     // Init interests after registration
@@ -116,7 +117,7 @@ export const NotificationsProvider = ({ children, navigation }) => {
 
     // Setup notification listeners
     RNPusherPushNotifications.on("notification", notification => {
-      handleNotification(notification, navigation)
+      handleNotification(notification)
     })
   }
 
