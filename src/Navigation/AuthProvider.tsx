@@ -1,12 +1,12 @@
 import { color } from "App/Utils"
 import { getUserSession } from "App/Utils/auth"
-import React from "react"
+import React, { useEffect } from "react"
 import SplashScreen from "react-native-splash-screen"
 import AuthContext from "./AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
-import { ModalStackScreen, TabsStack } from "./Stacks"
-import { Notifications } from "App/Notifications"
+import { ModalStackScreen, TabsStack, ModalAndMainScreens } from "./Stacks"
+import { NotificationsProvider } from "App/Notifications"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -51,7 +51,7 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
     }
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     // const navigation = navigationRef.current
     const bootstrapAsync = async () => {
       try {
@@ -83,25 +83,14 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
 
   return (
     <AuthContext.Provider value={authContext}>
-      <RootStack.Navigator
-        mode="modal"
-        initialRouteName="Main"
-        screenOptions={{
-          ...defaultOptions,
-          gestureEnabled: true,
-          cardOverlayEnabled: true,
-          headerShown: false,
-          ...TransitionPresets.ModalPresentationIOS,
-        }}
-      >
-        <RootStack.Screen name="Main" options={{ headerShown: false }}>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Root" options={{ headerShown: false }}>
           {() => (
-            <Notifications>
-              <TabsStack currentScreen={currentScreen} />
-            </Notifications>
+            <NotificationsProvider>
+              <ModalAndMainScreens currentScreen={currentScreen} />
+            </NotificationsProvider>
           )}
         </RootStack.Screen>
-        <RootStack.Screen name="Modal" component={ModalStackScreen} />
       </RootStack.Navigator>
     </AuthContext.Provider>
   )

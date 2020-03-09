@@ -1,10 +1,10 @@
 import { Box, Flex, Sans, Separator, Spacer, GuestView } from "App/Components"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
-import React from "react"
+import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
 import ContentLoader, { Rect } from "react-content-loader/native"
-import { Image, Linking, ScrollView, TouchableOpacity } from "react-native"
+import { Linking, ScrollView, TouchableOpacity } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
@@ -19,6 +19,7 @@ export const GET_USER = gql`
     me {
       customer {
         user {
+          id
           firstName
           lastName
           email
@@ -35,14 +36,21 @@ export const GET_USER = gql`
   }
 `
 
-export function Account(props) {
+export const Account = props => {
   const { authState, signOut } = useAuthContext()
-  const { loading, error, data } = useQuery(GET_USER)
+  const { loading, error, data, refetch } = useQuery(GET_USER)
   const loaderStyles = useSpring({
     opacity: loading ? 1 : 0,
   })
-
   const { navigation } = props
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      refetch()
+    })
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe
+  }, [navigation])
 
   if (!authState?.userSession) {
     return <GuestView navigation={navigation} />
@@ -82,6 +90,7 @@ export function Account(props) {
   ]
 
   const pushNotifications = data?.me?.customer?.user?.pushNotifications
+  const userID = data?.me?.customer?.user?.id
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -108,12 +117,13 @@ export function Account(props) {
                 )}
               </Flex>
             </Box>
-            <Spacer m={2} />
+            <Spacer mb={2} />
             <Separator />
             <Box px={2} py={4}>
               <ProfileList {...props} />
             </Box>
-            <NotificationToggle userNotificationStatus={pushNotifications} />
+            <Separator />
+            <NotificationToggle userID={userID} userNotificationStatus={pushNotifications} />
             <Separator />
             <Box px={2} pt={4}>
               {bottomList.map(listItem => {

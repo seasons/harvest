@@ -1,68 +1,56 @@
 import React, { useState, useEffect } from "react"
-import { Separator, Spacer, Flex, Box, Toggle, Sans } from "App/Components"
+import { Spacer, Flex, Box, Toggle, Sans } from "App/Components"
 import { color } from "App/Utils"
-import { unsubscribe, requestPermission, seasonsNotifInterest } from "App/setupNotifications"
-import AsyncStorage from "@react-native-community/async-storage"
-import { useMutation } from "react-apollo"
-import { Text, Linking } from "react-native"
-import { GET_USER } from "../Account"
+import { Text, Linking, AppState } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import { UPDATE_USER_PUSH_NOTIFICATIONS } from "App/Scenes/SignIn/AllowNotifications"
 import { PushNotificationStatus } from "App/generated/globalTypes"
+import { checkNotifications } from "react-native-permissions"
+import { useNotificationsContext } from "App/Notifications/NotificationsContext"
 
-export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotificationStatus }> = ({
+export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotificationStatus; userID: string }> = ({
   userNotificationStatus,
 }) => {
+  const { requestPermissions, unsubscribe, init, subscribedToNotifs } = useNotificationsContext()
   const [isMutating, setIsMutating] = useState(false)
   const navigation = useNavigation()
-  const [updateUserPushNotifications] = useMutation(UPDATE_USER_PUSH_NOTIFICATIONS, {
-    refetchQueries: [
-      {
-        query: GET_USER,
-      },
-    ],
-  })
 
-  const setUserNotifs = async status => {
-    await updateUserPushNotifications({
-      variables: {
-        pushNotificationsStatus: status,
-      },
+  useEffect(() => {
+    // If user leaves the app to turn on notifications in the settings recheck status
+    const unsubscribe = AppState.addEventListener("change", userNotificationStatus => {
+      checkNotifications()
+        .then(async ({ status }) => {
+          if (userNotificationStatus && status !== userNotificationStatus?.toLowerCase()) {
+            requestPermissions(null)
+          }
+        })
+        .catch(error => {
+          console.log("error checking for permission", error)
+        })
     })
-    setIsMutating(false)
-  }
+    return unsubscribe
+  }, [navigation])
 
   const onChange = async () => {
     if (isMutating) {
       return
     }
     setIsMutating(true)
-    if (userNotificationStatus === "Denied") {
-      const beamsData = await AsyncStorage.getItem("beamsData")
-      try {
-        const { beamsToken, email } = JSON.parse(beamsData)
-        requestPermission(
-          navigation,
-          beamsToken,
-          email,
-          () => setUserNotifs("Granted"),
-          () => setUserNotifs("Blocked")
-        )
-      } catch (e) {
-        console.error("No beamsData in async storage ", e)
-      }
+    if (subscribedToNotifs) {
+      unsubscribe()
     } else {
-      setUserNotifs("Denied")
-      unsubscribe(seasonsNotifInterest)
+      if (userNotificationStatus === "Denied") {
+        requestPermissions(null)
+      } else {
+        init()
+      }
     }
+    setIsMutating(false)
   }
 
   const disabled = userNotificationStatus === "Blocked"
-  const selected = userNotificationStatus === "Granted"
 
   return (
     <Box px={2}>
-      <Separator />
       <Spacer m={2} />
       <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
         <Box style={{ maxWidth: 300 }}>
@@ -84,7 +72,7 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
             </Sans>
           )}
         </Box>
-        <Toggle disabled={disabled || isMutating} onChange={onChange} selected={selected} />
+        <Toggle disabled={disabled || isMutating} onChange={onChange} selected={subscribedToNotifs} />
       </Flex>
       <Spacer m={2} />
     </Box>

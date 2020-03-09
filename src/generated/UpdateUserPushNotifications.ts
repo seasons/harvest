@@ -3,19 +3,21 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { PushNotificationStatus } from "./globalTypes";
+
 // ====================================================
 // GraphQL mutation operation: UpdateUserPushNotifications
 // ====================================================
 
-export interface UpdateUserPushNotifications_updateUserPushNotifacations {
+export interface UpdateUserPushNotifications_updateUserPushNotifications {
   __typename: "User";
-  id: string;
+  pushNotifications: PushNotificationStatus;
 }
 
 export interface UpdateUserPushNotifications {
-  updateUserPushNotifacations: UpdateUserPushNotifications_updateUserPushNotifacations;
+  updateUserPushNotifications: UpdateUserPushNotifications_updateUserPushNotifications;
 }
 
 export interface UpdateUserPushNotificationsVariables {
-  pushNotifications: boolean;
+  pushNotificationsStatus: string;
 }

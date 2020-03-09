@@ -3,7 +3,6 @@ import { Box, Flex, Sans } from "App/Components"
 import { MembershipInfoIcon, PersonalPreferencesIcon, PaymentShippingIcon, ChevronIcon } from "Assets/icons"
 import { TouchableOpacity } from "react-native"
 import { Shirt, QuestionMark } from "Assets/svgs"
-import { space } from "App/Utils"
 
 const lists = [
   { title: "Membership info", icon: <MembershipInfoIcon />, link: "MembershipInfo" },
