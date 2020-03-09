@@ -20,5 +20,5 @@ export const Toggle: React.SFC<ToggleProps> = ({ disabled, onChange, selected })
     onChange(newValue)
   }
 
-  return <Switch disabled={disabled} onValueChange={debounce(toggleSwitch, 100)} value={selected} />
+  return <Switch disabled={disabled} onValueChange={debounce(toggleSwitch, 500)} value={selected} />
 }

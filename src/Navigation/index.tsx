@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { NavigationContainer } from "@react-navigation/native"
 import { AuthProvider } from "./AuthProvider"
+import { NotificationsProvider } from "App/Notifications"
 
 const getActiveRouteName = state => {
   const route = state.routes[state.index]
@@ -31,7 +32,9 @@ export const AppContainer = () => {
         routeNameRef.current = currentRouteName
       }}
     >
-      <AuthProvider currentScreen={currentScreen} navigationRef={navigationRef} />
+      <NotificationsProvider navigation={navigationRef}>
+        <AuthProvider currentScreen={currentScreen} navigationRef={navigationRef} />
+      </NotificationsProvider>
     </NavigationContainer>
   )
 }

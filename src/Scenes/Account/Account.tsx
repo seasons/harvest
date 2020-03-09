@@ -4,7 +4,7 @@ import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
 import ContentLoader, { Rect } from "react-content-loader/native"
-import { Image, Linking, ScrollView, TouchableOpacity } from "react-native"
+import { Linking, ScrollView, TouchableOpacity } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
@@ -36,13 +36,21 @@ export const GET_USER = gql`
   }
 `
 
-export function Account(props) {
+export const Account = props => {
   const { authState, signOut } = useAuthContext()
   const { loading, error, data, refetch } = useQuery(GET_USER)
   const loaderStyles = useSpring({
     opacity: loading ? 1 : 0,
   })
   const { navigation } = props
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      refetch()
+    })
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe
+  }, [navigation])
 
   if (!authState?.userSession) {
     return <GuestView navigation={navigation} />

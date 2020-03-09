@@ -1,6 +1,6 @@
 import { color } from "App/Utils"
 import { getUserSession } from "App/Utils/auth"
-import React from "react"
+import React, { useEffect } from "react"
 import SplashScreen from "react-native-splash-screen"
 import AuthContext from "./AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
@@ -51,7 +51,7 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
     }
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     // const navigation = navigationRef.current
     const bootstrapAsync = async () => {
       try {
@@ -95,11 +95,7 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
         }}
       >
         <RootStack.Screen name="Main" options={{ headerShown: false }}>
-          {() => (
-            <Notifications>
-              <TabsStack currentScreen={currentScreen} />
-            </Notifications>
-          )}
+          {() => <TabsStack currentScreen={currentScreen} />}
         </RootStack.Screen>
         <RootStack.Screen name="Modal" component={ModalStackScreen} />
       </RootStack.Navigator>
