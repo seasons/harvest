@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react"
 import { Box, Sans, Flex, Spacer } from "App/Components"
 import { TouchableOpacity, ScrollView } from "react-native"
 import { chunk } from "lodash"
+import { useTracking } from "react-tracking"
+import { Schema } from "App/utils/track"
 
 interface BrandsRailProps {
   items: any
@@ -11,6 +13,7 @@ interface BrandsRailProps {
 
 export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation }) => {
   const [rowGroups, createRowGroups] = useState([])
+  const tracking = useTracking()
 
   useEffect(() => {
     const rows = chunk(items, 5)
@@ -36,7 +39,15 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
     <Box pl={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between" pr={2}>
         <Sans size="1">{title}</Sans>
-        <TouchableOpacity onPress={() => navigation.navigate("Brands")}>
+        <TouchableOpacity
+          onPress={() => {
+            tracking.trackEvent({
+              action_name: Schema.ActionNames.ViewAllBrandsTapped,
+              action_type: Schema.ActionTypes.Tap,
+            })
+            navigation.navigate("Brands")
+          }}
+        >
           <Sans size="1" style={{ textDecorationLine: "underline" }}>
             View all
           </Sans>
