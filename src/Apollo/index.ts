@@ -4,7 +4,7 @@ import { ApolloLink, Observable } from "apollo-link"
 import { setContext } from "apollo-link-context"
 import { onError } from "apollo-link-error"
 import { HttpLink } from "apollo-link-http"
-import { getAccessTokenFromSession, getNewToken } from "App/Utils/auth"
+import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import Config from "react-native-config"
 import unfetch from "unfetch"
 

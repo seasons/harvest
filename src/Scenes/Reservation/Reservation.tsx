@@ -9,7 +9,7 @@ import { ScrollView, StatusBar } from "react-native"
 import styled from "styled-components/native"
 
 import { BagItem, BagItemFragment } from "../Bag/Components/BagItem"
-import { space } from "App/Utils"
+import { space } from "App/utils"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {

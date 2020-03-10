@@ -1,6 +1,6 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box, Flex, Radio, Sans, Separator, Spacer } from "App/Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { capitalize, find, get } from "lodash"
 import React, { useEffect, useState } from "react"
 import { TouchableOpacity } from "react-native"

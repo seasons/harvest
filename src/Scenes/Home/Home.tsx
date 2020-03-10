@@ -1,6 +1,6 @@
 import { Box, Flex, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { Container } from "Components/Container"
 import { LogoText } from "Components/Typography"
 import gql from "graphql-tag"

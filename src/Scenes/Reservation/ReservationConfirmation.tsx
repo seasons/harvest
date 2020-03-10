@@ -7,7 +7,7 @@ import { ScrollView } from "react-native"
 import styled from "styled-components/native"
 
 import { BagItem } from "../Bag/Components/BagItem"
-import { space } from "App/Utils"
+import { space } from "App/utils"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {

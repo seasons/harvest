@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Spacer, Flex, Box, Toggle, Sans } from "App/Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { Text, Linking, AppState } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { PushNotificationStatus } from "App/generated/globalTypes"

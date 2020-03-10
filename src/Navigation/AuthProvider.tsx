@@ -1,5 +1,5 @@
-import { color } from "App/Utils"
-import { getUserSession } from "App/Utils/auth"
+import { color } from "App/utils"
+import { getUserSession } from "App/utils/auth"
 import React, { useEffect } from "react"
 import SplashScreen from "react-native-splash-screen"
 import AuthContext from "./AuthContext"

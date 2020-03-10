@@ -1,6 +1,6 @@
 import React from "react"
 import { Sans, Box, Separator, Spacer } from "App/Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 export const FaqSection = ({ section }) => {
   return (

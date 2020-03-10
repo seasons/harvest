@@ -1,7 +1,7 @@
 import React from "react"
 import { Box, Sans, Spacer } from "App/Components"
 import { Image } from "react-native"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { ProductsRail } from "../Components/ProductsRail"
 
 interface BrandsRailProps {

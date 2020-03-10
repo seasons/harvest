@@ -1,6 +1,6 @@
 import React from "react"
 import { Box, Container, FixedButton, Sans, Spacer } from "App/Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 export const FinishProductRequest = (props: any) => {
   return (

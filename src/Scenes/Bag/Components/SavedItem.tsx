@@ -5,7 +5,7 @@ import { get, head } from "lodash"
 import React, { useState, useEffect } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 interface BagItemProps {
   bagItem: any

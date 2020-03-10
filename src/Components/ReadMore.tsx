@@ -1,7 +1,7 @@
 import _ from "lodash"
 import React, { useState } from "react"
 import { Sans, Flex } from "./"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { Color } from "./Theme"
 import { Text } from "react-native"
 
