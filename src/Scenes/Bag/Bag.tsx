@@ -215,7 +215,8 @@ export const Bag = props => {
   }
 
   const renderItem = ({ item, index }) => {
-    const showSavedItems = BagView.Saved == currentView || item.status !== "Added"
+    const showSavedItems = BagView.Saved == currentView
+    const hideButtons = item.status !== "Added"
     return item.productID.length ? (
       <Box mx={showSavedItems ? 0 : 2} mt={isSavedView && index === 0 ? 1 : 0}>
         {showSavedItems ? (
@@ -228,6 +229,7 @@ export const Bag = props => {
         ) : (
           <Box my={2}>
             <BagItem
+              hideButtons={hideButtons}
               removeItemFromBag={deleteBagItem}
               removeFromBagAndSaveItem={removeFromBagAndSaveItem}
               sectionHeight={SECTION_HEIGHT}
