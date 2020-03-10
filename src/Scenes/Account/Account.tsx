@@ -1,4 +1,6 @@
-import { Box, Flex, Sans, Separator, Spacer, GuestView } from "App/Components"
+import { Box, Flex, GuestView, Sans, Separator, Spacer } from "App/Components"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { space } from "App/utils"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
@@ -10,8 +12,6 @@ import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { ProfileList } from "./ProfileList"
 import { color } from "styled-system"
-import { useAuthContext } from "App/Navigation/AuthContext"
-import { space } from "App/utils"
 import { NotificationToggle } from "./Components/NotificationToggle"
 
 export const GET_USER = gql`

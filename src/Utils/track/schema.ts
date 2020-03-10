@@ -1,9 +1,4 @@
 /**
- * Useful notes:
- *  * At the bottom of this file there is an example of how to test track'd code.
- */
-
-/**
  * The global tracking-info keys in Season's schema.
  */
 export interface Global {
@@ -34,7 +29,7 @@ export interface Global {
   additionalProperties?: object
 }
 
-export interface Entity extends Global {
+export interface Event extends Global {
   /**
    * The ID of the entity in its database. E.g. the Prisma for entities that reside in Monsoon.
    */
@@ -60,7 +55,7 @@ export interface PageView {
   /**
    * The root container component should specify this as the screen context.
    */
-  contextScreen: PageNames
+  contextScreen?: PageNames
 
   /**
    * The public slug for the entity that owns this page (e.g. for the brand page)
