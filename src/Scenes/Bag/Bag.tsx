@@ -226,14 +226,16 @@ export const Bag = props => {
             navigation={navigation}
           />
         ) : (
-          <BagItem
-            removeItemFromBag={deleteBagItem}
-            removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-            sectionHeight={SECTION_HEIGHT}
-            index={index}
-            bagItem={item}
-            navigation={navigation}
-          />
+          <Box my={2}>
+            <BagItem
+              removeItemFromBag={deleteBagItem}
+              removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+              sectionHeight={SECTION_HEIGHT}
+              index={index}
+              bagItem={item}
+              navigation={navigation}
+            />
+          </Box>
         )}
       </Box>
     ) : (

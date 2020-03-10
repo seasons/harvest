@@ -146,7 +146,8 @@ export const ReservationConfirmation = props => {
               {items.map((item, i) => {
                 return (
                   <Box key={item.id}>
-                    <BagItem removeItemFromBag={() => null} sectionHeight={200} index={i} bagItem={item} saved={true} />
+                    <BagItem hideButtons removeItemFromBag={() => null} sectionHeight={200} index={i} bagItem={item} />
+                    <Spacer mb={2} />
                   </Box>
                 )
               })}

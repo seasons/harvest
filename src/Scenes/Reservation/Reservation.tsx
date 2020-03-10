@@ -142,13 +142,8 @@ export const Reservation = props => {
                 items.map((item, i) => {
                   return (
                     <Box key={item.id}>
-                      <BagItem
-                        sectionHeight={200}
-                        index={i}
-                        bagItem={item}
-                        navigation={props.navigation}
-                        saved={true}
-                      />
+                      <BagItem sectionHeight={200} index={i} bagItem={item} navigation={props.navigation} hideButtons />
+                      <Spacer mb={2} />
                     </Box>
                   )
                 })}

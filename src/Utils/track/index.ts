@@ -1,4 +1,4 @@
-import "../setupAnalytics"
+import "../../setupAnalytics"
 
 import _track, { Track as _Track, TrackingInfo } from "react-tracking"
 
@@ -44,17 +44,17 @@ export interface Entity extends Global {
   /**
    * The ID of the entity in its database. E.g. the Mongo ID for entities that reside in Gravity.
    */
-  ownerId?: string
+  entityId?: string
 
   /**
    * The public slug for this entity.
    */
-  ownerSlug?: string
+  entitySlug?: string
 
   /**
    * The type of entity, e.g. Artwork, Artist, etc.
    */
-  ownerType?: OwnerEntityTypes
+  entityType?: EntityTypes
 
   /**
    * Provides a context, usually the component the event is emitted from.
@@ -83,7 +83,7 @@ export interface PageView {
   /**
    * The type of entity (owner), E.g. Artist, Artwork, etc.
    */
-  contextScreenOwnerType: OwnerEntityTypes
+  contextScreenOwnerType: EntityTypes
 }
 
 export enum PageNames {
@@ -97,7 +97,7 @@ export enum PageNames {
   ReservationConfirmationPage = "ReservationConfirmation",
 }
 
-export enum OwnerEntityTypes {
+export enum EntityTypes {
   Product = "Product",
 }
 
@@ -105,24 +105,100 @@ export enum ActionTypes {
   /**
    * User actions
    */
-  Tap = "tap",
-  Swipe = "swipe",
-  Session = "session",
+  Tap = "Tap",
+  Swipe = "Swipe",
+  Session = "Session",
 
   /**
    * Events / results
    */
-  Fail = "fail",
-  Success = "success",
+  Fail = "Fail",
+  Success = "Success",
 }
 
 /**
  * Action event discriptors / names
  */
 export enum ActionNames {
-  ProductSave = "productSave",
-  ProductWant = "productWant",
-  ProductReserve = "productReserve",
+  // Home page
+  ViewAllBrandsTapped = "View All Brands Tapped",
+  BrowseButtonTapped = "Browse Button Tapped",
+
+  // Browse page
+  FiltersButtonTapped = "Filters Button Tapped",
+  FilterTapped = "Filter Tapped",
+  FiltersApplied = "Filters Applied",
+  FiltersCleared = "Filters Cleared",
+  FilterModalCanceled = "Filters Modal Canceled",
+  CategoryTapped = "Category Tapped",
+  BrowsePageSwiped = "Browse Page Swiped",
+
+  // Bag
+  BagItemRemoved = "Bag Item Removed",
+  BagSavedItemRemoved = "Bag Saved Item Removed",
+  BagItemSaved = "Bag Item Saved",
+  BagTabTapped = "Bag Tab Tapped",
+  SavedTabTapped = "Saved Tab Tapped",
+  ReserveButtonTapped = "Reserve Button Tapped",
+
+  // Brand view
+  ReadMoreTapped = "Read More Tapped",
+
+  // Brands view
+  AlphabetTapped = "Alphabet Tapped",
+
+  // Reservation
+  PlaceOrderTapped = "Place Order Tapped",
+
+  // Reservation Confirmation
+  ReservationConfirmationDoneButtonTapped = "Reservation Confirmation Done Button Tapped",
+
+  // Account
+  MembershipInfoTapped = "Membership Info Tapped",
+  PersonalPreferencesTapped = "Personal Preferences Tapped",
+  PaymentAndShippingTapped = "Payment And Shipping Tapped",
+  SubmitAnItemTapped = "Submit An Item Tapped",
+  FAQTapped = "FAQ Tapped",
+  NotificationToggleTapped = "Notification Toggle Tapped",
+  SupportTapped = "Support Tapped",
+  PrivacyPolicyTapped = "Privacy Policy Tapped",
+  TermsOfServiceTapped = "Terms of Service Tapped",
+  LogOutTapped = "Log Out Tapped",
+
+  // Membership Info
+  ContactUsTapped = "Contact Us Tapped",
+
+  // Personal Preferences
+  EditButtonTapped = "Edit Button Tapped",
+  EditDoneButtonTapped = "Edit Done Button Tapped",
+
+  // Payment And Shipping
+  PaymentAndShippingEditSaveTapped = "Payment And Shipping Edit Save Tapped",
+  PaymentAndShippingEditCancelTapped = "Payment And Shipping Edit Cancel Tapped",
+  PaymentAndShippingEditBillingInfoTapped = "Payment And Shipping Edit Billing Info Tapped",
+
+  // Submit an item
+  NextButtonTapped = "Next Button Tapped",
+  SubmitButtonTapped = "Submit Button Tapped",
+  FinishButtonTapped = "Finish Button Tapped",
+
+  // // Reservation Flow Steps
+  // ReservationInitiated = "Reservation Initiated",
+  // ReservationCompleted = "Reservation Completed",
+  // ReservationConfirmed = "Reservation Confirmed",
+
+  // Product page action names
+  ProductSaved = "Product Saved",
+  ProductWanted = "Product Wanted",
+  ProductReserved = "Product Reserved",
+  ProductAdded = "Product Added",
+  ProductVariantSelected = "Product Variant Selected",
+  SizeButtonTapped = "Size Button Tapped",
+
+  // Shared action names
+  ProductTapped = "Product Tapped",
+  BrandTapped = "Brand Tapped",
+  CarouselSwiped = "Carousel Swiped",
 }
 
 /**
@@ -170,7 +246,7 @@ export enum ContextModules {}
  *          actionType: Schema.ActionTypes.Tap,
  *          actionName: state.following ? Schema.ActionNames.ArtistUnfollow : Schema.ActionNames.ArtistFollow,
  *          owner_id: props.artist.internalID,
- *          owner_type: Schema.OwnerEntityTypes.Artist,
+ *          owner_type: Schema.EntityTypes.Artist,
  *          owner_slug: props.artist.id,
  *        }))
  *        handleFollow() {
@@ -233,7 +309,7 @@ export const track: Track = _track
  *       @screenTrack({
  *        contextScreen: Schema.PageNames.ConsignmentsWelcome,
  *        contextScreenOwnerSlug: null,
- *        contextScreenOwnerType: Schema.OwnerEntityTypes.Consignment,
+ *        contextScreenOwnerType: Schema.EntityTypes.Consignment,
  *       })
  *
  *       export default class Welcome extends React.Component<Props, null> {
@@ -254,7 +330,7 @@ export const track: Track = _track
  *      @screenTrack<Props>(props => ({
  *        contextScreen: Schema.PageNames.ConsignmentsSubmission,
  *        contextScreenOwnerSlug: props.submissionID,
- *        contextScreenOwnerType: Schema.OwnerEntityTypes.Consignment,
+ *        contextScreenOwnerType: Schema.EntityTypes.Consignment,
  *      }))
  *
  *      export default class Welcome extends React.Component<Props, null> {
