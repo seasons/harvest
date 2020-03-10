@@ -11,6 +11,7 @@ import { PushNotificationStatus } from "./globalTypes";
 
 export interface GetUser_me_customer_user {
   __typename: "User";
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
