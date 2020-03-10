@@ -94,6 +94,9 @@ export const track: Track = _track
 export function screenTrack<P>(trackingInfo: TrackingInfo<PageView, P, null>) {
   return _track(trackingInfo as any, {
     dispatch: data => {
+      if (__DEV__) {
+        console.log("[Event tracked]", JSON.stringify(data, null, 2))
+      }
       return analytics.screen(data.contextScreen, data)
     },
     dispatchOnMount: true,
