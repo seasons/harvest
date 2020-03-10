@@ -26,7 +26,9 @@ export const ProductsRail: React.FC<{
           const brandName = item.brand && item.brand.name
           return (
             <Animatable.View animation="fadeIn" duration={300}>
-              <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: item.id })}>
+              <TouchableWithoutFeedback
+                onPress={() => navigation.navigate("Product", { id: item.id, slug: item.slug })}
+              >
                 <Box mr={0.5} style={{ width: slideWidth }}>
                   <FadeInImage source={{ uri: resizedImage }} style={{ width: slideWidth, height: 180 }} />
                   <Spacer mb={0.5} />

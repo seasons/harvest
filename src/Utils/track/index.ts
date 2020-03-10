@@ -1,7 +1,7 @@
 import "../../setupAnalytics"
 import _track, { Track as _Track, TrackingInfo, useTracking as _useTracking, TrackingProp } from "react-tracking"
 import analytics from "@segment/analytics-react-native"
-import { PageView } from "./schema"
+import { PageViewEvent } from "./schema"
 import * as Schema from "./schema"
 export { Schema }
 
@@ -55,9 +55,9 @@ export const track: Track = _track
  *      }
  *
  *      screenTrack<Props>(props => ({
- *        contextScreen: Schema.PageNames.ConsignmentsSubmission,
- *        contextScreenOwnerSlug: props.submissionID,
- *        contextScreenOwnerType: Schema.EntityTypes.Consignment,
+ *        page: Schema.PageNames.ConsignmentsSubmission,
+ *        entitySlug: props.submissionID,
+ *        entityId: Schema.EntityTypes.Consignment,
  *      }))(props => {
  *        const tracking = useTracking()
  *        return <Button onPress={() => {
@@ -70,13 +70,13 @@ export const track: Track = _track
  *
  */
 
-export function screenTrack<P>(trackingInfo?: TrackingInfo<PageView, P, null>) {
+export function screenTrack<P>(trackingInfo?: TrackingInfo<PageViewEvent, P, null>) {
   const decorateTracking = (props, state, args) => {
     const baseData = typeof trackingInfo === "function" ? trackingInfo?.(props, state, args) : trackingInfo
     const info = {
-      contextScreen: props?.route.name,
-      contextScreenOwnerSlug: props?.route?.params?.slug,
-      contextScreenOwnerId: props?.route?.params?.id,
+      page: props?.route.name,
+      entitySlug: props?.route?.params?.slug,
+      entityId: props?.route?.params?.id,
       ...baseData,
     }
     return info
@@ -87,7 +87,7 @@ export function screenTrack<P>(trackingInfo?: TrackingInfo<PageView, P, null>) {
       if (__DEV__) {
         console.log("[Event tracked]", JSON.stringify(data, null, 2))
       }
-      return analytics.screen(data.contextScreen, data)
+      return analytics.screen(data.page, data)
     },
     dispatchOnMount: true,
   })

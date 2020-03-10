@@ -27,6 +27,7 @@ export const GET_HOMEPAGE = gql`
           }
           ... on Product {
             id
+            slug
             images
             brand {
               id
@@ -44,11 +45,7 @@ export const GET_HOMEPAGE = gql`
   }
 `
 
-export const Home = screenTrack(() => {
-  return {
-    contextScreen: "Home",
-  }
-})(({ navigation }) => {
+export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)

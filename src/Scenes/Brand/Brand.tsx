@@ -4,10 +4,10 @@ import { ReadMore } from "App/Components/ReadMore"
 import { GetBrand } from "App/generated/GetBrand"
 import { imageResize } from "App/helpers/imageResize"
 import { color, space } from "App/utils"
-import { screenTrack } from "App/utils/track"
+import { screenTrack, Schema } from "App/utils/track"
 import gql from "graphql-tag"
 import { get } from "lodash"
-import React, { useMemo, useState } from "react"
+import React, { useState } from "react"
 import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
 
 import { useQuery } from "@apollo/react-hooks"
@@ -48,12 +48,8 @@ const GET_BRAND = gql`
   }
 `
 
-export const Brand = screenTrack(props => {
-  const brandID = props.route?.params?.id
-  return {
-    contextScreen: "Brand",
-    brandID,
-  }
+export const Brand = screenTrack({
+  entityType: Schema.EntityTypes.Brand,
 })((props: any) => {
   const { navigation, route } = props
   const [readMoreExpanded, setReadMoreExpanded] = useState(false)

@@ -9,17 +9,17 @@ export interface Global {
    *
    * This is unique to a "Track" event, meaning a "screen view" in Segment does not have this
    * This is how we distinguish the two type of events in Harvest
-   * Track data inherits the screen view (called "contextScreen") properties
+   * Track data inherits the screen view (called "page") properties
    *
    */
-  actionType: ActionTypes
+  actionType?: ActionTypes
 
   /**
    * The discription of an event
    *
    * E.g. Conversation product attachment tapped
    */
-  actionName: ActionNames
+  actionName?: ActionNames
 
   sessionLength?: number
 
@@ -51,28 +51,11 @@ export interface Event extends Global {
   contextModule?: string
 }
 
-export interface PageView {
+export interface PageViewEvent extends Event {
   /**
    * The root container component should specify this as the screen context.
    */
-  contextScreen?: PageNames
-
-  /**
-   * The public slug for the entity that owns this page (e.g. for the brand page)
-   */
-  contextScreenOwnerSlug?: string
-
-  /**
-   * The ID of the entity in its database. E.g. the Prisma for entities that reside in Monsoon.
-   *
-   * OPTIONAL: This may not always be available before the relay call for props has been made
-   */
-  contextScreenOwnerId?: string
-
-  /**
-   * The type of entity (owner), E.g. brand, product, etc.
-   */
-  contextScreenOwnerType: EntityTypes
+  page?: PageNames
 }
 
 export enum PageNames {
@@ -87,7 +70,9 @@ export enum PageNames {
 }
 
 export enum EntityTypes {
+  Brand = "Brand",
   Product = "Product",
+  Reservation = "Reservation",
 }
 
 export enum ActionTypes {

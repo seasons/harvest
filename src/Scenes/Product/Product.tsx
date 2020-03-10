@@ -39,7 +39,7 @@ interface ProductProps {
 }
 
 export const Product = screenTrack({
-  contextScreenOwnerType: Schema.EntityTypes.Product,
+  entityType: Schema.EntityTypes.Product,
 })((props: ProductProps) => {
   const { authState } = useAuthContext()
   const insets = useSafeArea()
