@@ -1,11 +1,11 @@
 import { Box, Flex, Separator, Spacer } from "App/Components"
-import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { Container } from "Components/Container"
 import { LogoText } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
+import SplashScreen from "react-native-splash-screen"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { HomeFooter } from "./Components/HomeFooter"
@@ -47,8 +47,8 @@ export const Home: React.FC<{
   navigation: any
 }> = ({ navigation }) => {
   const [sections, setSections] = useState([])
-  const [showLoader, toggleLoader] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
+  const [showSplash, setShowSplash] = useState(true)
 
   useEffect(() => {
     if (data?.homepage?.sections?.length) {
@@ -58,14 +58,13 @@ export const Home: React.FC<{
   }, [data])
 
   useEffect(() => {
-    setTimeout(() => {
-      toggleLoader(loading)
-    }, 500)
+    if (!loading && showSplash) {
+      setShowSplash(false)
+      setTimeout(() => {
+        SplashScreen.hide()
+      }, 100)
+    }
   }, [loading])
-
-  if (showLoader || !data) {
-    return <Loader />
-  }
 
   if (error) {
     console.error("error /home/index.tsx: ", error)

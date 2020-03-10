@@ -53,6 +53,7 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navi
                   return
                 }
                 setIsMutating(true)
+                console.log("removeItemFromBag", variantToUse)
                 removeItemFromBag({
                   variables: {
                     id: variantToUse.id,
