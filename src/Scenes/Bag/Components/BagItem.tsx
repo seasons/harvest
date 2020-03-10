@@ -62,7 +62,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   return (
     <Box key={product.id}>
       <TouchableWithoutFeedback
-        onPress={() => (navigation ? navigation.navigate("Product", { id: product.id }) : null)}
+        onPress={() => (navigation ? navigation.navigate("Product", { id: product.id, slug: product.slug }) : null)}
       >
         <BagItemContainer flexDirection="row">
           <Flex style={{ flex: 2 }} p={2} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">

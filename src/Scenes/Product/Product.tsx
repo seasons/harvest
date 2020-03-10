@@ -5,14 +5,13 @@ import { PopUpProps } from "App/Components/PopUp"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { EntityTypes, PageNames, screenTrack } from "App/utils/track"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { find, get } from "lodash"
 import React, { useEffect, useState } from "react"
 import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
-import { useTracking } from "react-tracking"
 import styled from "styled-components/native"
 
 import { useMutation, useQuery } from "@apollo/react-hooks"
@@ -39,15 +38,8 @@ interface ProductProps {
   navigation: any
 }
 
-export const Product = screenTrack<ProductProps>(props => {
-  const productID = props?.route?.params?.id
-  const productSlug = props?.route?.params?.slug
-  return {
-    contextScreen: PageNames.ProductPage,
-    contextScreenOwnerSlug: productSlug,
-    contextScreenOwnerId: productID,
-    contextScreenOwnerType: EntityTypes.Product,
-  }
+export const Product = screenTrack({
+  contextScreenOwnerType: Schema.EntityTypes.Product,
 })((props: ProductProps) => {
   const { authState } = useAuthContext()
   const insets = useSafeArea()

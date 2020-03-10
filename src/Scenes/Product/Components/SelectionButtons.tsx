@@ -29,6 +29,7 @@ export const SelectionButtons: React.FC<Props> = props => {
     setPopUp,
   } = props
   const inStock = selectedVariant && !!selectedVariant.stock
+
   if (!selectedVariant) {
     return <></>
   }
