@@ -4,52 +4,35 @@ import { useComponentSize } from "App/Utils/Hooks/useComponentSize"
 import { Text } from "Components/Typography"
 import { ActiveDislikedFace, ActiveLovedFace, ActiveNeutralFace, DefaultDislikedFace, DefaultLovedFace, DefaultNeutralFace } from "Assets/svgs"
 import React, { useEffect, useState } from "react"
-import { Dimensions } from "react-native"
+import { Dimensions, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 
 const windowDimensions = Dimensions.get("window")
 const windowHeight = windowDimensions.height
-const twoButtonWidth = windowDimensions.width / 2 - (space(2) + space(0.5))
 
 export interface PopUpProps {
-  insetsBottom?: boolean
   show: boolean
 }
 
-export const ReviewPopUp: React.FC<PopUpProps> = ({ show, insetsBottom }) => {
+export const ReviewPopUp: React.FC<PopUpProps> = ({ show }) => {
   const [mounted, setMounted] = useState(false)
+  const [isDislikeSelected, setIsDislikeSelected] = useState(false)
+  const [isNeutralSelected, setIsNeutralSelected] = useState(false)
+  const [isLovedSelected, setIsLovedSelected] = useState(false)
+  const [size, onLayout] = useComponentSize()
+  const height = size ? size.height + 100 : 240
+
   useEffect(() => {
     setTimeout(() => {
       setMounted(true)
     })
   }, [])
-  const [size, onLayout] = useComponentSize()
-  const height = size ? size.height + 100 : 240
 
   const animation = useSpring({
     translateY: show && mounted ? windowHeight - height : windowHeight,
     backgroundColor: show && mounted ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0)",
   })
-
-  const colorsForTheme = theme => {
-    switch (theme) {
-      case "dark":
-        return {
-          backgroundColor: color("green"),
-          primaryText: color("white100"),
-          secondaryText: color("lightGreen"),
-          separator: color("lightGreen"),
-        }
-      case "light":
-        return {
-          backgroundColor: color("white100"),
-          primaryText: color("black100"),
-          secondaryText: color("black50"),
-          separator: "transparent",
-        }
-    }
-  }
 
   return (
     <>
@@ -69,7 +52,9 @@ export const ReviewPopUp: React.FC<PopUpProps> = ({ show, insetsBottom }) => {
             <Spacer mb={4} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" alignItems="center">
               <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" alignItems="center">
-                <DefaultDislikedFace />
+                <TouchableOpacity onPress={() => setIsDislikeSelected(true)}>
+                  {isDislikeSelected ? <ActiveDislikedFace /> : <DefaultDislikedFace />}
+                </TouchableOpacity>
                 <Spacer mb={1} />
                 <Sans size="0" color={color("black50")}>
                   Disliked
@@ -77,7 +62,9 @@ export const ReviewPopUp: React.FC<PopUpProps> = ({ show, insetsBottom }) => {
               </Flex>
               <Spacer ml={5} />
               <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" alignItems="center">
-                <DefaultNeutralFace />
+                <TouchableOpacity onPress={() => setIsNeutralSelected(true)}>
+                  {isNeutralSelected ? <ActiveNeutralFace /> : <DefaultNeutralFace />}
+                </TouchableOpacity>
                 <Spacer mb={1} />
                 <Sans size="0" color={color("black50")}>
                   Meh
@@ -85,7 +72,9 @@ export const ReviewPopUp: React.FC<PopUpProps> = ({ show, insetsBottom }) => {
               </Flex>
               <Spacer ml={5} />
               <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" alignItems="center">
-                <DefaultLovedFace />
+                <TouchableOpacity onPress={() => setIsLovedSelected(true)}>
+                  {isLovedSelected ? <ActiveLovedFace /> : <DefaultLovedFace />}
+                </TouchableOpacity>
                 <Spacer mb={1} />
                 <Sans size="0" color={color("black50")}>
                   Loved
