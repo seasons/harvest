@@ -1,6 +1,6 @@
 import React from "react"
 import { Box, Flex, CloseButton, Sans, Spacer, Container, Button } from "../../Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 export const ResetPasswordConfirmation = (props: any) => {
   return (

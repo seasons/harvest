@@ -1,7 +1,7 @@
 import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
@@ -226,14 +226,16 @@ export const Bag = props => {
             navigation={navigation}
           />
         ) : (
-          <BagItem
-            removeItemFromBag={deleteBagItem}
-            removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-            sectionHeight={SECTION_HEIGHT}
-            index={index}
-            bagItem={item}
-            navigation={navigation}
-          />
+          <Box my={2}>
+            <BagItem
+              removeItemFromBag={deleteBagItem}
+              removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+              sectionHeight={SECTION_HEIGHT}
+              index={index}
+              bagItem={item}
+              navigation={navigation}
+            />
+          </Box>
         )}
       </Box>
     ) : (

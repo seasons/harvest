@@ -3,7 +3,7 @@ import styled from "styled-components/native"
 import { Box } from "./Box"
 import { CloseXSVG } from "../../assets/svgs"
 import { TouchableOpacity } from "react-native"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 export type CloseButtonVariant = "light" | "dark"
 

@@ -6,7 +6,7 @@ import styled from "styled-components/native"
 import { GreenCheck, LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Flex, Sans } from "App/Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 const ADD_PRODUCT_VARIANT_WANT = gql`
   mutation AddProductVariantWant($variantID: ID!) {

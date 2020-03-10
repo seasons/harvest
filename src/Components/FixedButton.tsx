@@ -3,7 +3,7 @@ import { Button, ButtonProps } from "App/Components/Button"
 import React from "react"
 import { KeyboardAvoidingView } from "react-native"
 import styled from "styled-components/native"
-import { space } from "App/Utils"
+import { space } from "App/utils"
 
 interface Props extends ButtonProps {
   positionBottom?: number

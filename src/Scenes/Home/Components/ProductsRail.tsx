@@ -1,7 +1,7 @@
 import React from "react"
 import { Box, Sans, Spacer, VariantSizes } from "App/Components"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
-import { space } from "App/Utils"
+import { space } from "App/utils"
 import * as Animatable from "react-native-animatable"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"

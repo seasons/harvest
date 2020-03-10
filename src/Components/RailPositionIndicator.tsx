@@ -2,7 +2,7 @@ import React from "react"
 import { Flex } from "./Flex"
 import { Box } from "./Box"
 import styled from "styled-components/native"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 export const RailPositionIndicator = ({ length, currentPage }) => {
   return (

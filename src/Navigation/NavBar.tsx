@@ -1,5 +1,5 @@
 import { Box, Flex } from "App/Components"
-import { color, space } from "App/Utils"
+import { color, space } from "App/utils"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import React from "react"
 import { useSafeArea } from "react-native-safe-area-context"

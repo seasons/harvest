@@ -1,6 +1,6 @@
 import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
-import { color, space } from "App/Utils"
-import { useComponentSize } from "App/Utils/Hooks/useComponentSize"
+import { color, space } from "App/utils"
+import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import React, { useEffect, useState } from "react"
 import { Dimensions } from "react-native"
 import { animated, useSpring } from "react-spring/native.cjs"

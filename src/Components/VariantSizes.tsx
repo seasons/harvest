@@ -1,6 +1,6 @@
 import { sortVariants } from "App/helpers/sortVariants"
 import { Flex, Box, Sans } from "App/Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import React from "react"
 import styled from "styled-components/native"
 import { Homepage_homepage_sections_results_Product_variants } from "App/generated/Homepage"

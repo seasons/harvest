@@ -1,4 +1,4 @@
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import React from "react"
 import { StatusBar } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"

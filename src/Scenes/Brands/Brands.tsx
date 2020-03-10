@@ -6,7 +6,7 @@ import { FlatList, TouchableOpacity, PanResponder } from "react-native"
 import { GetBrands } from "App/generated/GetBrands"
 import styled from "styled-components/native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { groupBy, map, sortBy, toPairs, debounce } from "lodash"
 import { Loader } from "App/Components/Loader"
 

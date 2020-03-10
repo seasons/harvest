@@ -1,6 +1,6 @@
 import React from "react"
 import Svg, { G, Rect } from "react-native-svg"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { CloseButtonVariant } from "App/Components/CloseButton"
 
 export const CloseXSVG: React.FC<{ variant: CloseButtonVariant }> = ({ variant }) => (

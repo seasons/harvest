@@ -4,7 +4,7 @@ import { Sans } from "Components/Typography"
 import styled from "styled-components/native"
 import { SeasonsLogoSVG } from "Assets/svgs"
 import { Image, TouchableOpacity, Dimensions, Linking } from "react-native"
-import { color, space } from "App/Utils"
+import { color, space } from "App/utils"
 
 const buttonWidth = (Dimensions.get("window").width - space(4)) / 2 - 1
 

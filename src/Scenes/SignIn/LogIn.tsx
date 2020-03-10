@@ -1,6 +1,6 @@
 import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, CloseButton, Container } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"

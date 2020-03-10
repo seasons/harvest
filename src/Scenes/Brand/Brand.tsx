@@ -7,7 +7,7 @@ import { FlatList, Dimensions, TouchableWithoutFeedback } from "react-native"
 import { get } from "lodash"
 import { imageResize } from "App/helpers/imageResize"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { color, space } from "App/Utils"
+import { color, space } from "App/utils"
 import { ReadMore } from "App/Components/ReadMore"
 
 const IMAGE_HEIGHT = 240

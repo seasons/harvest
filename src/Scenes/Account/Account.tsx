@@ -11,7 +11,7 @@ import styled from "styled-components/native"
 import { ProfileList } from "./ProfileList"
 import { color } from "styled-system"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { space } from "App/Utils"
+import { space } from "App/utils"
 import { NotificationToggle } from "./Components/NotificationToggle"
 
 export const GET_USER = gql`

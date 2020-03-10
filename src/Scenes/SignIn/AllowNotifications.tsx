@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Sans, Flex, Spacer, Button, Container } from "App/Components"
 import { NotificationGraphic } from "Assets/svgs"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { useNotificationsContext } from "App/Notifications/NotificationsContext"
 
 export const AllowNotifications = ({ navigation, route }) => {
