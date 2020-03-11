@@ -80,9 +80,12 @@ export const createBillingAddress = billingInfo => {
 }
 
 export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const { loading, error, data } = useQuery(GET_PAYMENT_DATA)
+  const { loading, error, data } = useQuery(GET_PAYMENT_DATA, {
+    // Refetch query every second to account for chargebee webhook updates
+    pollInterval: 1000
+  })
 
-  if (loading) {
+  if (!data && loading) {
     return <Loader />
   }
 

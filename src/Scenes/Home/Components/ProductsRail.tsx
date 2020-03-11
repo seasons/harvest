@@ -1,7 +1,7 @@
 import React from "react"
 import { Box, Sans, Spacer, VariantSizes } from "App/Components"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
-import { space } from "App/Utils"
+import { space } from "App/utils"
 import * as Animatable from "react-native-animatable"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
@@ -26,7 +26,9 @@ export const ProductsRail: React.FC<{
           const brandName = item.brand && item.brand.name
           return (
             <Animatable.View animation="fadeIn" duration={300}>
-              <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: item.id })}>
+              <TouchableWithoutFeedback
+                onPress={() => navigation.navigate("Product", { id: item.id, slug: item.slug })}
+              >
                 <Box mr={0.5} style={{ width: slideWidth }}>
                   <FadeInImage source={{ uri: resizedImage }} style={{ width: slideWidth, height: 180 }} />
                   <Spacer mb={0.5} />

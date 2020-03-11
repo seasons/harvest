@@ -1,23 +1,14 @@
-import { color } from "App/Utils"
-import { getUserSession } from "App/Utils/auth"
-import React from "react"
-import SplashScreen from "react-native-splash-screen"
+import { getUserSession } from "App/utils/auth"
+import React, { useEffect } from "react"
 import AuthContext from "./AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
-import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
-import { ModalStackScreen, TabsStack } from "./Stacks"
+import { createStackNavigator } from "@react-navigation/stack"
+import { ModalAndMainScreens } from "./Stacks"
+import { NotificationsProvider } from "App/Notifications"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
 const RootStack = createStackNavigator()
-
-const defaultOptions = {
-  headerShown: false,
-  cardStyle: {
-    backgroundColor: color("white100"),
-    opacity: 1,
-  },
-}
 
 export const AuthProvider = ({ currentScreen, navigationRef }) => {
   const [authState, dispatch] = React.useReducer(
@@ -51,7 +42,7 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
     }
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     // const navigation = navigationRef.current
     const bootstrapAsync = async () => {
       try {
@@ -65,7 +56,6 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
     }
 
     bootstrapAsync()
-    SplashScreen.hide()
   }, [])
 
   const authContext = {
@@ -74,6 +64,7 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
     },
     signOut: async () => {
       await AsyncStorage.removeItem("userSession")
+      await AsyncStorage.removeItem("beamsData")
       dispatch({ type: "SIGN_OUT" })
     },
     authState,
@@ -82,21 +73,14 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
 
   return (
     <AuthContext.Provider value={authContext}>
-      <RootStack.Navigator
-        mode="modal"
-        initialRouteName="Main"
-        screenOptions={{
-          ...defaultOptions,
-          gestureEnabled: true,
-          cardOverlayEnabled: true,
-          headerShown: false,
-          ...TransitionPresets.ModalPresentationIOS,
-        }}
-      >
-        <RootStack.Screen name="Main" options={{ headerShown: false }}>
-          {() => <TabsStack currentScreen={currentScreen} />}
+      <RootStack.Navigator>
+        <RootStack.Screen name="Root" options={{ headerShown: false }}>
+          {() => (
+            <NotificationsProvider>
+              <ModalAndMainScreens currentScreen={currentScreen} />
+            </NotificationsProvider>
+          )}
         </RootStack.Screen>
-        <RootStack.Screen name="Modal" component={ModalStackScreen} />
       </RootStack.Navigator>
     </AuthContext.Provider>
   )

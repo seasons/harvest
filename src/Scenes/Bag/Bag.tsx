@@ -1,16 +1,17 @@
 import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
 import { assign, fill, get } from "lodash"
 import React, { useState, useEffect } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import { FlatList } from "react-native"
+import { FlatList, RefreshControl } from "react-native"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
+import { SavedItem } from "./Components/SavedItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
 import { GuestView } from "App/Components/GuestView"
@@ -34,14 +35,20 @@ export const Bag = props => {
 
   const insets = useSafeArea()
   const [isMutating, setMutating] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [showReserveError, displayReserveError] = useState(false)
+  const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+  const [refreshing, setRefreshing] = useState(false)
+
   const { data, loading, refetch } = useQuery(GET_BAG, {
     fetchPolicy: "cache-and-network",
   })
   useEffect(() => {
+    if (data) {
+      setIsLoading(false)
+    }
     return displayReserveError(false)
-  }, [])
-  const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+  }, [data])
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {
       const { me } = cache.readQuery({ query: GET_BAG })
@@ -94,8 +101,14 @@ export const Bag = props => {
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
 
-  if (loading) {
+  if (isLoading) {
     return <Loader />
+  }
+
+  const onRefresh = () => {
+    setRefreshing(true)
+    refetch()
+    setRefreshing(false)
   }
 
   const items =
@@ -202,17 +215,30 @@ export const Bag = props => {
   }
 
   const renderItem = ({ item, index }) => {
+    const showSavedItems = BagView.Saved == currentView
+    const hideButtons = item.status !== "Added"
     return item.productID.length ? (
-      <Box mx={2} mt={isSavedView && index === 0 ? 1 : 0}>
-        <BagItem
-          removeItemFromBag={deleteBagItem}
-          removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-          saved={BagView.Saved == currentView || item.status !== "Added"}
-          sectionHeight={SECTION_HEIGHT}
-          index={index}
-          bagItem={item}
-          navigation={navigation}
-        />
+      <Box mx={showSavedItems ? 0 : 2} mt={isSavedView && index === 0 ? 1 : 0}>
+        {showSavedItems ? (
+          <SavedItem
+            removeItemFromBag={deleteBagItem}
+            sectionHeight={SECTION_HEIGHT}
+            bagItem={item}
+            navigation={navigation}
+          />
+        ) : (
+          <Box my={2}>
+            <BagItem
+              hideButtons={hideButtons}
+              removeItemFromBag={deleteBagItem}
+              removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+              sectionHeight={SECTION_HEIGHT}
+              index={index}
+              bagItem={item}
+              navigation={navigation}
+            />
+          </Box>
+        )}
       </Box>
     ) : (
       <EmptyBagItem navigation={navigation} />
@@ -220,10 +246,12 @@ export const Bag = props => {
   }
 
   const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"
+  const footerMarginBottom = currentView === BagView.Bag ? 96 : 2
   const headerSubtitle = currentView === BagView.Bag ? bagSubtitle : "Tucked away for later"
   return (
     <Container insetsBottom={false} insetsTop={false}>
       <FlatList
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         data={currentView === BagView.Bag ? paddedItems : savedItems}
         ListHeaderComponent={() => (
           <>
@@ -263,7 +291,7 @@ export const Bag = props => {
         renderItem={item => {
           return renderItem(item)
         }}
-        ListFooterComponent={() => <Spacer mb={96} />}
+        ListFooterComponent={() => <Spacer mb={footerMarginBottom} />}
       />
       {isBagView && (
         <>

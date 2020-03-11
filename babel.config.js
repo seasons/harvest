@@ -12,7 +12,7 @@ module.exports = function(api) {
             Assets: "./assets",
             Components: "./src/Components",
             Scenes: "./src/Scenes",
-            Utils: "./src/Utils",
+            Utils: "./src/utils",
           },
         },
       ],

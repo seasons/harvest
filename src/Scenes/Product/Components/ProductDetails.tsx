@@ -1,5 +1,5 @@
 import { Box, Sans, Separator, Spacer, Flex } from "App/Components"
-import { color, space } from "App/Utils"
+import { color, space } from "App/utils"
 import React from "react"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"

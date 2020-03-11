@@ -67,13 +67,13 @@ describe("EditPaymentAndShipping", () => {
     const route = {
       params: {
         billingInfo: GetPaymentDataFixture.me.customer.billingInfo,
-        shippingAddress: GetPaymentDataFixture.me.customer.detail.shippingAddress
-      }
+        shippingAddress: GetPaymentDataFixture.me.customer.detail.shippingAddress,
+      },
     }
     const component = mount(
       <MockedProvider mocks={editPaymentAndShippingMocks} addTypename={false}>
         <EditPaymentAndShipping navigation={null} route={route} />
-      </MockedProvider >
+      </MockedProvider>
     )
 
     await waitForLoad(component)

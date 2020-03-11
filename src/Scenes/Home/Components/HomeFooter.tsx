@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Sans, Spacer } from "App/Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import React from "react"
 import styled from "styled-components/native"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"

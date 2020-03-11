@@ -1,10 +1,18 @@
-import React from "react"
+import React, { useState } from "react"
 import { Sans, Flex, Spacer, Button, Container } from "App/Components"
 import { NotificationGraphic } from "Assets/svgs"
-import { init } from "../../setupNotifications"
-import { color } from "App/Utils"
+import { color } from "App/utils"
+import { useNotificationsContext } from "App/Notifications/NotificationsContext"
 
-export const AllowNotifications = ({ navigation }) => {
+export const AllowNotifications = ({ navigation, route }) => {
+  const [isMutating, setIsMutating] = useState(false)
+  const { requestPermissions, setDeviceNotifStatus } = useNotificationsContext()
+
+  const callback = () => {
+    setIsMutating(false)
+    navigation.navigate("Main")
+  }
+
   return (
     <Container insetsBottom>
       <Flex px={2} flexDirection="column" justifyContent="center" alignItems="center" style={{ flex: 1 }}>
@@ -18,12 +26,30 @@ export const AllowNotifications = ({ navigation }) => {
           Get notified about your order status, new products, and restocks. Never miss an update.
         </Sans>
         <Spacer mb={3} />
-        <Button block onPress={() => init(navigation)} variant="primaryBlack">
+        <Button
+          block
+          onPress={() => {
+            if (isMutating) {
+              return
+            } else {
+              setIsMutating(true)
+              requestPermissions(callback)
+            }
+          }}
+          variant="primaryBlack"
+        >
           Allow
         </Button>
         <Spacer mb={2} />
-        <Button block onPress={() => navigation.navigate("Main")} variant="primaryWhite">
-          Maybe Later
+        <Button
+          block
+          onPress={() => {
+            setDeviceNotifStatus("Denied")
+            navigation.navigate("Main")
+          }}
+          variant="primaryWhite"
+        >
+          Maybe later
         </Button>
         <Spacer mb={3} />
       </Flex>

@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Sans } from "App/Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import React from "react"
 import { ScrollView } from "react-native"
 import styled from "styled-components/native"

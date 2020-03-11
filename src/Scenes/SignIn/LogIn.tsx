@@ -1,6 +1,6 @@
 import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, CloseButton, Container } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
@@ -21,6 +21,7 @@ const LOG_IN = gql`
       token
       refreshToken
       expiresIn
+      beamsToken
     }
   }
 `
@@ -54,12 +55,12 @@ export const LogIn: React.FC<LogInProps> = props => {
     setEmailComplete(isValidEmail(val))
   }
 
-  const checkPermissions = () => {
+  const checkPermissions = beamsToken => {
     checkNotifications()
       .then(({ status }) => {
         if (status === "denied") {
           props.navigation.popToTop()
-          props.navigation.navigate("Modal", { screen: "AllowNotificationsModal" })
+          props.navigation.navigate("Modal", { screen: "AllowNotificationsModal", params: { beamsToken, email } })
         } else {
           props.navigation.navigate("Main")
         }
@@ -85,8 +86,11 @@ export const LogIn: React.FC<LogInProps> = props => {
           data: { login: userSession },
         } = result
         signIn(userSession)
+        const beamsToken = result?.data?.login?.beamsToken
+        const beamsData = { beamsToken, email }
+        AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
-        checkPermissions()
+        checkPermissions(beamsToken)
       }
     }
   }

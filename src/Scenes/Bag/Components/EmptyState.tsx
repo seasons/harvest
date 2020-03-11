@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Sans, Spacer, Theme } from "App/Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import React from "react"
 import { Image } from "react-native"
 

@@ -1,25 +1,25 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Box, Container, PopUp, Spacer, VariantSizes, FixedBackArrow } from "App/Components"
+import { Box, Container, FixedBackArrow, PopUp, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { PopUpProps } from "App/Components/PopUp"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
-import { color } from "App/Utils"
-import { screenTrack } from "App/Utils/track"
-import { BackArrowIcon } from "Assets/icons"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
 import { find, get } from "lodash"
 import React, { useEffect, useState } from "react"
-import { Dimensions, FlatList, TouchableOpacity } from "react-native"
+import { Dimensions, FlatList } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
+
 import { useMutation, useQuery } from "@apollo/react-hooks"
+
 import { GET_HOMEPAGE } from "../Home/Home"
 import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
-import { useSafeArea } from "react-native-safe-area-context"
-import { useAuthContext } from "App/Navigation/AuthContext"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -38,12 +38,8 @@ interface ProductProps {
   navigation: any
 }
 
-export const Product = screenTrack(props => {
-  const productID = get(props, "route.params.id")
-  return {
-    contextScreen: "Product",
-    productID,
-  }
+export const Product = screenTrack({
+  entityType: Schema.EntityTypes.Product,
 })((props: ProductProps) => {
   const { authState } = useAuthContext()
   const insets = useSafeArea()
@@ -51,7 +47,7 @@ export const Product = screenTrack(props => {
   const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation, route } = props
-  const productID = get(route, "params.id")
+  const productID = route?.params?.id
   const { data, loading, error } = useQuery<GetProduct>(GET_PRODUCT, {
     variables: {
       productID,

@@ -1,10 +1,10 @@
 import React from "react"
 import { Box, Container, FixedButton, Sans, Spacer } from "App/Components"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 export const FinishProductRequest = (props: any) => {
   return (
-    <Container>
+    <Container insetsBottom={false}>
       <Box px={2} style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}>
         <Box>
           <Sans size="3" color={color("black100")} textAlign="center">

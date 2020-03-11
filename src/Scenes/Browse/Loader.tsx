@@ -13,7 +13,7 @@ export const BrowseItemLoader = () => (
 )
 
 export const TabBarLoader = props => (
-  <Svg width={375} height={69} {...props}>
+  <Svg width={375} height={60} {...props}>
     <Defs>
       <Path id="prefix__b" d="M0 0h375v68H0z" />
     </Defs>
@@ -50,7 +50,7 @@ export const BrowseLoader: React.FC<{ imageHeight: number }> = props => {
     <ContentLoader height={height} width={width}>
       {[...Array(rowCount)].map((_, index) => {
         const yPosition = index * rowHeight
-        const maxCardHeight = height - yPosition - 190
+        const maxCardHeight = height - yPosition - 183
         const doesOverlap = yPosition + rowHeight > height - 190
         return (
           <React.Fragment key={index}>
@@ -60,12 +60,12 @@ export const BrowseLoader: React.FC<{ imageHeight: number }> = props => {
         )
       })}
       <>
-        <Rect x={20} y={height - 160} height={10} width={30} />
-        <Rect x={70} y={height - 160} height={10} width={55} />
-        <Rect x={140} y={height - 160} height={10} width={30} />
-        <Rect x={190} y={height - 160} height={10} width={80} />
-        <Rect x={290} y={height - 160} height={10} width={60} />
-        <Rect x={340} y={height - 160} height={10} width={55} />
+        <Rect x={20} y={height - 156} height={10} width={20} />
+        <Rect x={60} y={height - 156} height={10} width={55} />
+        <Rect x={140} y={height - 156} height={10} width={30} />
+        <Rect x={190} y={height - 156} height={10} width={80} />
+        <Rect x={290} y={height - 156} height={10} width={60} />
+        <Rect x={340} y={height - 156} height={10} width={55} />
       </>
     </ContentLoader>
   )

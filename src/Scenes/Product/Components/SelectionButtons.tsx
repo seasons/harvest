@@ -1,6 +1,6 @@
 import { Flex, Sans, Spacer } from "App/Components"
 import { AddToBagButton } from "App/Scenes/Product/Components"
-import { color, space } from "App/Utils"
+import { color, space } from "App/utils"
 import { DownChevronIcon } from "Assets/icons"
 import React from "react"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
@@ -29,6 +29,7 @@ export const SelectionButtons: React.FC<Props> = props => {
     setPopUp,
   } = props
   const inStock = selectedVariant && !!selectedVariant.stock
+
   if (!selectedVariant) {
     return <></>
   }
