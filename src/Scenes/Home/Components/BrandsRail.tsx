@@ -42,8 +42,8 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
         <TouchableOpacity
           onPress={() => {
             tracking.trackEvent({
-              action_name: Schema.ActionNames.ViewAllBrandsTapped,
-              action_type: Schema.ActionTypes.Tap,
+              actionName: Schema.ActionNames.ViewAllBrandsTapped,
+              actionType: Schema.ActionTypes.Tap,
             })
             navigation.navigate("Brands")
           }}
