@@ -9,9 +9,19 @@ import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 import { useMutation } from "react-apollo"
 import { GET_USER } from "App/Scenes/Account/Account"
 import { useNavigation } from "@react-navigation/native"
+import { getUserSession } from "App/utils/auth"
 
 // Get your interest
 export const seasonsNotifInterest = "seasons-general-notifications"
+
+export const GET_BEAMS_DATA = gql`
+  mutation BeamsData {
+    beamsData {
+      email
+      beamsToken
+    }
+  }
+`
 
 export const UPDATE_USER_PUSH_NOTIFICATIONS = gql`
   mutation UpdateUserPushNotifications($pushNotificationsStatus: String!) {
@@ -65,6 +75,25 @@ export const NotificationsProvider = ({ children }) => {
       subscribedToNotifs: null,
     }
   )
+  const [getBeamsData] = useMutation(GET_BEAMS_DATA, {})
+  useEffect(() => {
+    // If users are logged in without a beamsToken this will fetch one
+    const checkBeamsData = async () => {
+      const beamsData = await AsyncStorage.getItem("beamsData")
+      const userSession = await getUserSession()
+      if (!beamsData && userSession && userSession.token) {
+        const result = await getBeamsData()
+        if (result?.data) {
+          const { data } = result
+          const beamsToken = data?.beamsToken
+          const email = data?.email
+          const beamsData = { beamsToken, email }
+          AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
+        }
+      }
+    }
+    checkBeamsData()
+  }, [])
 
   const handleNotification = notification => {
     const route = notification?.userInfo?.data?.route
