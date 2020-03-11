@@ -4,14 +4,15 @@ import React, { useState } from "react"
 import { Dimensions, SectionList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
-
 import { Box, Button, Flex, Radio, Sans, Separator, Spacer, Theme } from "../../Components"
+import { useTracking, Schema, screenTrack } from "App/utils/track"
 
 const FILTER_BY = "Filter by"
 
-export const Filters = (props: any) => {
+export const Filters = screenTrack()((props: any) => {
   const currentSizeFilters = get(props, "route.params.sizeFilters", [])
   const [sizeFilters, setSizeFilters] = useState(currentSizeFilters)
+  const tracking = useTracking()
 
   const filterSections = [
     {
@@ -31,6 +32,11 @@ export const Filters = (props: any) => {
     const isSelected = sizeFilters.includes(item)
     // Use the default border radius for the sort by section
     const handlePress = () => {
+      tracking.trackEvent({
+        actionName: Schema.ActionNames.FilterTapped,
+        actionType: Schema.ActionTypes.Tap,
+        filterValue: item,
+      })
       if (sizeFilters.includes(item)) {
         setSizeFilters(sizeFilters.filter(f => f !== item))
       } else {
@@ -109,7 +115,7 @@ export const Filters = (props: any) => {
       </Container>
     </Theme>
   )
-}
+})
 
 const Container = styled(Box)`
   background: black;

@@ -95,11 +95,13 @@ export enum ActionTypes {
  */
 export enum ActionNames {
   // Home page
-  ViewAllBrandsTapped = "View All Brands Tapped",
   BrowseButtonTapped = "Browse Button Tapped",
+  ViewAllBrandsTapped = "View All Brands Tapped",
 
   // Browse page
+  // FIXME: Add this
   FiltersButtonTapped = "Filters Button Tapped",
+
   FilterTapped = "Filter Tapped",
   FiltersApplied = "Filters Applied",
   FiltersCleared = "Filters Cleared",
@@ -108,6 +110,7 @@ export enum ActionNames {
   BrowsePageSwiped = "Browse Page Swiped",
 
   // Bag
+  // FIXME: Add this
   BagItemRemoved = "Bag Item Removed",
   BagSavedItemRemoved = "Bag Saved Item Removed",
   BagItemSaved = "Bag Item Saved",
@@ -116,15 +119,19 @@ export enum ActionNames {
   ReserveButtonTapped = "Reserve Button Tapped",
 
   // Brand view
+  // FIXME: Add this
   ReadMoreTapped = "Read More Tapped",
 
   // Brands view
+  // FIXME: Add this
   AlphabetTapped = "Alphabet Tapped",
 
   // Reservation
+  // FIXME: Add this
   PlaceOrderTapped = "Place Order Tapped",
 
   // Reservation Confirmation
+  // FIXME: Add this
   ReservationConfirmationDoneButtonTapped = "Reservation Confirmation Done Button Tapped",
 
   // Account
@@ -140,18 +147,22 @@ export enum ActionNames {
   LogOutTapped = "Log Out Tapped",
 
   // Membership Info
+  // FIXME: Add this
   ContactUsTapped = "Contact Us Tapped",
 
   // Personal Preferences
+  // FIXME: Add this
   EditButtonTapped = "Edit Button Tapped",
   EditDoneButtonTapped = "Edit Done Button Tapped",
 
   // Payment And Shipping
+  // FIXME: Add this
   PaymentAndShippingEditSaveTapped = "Payment And Shipping Edit Save Tapped",
   PaymentAndShippingEditCancelTapped = "Payment And Shipping Edit Cancel Tapped",
   PaymentAndShippingEditBillingInfoTapped = "Payment And Shipping Edit Billing Info Tapped",
 
   // Submit an item
+  // FIXME: Add this
   NextButtonTapped = "Next Button Tapped",
   SubmitButtonTapped = "Submit Button Tapped",
   FinishButtonTapped = "Finish Button Tapped",
@@ -162,6 +173,7 @@ export enum ActionNames {
   // ReservationConfirmed = "Reservation Confirmed",
 
   // Product page action names
+  // FIXME: Add this
   ProductSaved = "Product Saved",
   ProductWanted = "Product Wanted",
   ProductReserved = "Product Reserved",
@@ -170,6 +182,7 @@ export enum ActionNames {
   SizeButtonTapped = "Size Button Tapped",
 
   // Shared action names
+  // FIXME: Add this
   ProductTapped = "Product Tapped",
   BrandTapped = "Brand Tapped",
   CarouselSwiped = "Carousel Swiped",

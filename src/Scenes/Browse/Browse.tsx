@@ -16,6 +16,7 @@ import { color } from "styled-system"
 import { useQuery } from "@apollo/react-hooks"
 import { BrowseLoader } from "./Loader"
 import { Spinner } from "App/Components/Spinner"
+import { useTracking, Schema, screenTrack } from "App/utils/track"
 
 const IMAGE_HEIGHT = 240
 
@@ -94,10 +95,11 @@ const renderItem = ({ item }, i, navigation) => {
   )
 }
 
-export const Browse = (props: any) => {
+export const Browse = screenTrack()((props: any) => {
   const sizeFilters = get(props, "route.params.sizeFilters") || []
   const [currentCategory, setCurrentCategory] = useState("all")
   const insets = useSafeArea()
+  const tracking = useTracking()
 
   // Get all the sizes that we want to query by.
   // If no size filter is selected, all sizes are queried.
@@ -138,6 +140,10 @@ export const Browse = (props: any) => {
   }
 
   const onFilterBtnPress = () => {
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.FiltersButtonTapped,
+      actionType: Schema.ActionTypes.Tap,
+    })
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
   }
 
@@ -225,7 +231,7 @@ export const Browse = (props: any) => {
       </Flex>
     </Container>
   )
-}
+})
 
 const CategoryPicker = styled.FlatList`
   position: absolute;
