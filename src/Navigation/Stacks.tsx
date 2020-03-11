@@ -93,7 +93,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />
       <ModalStack.Screen name={Schema.PageNames.ReservationConfirmationModal} component={ReservationConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ReservationModal} component={Reservation} />
-      <ModalStack.Screen name={Schema.PageNames.ReservationConfirmationModal} component={AllowNotifications} />
+      <ModalStack.Screen name={Schema.PageNames.AllowNotificationsModal} component={AllowNotifications} />
     </ModalStack.Navigator>
   )
 }
