@@ -18,6 +18,7 @@ import { color } from "App/utils"
 import { Faq } from "App/Scenes/Faq"
 import { Brand } from "App/Scenes/Brand"
 import { Brands } from "App/Scenes/Brands"
+import { Schema } from "App/Navigation"
 
 const HomeStack = createStackNavigator()
 const BagStack = createStackNavigator()
@@ -40,7 +41,7 @@ export const ModalAndMainScreens = ({ currentScreen }) => {
   return (
     <ModalAndMainStack.Navigator
       mode="modal"
-      initialRouteName="Main"
+      initialRouteName={Schema.StackNames.Main}
       screenOptions={{
         ...defaultOptions,
         gestureEnabled: true,
@@ -49,10 +50,10 @@ export const ModalAndMainScreens = ({ currentScreen }) => {
         ...TransitionPresets.ModalPresentationIOS,
       }}
     >
-      <ModalAndMainStack.Screen name="Main" options={{ headerShown: false }}>
+      <ModalAndMainStack.Screen name={Schema.StackNames.Main} options={{ headerShown: false }}>
         {() => <TabsStack currentScreen={currentScreen} />}
       </ModalAndMainStack.Screen>
-      <ModalAndMainStack.Screen name="Modal" component={ModalStackScreen} />
+      <ModalAndMainStack.Screen name={Schema.StackNames.Modal} component={ModalStackScreen} />
     </ModalAndMainStack.Navigator>
   )
 }
@@ -60,7 +61,7 @@ export const ModalAndMainScreens = ({ currentScreen }) => {
 const TabsStack = ({ currentScreen }) => {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName={Schema.PageNames.Home}
       tabBarOptions={{
         // https://reactnavigation.org/docs/en/bottom-tab-navigator.html
         // @ts-ignore
@@ -70,10 +71,10 @@ const TabsStack = ({ currentScreen }) => {
         return <NavBar {...props} currentScreen={currentScreen} />
       }}
     >
-      <Tab.Screen name="HomeStack" component={HomeStackScreen} />
-      <Tab.Screen name="BrowseStack" component={BrowseStackScreen} />
-      <Tab.Screen name="BagStack" component={BagStackScreen} />
-      <Tab.Screen name="AccountStack" component={AccountStackScreen} />
+      <Tab.Screen name={Schema.StackNames.HomeStack} component={HomeStackScreen} />
+      <Tab.Screen name={Schema.StackNames.BrowseStack} component={BrowseStackScreen} />
+      <Tab.Screen name={Schema.StackNames.BagStack} component={BagStackScreen} />
+      <Tab.Screen name={Schema.StackNames.AccountStack} component={AccountStackScreen} />
     </Tab.Navigator>
   )
 }
@@ -86,65 +87,65 @@ const ModalStackScreen = () => {
         headerShown: false,
       }}
     >
-      <ModalStack.Screen name="FiltersModal" component={Filters} />
-      <ModalStack.Screen name="ResetPasswordModal" component={ResetPassword} />
-      <ModalStack.Screen name="ResetPasswordConfirmationModal" component={ResetPasswordConfirmation} />
-      <ModalStack.Screen name="SignInModal" component={SignIn} />
-      <ModalStack.Screen name="ReservationConfirmationModal" component={ReservationConfirmation} />
-      <ModalStack.Screen name="ReservationModal" component={Reservation} />
-      <ModalStack.Screen name="AllowNotificationsModal" component={AllowNotifications} />
+      <ModalStack.Screen name={Schema.PageNames.FiltersModal} component={Filters} />
+      <ModalStack.Screen name={Schema.PageNames.ResetPasswordModal} component={ResetPassword} />
+      <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
+      <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationConfirmationModal} component={ReservationConfirmation} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationModal} component={Reservation} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationConfirmationModal} component={AllowNotifications} />
     </ModalStack.Navigator>
   )
 }
 
 const HomeStackScreen = () => {
   return (
-    <HomeStack.Navigator initialRouteName="Home" screenOptions={{ ...defaultOptions }}>
-      <HomeStack.Screen name="Home" component={Home} />
-      <HomeStack.Screen name="Product" component={Product} initialParams={{ id: "" }} />
-      <BrowseStack.Screen name="Brand" component={Brand} initialParams={{ id: "" }} />
-      <BrowseStack.Screen name="Brands" component={Brands} />
+    <HomeStack.Navigator initialRouteName={Schema.PageNames.Home} screenOptions={{ ...defaultOptions }}>
+      <HomeStack.Screen name={Schema.PageNames.Home} component={Home} />
+      <HomeStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name={Schema.PageNames.Brands} component={Brands} />
     </HomeStack.Navigator>
   )
 }
 
 const BrowseStackScreen = () => {
   return (
-    <BrowseStack.Navigator initialRouteName="Browse" screenOptions={{ ...defaultOptions }}>
-      <BrowseStack.Screen name="Browse" component={Browse} initialParams={{ sizeFilters: [] }} />
-      <BrowseStack.Screen name="Product" component={Product} initialParams={{ id: "" }} />
-      <BrowseStack.Screen name="Brand" component={Brand} initialParams={{ id: "" }} />
+    <BrowseStack.Navigator initialRouteName={Schema.PageNames.Browse} screenOptions={{ ...defaultOptions }}>
+      <BrowseStack.Screen name={Schema.PageNames.Browse} component={Browse} initialParams={{ sizeFilters: [] }} />
+      <BrowseStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
     </BrowseStack.Navigator>
   )
 }
 
 const BagStackScreen = () => {
   return (
-    <BagStack.Navigator initialRouteName="Bag" screenOptions={{ ...defaultOptions }}>
-      <BagStack.Screen name="Bag" component={Bag} />
-      <BagStack.Screen name="Webview" component={Webview} />
-      <BagStack.Screen name="Product" component={Product} initialParams={{ id: "" }} />
-      <BrowseStack.Screen name="Brand" component={Brand} initialParams={{ id: "" }} />
-      <BagStack.Screen name="CurrentRotation" component={CurrentRotation} />
-      <BagStack.Screen name="Faq" component={Faq} />
+    <BagStack.Navigator initialRouteName={Schema.PageNames.Bag} screenOptions={{ ...defaultOptions }}>
+      <BagStack.Screen name={Schema.PageNames.Bag} component={Bag} />
+      <BagStack.Screen name={Schema.PageNames.Webview} component={Webview} />
+      <BagStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
+      <BrowseStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
+      <BagStack.Screen name={Schema.PageNames.CurrentRotation} component={CurrentRotation} />
+      <BagStack.Screen name={Schema.PageNames.Faq} component={Faq} />
     </BagStack.Navigator>
   )
 }
 
 const AccountStackScreen = () => {
   return (
-    <AccountStack.Navigator initialRouteName="Account" screenOptions={{ ...defaultOptions }}>
-      <AccountStack.Screen name="Account" component={Account} />
-      <AccountStack.Screen name="MembershipInfo" component={MembershipInfo} />
-      <AccountStack.Screen name="PaymentAndShipping" component={PaymentAndShipping} />
-      <AccountStack.Screen name="EditPaymentAndShipping" component={EditPaymentAndShipping} />
-      <AccountStack.Screen name="PersonalPreferences" component={PersonalPreferences} />
-      <AccountStack.Screen name="Webview" component={Webview} />
-      <AccountStack.Screen name="ProductRequest" component={ProductRequest} />
-      <AccountStack.Screen name="FinishProductRequest" component={FinishProductRequest} />
-      <AccountStack.Screen name="ProductRequestConfirmation" component={ProductRequestConfirmation} />
-      <AccountStack.Screen name="ProductRequestGallery" component={ProductRequestGallery} />
-      <AccountStack.Screen name="Faq" component={Faq} />
+    <AccountStack.Navigator initialRouteName={Schema.PageNames.Account} screenOptions={{ ...defaultOptions }}>
+      <AccountStack.Screen name={Schema.PageNames.Account} component={Account} />
+      <AccountStack.Screen name={Schema.PageNames.MembershipInfo} component={MembershipInfo} />
+      <AccountStack.Screen name={Schema.PageNames.PaymentAndShipping} component={PaymentAndShipping} />
+      <AccountStack.Screen name={Schema.PageNames.EditPaymentAndShipping} component={EditPaymentAndShipping} />
+      <AccountStack.Screen name={Schema.PageNames.PersonalPreferences} component={PersonalPreferences} />
+      <AccountStack.Screen name={Schema.PageNames.Webview} component={Webview} />
+      <AccountStack.Screen name={Schema.PageNames.ProductRequest} component={ProductRequest} />
+      <AccountStack.Screen name={Schema.PageNames.FinishProductRequest} component={FinishProductRequest} />
+      <AccountStack.Screen name={Schema.PageNames.ProductRequestConfirmation} component={ProductRequestConfirmation} />
+      <AccountStack.Screen name={Schema.PageNames.ProductRequestGallery} component={ProductRequestGallery} />
+      <AccountStack.Screen name={Schema.PageNames.Faq} component={Faq} />
     </AccountStack.Navigator>
   )
 }
