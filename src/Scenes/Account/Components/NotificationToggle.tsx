@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native"
 import { PushNotificationStatus } from "App/generated/globalTypes"
 import { checkNotifications } from "react-native-permissions"
 import { useNotificationsContext } from "App/Notifications/NotificationsContext"
+import { useTracking, Schema } from "App/utils/track"
 
 export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotificationStatus; userID: string }> = ({
   userNotificationStatus,
@@ -13,6 +14,7 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
   const { requestPermissions, unsubscribe, init, subscribedToNotifs } = useNotificationsContext()
   const [isMutating, setIsMutating] = useState(false)
   const navigation = useNavigation()
+  const tracking = useTracking()
 
   useEffect(() => {
     // If user leaves the app to turn on notifications in the settings recheck status
@@ -30,7 +32,7 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
     return unsubscribe
   }, [navigation])
 
-  const onChange = async () => {
+  const onChange = async newValue => {
     if (isMutating) {
       return
     }
@@ -44,6 +46,11 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
         init()
       }
     }
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.NotificationToggleTapped,
+      actionType: Schema.ActionTypes.Tap,
+      newValue,
+    })
     setIsMutating(false)
   }
 
@@ -72,7 +79,11 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
             </Sans>
           )}
         </Box>
-        <Toggle disabled={disabled || isMutating} onChange={onChange} selected={subscribedToNotifs} />
+        <Toggle
+          disabled={disabled || isMutating}
+          onChange={newValue => onChange(newValue)}
+          selected={subscribedToNotifs}
+        />
       </Flex>
       <Spacer m={2} />
     </Box>

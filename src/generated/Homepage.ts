@@ -36,6 +36,7 @@ export interface Homepage_homepage_sections_results_Product_variants {
 export interface Homepage_homepage_sections_results_Product {
   __typename: "Product";
   id: string;
+  slug: string;
   images: any;
   brand: Homepage_homepage_sections_results_Product_brand;
   variants: Homepage_homepage_sections_results_Product_variants[] | null;

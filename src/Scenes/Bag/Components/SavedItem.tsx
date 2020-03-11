@@ -33,7 +33,7 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navi
   return (
     <Box py={1} key={product.id}>
       <TouchableWithoutFeedback
-        onPress={() => (navigation ? navigation.navigate("Product", { id: product.id }) : null)}
+        onPress={() => (navigation ? navigation.navigate("Product", { id: product.id, slug: product.slug }) : null)}
       >
         <BagItemContainer flexDirection="row" px={2}>
           <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">

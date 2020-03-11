@@ -11,6 +11,7 @@ import * as Animatable from "react-native-animatable"
 import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
 import { BrandsRail } from "./Components/BrandsRail"
+import { screenTrack } from "App/utils/track"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -26,6 +27,7 @@ export const GET_HOMEPAGE = gql`
           }
           ... on Product {
             id
+            slug
             images
             brand {
               id
@@ -43,9 +45,7 @@ export const GET_HOMEPAGE = gql`
   }
 `
 
-export const Home: React.FC<{
-  navigation: any
-}> = ({ navigation }) => {
+export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)
@@ -101,4 +101,4 @@ export const Home: React.FC<{
       </Animatable.View>
     </Container>
   )
-}
+})

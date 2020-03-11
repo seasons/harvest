@@ -1,14 +1,16 @@
-import React, { useMemo, useState } from "react"
-import gql from "graphql-tag"
-import { useQuery } from "@apollo/react-hooks"
-import { Container, Sans, Box, VariantSizes, Spacer, FixedBackArrow } from "App/Components"
-import { GetBrand } from "App/generated/GetBrand"
-import { FlatList, Dimensions, TouchableWithoutFeedback } from "react-native"
-import { get } from "lodash"
-import { imageResize } from "App/helpers/imageResize"
+import { Box, Container, FixedBackArrow, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { color, space } from "App/utils"
 import { ReadMore } from "App/Components/ReadMore"
+import { GetBrand } from "App/generated/GetBrand"
+import { imageResize } from "App/helpers/imageResize"
+import { color, space } from "App/utils"
+import { screenTrack, Schema } from "App/utils/track"
+import gql from "graphql-tag"
+import { get } from "lodash"
+import React, { useState } from "react"
+import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
+
+import { useQuery } from "@apollo/react-hooks"
 
 const IMAGE_HEIGHT = 240
 
@@ -46,7 +48,9 @@ const GET_BRAND = gql`
   }
 `
 
-export const Brand = (props: any) => {
+export const Brand = screenTrack({
+  entityType: Schema.EntityTypes.Brand,
+})((props: any) => {
   const { navigation, route } = props
   const [readMoreExpanded, setReadMoreExpanded] = useState(false)
   const brandID = route?.params?.id
@@ -157,4 +161,4 @@ export const Brand = (props: any) => {
       />
     </Container>
   )
-}
+})
