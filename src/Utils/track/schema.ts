@@ -175,7 +175,6 @@ export enum ActionNames {
   // Shared action names
   ProductTapped = "Product Tapped",
   BrandTapped = "Brand Tapped",
-  // FIXME: Add this
   CarouselSwiped = "Carousel Swiped",
 }
 
