@@ -5,6 +5,7 @@ import React from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
+import { screenTrack } from "App/utils/track"
 
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
@@ -79,10 +80,10 @@ export const createBillingAddress = billingInfo => {
   return addressArray
 }
 
-export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }) => {
+export const PaymentAndShipping = screenTrack()(({ navigation }) => {
   const { loading, error, data } = useQuery(GET_PAYMENT_DATA, {
     // Refetch query every second to account for chargebee webhook updates
-    pollInterval: 1000
+    pollInterval: 1000,
   })
 
   if (!data && loading) {
@@ -129,7 +130,7 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
     navigation.navigate("EditPaymentAndShipping", {
       billingInfo,
       phoneNumber,
-      shippingAddress
+      shippingAddress,
     })
   }
 
@@ -157,4 +158,4 @@ export const PaymentAndShipping: React.FC<{ navigation: any }> = ({ navigation }
       </FixedButton>
     </Container>
   )
-}
+})

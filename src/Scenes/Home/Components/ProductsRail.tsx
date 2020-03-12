@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Box, Sans, Spacer, VariantSizes } from "App/Components"
 import { FlatList, TouchableWithoutFeedback } from "react-native"
 import { space } from "App/utils"
@@ -6,6 +6,7 @@ import * as Animatable from "react-native-animatable"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
 import { Homepage_homepage_sections_results_Product, Homepage_homepage_sections_results } from "App/generated/Homepage"
+import { useTracking, Schema } from "App/utils/track"
 
 const slideWidth = 144
 
@@ -14,6 +15,23 @@ export const ProductsRail: React.FC<{
   title?: string
   navigation: any
 }> = ({ items, title, navigation }) => {
+  const [currentPage, setCurrentPage] = useState(1)
+  const tracking = useTracking()
+
+  const onScroll = e => {
+    const newPageNum = Math.round(e.nativeEvent.contentOffset.x / slideWidth + 1)
+
+    if (newPageNum !== currentPage) {
+      tracking.trackEvent({
+        actionName: Schema.ActionNames.CarouselSwiped,
+        actionType: Schema.ActionTypes.Swipe,
+        slideIndex: newPageNum,
+        contextModule: title,
+      })
+      setCurrentPage(newPageNum)
+    }
+  }
+
   return (
     <Box mb={3} pl={2}>
       <Sans size="1">{title}</Sans>
@@ -42,6 +60,7 @@ export const ProductsRail: React.FC<{
         keyExtractor={(item: Homepage_homepage_sections_results_Product, index: number) => item.id + index}
         showsHorizontalScrollIndicator={false}
         horizontal
+        onScroll={onScroll}
         overScrollMode="always"
         snapToAlignment="start"
         decelerationRate="fast"

@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { color } from "App/utils"
+import { Schema, useTracking } from "App/utils/track"
 
 interface BagItemProps {
   bagItem: any
@@ -16,6 +17,7 @@ interface BagItemProps {
 
 export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navigation, removeItemFromBag }) => {
   const [isMutating, setIsMutating] = useState(false)
+  const tracking = useTracking()
   if (!bagItem) {
     return <></>
   }
@@ -53,7 +55,13 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navi
                   return
                 }
                 setIsMutating(true)
-                console.log("removeItemFromBag", variantToUse)
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.BagItemRemoved,
+                  actionType: Schema.ActionTypes.Tap,
+                  productSlug: product.slug,
+                  productId: product.id,
+                  variantId: variantToUse.id,
+                })
                 removeItemFromBag({
                   variables: {
                     id: variantToUse.id,

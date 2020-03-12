@@ -5,8 +5,10 @@ import { ScrollView } from "react-native"
 import styled from "styled-components/native"
 import { VariantList } from "./VariantList"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
+import { Schema, useTracking } from "App/utils/track"
 
 export const VariantPicker = props => {
+  const tracking = useTracking()
   const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, productID, height } = props
 
   if (!productID) {
@@ -23,7 +25,7 @@ export const VariantPicker = props => {
         </Sans>
       </Flex>
       <FixedButtonWrapper px={2}>
-        <Button variant="secondaryBlack" width="100%" size="medium" onPress={() => toggleShowVariantPicker(false)}>
+        <Button variant="secondaryBlack" width="100%" onPress={() => toggleShowVariantPicker(false)}>
           Cancel
         </Button>
       </FixedButtonWrapper>

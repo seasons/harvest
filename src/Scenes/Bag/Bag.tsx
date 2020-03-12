@@ -17,6 +17,7 @@ import { SavedEmptyState } from "./Components/SavedEmptyState"
 import { GuestView } from "App/Components/GuestView"
 import { useSafeArea } from "react-native-safe-area-context"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { screenTrack, useTracking, Schema } from "App/utils/track"
 
 const SECTION_HEIGHT = 300
 
@@ -25,7 +26,7 @@ enum BagView {
   Saved = 1,
 }
 
-export const Bag = props => {
+export const Bag = screenTrack()(props => {
   const { authState } = useAuthContext()
   const { navigation } = props
 
@@ -39,6 +40,8 @@ export const Bag = props => {
   const [showReserveError, displayReserveError] = useState(false)
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
   const [refreshing, setRefreshing] = useState(false)
+
+  const tracking = useTracking()
 
   const { data, loading, refetch } = useQuery(GET_BAG, {
     fetchPolicy: "cache-and-network",
@@ -268,8 +271,12 @@ export const Bag = props => {
               spaceEvenly
               tabs={["Bag", "Saved"]}
               activeTab={currentView}
-              goToPage={page => {
-                setCurrentView(page as BagView)
+              goToPage={(page: BagView) => {
+                tracking.trackEvent({
+                  actionName: page === 0 ? Schema.ActionNames.BagTabTapped : Schema.ActionNames.SavedTabTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                })
+                setCurrentView(page)
               }}
             />
           </>
@@ -296,13 +303,30 @@ export const Bag = props => {
       {isBagView && (
         <>
           {hasActiveReservation ? (
-            <FixedButton block variant="primaryWhite" onPress={() => navigation.navigate("Faq")}>
+            <FixedButton
+              block
+              variant="primaryWhite"
+              onPress={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.FAQButtonTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                })
+                navigation.navigate("Faq")
+              }}
+            >
               FAQ
             </FixedButton>
           ) : (
             <FixedButton
               block
-              onPress={() => (!bagIsFull ? displayReserveError(true) : handleReserve(navigation))}
+              onPress={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.ReserveButtonTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                  bagIsFull,
+                })
+                !bagIsFull ? displayReserveError(true) : handleReserve(navigation)
+              }}
               disabled={!bagIsFull}
               loading={isMutating}
             >
@@ -314,4 +338,4 @@ export const Bag = props => {
       <ErrorMessage />
     </Container>
   )
-}
+})

@@ -5,6 +5,7 @@ import { LogoText } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
+import { Loader } from "App/Components/Loader"
 import SplashScreen from "react-native-splash-screen"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
@@ -47,6 +48,7 @@ export const GET_HOMEPAGE = gql`
 
 export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
+  const [showLoader, toggleLoader] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)
 
@@ -61,6 +63,7 @@ export const Home = screenTrack()(({ navigation }) => {
     if (!loading && showSplash) {
       setShowSplash(false)
       setTimeout(() => {
+        toggleLoader(loading)
         SplashScreen.hide()
       }, 100)
     }
@@ -68,6 +71,10 @@ export const Home = screenTrack()(({ navigation }) => {
 
   if (error) {
     console.error("error /home/index.tsx: ", error)
+  }
+
+  if (showLoader || !data) {
+    return <Loader />
   }
 
   const renderItem = item => {

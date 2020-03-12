@@ -4,7 +4,7 @@ import { ReadMore } from "App/Components/ReadMore"
 import { GetBrand } from "App/generated/GetBrand"
 import { imageResize } from "App/helpers/imageResize"
 import { color, space } from "App/utils"
-import { screenTrack, Schema } from "App/utils/track"
+import { screenTrack, Schema, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React, { useState } from "react"
@@ -23,6 +23,7 @@ const GET_BRAND = gql`
       description
       products(first: $first, skip: $skip, orderBy: $orderBy, where: { status: Available }) {
         id
+        slug
         name
         description
         images
@@ -51,8 +52,9 @@ const GET_BRAND = gql`
 export const Brand = screenTrack({
   entityType: Schema.EntityTypes.Brand,
 })((props: any) => {
-  const { navigation, route } = props
   const [readMoreExpanded, setReadMoreExpanded] = useState(false)
+  const tracking = useTracking()
+  const { navigation, route } = props
   const brandID = route?.params?.id
 
   const { data, loading, fetchMore } = useQuery<GetBrand>(GET_BRAND, {
@@ -83,7 +85,17 @@ export const Brand = screenTrack({
     const productName = product?.name
 
     return (
-      <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          tracking.trackEvent({
+            actionName: Schema.ActionNames.ProductTapped,
+            actionType: Schema.ActionTypes.Tap,
+            productSlug: product.slug,
+            productId: product.id,
+          })
+          navigation.navigate("Product", { id: product.id, slug: product.slug })
+        }}
+      >
         <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
           <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
           <Box my={0.5} mx={1}>

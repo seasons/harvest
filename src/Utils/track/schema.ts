@@ -95,17 +95,17 @@ export enum ActionTypes {
  */
 export enum ActionNames {
   // Home page
-  ViewAllBrandsTapped = "View All Brands Tapped",
   BrowseButtonTapped = "Browse Button Tapped",
+  ViewAllBrandsTapped = "View All Brands Tapped",
 
   // Browse page
   FiltersButtonTapped = "Filters Button Tapped",
   FilterTapped = "Filter Tapped",
-  FiltersApplied = "Filters Applied",
   FiltersCleared = "Filters Cleared",
   FilterModalCanceled = "Filters Modal Canceled",
+  FiltersApplied = "Filters Applied",
   CategoryTapped = "Category Tapped",
-  BrowsePageSwiped = "Browse Page Swiped",
+  BrowsePagePaginated = "Browse Page Paginated",
 
   // Bag
   BagItemRemoved = "Bag Item Removed",
@@ -113,6 +113,7 @@ export enum ActionNames {
   BagItemSaved = "Bag Item Saved",
   BagTabTapped = "Bag Tab Tapped",
   SavedTabTapped = "Saved Tab Tapped",
+  FAQButtonTapped = "FAQ Button Tapped",
   ReserveButtonTapped = "Reserve Button Tapped",
 
   // Brand view
@@ -140,23 +141,27 @@ export enum ActionNames {
   LogOutTapped = "Log Out Tapped",
 
   // Membership Info
+  // FIXME: Add this
   ContactUsTapped = "Contact Us Tapped",
 
   // Personal Preferences
+  // FIXME: Add this
   EditButtonTapped = "Edit Button Tapped",
   EditDoneButtonTapped = "Edit Done Button Tapped",
 
   // Payment And Shipping
+  // FIXME: Add this
   PaymentAndShippingEditSaveTapped = "Payment And Shipping Edit Save Tapped",
   PaymentAndShippingEditCancelTapped = "Payment And Shipping Edit Cancel Tapped",
   PaymentAndShippingEditBillingInfoTapped = "Payment And Shipping Edit Billing Info Tapped",
 
   // Submit an item
+  FinishButtonTapped = "Finish Button Tapped",
   NextButtonTapped = "Next Button Tapped",
   SubmitButtonTapped = "Submit Button Tapped",
-  FinishButtonTapped = "Finish Button Tapped",
 
-  // // Reservation Flow Steps
+  // Reservation Flow Steps
+  // FIXME: Adds these to the backend
   // ReservationInitiated = "Reservation Initiated",
   // ReservationCompleted = "Reservation Completed",
   // ReservationConfirmed = "Reservation Confirmed",
@@ -164,10 +169,9 @@ export enum ActionNames {
   // Product page action names
   ProductSaved = "Product Saved",
   ProductWanted = "Product Wanted",
-  ProductReserved = "Product Reserved",
-  ProductAdded = "Product Added",
-  ProductVariantSelected = "Product Variant Selected",
   SizeButtonTapped = "Size Button Tapped",
+  ProductAddedToBag = "Product Added To Bag",
+  ProductVariantSelected = "Product Variant Selected",
 
   // Shared action names
   ProductTapped = "Product Tapped",

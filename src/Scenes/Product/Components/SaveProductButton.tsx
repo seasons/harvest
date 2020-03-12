@@ -10,6 +10,7 @@ import { useMutation } from "react-apollo"
 import { TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { useTracking, Schema } from "App/utils/track"
 
 const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
@@ -29,6 +30,7 @@ export const SaveProductButton: React.FC<{
   setPopUp: ({ show: boolean, data: any }) => void
 }> = ({ selectedVariant, product, setPopUp }) => {
   const navigation = useNavigation()
+  const tracking = useTracking()
   if (!product.variants || product?.variants?.length === 0) {
     return <></>
   }
@@ -60,6 +62,11 @@ export const SaveProductButton: React.FC<{
       navigation.navigate("Modal", { screen: "SignInModal" })
     } else {
       const updatedState = !isSaved
+      tracking.trackEvent({
+        actionName: Schema.ActionNames.ProductSaved,
+        actionType: Schema.ActionTypes.Tap,
+        saved: updatedState,
+      })
       saveItem({
         variables: {
           item: selectedVariant.id,
@@ -97,7 +104,7 @@ export const SaveProductButton: React.FC<{
 
   return (
     <Box>
-      <TouchableOpacity onPress={() => handleSaveButton()}>
+      <TouchableOpacity onPress={handleSaveButton}>
         <Box p={2}>
           <SaveIcon enabled={isSaved} />
         </Box>
