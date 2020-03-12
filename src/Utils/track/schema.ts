@@ -160,7 +160,8 @@ export enum ActionNames {
   NextButtonTapped = "Next Button Tapped",
   SubmitButtonTapped = "Submit Button Tapped",
 
-  // // Reservation Flow Steps
+  // Reservation Flow Steps
+  // FIXME: Adds these to the backend
   // ReservationInitiated = "Reservation Initiated",
   // ReservationCompleted = "Reservation Completed",
   // ReservationConfirmed = "Reservation Confirmed",
