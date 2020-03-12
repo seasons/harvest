@@ -13,9 +13,7 @@ import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-
 import { useMutation, useQuery } from "@apollo/react-hooks"
-
 import { GET_HOMEPAGE } from "../Home/Home"
 import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
@@ -48,6 +46,7 @@ export const Product = screenTrack({
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation, route } = props
   const productID = route?.params?.id
+  const productSlug = route?.params?.slug
   const { data, loading, error } = useQuery<GetProduct>(GET_PRODUCT, {
     variables: {
       productID,
@@ -151,11 +150,11 @@ export const Product = screenTrack({
         setPopUp={setPopUp}
         showVariantPicker={showVariantPicker}
         selectedVariant={selectedVariant}
-        navigation={navigation}
       />
       <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
         {shouldShowVariantWant && (
           <VariantWant
+            productSlug={productSlug}
             isWanted={selectedVariantIsWanted}
             productID={productID}
             setPopUp={setPopUp}

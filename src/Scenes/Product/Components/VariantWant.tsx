@@ -7,6 +7,7 @@ import { GreenCheck, LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Flex, Sans } from "App/Components"
 import { color } from "App/utils"
+import { useTracking, Schema } from "App/utils/track"
 
 const ADD_PRODUCT_VARIANT_WANT = gql`
   mutation AddProductVariantWant($variantID: ID!) {
@@ -23,10 +24,12 @@ interface VariantWantProps {
   productID: string
   setPopUp: ({ show: boolean, data: any }) => void
   variantID: string
+  productSlug: string
 }
 
 export const VariantWant = (props: VariantWantProps) => {
-  const { isWanted, productID, setPopUp, variantID } = props
+  const tracking = useTracking()
+  const { isWanted, productID, setPopUp, variantID, productSlug } = props
   const shouldShowGreenCheck = isWanted
   const plainText = isWanted ? THANKS_MESSAGE : "Want this item? "
   const underlinedText = isWanted ? "" : "Let us know!"
@@ -53,6 +56,11 @@ export const VariantWant = (props: VariantWantProps) => {
   })
 
   const handleWantVariant = async () => {
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.ProductWanted,
+      actionType: Schema.ActionTypes.Tap,
+      variantID,
+    })
     try {
       const result = await addProductVariantWant({
         variables: {
@@ -63,6 +71,7 @@ export const VariantWant = (props: VariantWantProps) => {
         setPopUp({ show: true, data: popUpData })
       }
     } catch (e) {
+      console.log("error VariantWant.tsx ", e)
       setPopUp({ show: true, data: popUpData })
     }
   }

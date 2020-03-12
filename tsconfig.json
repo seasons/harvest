@@ -8,6 +8,7 @@
     "noEmit": true,
     "target": "ES2015",
     "skipLibCheck": true,
+    "noUnusedLocals": true,
     "resolveJsonModule": true,
     "types": ["jest", "react", "react-native"],
     "paths": {

@@ -8,6 +8,7 @@ import styled from "styled-components/native"
 
 import { BagItem } from "../Bag/Components/BagItem"
 import { space } from "App/utils"
+import { screenTrack, Schema, useTracking } from "App/utils/track"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -60,8 +61,9 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   }
 `
 
-export const ReservationConfirmation = props => {
+export const ReservationConfirmation = screenTrack()(props => {
   const reservationID = get(props, "route.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
+  const tracking = useTracking()
   const { data } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
     variables: {
       reservationID,
@@ -173,6 +175,10 @@ export const ReservationConfirmation = props => {
       <FixedButton
         positionBottom={space(4)}
         onPress={() => {
+          tracking.trackEvent({
+            actionName: Schema.ActionNames.ReservationConfirmationDoneButtonTapped,
+            actionType: Schema.ActionTypes.Tap,
+          })
           props.navigation.navigate("Bag", { reservationID: reservationID })
         }}
         block
@@ -181,7 +187,7 @@ export const ReservationConfirmation = props => {
       </FixedButton>
     </Container>
   )
-}
+})
 
 const Content = styled(Box)`
   background: white;

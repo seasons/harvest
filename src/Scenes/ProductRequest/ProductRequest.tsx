@@ -4,6 +4,7 @@ import { useMutation } from "react-apollo"
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
 import { Box, PopUp, FixedButton, Flex, Sans, Spacer, TextInput, FixedBackArrow, Container } from "App/Components"
 import { color, space } from "App/utils"
+import { screenTrack, useTracking, Schema } from "App/utils/track"
 
 const ADD_PRODUCT_REQUEST = gql`
   mutation AddProductRequest($reason: String!, $url: String!) {
@@ -22,11 +23,12 @@ const ADD_PRODUCT_REQUEST = gql`
   }
 `
 
-export const ProductRequest = (props: any) => {
+export const ProductRequest = screenTrack()((props: any) => {
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true)
   const [likeReason, setLikeReason] = useState("")
   const [showError, setShowError] = useState(false)
   const [url, setURL] = useState("")
+  const tracking = useTracking()
 
   const [addProductRequest] = useMutation(ADD_PRODUCT_REQUEST, {
     onError: error => {
@@ -47,6 +49,11 @@ export const ProductRequest = (props: any) => {
   }
 
   const handleNextBtnPressed = async () => {
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.NextButtonTapped,
+      actionType: Schema.ActionTypes.Tap,
+    })
+
     const result = await addProductRequest({
       variables: {
         reason: likeReason,
@@ -119,4 +126,4 @@ export const ProductRequest = (props: any) => {
       <PopUp data={pupUpData} show={showError} />
     </Container>
   )
-}
+})

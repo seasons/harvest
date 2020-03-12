@@ -133,6 +133,11 @@ export const Browse = screenTrack()((props: any) => {
   const filtersButtonTextColor = numFiltersSelected > 0 ? "white100" : "black100"
 
   const onCategoryPress = item => {
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.CategoryTapped,
+      actionType: Schema.ActionTypes.Tap,
+      category: item.slug,
+    })
     if (item.slug !== currentCategory) {
       setCurrentCategory(item.slug)
     }

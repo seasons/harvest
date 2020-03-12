@@ -7,13 +7,16 @@ import { GetBrands } from "App/generated/GetBrands"
 import styled from "styled-components/native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { color } from "App/utils"
-import { groupBy, map, sortBy, toPairs, debounce } from "lodash"
+import { groupBy, map, sortBy, toPairs } from "lodash"
 import { Loader } from "App/Components/Loader"
+import { screenTrack, useTracking, Schema } from "App/utils/track"
 
+// NOTE: We need to query products here to filter out brands with 0 products in Monsoon
 const GET_BRANDS = gql`
   query GetBrands($orderBy: BrandOrderByInput!) {
     brands(orderBy: $orderBy) {
       id
+      slug
       name
       products {
         id
@@ -24,8 +27,9 @@ const GET_BRANDS = gql`
 
 const ITEM_HEIGHT = 60
 
-export const Brands = (props: any) => {
+export const Brands = screenTrack()((props: any) => {
   const listRef = useRef(null)
+  const tracking = useTracking()
   const alphabetContainer = useRef(null)
   const [groupedBrands, setGroupedBrands] = useState([])
   const [alphabet, setAlphabet] = useState([])
@@ -80,7 +84,13 @@ export const Brands = (props: any) => {
   }
 
   const handleOnFingerTouch = (e, gestureState) => {
-    handleOnTouchLetter(getTouchedLetter(gestureState.y0))
+    const letter = getTouchedLetter(gestureState.y0)
+    handleOnTouchLetter(letter)
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.AlphabetTapped,
+      actionType: Schema.ActionTypes.Tap,
+      letter,
+    })
   }
 
   const handleOnFingerMove = (evt, gestureState) => {
@@ -121,7 +131,17 @@ export const Brands = (props: any) => {
     return (
       <Flex pl={2} pr={6} flexDirection="column">
         <Spacer mb={2} />
-        <TouchableOpacity onPress={() => navigation.navigate("Brand", { id: item?.id })}>
+        <TouchableOpacity
+          onPress={() => {
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.CategoryTapped,
+              actionType: Schema.ActionTypes.Tap,
+              brandId: item?.id,
+              brandSlug: item?.slug,
+            })
+            navigation.navigate("Brand", { id: item?.id, slug: item?.slug })
+          }}
+        >
           <Sans size="2" style={{ textDecorationLine: "underline" }}>
             {item.name}
           </Sans>
@@ -175,7 +195,7 @@ export const Brands = (props: any) => {
       />
     </Container>
   )
-}
+})
 
 const Scrubber = styled(Flex)`
   position: absolute;

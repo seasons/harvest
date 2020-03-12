@@ -6,6 +6,7 @@ import { DateTime } from "luxon"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
+import { screenTrack } from "App/utils/track"
 
 const GET_PREFERENCES = gql`
   query GetUserPreferences {
@@ -58,7 +59,7 @@ export const AccountSection: React.FC<{ title: string; value: string | [string] 
   )
 }
 
-export const PersonalPreferences: React.FC<{ navigation: any }> = ({ navigation }) => {
+export const PersonalPreferences = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_PREFERENCES)
 
@@ -172,4 +173,4 @@ export const PersonalPreferences: React.FC<{ navigation: any }> = ({ navigation 
       />
     </Container>
   )
-}
+})

@@ -99,39 +99,35 @@ export enum ActionNames {
   ViewAllBrandsTapped = "View All Brands Tapped",
 
   // Browse page
-  // FIXME: Add this
   FiltersButtonTapped = "Filters Button Tapped",
-
   FilterTapped = "Filter Tapped",
-  FiltersApplied = "Filters Applied",
   FiltersCleared = "Filters Cleared",
   FilterModalCanceled = "Filters Modal Canceled",
+  FiltersApplied = "Filters Applied",
   CategoryTapped = "Category Tapped",
+
+  // FIXME: Add this
   BrowsePageSwiped = "Browse Page Swiped",
 
   // Bag
-  // FIXME: Add this
   BagItemRemoved = "Bag Item Removed",
   BagSavedItemRemoved = "Bag Saved Item Removed",
   BagItemSaved = "Bag Item Saved",
   BagTabTapped = "Bag Tab Tapped",
   SavedTabTapped = "Saved Tab Tapped",
+  FAQButtonTapped = "FAQ Button Tapped",
   ReserveButtonTapped = "Reserve Button Tapped",
 
   // Brand view
-  // FIXME: Add this
   ReadMoreTapped = "Read More Tapped",
 
   // Brands view
-  // FIXME: Add this
   AlphabetTapped = "Alphabet Tapped",
 
   // Reservation
-  // FIXME: Add this
   PlaceOrderTapped = "Place Order Tapped",
 
   // Reservation Confirmation
-  // FIXME: Add this
   ReservationConfirmationDoneButtonTapped = "Reservation Confirmation Done Button Tapped",
 
   // Account
@@ -162,10 +158,9 @@ export enum ActionNames {
   PaymentAndShippingEditBillingInfoTapped = "Payment And Shipping Edit Billing Info Tapped",
 
   // Submit an item
-  // FIXME: Add this
+  FinishButtonTapped = "Finish Button Tapped",
   NextButtonTapped = "Next Button Tapped",
   SubmitButtonTapped = "Submit Button Tapped",
-  FinishButtonTapped = "Finish Button Tapped",
 
   // // Reservation Flow Steps
   // ReservationInitiated = "Reservation Initiated",
@@ -173,18 +168,16 @@ export enum ActionNames {
   // ReservationConfirmed = "Reservation Confirmed",
 
   // Product page action names
-  // FIXME: Add this
   ProductSaved = "Product Saved",
   ProductWanted = "Product Wanted",
-  ProductReserved = "Product Reserved",
-  ProductAdded = "Product Added",
-  ProductVariantSelected = "Product Variant Selected",
   SizeButtonTapped = "Size Button Tapped",
+  ProductAddedToBag = "Product Added To Bag",
+  ProductVariantSelected = "Product Variant Selected",
 
   // Shared action names
-  // FIXME: Add this
   ProductTapped = "Product Tapped",
   BrandTapped = "Brand Tapped",
+  // FIXME: Add this
   CarouselSwiped = "Carousel Swiped",
 }
 
