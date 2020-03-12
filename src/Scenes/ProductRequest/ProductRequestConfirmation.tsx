@@ -3,8 +3,10 @@ import React from "react"
 import { ScrollView } from "react-native"
 import { Box, Container, FixedButton, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
 import { ProductRequestGallery } from "./Components"
+import { screenTrack, useTracking, Schema } from "App/utils/track"
 
-export const ProductRequestConfirmation = ({ navigation, route }) => {
+export const ProductRequestConfirmation = screenTrack()(({ navigation, route }) => {
+  const tracking = useTracking()
   const productRequest = get(route, "params.productRequest")
   const { brand, description, images, name, price, sku } = productRequest
   const primarySections = [
@@ -18,6 +20,10 @@ export const ProductRequestConfirmation = ({ navigation, route }) => {
   ]
 
   const handleSubmitBtnPressed = () => {
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.SubmitButtonTapped,
+      actionType: Schema.ActionTypes.Tap,
+    })
     navigation.navigate("FinishProductRequest")
   }
 
@@ -71,4 +77,4 @@ export const ProductRequestConfirmation = ({ navigation, route }) => {
       </FixedButton>
     </Container>
   )
-}
+})

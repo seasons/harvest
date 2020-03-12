@@ -6,6 +6,7 @@ import { get, head } from "lodash"
 import React from "react"
 import { Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
+import { useTracking, Schema } from "App/utils/track"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -45,6 +46,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   removeFromBagAndSaveItem,
   hideButtons,
 }) => {
+  const tracking = useTracking()
   if (!bagItem) {
     return <></>
   }
@@ -58,11 +60,20 @@ export const BagItem: React.FC<BagItemProps> = ({
 
   const imageURL = imageResize(get(product, "images[0].url"), "medium")
   const variantSize = get(variantToUse, "size")
+  const variantId = bagItem.variantID
 
   return (
     <Box key={product.id}>
       <TouchableWithoutFeedback
-        onPress={() => (navigation ? navigation.navigate("Product", { id: product.id, slug: product.slug }) : null)}
+        onPress={() => {
+          tracking.trackEvent({
+            actionName: Schema.ActionNames.ProductTapped,
+            actionType: Schema.ActionTypes.Tap,
+            productSlug: product.slug,
+            productId: product.id,
+          })
+          navigation?.navigate("Product", { id: product.id, slug: product.slug })
+        }}
       >
         <BagItemContainer flexDirection="row">
           <Flex style={{ flex: 2 }} p={2} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
@@ -99,9 +110,16 @@ export const BagItem: React.FC<BagItemProps> = ({
           <Box flex={1} pr={1}>
             <TouchableOpacity
               onPress={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.BagItemRemoved,
+                  actionType: Schema.ActionTypes.Tap,
+                  productSlug: product.slug,
+                  productId: product.id,
+                  variantId: variantId,
+                })
                 removeItemFromBag({
                   variables: {
-                    id: bagItem.variantID,
+                    id: variantId,
                     saved: false,
                   },
                 })
@@ -117,9 +135,16 @@ export const BagItem: React.FC<BagItemProps> = ({
           <Box flex={1}>
             <TouchableOpacity
               onPress={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.BagItemSaved,
+                  actionType: Schema.ActionTypes.Tap,
+                  productSlug: product.slug,
+                  productId: product.id,
+                  variantId: variantId,
+                })
                 removeFromBagAndSaveItem({
                   variables: {
-                    id: bagItem.variantID,
+                    id: variantId,
                     saved: false,
                   },
                 })

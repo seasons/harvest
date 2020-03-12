@@ -7,6 +7,7 @@ import styled from "styled-components/native"
 import { GetProduct_product } from "App/generated/GetProduct"
 import { TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native"
+import { useTracking, Schema } from "App/utils/track"
 
 // FIXME: Fix types here
 export const ProductDetails: React.FC<{
@@ -14,6 +15,7 @@ export const ProductDetails: React.FC<{
   selectedVariant: any
   product: GetProduct_product
 }> = ({ setPopUp, selectedVariant, product }) => {
+  const tracking = useTracking()
   const navigation = useNavigation()
   if (!product || !product.variants) {
     return <></>
@@ -43,7 +45,19 @@ export const ProductDetails: React.FC<{
           <Sans size="1" color={color("black100")}>
             {name}
           </Sans>
-          <TouchableOpacity onPress={() => navigation.navigate("Brand", { id: product?.brand?.id })}>
+          <TouchableOpacity
+            onPress={() => {
+              const brandID = product?.brand?.id
+              const brandSlug = ""
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.BrandTapped,
+                actionType: Schema.ActionTypes.Tap,
+                brandSlug,
+                brandID,
+              })
+              navigation.navigate("Brand", { id: brandID, slug: brandSlug })
+            }}
+          >
             <Sans size="1" color={color("black50")} style={{ textDecorationLine: "underline" }}>
               {brandName}
             </Sans>

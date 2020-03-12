@@ -1,9 +1,10 @@
 import _ from "lodash"
-import React, { useState } from "react"
+import React from "react"
 import { Sans, Flex } from "./"
 import { color } from "App/utils"
 import { Color } from "./Theme"
 import { Text } from "react-native"
+import { useTracking, Schema } from "App/utils/track"
 
 interface Props {
   content: string
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export const ReadMore = React.memo(({ content, maxChars, textColor, readMoreExpanded, setReadMoreExpanded }: Props) => {
+  const tracking = useTracking()
   const isAlreadyExpanded = readMoreExpanded || content?.length <= maxChars
 
   const root = (
@@ -32,6 +34,10 @@ export const ReadMore = React.memo(({ content, maxChars, textColor, readMoreExpa
           maxChars,
           onExpand: () => {
             setReadMoreExpanded(true)
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.ReadMoreTapped,
+              actionType: Schema.ActionTypes.Tap,
+            })
           },
         })}
       </Sans>

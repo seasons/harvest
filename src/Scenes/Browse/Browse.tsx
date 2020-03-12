@@ -16,6 +16,7 @@ import { color } from "styled-system"
 import { useQuery } from "@apollo/react-hooks"
 import { BrowseLoader } from "./Loader"
 import { Spinner } from "App/Components/Spinner"
+import { useTracking, Schema, screenTrack } from "App/utils/track"
 
 const IMAGE_HEIGHT = 240
 
@@ -94,10 +95,13 @@ const renderItem = ({ item }, i, navigation) => {
   )
 }
 
-export const Browse = (props: any) => {
+export const Browse = screenTrack()((props: any) => {
   const sizeFilters = get(props, "route.params.sizeFilters") || []
   const [currentCategory, setCurrentCategory] = useState("all")
   const insets = useSafeArea()
+  const tracking = useTracking()
+
+  const PAGE_LENGTH = 10
 
   // Get all the sizes that we want to query by.
   // If no size filter is selected, all sizes are queried.
@@ -108,7 +112,7 @@ export const Browse = (props: any) => {
   const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
     variables: {
       name: currentCategory,
-      first: 10,
+      first: PAGE_LENGTH,
       skip: 0,
       orderBy: "createdAt_DESC",
       sizes,
@@ -131,6 +135,11 @@ export const Browse = (props: any) => {
   const filtersButtonTextColor = numFiltersSelected > 0 ? "white100" : "black100"
 
   const onCategoryPress = item => {
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.CategoryTapped,
+      actionType: Schema.ActionTypes.Tap,
+      category: item.slug,
+    })
     if (item.slug !== currentCategory) {
       setCurrentCategory(item.slug)
     }
@@ -138,6 +147,10 @@ export const Browse = (props: any) => {
   }
 
   const onFilterBtnPress = () => {
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.FiltersButtonTapped,
+      actionType: Schema.ActionTypes.Tap,
+    })
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
   }
 
@@ -169,6 +182,11 @@ export const Browse = (props: any) => {
               // If we are sorting alphabetically, all products are returned so we do not need
               // to fetch any more
               if (!loading) {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.BrowsePagePaginated,
+                  actionType: Schema.ActionTypes.Tap,
+                  pageNumber: Math.ceil(products.length / PAGE_LENGTH) + 1,
+                })
                 fetchMore({
                   variables: {
                     skip: products.length,
@@ -225,7 +243,7 @@ export const Browse = (props: any) => {
       </Flex>
     </Container>
   )
-}
+})
 
 const CategoryPicker = styled.FlatList`
   position: absolute;

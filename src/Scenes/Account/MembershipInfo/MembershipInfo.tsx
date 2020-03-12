@@ -5,6 +5,7 @@ import { get } from "lodash"
 import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
+import { screenTrack } from "App/utils/track"
 
 const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
@@ -16,8 +17,8 @@ const GET_MEMBERSHIP_INFO = gql`
   }
 `
 
-export const MembershipInfo: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const { loading, error, data } = useQuery(GET_MEMBERSHIP_INFO)
+export const MembershipInfo = screenTrack()(({ navigation }) => {
+  const { loading, data } = useQuery(GET_MEMBERSHIP_INFO)
 
   const plan = get(data, "me.customer.plan")
   let planInfo = null
@@ -87,4 +88,4 @@ export const MembershipInfo: React.FC<{ navigation: any }> = ({ navigation }) =>
       </ScrollView>
     </Container>
   )
-}
+})
