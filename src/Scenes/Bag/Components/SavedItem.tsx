@@ -5,7 +5,7 @@ import { get, head } from "lodash"
 import React, { useState, useEffect } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 interface BagItemProps {
   bagItem: any
@@ -33,7 +33,7 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navi
   return (
     <Box py={1} key={product.id}>
       <TouchableWithoutFeedback
-        onPress={() => (navigation ? navigation.navigate("Product", { id: product.id }) : null)}
+        onPress={() => (navigation ? navigation.navigate("Product", { id: product.id, slug: product.slug }) : null)}
       >
         <BagItemContainer flexDirection="row" px={2}>
           <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
@@ -53,6 +53,7 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navi
                   return
                 }
                 setIsMutating(true)
+                console.log("removeItemFromBag", variantToUse)
                 removeItemFromBag({
                   variables: {
                     id: variantToUse.id,

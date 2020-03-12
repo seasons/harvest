@@ -6,9 +6,11 @@ import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { useTracking, Schema } from "App/utils/track"
 
 interface Props {
   productID: string
+  productSlug: string
   disabled?: Boolean
   variantInStock: Boolean
   width: number
@@ -19,6 +21,7 @@ interface Props {
 export const AddToBagButton: React.FC<Props> = props => {
   const [isMutating, setIsMutating] = useState(false)
   const { productID, setPopUp, variantInStock, width, selectedVariant } = props
+  const tracking = useTracking()
 
   const navigation = useNavigation()
   const { authState } = useAuthContext()
@@ -37,6 +40,7 @@ export const AddToBagButton: React.FC<Props> = props => {
     ],
     onCompleted: () => {
       setIsMutating(false)
+
       if (data?.me?.bag?.length >= 2) {
         setPopUp({
           show: true,
@@ -118,11 +122,17 @@ export const AddToBagButton: React.FC<Props> = props => {
   let showCheckMark = false
   let text = "Add to Bag"
   let disabled = !!props.disabled || false
-  let onPress = () => handleReserve()
+
+  let onPress = () => {
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.ProductAdded,
+      actionType: Schema.ActionTypes.Tap,
+    })
+    handleReserve()
+  }
 
   if (itemInBag) {
     text = "Added"
-    onPress = () => handleReserve()
     showCheckMark = true
   } else if (!variantInStock) {
     disabled = true

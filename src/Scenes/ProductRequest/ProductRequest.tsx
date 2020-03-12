@@ -3,7 +3,7 @@ import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
 import { Box, PopUp, FixedButton, Flex, Sans, Spacer, TextInput, FixedBackArrow, Container } from "App/Components"
-import { color, space } from "App/Utils"
+import { color, space } from "App/utils"
 
 const ADD_PRODUCT_REQUEST = gql`
   mutation AddProductRequest($reason: String!, $url: String!) {

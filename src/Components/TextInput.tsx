@@ -1,4 +1,4 @@
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import React, { useEffect } from "react"
 import { TextInput as RNTextInput, ViewStyle } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
@@ -128,7 +128,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   )
 }
 
-const StyledTextInput = styled(RNTextInput) <TextInputProps>`
+const StyledTextInput = styled(RNTextInput)<TextInputProps>`
   border-width: 1;
   height: 56;
   border-radius: 8;

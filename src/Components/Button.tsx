@@ -10,7 +10,7 @@ import { themeProps } from "./Theme"
 import { Sans } from "./Typography"
 import { Spinner } from "./Spinner"
 import { DownChevronIcon } from "Assets/icons"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 
 enum DisplayState {
   Default = "default",

@@ -6,7 +6,7 @@ import { FlatList, TouchableOpacity, PanResponder } from "react-native"
 import { GetBrands } from "App/generated/GetBrands"
 import styled from "styled-components/native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { groupBy, map, sortBy, toPairs, debounce } from "lodash"
 import { Loader } from "App/Components/Loader"
 
@@ -87,7 +87,7 @@ export const Brands = (props: any) => {
     handleOnTouchLetter(getTouchedLetter(gestureState.moveY))
   }
 
-  const scrollTo = debounce(touchedLetter => {
+  const scrollTo = touchedLetter => {
     let index
     if (touchedLetter === "#") {
       index = 0
@@ -104,7 +104,7 @@ export const Brands = (props: any) => {
         listRef?.current?.scrollToOffset({ animated: false, offset: index * ITEM_HEIGHT })
       }
     }
-  }, 100)
+  }
 
   const handleOnTouchLetter = touchedLetter => {
     scrollTo(touchedLetter)
@@ -113,8 +113,8 @@ export const Brands = (props: any) => {
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onMoveShouldSetPanResponder: () => true,
-    onPanResponderGrant: debounce((evt, gestureState) => handleOnFingerTouch(evt, gestureState), 100),
-    onPanResponderMove: debounce((evt, gestureState) => handleOnFingerMove(evt, gestureState), 100),
+    onPanResponderGrant: (evt, gestureState) => handleOnFingerTouch(evt, gestureState),
+    onPanResponderMove: (evt, gestureState) => handleOnFingerMove(evt, gestureState),
   })
 
   const renderItem = ({ item }, i, navigation) => {
@@ -151,7 +151,7 @@ export const Brands = (props: any) => {
       </Box>
       <Scrubber insetsTop={insets.top}>
         <Flex flexDirection="column" style={{ flex: 1 }} justifyContent="center">
-          <Box pr={2} pl={3} {...panResponder?.panHandlers} onLayout={handleOnLayout} ref={alphabetContainer}>
+          <Box py={2} pr={2} pl={3} {...panResponder?.panHandlers} onLayout={handleOnLayout} ref={alphabetContainer}>
             {alphabet.map(letter => (
               <Box key={letter}>
                 <Box>

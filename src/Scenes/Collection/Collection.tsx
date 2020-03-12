@@ -8,7 +8,7 @@ import styled from "styled-components/native"
 import { imageResize } from "App/helpers/imageResize"
 import { GET_COLLECTION } from "App/Apollo/Queries"
 import { Dimensions } from "react-native"
-import { color } from "App/Utils"
+import { color } from "App/utils"
 import { Loader } from "App/Components/Loader"
 
 export const Collection = props => {

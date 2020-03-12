@@ -1,7 +1,7 @@
 import React from "react"
 import { Flex, Button, Container, Sans, Box, Spacer } from "App/Components"
 import { SeasonsLogoSVG } from "Assets/svgs"
-import { color, space } from "App/Utils"
+import { color, space } from "App/utils"
 import { TouchableOpacity, Linking, Dimensions } from "react-native"
 
 const buttonWidth = (Dimensions.get("window").width - space(4)) / 2 - 1

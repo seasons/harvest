@@ -2,7 +2,7 @@ import debounce from "lodash/debounce"
 import React from "react"
 import styled from "styled-components/native"
 import { SansSize } from "App/Components"
-import { color, space } from "App/Utils"
+import { color, space } from "App/utils"
 import { Flex, FlexProps } from "./Flex"
 
 import { BorderProps, borders, SizeProps, space as styledSpace, SpaceProps } from "styled-system"
@@ -31,7 +31,7 @@ export interface RadioProps extends FlexProps {
   labelSize?: SansSize
 }
 
-export interface RadioToggleProps extends RadioProps, BorderProps, SizeProps, SpaceProps { }
+export interface RadioToggleProps extends RadioProps, BorderProps, SizeProps, SpaceProps {}
 
 /**
  * A Radio button
@@ -62,7 +62,14 @@ export const Radio: React.SFC<RadioProps> = props => {
     <Flex flexDirection="row" alignItems="center">
       <TouchableWithoutFeedback onPress={() => !disabled && onSelect && onSelect({ selected: !selected, value })}>
         <Container disabled={disabled} alignItems="center" selected={selected} {...others}>
-          <RadioButton role="presentation" border={1} borderRadius={borderRadius} mr={1} selected={selected} disabled={disabled}>
+          <RadioButton
+            role="presentation"
+            border={1}
+            borderRadius={borderRadius}
+            mr={1}
+            selected={selected}
+            disabled={disabled}
+          >
             {selected && innerComponent}
           </RadioButton>
         </Container>
@@ -81,7 +88,7 @@ export const Radio: React.SFC<RadioProps> = props => {
 /**
  * A radio button with a border
  */
-export const BorderedRadio = styled(Box) <RadioProps>`
+export const BorderedRadio = styled(Box)<RadioProps>`
   padding: ${space(2)}px;
   border: 1px solid ${color("black85")};
   transition: background-color 0.14s ease-in-out;
@@ -101,7 +108,7 @@ interface ContainerProps extends FlexProps {
   selected: boolean
 }
 
-const Container = styled(Flex) <ContainerProps>`
+const Container = styled(Flex)<ContainerProps>`
   align-items: flex-start;
 `
 
@@ -111,7 +118,7 @@ const InnerCircle = styled(Box)`
   background-color: ${color("blue")};
 `
 
-const RadioButton = styled(Box) <RadioToggleProps>`
+const RadioButton = styled(Box)<RadioToggleProps>`
   ${borders};
   ${styledSpace};
   border-color: ${color("black85")};

@@ -9,7 +9,7 @@ import { ScrollView, StatusBar } from "react-native"
 import styled from "styled-components/native"
 
 import { BagItem, BagItemFragment } from "../Bag/Components/BagItem"
-import { space } from "App/Utils"
+import { space } from "App/utils"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
@@ -142,13 +142,8 @@ export const Reservation = props => {
                 items.map((item, i) => {
                   return (
                     <Box key={item.id}>
-                      <BagItem
-                        sectionHeight={200}
-                        index={i}
-                        bagItem={item}
-                        navigation={props.navigation}
-                        saved={true}
-                      />
+                      <BagItem sectionHeight={200} index={i} bagItem={item} navigation={props.navigation} hideButtons />
+                      <Spacer mb={2} />
                     </Box>
                   )
                 })}

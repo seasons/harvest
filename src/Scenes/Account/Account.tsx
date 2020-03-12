@@ -1,4 +1,6 @@
-import { Box, Flex, Sans, Separator, Spacer, GuestView } from "App/Components"
+import { Box, Flex, GuestView, Sans, Separator, Spacer } from "App/Components"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { space } from "App/utils"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
@@ -8,11 +10,10 @@ import { Linking, ScrollView, TouchableOpacity } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-import { ProfileList } from "./ProfileList"
 import { color } from "styled-system"
-import { useAuthContext } from "App/Navigation/AuthContext"
-import { space } from "App/Utils"
 import { NotificationToggle } from "./Components/NotificationToggle"
+import { ProfileList } from "./ProfileList"
+import { screenTrack, useTracking, Schema } from "App/utils/track"
 
 export const GET_USER = gql`
   query GetUser {
@@ -36,8 +37,9 @@ export const GET_USER = gql`
   }
 `
 
-export const Account = props => {
+export const Account = screenTrack()(props => {
   const { authState, signOut } = useAuthContext()
+  const tracking = useTracking()
   const { loading, error, data, refetch } = useQuery(GET_USER)
   const loaderStyles = useSpring({
     opacity: loading ? 1 : 0,
@@ -45,7 +47,7 @@ export const Account = props => {
   const { navigation } = props
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      refetch()
+      refetch?.()
     })
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -77,16 +79,46 @@ export const Account = props => {
   }
 
   const bottomList = [
-    { text: "Support", onPress: () => Linking.openURL(`mailto:membership@seasons.nyc?subject=Help`) },
+    {
+      text: "Support",
+      onPress: () => {
+        tracking.trackEvent({
+          actionName: Schema.ActionNames.SupportTapped,
+          actionType: Schema.ActionTypes.Tap,
+        })
+        Linking.openURL(`mailto:membership@seasons.nyc?subject=Help`)
+      },
+    },
     {
       text: "Privacy policy",
-      onPress: () => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" }),
+      onPress: () => {
+        tracking.trackEvent({
+          actionName: Schema.ActionNames.PrivacyPolicyTapped,
+          actionType: Schema.ActionTypes.Tap,
+        })
+        navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })
+      },
     },
     {
       text: "Terms of Service",
-      onPress: () => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" }),
+      onPress: () => {
+        tracking.trackEvent({
+          actionName: Schema.ActionNames.TermsOfServiceTapped,
+          actionType: Schema.ActionTypes.Tap,
+        })
+        navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })
+      },
     },
-    { text: "Log out", onPress: () => signOut() },
+    {
+      text: "Log out",
+      onPress: () => {
+        tracking.trackEvent({
+          actionName: Schema.ActionNames.LogOutTapped,
+          actionType: Schema.ActionTypes.Tap,
+        })
+        signOut()
+      },
+    },
   ]
 
   const pushNotifications = data?.me?.customer?.user?.pushNotifications
@@ -144,7 +176,7 @@ export const Account = props => {
       </Animatable.View>
     </Container>
   )
-}
+})
 
 const LoaderContainer = animated(styled(Box)`
   top: 3;
