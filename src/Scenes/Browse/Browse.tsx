@@ -101,6 +101,8 @@ export const Browse = screenTrack()((props: any) => {
   const insets = useSafeArea()
   const tracking = useTracking()
 
+  const PAGE_LENGTH = 10
+
   // Get all the sizes that we want to query by.
   // If no size filter is selected, all sizes are queried.
   const sizes =
@@ -110,7 +112,7 @@ export const Browse = screenTrack()((props: any) => {
   const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
     variables: {
       name: currentCategory,
-      first: 10,
+      first: PAGE_LENGTH,
       skip: 0,
       orderBy: "createdAt_DESC",
       sizes,
@@ -180,6 +182,11 @@ export const Browse = screenTrack()((props: any) => {
               // If we are sorting alphabetically, all products are returned so we do not need
               // to fetch any more
               if (!loading) {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.BrowsePagePaginated,
+                  actionType: Schema.ActionTypes.Tap,
+                  pageNumber: Math.ceil(products.length / PAGE_LENGTH) + 1,
+                })
                 fetchMore({
                   variables: {
                     skip: products.length,

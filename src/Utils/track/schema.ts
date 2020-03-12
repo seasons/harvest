@@ -105,9 +105,7 @@ export enum ActionNames {
   FilterModalCanceled = "Filters Modal Canceled",
   FiltersApplied = "Filters Applied",
   CategoryTapped = "Category Tapped",
-
-  // FIXME: Add this
-  BrowsePageSwiped = "Browse Page Swiped",
+  BrowsePagePaginated = "Browse Page Paginated",
 
   // Bag
   BagItemRemoved = "Bag Item Removed",
