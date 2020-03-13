@@ -110,7 +110,7 @@ export const LogIn: React.FC<LogInProps> = props => {
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      <CloseButton navigation={props.navigation} />
+      <CloseButton />
       <Flex style={{ flex: 1 }}>
         <Spacer mb={3} />
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>

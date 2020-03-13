@@ -107,7 +107,7 @@ export const Collection = props => {
   return (
     <>
       <Theme>
-        <CloseButton navigation={props.navigation} />
+        <CloseButton />
         <Outer>
           <SafeAreaView style={{ flex: 1 }}>
             <FlatList

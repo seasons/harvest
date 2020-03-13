@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 import { createStackNavigator } from "@react-navigation/stack"
 import { ModalAndMainScreens } from "./Stacks"
 import { NotificationsProvider } from "App/Notifications"
+import { DebugListener } from "App/DebugListener"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -77,7 +78,9 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
         <RootStack.Screen name="Root" options={{ headerShown: false }}>
           {() => (
             <NotificationsProvider>
-              <ModalAndMainScreens currentScreen={currentScreen} />
+              <DebugListener>
+                <ModalAndMainScreens currentScreen={currentScreen} />
+              </DebugListener>
             </NotificationsProvider>
           )}
         </RootStack.Screen>
