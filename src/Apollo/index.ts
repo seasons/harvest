@@ -20,7 +20,7 @@ const link = new HttpLink({
   // FIXME: unfetch here is being used for this fix https://github.com/jhen0409/react-native-debugger/issues/432
 
   fetch: unfetch,
-  //   uri: "https://monsoon.seasons.nyc",x
+  //   uri: "https://monsoon.seasons.nyc",
   //   uri: "https://monsoon-staging.seasons.nyc",
 })
 

@@ -14,7 +14,6 @@ export const DebugMenu = () => {
   const switchEnvTitle = async () => {
     const data = (await AsyncStorage.getItem("environment")) || ""
     const environment = data ? JSON.parse(data) : null
-    console.log("data", data)
     if (!environment || (environment && environment === "Production")) {
       setEnvTitle("Switch to Staging")
       setEnvironment("Production")

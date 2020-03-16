@@ -54,7 +54,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new ReactNativeRestartPackage(),
-            new RNShakeEventPackage(),
             new RNAnalyticsPackage(),
             new ReactNativeConfigPackage(),
             new RNSentryPackage(),

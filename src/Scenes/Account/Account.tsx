@@ -135,8 +135,6 @@ export const Account = screenTrack()(props => {
   const pushNotifications = data?.me?.customer?.user?.pushNotifications
   const userID = data?.me?.customer?.user?.id
 
-  console.log("data", data)
-
   return (
     <Container insetsBottom={false} insetsTop={false}>
       <Animatable.View animation="fadeIn" duration={300}>
