@@ -63,8 +63,6 @@ target 'seasons' do
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
 
-  pod 'react-native-shake', :path => '../node_modules/react-native-shake'
-
   pod 'RCTRestart', :path => '../node_modules/react-native-restart'
 
   post_install do |installer|
