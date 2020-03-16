@@ -4,10 +4,10 @@ import { ApolloLink, Observable } from "apollo-link"
 import { setContext } from "apollo-link-context"
 import { onError } from "apollo-link-error"
 import { HttpLink } from "apollo-link-http"
-import Config from "react-native-config"
 import unfetch from "unfetch"
 import introspectionQueryResultData from "../fragmentTypes.json"
-import { getAccessTokenFromSession, getNewToken } from "Utils/auth"
+import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
+import { config, EnvVars } from "App/utils/config"
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,
@@ -16,11 +16,11 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 const cache = new InMemoryCache({ fragmentMatcher })
 
 const link = new HttpLink({
-  uri: Config.MONSOON_ENDPOINT || "http://localhost:4000/",
+  uri: config.get(EnvVars.MONSOON_ENDPOINT) || "http://localhost:4000/",
   // FIXME: unfetch here is being used for this fix https://github.com/jhen0409/react-native-debugger/issues/432
 
   fetch: unfetch,
-  //   uri: "https://monsoon.seasons.nyc",
+  //   uri: "https://monsoon.seasons.nyc",x
   //   uri: "https://monsoon-staging.seasons.nyc",
 })
 

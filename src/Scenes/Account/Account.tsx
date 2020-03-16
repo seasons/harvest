@@ -25,6 +25,7 @@ export const GET_USER = gql`
           lastName
           email
           pushNotifications
+          role
         }
         detail {
           shippingAddress {
@@ -121,10 +122,20 @@ export const Account = screenTrack()(props => {
         signOut()
       },
     },
+    {
+      text: "Debug menu",
+      onPress: () => {
+        navigation.navigate("Modal", {
+          screen: "DebugMenu",
+        })
+      },
+    },
   ]
 
   const pushNotifications = data?.me?.customer?.user?.pushNotifications
   const userID = data?.me?.customer?.user?.id
+
+  console.log("data", data)
 
   return (
     <Container insetsBottom={false} insetsTop={false}>

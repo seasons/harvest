@@ -3,6 +3,8 @@ package com.seasons;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.avishayil.rnrestart.ReactNativeRestartPackage;
+import com.clipsub.RNShake.RNShakeEventPackage;
 import com.segment.analytics.reactnative.core.RNAnalyticsPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import io.sentry.RNSentryPackage;
@@ -51,6 +53,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeRestartPackage(),
+            new RNShakeEventPackage(),
             new RNAnalyticsPackage(),
             new ReactNativeConfigPackage(),
             new RNSentryPackage(),

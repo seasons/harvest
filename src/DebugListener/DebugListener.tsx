@@ -1,16 +1,23 @@
-import React, { useEffect } from "react"
+import React from "react"
 import RNShake from "react-native-shake"
-import { useNavigation } from "@react-navigation/native"
 
-export const DebugListener = ({ children }) => {
-  const navigation = useNavigation()
-  useEffect(() => {
+export class DebugListener extends React.Component {
+  UNSAFE_componentWillMount() {
+    console.log("attach", RNShake.addEventListener)
+    console.log("props", this.props)
     RNShake.addEventListener("ShakeEvent", () => {
-      navigation.navigate("Modal", {
-        screen: "DebugMenu",
-      })
+      console.log("shaked")
+      // this.props.navigation.navigate("Modal", {
+      //   screen: "DebugMenu",
+      // })
     })
-  }, [])
+  }
 
-  return <>{children}</>
+  UNSAFE_componentWillUnmount() {
+    RNShake.removeEventListener("ShakeEvent")
+  }
+
+  render() {
+    return <>{this.props.children}</>
+  }
 }
