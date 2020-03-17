@@ -4,7 +4,7 @@ import { ReadMore } from "App/Components/ReadMore"
 import { GetBrand } from "App/generated/GetBrand"
 import { imageResize } from "App/helpers/imageResize"
 import { color, space } from "App/utils"
-import { screenTrack, Schema, useTracking } from "App/utils/track"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React, { useState } from "react"
@@ -27,7 +27,9 @@ const GET_BRAND = gql`
         name
         description
         images
-        modelSize
+        modelSize {
+          display
+        }
         modelHeight
         externalURL
         tags

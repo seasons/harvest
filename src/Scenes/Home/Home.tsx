@@ -37,6 +37,7 @@ export const GET_HOMEPAGE = gql`
             }
             variants {
               id
+              size
               reservable
             }
           }
