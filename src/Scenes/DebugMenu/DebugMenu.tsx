@@ -12,8 +12,7 @@ export const DebugMenu = () => {
   const [environment, setEnvironment] = useState("Production")
 
   const switchEnvTitle = async () => {
-    const data = (await AsyncStorage.getItem("environment")) || ""
-    const environment = data ? JSON.parse(data) : null
+    const environment = (await AsyncStorage.getItem("environment")) || null
     if (!environment || (environment && environment === "Production")) {
       setEnvTitle("Switch to Staging")
       setEnvironment("Production")
@@ -55,13 +54,13 @@ export const DebugMenu = () => {
       },
       key: "debug",
     },
-    { title: envTitle, onPress: switchEnvironment, key: "switch-env" },
+    { title: envTitle, onPress: () => switchEnvironment(), key: "switch-env" },
   ]
 
   const renderItem = ({ item }) => {
     return (
       <Box px={2}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={item.onPress}>
           <Spacer mb={2} />
           <Flex flexDirection="row">
             <Sans size="2">{item.title}</Sans>

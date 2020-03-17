@@ -16,10 +16,10 @@ export const downloadFromS3 = async (bucket, key) => {
       Bucket: bucket,
       Key: key,
     }
-    return s3.getObject(params, (err, data) => {
+    s3.getObject(params, (err, data) => {
       const jsonResponse = JSON.parse(data?.Body?.toString())
-      return jsonResponse
       if (err) reject(err)
+      resolve(jsonResponse)
     })
   })
 }

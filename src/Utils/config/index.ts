@@ -14,7 +14,9 @@ export enum EnvVars {
 
 const downloadAndSetNewStoredEnv = async () => {
   const envJson = await downloadFromS3("harvest-scripts", "env.json")
-  await AsyncStorage.setItem("env", JSON.stringify(envJson))
+  console.log("envJSON", envJson)
+  AsyncStorage.setItem("env", JSON.stringify(envJson))
+  return envJson
 }
 
 class Config {
@@ -26,16 +28,16 @@ class Config {
     const environment = await AsyncStorage.getItem("environment")
     if (environment) {
       const configFromStorage = await AsyncStorage.getItem("env")
-      if (configFromStorage) {
+      if (configFromStorage && configFromStorage[environment]) {
         this.variables = configFromStorage[environment]
-        downloadAndSetNewStoredEnv()
-      } else {
         await downloadAndSetNewStoredEnv()
-        const configFromStorage = await AsyncStorage.getItem("env")
-        this.variables = configFromStorage[environment]
+      } else {
+        const envJSON = await downloadAndSetNewStoredEnv()
+        this.variables = envJSON[environment]
       }
       return
     }
+    return
   }
   get(variable) {
     return this.variables[variable]
