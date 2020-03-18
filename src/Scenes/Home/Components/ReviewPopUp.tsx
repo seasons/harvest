@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
-import { color, space } from "App/Utils"
-import { useComponentSize } from "App/Utils/Hooks/useComponentSize"
+import { color, space } from "App/utils"
+import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import { Text } from "Components/Typography"
 import { ActiveDislikedFace, ActiveLovedFace, ActiveNeutralFace, DefaultDislikedFace, DefaultLovedFace, DefaultNeutralFace } from "Assets/svgs"
 import React, { useEffect, useState } from "react"
