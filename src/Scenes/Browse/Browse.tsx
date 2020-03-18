@@ -1,27 +1,34 @@
 import { Box, Button, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
+import { Spinner } from "App/Components/Spinner"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { imageResize } from "App/helpers/imageResize"
 import { space } from "App/utils"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import get from "lodash/get"
 import React, { useState } from "react"
-import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
-import { TouchableOpacity } from "react-native"
+import { Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
+
 import { useQuery } from "@apollo/react-hooks"
+
 import { BrowseLoader } from "./Loader"
-import { Spinner } from "App/Components/Spinner"
-import { useTracking, Schema, screenTrack } from "App/utils/track"
 
 const IMAGE_HEIGHT = 240
 
 const GET_BROWSE_PRODUCTS = gql`
-  query GetBrowseProducts($name: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!, $sizes: [Size!]) {
+  query GetBrowseProducts(
+    $name: String!
+    $first: Int!
+    $skip: Int!
+    $orderBy: ProductOrderByInput!
+    $sizes: [String!]
+  ) {
     categories(where: { visible: true }) {
       id
       slug
@@ -42,7 +49,9 @@ const GET_BROWSE_PRODUCTS = gql`
       name
       description
       images
-      modelSize
+      modelSize {
+        display
+      }
       modelHeight
       externalURL
       tags

@@ -1,13 +1,15 @@
-import { Box, Sans, Separator, Spacer, Flex } from "App/Components"
+import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
+import { GetProduct_product } from "App/generated/GetProduct"
 import { color, space } from "App/utils"
+import { Schema, useTracking } from "App/utils/track"
 import React from "react"
+import { TouchableOpacity } from "react-native"
+import styled from "styled-components/native"
+
+import { useNavigation } from "@react-navigation/native"
+
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
-import styled from "styled-components/native"
-import { GetProduct_product } from "App/generated/GetProduct"
-import { TouchableOpacity } from "react-native"
-import { useNavigation } from "@react-navigation/native"
-import { useTracking, Schema } from "App/utils/track"
 
 // FIXME: Fix types here
 export const ProductDetails: React.FC<{
@@ -79,7 +81,7 @@ export const ProductDetails: React.FC<{
       {!!product.modelSize && !!product.modelHeight && (
         <ProductInfoItem
           detailType="Fit"
-          detailValue={`Model is ${modelHeightDisplay(product.modelHeight)} in a ${product.modelSize}`}
+          detailValue={`Model is ${modelHeightDisplay(product.modelHeight)} in a ${product.modelSize.display}`}
         />
       )}
       {product.outerMaterials && (
