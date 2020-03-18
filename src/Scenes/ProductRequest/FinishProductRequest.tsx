@@ -1,8 +1,11 @@
 import React from "react"
 import { Box, Container, FixedButton, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
+import { screenTrack, Schema, useTracking } from "App/utils/track"
 
-export const FinishProductRequest = (props: any) => {
+export const FinishProductRequest = screenTrack()((props: any) => {
+  const tracking = useTracking()
+
   return (
     <Container insetsBottom={false}>
       <Box px={2} style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}>
@@ -16,9 +19,19 @@ export const FinishProductRequest = (props: any) => {
           </Sans>
         </Box>
       </Box>
-      <FixedButton block variant="primaryWhite" onPress={() => props.navigation.popToTop()}>
+      <FixedButton
+        block
+        variant="primaryWhite"
+        onPress={() => {
+          tracking.trackEvent({
+            actionName: Schema.ActionNames.FinishButtonTapped,
+            actionType: Schema.ActionTypes.Tap,
+          })
+          props.navigation.popToTop()
+        }}
+      >
         Finish
       </FixedButton>
     </Container>
   )
-}
+})

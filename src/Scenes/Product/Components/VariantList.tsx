@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react"
 import { TouchableOpacity } from "react-native"
 
 import { useQuery } from "@apollo/react-hooks"
+import { Schema, useTracking } from "App/utils/track"
 
 export interface Size {
   id: string
@@ -64,6 +65,7 @@ const sizeDataForVariants = (variants = []) => {
 
 export const VariantList = ({ productID, setSelectedVariant, selectedVariant, onSizeSelected }) => {
   const [sizeData, setSizeData] = useState({})
+  const tracking = useTracking()
   const { data } = useQuery(GET_PRODUCT, {
     variables: {
       productID,
@@ -92,6 +94,12 @@ export const VariantList = ({ productID, setSelectedVariant, selectedVariant, on
       <Box key={size.id || i}>
         <TouchableOpacity
           onPress={() => {
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.ProductVariantSelected,
+              actionType: Schema.ActionTypes.Tap,
+              size: size.size,
+              variantID: size.id,
+            })
             setSelectedVariant(size)
             onSizeSelected(size)
           }}

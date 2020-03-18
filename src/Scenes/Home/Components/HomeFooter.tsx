@@ -3,8 +3,11 @@ import { color } from "App/utils"
 import React from "react"
 import styled from "styled-components/native"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
+import { Schema, useTracking } from "App/utils/track"
 
 export const HomeFooter: React.FC<{ navigation: any }> = ({ navigation }) => {
+  const tracking = useTracking()
+
   return (
     <>
       <Spacer mt={3} />
@@ -22,7 +25,16 @@ export const HomeFooter: React.FC<{ navigation: any }> = ({ navigation }) => {
           </Sans>
           <Spacer mb={3} />
           <Flex justifyContent="center" flexDirection="row">
-            <Button variant="secondaryBlack" onPress={() => navigation.navigate("BrowseStack")}>
+            <Button
+              variant="secondaryBlack"
+              onPress={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.BrowseButtonTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                })
+                navigation.navigate("BrowseStack")
+              }}
+            >
               Browse
             </Button>
           </Flex>

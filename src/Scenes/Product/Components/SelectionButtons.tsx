@@ -5,6 +5,7 @@ import { DownChevronIcon } from "Assets/icons"
 import React from "react"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
+import { Schema, useTracking } from "App/utils/track"
 
 interface Props {
   productID: string
@@ -12,22 +13,14 @@ interface Props {
   showVariantPicker: boolean
   selectedVariant: any
   setPopUp: ({ show: boolean, data: any }) => void
-  navigation: any
   bottom?: number
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
 
 export const SelectionButtons: React.FC<Props> = props => {
-  const {
-    bottom = 0,
-    navigation,
-    selectedVariant,
-    showVariantPicker,
-    toggleShowVariantPicker,
-    productID,
-    setPopUp,
-  } = props
+  const tracking = useTracking()
+  const { bottom = 0, selectedVariant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
   const inStock = selectedVariant && !!selectedVariant.stock
 
   if (!selectedVariant) {
@@ -37,7 +30,15 @@ export const SelectionButtons: React.FC<Props> = props => {
   return (
     <Wrapper style={{ bottom }}>
       <Flex px={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
-        <TouchableWithoutFeedback onPress={() => toggleShowVariantPicker(!showVariantPicker)}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.SizeButtonTapped,
+              actionType: Schema.ActionTypes.Tap,
+            })
+            toggleShowVariantPicker(!showVariantPicker)
+          }}
+        >
           <VariantSelectionButton p={2} inStock={inStock}>
             <Flex
               px={2}

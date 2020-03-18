@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"
 import { Spacer, Flex, Box, Toggle, Sans } from "App/Components"
 import { color } from "App/utils"
 import { Text, Linking, AppState } from "react-native"
-import { useNavigation } from "@react-navigation/native"
 import { PushNotificationStatus } from "App/generated/globalTypes"
 import { checkNotifications } from "react-native-permissions"
 import { useNotificationsContext } from "App/Notifications/NotificationsContext"
@@ -13,24 +12,38 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
 }) => {
   const { requestPermissions, unsubscribe, init, subscribedToNotifs } = useNotificationsContext()
   const [isMutating, setIsMutating] = useState(false)
-  const navigation = useNavigation()
   const tracking = useTracking()
 
-  useEffect(() => {
-    // If user leaves the app to turn on notifications in the settings recheck status
-    const unsubscribe = AppState.addEventListener("change", userNotificationStatus => {
+  const disabled = userNotificationStatus === "Blocked"
+
+  const getPermission = () => {
+    if (isMutating) {
+      return
+    }
+    setIsMutating(true)
+    requestPermissions(null)
+    setIsMutating(false)
+  }
+
+  const handleAppChange = nextAppState => {
+    if (nextAppState === "active") {
       checkNotifications()
         .then(async ({ status }) => {
-          if (userNotificationStatus && status !== userNotificationStatus?.toLowerCase()) {
-            requestPermissions(null)
+          if (userNotificationStatus === "Blocked" && status !== userNotificationStatus?.toLowerCase()) {
+            getPermission()
           }
         })
         .catch(error => {
           console.log("error checking for permission", error)
         })
-    })
+    }
+  }
+
+  useEffect(() => {
+    // If user leaves the app to turn on notifications in the settings recheck status
+    const unsubscribe = AppState.addEventListener("change", handleAppChange)
     return unsubscribe
-  }, [navigation])
+  }, [userNotificationStatus])
 
   const onChange = async newValue => {
     if (isMutating) {
@@ -41,7 +54,7 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
       unsubscribe()
     } else {
       if (userNotificationStatus === "Denied") {
-        requestPermissions(null)
+        getPermission()
       } else {
         init()
       }
@@ -53,8 +66,6 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
     })
     setIsMutating(false)
   }
-
-  const disabled = userNotificationStatus === "Blocked"
 
   return (
     <Box px={2}>

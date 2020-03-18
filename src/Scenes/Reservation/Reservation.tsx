@@ -10,6 +10,7 @@ import styled from "styled-components/native"
 
 import { BagItem, BagItemFragment } from "../Bag/Components/BagItem"
 import { space } from "App/utils"
+import { screenTrack, useTracking, Schema } from "App/utils/track"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
@@ -71,8 +72,9 @@ const SectionHeader = ({ title }) => {
   )
 }
 
-export const Reservation = props => {
+export const Reservation = screenTrack()(props => {
   const [isMutating, setIsMutating] = useState(false)
+  const tracking = useTracking()
   const { data, loading } = useQuery(GET_CUSTOMER)
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
@@ -171,6 +173,10 @@ export const Reservation = props => {
           if (isMutating) {
             return
           }
+          tracking.trackEvent({
+            actionName: Schema.ActionNames.PlaceOrderTapped,
+            actionType: Schema.ActionTypes.Tap,
+          })
           setIsMutating(true)
           try {
             const { data } = await reserveItems({
@@ -196,7 +202,7 @@ export const Reservation = props => {
       <PopUp data={popUpData} show={showError} insetsBottom />
     </Container>
   )
-}
+})
 
 const Content = styled(Box)`
   background: white;

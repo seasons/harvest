@@ -18,6 +18,7 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
           return {
             ...prevState,
             userSession: action.token,
+            isSignedIn: !!action.token,
             authInitializing: false,
           }
         case "SIGN_IN":

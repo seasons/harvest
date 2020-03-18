@@ -5,6 +5,7 @@ import React, { useState } from "react"
 import { FlatList } from "react-native"
 import styled from "styled-components/native"
 import { GetProduct_product } from "App/generated/GetProduct"
+import { Schema, useTracking } from "App/utils/track"
 
 const IMAGE_WIDTH = 320
 
@@ -13,12 +14,18 @@ export const ImageRail: React.FC<{
   showPageDots: Boolean
   TextComponent?: React.ComponentType
 }> = ({ images, showPageDots, TextComponent }) => {
+  const tracking = useTracking()
   const [currentPage, setCurrentPage] = useState(1)
 
   const onScroll = e => {
     const newPageNum = Math.round(e.nativeEvent.contentOffset.x / IMAGE_WIDTH + 1)
 
     if (newPageNum !== currentPage) {
+      tracking.trackEvent({
+        actionName: Schema.ActionNames.CarouselSwiped,
+        actionType: Schema.ActionTypes.Swipe,
+        slideIndex: newPageNum,
+      })
       setCurrentPage(newPageNum)
     }
   }

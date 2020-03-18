@@ -1,18 +1,20 @@
 import { Box, Flex, Separator, Spacer } from "App/Components"
+import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
+import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
 import { LogoText } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
-import SplashScreen from "react-native-splash-screen"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
+import SplashScreen from "react-native-splash-screen"
+
+import { BrandsRail } from "./Components/BrandsRail"
 import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
 import { ReviewPopUp } from "./Components/ReviewPopUp"
-import { BrandsRail } from "./Components/BrandsRail"
-import { screenTrack } from "App/utils/track"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -35,7 +37,6 @@ export const GET_HOMEPAGE = gql`
               name
             }
             variants {
-              size
               id
               reservable
             }
@@ -75,6 +76,7 @@ export const GET_RESERVATION_FEEDBACK = gql`
 
 export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
+  const [showLoader, toggleLoader] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const { loading: feedbackLoading, error: feedbackError, data: feedbackData } = useQuery(GET_RESERVATION_FEEDBACK)
   const [showSplash, setShowSplash] = useState(true)
@@ -90,6 +92,7 @@ export const Home = screenTrack()(({ navigation }) => {
     if (!loading && showSplash) {
       setShowSplash(false)
       setTimeout(() => {
+        toggleLoader(loading)
         SplashScreen.hide()
       }, 100)
     }
@@ -101,6 +104,10 @@ export const Home = screenTrack()(({ navigation }) => {
 
   if (feedbackData) {
     console.log("FEEDBACK DATA:", feedbackData)
+  }
+
+  if (showLoader || !data) {
+    return <Loader />
   }
 
   const renderItem = item => {

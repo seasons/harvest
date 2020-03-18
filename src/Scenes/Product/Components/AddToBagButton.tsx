@@ -10,7 +10,6 @@ import { useTracking, Schema } from "App/utils/track"
 
 interface Props {
   productID: string
-  productSlug: string
   disabled?: Boolean
   variantInStock: Boolean
   width: number
@@ -125,7 +124,7 @@ export const AddToBagButton: React.FC<Props> = props => {
 
   let onPress = () => {
     tracking.trackEvent({
-      actionName: Schema.ActionNames.ProductAdded,
+      actionName: Schema.ActionNames.ProductAddedToBag,
       actionType: Schema.ActionTypes.Tap,
     })
     handleReserve()
