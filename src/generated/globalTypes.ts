@@ -189,10 +189,24 @@ export enum PushNotificationStatus {
   Granted = "Granted",
 }
 
-export enum UserRole {
-  Admin = "Admin",
-  Customer = "Customer",
-  Partner = "Partner",
+export enum QuestionType {
+  FreeResponse = "FreeResponse",
+  MultipleChoice = "MultipleChoice",
+}
+
+export enum Rating {
+  Disliked = "Disliked",
+  Loved = "Loved",
+  Meh = "Meh",
+}
+
+export enum Size {
+  L = "L",
+  M = "M",
+  S = "S",
+  XL = "XL",
+  XS = "XS",
+  XXL = "XXL",
 }
 
 export interface AddressInput {

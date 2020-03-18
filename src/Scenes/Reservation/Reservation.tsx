@@ -129,7 +129,7 @@ export const Reservation = screenTrack()(props => {
             </Sans>
           </Box>
 
-          {phoneNumber && (
+          {!!phoneNumber && (
             <Box mb={4}>
               <SectionHeader title="Phone number" />
               <Sans size="2" color="gray" mt={1}>

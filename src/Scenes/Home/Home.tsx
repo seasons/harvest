@@ -49,6 +49,33 @@ export const GET_HOMEPAGE = gql`
   }
 `
 
+export const GET_RESERVATION_FEEDBACK = gql`
+  query ReservationFeedback {
+    reservationFeedback {
+      id
+      comment
+      rating
+      feedbacks {
+        id
+        isCompleted
+        questions {
+          id
+          options
+          question
+          responses
+          type
+        }
+        variant {
+          id
+          product {
+            images
+          }
+        }
+      }
+    }
+  }
+`
+
 export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
   const [showLoader, toggleLoader] = useState(true)
