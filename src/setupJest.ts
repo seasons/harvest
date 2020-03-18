@@ -5,6 +5,16 @@ import expect from "expect"
 import { format } from "util"
 import mockAsyncStorage from "@react-native-community/async-storage/jest/async-storage-mock"
 
+jest.mock("react-tracking")
+import track, { useTracking } from "react-tracking"
+const trackEvent = jest.fn()
+;(track as jest.Mock).mockImplementation((_ => x => x) as any)
+;(useTracking as jest.Mock).mockImplementation(() => {
+  return {
+    trackEvent,
+  }
+})
+
 jest.mock("@react-native-community/async-storage", () => mockAsyncStorage)
 jest.mock("react-native-safe-area-context", () => ({
   useSafeArea: () => ({
