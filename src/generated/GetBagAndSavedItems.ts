@@ -1,9 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-// @generated
 // This file was automatically generated and should not be edited.
 
-import { Size, BagItemStatus } from "./globalTypes";
+import { BagItemStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBagAndSavedItems
@@ -16,6 +15,11 @@ export interface GetBagAndSavedItems_me_activeReservation {
   createdAt: any;
 }
 
+export interface GetBagAndSavedItems_me_bag_productVariant_product_modelSize {
+  __typename: "Size";
+  display: string;
+}
+
 export interface GetBagAndSavedItems_me_bag_productVariant_product_brand {
   __typename: "Brand";
   id: string;
@@ -25,14 +29,14 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_brand {
 export interface GetBagAndSavedItems_me_bag_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
-  size: Size;
+  size: string | null;
 }
 
 export interface GetBagAndSavedItems_me_bag_productVariant_product {
   __typename: "Product";
   name: string;
   id: string;
-  modelSize: Size | null;
+  modelSize: GetBagAndSavedItems_me_bag_productVariant_product_modelSize | null;
   brand: GetBagAndSavedItems_me_bag_productVariant_product_brand;
   images: any;
   variants: GetBagAndSavedItems_me_bag_productVariant_product_variants[] | null;
@@ -53,6 +57,11 @@ export interface GetBagAndSavedItems_me_bag {
   status: BagItemStatus;
 }
 
+export interface GetBagAndSavedItems_me_savedItems_productVariant_product_modelSize {
+  __typename: "Size";
+  display: string;
+}
+
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_brand {
   __typename: "Brand";
   id: string;
@@ -62,14 +71,14 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_brand 
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
-  size: Size;
+  size: string | null;
 }
 
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product {
   __typename: "Product";
   name: string;
   id: string;
-  modelSize: Size | null;
+  modelSize: GetBagAndSavedItems_me_savedItems_productVariant_product_modelSize | null;
   brand: GetBagAndSavedItems_me_savedItems_productVariant_product_brand;
   images: any;
   variants: GetBagAndSavedItems_me_savedItems_productVariant_product_variants[] | null;

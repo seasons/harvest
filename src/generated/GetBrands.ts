@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-// @generated
 // This file was automatically generated and should not be edited.
 
 import { BrandOrderByInput } from "./globalTypes";
@@ -17,6 +16,7 @@ export interface GetBrands_brands_products {
 export interface GetBrands_brands {
   __typename: "Brand";
   id: string;
+  slug: string;
   name: string;
   products: GetBrands_brands_products[] | null;
 }

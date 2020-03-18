@@ -1,9 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-// @generated
 // This file was automatically generated and should not be edited.
 
-import { InventoryStatus, PhysicalProductStatus, Size } from "./globalTypes";
+import { InventoryStatus, PhysicalProductStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: ActiveReservation
@@ -24,7 +23,7 @@ export interface ActiveReservation_me_activeReservation_products_productVariant_
 
 export interface ActiveReservation_me_activeReservation_products_productVariant {
   __typename: "ProductVariant";
-  size: Size;
+  size: string | null;
   product: ActiveReservation_me_activeReservation_products_productVariant_product;
 }
 

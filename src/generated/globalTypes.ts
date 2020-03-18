@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-// @generated
 // This file was automatically generated and should not be edited.
 
 //==============================================================
@@ -11,6 +10,14 @@ export enum BagItemStatus {
   Added = "Added",
   Received = "Received",
   Reserved = "Reserved",
+}
+
+export enum BottomSizeType {
+  EU = "EU",
+  JP = "JP",
+  Letter = "Letter",
+  US = "US",
+  WxL = "WxL",
 }
 
 export enum BrandOrderByInput {
@@ -53,6 +60,15 @@ export enum InventoryStatus {
   NonReservable = "NonReservable",
   Reservable = "Reservable",
   Reserved = "Reserved",
+}
+
+export enum LetterSize {
+  L = "L",
+  M = "M",
+  S = "S",
+  XL = "XL",
+  XS = "XS",
+  XXL = "XXL",
 }
 
 export enum Material {
@@ -139,8 +155,6 @@ export enum ProductOrderByInput {
   images_DESC = "images_DESC",
   modelHeight_ASC = "modelHeight_ASC",
   modelHeight_DESC = "modelHeight_DESC",
-  modelSize_ASC = "modelSize_ASC",
-  modelSize_DESC = "modelSize_DESC",
   name_ASC = "name_ASC",
   name_DESC = "name_DESC",
   retailPrice_ASC = "retailPrice_ASC",
@@ -151,6 +165,8 @@ export enum ProductOrderByInput {
   status_DESC = "status_DESC",
   tags_ASC = "tags_ASC",
   tags_DESC = "tags_DESC",
+  type_ASC = "type_ASC",
+  type_DESC = "type_DESC",
   updatedAt_ASC = "updatedAt_ASC",
   updatedAt_DESC = "updatedAt_DESC",
 }
@@ -160,19 +176,17 @@ export enum ProductStatus {
   NotAvailable = "NotAvailable",
 }
 
+export enum ProductType {
+  Accessory = "Accessory",
+  Bottom = "Bottom",
+  Shoe = "Shoe",
+  Top = "Top",
+}
+
 export enum PushNotificationStatus {
   Blocked = "Blocked",
   Denied = "Denied",
   Granted = "Granted",
-}
-
-export enum Size {
-  L = "L",
-  M = "M",
-  S = "S",
-  XL = "XL",
-  XS = "XS",
-  XXL = "XXL",
 }
 
 export interface AddressInput {

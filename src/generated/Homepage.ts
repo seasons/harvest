@@ -1,9 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-// @generated
 // This file was automatically generated and should not be edited.
 
-import { HomePageSectionType, Size } from "./globalTypes";
+import { HomePageSectionType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: Homepage
@@ -26,10 +25,15 @@ export interface Homepage_homepage_sections_results_Product_brand {
   name: string;
 }
 
+export interface Homepage_homepage_sections_results_Product_variants_internalSize {
+  __typename: "Size";
+  display: string;
+}
+
 export interface Homepage_homepage_sections_results_Product_variants {
   __typename: "ProductVariant";
-  size: Size;
   id: string;
+  internalSize: Homepage_homepage_sections_results_Product_variants_internalSize | null;
   reservable: number;
 }
 
