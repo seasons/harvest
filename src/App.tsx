@@ -1,22 +1,25 @@
 import { AppContainer } from "App/Navigation"
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { ApolloProvider } from "@apollo/react-hooks"
-import { apolloClient } from "./Apollo"
+import { setupApolloClient } from "./Apollo"
 import { config } from "./utils/config"
 
 export const App = () => {
-  const [loaded, setLoaded] = useState(false)
-  const loadConfig = async () => {
-    await config.start()
-    setLoaded(true)
-  }
+  const [apolloClient, setApolloClient] = useState(null)
   useEffect(() => {
-    loadConfig()
+    async function loadClient() {
+      await config.start()
+      const client = await setupApolloClient()
+      setApolloClient(client)
+    }
+    loadClient()
   }, [])
-  if (!loaded) {
-    return <></>
+
+  if (!apolloClient) {
+    return null
   }
+
   return (
     <ApolloProvider client={apolloClient}>
       <SafeAreaProvider>

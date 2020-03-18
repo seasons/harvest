@@ -2,7 +2,7 @@ import * as RNConfig from "react-native-config"
 import AsyncStorage from "@react-native-community/async-storage"
 import { downloadFromS3 } from "../downloadFromS3"
 
-export enum EnvVars {
+export enum Env {
   RN_PUSHER_ID = "RN_PUSHER_ID",
   RN_SRC_EXT = "RN_SRC_EXT",
   SEGMENT_KEY = "SEGMENT_KEY",
@@ -14,7 +14,6 @@ export enum EnvVars {
 
 const downloadAndSetNewStoredEnv = async () => {
   const envJson = await downloadFromS3("harvest-scripts", "env.json")
-  console.log("envJSON", envJson)
   AsyncStorage.setItem("env", JSON.stringify(envJson))
   return envJson
 }
@@ -35,11 +34,11 @@ class Config {
         const envJSON = await downloadAndSetNewStoredEnv()
         this.variables = envJSON[environment]
       }
-      return
     }
+    console.log("this.variables", this.variables)
     return
   }
-  get(variable) {
+  get(variable: Env) {
     return this.variables[variable]
   }
 }

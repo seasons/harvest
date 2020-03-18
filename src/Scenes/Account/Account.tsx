@@ -122,14 +122,14 @@ export const Account = screenTrack()(props => {
         signOut()
       },
     },
-    {
-      text: "Debug menu",
-      onPress: () => {
-        navigation.navigate("Modal", {
-          screen: "DebugMenu",
-        })
-      },
-    },
+    // {
+    //   text: "Debug menu",
+    //   onPress: () => {
+    //     navigation.navigate("Modal", {
+    //       screen: "DebugMenu",
+    //     })
+    //   },
+    // },
   ]
 
   const pushNotifications = data?.me?.customer?.user?.pushNotifications

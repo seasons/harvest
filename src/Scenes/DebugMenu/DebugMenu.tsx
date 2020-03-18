@@ -7,7 +7,6 @@ import AsyncStorage from "@react-native-community/async-storage"
 
 export const DebugMenu = () => {
   const [isMutating, setIsMutating] = useState(false)
-  const [showDevMenu, setShowDevMenu] = useState(false)
   const [envTitle, setEnvTitle] = useState("")
   const [environment, setEnvironment] = useState("Production")
 
@@ -45,12 +44,7 @@ export const DebugMenu = () => {
     {
       title: "Debug",
       onPress: () => {
-        if (showDevMenu) {
-          NativeModules.DevMenu.hide()
-        } else {
-          NativeModules.DevMenu.show()
-        }
-        setShowDevMenu(!showDevMenu)
+        NativeModules.DevMenu.show()
       },
       key: "debug",
     },
