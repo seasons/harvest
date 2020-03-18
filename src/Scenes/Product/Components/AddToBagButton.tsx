@@ -90,33 +90,27 @@ export const AddToBagButton: React.FC<Props> = props => {
 
   const itemInBag = !!items.find(item => item.productID === productID)
 
-  let showCheckMark = false
+  const disabled = !!props.disabled || itemInBag || !variantInStock
+
   let text = "Add to Bag"
-  let disabled = !!props.disabled || false
-
-  let onPress = () => {
-    tracking.trackEvent({
-      actionName: Schema.ActionNames.ProductAddedToBag,
-      actionType: Schema.ActionTypes.Tap,
-    })
-    handleReserve()
-  }
-
   if (itemInBag) {
     text = "Added"
-    showCheckMark = true
-  } else if (!variantInStock) {
-    disabled = true
   }
 
   return (
     <Button
       width={width}
       loading={isMutating}
-      showCheckMark={showCheckMark}
+      showCheckMark={itemInBag}
       variant="primaryBlack"
       disabled={disabled}
-      onPress={onPress}
+      onPress={() => {
+        tracking.trackEvent({
+          actionName: Schema.ActionNames.ProductAddedToBag,
+          actionType: Schema.ActionTypes.Tap,
+        })
+        handleReserve()
+      }}
     >
       {text}
     </Button>
