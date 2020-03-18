@@ -136,6 +136,10 @@ export const Bag = props => {
 
   const handleReserve = async navigation => {
     setMutating(true)
+    console.log("VARIANT IDS:")
+    items.map(item => {
+      console.log(item.variantID)
+    })
     try {
       const { data } = await checkItemsAvailability({
         variables: {
@@ -227,22 +231,22 @@ export const Bag = props => {
             navigation={navigation}
           />
         ) : (
-          <Box my={2}>
-            <BagItem
-              hideButtons={hideButtons}
-              removeItemFromBag={deleteBagItem}
-              removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-              sectionHeight={SECTION_HEIGHT}
-              index={index}
-              bagItem={item}
-              navigation={navigation}
-            />
-          </Box>
-        )}
+            <Box my={2}>
+              <BagItem
+                hideButtons={hideButtons}
+                removeItemFromBag={deleteBagItem}
+                removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+                sectionHeight={SECTION_HEIGHT}
+                index={index}
+                bagItem={item}
+                navigation={navigation}
+              />
+            </Box>
+          )}
       </Box>
     ) : (
-      <EmptyBagItem navigation={navigation} />
-    )
+        <EmptyBagItem navigation={navigation} />
+      )
   }
 
   const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"
@@ -300,15 +304,15 @@ export const Bag = props => {
               FAQ
             </FixedButton>
           ) : (
-            <FixedButton
-              block
-              onPress={() => (!bagIsFull ? displayReserveError(true) : handleReserve(navigation))}
-              disabled={!bagIsFull}
-              loading={isMutating}
-            >
-              Reserve
-            </FixedButton>
-          )}
+              <FixedButton
+                block
+                onPress={() => (!bagIsFull ? displayReserveError(true) : handleReserve(navigation))}
+                disabled={!bagIsFull}
+                loading={isMutating}
+              >
+                Reserve
+              </FixedButton>
+            )}
         </>
       )}
       <ErrorMessage />

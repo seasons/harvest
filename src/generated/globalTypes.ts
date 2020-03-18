@@ -166,6 +166,17 @@ export enum PushNotificationStatus {
   Granted = "Granted",
 }
 
+export enum QuestionType {
+  FreeResponse = "FreeResponse",
+  MultipleChoice = "MultipleChoice",
+}
+
+export enum Rating {
+  Disliked = "Disliked",
+  Loved = "Loved",
+  Meh = "Meh",
+}
+
 export enum Size {
   L = "L",
   M = "M",

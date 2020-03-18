@@ -46,9 +46,37 @@ export const GET_HOMEPAGE = gql`
   }
 `
 
+export const GET_RESERVATION_FEEDBACK = gql`
+  query ReservationFeedback {
+    reservationFeedback {
+      id
+      comment
+      rating
+      feedbacks {
+        id
+        isCompleted
+        questions {
+          id
+          options
+          question
+          responses
+          type
+        }
+        variant {
+          id
+          product {
+            images
+          }
+        }
+      }
+    }
+  }
+`
+
 export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
+  const { loading: feedbackLoading, error: feedbackError, data: feedbackData } = useQuery(GET_RESERVATION_FEEDBACK)
   const [showSplash, setShowSplash] = useState(true)
 
   useEffect(() => {
@@ -69,6 +97,10 @@ export const Home = screenTrack()(({ navigation }) => {
 
   if (error) {
     console.error("error /home/index.tsx: ", error)
+  }
+
+  if (feedbackData) {
+    console.log("FEEDBACK DATA:", feedbackData)
   }
 
   const renderItem = item => {
