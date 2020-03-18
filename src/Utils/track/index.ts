@@ -74,7 +74,7 @@ export function screenTrack<P>(trackingInfo?: TrackingInfo<PageViewEvent, P, nul
   const decorateTracking = (props, state, args) => {
     const baseData = typeof trackingInfo === "function" ? trackingInfo?.(props, state, args) : trackingInfo
     const info = {
-      page: props?.route.name,
+      page: props?.route?.name,
       entitySlug: props?.route?.params?.slug,
       entityId: props?.route?.params?.id,
       ...baseData,
