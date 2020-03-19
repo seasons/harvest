@@ -6,9 +6,7 @@ import get from "lodash/get"
 import React, { useState } from "react"
 import { Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import styled from "styled-components/native"
-
-import { Box, Button, Container, Flex, Radio, Sans, Separator, Spacer } from "../../Components"
+import { Box, Button, Flex, Handle, Radio, Sans, Separator, Spacer, Container } from "../../Components"
 
 enum FilterView {
   Tops = 0,
@@ -40,7 +38,7 @@ export const Filters = screenTrack()((props: any) => {
         filterValue: item,
       })
       if (sizeFilters.includes(item)) {
-        setSizeFilters(sizeFilters.filter(f => f !== item))
+        setSizeFilters(sizeFilters.filter((f) => f !== item))
       } else {
         setSizeFilters([...sizeFilters, item])
       }
@@ -103,7 +101,7 @@ export const Filters = screenTrack()((props: any) => {
       <FlatList
         data={currentView === FilterView.Tops ? filterData.tops : filterData.bottoms}
         keyExtractor={(_item, index) => String(index)}
-        renderItem={item => {
+        renderItem={(item) => {
           return renderItem(item)
         }}
         ListFooterComponent={() => <Spacer mb={buttonHeight + space(4)} />}
@@ -142,12 +140,3 @@ export const Filters = screenTrack()((props: any) => {
     </Container>
   )
 })
-
-const Handle = styled(Box)`
-  width: 40px;
-  height: 5px;
-  border-radius: 100;
-  background: ${color("black100")};
-  opacity: 0.5;
-  margin: auto;
-`

@@ -1,4 +1,4 @@
-import { Box, Flex, Separator, Spacer } from "App/Components"
+import { Box, Flex, Handle, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/Utils"
 import { Container } from "Components/Container"
@@ -8,6 +8,8 @@ import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
+import { useSafeArea } from "react-native-safe-area-context"
+import styled from "styled-components/native"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -42,15 +44,19 @@ export const GET_HOMEPAGE = gql`
 
 export const ReservationFeedback: React.FC<{
   navigation: any
-}> = ({ navigation }) => {
-  const [showLoader, toggleLoader] = useState(true)
+  route: any
+}> = ({ route, navigation }) => {
+  const { reservationFeedback } = route.params
+  const [showLoader, toggleLoader] = useState(false)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
+  const insets = useSafeArea()
 
-  useEffect(() => {
-    setTimeout(() => {
-      toggleLoader(loading)
-    }, 500)
-  }, [loading])
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     toggleLoader(loading)
+  //   }, 500)
+  // }, [loading])
 
   if (showLoader || !data) {
     return <Loader />
@@ -62,7 +68,8 @@ export const ReservationFeedback: React.FC<{
 
 
   return (
-    <Container insetsBottom={false}>
+    <Container insetsBottom={false} insetsTop={false}>
+      <Handle color="black15" style={{ marginTop: 12, marginBottom: insets.top }} />
     </Container >
   )
 }
