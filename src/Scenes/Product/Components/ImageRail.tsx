@@ -7,18 +7,18 @@ import styled from "styled-components/native"
 import { GetProduct_product } from "App/generated/GetProduct"
 import { Schema, useTracking } from "App/utils/track"
 
-const IMAGE_WIDTH = 320
-
 export const ImageRail: React.FC<{
+  height?: number
   images: GetProduct_product["images"]
+  imageWidth?: number
   showPageDots: Boolean
   TextComponent?: React.ComponentType
-}> = ({ images, showPageDots, TextComponent }) => {
+}> = ({ height = 400, imageWidth = 320, images, showPageDots, TextComponent }) => {
   const tracking = useTracking()
   const [currentPage, setCurrentPage] = useState(1)
 
   const onScroll = e => {
-    const newPageNum = Math.round(e.nativeEvent.contentOffset.x / IMAGE_WIDTH + 1)
+    const newPageNum = Math.round(e.nativeEvent.contentOffset.x / imageWidth + 1)
 
     if (newPageNum !== currentPage) {
       tracking.trackEvent({
@@ -36,9 +36,10 @@ export const ImageRail: React.FC<{
         data={images}
         renderItem={({ item }) => {
           const imageURL = imageResize(item && item.url, "x-large")
+          console.log(imageURL)
           return (
             <Box mr={0.5}>
-              <ImageContainer source={{ uri: imageURL }} />
+              <ImageContainer height={height} imageWidth={imageWidth} source={{ uri: imageURL }} />
             </Box>
           )
         }}
@@ -89,6 +90,6 @@ export const ImageRail: React.FC<{
 
 const ImageContainer = styled(FadeInImage)`
   background: #f6f6f6;
-  height: 400;
-  width: ${IMAGE_WIDTH};
+  height: ${props => props.height};
+  width: ${props => props.imageWidth};
 `
