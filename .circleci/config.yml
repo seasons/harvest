@@ -44,9 +44,7 @@ jobs:
           command: yarn install
       - run:
           name: "Install React Native dependencies"
-          command: |
-            brew update
-            brew install watchman
+          command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
       - run: bundle install
       - run:
           name: Install CocoaPods
