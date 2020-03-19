@@ -1,19 +1,16 @@
 import { Box, Button, Flex, Sans } from "App/Components"
 import { color } from "App/utils"
+import { Schema, useTracking } from "App/utils/track"
+import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import React from "react"
 import { ScrollView } from "react-native"
 import styled from "styled-components/native"
+
 import { VariantList } from "./VariantList"
-import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
-import { Schema, useTracking } from "App/utils/track"
 
 export const VariantPicker = props => {
   const tracking = useTracking()
-  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, productID, height } = props
-
-  if (!productID) {
-    return null
-  }
+  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, productID, height, product } = props
 
   return (
     <Flex style={{ flex: 1, backgroundColor: color("black100"), height, position: "relative" }}>
@@ -25,13 +22,24 @@ export const VariantPicker = props => {
         </Sans>
       </Flex>
       <FixedButtonWrapper px={2}>
-        <Button variant="secondaryBlack" width="100%" onPress={() => toggleShowVariantPicker(false)}>
+        <Button
+          variant="secondaryBlack"
+          width="100%"
+          onPress={() => {
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.SizePickerCancelTapped,
+              actionType: Schema.ActionTypes.Tap,
+            })
+            toggleShowVariantPicker(false)
+          }}
+        >
           Cancel
         </Button>
       </FixedButtonWrapper>
       <StyledScrollview>
         <Box px={2}>
           <VariantList
+            product={product}
             setSelectedVariant={setSelectedVariant}
             selectedVariant={selectedVariant}
             productID={productID}

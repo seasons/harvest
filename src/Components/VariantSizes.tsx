@@ -1,9 +1,9 @@
+import { Box, Flex, Sans } from "App/Components"
+import { Homepage_homepage_sections_results_Product_variants } from "App/generated/Homepage"
 import { sortVariants } from "App/helpers/sortVariants"
-import { Flex, Box, Sans } from "App/Components"
 import { color } from "App/utils"
 import React from "react"
 import styled from "styled-components/native"
-import { Homepage_homepage_sections_results_Product_variants } from "App/generated/Homepage"
 
 export const VariantSizes: React.FC<{
   variants: Homepage_homepage_sections_results_Product_variants[]
@@ -17,7 +17,7 @@ export const VariantSizes: React.FC<{
         return (
           <Box key={variant.id} mr={0.5} style={{ position: "relative" }}>
             <Sans size={size} color={reservable ? "black" : "black15"}>
-              {variant.size}
+              {variant.internalSize.display}
             </Sans>
             {!reservable && <Strikethrough size={size} />}
           </Box>

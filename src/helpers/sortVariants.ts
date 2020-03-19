@@ -23,12 +23,18 @@ const sizes = {
 
 export const sortVariants = variants => {
   // The higher the sortWeight the sooner it will be displayed, e.g. "xxl, xl, l, m"
-  const uniqueArray = uniqBy(variants, "size")
+  const uniqueArray = uniqBy(variants, "internalSize.display")
   return uniqueArray.sort((variantA, variantB) => {
     const sortWeightA =
-      (variantA.size && sizes[variantA.size.toLowerCase()] && sizes[variantA.size.toLowerCase()].sortWeight) || 0
+      (variantA.internalSize?.display &&
+        sizes[variantA.internalSize?.display.toLowerCase()] &&
+        sizes[variantA.internalSize?.display.toLowerCase()].sortWeight) ||
+      0
     const sortWeightB =
-      (variantB.size && sizes[variantB.size.toLowerCase()] && sizes[variantB.size.toLowerCase()].sortWeight) || 0
+      (variantB.internalSize?.display &&
+        sizes[variantB.internalSize?.display.toLowerCase()] &&
+        sizes[variantB.internalSize?.display.toLowerCase()].sortWeight) ||
+      0
     return sortWeightA - sortWeightB
   })
 }
