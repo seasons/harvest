@@ -1,19 +1,21 @@
 import { Box, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
+import { Schema, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { get, head } from "lodash"
 import React from "react"
 import { Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { useTracking, Schema } from "App/utils/track"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
     product {
       name
       id
-      modelSize
+      modelSize {
+        display
+      }
       brand {
         id
         name

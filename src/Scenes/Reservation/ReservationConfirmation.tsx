@@ -1,4 +1,8 @@
-import { Box, FixedButton, Flex, Sans, Separator, Spacer, Container, CloseButton } from "App/Components"
+import {
+  Box, CloseButton, Container, FixedButton, Flex, Sans, Separator, Spacer
+} from "App/Components"
+import { space } from "App/utils"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React from "react"
@@ -7,8 +11,6 @@ import { ScrollView } from "react-native"
 import styled from "styled-components/native"
 
 import { BagItem } from "../Bag/Components/BagItem"
-import { space } from "App/utils"
-import { screenTrack, Schema, useTracking } from "App/utils/track"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -42,7 +44,9 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
               product {
                 name
                 id
-                modelSize
+                modelSize {
+                  display
+                }
                 brand {
                   id
                   name
