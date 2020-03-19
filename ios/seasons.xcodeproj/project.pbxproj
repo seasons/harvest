@@ -373,7 +373,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seasons.Seasons;
 				PRODUCT_NAME = seasons;
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.seasons.Seasons";
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.seasons.Seasons";
 				SWIFT_OBJC_BRIDGING_HEADER = "seasons-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -418,7 +418,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seasons.Seasons;
 				PRODUCT_NAME = seasons;
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.seasons.Seasons";
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.seasons.Seasons";
 				SWIFT_OBJC_BRIDGING_HEADER = "seasons-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
