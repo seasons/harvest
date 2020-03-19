@@ -40,13 +40,13 @@ jobs:
     steps:
       - checkout
       - run:
+        name: Install dependencies
+        command: yarn install
+      - run:
           name: "Install React Native dependencies"
           command: |
             brew update
             brew install watchman
-      - run:
-          name: Install dependencies
-          command: yarn install
       - run: bundle install
       - run:
           name: Install CocoaPods
