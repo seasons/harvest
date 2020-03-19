@@ -1,4 +1,4 @@
-import { Box, Flex, Handle, ProgressBar, Sans, Separator, Spacer } from "App/Components"
+import { Box, Button, Flex, Handle, ProgressBar, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { ImageRail } from "App/Scenes/Product/Components"
 import { color } from "App/utils"
@@ -8,7 +8,7 @@ import { LogoText } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
-import { Dimensions, FlatList } from "react-native"
+import { Dimensions, FlatList, Text } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
@@ -51,15 +51,42 @@ export const ReservationFeedback: React.FC<{
   const { reservationFeedback } = route.params
   const [images, setImages] = useState(reservationFeedback.feedbacks[0].variant.images)
   const [productName, setProductName] = useState(reservationFeedback.feedbacks[0].variant.name)
+  const [flatListData, setFlatListData] = useState(reservationFeedback.feedbacks[0].questions)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const insets = useSafeArea()
   const { width: windowWidth } = Dimensions.get("window")
   const numFeedbacks = reservationFeedback.feedbacks.length
   const progressBarSpacerWidth = 5
-  const progressBarWidth = ((windowWidth - 32) / numFeedbacks) - progressBarSpacerWidth * (numFeedbacks - 1)
+  const contentWidth = windowWidth - 32
+  const progressBarWidth = (contentWidth / numFeedbacks) - progressBarSpacerWidth * (numFeedbacks - 1)
+
+  let flatListRef
 
   if (error) {
     console.error("error ReservationFeedback.tsx: ", error)
+  }
+
+  const renderItem = (feedbackQuestion, index) => {
+    const { question, options } = feedbackQuestion
+    return (
+      <FlatList
+        data={options}
+        ListHeaderComponent={() => (
+          <>
+            <Text style={{ flexWrap: "wrap", width: contentWidth }}>
+              <Sans size="2">{`${index + 1}. ${question}`}</Sans>
+            </Text>
+            <Spacer mb={3} />
+          </>
+        )}
+        ItemSeparatorComponent={() => <Spacer mb={1} />}
+        scrollEnabled={false}
+        keyExtractor={item => item}
+        renderItem={({ item }) => (
+          <Button variant="secondaryWhite" width={contentWidth} height={48}>{item}</Button>
+        )}
+      />
+    )
   }
 
   return (
@@ -89,6 +116,18 @@ export const ReservationFeedback: React.FC<{
             showPageDots={false} />
           <Spacer mb={1} />
           <Sans size="0">{productName}</Sans>
+          <Spacer mb={2} />
+          <Separator />
+          <Spacer mb={3} />
+          <FlatList
+            data={flatListData}
+            horizontal={true}
+            keyExtractor={item => item.question}
+            ref={(ref) => flatListRef = ref}
+            renderItem={({ item, index }) => renderItem(item, index)}
+            showsHorizontalScrollIndicator={false}
+          />
+
         </Flex>
       </Box>
     </Container >
