@@ -1,4 +1,7 @@
-platform :ios do    
+platform :ios do  
+    before_all do
+        setup_circle_ci
+    end  
     desc 'Fetch certificates and provisioning profiles'
     lane :certificates do
         match(app_identifier: 'com.seasons.Seasons', username: 'luc@seasons.nyc', type: "appstore")
