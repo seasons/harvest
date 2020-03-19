@@ -40,8 +40,8 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Install dependencies
-        command: yarn install
+          name: Install dependencies
+          command: yarn install
       - run:
           name: "Install React Native dependencies"
           command: |
