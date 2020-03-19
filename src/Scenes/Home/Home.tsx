@@ -98,9 +98,9 @@ export const RESERVATION_FEEDBACK = {
         name: "Engineered Garments Hoodie",
         retailPrice: 495,
         images: [
-          { url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
-          { url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
-          { url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
+          { id: 1, url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
+          { id: 2, url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
+          { id: 3, url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
         ]
       }
     },
@@ -122,9 +122,9 @@ export const RESERVATION_FEEDBACK = {
         name: "Sherpa Jacket",
         retailPrice: 495,
         images: [
-          { url: "https://dl.airtable.com/.attachments/d066ca7e3b22be0fbaf751eb5dcfa088/393b7ccc/Levis-BlackDenim-Jacket-Front.png" },
-          { url: "https://dl.airtable.com/.attachments/d066ca7e3b22be0fbaf751eb5dcfa088/393b7ccc/Levis-BlackDenim-Jacket-Front.png" },
-          { url: "https://dl.airtable.com/.attachments/d066ca7e3b22be0fbaf751eb5dcfa088/393b7ccc/Levis-BlackDenim-Jacket-Front.png" },
+          { id: 1, url: "https://dl.airtable.com/.attachments/d066ca7e3b22be0fbaf751eb5dcfa088/393b7ccc/Levis-BlackDenim-Jacket-Front.png" },
+          { id: 2, url: "https://dl.airtable.com/.attachments/d066ca7e3b22be0fbaf751eb5dcfa088/393b7ccc/Levis-BlackDenim-Jacket-Front.png" },
+          { id: 3, url: "https://dl.airtable.com/.attachments/d066ca7e3b22be0fbaf751eb5dcfa088/393b7ccc/Levis-BlackDenim-Jacket-Front.png" },
         ]
       }
     },
@@ -160,7 +160,7 @@ export const Home = screenTrack()(({ navigation }) => {
   const onSelectedReviewRating = (rating) => {
     setShowReviewPopUp(false)
     navigation.navigate("Modal", {
-      screen: "ReservationFeedback",
+      screen: Schema.PageNames.ReservationFeedback,
       params: {
         reservationFeedback: RESERVATION_FEEDBACK,
       }
