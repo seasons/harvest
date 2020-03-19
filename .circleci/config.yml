@@ -54,6 +54,6 @@ workflows:
       - beta:
           filters:
             branches:
-              only: production
+              only: release
           requires:
             - build-and-test
