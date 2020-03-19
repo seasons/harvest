@@ -15,9 +15,10 @@ const windowHeight = windowDimensions.height
 export interface PopUpProps {
   show: boolean
   reservationFeedback: any
+  onSelectedRating: (string) => void
 }
 
-export const ReviewPopUp: React.FC<PopUpProps> = ({ reservationFeedback, show }) => {
+export const ReviewPopUp: React.FC<PopUpProps> = ({ onSelectedRating, reservationFeedback, show }) => {
   const [mounted, setMounted] = useState(false)
   const [isDislikeSelected, setIsDislikeSelected] = useState(false)
   const [isNeutralSelected, setIsNeutralSelected] = useState(false)
@@ -39,6 +40,10 @@ export const ReviewPopUp: React.FC<PopUpProps> = ({ reservationFeedback, show })
   const images = reservationFeedback.feedbacks.map(feedback => feedback.variant.images[0].url)
   const options = ["Loved it", "It was ok", "Didn't like it"]
   const buttonWidth = windowDimensions.width - 32
+
+  const onRatingButtonPressed = (rating) => {
+    onSelectedRating(rating)
+  }
 
   return (
     <>
@@ -67,7 +72,9 @@ export const ReviewPopUp: React.FC<PopUpProps> = ({ reservationFeedback, show })
             <Spacer mb={3} />
             {options.map(option => (
               <>
-                <Button variant="secondaryWhite" width={buttonWidth} height={48}>{option}</Button>
+                <Button variant="secondaryWhite" width={buttonWidth} height={48} onPress={() => onRatingButtonPressed(option)}>
+                  {option}
+                </Button>
                 <Spacer mt={1} />
               </>
             ))}
