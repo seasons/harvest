@@ -39,6 +39,9 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: yarn install
       - run: bundle install
       - run:
           name: Install CocoaPods
