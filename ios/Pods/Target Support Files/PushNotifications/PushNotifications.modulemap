@@ -1,6 +1,0 @@
-module PushNotifications {
-  umbrella header "PushNotifications-umbrella.h"
-
-  export *
-  module * { export * }
-}
