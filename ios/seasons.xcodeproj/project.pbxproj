@@ -192,7 +192,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = QY3QKXPU37;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -351,9 +351,10 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
 				CODE_SIGN_ENTITLEMENTS = seasons/seasons.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Luc Succes (NMHM6A8JPD)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Luc Succes (NMHM6A8JPD)";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 45;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -372,7 +373,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seasons.Seasons;
 				PRODUCT_NAME = seasons;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.seasons.Seasons";
 				SWIFT_OBJC_BRIDGING_HEADER = "seasons-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -398,9 +399,9 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
 				CODE_SIGN_ENTITLEMENTS = seasons/seasons.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Luc Succes (NMHM6A8JPD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Luc Succes (NMHM6A8JPD)";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = QY3QKXPU37;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
@@ -417,7 +418,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seasons.Seasons;
 				PRODUCT_NAME = seasons;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.seasons.Seasons";
 				SWIFT_OBJC_BRIDGING_HEADER = "seasons-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
