@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { Dimensions, SectionList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
-import { Box, Button, Flex, Radio, Sans, Separator, Spacer, Theme } from "../../Components"
+import { Box, Button, Flex, Handle, Radio, Sans, Separator, Spacer, Theme } from "../../Components"
 import { useTracking, Schema, screenTrack } from "App/utils/track"
 import { color } from "App/utils"
 
@@ -66,7 +66,7 @@ export const Filters = screenTrack()((props: any) => {
   return (
     <Theme>
       <Container>
-        <Handle style={{ marginTop: 12, marginBottom: insets.top }} />
+        <Handle color="black50" style={{ marginTop: 12, marginBottom: insets.top }} />
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
           <HeaderContainer px={2}>
             <Flex flexDirection="row" alignItems="center">
@@ -148,13 +148,4 @@ const HeaderContainer = styled(Box)`
   border-color: ${color("black50")};
   border-style: solid;
   border-bottom-width: 1px;
-`
-
-const Handle = styled(Box)`
-  width: 40px;
-  height: 5px;
-  border-radius: 100;
-  background: white;
-  opacity: 0.5;
-  margin: auto;
 `

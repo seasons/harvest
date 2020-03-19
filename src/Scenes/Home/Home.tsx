@@ -15,6 +15,7 @@ import { BrandsRail } from "./Components/BrandsRail"
 import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
 import { ReviewPopUp } from "./Components/ReviewPopUp"
+import { Schema } from "App/Navigation"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -158,6 +159,12 @@ export const Home = screenTrack()(({ navigation }) => {
 
   const onSelectedReviewRating = (rating) => {
     setShowReviewPopUp(false)
+    navigation.navigate("Modal", {
+      screen: "ReservationFeedback",
+      params: {
+        reservationFeedback: RESERVATION_FEEDBACK,
+      }
+    })
   }
 
   return (
