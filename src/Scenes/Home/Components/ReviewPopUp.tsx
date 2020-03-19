@@ -1,4 +1,5 @@
 import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
+import { FadeInImage } from "App/Components/FadeInImage"
 import { color, space } from "App/utils"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import { Text } from "Components/Typography"
@@ -13,9 +14,10 @@ const windowHeight = windowDimensions.height
 
 export interface PopUpProps {
   show: boolean
+  reservationFeedback: any
 }
 
-export const ReviewPopUp: React.FC<PopUpProps> = ({ show }) => {
+export const ReviewPopUp: React.FC<PopUpProps> = ({ reservationFeedback, show }) => {
   const [mounted, setMounted] = useState(false)
   const [isDislikeSelected, setIsDislikeSelected] = useState(false)
   const [isNeutralSelected, setIsNeutralSelected] = useState(false)
@@ -34,57 +36,43 @@ export const ReviewPopUp: React.FC<PopUpProps> = ({ show }) => {
     backgroundColor: show && mounted ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0)",
   })
 
+  const images = reservationFeedback.feedbacks.map(feedback => feedback.variant.images[0].url)
+  const options = ["Loved it", "It was ok", "Didn't like it"]
+  const buttonWidth = windowDimensions.width - 32
+
   return (
     <>
       <AnimatedPopUp style={{ transform: [{ translateY: animation.translateY }] }} color={color("white100")}>
-        <Box m={2} onLayout={onLayout}>
-          <Spacer mt={2} />
-          <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" alignItems="center">
+        <Box p={2} onLayout={onLayout}>
+          <Spacer mt={4} />
+          <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" >
             <Sans size="2" color={color("black100")}>
               What'd you think?
             </Sans>
             <Spacer mb={1} />
-            <Text style={{ textAlign: "center" }}>
-              <Sans size="1" color={color("black50")}>
-                Help us improve your experience by sharing what you thought of your last order
+            <Sans size="1" color={color("black50")}>
+              Help us improve your experience by sharing what you thought of your last order
               </Sans>
-            </Text>
-            <Spacer mb={4} />
+            <Spacer mb={3} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" alignItems="center">
-              <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" alignItems="center">
-                <TouchableOpacity onPress={() => setIsDislikeSelected(true)}>
-                  {isDislikeSelected ? <ActiveDislikedFace /> : <DefaultDislikedFace />}
-                </TouchableOpacity>
-                <Spacer mb={1} />
-                <Sans size="0" color={color("black50")}>
-                  Disliked
-                </Sans>
-              </Flex>
-              <Spacer ml={5} />
-              <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" alignItems="center">
-                <TouchableOpacity onPress={() => setIsNeutralSelected(true)}>
-                  {isNeutralSelected ? <ActiveNeutralFace /> : <DefaultNeutralFace />}
-                </TouchableOpacity>
-                <Spacer mb={1} />
-                <Sans size="0" color={color("black50")}>
-                  Meh
-                </Sans>
-              </Flex>
-              <Spacer ml={5} />
-              <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" alignItems="center">
-                <TouchableOpacity onPress={() => setIsLovedSelected(true)}>
-                  {isLovedSelected ? <ActiveLovedFace /> : <DefaultLovedFace />}
-                </TouchableOpacity>
-                <Spacer mb={1} />
-                <Sans size="0" color={color("black50")}>
-                  Loved
-                </Sans>
-              </Flex>
+              {images.map(image => (
+                <>
+                  <FadeInImage source={{ uri: image }} style={{ width: 112, height: 140 }} />
+                  <Spacer ml={0.5} />
+                </>
+              ))}
             </Flex>
-            <Spacer mb={2} />
+            <Spacer mb={3} />
+            <Separator />
+            <Spacer mb={3} />
+            {options.map(option => (
+              <>
+                <Button variant="secondaryWhite" width={buttonWidth} height={48}>{option}</Button>
+                <Spacer mt={1} />
+              </>
+            ))}
+            <Spacer mb={6} />
           </Flex>
-          <Spacer mb={3} />
-          <Spacer mb={4} />
         </Box>
       </AnimatedPopUp>
       {show && <AnimatedOuterWrapper style={{ backgroundColor: animation.backgroundColor }} />}

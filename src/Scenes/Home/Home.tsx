@@ -76,6 +76,62 @@ export const GET_RESERVATION_FEEDBACK = gql`
   }
 `
 
+export const RESERVATION_FEEDBACK = {
+  id: 123,
+  comment: "Sample comment",
+  feedbacks: [
+    {
+      isCompleted: false,
+      questions: [
+        {
+          question: "How many times did you wear this Engineered Garments Hoodie?",
+          options: ["More than 6 times", "3-5 times", "1-2 times", "0 times"],
+          type: "MultipleChoice",
+        },
+        {
+          question: "Would you buy it at retail for $495?",
+          options: ["Would buy at a discount", "Buy below retail", "Buy at retail", "Would only rent"],
+          type: "MultipleChoice",
+        }
+      ],
+      variant: {
+        name: "Engineered Garments Hoodie",
+        retailPrice: 495,
+        images: [
+          { url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
+          { url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
+          { url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
+        ]
+      }
+    },
+    {
+      isCompleted: false,
+      questions: [
+        {
+          question: "How many times did you wear this Sherpa Jacket?",
+          options: ["More than 6 times", "3-5 times", "1-2 times", "0 times"],
+          type: "MultipleChoice",
+        },
+        {
+          question: "Would you buy it at retail for $495?",
+          options: ["Would buy at a discount", "Buy below retail", "Buy at retail", "Would only rent"],
+          type: "MultipleChoice",
+        }
+      ],
+      variant: {
+        name: "Sherpa Jacket",
+        retailPrice: 495,
+        images: [
+          { url: "https://dl.airtable.com/.attachments/d066ca7e3b22be0fbaf751eb5dcfa088/393b7ccc/Levis-BlackDenim-Jacket-Front.png" },
+          { url: "https://dl.airtable.com/.attachments/d066ca7e3b22be0fbaf751eb5dcfa088/393b7ccc/Levis-BlackDenim-Jacket-Front.png" },
+          { url: "https://dl.airtable.com/.attachments/d066ca7e3b22be0fbaf751eb5dcfa088/393b7ccc/Levis-BlackDenim-Jacket-Front.png" },
+        ]
+      }
+    },
+  ],
+  rating: "Loved it",
+}
+
 export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
   const [showLoader, toggleLoader] = useState(true)
@@ -98,6 +154,13 @@ export const Home = screenTrack()(({ navigation }) => {
       }, 100)
     }
   }, [loading])
+
+  return (
+    <Container insetsBottom={false}>
+      <Loader />
+      <ReviewPopUp reservationFeedback={RESERVATION_FEEDBACK} show={true} />
+    </Container>
+  )
 
   if (error) {
     console.error("error /home/index.tsx: ", error)
