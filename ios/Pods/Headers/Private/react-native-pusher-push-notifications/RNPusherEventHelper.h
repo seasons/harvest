@@ -1,0 +1,1 @@
+../../../../../node_modules/react-native-pusher-push-notifications/ios/RNPusherEventHelper.h

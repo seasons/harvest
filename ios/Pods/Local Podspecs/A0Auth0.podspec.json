@@ -1,0 +1,27 @@
+{
+  "name": "A0Auth0",
+  "version": "2.1.0",
+  "summary": "React Native toolkit for Auth0 API",
+  "homepage": "https://github.com/auth0/react-native-auth0",
+  "license": {
+    "type": "MIT",
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Auth0": "support@auth0.com"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source": {
+    "git": "https://github.com/auth0/react-native-auth0.git",
+    "tag": "2.1.0"
+  },
+  "source_files": "*.{h,m,swift}",
+  "requires_arc": true,
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}
