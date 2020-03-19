@@ -135,6 +135,7 @@ export const RESERVATION_FEEDBACK = {
 export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
   const [showLoader, toggleLoader] = useState(true)
+  const [showReviewPopUp, setShowReviewPopUp] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)
 
@@ -155,10 +156,18 @@ export const Home = screenTrack()(({ navigation }) => {
     }
   }, [loading])
 
+  const onSelectedReviewRating = (rating) => {
+    setShowReviewPopUp(false)
+  }
+
   return (
     <Container insetsBottom={false}>
       <Loader />
-      <ReviewPopUp reservationFeedback={RESERVATION_FEEDBACK} show={true} />
+      <ReviewPopUp
+        reservationFeedback={RESERVATION_FEEDBACK}
+        show={showReviewPopUp}
+        onSelectedRating={onSelectedReviewRating}
+      />
     </Container>
   )
 
