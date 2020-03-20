@@ -1,6 +1,0 @@
-framework module EXAppLoaderProvider {
-  umbrella header "EXAppLoaderProvider-umbrella.h"
-
-  export *
-  module * { export * }
-}
