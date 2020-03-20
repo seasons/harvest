@@ -5,7 +5,6 @@ jobs:
   build-and-test:
     macos:
       xcode: "11.3.1"
-    working_directory: /ios
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
@@ -44,7 +43,6 @@ jobs:
   beta:
     macos:
       xcode: "11.3.1"
-    working_directory: /ios
     environment:
       FL_OUTPUT_DIR: output
       FASTLANE_LANE: ios beta
