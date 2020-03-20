@@ -52,6 +52,8 @@ export const ReservationFeedback: React.FC<{
   const [images, setImages] = useState(reservationFeedback.feedbacks[0].variant.images)
   const [productName, setProductName] = useState(reservationFeedback.feedbacks[0].variant.name)
   const [flatListData, setFlatListData] = useState(reservationFeedback.feedbacks[0].questions)
+  const [currQuestionIndex, setCurrQuestionIndex] = useState(0)
+  const [currProductIndex, setCurrProductIndex] = useState(0)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const insets = useSafeArea()
   const { width: windowWidth } = Dimensions.get("window")
@@ -68,6 +70,27 @@ export const ReservationFeedback: React.FC<{
 
   const renderItem = (feedbackQuestion, index) => {
     const { question, options } = feedbackQuestion
+    const onOptionPressed = () => {
+      const totalNumQuestions = reservationFeedback.feedbacks[currProductIndex].questions.length
+      const nextQuestionIndex = currQuestionIndex + 1
+      if (nextQuestionIndex < totalNumQuestions) { // Scroll to next question
+        flatListRef.scrollToIndex({ index: nextQuestionIndex })
+        setCurrQuestionIndex(nextQuestionIndex)
+      } else {
+        const nextProductIndex = currProductIndex + 1
+        const totalNumProducts = reservationFeedback.feedbacks.length
+        if (nextProductIndex < totalNumProducts) { // Scroll to next product
+          const productFeedback = reservationFeedback.feedbacks[nextProductIndex]
+          setImages(productFeedback.variant.images)
+          setProductName(productFeedback.variant.name)
+          setFlatListData(productFeedback.questions)
+          setCurrQuestionIndex(0)
+          flatListRef.scrollToIndex({ index: 0 })
+          setCurrProductIndex(nextProductIndex)
+        } else {
+        }
+      }
+    }
     return (
       <FlatList
         data={options}
@@ -83,7 +106,13 @@ export const ReservationFeedback: React.FC<{
         scrollEnabled={false}
         keyExtractor={item => item}
         renderItem={({ item }) => (
-          <Button variant="secondaryWhite" width={contentWidth} height={48}>{item}</Button>
+          <Button
+            variant="secondaryWhite"
+            width={contentWidth}
+            height={48}
+            onPress={onOptionPressed}>
+            {item}
+          </Button>
         )}
       />
     )
@@ -122,6 +151,7 @@ export const ReservationFeedback: React.FC<{
           <FlatList
             data={flatListData}
             horizontal={true}
+            scrollEnabled={false}
             keyExtractor={item => item.question}
             ref={(ref) => flatListRef = ref}
             renderItem={({ item, index }) => renderItem(item, index)}
