@@ -1,6 +1,5 @@
 import Auth0 from "react-native-auth0"
 import Config from "react-native-config"
-
 import AsyncStorage from "@react-native-community/async-storage"
 
 const auth0 = () => {

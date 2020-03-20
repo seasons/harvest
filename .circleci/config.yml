@@ -9,9 +9,21 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
+      - restore_cache:
+          key: yarn-v2-{{ checksum "yarn.lock" }}-{{ arch }}
+      - restore_cache:
+          key: node-v2-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install dependencies
           command: yarn install
+      - save_cache:
+          key: yarn-v2-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: node-v2-{{ checksum "package.json" }}-{{ arch }}
+          paths:
+            - node_modules
       - restore_cache:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
       - run:
@@ -39,19 +51,35 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
+      - restore_cache:
+          key: yarn-v2-{{ checksum "yarn.lock" }}-{{ arch }}
+      - restore_cache:
+          key: node-v2-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install dependencies
           command: yarn install
+      - save_cache:
+          key: yarn-v2-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: node-v2-{{ checksum "package.json" }}-{{ arch }}
+          paths:
+            - node_modules
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
+      - restore_cache:
+          key: bundle-v2-{{ checksum "Gemfile.lock" }}-{{ arch }}
       - run: bundle install
       - run:
           name: Install CocoaPods
           command: cd ios ; pod install ;
       - run:
           name: Install command line tool
-          command: npm install -g react-native-cli
+          command: |
+            npm install -g react-native-cli
+            npm install -g react-native-version
       - run:
           name: Build entry file
           command: react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios
