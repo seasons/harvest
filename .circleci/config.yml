@@ -9,18 +9,18 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: yarn-v0-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
-          key: node-v0-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install dependencies
           command: yarn install
       - save_cache:
-          key: yarn-v0-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: node-v0-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
           paths:
             - node_modules
       - restore_cache:
@@ -50,33 +50,33 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: yarn-v0-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
-          key: node-v0-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install dependencies
           command: yarn install
       - save_cache:
-          key: yarn-v0-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: node-v0-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
           paths:
             - node_modules
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
       - restore_cache:
-          key: bundle-v0-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
       - run: bundle install
       - restore_cache:
-          key: pods-v0-{{ checksum "Podfile.lock" }}
+          key: pods-v4-{{ checksum "Podfile.lock" }}
       - run:
           name: Install CocoaPods
           command: cd ios ; pod install ;
       - save_cache:
-          key: pods-v0-{{ checksum "Podfile.lock" }}
+          key: pods-v4-{{ checksum "Podfile.lock" }}
           paths:
             - ./Pods
       - run:
