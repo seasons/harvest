@@ -46,8 +46,8 @@ jobs:
             curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.1/install.sh | bash -s -- --no-use
             echo 'export NVM_DIR=$HOME/.nvm' >> $BASH_ENV
             echo 'source $NVM_DIR/nvm.sh' >> $BASH_ENV
-            echo 'nvm install v10.2.0' >> $BASH_ENV
-            echo 'nvm alias default v10.2.0' >> $BASH_ENV
+            echo 'nvm install v12.16.1' >> $BASH_ENV
+            echo 'nvm alias default v12.16.1' >> $BASH_ENV
       - run:
           name: Install dependencies
           command: yarn install
