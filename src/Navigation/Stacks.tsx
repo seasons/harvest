@@ -9,7 +9,7 @@ import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn } from "App/Scenes/SignIn"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
 import { Webview } from "App/Scenes/Webview"
-import { ReservationFeedback } from "App/Scenes/ReservationFeedback"
+import { ReservationFeedback, ReservationFeedbackConfirmation } from "App/Scenes/ReservationFeedback"
 import React from "react"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { NavBar } from "./NavBar"
@@ -96,6 +96,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ReservationConfirmationModal} component={ReservationConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ReservationModal} component={Reservation} />
       <ModalStack.Screen name={Schema.PageNames.ReservationFeedback} component={ReservationFeedback} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackConfirmation} component={ReservationFeedbackConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.AllowNotificationsModal} component={AllowNotifications} />
       <ModalStack.Screen name={Schema.PageNames.DebugMenu} component={DebugMenu} />
     </ModalStack.Navigator>
