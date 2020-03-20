@@ -40,15 +40,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Force specific nodejs version
-          command: |
-            export NODE_VERSION=$(cat .nvmrc)
-            curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.1/install.sh | bash -s -- --no-use
-            echo 'export NVM_DIR=$HOME/.nvm' >> $BASH_ENV
-            echo 'source $NVM_DIR/nvm.sh' >> $BASH_ENV
-            echo 'nvm install v12.16.1' >> $BASH_ENV
-            echo 'nvm alias default v12.16.1' >> $BASH_ENV
-      - run:
           name: Install dependencies
           command: yarn install
       - run:
@@ -58,6 +49,9 @@ jobs:
       - run:
           name: Install CocoaPods
           command: cd ios ; pod install ;
+      - run:
+          name: Build entry file
+          command: react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios
       - run:
           name: Fastlane
           command: bundle exec fastlane $FASTLANE_LANE
