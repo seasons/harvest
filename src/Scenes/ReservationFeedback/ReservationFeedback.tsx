@@ -156,13 +156,13 @@ export const ReservationFeedback: React.FC<{
           <FlatList
             data={flatListData}
             horizontal={true}
-            scrollEnabled={false}
+            // scrollEnabled={false}
+            pagingEnabled
             keyExtractor={item => item.question}
             ref={(ref) => flatListRef = ref}
             renderItem={({ item, index }) => renderItem(item, index)}
             showsHorizontalScrollIndicator={false}
           />
-
         </Flex>
       </Box>
     </Container >

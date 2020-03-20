@@ -12,6 +12,7 @@ import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } 
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
+import { Schema } from "App/Navigation"
 
 export const ReservationFeedbackConfirmation: React.FC<{
   navigation: any
@@ -32,6 +33,12 @@ export const ReservationFeedbackConfirmation: React.FC<{
 
   const onSubmitBtnPressed = () => {
     console.log("SUBMIT")
+    navigation.pop()
+    navigation.pop()
+    navigation.navigate("Modal", {
+      screen: Schema.PageNames.ReservationFeedbackFinish,
+      params: { reservationFeedback }
+    })
   }
 
   return (
