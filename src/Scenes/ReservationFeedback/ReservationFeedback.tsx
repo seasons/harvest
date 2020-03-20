@@ -12,6 +12,7 @@ import { Dimensions, FlatList, Text } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
+import { Schema } from "App/Navigation"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -88,6 +89,10 @@ export const ReservationFeedback: React.FC<{
           flatListRef.scrollToIndex({ index: 0 })
           setCurrProductIndex(nextProductIndex)
         } else {
+          navigation.navigate("Modal", {
+            screen: Schema.PageNames.ReservationFeedbackConfirmation,
+            params: { reservationFeedback }
+          })
         }
       }
     }
@@ -163,17 +168,3 @@ export const ReservationFeedback: React.FC<{
     </Container >
   )
 })
-
-// const ProgressBar = styled(Box)`
-//   background: ${color("black15")};
-//   height: 3px;
-//   width: 111px;
-//   border-radius: 100;
-// `
-
-// const ProgressBarInside = styled(Box)`
-//   background: ${color("black100")};
-//   height: 3px;
-//   width: 30px;
-//   border-radius: 100;
-// `
