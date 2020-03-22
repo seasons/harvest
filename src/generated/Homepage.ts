@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { HomePageSectionType, Size } from "./globalTypes";
+import { HomePageSectionType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: Homepage
@@ -28,8 +28,8 @@ export interface Homepage_homepage_sections_results_Product_brand {
 
 export interface Homepage_homepage_sections_results_Product_variants {
   __typename: "ProductVariant";
-  size: Size;
   id: string;
+  size: string | null;
   reservable: number;
 }
 

@@ -17,6 +17,7 @@ export interface GetBrands_brands_products {
 export interface GetBrands_brands {
   __typename: "Brand";
   id: string;
+  slug: string;
   name: string;
   products: GetBrands_brands_products[] | null;
 }

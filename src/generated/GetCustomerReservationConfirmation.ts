@@ -3,8 +3,6 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Size } from "./globalTypes";
-
 // ====================================================
 // GraphQL query operation: GetCustomerReservationConfirmation
 // ====================================================
@@ -33,6 +31,11 @@ export interface GetCustomerReservationConfirmation_me_customer_detail {
   shippingAddress: GetCustomerReservationConfirmation_me_customer_detail_shippingAddress | null;
 }
 
+export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_modelSize {
+  __typename: "Size";
+  display: string;
+}
+
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_brand {
   __typename: "Brand";
   id: string;
@@ -42,14 +45,14 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_pro
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
-  size: Size;
+  size: string | null;
 }
 
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product {
   __typename: "Product";
   name: string;
   id: string;
-  modelSize: Size | null;
+  modelSize: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_modelSize | null;
   brand: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_brand;
   images: any;
   variants: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_variants[] | null;

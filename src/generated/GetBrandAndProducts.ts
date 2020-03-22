@@ -3,16 +3,21 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ProductOrderByInput, Size, ProductStatus } from "./globalTypes";
+import { ProductOrderByInput, ProductStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBrandAndProducts
 // ====================================================
 
+export interface GetBrandAndProducts_brand_products_modelSize {
+  __typename: "Size";
+  display: string;
+}
+
 export interface GetBrandAndProducts_brand_products_variants {
   __typename: "ProductVariant";
   id: string;
-  size: Size;
+  size: string | null;
   total: number;
   reservable: number;
   nonReservable: number;
@@ -23,10 +28,11 @@ export interface GetBrandAndProducts_brand_products_variants {
 export interface GetBrandAndProducts_brand_products {
   __typename: "Product";
   id: string;
+  slug: string;
   name: string;
   description: string | null;
   images: any;
-  modelSize: Size | null;
+  modelSize: GetBrandAndProducts_brand_products_modelSize | null;
   modelHeight: number | null;
   externalURL: string | null;
   tags: any | null;

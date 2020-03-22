@@ -139,8 +139,6 @@ export enum ProductOrderByInput {
   images_DESC = "images_DESC",
   modelHeight_ASC = "modelHeight_ASC",
   modelHeight_DESC = "modelHeight_DESC",
-  modelSize_ASC = "modelSize_ASC",
-  modelSize_DESC = "modelSize_DESC",
   name_ASC = "name_ASC",
   name_DESC = "name_DESC",
   retailPrice_ASC = "retailPrice_ASC",
@@ -151,6 +149,8 @@ export enum ProductOrderByInput {
   status_DESC = "status_DESC",
   tags_ASC = "tags_ASC",
   tags_DESC = "tags_DESC",
+  type_ASC = "type_ASC",
+  type_DESC = "type_DESC",
   updatedAt_ASC = "updatedAt_ASC",
   updatedAt_DESC = "updatedAt_DESC",
 }
@@ -174,16 +174,7 @@ export enum QuestionType {
 export enum Rating {
   Disliked = "Disliked",
   Loved = "Loved",
-  Meh = "Meh",
-}
-
-export enum Size {
-  L = "L",
-  M = "M",
-  S = "S",
-  XL = "XL",
-  XS = "XS",
-  XXL = "XXL",
+  Ok = "Ok",
 }
 
 export interface AddressInput {

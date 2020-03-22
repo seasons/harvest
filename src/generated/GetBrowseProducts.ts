@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ProductOrderByInput, Size, ProductStatus } from "./globalTypes";
+import { ProductOrderByInput, ProductStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBrowseProducts
@@ -22,6 +22,11 @@ export interface GetBrowseProducts_categories {
   children: GetBrowseProducts_categories_children[] | null;
 }
 
+export interface GetBrowseProducts_products_modelSize {
+  __typename: "Size";
+  display: string;
+}
+
 export interface GetBrowseProducts_products_brand {
   __typename: "Brand";
   id: string;
@@ -31,7 +36,7 @@ export interface GetBrowseProducts_products_brand {
 export interface GetBrowseProducts_products_variants {
   __typename: "ProductVariant";
   id: string;
-  size: Size;
+  size: string | null;
   total: number;
   reservable: number;
   nonReservable: number;
@@ -45,7 +50,7 @@ export interface GetBrowseProducts_products {
   name: string;
   description: string | null;
   images: any;
-  modelSize: Size | null;
+  modelSize: GetBrowseProducts_products_modelSize | null;
   modelHeight: number | null;
   externalURL: string | null;
   tags: any | null;
@@ -67,5 +72,5 @@ export interface GetBrowseProductsVariables {
   first: number;
   skip: number;
   orderBy: ProductOrderByInput;
-  sizes?: Size[] | null;
+  sizes?: string[] | null;
 }

@@ -3,11 +3,16 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Size, Material } from "./globalTypes";
+import { Material } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetProduct
 // ====================================================
+
+export interface GetProduct_product_modelSize {
+  __typename: "Size";
+  display: string;
+}
 
 export interface GetProduct_product_color {
   __typename: "Color";
@@ -24,6 +29,7 @@ export interface GetProduct_product_secondaryColor {
 export interface GetProduct_product_brand {
   __typename: "Brand";
   id: string;
+  slug: string;
   name: string;
   logo: any | null;
   since: any | null;
@@ -32,7 +38,7 @@ export interface GetProduct_product_brand {
 export interface GetProduct_product_variants {
   __typename: "ProductVariant";
   id: string;
-  size: Size;
+  size: string | null;
   total: number;
   reservable: number;
   nonReservable: number;
@@ -47,7 +53,7 @@ export interface GetProduct_product {
   name: string;
   description: string | null;
   retailPrice: number | null;
-  modelSize: Size | null;
+  modelSize: GetProduct_product_modelSize | null;
   modelHeight: number | null;
   color: GetProduct_product_color;
   secondaryColor: GetProduct_product_secondaryColor | null;
