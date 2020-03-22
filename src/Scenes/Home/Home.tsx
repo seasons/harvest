@@ -7,6 +7,7 @@ import { LogoText } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
+import { useMutation } from "@apollo/react-hooks"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import SplashScreen from "react-native-splash-screen"
@@ -159,20 +160,19 @@ export const Home = screenTrack()(({ navigation }) => {
     }
   }, [loading])
 
-  const onSelectedReviewRating = (rating) => {
+  const reservationFeedback = feedbackData?.reservationFeedback
+
+  const onSelectedReviewRating = () => {
     setShowReviewPopUp(false)
     navigation.navigate("Modal", {
       screen: Schema.PageNames.ReservationFeedback,
-      params: {
-        reservationFeedback: RESERVATION_FEEDBACK,
-      }
+      params: { reservationFeedback }
     })
   }
 
   if (feedbackData) {
     console.log("FEEDBACK DATA:", feedbackData)
   }
-  const reservationFeedback = feedbackData?.reservationFeedback
 
   return (
     <Container insetsBottom={false}>
