@@ -32,6 +32,7 @@ export interface ButtonProps extends BoxProps {
   /** React Native only, Callback on press, use instead of onClick */
   onPress?: (e) => void
   disabled?: boolean
+  selected?: boolean
   showCheckMark?: boolean
   height?: number
   width?: number | string
@@ -178,9 +179,21 @@ export class Button extends Component<ButtonProps, ButtonState> {
     theme: themeProps,
   }
 
-  state = {
-    previous: DisplayState.Default,
-    current: DisplayState.Default,
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { selected = false } = nextProps
+    const { current: currentState, previous: previousState } = prevState
+    const previous = selected ? currentState : previousState
+    const current = selected ? DisplayState.Pressed : DisplayState.Default
+    return { previous, current }
+  }
+
+  constructor(props: ButtonProps) {
+    super(props)
+    const { selected = false } = props
+    this.state = {
+      previous: DisplayState.Default,
+      current: selected ? DisplayState.Pressed : DisplayState.Default
+    }
   }
 
   get spinnerColor() {
@@ -241,6 +254,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
       loading,
       showChevron,
       rotateChevron,
+      selected = false,
       ...rest
     } = this.props
     const { px, size, height } = this.getSize()
@@ -305,7 +319,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 }
 
-const Container = styled(Box)<ButtonProps>`
+const Container = styled(Box) <ButtonProps>`
   align-items: center;
   justify-content: center;
   position: relative;
