@@ -69,10 +69,10 @@ export const GET_RESERVATION_FEEDBACK = gql`
         }
         variant {
           id
-          retailPrice
           product {
-            name
             images
+            name
+            retailPrice
           }
         }
       }
