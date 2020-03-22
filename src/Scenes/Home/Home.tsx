@@ -167,6 +167,10 @@ export const Home = screenTrack()(({ navigation }) => {
     })
   }
 
+  if (feedbackData) {
+    console.log("FEEDBACK DATA:", feedbackData)
+  }
+
   return (
     <Container insetsBottom={false}>
       <Loader />
