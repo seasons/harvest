@@ -20,14 +20,14 @@ export interface ReservationFeedback_reservationFeedback_feedbacks_questions {
 
 export interface ReservationFeedback_reservationFeedback_feedbacks_variant_product {
   __typename: "Product";
-  name: string;
   images: any;
+  name: string;
+  retailPrice: number | null;
 }
 
 export interface ReservationFeedback_reservationFeedback_feedbacks_variant {
   __typename: "ProductVariant";
   id: string;
-  retailPrice: number | null;
   product: ReservationFeedback_reservationFeedback_feedbacks_variant_product;
 }
 
