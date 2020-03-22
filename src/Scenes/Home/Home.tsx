@@ -67,7 +67,9 @@ export const GET_RESERVATION_FEEDBACK = gql`
         }
         variant {
           id
+          retailPrice
           product {
+            name
             images
           }
         }
@@ -170,15 +172,18 @@ export const Home = screenTrack()(({ navigation }) => {
   if (feedbackData) {
     console.log("FEEDBACK DATA:", feedbackData)
   }
+  const reservationFeedback = feedbackData?.reservationFeedback
 
   return (
     <Container insetsBottom={false}>
-      <Loader />
-      <ReviewPopUp
-        reservationFeedback={RESERVATION_FEEDBACK}
-        show={showReviewPopUp}
-        onSelectedRating={onSelectedReviewRating}
-      />
+      {reservationFeedback
+        ? <ReviewPopUp
+          reservationFeedback={reservationFeedback}
+          show={showReviewPopUp}
+          onSelectedRating={onSelectedReviewRating}
+        />
+        : <Loader />
+      }
     </Container>
   )
 

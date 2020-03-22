@@ -8,13 +8,14 @@ import React, { useEffect, useState } from "react"
 import { Dimensions, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
+import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
 
 const windowDimensions = Dimensions.get("window")
 const windowHeight = windowDimensions.height
 
 export interface PopUpProps {
   show: boolean
-  reservationFeedback: any
+  reservationFeedback: ReservationFeedback_reservationFeedback
   onSelectedRating: (string) => void
 }
 
@@ -37,7 +38,7 @@ export const ReviewPopUp: React.FC<PopUpProps> = ({ onSelectedRating, reservatio
     backgroundColor: show && mounted ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0)",
   })
 
-  const images = reservationFeedback.feedbacks.map(feedback => feedback.variant.images[0].url)
+  const images = reservationFeedback.feedbacks.map(feedback => feedback.variant.product.images[0].url)
   const options = ["Loved it", "It was ok", "Didn't like it"]
   const buttonWidth = windowDimensions.width - 32
 
