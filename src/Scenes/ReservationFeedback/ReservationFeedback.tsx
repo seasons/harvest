@@ -13,18 +13,18 @@ import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 import { Schema } from "App/Navigation"
+import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
 
 export const ReservationFeedback: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ route, navigation }) => {
-  const { reservationFeedback } = route.params
-  const [images, setImages] = useState(reservationFeedback.feedbacks[0].variant.images)
-  const [productName, setProductName] = useState(reservationFeedback.feedbacks[0].variant.name)
+  const reservationFeedback: ReservationFeedback_reservationFeedback = route.params.reservationFeedback
+  const [images, setImages] = useState(reservationFeedback.feedbacks[0].variant.product.images)
+  const [productName, setProductName] = useState(reservationFeedback.feedbacks[0].variant.product.name)
   const [flatListData, setFlatListData] = useState(reservationFeedback.feedbacks[0].questions)
   const [currQuestionIndex, setCurrQuestionIndex] = useState(0)
   const [currProductIndex, setCurrProductIndex] = useState(0)
-  const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const insets = useSafeArea()
   const { width: windowWidth } = Dimensions.get("window")
   const numFeedbacks = reservationFeedback.feedbacks.length
@@ -33,10 +33,6 @@ export const ReservationFeedback: React.FC<{
   const progressBarWidth = (contentWidth / numFeedbacks) - progressBarSpacerWidth * (numFeedbacks - 1)
 
   let flatListRef
-
-  if (error) {
-    console.error("error ReservationFeedback.tsx: ", error)
-  }
 
   const renderItem = (feedbackQuestion, index) => {
     const { question, options } = feedbackQuestion
@@ -51,8 +47,8 @@ export const ReservationFeedback: React.FC<{
         const totalNumProducts = reservationFeedback.feedbacks.length
         if (nextProductIndex < totalNumProducts) { // Scroll to next product
           const productFeedback = reservationFeedback.feedbacks[nextProductIndex]
-          setImages(productFeedback.variant.images)
-          setProductName(productFeedback.variant.name)
+          setImages(productFeedback.variant.product.images)
+          setProductName(productFeedback.variant.product.name)
           setFlatListData(productFeedback.questions)
           setCurrQuestionIndex(0)
           flatListRef.scrollToIndex({ index: 0 })
