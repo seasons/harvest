@@ -34,6 +34,16 @@ export const ReservationFeedback: React.FC<{
 
   let flatListRef
 
+  const changeToFeedbackIndex = (index) => {
+    const productFeedback = reservationFeedback.feedbacks[index]
+    setImages(productFeedback.variant.product.images)
+    setProductName(productFeedback.variant.product.name)
+    setFlatListData(productFeedback.questions)
+    setCurrQuestionIndex(0)
+    flatListRef.scrollToIndex({ index: 0 })
+    setCurrProductIndex(index)
+  }
+
   const renderItem = (feedbackQuestion, index) => {
     const { question, options } = feedbackQuestion
     const onOptionPressed = () => {
@@ -46,13 +56,7 @@ export const ReservationFeedback: React.FC<{
         const nextProductIndex = currProductIndex + 1
         const totalNumProducts = reservationFeedback.feedbacks.length
         if (nextProductIndex < totalNumProducts) { // Scroll to next product
-          const productFeedback = reservationFeedback.feedbacks[nextProductIndex]
-          setImages(productFeedback.variant.product.images)
-          setProductName(productFeedback.variant.product.name)
-          setFlatListData(productFeedback.questions)
-          setCurrQuestionIndex(0)
-          flatListRef.scrollToIndex({ index: 0 })
-          setCurrProductIndex(nextProductIndex)
+          changeToFeedbackIndex(nextProductIndex)
         } else {
           navigation.navigate("Modal", {
             screen: Schema.PageNames.ReservationFeedbackConfirmation,
@@ -88,6 +92,10 @@ export const ReservationFeedback: React.FC<{
     )
   }
 
+  const handleSelectedProgressBar = (index) => {
+    changeToFeedbackIndex(index)
+  }
+
   const handleContinueLaterPressed = () => {
     navigation.pop()
   }
@@ -106,13 +114,17 @@ export const ReservationFeedback: React.FC<{
                 Item 1 of 3
             </Sans>
             </Flex>
-            <Spacer mb={1} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" >
-              {reservationFeedback.feedbacks.map(feedback =>
-                <ProgressBar width={progressBarWidth} percentCompleted={0.5} />
+              {reservationFeedback.feedbacks.map((feedback, index) =>
+                <TouchableWithoutFeedback onPress={() => handleSelectedProgressBar(index)}>
+                  <Box>
+                    <Spacer mt={1} />
+                    <ProgressBar width={progressBarWidth} percentCompleted={0.5} />
+                    <Spacer mb={3} />
+                  </Box>
+                </TouchableWithoutFeedback>
               )}
             </Flex>
-            <Spacer mb={3} />
             <ImageRail
               height={200}
               images={images}
