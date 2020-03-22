@@ -8,7 +8,7 @@ import { LogoText } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
-import { Dimensions, FlatList, Text } from "react-native"
+import { Dimensions, FlatList, Text, TouchableWithoutFeedback } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
@@ -88,47 +88,62 @@ export const ReservationFeedback: React.FC<{
     )
   }
 
+  const handleContinueLaterPressed = () => {
+    navigation.pop()
+  }
+
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      <Box px={2} >
-        <Handle color="black15" style={{ marginTop: 12, marginBottom: 16 }} />
-        <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" >
-          <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" >
-            <Sans size="1" color={color("black100")}>
-              Reviewing
+      <Box px={2} style={{ flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
+        <Box>
+          <Handle color="black15" style={{ marginTop: 12, marginBottom: 16 }} />
+          <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" >
+            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" >
+              <Sans size="1" color={color("black100")}>
+                Reviewing
             </Sans>
-            <Sans size="1" color={color("black50")}>
-              Item 1 of 3
+              <Sans size="1" color={color("black50")}>
+                Item 1 of 3
             </Sans>
+            </Flex>
+            <Spacer mb={1} />
+            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" >
+              {reservationFeedback.feedbacks.map(feedback =>
+                <ProgressBar width={progressBarWidth} percentCompleted={0.5} />
+              )}
+            </Flex>
+            <Spacer mb={3} />
+            <ImageRail
+              height={200}
+              images={images}
+              imageWidth={161}
+              showPageDots={false} />
+            <Spacer mb={1} />
+            <Sans size="0">{productName}</Sans>
+            <Spacer mb={2} />
+            <Separator />
+            <Spacer mb={3} />
+            <FlatList
+              data={flatListData}
+              horizontal={true}
+              pagingEnabled
+              keyExtractor={item => item.question}
+              ref={(ref) => flatListRef = ref}
+              renderItem={({ item, index }) => renderItem(item, index)}
+              showsHorizontalScrollIndicator={false}
+            />
           </Flex>
-          <Spacer mb={1} />
-          <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" >
-            {reservationFeedback.feedbacks.map(feedback =>
-              <ProgressBar width={progressBarWidth} percentCompleted={0.5} />
-            )}
-          </Flex>
-          <Spacer mb={3} />
-          <ImageRail
-            height={200}
-            images={images}
-            imageWidth={161}
-            showPageDots={false} />
-          <Spacer mb={1} />
-          <Sans size="0">{productName}</Sans>
-          <Spacer mb={2} />
-          <Separator />
-          <Spacer mb={3} />
-          <FlatList
-            data={flatListData}
-            horizontal={true}
-            // scrollEnabled={false}
-            pagingEnabled
-            keyExtractor={item => item.question}
-            ref={(ref) => flatListRef = ref}
-            renderItem={({ item, index }) => renderItem(item, index)}
-            showsHorizontalScrollIndicator={false}
-          />
-        </Flex>
+        </Box>
+        <Box>
+          <TouchableWithoutFeedback onPress={handleContinueLaterPressed}>
+            <Text style={{ textAlign: "center" }}>
+              <Sans style={{ textDecorationLine: "underline" }} size="1" color={color("black100")}>
+                Continue later
+              </Sans>
+            </Text>
+          </TouchableWithoutFeedback>
+          <Spacer mb={6} />
+        </Box>
       </Box>
     </Container >
   )
