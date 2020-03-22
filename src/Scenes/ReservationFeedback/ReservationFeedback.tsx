@@ -111,8 +111,8 @@ export const ReservationFeedback: React.FC<{
                 Reviewing
             </Sans>
               <Sans size="1" color={color("black50")}>
-                Item 1 of 3
-            </Sans>
+                Item {currProductIndex + 1} of {numFeedbacks}
+              </Sans>
             </Flex>
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" >
               {reservationFeedback.feedbacks.map((feedback, index) =>
