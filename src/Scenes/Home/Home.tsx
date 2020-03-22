@@ -167,6 +167,10 @@ export const Home = screenTrack()(({ navigation }) => {
     })
   }
 
+  if (feedbackData) {
+    console.log("FEEDBACK DATA:", feedbackData)
+  }
+
   return (
     <Container insetsBottom={false}>
       <Loader />
@@ -180,10 +184,6 @@ export const Home = screenTrack()(({ navigation }) => {
 
   if (error) {
     console.error("error /home/index.tsx: ", error)
-  }
-
-  if (feedbackData) {
-    console.log("FEEDBACK DATA:", feedbackData)
   }
 
   if (showLoader || !data) {
