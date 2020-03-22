@@ -19,7 +19,30 @@ export interface PopUpProps {
 
 export const UPDATE_RESERVATION_FEEDBACK = gql`
   mutation UpdateReservationFeedback($id: ID!, $input: ReservationFeedbackUpdateInput!) {
-    updateReservationFeedback(feedbackID: $id, input: $input)
+    updateReservationFeedback(feedbackID: $id, input: $input) {
+      id
+      comment
+      rating
+      feedbacks {
+        id
+        isCompleted
+        questions {
+          id
+          options
+          question
+          responses
+          type
+        }
+        variant {
+          id
+          product {
+            images
+            name
+            retailPrice
+          }
+        }
+      }
+    }
   }
 `
 

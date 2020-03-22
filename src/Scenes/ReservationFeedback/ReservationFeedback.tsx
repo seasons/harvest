@@ -13,40 +13,64 @@ import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 import { Schema } from "App/Navigation"
-import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
+import { ReservationFeedback_reservationFeedback, ReservationFeedback_reservationFeedback_feedbacks } from "src/generated/ReservationFeedback"
+import { UPDATE_RESERVATION_FEEDBACK } from "../Home/Components/ReviewPopUp"
+import { GET_RESERVATION_FEEDBACK } from "../Home/Home"
+import { useMutation } from "@apollo/react-hooks"
 
 export const ReservationFeedback: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ route, navigation }) => {
-  const reservationFeedback: ReservationFeedback_reservationFeedback = route.params.reservationFeedback
-  const [images, setImages] = useState(reservationFeedback.feedbacks[0].variant.product.images)
-  const [productName, setProductName] = useState(reservationFeedback.feedbacks[0].variant.product.name)
-  const [flatListData, setFlatListData] = useState(reservationFeedback.feedbacks[0].questions)
+  const [reservationFeedback, setReservationFeedback] = useState(route.params.reservationFeedback)
   const [currQuestionIndex, setCurrQuestionIndex] = useState(0)
   const [currProductIndex, setCurrProductIndex] = useState(0)
-  const insets = useSafeArea()
+  const [flatListRef, setFlatListRef] = useState(null)
+  const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK)
   const { width: windowWidth } = Dimensions.get("window")
   const numFeedbacks = reservationFeedback.feedbacks.length
   const progressBarSpacerWidth = 5
   const contentWidth = windowWidth - 32
   const progressBarWidth = (contentWidth / numFeedbacks) - progressBarSpacerWidth * (numFeedbacks - 1)
 
-  let flatListRef
-
   const changeToFeedbackIndex = (index) => {
-    const productFeedback = reservationFeedback.feedbacks[index]
-    setImages(productFeedback.variant.product.images)
-    setProductName(productFeedback.variant.product.name)
-    setFlatListData(productFeedback.questions)
+    setCurrProductIndex(index)
     setCurrQuestionIndex(0)
     flatListRef.scrollToIndex({ index: 0 })
-    setCurrProductIndex(index)
   }
 
   const renderItem = (feedbackQuestion, index) => {
-    const { question, options } = feedbackQuestion
-    const onOptionPressed = () => {
+    const { id: feedbackQuestionID, question, options, responses } = feedbackQuestion
+    const currVariantFeedback = reservationFeedback.feedbacks[currProductIndex]
+    const onOptionPressed = async (option) => {
+      feedbackQuestion.responses = [option]
+      const result = await updateReservationFeedback({
+        variables: {
+          id: reservationFeedback.id,
+          input: {
+            feedbacks: {
+              update: {
+                where: { id: currVariantFeedback.id },
+                data: {
+                  questions: {
+                    update: {
+                      where: { id: feedbackQuestionID },
+                      data: {
+                        responses: { set: option }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        refetchQueries: [{
+          query: GET_RESERVATION_FEEDBACK
+        }]
+      })
+      console.log("UPDATED FEEDBACK:", result?.data?.updateReservationFeedback)
+      setReservationFeedback(result?.data?.updateReservationFeedback)
       const totalNumQuestions = reservationFeedback.feedbacks[currProductIndex].questions.length
       const nextQuestionIndex = currQuestionIndex + 1
       if (nextQuestionIndex < totalNumQuestions) { // Scroll to next question
@@ -83,8 +107,9 @@ export const ReservationFeedback: React.FC<{
           <Button
             variant="secondaryWhite"
             width={contentWidth}
+            selected={responses.includes(item)}
             height={48}
-            onPress={onOptionPressed}>
+            onPress={() => onOptionPressed(item)}>
             {item}
           </Button>
         )}
@@ -99,6 +124,11 @@ export const ReservationFeedback: React.FC<{
   const handleContinueLaterPressed = () => {
     navigation.pop()
   }
+
+  const currVariantFeedback: ReservationFeedback_reservationFeedback_feedbacks = reservationFeedback.feedbacks[currProductIndex]
+  const { variant: currVariant, questions: currQuestions } = currVariantFeedback
+  const { product: currProduct } = currVariant
+  const { images, name: productName } = currProduct
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -136,11 +166,11 @@ export const ReservationFeedback: React.FC<{
             <Separator />
             <Spacer mb={3} />
             <FlatList
-              data={flatListData}
+              data={currQuestions}
               horizontal={true}
               pagingEnabled
               keyExtractor={item => item.question}
-              ref={(ref) => flatListRef = ref}
+              ref={(ref) => setFlatListRef(ref)}
               renderItem={({ item, index }) => renderItem(item, index)}
               showsHorizontalScrollIndicator={false}
             />
