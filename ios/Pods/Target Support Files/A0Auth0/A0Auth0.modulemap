@@ -1,6 +1,0 @@
-framework module A0Auth0 {
-  umbrella header "A0Auth0-umbrella.h"
-
-  export *
-  module * { export * }
-}
