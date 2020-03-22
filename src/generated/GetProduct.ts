@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { Material, LetterSize, BottomSizeType, ProductType } from "./globalTypes"
+import { Material } from "./globalTypes"
 
 // ====================================================
 // GraphQL query operation: GetProduct
@@ -34,29 +34,10 @@ export interface GetProduct_product_brand {
   since: any | null
 }
 
-export interface GetProduct_product_variants_internalSize_top {
-  __typename: "TopSize"
-  letter: LetterSize | null
-}
-
-export interface GetProduct_product_variants_internalSize_bottom {
-  __typename: "BottomSize"
-  type: BottomSizeType | null
-  value: string | null
-}
-
-export interface GetProduct_product_variants_internalSize {
-  __typename: "Size"
-  top: GetProduct_product_variants_internalSize_top | null
-  bottom: GetProduct_product_variants_internalSize_bottom | null
-  productType: ProductType | null
-  display: string
-}
-
 export interface GetProduct_product_variants {
   __typename: "ProductVariant"
   id: string
-  internalSize: GetProduct_product_variants_internalSize | null
+  size: string | null
   total: number
   reservable: number
   nonReservable: number

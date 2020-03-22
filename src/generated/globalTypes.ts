@@ -197,16 +197,7 @@ export enum QuestionType {
 export enum Rating {
   Disliked = "Disliked",
   Loved = "Loved",
-  Meh = "Meh",
-}
-
-export enum Size {
-  L = "L",
-  M = "M",
-  S = "S",
-  XL = "XL",
-  XS = "XS",
-  XXL = "XXL",
+  Ok = "Ok",
 }
 
 export interface AddressInput {

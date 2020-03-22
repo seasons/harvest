@@ -33,7 +33,6 @@ export interface Homepage_homepage_sections_results_Product_variants_internalSiz
 export interface Homepage_homepage_sections_results_Product_variants {
   __typename: "ProductVariant"
   id: string
-  internalSize: Homepage_homepage_sections_results_Product_variants_internalSize | null
   size: string | null
   reservable: number
 }

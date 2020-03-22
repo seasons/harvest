@@ -14,37 +14,6 @@ import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 import { Schema } from "App/Navigation"
 
-export const GET_HOMEPAGE = gql`
-  query Homepage {
-    homepage {
-      sections {
-        title
-        type
-        results {
-          ... on Brand {
-            id
-            name
-            since
-          }
-          ... on Product {
-            id
-            images
-            brand {
-              id
-              name
-            }
-            variants {
-              size
-              id
-              reservable
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export const ReservationFeedback: React.FC<{
   navigation: any
   route: any

@@ -26,6 +26,11 @@ export interface GetBrowseProducts_products_modelSize {
   display: string
 }
 
+export interface GetBrowseProducts_products_modelSize {
+  __typename: "Size"
+  display: string
+}
+
 export interface GetBrowseProducts_products_brand {
   __typename: "Brand"
   id: string
@@ -46,7 +51,6 @@ export interface GetBrowseProducts_products_variants {
   nonReservable: number
   reserved: number
   isSaved: boolean
-  internalSize: GetBrowseProducts_products_variants_internalSize | null
 }
 
 export interface GetBrowseProducts_products {
