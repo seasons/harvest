@@ -223,7 +223,6 @@ export const Home = screenTrack()(({ navigation }) => {
           renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
           ListFooterComponent={() => <HomeFooter navigation={navigation} />}
         />
-        <ReviewPopUp show={true} />
       </Animatable.View>
     </Container>
   )

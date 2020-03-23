@@ -26,7 +26,7 @@ const ADD_PRODUCT_REQUEST = gql`
 export const ProductRequest = screenTrack()((props: any) => {
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true)
   const [likeReason, setLikeReason] = useState("")
-  const [showError, setShowError] = useState(false)
+  const [showError, setShowError] = useState(true)
   const [url, setURL] = useState("")
   const tracking = useTracking()
 

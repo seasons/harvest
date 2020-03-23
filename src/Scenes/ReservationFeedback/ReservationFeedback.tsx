@@ -125,6 +125,12 @@ export const ReservationFeedback: React.FC<{
     navigation.pop()
   }
 
+  const onQuestionsFlatListScrollEnd = (event) => {
+    const { contentOffset, layoutMeasurement: viewSize } = event.nativeEvent
+    const questionIndexScrolledTo = Math.floor(contentOffset.x / viewSize.width)
+    setCurrQuestionIndex(questionIndexScrolledTo)
+  }
+
   const currVariantFeedback: ReservationFeedback_reservationFeedback_feedbacks = reservationFeedback.feedbacks[currProductIndex]
   const { variant: currVariant, questions: currQuestions } = currVariantFeedback
   const { product: currProduct } = currVariant
@@ -176,6 +182,7 @@ export const ReservationFeedback: React.FC<{
               ref={(ref) => setFlatListRef(ref)}
               renderItem={({ item, index }) => renderItem(item, index)}
               showsHorizontalScrollIndicator={false}
+              onMomentumScrollEnd={onQuestionsFlatListScrollEnd}
             />
           </Flex>
         </Box>
