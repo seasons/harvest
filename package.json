@@ -128,6 +128,7 @@
       "node_modules/react-native/.+\\.(js|tsx?)$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
     },
     "transformIgnorePatterns": [
+      "node_modules/aws-sdk/dist/aws-sdk-react-native.js",
       "node_modules/(?!react-native|react-navigation)/"
     ]
   },
