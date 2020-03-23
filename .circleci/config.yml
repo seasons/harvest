@@ -24,12 +24,12 @@ jobs:
           paths:
             - node_modules
       - restore_cache:
-          key: 1-gems-{{ checksum "Gemfile.lock" }}
+          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
       - run:
           name: Bundle install
           command: bundle check || bundle install
       - save_cache:
-          key: 1-gems-{{ checksum "Gemfile.lock" }}
+          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
       - run:
@@ -70,23 +70,15 @@ jobs:
       - restore_cache:
           key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
       - run: bundle install
-      - restore_cache:
-          key: pods-v4-{{ checksum "Podfile.lock" }}
-      - run:
-          name: Install CocoaPods
-          command: cd ios ; pod install ;
       - save_cache:
-          key: pods-v4-{{ checksum "Podfile.lock" }}
+          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
-            - ./Pods
+            - vendor/bundle
       - run:
           name: Install command line tool
           command: |
             npm install -g react-native-cli
             npm install -g react-native-version
-      - run:
-          name: Build entry file
-          command: react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios --verbose
       - run:
           name: Fastlane
           command: bundle exec fastlane $FASTLANE_LANE
