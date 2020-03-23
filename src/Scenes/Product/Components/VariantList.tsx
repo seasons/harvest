@@ -48,7 +48,8 @@ const sizeDataForVariants = (variants = [], type) => {
 
     if (variants) {
       for (let variant of variants) {
-        const { id, size, reservable } = variant
+        const { id, internalSize, reservable } = variant
+        const size = internalSize.display
 
         sizeData[size] = {
           id,

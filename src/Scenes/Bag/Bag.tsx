@@ -1,23 +1,24 @@
 import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
+import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
+import { useAuthContext } from "App/Navigation/AuthContext"
 import { color } from "App/utils"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
 import { assign, fill, get } from "lodash"
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, RefreshControl } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
+
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
-import { SavedItem } from "./Components/SavedItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
-import { GuestView } from "App/Components/GuestView"
-import { useSafeArea } from "react-native-safe-area-context"
-import { useAuthContext } from "App/Navigation/AuthContext"
-import { screenTrack, useTracking, Schema } from "App/utils/track"
+import { SavedItem } from "./Components/SavedItem"
 
 const SECTION_HEIGHT = 300
 
@@ -43,7 +44,7 @@ export const Bag = screenTrack()(props => {
 
   const tracking = useTracking()
 
-  const { data, loading, refetch } = useQuery(GET_BAG, {
+  const { data, refetch } = useQuery(GET_BAG, {
     fetchPolicy: "cache-and-network",
   })
   useEffect(() => {
