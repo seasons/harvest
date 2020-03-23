@@ -48,6 +48,7 @@ export const UPDATE_RESERVATION_FEEDBACK = gql`
 
 export const ReviewPopUp: React.FC<PopUpProps> = ({ onSelectedRating, reservationFeedback, show }) => {
   const [mounted, setMounted] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState(null)
   const [size, onLayout] = useComponentSize()
   const height = size ? size.height + 100 : 240
   const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK)
@@ -72,6 +73,7 @@ export const ReviewPopUp: React.FC<PopUpProps> = ({ onSelectedRating, reservatio
   const imageWidth = Math.max((contentWidth - imageHorizontalPadding * (numFeedbacks - 1)) / numFeedbacks, 112)
 
   const onRatingButtonPressed = async (ratingIndex) => {
+    setSelectedIndex(ratingIndex)
     let rating
     switch (ratingIndex) {
       case 0:
@@ -124,7 +126,7 @@ export const ReviewPopUp: React.FC<PopUpProps> = ({ onSelectedRating, reservatio
             <Spacer mb={3} />
             {options.map((option, index) => (
               <>
-                <Button variant="secondaryWhite" width={contentWidth} height={48} onPress={() => onRatingButtonPressed(index)}>
+                <Button variant="secondaryWhite" selected={selectedIndex === index} width={contentWidth} height={48} onPress={() => onRatingButtonPressed(index)}>
                   {option}
                 </Button>
                 <Spacer mt={1} />
