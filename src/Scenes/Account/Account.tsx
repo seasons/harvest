@@ -44,7 +44,9 @@ export const Account = screenTrack()(props => {
   const loaderStyles = useSpring({
     opacity: loading ? 1 : 0,
   })
+
   const { navigation } = props
+
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       refetch?.()
