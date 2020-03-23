@@ -129,6 +129,9 @@ export const ReservationFeedback: React.FC<{
   const { variant: currVariant, questions: currQuestions } = currVariantFeedback
   const { product: currProduct } = currVariant
   const { images, name: productName } = currProduct
+  const numResponses = currQuestions.filter((question) => question.responses).length
+  const numQuestions = currQuestions.length
+  const progressBarCompletedPercentage = numResponses / numQuestions
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -149,7 +152,7 @@ export const ReservationFeedback: React.FC<{
                 <TouchableWithoutFeedback onPress={() => handleSelectedProgressBar(index)}>
                   <Box>
                     <Spacer mt={1} />
-                    <ProgressBar width={progressBarWidth} percentCompleted={0.5} />
+                    <ProgressBar width={progressBarWidth} percentCompleted={progressBarCompletedPercentage} />
                     <Spacer mb={3} />
                   </Box>
                 </TouchableWithoutFeedback>
