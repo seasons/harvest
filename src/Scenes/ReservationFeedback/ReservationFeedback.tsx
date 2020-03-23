@@ -17,6 +17,7 @@ import { ReservationFeedback_reservationFeedback, ReservationFeedback_reservatio
 import { UPDATE_RESERVATION_FEEDBACK } from "../Home/Components/ReviewPopUp"
 import { GET_RESERVATION_FEEDBACK } from "../Home/Home"
 import { useMutation } from "@apollo/react-hooks"
+import { ReservationFeedbackHeader } from "./Components"
 
 export const ReservationFeedback: React.FC<{
   navigation: any
@@ -135,9 +136,13 @@ export const ReservationFeedback: React.FC<{
   const { variant: currVariant, questions: currQuestions } = currVariantFeedback
   const { product: currProduct } = currVariant
   const { images, name: productName } = currProduct
-  const numResponses = currQuestions.filter((question) => question.responses).length
-  const numQuestions = currQuestions.length
-  const progressBarCompletedPercentage = numResponses / numQuestions
+
+  const progressBarCompletedPercentages = reservationFeedback.feedbacks.map((feedback) => {
+    const { questions } = feedback
+    const numResponses = questions.filter((question) => question.responses).length
+    const numQuestions = questions.length
+    return numResponses / numQuestions
+  })
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -145,25 +150,13 @@ export const ReservationFeedback: React.FC<{
         <Box>
           <Handle color="black15" style={{ marginTop: 12, marginBottom: 16 }} />
           <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" >
-            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" >
-              <Sans size="1" color={color("black100")}>
-                Reviewing
-            </Sans>
-              <Sans size="1" color={color("black50")}>
-                Item {currProductIndex + 1} of {numFeedbacks}
-              </Sans>
-            </Flex>
-            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" >
-              {reservationFeedback.feedbacks.map((feedback, index) =>
-                <TouchableWithoutFeedback onPress={() => handleSelectedProgressBar(index)}>
-                  <Box>
-                    <Spacer mt={1} />
-                    <ProgressBar width={progressBarWidth} percentCompleted={progressBarCompletedPercentage} />
-                    <Spacer mb={3} />
-                  </Box>
-                </TouchableWithoutFeedback>
-              )}
-            </Flex>
+            <ReservationFeedbackHeader
+              currentItem={currProductIndex + 1}
+              headerText="Reviewing"
+              progressBarCompletedPercentages={progressBarCompletedPercentages}
+              totalNumItems={numFeedbacks}
+              onSelectedProgressBarIndex={handleSelectedProgressBar}
+            />
             <ImageRail
               height={200}
               images={images}
