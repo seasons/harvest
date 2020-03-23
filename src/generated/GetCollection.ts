@@ -1,13 +1,15 @@
 /* tslint:disable */
 /* eslint-disable */
-// @generated
 // This file was automatically generated and should not be edited.
-
-import { Size } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetCollection
 // ====================================================
+
+export interface GetCollection_collection_products_modelSize {
+  __typename: "Size";
+  display: string;
+}
 
 export interface GetCollection_collection_products_brand {
   __typename: "Brand";
@@ -21,7 +23,7 @@ export interface GetCollection_collection_products {
   name: string;
   description: string | null;
   retailPrice: number | null;
-  modelSize: Size | null;
+  modelSize: GetCollection_collection_products_modelSize | null;
   modelHeight: number | null;
   brand: GetCollection_collection_products_brand;
   images: any;

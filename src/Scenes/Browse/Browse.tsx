@@ -65,12 +65,14 @@ const GET_BROWSE_PRODUCTS = gql`
       }
       variants {
         id
-        size
         total
         reservable
         nonReservable
         reserved
         isSaved
+        internalSize {
+          display
+        }
       }
     }
   }

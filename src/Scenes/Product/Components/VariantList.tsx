@@ -1,12 +1,9 @@
-import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box, Flex, Radio, Sans, Separator, Spacer } from "App/Components"
 import { color } from "App/utils"
-import { capitalize, find, get } from "lodash"
+import { Schema, useTracking } from "App/utils/track"
+import { capitalize, find, head } from "lodash"
 import React, { useEffect, useState } from "react"
 import { TouchableOpacity } from "react-native"
-
-import { useQuery } from "@apollo/react-hooks"
-import { Schema, useTracking } from "App/utils/track"
 
 export interface Size {
   id: string
@@ -31,61 +28,74 @@ const sizeToName = size => {
   }
 }
 
-const sizeDataForVariants = (variants = []) => {
-  const sizeData = {
-    XS: {},
-    S: {},
-    M: {},
-    L: {},
-    XL: {},
-  }
-  for (let size in sizeData) {
-    sizeData[size] = {
-      id: size,
-      size: sizeToName(size),
-      reservable: 0,
-      stock: 0,
+const sizeDataForVariants = (variants = [], type) => {
+  if (type === "Top") {
+    const sizeData = {
+      XS: {},
+      S: {},
+      M: {},
+      L: {},
+      XL: {},
     }
-  }
+    for (let size in sizeData) {
+      sizeData[size] = {
+        id: size,
+        size: sizeToName(size),
+        reservable: 0,
+        stock: 0,
+      }
+    }
 
-  if (variants) {
+    if (variants) {
+      for (let variant of variants) {
+        const { id, internalSize, reservable } = variant
+        const size = internalSize.display
+
+        sizeData[size] = {
+          id,
+          size: sizeToName(size),
+          reservable,
+          stock: reservable,
+        }
+      }
+    }
+    return sizeData
+  } else if (type === "Bottom") {
+    const sizeData: any = {}
     for (let variant of variants) {
-      const { id, size, reservable } = variant
+      const { id, reservable } = variant
+      const size = variant.internalSize?.bottom?.value
 
       sizeData[size] = {
         id,
-        size: sizeToName(size),
+        size,
         reservable,
         stock: reservable,
       }
     }
+
+    return sizeData
   }
-  return sizeData
 }
 
-export const VariantList = ({ productID, setSelectedVariant, selectedVariant, onSizeSelected }) => {
+export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelected, product }) => {
+  const variants = product?.variants
+  const type = product?.type
   const [sizeData, setSizeData] = useState({})
   const tracking = useTracking()
-  const { data } = useQuery(GET_PRODUCT, {
-    variables: {
-      productID,
-    },
-    onCompleted: () => {
-      updateSizeData()
-    },
-  })
+
+  console.log(variants)
 
   useEffect(() => {
     updateSizeData()
   }, [])
 
   const updateSizeData = () => {
-    const variants = get(data, "product.variants")
-    const sizeData = sizeDataForVariants(variants)
+    const sizeData = sizeDataForVariants(variants, type)
     setSizeData(sizeData)
 
     // Update size data
-    const firstAvailableSize = find(sizeData, (size: Size) => size.stock > 0) || sizeData["M"]
+    const firstAvailableSize = find(sizeData, (size: Size) => size.stock > 0) || sizeData[head(Object.keys(sizeData))]
     setSelectedVariant(firstAvailableSize)
   }
 

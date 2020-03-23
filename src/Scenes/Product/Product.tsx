@@ -13,7 +13,9 @@ import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
+
 import { useMutation, useQuery } from "@apollo/react-hooks"
+
 import { GET_HOMEPAGE } from "../Home/Home"
 import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
@@ -75,7 +77,7 @@ export const Product = screenTrack({
 
   const product: GetProduct_product = data && data.product
   const [selectedVariant, setSelectedVariant] = useState(
-    (product && product.variants && product.variants.length && product.variants[0]) || {
+    product?.variants?.[0] || {
       id: "",
       reservable: 0,
       size: "",
@@ -165,6 +167,7 @@ export const Product = screenTrack({
       {showVariantPicker && <Overlay />}
       <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
         <VariantPicker
+          product={product}
           setSelectedVariant={setSelectedVariant}
           selectedVariant={selectedVariant}
           height={variantPickerHeight}
