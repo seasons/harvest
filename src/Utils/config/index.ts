@@ -35,7 +35,6 @@ class Config {
         this.variables = envJSON[environment]
       }
     }
-    console.log("this.variables", this.variables)
     return
   }
   get(variable: Env) {
