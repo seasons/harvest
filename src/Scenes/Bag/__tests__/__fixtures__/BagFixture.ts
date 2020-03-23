@@ -9,7 +9,7 @@ export const BagFixture = {
           product: {
             name: "Conroy Leather Biker Jacket",
             id: "ck69viyie01w20722g086g2pk",
-            modelSize: "M",
+            modelSize: { display: "M" },
             brand: {
               id: "ck69vhvre002q0722grv8x8l5",
               name: "All Saints",
@@ -143,7 +143,7 @@ export const BagFixture = {
           product: {
             name: "Logo Hoodie",
             id: "ck69vixyo01um0722qgoea1hs",
-            modelSize: "M",
+            modelSize: { display: "M" },
             brand: {
               id: "ck69vhvk6002c07229dpkuz4h",
               name: "Aimé Leon Dore",
@@ -277,7 +277,7 @@ export const BagFixture = {
           product: {
             name: "Fleece Bomber Jacket",
             id: "ck69viyy801xi0722t28fgo8q",
-            modelSize: "M",
+            modelSize: { display: "M" },
             brand: {
               id: "ck69vi6gs00km0722kxdcgyww",
               name: "Ambush",

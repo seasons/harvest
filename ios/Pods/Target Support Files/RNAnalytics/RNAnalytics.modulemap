@@ -1,6 +1,0 @@
-framework module RNAnalytics {
-  umbrella header "RNAnalytics-umbrella.h"
-
-  export *
-  module * { export * }
-}
