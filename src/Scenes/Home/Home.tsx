@@ -9,6 +9,7 @@ import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { useMutation } from "@apollo/react-hooks"
+import { useFocusEffect } from '@react-navigation/native';
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import SplashScreen from "react-native-splash-screen"
@@ -144,7 +145,7 @@ export const Home = screenTrack()(({ navigation }) => {
   const [showLoader, toggleLoader] = useState(true)
   const [showReviewPopUp, setShowReviewPopUp] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
-  const { loading: feedbackLoading, error: feedbackError, data: feedbackData } = useQuery(GET_RESERVATION_FEEDBACK)
+  const { loading: feedbackLoading, error: feedbackError, data: feedbackData, refetch: refetchReservationFeedback } = useQuery(GET_RESERVATION_FEEDBACK)
   const [showSplash, setShowSplash] = useState(true)
 
   useEffect(() => {
@@ -163,6 +164,10 @@ export const Home = screenTrack()(({ navigation }) => {
       }, 100)
     }
   }, [loading])
+
+  useFocusEffect(() => {
+    refetchReservationFeedback()
+  })
 
   const reservationFeedback = feedbackData?.reservationFeedback
 

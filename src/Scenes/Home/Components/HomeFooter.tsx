@@ -43,7 +43,7 @@ export const HomeFooter: React.FC<HomeFooterProps> = ({ bottom, navigation }) =>
               Browse
             </Button>
           </Flex>
-          {bottom && <Spacer mb={bottom} />}
+          {!!bottom && <Spacer mb={bottom} />}
         </Flex>
         <Box style={{ height: 1000, backgroundColor: color("black100") }} />
       </Box>

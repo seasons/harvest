@@ -17,7 +17,6 @@ export const ReservationFeedbackReminder: React.FC<ReservationFeedbackHeaderProp
   const { feedbacks } = reservationFeedback
   const incompleteFeedbackIndex = feedbacks.findIndex(feedback => !feedback.isCompleted)
   const currentItem = incompleteFeedbackIndex === -1 ? feedbacks.length : incompleteFeedbackIndex + 1
-  console.log("HEREEEE")
   return (
     <>
       <Separator color="black" />
