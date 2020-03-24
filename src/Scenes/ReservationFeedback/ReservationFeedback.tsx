@@ -10,7 +10,6 @@ import { screenTrack } from "App/utils/track"
 import { ReservationFeedbackHeader } from "./Components"
 import { Container } from "Components/Container"
 import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
-import { GET_RESERVATION_FEEDBACK } from "../Home/Home"
 import { ReservationFeedback_reservationFeedback_feedbacks } from "src/generated/ReservationFeedback"
 
 export const ReservationFeedback: React.FC<{
@@ -74,10 +73,7 @@ export const ReservationFeedback: React.FC<{
               }
             }
           }
-        },
-        refetchQueries: [{
-          query: GET_RESERVATION_FEEDBACK
-        }]
+        }
       })
       const updatedReservationFeedback = result?.data?.updateReservationFeedback
       if (updatedReservationFeedback) {

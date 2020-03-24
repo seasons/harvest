@@ -51,11 +51,6 @@ export const GET_HOMEPAGE = gql`
         }
       }
     }
-  }
-`
-
-export const GET_RESERVATION_FEEDBACK = gql`
-  query ReservationFeedback {
     reservationFeedback {
       id
       comment
@@ -87,13 +82,7 @@ export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
   const [showLoader, toggleLoader] = useState(true)
   const [showReviewPopUp, setShowReviewPopUp] = useState(true)
-  const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
-  const {
-    loading: _feedbackLoading,
-    error: _feedbackError,
-    data: feedbackData,
-    refetch: refetchReservationFeedback,
-  } = useQuery(GET_RESERVATION_FEEDBACK)
+  const { loading, error, data, refetch } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)
 
   useEffect(() => {
@@ -114,10 +103,18 @@ export const Home = screenTrack()(({ navigation }) => {
   }, [loading])
 
   useFocusEffect(() => {
-    refetchReservationFeedback()
+    refetch()
   })
 
-  const reservationFeedback = feedbackData?.reservationFeedback
+  if (error) {
+    console.error("error /home/index.tsx: ", error)
+  }
+
+  if (showLoader || !data) {
+    return <Loader />
+  }
+
+  const reservationFeedback = data?.reservationFeedback
 
   const goToReservationFeedbackScreen = () => {
     navigation.navigate("Modal", {
