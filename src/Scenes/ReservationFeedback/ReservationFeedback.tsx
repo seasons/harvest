@@ -22,36 +22,36 @@ export const ReservationFeedback: React.FC<{
 
   const incompleteFeedbackIndex = reservationFeedback.feedbacks
     .findIndex(feedback => !feedback.isCompleted)
-  const [currProductIndex, setCurrProductIndex] = useState(
+  const [currFeedbackIndex, setCurrFeedbackIndex] = useState(
     incompleteFeedbackIndex === -1
       ? feedbacks.length - 1
       : incompleteFeedbackIndex
   )
 
-  const incompleteFeedback = feedbacks[currProductIndex]
+  const incompleteFeedback = feedbacks[currFeedbackIndex]
   const incompleteQuestionIndex = incompleteFeedback.questions.findIndex(question => question.responses.length === 0)
   const [currQuestionIndex, setCurrQuestionIndex] = useState(
     incompleteQuestionIndex === -1
       ? incompleteFeedback.questions.length - 1
       : incompleteQuestionIndex
   )
+
   const [flatListRef, setFlatListRef] = useState(null)
   const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK)
-  const { width: windowWidth } = Dimensions.get("window")
-  const contentWidth = windowWidth - 32
 
   const changeToFeedbackIndex = (index) => {
-    setCurrProductIndex(index)
+    setCurrFeedbackIndex(index)
     setCurrQuestionIndex(0)
     flatListRef.scrollToIndex({ index: 0 })
   }
 
   const renderItem = (feedbackQuestion, index) => {
     const { id: feedbackQuestionID, question, options, responses } = feedbackQuestion
-    const currVariantFeedback: ReservationFeedback_reservationFeedback_feedbacks = reservationFeedback.feedbacks[currProductIndex]
+    const currFeedback: ReservationFeedback_reservationFeedback_feedbacks = reservationFeedback.feedbacks[currFeedbackIndex]
+    const { questions: currQuestions } = currFeedback
     const onOptionPressed = async (option) => {
       feedbackQuestion.responses = [option]
-      const unansweredFeedbackQuestions = currVariantFeedback.questions.filter((question) => question.responses.length === 0)
+      const unansweredFeedbackQuestions = currQuestions.filter((question) => question.responses.length === 0)
       const feedbackIsCompleted =
         (unansweredFeedbackQuestions.length === 1 && unansweredFeedbackQuestions[0].id === feedbackQuestionID) ||
         unansweredFeedbackQuestions.length === 0
@@ -61,7 +61,7 @@ export const ReservationFeedback: React.FC<{
           input: {
             feedbacks: {
               update: {
-                where: { id: currVariantFeedback.id },
+                where: { id: currFeedback.id },
                 data: {
                   isCompleted: feedbackIsCompleted,
                   questions: {
@@ -79,22 +79,25 @@ export const ReservationFeedback: React.FC<{
           query: GET_RESERVATION_FEEDBACK
         }]
       })
-      setReservationFeedback(result?.data?.updateReservationFeedback)
-      const totalNumQuestions = reservationFeedback.feedbacks[currProductIndex].questions.length
-      const nextQuestionIndex = currQuestionIndex + 1
-      if (nextQuestionIndex < totalNumQuestions) { // Scroll to next question
-        flatListRef.scrollToIndex({ index: nextQuestionIndex })
-        setCurrQuestionIndex(nextQuestionIndex)
-      } else {
-        const nextProductIndex = currProductIndex + 1
-        const totalNumProducts = reservationFeedback.feedbacks.length
-        if (nextProductIndex < totalNumProducts) { // Scroll to next product
-          changeToFeedbackIndex(nextProductIndex)
+      const updatedReservationFeedback = result?.data?.updateReservationFeedback
+      if (updatedReservationFeedback) {
+        setReservationFeedback(updatedReservationFeedback)
+        const totalNumQuestions = currQuestions.length
+        const nextQuestionIndex = currQuestionIndex + 1
+        if (nextQuestionIndex < totalNumQuestions) { // Scroll to next question
+          flatListRef.scrollToIndex({ index: nextQuestionIndex })
+          setCurrQuestionIndex(nextQuestionIndex)
         } else {
-          navigation.navigate("Modal", {
-            screen: Schema.PageNames.ReservationFeedbackConfirmationModal,
-            params: { reservationFeedback }
-          })
+          const nextProductIndex = currFeedbackIndex + 1
+          const totalNumProducts = reservationFeedback.feedbacks.length
+          if (nextProductIndex < totalNumProducts) { // Scroll to next product
+            changeToFeedbackIndex(nextProductIndex)
+          } else {
+            navigation.navigate("Modal", {
+              screen: Schema.PageNames.ReservationFeedbackConfirmationModal,
+              params: { reservationFeedback }
+            })
+          }
         }
       }
     }
@@ -140,10 +143,13 @@ export const ReservationFeedback: React.FC<{
     setCurrQuestionIndex(questionIndexScrolledTo)
   }
 
-  const currVariantFeedback: ReservationFeedback_reservationFeedback_feedbacks = reservationFeedback.feedbacks[currProductIndex]
-  const { variant: currVariant, questions: currQuestions } = currVariantFeedback
+  const currFeedback: ReservationFeedback_reservationFeedback_feedbacks = reservationFeedback.feedbacks[currFeedbackIndex]
+  const { variant: currVariant, questions: currQuestions } = currFeedback
   const { product: currProduct } = currVariant
   const { images, name: productName } = currProduct
+
+  const { width: windowWidth } = Dimensions.get("window")
+  const contentWidth = windowWidth - 32
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -152,7 +158,7 @@ export const ReservationFeedback: React.FC<{
           <Handle color="black15" style={{ marginTop: 12, marginBottom: 16 }} />
           <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" >
             <ReservationFeedbackHeader
-              currentItem={currProductIndex + 1}
+              currentItem={currFeedbackIndex + 1}
               headerText="Reviewing"
               reservationFeedback={reservationFeedback}
               onSelectedProgressBarIndex={handleSelectedProgressBar}
