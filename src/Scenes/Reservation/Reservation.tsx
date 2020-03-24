@@ -158,7 +158,7 @@ export const Reservation = screenTrack()(props => {
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="black100">
-      <CloseButton navigation={props.navigation} />
+      <CloseButton />
       <Box px={2} pb={3}>
         <Sans size="3" color="white">
           Review your order

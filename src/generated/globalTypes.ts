@@ -189,16 +189,22 @@ export enum PushNotificationStatus {
   Granted = "Granted",
 }
 
+export enum UserRole {
+  Admin = "Admin",
+  Customer = "Customer",
+  Partner = "Partner",
+}
+
 export interface AddressInput {
-  city: string;
-  postalCode: string;
-  state: string;
-  street1: string;
-  street2?: string | null;
+  city: string
+  postalCode: string
+  state: string
+  street1: string
+  street2?: string | null
 }
 
 export interface ReserveItemsOptions {
-  dryRun?: boolean | null;
+  dryRun?: boolean | null
 }
 
 //==============================================================

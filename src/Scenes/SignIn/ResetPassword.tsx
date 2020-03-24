@@ -56,7 +56,7 @@ export const ResetPassword = (props: any) => {
 
   return (
     <Container backgroundColor="black100" insetsBottom={false}>
-      <CloseButton navigation={props.navigation} />
+      <CloseButton />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
           <Box px={2}>

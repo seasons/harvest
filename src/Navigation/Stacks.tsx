@@ -19,6 +19,7 @@ import { Faq } from "App/Scenes/Faq"
 import { Brand } from "App/Scenes/Brand"
 import { Brands } from "App/Scenes/Brands"
 import { Schema } from "App/Navigation"
+import { DebugMenu } from "App/Scenes/DebugMenu"
 
 const HomeStack = createStackNavigator()
 const BagStack = createStackNavigator()
@@ -94,6 +95,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ReservationConfirmationModal} component={ReservationConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ReservationModal} component={Reservation} />
       <ModalStack.Screen name={Schema.PageNames.AllowNotificationsModal} component={AllowNotifications} />
+      <ModalStack.Screen name={Schema.PageNames.DebugMenu} component={DebugMenu} />
     </ModalStack.Navigator>
   )
 }

@@ -17,5 +17,6 @@ module.exports = function(api) {
         },
       ],
     ],
+    ignore: ["node_modules/aws-sdk/dist/aws-sdk-react-native.js"],
   }
 }
