@@ -77,6 +77,7 @@ export const GET_HOMEPAGE = gql`
   }
 `
 
+
 export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
   const [showLoader, toggleLoader] = useState(true)
