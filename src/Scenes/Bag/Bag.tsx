@@ -139,10 +139,6 @@ export const Bag = screenTrack()(props => {
 
   const handleReserve = async navigation => {
     setMutating(true)
-    console.log("VARIANT IDS:")
-    items.map(item => {
-      console.log(item.variantID)
-    })
     try {
       const { data } = await checkItemsAvailability({
         variables: {

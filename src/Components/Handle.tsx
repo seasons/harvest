@@ -15,6 +15,6 @@ export const Handle = styled(Box) <HandleProps>`
   width: 40px;
   height: 5px;
   border-radius: 100;
-  background: ${props => color(props.color) || color("white")};
+  background: ${props => color(props.color) || color("white100")};
   margin: auto;
 `

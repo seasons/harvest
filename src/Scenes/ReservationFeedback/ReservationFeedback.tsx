@@ -1,29 +1,23 @@
-import { Box, Button, Flex, Handle, ProgressBar, Sans, Separator, Spacer } from "App/Components"
-import { Loader } from "App/Components/Loader"
+import { useMutation } from "@apollo/react-hooks"
+import React, { useState } from "react"
+import { Dimensions, FlatList, Text, TouchableWithoutFeedback } from "react-native"
+
+import { Box, Button, Flex, Handle, Sans, Separator, Spacer } from "App/Components"
+import { Schema } from "App/Navigation"
 import { ImageRail } from "App/Scenes/Product/Components"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
-import { Container } from "Components/Container"
-import { LogoText } from "Components/Typography"
-import gql from "graphql-tag"
-import React, { useEffect, useState } from "react"
-import { useQuery } from "react-apollo"
-import { Dimensions, FlatList, Text, TouchableWithoutFeedback, findNodeHandle } from "react-native"
-import * as Animatable from "react-native-animatable"
-import { useSafeArea } from "react-native-safe-area-context"
-import styled from "styled-components/native"
-import { Schema } from "App/Navigation"
-import { ReservationFeedback_reservationFeedback, ReservationFeedback_reservationFeedback_feedbacks } from "src/generated/ReservationFeedback"
-import { UPDATE_RESERVATION_FEEDBACK } from "../Home/Components/ReviewPopUp"
-import { GET_RESERVATION_FEEDBACK } from "../Home/Home"
-import { useMutation } from "@apollo/react-hooks"
 import { ReservationFeedbackHeader } from "./Components"
+import { Container } from "Components/Container"
+import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
+import { GET_RESERVATION_FEEDBACK } from "../Home/Home"
+import { ReservationFeedback_reservationFeedback_feedbacks } from "src/generated/ReservationFeedback"
 
 export const ReservationFeedback: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ route, navigation }) => {
-  const [reservationFeedback, setReservationFeedback] = useState(route.params.reservationFeedback)
+  const [reservationFeedback, setReservationFeedback] = useState(route?.params?.reservationFeedback)
   const { feedbacks } = reservationFeedback
 
   const incompleteFeedbackIndex = reservationFeedback.feedbacks
@@ -73,9 +67,7 @@ export const ReservationFeedback: React.FC<{
                   questions: {
                     update: {
                       where: { id: feedbackQuestionID },
-                      data: {
-                        responses: { set: option }
-                      }
+                      data: { responses: { set: option } }
                     }
                   }
                 }
@@ -100,7 +92,7 @@ export const ReservationFeedback: React.FC<{
           changeToFeedbackIndex(nextProductIndex)
         } else {
           navigation.navigate("Modal", {
-            screen: Schema.PageNames.ReservationFeedbackConfirmation,
+            screen: Schema.PageNames.ReservationFeedbackConfirmationModal,
             params: { reservationFeedback }
           })
         }

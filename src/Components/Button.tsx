@@ -183,7 +183,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
     const { selected = false } = nextProps
     const { current: currentState, previous: previousState } = prevState
     const previous = selected ? currentState : previousState
-    const current = selected ? DisplayState.Pressed : DisplayState.Default
+    const current = selected ? DisplayState.Pressed : currentState
     return { previous, current }
   }
 

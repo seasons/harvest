@@ -6,10 +6,10 @@ import { Home } from "App/Scenes/Home"
 import { Product } from "App/Scenes/Product"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
-import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn, Welcome } from "App/Scenes/SignIn"
+import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn } from "App/Scenes/SignIn"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
-import { Webview } from "App/Scenes/Webview"
 import { ReservationFeedback, ReservationFeedbackConfirmation, ReservationFeedbackFinish } from "App/Scenes/ReservationFeedback"
+import { Webview } from "App/Scenes/Webview"
 import React from "react"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { NavBar } from "./NavBar"
@@ -94,9 +94,9 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />
       <ModalStack.Screen name={Schema.PageNames.ReservationConfirmationModal} component={ReservationConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ReservationModal} component={Reservation} />
-      <ModalStack.Screen name={Schema.PageNames.ReservationFeedback} component={ReservationFeedback} />
-      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackConfirmation} component={ReservationFeedbackConfirmation} />
-      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackFinish} component={ReservationFeedbackFinish} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackModal} component={ReservationFeedback} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackConfirmationModal} component={ReservationFeedbackConfirmation} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackFinishModal} component={ReservationFeedbackFinish} />
       <ModalStack.Screen name={Schema.PageNames.AllowNotificationsModal} component={AllowNotifications} />
     </ModalStack.Navigator>
   )
