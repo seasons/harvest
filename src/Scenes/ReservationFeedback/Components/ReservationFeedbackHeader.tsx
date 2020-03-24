@@ -20,7 +20,7 @@ export const ReservationFeedbackHeader: React.FC<ReservationFeedbackHeaderProps>
   const { feedbacks } = reservationFeedback
   const progressBarCompletedPercentages = feedbacks.map((feedback) => {
     const { questions } = feedback
-    const numResponses = questions.filter((question) => question.responses).length
+    const numResponses = questions.filter((question) => question.responses.length > 0).length
     const numQuestions = questions.length
     return numResponses / numQuestions
   })

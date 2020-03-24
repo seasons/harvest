@@ -8,7 +8,7 @@ import { LogoText } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
-import { Dimensions, FlatList, Text, TouchableWithoutFeedback } from "react-native"
+import { Dimensions, FlatList, Text, TouchableWithoutFeedback, findNodeHandle } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
@@ -24,15 +24,27 @@ export const ReservationFeedback: React.FC<{
   route: any
 }> = screenTrack()(({ route, navigation }) => {
   const [reservationFeedback, setReservationFeedback] = useState(route.params.reservationFeedback)
-  const [currQuestionIndex, setCurrQuestionIndex] = useState(0)
-  const [currProductIndex, setCurrProductIndex] = useState(0)
+  const { feedbacks } = reservationFeedback
+
+  const incompleteFeedbackIndex = reservationFeedback.feedbacks
+    .findIndex(feedback => !feedback.isCompleted)
+  const [currProductIndex, setCurrProductIndex] = useState(
+    incompleteFeedbackIndex === -1
+      ? feedbacks.length - 1
+      : incompleteFeedbackIndex
+  )
+
+  const incompleteFeedback = feedbacks[currProductIndex]
+  const incompleteQuestionIndex = incompleteFeedback.questions.findIndex(question => question.responses.length === 0)
+  const [currQuestionIndex, setCurrQuestionIndex] = useState(
+    incompleteQuestionIndex === -1
+      ? incompleteFeedback.questions.length - 1
+      : incompleteQuestionIndex
+  )
   const [flatListRef, setFlatListRef] = useState(null)
   const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK)
   const { width: windowWidth } = Dimensions.get("window")
-  const numFeedbacks = reservationFeedback.feedbacks.length
-  const progressBarSpacerWidth = 5
   const contentWidth = windowWidth - 32
-  const progressBarWidth = (contentWidth / numFeedbacks) - progressBarSpacerWidth * (numFeedbacks - 1)
 
   const changeToFeedbackIndex = (index) => {
     setCurrProductIndex(index)
@@ -44,7 +56,8 @@ export const ReservationFeedback: React.FC<{
     const { id: feedbackQuestionID, question, options, responses } = feedbackQuestion
     const currVariantFeedback: ReservationFeedback_reservationFeedback_feedbacks = reservationFeedback.feedbacks[currProductIndex]
     const onOptionPressed = async (option) => {
-      const unansweredFeedbackQuestions = currVariantFeedback.questions.filter((question) => !question.responses)
+      feedbackQuestion.responses = [option]
+      const unansweredFeedbackQuestions = currVariantFeedback.questions.filter((question) => question.responses.length === 0)
       const feedbackIsCompleted =
         (unansweredFeedbackQuestions.length === 1 && unansweredFeedbackQuestions[0].id === feedbackQuestionID) ||
         unansweredFeedbackQuestions.length === 0
@@ -74,7 +87,6 @@ export const ReservationFeedback: React.FC<{
           query: GET_RESERVATION_FEEDBACK
         }]
       })
-      console.log("UPDATED FEEDBACK:", result?.data?.updateReservationFeedback)
       setReservationFeedback(result?.data?.updateReservationFeedback)
       const totalNumQuestions = reservationFeedback.feedbacks[currProductIndex].questions.length
       const nextQuestionIndex = currQuestionIndex + 1
@@ -165,6 +177,14 @@ export const ReservationFeedback: React.FC<{
             <Spacer mb={3} />
             <FlatList
               data={currQuestions}
+              initialScrollIndex={currQuestionIndex}
+              onScrollToIndexFailed={info => {
+                // When the initialScrollIndex is at the end, the flat list may fail to scroll
+                // to that index because the layout is not yet complete so we have to wait for 
+                // the layout to finish and then retry
+                const wait = new Promise(resolve => setTimeout(resolve, 500));
+                wait.then(() => { flatListRef.scrollToIndex({ index: info.index }) })
+              }}
               horizontal={true}
               pagingEnabled
               keyExtractor={item => item.question}
