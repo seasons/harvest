@@ -27,9 +27,6 @@ const GET_BRAND = gql`
         name
         description
         images
-        modelSize {
-          display
-        }
         modelHeight
         externalURL
         tags
@@ -39,7 +36,17 @@ const GET_BRAND = gql`
         updatedAt
         variants {
           id
-          size
+          internalSize {
+            top {
+              letter
+            }
+            bottom {
+              type
+              value
+            }
+            productType
+            display
+          }
           total
           reservable
           nonReservable
