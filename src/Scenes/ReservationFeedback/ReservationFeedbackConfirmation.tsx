@@ -1,28 +1,23 @@
-import { Box, Button, FixedBackArrow, FixedButton, Flex, Handle, PopUp, ProgressBar, Sans, Separator, Spacer, TextInput } from "App/Components"
-import { Loader } from "App/Components/Loader"
-import { ImageRail } from "App/Scenes/Product/Components"
-import { color } from "App/utils"
-import { screenTrack } from "App/utils/track"
-import { Container } from "Components/Container"
-import { LogoText } from "Components/Typography"
-import gql from "graphql-tag"
-import React, { useEffect, useState } from "react"
-import { useQuery } from "react-apollo"
+import { useMutation } from "@apollo/react-hooks"
+import React, { useState } from "react"
 import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
-import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
+
+import { Box, Button, FixedBackArrow, Flex, PopUp, Sans, Separator, Spacer, TextInput } from "App/Components"
 import { Schema } from "App/Navigation"
+import { space } from "App/utils"
+import { screenTrack } from "App/utils/track"
+import { Container } from "Components/Container"
 import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
-import { useMutation } from "@apollo/react-hooks"
 import { GET_RESERVATION_FEEDBACK } from "../Home/Home"
 
 export const ReservationFeedbackConfirmation: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ route, navigation }) => {
-  const { reservationFeedback } = route.params
-  const [comment, setComment] = useState(reservationFeedback.comment)
+  const reservationFeedback = route?.params?.reservationFeedback
+  const [comment, setComment] = useState(reservationFeedback?.comment)
   const [showError, setShowError] = useState(false)
   const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK)
   const insets = useSafeArea()
@@ -32,7 +27,7 @@ export const ReservationFeedbackConfirmation: React.FC<{
   const submitFeedback = async () => {
     const result = await updateReservationFeedback({
       variables: {
-        id: reservationFeedback.id,
+        id: reservationFeedback?.id,
         input: { comment }
       },
       refetchQueries: [{
@@ -103,6 +98,6 @@ export const ReservationFeedbackConfirmation: React.FC<{
 
 const FixedKeyboardAvoidingView = styled(KeyboardAvoidingView)`
   position: absolute;
-  left: 16;
+  left: ${space(2)};
 `
 

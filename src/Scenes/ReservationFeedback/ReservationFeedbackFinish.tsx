@@ -1,13 +1,12 @@
-import { Box, Button, FixedBackArrow, Flex, Handle, ProgressBar, Sans, Separator, Spacer, TextInput } from "App/Components"
-import { screenTrack } from "App/utils/track"
-import { Container } from "Components/Container"
 import React from "react"
 import { Text } from "react-native"
+import { Box, Button, Flex, Sans, Spacer } from "App/Components"
+import { screenTrack } from "App/utils/track"
+import { Container } from "Components/Container"
 
 export const ReservationFeedbackFinish: React.FC<{
   navigation: any
-  route: any
-}> = screenTrack()(({ route, navigation }) => {
+}> = screenTrack()(({ navigation }) => {
   return (
     <Container >
       <Box px={2} style={{ flex: 1, flexDirection: "column" }}>
