@@ -9,7 +9,6 @@ import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { color } from "App/utils"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
-import { GET_RESERVATION_FEEDBACK } from "../../Home/Home"
 import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
 
 export interface ReservationFeedbackPopUpProps {
@@ -95,9 +94,6 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
         id: reservationFeedback.id,
         input: { rating }
       },
-      refetchQueries: [{
-        query: GET_RESERVATION_FEEDBACK
-      }]
     })
     if (result?.data) {
       onSelectedRating()
@@ -120,10 +116,10 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
             <Spacer mb={3} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" alignItems="center">
               {images.map((image, index) => (
-                <Box key={index} >
+                <React.Fragment key={index}>
                   <FadeInImage source={{ uri: image }} style={{ width: imageWidth, height: 140 }} />
-                  <Spacer ml={0.5} />
-                </Box>
+                  <Spacer mr={0.5} />
+                </React.Fragment>
               ))}
             </Flex>
             <Spacer mb={3} />
