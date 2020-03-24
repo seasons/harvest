@@ -75,12 +75,12 @@ jobs:
           paths:
             - vendor/bundle
       - restore_cache:
-          key: pods-v4-{{ checksum "Podfile.lock" }}
+          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
       - run:
           name: Install CocoaPods
           command: cd ios ; pod install ;
       - save_cache:
-          key: pods-v4-{{ checksum "Podfile.lock" }}
+          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
           paths:
             - ./Pods
       - run:
