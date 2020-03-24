@@ -10,7 +10,6 @@ import { space } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
 import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
-import { GET_RESERVATION_FEEDBACK } from "../Home/Home"
 
 export const ReservationFeedbackConfirmation: React.FC<{
   navigation: any
@@ -30,9 +29,6 @@ export const ReservationFeedbackConfirmation: React.FC<{
         id: reservationFeedback?.id,
         input: { comment }
       },
-      refetchQueries: [{
-        query: GET_RESERVATION_FEEDBACK
-      }]
     })
     if (!result?.data) {
       setShowError(true)
