@@ -180,10 +180,11 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { selected = false } = nextProps
+    const { selected } = nextProps
+    if (selected === undefined) { return prevState }
     const { current: currentState, previous: previousState } = prevState
     const previous = selected ? currentState : previousState
-    const current = selected ? DisplayState.Pressed : currentState
+    const current = selected ? DisplayState.Pressed : DisplayState.Default
     return { previous, current }
   }
 
