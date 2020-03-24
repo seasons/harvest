@@ -1,9 +1,8 @@
 import React from "react"
-import { Dimensions, TouchableWithoutFeedback } from "react-native"
-import { Box, Flex, ProgressBar, Sans, Spacer, Separator } from "App/Components"
-import { color } from "App/utils"
-import { ReservationFeedback_reservationFeedback, ReservationFeedback_reservationFeedback_feedbacks } from "src/generated/ReservationFeedback"
+import { TouchableWithoutFeedback } from "react-native"
+import { Box, Separator } from "App/Components"
 import { ReservationFeedbackHeader } from "./ReservationFeedbackHeader"
+import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
 
 export interface ReservationFeedbackHeaderProps {
   reservationFeedback: ReservationFeedback_reservationFeedback

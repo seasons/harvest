@@ -13,7 +13,7 @@ import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 import { Schema } from "App/Navigation"
-import { UPDATE_RESERVATION_FEEDBACK } from "../Home/Components/ReviewPopUp"
+import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
 import { useMutation } from "@apollo/react-hooks"
 import { GET_RESERVATION_FEEDBACK } from "../Home/Home"
 
@@ -46,7 +46,7 @@ export const ReservationFeedbackConfirmation: React.FC<{
     navigation.pop()
     navigation.pop()
     navigation.navigate("Modal", {
-      screen: Schema.PageNames.ReservationFeedbackFinish,
+      screen: Schema.PageNames.ReservationFeedbackFinishModal,
       params: { reservationFeedback }
     })
   }

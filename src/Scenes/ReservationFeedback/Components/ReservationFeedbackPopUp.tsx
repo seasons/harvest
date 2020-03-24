@@ -1,19 +1,20 @@
-import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
-import { FadeInImage } from "App/Components/FadeInImage"
-import { color, space } from "App/utils"
-import { useComponentSize } from "App/utils/hooks/useComponentSize"
-import React, { useEffect, useState } from "react"
 import { useMutation } from "@apollo/react-hooks"
+import gql from "graphql-tag"
+import React, { useEffect, useState } from "react"
 import { Dimensions } from "react-native"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
-import gql from "graphql-tag"
-import { GET_RESERVATION_FEEDBACK } from "../Home"
 
-export interface PopUpProps {
-  show: boolean
+import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
+import { FadeInImage } from "App/Components/FadeInImage"
+import { color } from "App/utils"
+import { useComponentSize } from "App/utils/hooks/useComponentSize"
+import { GET_RESERVATION_FEEDBACK } from "../../Home/Home"
+import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
+
+export interface ReservationFeedbackPopUpProps {
   reservationFeedback: ReservationFeedback_reservationFeedback
+  show: boolean
   onSelectedRating: () => void
 }
 
@@ -46,7 +47,11 @@ export const UPDATE_RESERVATION_FEEDBACK = gql`
   }
 `
 
-export const ReviewPopUp: React.FC<PopUpProps> = ({ onSelectedRating, reservationFeedback, show }) => {
+export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> = ({
+  reservationFeedback,
+  show,
+  onSelectedRating,
+}) => {
   const [mounted, setMounted] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [size, onLayout] = useComponentSize()
@@ -65,7 +70,7 @@ export const ReviewPopUp: React.FC<PopUpProps> = ({ onSelectedRating, reservatio
     backgroundColor: show && mounted ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0)",
   })
 
-  const images = reservationFeedback.feedbacks.map(feedback => feedback.variant.product.images[0].url)
+  const images = reservationFeedback.feedbacks.map(feedback => feedback?.variant?.product?.images?.[0]?.url)
   const options = ["Loved it", "It was ok", "Didn't like it"]
   const contentWidth = windowWidth - 32
   const imageHorizontalPadding = 4
@@ -114,23 +119,23 @@ export const ReviewPopUp: React.FC<PopUpProps> = ({ onSelectedRating, reservatio
               </Sans>
             <Spacer mb={3} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" alignItems="center">
-              {images.map(image => (
-                <>
+              {images.map((image, index) => (
+                <Box key={index} >
                   <FadeInImage source={{ uri: image }} style={{ width: imageWidth, height: 140 }} />
                   <Spacer ml={0.5} />
-                </>
+                </Box>
               ))}
             </Flex>
             <Spacer mb={3} />
             <Separator />
             <Spacer mb={3} />
             {options.map((option, index) => (
-              <>
+              <Box key={index}>
                 <Button variant="secondaryWhite" selected={selectedIndex === index} width={contentWidth} height={48} onPress={() => onRatingButtonPressed(index)}>
                   {option}
                 </Button>
                 <Spacer mt={1} />
-              </>
+              </Box>
             ))}
             <Spacer mb={6} />
           </Flex>

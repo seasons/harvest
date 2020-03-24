@@ -4,7 +4,7 @@ import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
 import { LogoText } from "Components/Typography"
-import { ReservationFeedbackReminder } from "../ReservationFeedback/Components"
+import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
@@ -16,7 +16,6 @@ import styled from "styled-components/native"
 import { BrandsRail } from "./Components/BrandsRail"
 import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
-import { ReviewPopUp } from "./Components/ReviewPopUp"
 import { Schema } from "App/Navigation"
 
 export const GET_HOMEPAGE = gql`
@@ -170,8 +169,8 @@ export const Home = screenTrack()(({ navigation }) => {
   const [showReviewPopUp, setShowReviewPopUp] = useState(true)
   const { loading, error, data } = useQuery(GET_HOMEPAGE, {})
   const {
-    loading: feedbackLoading,
-    error: feedbackError,
+    loading: _feedbackLoading,
+    error: _feedbackError,
     data: feedbackData,
     refetch: refetchReservationFeedback,
   } = useQuery(GET_RESERVATION_FEEDBACK)
@@ -200,23 +199,20 @@ export const Home = screenTrack()(({ navigation }) => {
 
   const reservationFeedback = feedbackData?.reservationFeedback
 
-  const onSelectedReviewRating = () => {
-    setShowReviewPopUp(false)
+  const goToReservationFeedbackScreen = () => {
     navigation.navigate("Modal", {
-      screen: Schema.PageNames.ReservationFeedback,
+      screen: Schema.PageNames.ReservationFeedbackModal,
       params: { reservationFeedback },
     })
+  }
+
+  const onSelectedReviewRating = () => {
+    setShowReviewPopUp(false)
+    goToReservationFeedbackScreen()
   }
 
   const onPressReservationFeedbackReminder = () => {
-    navigation.navigate("Modal", {
-      screen: Schema.PageNames.ReservationFeedback,
-      params: { reservationFeedback },
-    })
-  }
-
-  if (feedbackData) {
-    console.log("FEEDBACK DATA:", feedbackData)
+    goToReservationFeedbackScreen()
   }
 
   if (error) {
@@ -269,7 +265,7 @@ export const Home = screenTrack()(({ navigation }) => {
               />
             </ReservationFeedbackReminderWrapper>
           ) : (
-            <ReviewPopUp
+            <ReservationFeedbackPopUp
               reservationFeedback={reservationFeedback}
               show={showReviewPopUp}
               onSelectedRating={onSelectedReviewRating}

@@ -11,9 +11,3 @@ export { Check } from "./Check"
 export { NotificationGraphic } from "./NotificationGraphic"
 export { Shirt } from "./Shirt"
 export { QuestionMark } from "./QuestionMark"
-export { ActiveDislikedFace } from './ActiveDislikedFace'
-export { ActiveLovedFace } from './ActiveLovedFace'
-export { ActiveNeutralFace } from './ActiveNeutralFace'
-export { DefaultDislikedFace } from './DefaultDislikedFace'
-export { DefaultLovedFace } from './DefaultLovedFace'
-export { DefaultNeutralFace } from './DefaultNeutralFace'
