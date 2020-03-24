@@ -10,7 +10,7 @@ export interface HomeFooterProps {
   bottom?: number
 }
 
-export const HomeFooter: React.FC<HomeFooterProps> = ({ bottom, navigation }) => {
+export const HomeFooter: React.FC<HomeFooterProps> = ({ bottom = 0, navigation }) => {
   const tracking = useTracking()
 
   return (
@@ -18,7 +18,7 @@ export const HomeFooter: React.FC<HomeFooterProps> = ({ bottom, navigation }) =>
       <Spacer mt={3} />
       <LeftCorner />
       <RightCorner />
-      <Box style={{ backgroundColor: color("black100"), height: 320, overflow: "visible" }}>
+      <Box style={{ backgroundColor: color("black100"), overflow: "visible" }}>
         <Spacer mb={60} />
         <Flex justifyContent="center" flexDirection="column">
           <Sans size="2" color={color("white100")} style={{ textAlign: "center" }}>
@@ -43,9 +43,9 @@ export const HomeFooter: React.FC<HomeFooterProps> = ({ bottom, navigation }) =>
               Browse
             </Button>
           </Flex>
-          {!!bottom && <Spacer mb={bottom} />}
         </Flex>
-        <Box style={{ height: 1000, backgroundColor: color("black100") }} />
+        <Spacer mb={80} />
+        {!!bottom && <Spacer mb={bottom} />}
       </Box>
     </>
   )
