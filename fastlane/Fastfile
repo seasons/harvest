@@ -4,7 +4,7 @@ platform :ios do
     end  
     desc 'Fetch certificates and provisioning profiles'
     lane :certificates do
-        match(app_identifier: 'com.seasons.Seasons', username: 'luc@seasons.nyc', type: "adhoc")
+        match(app_identifier: 'com.seasons.Seasons', username: 'dev@seasons.nyc', type: "adhoc")
     end
 
     desc 'Fetch certificates. Build the iOS application.'
