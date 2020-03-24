@@ -32,15 +32,6 @@ jobs:
           key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
-      - restore_cache:
-          key: pods-v4-{{ checksum "Podfile.lock" }}
-      - run:
-          name: Install CocoaPods
-          command: cd ios ; pod install ;
-      - save_cache:
-          key: pods-v4-{{ checksum "Podfile.lock" }}
-          paths:
-            - ./Pods
       - run:
           name: Test suites
           command: yarn test
@@ -83,6 +74,15 @@ jobs:
           key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
+      - restore_cache:
+          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+      - run:
+          name: Install CocoaPods
+          command: cd ios ; pod install ;
+      - save_cache:
+          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+          paths:
+            - ./Pods
       - run:
           name: Install command line tool
           command: |
