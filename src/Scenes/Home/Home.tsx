@@ -81,7 +81,7 @@ export const GET_HOMEPAGE = gql`
 export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
   const [showLoader, toggleLoader] = useState(true)
-  const [showReviewPopUp, setShowReviewPopUp] = useState(true)
+  const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
   const { loading, error, data, refetch } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)
 
@@ -124,7 +124,7 @@ export const Home = screenTrack()(({ navigation }) => {
   }
 
   const onSelectedReviewRating = () => {
-    setShowReviewPopUp(false)
+    setShowReservationFeedbackPopUp(false)
     goToReservationFeedbackScreen()
   }
 
@@ -171,7 +171,7 @@ export const Home = screenTrack()(({ navigation }) => {
             </ReservationFeedbackReminderWrapper>
             : <ReservationFeedbackPopUp
               reservationFeedback={reservationFeedback}
-              show={showReviewPopUp}
+              show={showReservationFeedbackPopUp}
               onSelectedRating={onSelectedReviewRating} />)
           : null
         }
