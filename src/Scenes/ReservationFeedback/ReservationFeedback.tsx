@@ -42,9 +42,12 @@ export const ReservationFeedback: React.FC<{
 
   const renderItem = (feedbackQuestion, index) => {
     const { id: feedbackQuestionID, question, options, responses } = feedbackQuestion
-    const currVariantFeedback = reservationFeedback.feedbacks[currProductIndex]
+    const currVariantFeedback: ReservationFeedback_reservationFeedback_feedbacks = reservationFeedback.feedbacks[currProductIndex]
     const onOptionPressed = async (option) => {
-      feedbackQuestion.responses = [option]
+      const unansweredFeedbackQuestions = currVariantFeedback.questions.filter((question) => !question.responses)
+      const feedbackIsCompleted =
+        (unansweredFeedbackQuestions.length === 1 && unansweredFeedbackQuestions[0].id === feedbackQuestionID) ||
+        unansweredFeedbackQuestions.length === 0
       const result = await updateReservationFeedback({
         variables: {
           id: reservationFeedback.id,
@@ -53,6 +56,7 @@ export const ReservationFeedback: React.FC<{
               update: {
                 where: { id: currVariantFeedback.id },
                 data: {
+                  isCompleted: feedbackIsCompleted,
                   questions: {
                     update: {
                       where: { id: feedbackQuestionID },
@@ -137,13 +141,6 @@ export const ReservationFeedback: React.FC<{
   const { product: currProduct } = currVariant
   const { images, name: productName } = currProduct
 
-  const progressBarCompletedPercentages = reservationFeedback.feedbacks.map((feedback) => {
-    const { questions } = feedback
-    const numResponses = questions.filter((question) => question.responses).length
-    const numQuestions = questions.length
-    return numResponses / numQuestions
-  })
-
   return (
     <Container insetsBottom={false} insetsTop={false}>
       <Box px={2} style={{ flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
@@ -153,8 +150,7 @@ export const ReservationFeedback: React.FC<{
             <ReservationFeedbackHeader
               currentItem={currProductIndex + 1}
               headerText="Reviewing"
-              progressBarCompletedPercentages={progressBarCompletedPercentages}
-              totalNumItems={numFeedbacks}
+              reservationFeedback={reservationFeedback}
               onSelectedProgressBarIndex={handleSelectedProgressBar}
             />
             <ImageRail
