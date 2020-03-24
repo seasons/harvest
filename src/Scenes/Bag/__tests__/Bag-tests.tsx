@@ -1,13 +1,15 @@
-import React from "react"
-import { Bag } from ".."
-import { mount } from "enzyme"
-import { MockedProvider } from "@apollo/react-testing"
-import { GET_BAG } from "../BagQueries"
-import { BagFixture, BagFixtureWithReservation } from "./__fixtures__/BagFixture"
-import { BagItem } from "../Components/BagItem"
-import { waitForLoad } from "App/testUtils/waitForLoad"
 import { FixedButton } from "App/Components"
 import * as AuthContext from "App/Navigation/AuthContext"
+import { waitForLoad } from "App/testUtils/waitForLoad"
+import { mount } from "enzyme"
+import React from "react"
+
+import { MockedProvider } from "@apollo/react-testing"
+
+import { Bag } from "../"
+import { GET_BAG } from "../BagQueries"
+import { BagItem } from "../Components/BagItem"
+import { BagFixture, BagFixtureWithReservation } from "./__fixtures__/BagFixture"
 
 const mocks = [
   {
@@ -47,13 +49,13 @@ beforeEach(() => {
 
 describe("Bag", () => {
   it("renders properly", async () => {
-    const component = mount(
+    const component = await mount(
       <MockedProvider mocks={mocks} addTypename={false}>
         <Bag navigation={null} />
       </MockedProvider>
-    )
-
-    await waitForLoad(component)
+    ).renderUntil(wrapper => {
+      return wrapper.find(BagItem).length > 0
+    })
 
     expect(component).toMatchSnapshot()
     expect(component.find(BagItem).length).toEqual(3)

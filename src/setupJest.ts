@@ -1,12 +1,17 @@
+import "./testUtils/renderUntil"
+
 import chalk from "chalk"
 import Enzyme from "enzyme"
 import Adapter from "enzyme-adapter-react-16"
 import expect from "expect"
+import track, { useTracking } from "react-tracking"
+// Waiting on https://github.com/thymikee/snapshot-diff/pull/17
+import diff from "snapshot-diff"
 import { format } from "util"
+
 import mockAsyncStorage from "@react-native-community/async-storage/jest/async-storage-mock"
 
 jest.mock("react-tracking")
-import track, { useTracking } from "react-tracking"
 const trackEvent = jest.fn()
 ;(track as jest.Mock).mockImplementation((_ => x => x) as any)
 ;(useTracking as jest.Mock).mockImplementation(() => {
@@ -41,8 +46,6 @@ jest.mock("react-native-config", () => ({
 
 Enzyme.configure({ adapter: new Adapter() })
 
-// Waiting on https://github.com/thymikee/snapshot-diff/pull/17
-import diff from "snapshot-diff"
 expect.extend({ toMatchDiffSnapshot: (diff as any).toMatchDiffSnapshot })
 
 const originalConsoleError = console.error
