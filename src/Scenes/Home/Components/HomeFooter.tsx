@@ -5,7 +5,12 @@ import styled from "styled-components/native"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { Schema, useTracking } from "App/utils/track"
 
-export const HomeFooter: React.FC<{ navigation: any }> = ({ navigation }) => {
+export interface HomeFooterProps {
+  navigation: any
+  bottom?: number
+}
+
+export const HomeFooter: React.FC<HomeFooterProps> = ({ bottom, navigation }) => {
   const tracking = useTracking()
 
   return (
@@ -38,6 +43,7 @@ export const HomeFooter: React.FC<{ navigation: any }> = ({ navigation }) => {
               Browse
             </Button>
           </Flex>
+          {bottom && <Spacer mb={bottom} />}
         </Flex>
         <Box style={{ height: 1000, backgroundColor: color("black100") }} />
       </Box>

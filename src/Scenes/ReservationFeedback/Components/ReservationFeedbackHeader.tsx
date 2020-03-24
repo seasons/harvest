@@ -2,12 +2,12 @@ import React from "react"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import { Box, Flex, ProgressBar, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
+import { ReservationFeedback_reservationFeedback, ReservationFeedback_reservationFeedback_feedbacks } from "src/generated/ReservationFeedback"
 
 export interface ReservationFeedbackHeaderProps {
   currentItem: number
   headerText: string
-  progressBarCompletedPercentages: number[]
-  totalNumItems: number
+  reservationFeedback: ReservationFeedback_reservationFeedback
   onSelectedProgressBarIndex?: (number) => void
 }
 
@@ -15,9 +15,16 @@ export const ReservationFeedbackHeader: React.FC<ReservationFeedbackHeaderProps>
   currentItem,
   headerText,
   onSelectedProgressBarIndex,
-  progressBarCompletedPercentages,
-  totalNumItems,
+  reservationFeedback,
 }) => {
+  const { feedbacks } = reservationFeedback
+  const progressBarCompletedPercentages = feedbacks.map((feedback) => {
+    const { questions } = feedback
+    const numResponses = questions.filter((question) => question.responses).length
+    const numQuestions = questions.length
+    return numResponses / numQuestions
+  })
+  const totalNumItems = feedbacks.length
   const { width: windowWidth } = Dimensions.get("window")
   const progressBarSpacerWidth = 5
   const contentWidth = windowWidth - 32

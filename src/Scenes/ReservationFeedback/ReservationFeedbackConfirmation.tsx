@@ -15,6 +15,7 @@ import styled from "styled-components/native"
 import { Schema } from "App/Navigation"
 import { UPDATE_RESERVATION_FEEDBACK } from "../Home/Components/ReviewPopUp"
 import { useMutation } from "@apollo/react-hooks"
+import { GET_RESERVATION_FEEDBACK } from "../Home/Home"
 
 export const ReservationFeedbackConfirmation: React.FC<{
   navigation: any
@@ -28,18 +29,19 @@ export const ReservationFeedbackConfirmation: React.FC<{
   const { width: windowWidth } = Dimensions.get("window")
   const buttonWidth = (windowWidth - 42) / 2
 
-  const submitFeedback = async (shouldSubmitComment) => {
-    if (shouldSubmitComment) {
-      const result = await updateReservationFeedback({
-        variables: {
-          id: reservationFeedback.id,
-          input: { comment }
-        },
-      })
-      if (!result?.data) {
-        setShowError(true)
-        return
-      }
+  const submitFeedback = async () => {
+    const result = await updateReservationFeedback({
+      variables: {
+        id: reservationFeedback.id,
+        input: { comment }
+      },
+      refetchQueries: [{
+        query: GET_RESERVATION_FEEDBACK
+      }]
+    })
+    if (!result?.data) {
+      setShowError(true)
+      return
     }
     navigation.pop()
     navigation.pop()
@@ -85,11 +87,11 @@ export const ReservationFeedbackConfirmation: React.FC<{
       </Box>
       <FixedKeyboardAvoidingView behavior="padding" keyboardVerticalOffset={64} style={{ bottom: insets.bottom + 32 }}>
         <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" >
-          <Button block variant="primaryWhite" width={buttonWidth} onPress={() => submitFeedback(false)}>
+          <Button block variant="primaryWhite" width={buttonWidth} onPress={submitFeedback}>
             Skip
           </Button>
           <Spacer ml={1} />
-          <Button block variant="primaryBlack" width={buttonWidth} onPress={() => submitFeedback(true)}>
+          <Button block variant="primaryBlack" width={buttonWidth} onPress={submitFeedback}>
             Submit
           </Button>
         </Flex>
