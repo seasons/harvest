@@ -1,36 +1,37 @@
-import { WhiteCheck } from "Assets/svgs"
+import { Check } from "Assets/svgs"
 import get from "lodash/get"
 import React, { useState } from "react"
-import { Dimensions, SectionList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { Dimensions, TouchableOpacity, TouchableWithoutFeedback, FlatList } from "react-native"
 import styled from "styled-components/native"
-import { Box, Button, Flex, Radio, Sans, Separator, Spacer, Theme } from "../../Components"
+import { Box, Button, Flex, Radio, Sans, Separator, Spacer, Container } from "../../Components"
 import { useTracking, Schema, screenTrack } from "App/utils/track"
-import { color } from "App/utils"
+import { color, space } from "App/utils"
+import { TabBar } from "App/Components/TabBar"
+import { useSafeArea } from "react-native-safe-area-context"
 
-const FILTER_BY = "Filter by"
+enum FilterView {
+  Tops = 0,
+  Bottoms = 1,
+}
 
 export const Filters = screenTrack()((props: any) => {
-  const currentSizeFilters = get(props, "route.params.sizeFilters", [])
-  const [sizeFilters, setSizeFilters] = useState(currentSizeFilters)
+  const currentFilters = get(props, "route.params.sizeFilters", [])
+  const [sizeFilters, setSizeFilters] = useState(currentFilters)
+  const [currentView, setCurrentView] = useState<FilterView>(FilterView.Tops)
   const tracking = useTracking()
-
-  const filterSections = [
-    {
-      title: FILTER_BY,
-      data: ["X-Small", "Small", "Medium", "Large", "X-Large", "XX-Large"],
-    },
-  ]
-
   const insets = useSafeArea()
+
+  const filterData = {
+    tops: ["X-Small", "Small", "Medium", "Large", "X-Large", "XX-Large"],
+    bottoms: ["26", "27", "28", "29", "30", "31", "32", "33", "34"],
+  }
   const screenWidth = Dimensions.get("window").width
-  const buttonBottom = insets.bottom + 40
   const buttonWidth = (screenWidth - 39) / 2
   const buttonHeight = 48
 
   const renderItem = ({ item }) => {
     const isSelected = sizeFilters.includes(item)
-    // Use the default border radius for the sort by section
+
     const handlePress = () => {
       tracking.trackEvent({
         actionName: Schema.ActionNames.FilterTapped,
@@ -46,13 +47,13 @@ export const Filters = screenTrack()((props: any) => {
 
     return (
       <TouchableWithoutFeedback onPress={handlePress}>
-        <Box>
+        <Box px={2}>
           <Spacer mt={20} />
           <Flex flexDirection="row">
             <Radio borderRadius={4} selected={isSelected} onSelect={handlePress}>
-              <WhiteCheck />
+              <Check color={color("black100")} />
             </Radio>
-            <Sans color={color("black50")} ml={2} size="1" weight="medium">
+            <Sans color={color("black100")} ml={2} size="1" weight="medium">
               {item}
             </Sans>
           </Flex>
@@ -64,97 +65,88 @@ export const Filters = screenTrack()((props: any) => {
   }
 
   return (
-    <Theme>
-      <Container>
-        <Handle style={{ marginTop: 12, marginBottom: insets.top }} />
-        <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
-          <HeaderContainer px={2}>
-            <Flex flexDirection="row" alignItems="center">
-              <Sans size="3" color={color("white100")} weight="medium" py={2}>
-                Filter By
-              </Sans>
-              <Box ml="auto">
-                <TouchableOpacity
-                  onPress={() => {
-                    tracking.trackEvent({
-                      actionName: Schema.ActionNames.FiltersCleared,
-                      actionType: Schema.ActionTypes.Tap,
-                    })
-                    setSizeFilters([])
-                  }}
-                >
-                  <Sans size="2" color={color("white100")} weight="medium" ml="auto">
-                    Clear
-                  </Sans>
-                </TouchableOpacity>
-              </Box>
-            </Flex>
-          </HeaderContainer>
-          <Box px={2} flex={1}>
-            <SectionList
-              contentContainerStyle={{ paddingBottom: insets.bottom + buttonBottom + buttonHeight }}
-              sections={filterSections}
-              stickySectionHeadersEnabled={false}
-              keyExtractor={item => item}
-              renderItem={renderItem}
-            />
-          </Box>
-        </Flex>
-        <Box style={{ position: "absolute", left: 16, bottom: buttonBottom }}>
-          <Button
-            variant="secondaryBlack"
-            width={buttonWidth}
+    <Container insetsTop={false}>
+      <Handle style={{ marginTop: space(2) }} />
+      <Flex flexDirection="row" alignItems="center" px={2}>
+        <Sans size="3" color={color("black100")} weight="medium" py={2}>
+          Filter by size
+        </Sans>
+        <Box ml="auto">
+          <TouchableOpacity
             onPress={() => {
               tracking.trackEvent({
-                actionName: Schema.ActionNames.FilterModalCanceled,
+                actionName: Schema.ActionNames.FiltersCleared,
                 actionType: Schema.ActionTypes.Tap,
               })
-              props.navigation.goBack()
+              setSizeFilters([])
             }}
           >
-            Cancel
-          </Button>
+            <Sans size="1" color={color("black50")} ml="auto">
+              Clear
+            </Sans>
+          </TouchableOpacity>
         </Box>
-        <Box style={{ position: "absolute", left: screenWidth / 2 + 3.5, bottom: buttonBottom }}>
-          <Button
-            variant="primaryWhite"
-            width={buttonWidth}
-            onPress={() => {
-              tracking.trackEvent({
-                actionName: Schema.ActionNames.FiltersApplied,
-                actionType: Schema.ActionTypes.Tap,
-                filters: sizeFilters,
-              })
-              props.navigation.navigate("Browse", { sizeFilters })
-            }}
-          >
-            Apply
-          </Button>
-        </Box>
-      </Container>
-    </Theme>
+      </Flex>
+      <TabBar
+        spaceEvenly
+        tabs={["Tops", "Bottoms"]}
+        activeTab={currentView}
+        goToPage={(page: FilterView) => {
+          tracking.trackEvent({
+            actionName: page === 0 ? Schema.ActionNames.TopsTabTapped : Schema.ActionNames.BottomsTabTapped,
+            actionType: Schema.ActionTypes.Tap,
+          })
+          setCurrentView(page)
+        }}
+      />
+      <FlatList
+        data={currentView === FilterView.Tops ? filterData.tops : filterData.bottoms}
+        keyExtractor={(_item, index) => String(index)}
+        renderItem={item => {
+          return renderItem(item)
+        }}
+        ListFooterComponent={() => <Spacer mb={buttonHeight + space(4)} />}
+      />
+      <Box style={{ position: "absolute", left: space(2), bottom: space(2) + insets.bottom }}>
+        <Button
+          variant="primaryWhite"
+          width={buttonWidth}
+          onPress={() => {
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.FilterModalCanceled,
+              actionType: Schema.ActionTypes.Tap,
+            })
+            props.navigation.goBack()
+          }}
+        >
+          Cancel
+        </Button>
+      </Box>
+      <Box style={{ position: "absolute", left: screenWidth / 2 + 3.5, bottom: space(2) + insets.bottom }}>
+        <Button
+          variant="secondaryBlack"
+          width={buttonWidth}
+          onPress={() => {
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.FiltersApplied,
+              actionType: Schema.ActionTypes.Tap,
+              filters: sizeFilters,
+            })
+            props.navigation.navigate("Browse", { sizeFilters })
+          }}
+        >
+          Apply
+        </Button>
+      </Box>
+    </Container>
   )
 })
-
-const Container = styled(Box)`
-  background: black;
-  flex: 1;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  overflow: hidden;
-`
-
-const HeaderContainer = styled(Box)`
-  border-color: ${color("black50")};
-  border-style: solid;
-  border-bottom-width: 1px;
-`
 
 const Handle = styled(Box)`
   width: 40px;
   height: 5px;
   border-radius: 100;
-  background: white;
+  background: ${color("black100")};
   opacity: 0.5;
   margin: auto;
 `
