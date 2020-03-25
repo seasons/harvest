@@ -166,8 +166,6 @@ export const Browse = screenTrack()((props: any) => {
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
   }
 
-  console.log("products", products)
-
   return (
     <Container insetsBottom={false}>
       <LoaderContainer mt={insets.top} style={[loaderStyle]}>
