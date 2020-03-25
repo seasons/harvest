@@ -1,11 +1,10 @@
-import { Box, Button, Flex, Sans } from "App/Components"
-import { color } from "App/utils"
+import { Box, Button, Flex, Sans, Spacer } from "App/Components"
+import { color, space } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import React from "react"
 import { ScrollView } from "react-native"
 import styled from "styled-components/native"
-
 import { VariantList } from "./VariantList"
 
 export const VariantPicker = props => {
@@ -13,14 +12,9 @@ export const VariantPicker = props => {
   const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, productID, height, product } = props
 
   return (
-    <Flex style={{ flex: 1, backgroundColor: color("black100"), height, position: "relative" }}>
+    <Flex style={{ flex: 1, height: height + 28, position: "relative" }}>
       <LeftCorner />
       <RightCorner />
-      <Flex justifyContent="center" flexDirection="row" p={2}>
-        <Sans size="1" color={color("white100")}>
-          Select size
-        </Sans>
-      </Flex>
       <FixedButtonWrapper px={2}>
         <Button
           variant="secondaryBlack"
@@ -36,40 +30,47 @@ export const VariantPicker = props => {
           Cancel
         </Button>
       </FixedButtonWrapper>
-      <StyledScrollview>
-        <Box px={2}>
-          <VariantList
-            product={product}
-            setSelectedVariant={setSelectedVariant}
-            selectedVariant={selectedVariant}
-            productID={productID}
-            onSizeSelected={() => {
-              toggleShowVariantPicker(false)
-            }}
-          />
-        </Box>
-        <Box style={{ paddingBottom: 68 }} />
-      </StyledScrollview>
+      <Box style={{ backgroundColor: color("black100"), top: 28 }}>
+        <Flex justifyContent="center" flexDirection="row" p={2}>
+          <Sans size="1" color={color("white100")}>
+            Select size
+          </Sans>
+        </Flex>
+        <StyledScrollview>
+          <Box px={2}>
+            <VariantList
+              product={product}
+              setSelectedVariant={setSelectedVariant}
+              selectedVariant={selectedVariant}
+              productID={productID}
+              onSizeSelected={() => {
+                toggleShowVariantPicker(false)
+              }}
+            />
+          </Box>
+          <Box style={{ paddingBottom: 180 }} />
+        </StyledScrollview>
+      </Box>
     </Flex>
   )
 }
 
 const LeftCorner = styled(LeftTabCorner)`
   position: absolute;
-  top: -28;
+  top: 0;
   left: 0;
 `
 
 const RightCorner = styled(RightTabCorner)`
   position: absolute;
-  top: -28;
+  top: 0;
   right: 0;
 `
 
 const FixedButtonWrapper = styled(Box)`
   position: absolute;
-  bottom: 0;
   left: 0;
+  bottom: ${space(2)};
   width: 100%;
   z-index: 100;
 `

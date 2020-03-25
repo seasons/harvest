@@ -4,6 +4,7 @@ export const GET_PRODUCT = gql`
   query GetProduct($productID: ID!) {
     product(where: { id: $productID }) {
       id
+      slug
       name
       description
       retailPrice
@@ -30,6 +31,7 @@ export const GET_PRODUCT = gql`
       innerMaterials
       images
       isSaved
+      type
       variants {
         id
         internalSize {
@@ -50,7 +52,6 @@ export const GET_PRODUCT = gql`
         isSaved
         isWanted
       }
-      type
     }
   }
 `
