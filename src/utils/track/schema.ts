@@ -181,6 +181,9 @@ export enum ActionNames {
   ProductTapped = "Product Tapped",
   BrandTapped = "Brand Tapped",
   CarouselSwiped = "Carousel Swiped",
+
+  TopsTabTapped = "Tops Tab Tapped",
+  BottomsTabTapped = "Bottoms Tab Tapped",
 }
 
 /**

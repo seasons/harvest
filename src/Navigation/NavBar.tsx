@@ -10,7 +10,7 @@ import { Image } from "react-native"
 export const NavBar = ({ state, descriptors, navigation, currentScreen }) => {
   const insets = useSafeArea()
   const hideNav = currentScreen === "Product"
-  const buttonHeight = 44
+  const buttonHeight = 50
   const trayHeight = buttonHeight + insets.bottom
 
   const tabs = state.routes.map((route, routeIndex) => {
@@ -108,7 +108,6 @@ const Tray = styled(Box)`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: pink;
   z-index: 1000;
 `
 

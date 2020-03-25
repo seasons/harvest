@@ -1,11 +1,11 @@
 import { Box, Button, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { Spinner } from "App/Components/Spinner"
-import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { imageResize } from "App/helpers/imageResize"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
+import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import gql from "graphql-tag"
 import get from "lodash/get"
 import React, { useState } from "react"
@@ -41,8 +41,8 @@ const GET_BROWSE_PRODUCTS = gql`
       category: $name
       first: $first
       skip: $skip
-      orderBy: $orderBy
       sizes: $sizes
+      orderBy: $orderBy
       where: { status: Available }
     ) {
       id
@@ -114,12 +114,13 @@ export const Browse = screenTrack()((props: any) => {
 
   const PAGE_LENGTH = 10
 
-  // Get all the sizes that we want to query by.
-  // If no size filter is selected, all sizes are queried.
   const sizes =
     sizeFilters && sizeFilters.length > 0
-      ? sizeFilters.map(s => ABBREVIATED_SIZES[s])
-      : Object.values(ABBREVIATED_SIZES)
+      ? sizeFilters.map(s => {
+          return ABBREVIATED_SIZES[s] ? ABBREVIATED_SIZES[s] : s
+        })
+      : []
+
   const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
     variables: {
       name: currentCategory,
@@ -173,7 +174,10 @@ export const Browse = screenTrack()((props: any) => {
       <Flex flexDirection="column" flex={1}>
         <AnimatedBox flex={1} flexGrow={1} style={[productsBoxStyle]}>
           <FlatList
-            contentContainerStyle={{ paddingBottom: filtersButtonHeight }}
+            contentContainerStyle={{
+              paddingBottom: filtersButtonHeight,
+              minHeight: Dimensions.get("window").height - 100,
+            }}
             data={products}
             ref={ref => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
