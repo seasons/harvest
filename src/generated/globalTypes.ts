@@ -259,11 +259,11 @@ export interface BottomSizeUpdateDataInput {
 
 export interface BottomSizeUpdateOneInput {
   create?: BottomSizeCreateInput | null
+  connect?: BottomSizeWhereUniqueInput | null
+  disconnect?: boolean | null
+  delete?: boolean | null
   update?: BottomSizeUpdateDataInput | null
   upsert?: BottomSizeUpsertNestedInput | null
-  delete?: boolean | null
-  disconnect?: boolean | null
-  connect?: BottomSizeWhereUniqueInput | null
 }
 
 export interface BottomSizeUpsertNestedInput {
@@ -296,9 +296,9 @@ export interface BrandCreateWithoutProductsInput {
 
 export interface BrandUpdateOneRequiredWithoutProductsInput {
   create?: BrandCreateWithoutProductsInput | null
+  connect?: BrandWhereUniqueInput | null
   update?: BrandUpdateWithoutProductsDataInput | null
   upsert?: BrandUpsertWithoutProductsInput | null
-  connect?: BrandWhereUniqueInput | null
 }
 
 export interface BrandUpdateWithoutProductsDataInput {
@@ -325,17 +325,7 @@ export interface BrandWhereUniqueInput {
   brandCode?: string | null
 }
 
-export interface CategoryCreateManyWithoutChildrenInput {
-  create?: CategoryCreateWithoutChildrenInput[] | null
-  connect?: CategoryWhereUniqueInput[] | null
-}
-
-export interface CategoryCreateOneWithoutProductsInput {
-  create?: CategoryCreateWithoutProductsInput | null
-  connect?: CategoryWhereUniqueInput | null
-}
-
-export interface CategoryCreateWithoutChildrenInput {
+export interface CategoryCreateInput {
   id?: string | null
   slug: string
   name: string
@@ -343,6 +333,17 @@ export interface CategoryCreateWithoutChildrenInput {
   description?: string | null
   visible?: boolean | null
   products?: ProductCreateManyWithoutCategoryInput | null
+  children?: CategoryCreateManyInput | null
+}
+
+export interface CategoryCreateManyInput {
+  create?: CategoryCreateInput[] | null
+  connect?: CategoryWhereUniqueInput[] | null
+}
+
+export interface CategoryCreateOneWithoutProductsInput {
+  create?: CategoryCreateWithoutProductsInput | null
+  connect?: CategoryWhereUniqueInput | null
 }
 
 export interface CategoryCreateWithoutProductsInput {
@@ -352,10 +353,13 @@ export interface CategoryCreateWithoutProductsInput {
   image?: any | null
   description?: string | null
   visible?: boolean | null
-  children?: CategoryCreateManyWithoutChildrenInput | null
+  children?: CategoryCreateManyInput | null
 }
 
 export interface CategoryScalarWhereInput {
+  AND?: CategoryScalarWhereInput[] | null
+  OR?: CategoryScalarWhereInput[] | null
+  NOT?: CategoryScalarWhereInput[] | null
   id?: string | null
   id_not?: string | null
   id_in?: string[] | null
@@ -414,9 +418,16 @@ export interface CategoryScalarWhereInput {
   description_not_ends_with?: string | null
   visible?: boolean | null
   visible_not?: boolean | null
-  AND?: CategoryScalarWhereInput[] | null
-  OR?: CategoryScalarWhereInput[] | null
-  NOT?: CategoryScalarWhereInput[] | null
+}
+
+export interface CategoryUpdateDataInput {
+  slug?: string | null
+  name?: string | null
+  image?: any | null
+  description?: string | null
+  visible?: boolean | null
+  products?: ProductUpdateManyWithoutCategoryInput | null
+  children?: CategoryUpdateManyInput | null
 }
 
 export interface CategoryUpdateManyDataInput {
@@ -427,42 +438,33 @@ export interface CategoryUpdateManyDataInput {
   visible?: boolean | null
 }
 
+export interface CategoryUpdateManyInput {
+  create?: CategoryCreateInput[] | null
+  connect?: CategoryWhereUniqueInput[] | null
+  set?: CategoryWhereUniqueInput[] | null
+  disconnect?: CategoryWhereUniqueInput[] | null
+  delete?: CategoryWhereUniqueInput[] | null
+  update?: CategoryUpdateWithWhereUniqueNestedInput[] | null
+  updateMany?: CategoryUpdateManyWithWhereNestedInput[] | null
+  deleteMany?: CategoryScalarWhereInput[] | null
+  upsert?: CategoryUpsertWithWhereUniqueNestedInput[] | null
+}
+
 export interface CategoryUpdateManyWithWhereNestedInput {
   where: CategoryScalarWhereInput
   data: CategoryUpdateManyDataInput
 }
 
-export interface CategoryUpdateManyWithoutChildrenInput {
-  create?: CategoryCreateWithoutChildrenInput[] | null
-  delete?: CategoryWhereUniqueInput[] | null
-  connect?: CategoryWhereUniqueInput[] | null
-  set?: CategoryWhereUniqueInput[] | null
-  disconnect?: CategoryWhereUniqueInput[] | null
-  update?: CategoryUpdateWithWhereUniqueWithoutChildrenInput[] | null
-  upsert?: CategoryUpsertWithWhereUniqueWithoutChildrenInput[] | null
-  deleteMany?: CategoryScalarWhereInput[] | null
-  updateMany?: CategoryUpdateManyWithWhereNestedInput[] | null
-}
-
 export interface CategoryUpdateOneRequiredWithoutProductsInput {
   create?: CategoryCreateWithoutProductsInput | null
+  connect?: CategoryWhereUniqueInput | null
   update?: CategoryUpdateWithoutProductsDataInput | null
   upsert?: CategoryUpsertWithoutProductsInput | null
-  connect?: CategoryWhereUniqueInput | null
 }
 
-export interface CategoryUpdateWithWhereUniqueWithoutChildrenInput {
+export interface CategoryUpdateWithWhereUniqueNestedInput {
   where: CategoryWhereUniqueInput
-  data: CategoryUpdateWithoutChildrenDataInput
-}
-
-export interface CategoryUpdateWithoutChildrenDataInput {
-  slug?: string | null
-  name?: string | null
-  image?: any | null
-  description?: string | null
-  visible?: boolean | null
-  products?: ProductUpdateManyWithoutCategoryInput | null
+  data: CategoryUpdateDataInput
 }
 
 export interface CategoryUpdateWithoutProductsDataInput {
@@ -471,13 +473,13 @@ export interface CategoryUpdateWithoutProductsDataInput {
   image?: any | null
   description?: string | null
   visible?: boolean | null
-  children?: CategoryUpdateManyWithoutChildrenInput | null
+  children?: CategoryUpdateManyInput | null
 }
 
-export interface CategoryUpsertWithWhereUniqueWithoutChildrenInput {
+export interface CategoryUpsertWithWhereUniqueNestedInput {
   where: CategoryWhereUniqueInput
-  update: CategoryUpdateWithoutChildrenDataInput
-  create: CategoryCreateWithoutChildrenInput
+  update: CategoryUpdateDataInput
+  create: CategoryCreateInput
 }
 
 export interface CategoryUpsertWithoutProductsInput {
@@ -528,25 +530,25 @@ export interface ColorUpdateDataInput {
 
 export interface ColorUpdateOneInput {
   create?: ColorCreateInput | null
+  connect?: ColorWhereUniqueInput | null
+  disconnect?: boolean | null
+  delete?: boolean | null
   update?: ColorUpdateDataInput | null
   upsert?: ColorUpsertNestedInput | null
-  delete?: boolean | null
-  disconnect?: boolean | null
-  connect?: ColorWhereUniqueInput | null
 }
 
 export interface ColorUpdateOneRequiredInput {
   create?: ColorCreateInput | null
+  connect?: ColorWhereUniqueInput | null
   update?: ColorUpdateDataInput | null
   upsert?: ColorUpsertNestedInput | null
-  connect?: ColorWhereUniqueInput | null
 }
 
 export interface ColorUpdateOneRequiredWithoutProductVariantsInput {
   create?: ColorCreateWithoutProductVariantsInput | null
+  connect?: ColorWhereUniqueInput | null
   update?: ColorUpdateWithoutProductVariantsDataInput | null
   upsert?: ColorUpsertWithoutProductVariantsInput | null
-  connect?: ColorWhereUniqueInput | null
 }
 
 export interface ColorUpdateWithoutProductVariantsDataInput {
@@ -589,18 +591,18 @@ export interface LocationCreateWithoutPhysicalProductsInput {
   state: string
   zipCode: string
   locationType?: LocationType | null
-  user?: UserCreateOneInput | null
   lat?: number | null
   lng?: number | null
+  user?: UserCreateOneInput | null
 }
 
 export interface LocationUpdateOneWithoutPhysicalProductsInput {
   create?: LocationCreateWithoutPhysicalProductsInput | null
+  connect?: LocationWhereUniqueInput | null
+  disconnect?: boolean | null
+  delete?: boolean | null
   update?: LocationUpdateWithoutPhysicalProductsDataInput | null
   upsert?: LocationUpsertWithoutPhysicalProductsInput | null
-  delete?: boolean | null
-  disconnect?: boolean | null
-  connect?: LocationWhereUniqueInput | null
 }
 
 export interface LocationUpdateWithoutPhysicalProductsDataInput {
@@ -614,9 +616,9 @@ export interface LocationUpdateWithoutPhysicalProductsDataInput {
   state?: string | null
   zipCode?: string | null
   locationType?: LocationType | null
-  user?: UserUpdateOneInput | null
   lat?: number | null
   lng?: number | null
+  user?: UserUpdateOneInput | null
 }
 
 export interface LocationUpsertWithoutPhysicalProductsInput {
@@ -637,12 +639,15 @@ export interface PhysicalProductCreateManyWithoutProductVariantInput {
 export interface PhysicalProductCreateWithoutProductVariantInput {
   id?: string | null
   seasonsUID: string
-  location?: LocationCreateOneWithoutPhysicalProductsInput | null
   inventoryStatus: InventoryStatus
   productStatus: PhysicalProductStatus
+  location?: LocationCreateOneWithoutPhysicalProductsInput | null
 }
 
 export interface PhysicalProductScalarWhereInput {
+  AND?: PhysicalProductScalarWhereInput[] | null
+  OR?: PhysicalProductScalarWhereInput[] | null
+  NOT?: PhysicalProductScalarWhereInput[] | null
   id?: string | null
   id_not?: string | null
   id_in?: string[] | null
@@ -695,9 +700,6 @@ export interface PhysicalProductScalarWhereInput {
   updatedAt_lte?: any | null
   updatedAt_gt?: any | null
   updatedAt_gte?: any | null
-  AND?: PhysicalProductScalarWhereInput[] | null
-  OR?: PhysicalProductScalarWhereInput[] | null
-  NOT?: PhysicalProductScalarWhereInput[] | null
 }
 
 export interface PhysicalProductUpdateManyDataInput {
@@ -713,14 +715,14 @@ export interface PhysicalProductUpdateManyWithWhereNestedInput {
 
 export interface PhysicalProductUpdateManyWithoutProductVariantInput {
   create?: PhysicalProductCreateWithoutProductVariantInput[] | null
-  delete?: PhysicalProductWhereUniqueInput[] | null
   connect?: PhysicalProductWhereUniqueInput[] | null
   set?: PhysicalProductWhereUniqueInput[] | null
   disconnect?: PhysicalProductWhereUniqueInput[] | null
+  delete?: PhysicalProductWhereUniqueInput[] | null
   update?: PhysicalProductUpdateWithWhereUniqueWithoutProductVariantInput[] | null
-  upsert?: PhysicalProductUpsertWithWhereUniqueWithoutProductVariantInput[] | null
-  deleteMany?: PhysicalProductScalarWhereInput[] | null
   updateMany?: PhysicalProductUpdateManyWithWhereNestedInput[] | null
+  deleteMany?: PhysicalProductScalarWhereInput[] | null
+  upsert?: PhysicalProductUpsertWithWhereUniqueWithoutProductVariantInput[] | null
 }
 
 export interface PhysicalProductUpdateWithWhereUniqueWithoutProductVariantInput {
@@ -730,9 +732,9 @@ export interface PhysicalProductUpdateWithWhereUniqueWithoutProductVariantInput 
 
 export interface PhysicalProductUpdateWithoutProductVariantDataInput {
   seasonsUID?: string | null
-  location?: LocationUpdateOneWithoutPhysicalProductsInput | null
   inventoryStatus?: InventoryStatus | null
   productStatus?: PhysicalProductStatus | null
+  location?: LocationUpdateOneWithoutPhysicalProductsInput | null
 }
 
 export interface PhysicalProductUpsertWithWhereUniqueWithoutProductVariantInput {
@@ -760,44 +762,44 @@ export interface ProductCreateWithoutCategoryInput {
   id?: string | null
   slug: string
   name: string
-  brand: BrandCreateOneWithoutProductsInput
   type?: ProductType | null
   description?: string | null
   externalURL?: string | null
   images: any
   modelHeight?: number | null
   retailPrice?: number | null
+  tags?: any | null
+  status?: ProductStatus | null
+  innerMaterials?: ProductCreateinnerMaterialsInput | null
+  outerMaterials?: ProductCreateouterMaterialsInput | null
+  brand: BrandCreateOneWithoutProductsInput
   modelSize?: SizeCreateOneInput | null
   color: ColorCreateOneInput
   secondaryColor?: ColorCreateOneInput | null
-  tags?: any | null
   functions?: ProductFunctionCreateManyInput | null
-  innerMaterials?: ProductCreateinnerMaterialsInput | null
-  outerMaterials?: ProductCreateouterMaterialsInput | null
   variants?: ProductVariantCreateManyWithoutProductInput | null
-  status?: ProductStatus | null
 }
 
 export interface ProductCreateWithoutVariantsInput {
   id?: string | null
   slug: string
   name: string
-  brand: BrandCreateOneWithoutProductsInput
-  category: CategoryCreateOneWithoutProductsInput
   type?: ProductType | null
   description?: string | null
   externalURL?: string | null
   images: any
   modelHeight?: number | null
   retailPrice?: number | null
+  tags?: any | null
+  status?: ProductStatus | null
+  innerMaterials?: ProductCreateinnerMaterialsInput | null
+  outerMaterials?: ProductCreateouterMaterialsInput | null
+  brand: BrandCreateOneWithoutProductsInput
+  category: CategoryCreateOneWithoutProductsInput
   modelSize?: SizeCreateOneInput | null
   color: ColorCreateOneInput
   secondaryColor?: ColorCreateOneInput | null
-  tags?: any | null
   functions?: ProductFunctionCreateManyInput | null
-  innerMaterials?: ProductCreateinnerMaterialsInput | null
-  outerMaterials?: ProductCreateouterMaterialsInput | null
-  status?: ProductStatus | null
 }
 
 export interface ProductCreateinnerMaterialsInput {
@@ -819,6 +821,9 @@ export interface ProductFunctionCreateManyInput {
 }
 
 export interface ProductFunctionScalarWhereInput {
+  AND?: ProductFunctionScalarWhereInput[] | null
+  OR?: ProductFunctionScalarWhereInput[] | null
+  NOT?: ProductFunctionScalarWhereInput[] | null
   id?: string | null
   id_not?: string | null
   id_in?: string[] | null
@@ -847,9 +852,6 @@ export interface ProductFunctionScalarWhereInput {
   name_not_starts_with?: string | null
   name_ends_with?: string | null
   name_not_ends_with?: string | null
-  AND?: ProductFunctionScalarWhereInput[] | null
-  OR?: ProductFunctionScalarWhereInput[] | null
-  NOT?: ProductFunctionScalarWhereInput[] | null
 }
 
 export interface ProductFunctionUpdateDataInput {
@@ -862,14 +864,14 @@ export interface ProductFunctionUpdateManyDataInput {
 
 export interface ProductFunctionUpdateManyInput {
   create?: ProductFunctionCreateInput[] | null
-  update?: ProductFunctionUpdateWithWhereUniqueNestedInput[] | null
-  upsert?: ProductFunctionUpsertWithWhereUniqueNestedInput[] | null
-  delete?: ProductFunctionWhereUniqueInput[] | null
   connect?: ProductFunctionWhereUniqueInput[] | null
   set?: ProductFunctionWhereUniqueInput[] | null
   disconnect?: ProductFunctionWhereUniqueInput[] | null
-  deleteMany?: ProductFunctionScalarWhereInput[] | null
+  delete?: ProductFunctionWhereUniqueInput[] | null
+  update?: ProductFunctionUpdateWithWhereUniqueNestedInput[] | null
   updateMany?: ProductFunctionUpdateManyWithWhereNestedInput[] | null
+  deleteMany?: ProductFunctionScalarWhereInput[] | null
+  upsert?: ProductFunctionUpsertWithWhereUniqueNestedInput[] | null
 }
 
 export interface ProductFunctionUpdateManyWithWhereNestedInput {
@@ -894,6 +896,9 @@ export interface ProductFunctionWhereUniqueInput {
 }
 
 export interface ProductScalarWhereInput {
+  AND?: ProductScalarWhereInput[] | null
+  OR?: ProductScalarWhereInput[] | null
+  NOT?: ProductScalarWhereInput[] | null
   id?: string | null
   id_not?: string | null
   id_in?: string[] | null
@@ -1004,9 +1009,6 @@ export interface ProductScalarWhereInput {
   updatedAt_lte?: any | null
   updatedAt_gt?: any | null
   updatedAt_gte?: any | null
-  AND?: ProductScalarWhereInput[] | null
-  OR?: ProductScalarWhereInput[] | null
-  NOT?: ProductScalarWhereInput[] | null
 }
 
 export interface ProductUpdateManyDataInput {
@@ -1019,9 +1021,9 @@ export interface ProductUpdateManyDataInput {
   modelHeight?: number | null
   retailPrice?: number | null
   tags?: any | null
+  status?: ProductStatus | null
   innerMaterials?: ProductUpdateinnerMaterialsInput | null
   outerMaterials?: ProductUpdateouterMaterialsInput | null
-  status?: ProductStatus | null
 }
 
 export interface ProductUpdateManyWithWhereNestedInput {
@@ -1031,21 +1033,21 @@ export interface ProductUpdateManyWithWhereNestedInput {
 
 export interface ProductUpdateManyWithoutCategoryInput {
   create?: ProductCreateWithoutCategoryInput[] | null
-  delete?: ProductWhereUniqueInput[] | null
   connect?: ProductWhereUniqueInput[] | null
   set?: ProductWhereUniqueInput[] | null
   disconnect?: ProductWhereUniqueInput[] | null
+  delete?: ProductWhereUniqueInput[] | null
   update?: ProductUpdateWithWhereUniqueWithoutCategoryInput[] | null
-  upsert?: ProductUpsertWithWhereUniqueWithoutCategoryInput[] | null
-  deleteMany?: ProductScalarWhereInput[] | null
   updateMany?: ProductUpdateManyWithWhereNestedInput[] | null
+  deleteMany?: ProductScalarWhereInput[] | null
+  upsert?: ProductUpsertWithWhereUniqueWithoutCategoryInput[] | null
 }
 
 export interface ProductUpdateOneRequiredWithoutVariantsInput {
   create?: ProductCreateWithoutVariantsInput | null
+  connect?: ProductWhereUniqueInput | null
   update?: ProductUpdateWithoutVariantsDataInput | null
   upsert?: ProductUpsertWithoutVariantsInput | null
-  connect?: ProductWhereUniqueInput | null
 }
 
 export interface ProductUpdateWithWhereUniqueWithoutCategoryInput {
@@ -1056,43 +1058,43 @@ export interface ProductUpdateWithWhereUniqueWithoutCategoryInput {
 export interface ProductUpdateWithoutCategoryDataInput {
   slug?: string | null
   name?: string | null
-  brand?: BrandUpdateOneRequiredWithoutProductsInput | null
   type?: ProductType | null
   description?: string | null
   externalURL?: string | null
   images?: any | null
   modelHeight?: number | null
   retailPrice?: number | null
+  tags?: any | null
+  status?: ProductStatus | null
+  innerMaterials?: ProductUpdateinnerMaterialsInput | null
+  outerMaterials?: ProductUpdateouterMaterialsInput | null
+  brand?: BrandUpdateOneRequiredWithoutProductsInput | null
   modelSize?: SizeUpdateOneInput | null
   color?: ColorUpdateOneRequiredInput | null
   secondaryColor?: ColorUpdateOneInput | null
-  tags?: any | null
   functions?: ProductFunctionUpdateManyInput | null
-  innerMaterials?: ProductUpdateinnerMaterialsInput | null
-  outerMaterials?: ProductUpdateouterMaterialsInput | null
   variants?: ProductVariantUpdateManyWithoutProductInput | null
-  status?: ProductStatus | null
 }
 
 export interface ProductUpdateWithoutVariantsDataInput {
   slug?: string | null
   name?: string | null
-  brand?: BrandUpdateOneRequiredWithoutProductsInput | null
-  category?: CategoryUpdateOneRequiredWithoutProductsInput | null
   type?: ProductType | null
   description?: string | null
   externalURL?: string | null
   images?: any | null
   modelHeight?: number | null
   retailPrice?: number | null
+  tags?: any | null
+  status?: ProductStatus | null
+  innerMaterials?: ProductUpdateinnerMaterialsInput | null
+  outerMaterials?: ProductUpdateouterMaterialsInput | null
+  brand?: BrandUpdateOneRequiredWithoutProductsInput | null
+  category?: CategoryUpdateOneRequiredWithoutProductsInput | null
   modelSize?: SizeUpdateOneInput | null
   color?: ColorUpdateOneRequiredInput | null
   secondaryColor?: ColorUpdateOneInput | null
-  tags?: any | null
   functions?: ProductFunctionUpdateManyInput | null
-  innerMaterials?: ProductUpdateinnerMaterialsInput | null
-  outerMaterials?: ProductUpdateouterMaterialsInput | null
-  status?: ProductStatus | null
 }
 
 export interface ProductUpdateinnerMaterialsInput {
@@ -1117,19 +1119,19 @@ export interface ProductUpsertWithoutVariantsInput {
 export interface ProductVariantCreateInput {
   id?: string | null
   sku?: string | null
-  color: ColorCreateOneWithoutProductVariantsInput
-  internalSize?: SizeCreateOneInput | null
-  manufacturerSizes?: SizeCreateManyInput | null
   weight?: number | null
   height?: number | null
   productID: string
-  product: ProductCreateOneWithoutVariantsInput
   retailPrice?: number | null
-  physicalProducts?: PhysicalProductCreateManyWithoutProductVariantInput | null
   total: number
   reservable: number
   reserved: number
   nonReservable: number
+  color: ColorCreateOneWithoutProductVariantsInput
+  internalSize?: SizeCreateOneInput | null
+  manufacturerSizes?: SizeCreateManyInput | null
+  product: ProductCreateOneWithoutVariantsInput
+  physicalProducts?: PhysicalProductCreateManyWithoutProductVariantInput | null
 }
 
 export interface ProductVariantCreateManyWithoutColorInput {
@@ -1150,35 +1152,35 @@ export interface ProductVariantCreateOneInput {
 export interface ProductVariantCreateWithoutColorInput {
   id?: string | null
   sku?: string | null
-  internalSize?: SizeCreateOneInput | null
-  manufacturerSizes?: SizeCreateManyInput | null
   weight?: number | null
   height?: number | null
   productID: string
-  product: ProductCreateOneWithoutVariantsInput
   retailPrice?: number | null
-  physicalProducts?: PhysicalProductCreateManyWithoutProductVariantInput | null
   total: number
   reservable: number
   reserved: number
   nonReservable: number
+  internalSize?: SizeCreateOneInput | null
+  manufacturerSizes?: SizeCreateManyInput | null
+  product: ProductCreateOneWithoutVariantsInput
+  physicalProducts?: PhysicalProductCreateManyWithoutProductVariantInput | null
 }
 
 export interface ProductVariantCreateWithoutProductInput {
   id?: string | null
   sku?: string | null
-  color: ColorCreateOneWithoutProductVariantsInput
-  internalSize?: SizeCreateOneInput | null
-  manufacturerSizes?: SizeCreateManyInput | null
   weight?: number | null
   height?: number | null
   productID: string
   retailPrice?: number | null
-  physicalProducts?: PhysicalProductCreateManyWithoutProductVariantInput | null
   total: number
   reservable: number
   reserved: number
   nonReservable: number
+  color: ColorCreateOneWithoutProductVariantsInput
+  internalSize?: SizeCreateOneInput | null
+  manufacturerSizes?: SizeCreateManyInput | null
+  physicalProducts?: PhysicalProductCreateManyWithoutProductVariantInput | null
 }
 
 export interface ProductVariantFeedbackCreateWithoutReservationFeedbackInput {
@@ -1195,10 +1197,10 @@ export interface ProductVariantFeedbackQuestionCreateManyWithoutVariantFeedbackI
 
 export interface ProductVariantFeedbackQuestionCreateWithoutVariantFeedbackInput {
   id?: string | null
-  options?: ProductVariantFeedbackQuestionCreateoptionsInput | null
   question: string
-  responses?: ProductVariantFeedbackQuestionCreateresponsesInput | null
   type: QuestionType
+  options?: ProductVariantFeedbackQuestionCreateoptionsInput | null
+  responses?: ProductVariantFeedbackQuestionCreateresponsesInput | null
 }
 
 export interface ProductVariantFeedbackQuestionCreateoptionsInput {
@@ -1210,6 +1212,9 @@ export interface ProductVariantFeedbackQuestionCreateresponsesInput {
 }
 
 export interface ProductVariantFeedbackQuestionScalarWhereInput {
+  AND?: ProductVariantFeedbackQuestionScalarWhereInput[] | null
+  OR?: ProductVariantFeedbackQuestionScalarWhereInput[] | null
+  NOT?: ProductVariantFeedbackQuestionScalarWhereInput[] | null
   id?: string | null
   id_not?: string | null
   id_in?: string[] | null
@@ -1242,16 +1247,13 @@ export interface ProductVariantFeedbackQuestionScalarWhereInput {
   type_not?: QuestionType | null
   type_in?: QuestionType[] | null
   type_not_in?: QuestionType[] | null
-  AND?: ProductVariantFeedbackQuestionScalarWhereInput[] | null
-  OR?: ProductVariantFeedbackQuestionScalarWhereInput[] | null
-  NOT?: ProductVariantFeedbackQuestionScalarWhereInput[] | null
 }
 
 export interface ProductVariantFeedbackQuestionUpdateManyDataInput {
-  options?: ProductVariantFeedbackQuestionUpdateoptionsInput | null
   question?: string | null
-  responses?: ProductVariantFeedbackQuestionUpdateresponsesInput | null
   type?: QuestionType | null
+  options?: ProductVariantFeedbackQuestionUpdateoptionsInput | null
+  responses?: ProductVariantFeedbackQuestionUpdateresponsesInput | null
 }
 
 export interface ProductVariantFeedbackQuestionUpdateManyWithWhereNestedInput {
@@ -1261,14 +1263,14 @@ export interface ProductVariantFeedbackQuestionUpdateManyWithWhereNestedInput {
 
 export interface ProductVariantFeedbackQuestionUpdateManyWithoutVariantFeedbackInput {
   create?: ProductVariantFeedbackQuestionCreateWithoutVariantFeedbackInput[] | null
-  delete?: ProductVariantFeedbackQuestionWhereUniqueInput[] | null
   connect?: ProductVariantFeedbackQuestionWhereUniqueInput[] | null
   set?: ProductVariantFeedbackQuestionWhereUniqueInput[] | null
   disconnect?: ProductVariantFeedbackQuestionWhereUniqueInput[] | null
+  delete?: ProductVariantFeedbackQuestionWhereUniqueInput[] | null
   update?: ProductVariantFeedbackQuestionUpdateWithWhereUniqueWithoutVariantFeedbackInput[] | null
-  upsert?: ProductVariantFeedbackQuestionUpsertWithWhereUniqueWithoutVariantFeedbackInput[] | null
-  deleteMany?: ProductVariantFeedbackQuestionScalarWhereInput[] | null
   updateMany?: ProductVariantFeedbackQuestionUpdateManyWithWhereNestedInput[] | null
+  deleteMany?: ProductVariantFeedbackQuestionScalarWhereInput[] | null
+  upsert?: ProductVariantFeedbackQuestionUpsertWithWhereUniqueWithoutVariantFeedbackInput[] | null
 }
 
 export interface ProductVariantFeedbackQuestionUpdateWithWhereUniqueWithoutVariantFeedbackInput {
@@ -1277,10 +1279,10 @@ export interface ProductVariantFeedbackQuestionUpdateWithWhereUniqueWithoutVaria
 }
 
 export interface ProductVariantFeedbackQuestionUpdateWithoutVariantFeedbackDataInput {
-  options?: ProductVariantFeedbackQuestionUpdateoptionsInput | null
   question?: string | null
-  responses?: ProductVariantFeedbackQuestionUpdateresponsesInput | null
   type?: QuestionType | null
+  options?: ProductVariantFeedbackQuestionUpdateoptionsInput | null
+  responses?: ProductVariantFeedbackQuestionUpdateresponsesInput | null
 }
 
 export interface ProductVariantFeedbackQuestionUpdateoptionsInput {
@@ -1302,6 +1304,9 @@ export interface ProductVariantFeedbackQuestionWhereUniqueInput {
 }
 
 export interface ProductVariantFeedbackScalarWhereInput {
+  AND?: ProductVariantFeedbackScalarWhereInput[] | null
+  OR?: ProductVariantFeedbackScalarWhereInput[] | null
+  NOT?: ProductVariantFeedbackScalarWhereInput[] | null
   id?: string | null
   id_not?: string | null
   id_in?: string[] | null
@@ -1318,9 +1323,6 @@ export interface ProductVariantFeedbackScalarWhereInput {
   id_not_ends_with?: string | null
   isCompleted?: boolean | null
   isCompleted_not?: boolean | null
-  AND?: ProductVariantFeedbackScalarWhereInput[] | null
-  OR?: ProductVariantFeedbackScalarWhereInput[] | null
-  NOT?: ProductVariantFeedbackScalarWhereInput[] | null
 }
 
 export interface ProductVariantFeedbackUpdateManyDataInput {
@@ -1334,14 +1336,14 @@ export interface ProductVariantFeedbackUpdateManyWithWhereNestedInput {
 
 export interface ProductVariantFeedbackUpdateManyWithoutReservationFeedbackInput {
   create?: ProductVariantFeedbackCreateWithoutReservationFeedbackInput[] | null
-  delete?: ProductVariantFeedbackWhereUniqueInput[] | null
   connect?: ProductVariantFeedbackWhereUniqueInput[] | null
   set?: ProductVariantFeedbackWhereUniqueInput[] | null
   disconnect?: ProductVariantFeedbackWhereUniqueInput[] | null
+  delete?: ProductVariantFeedbackWhereUniqueInput[] | null
   update?: ProductVariantFeedbackUpdateWithWhereUniqueWithoutReservationFeedbackInput[] | null
-  upsert?: ProductVariantFeedbackUpsertWithWhereUniqueWithoutReservationFeedbackInput[] | null
-  deleteMany?: ProductVariantFeedbackScalarWhereInput[] | null
   updateMany?: ProductVariantFeedbackUpdateManyWithWhereNestedInput[] | null
+  deleteMany?: ProductVariantFeedbackScalarWhereInput[] | null
+  upsert?: ProductVariantFeedbackUpsertWithWhereUniqueWithoutReservationFeedbackInput[] | null
 }
 
 export interface ProductVariantFeedbackUpdateWithWhereUniqueWithoutReservationFeedbackInput {
@@ -1366,6 +1368,9 @@ export interface ProductVariantFeedbackWhereUniqueInput {
 }
 
 export interface ProductVariantScalarWhereInput {
+  AND?: ProductVariantScalarWhereInput[] | null
+  OR?: ProductVariantScalarWhereInput[] | null
+  NOT?: ProductVariantScalarWhereInput[] | null
   id?: string | null
   id_not?: string | null
   id_in?: string[] | null
@@ -1480,26 +1485,23 @@ export interface ProductVariantScalarWhereInput {
   updatedAt_lte?: any | null
   updatedAt_gt?: any | null
   updatedAt_gte?: any | null
-  AND?: ProductVariantScalarWhereInput[] | null
-  OR?: ProductVariantScalarWhereInput[] | null
-  NOT?: ProductVariantScalarWhereInput[] | null
 }
 
 export interface ProductVariantUpdateDataInput {
   sku?: string | null
-  color?: ColorUpdateOneRequiredWithoutProductVariantsInput | null
-  internalSize?: SizeUpdateOneInput | null
-  manufacturerSizes?: SizeUpdateManyInput | null
   weight?: number | null
   height?: number | null
   productID?: string | null
-  product?: ProductUpdateOneRequiredWithoutVariantsInput | null
   retailPrice?: number | null
-  physicalProducts?: PhysicalProductUpdateManyWithoutProductVariantInput | null
   total?: number | null
   reservable?: number | null
   reserved?: number | null
   nonReservable?: number | null
+  color?: ColorUpdateOneRequiredWithoutProductVariantsInput | null
+  internalSize?: SizeUpdateOneInput | null
+  manufacturerSizes?: SizeUpdateManyInput | null
+  product?: ProductUpdateOneRequiredWithoutVariantsInput | null
+  physicalProducts?: PhysicalProductUpdateManyWithoutProductVariantInput | null
 }
 
 export interface ProductVariantUpdateManyDataInput {
@@ -1521,33 +1523,33 @@ export interface ProductVariantUpdateManyWithWhereNestedInput {
 
 export interface ProductVariantUpdateManyWithoutColorInput {
   create?: ProductVariantCreateWithoutColorInput[] | null
-  delete?: ProductVariantWhereUniqueInput[] | null
   connect?: ProductVariantWhereUniqueInput[] | null
   set?: ProductVariantWhereUniqueInput[] | null
   disconnect?: ProductVariantWhereUniqueInput[] | null
+  delete?: ProductVariantWhereUniqueInput[] | null
   update?: ProductVariantUpdateWithWhereUniqueWithoutColorInput[] | null
-  upsert?: ProductVariantUpsertWithWhereUniqueWithoutColorInput[] | null
-  deleteMany?: ProductVariantScalarWhereInput[] | null
   updateMany?: ProductVariantUpdateManyWithWhereNestedInput[] | null
+  deleteMany?: ProductVariantScalarWhereInput[] | null
+  upsert?: ProductVariantUpsertWithWhereUniqueWithoutColorInput[] | null
 }
 
 export interface ProductVariantUpdateManyWithoutProductInput {
   create?: ProductVariantCreateWithoutProductInput[] | null
-  delete?: ProductVariantWhereUniqueInput[] | null
   connect?: ProductVariantWhereUniqueInput[] | null
   set?: ProductVariantWhereUniqueInput[] | null
   disconnect?: ProductVariantWhereUniqueInput[] | null
+  delete?: ProductVariantWhereUniqueInput[] | null
   update?: ProductVariantUpdateWithWhereUniqueWithoutProductInput[] | null
-  upsert?: ProductVariantUpsertWithWhereUniqueWithoutProductInput[] | null
-  deleteMany?: ProductVariantScalarWhereInput[] | null
   updateMany?: ProductVariantUpdateManyWithWhereNestedInput[] | null
+  deleteMany?: ProductVariantScalarWhereInput[] | null
+  upsert?: ProductVariantUpsertWithWhereUniqueWithoutProductInput[] | null
 }
 
 export interface ProductVariantUpdateOneRequiredInput {
   create?: ProductVariantCreateInput | null
+  connect?: ProductVariantWhereUniqueInput | null
   update?: ProductVariantUpdateDataInput | null
   upsert?: ProductVariantUpsertNestedInput | null
-  connect?: ProductVariantWhereUniqueInput | null
 }
 
 export interface ProductVariantUpdateWithWhereUniqueWithoutColorInput {
@@ -1562,34 +1564,34 @@ export interface ProductVariantUpdateWithWhereUniqueWithoutProductInput {
 
 export interface ProductVariantUpdateWithoutColorDataInput {
   sku?: string | null
-  internalSize?: SizeUpdateOneInput | null
-  manufacturerSizes?: SizeUpdateManyInput | null
   weight?: number | null
   height?: number | null
   productID?: string | null
-  product?: ProductUpdateOneRequiredWithoutVariantsInput | null
   retailPrice?: number | null
-  physicalProducts?: PhysicalProductUpdateManyWithoutProductVariantInput | null
   total?: number | null
   reservable?: number | null
   reserved?: number | null
   nonReservable?: number | null
+  internalSize?: SizeUpdateOneInput | null
+  manufacturerSizes?: SizeUpdateManyInput | null
+  product?: ProductUpdateOneRequiredWithoutVariantsInput | null
+  physicalProducts?: PhysicalProductUpdateManyWithoutProductVariantInput | null
 }
 
 export interface ProductVariantUpdateWithoutProductDataInput {
   sku?: string | null
-  color?: ColorUpdateOneRequiredWithoutProductVariantsInput | null
-  internalSize?: SizeUpdateOneInput | null
-  manufacturerSizes?: SizeUpdateManyInput | null
   weight?: number | null
   height?: number | null
   productID?: string | null
   retailPrice?: number | null
-  physicalProducts?: PhysicalProductUpdateManyWithoutProductVariantInput | null
   total?: number | null
   reservable?: number | null
   reserved?: number | null
   nonReservable?: number | null
+  color?: ColorUpdateOneRequiredWithoutProductVariantsInput | null
+  internalSize?: SizeUpdateOneInput | null
+  manufacturerSizes?: SizeUpdateManyInput | null
+  physicalProducts?: PhysicalProductUpdateManyWithoutProductVariantInput | null
 }
 
 export interface ProductVariantUpsertNestedInput {
@@ -1621,8 +1623,8 @@ export interface ProductWhereUniqueInput {
 
 export interface ReservationFeedbackUpdateInput {
   comment?: string | null
-  feedbacks?: ProductVariantFeedbackUpdateManyWithoutReservationFeedbackInput | null
   rating?: Rating | null
+  feedbacks?: ProductVariantFeedbackUpdateManyWithoutReservationFeedbackInput | null
   user?: UserUpdateOneRequiredInput | null
 }
 
@@ -1634,9 +1636,9 @@ export interface SizeCreateInput {
   id?: string | null
   slug: string
   productType?: ProductType | null
+  display: string
   top?: TopSizeCreateOneInput | null
   bottom?: BottomSizeCreateOneInput | null
-  display: string
 }
 
 export interface SizeCreateManyInput {
@@ -1650,6 +1652,9 @@ export interface SizeCreateOneInput {
 }
 
 export interface SizeScalarWhereInput {
+  AND?: SizeScalarWhereInput[] | null
+  OR?: SizeScalarWhereInput[] | null
+  NOT?: SizeScalarWhereInput[] | null
   id?: string | null
   id_not?: string | null
   id_in?: string[] | null
@@ -1696,17 +1701,14 @@ export interface SizeScalarWhereInput {
   display_not_starts_with?: string | null
   display_ends_with?: string | null
   display_not_ends_with?: string | null
-  AND?: SizeScalarWhereInput[] | null
-  OR?: SizeScalarWhereInput[] | null
-  NOT?: SizeScalarWhereInput[] | null
 }
 
 export interface SizeUpdateDataInput {
   slug?: string | null
   productType?: ProductType | null
+  display?: string | null
   top?: TopSizeUpdateOneInput | null
   bottom?: BottomSizeUpdateOneInput | null
-  display?: string | null
 }
 
 export interface SizeUpdateManyDataInput {
@@ -1717,14 +1719,14 @@ export interface SizeUpdateManyDataInput {
 
 export interface SizeUpdateManyInput {
   create?: SizeCreateInput[] | null
-  update?: SizeUpdateWithWhereUniqueNestedInput[] | null
-  upsert?: SizeUpsertWithWhereUniqueNestedInput[] | null
-  delete?: SizeWhereUniqueInput[] | null
   connect?: SizeWhereUniqueInput[] | null
   set?: SizeWhereUniqueInput[] | null
   disconnect?: SizeWhereUniqueInput[] | null
-  deleteMany?: SizeScalarWhereInput[] | null
+  delete?: SizeWhereUniqueInput[] | null
+  update?: SizeUpdateWithWhereUniqueNestedInput[] | null
   updateMany?: SizeUpdateManyWithWhereNestedInput[] | null
+  deleteMany?: SizeScalarWhereInput[] | null
+  upsert?: SizeUpsertWithWhereUniqueNestedInput[] | null
 }
 
 export interface SizeUpdateManyWithWhereNestedInput {
@@ -1734,11 +1736,11 @@ export interface SizeUpdateManyWithWhereNestedInput {
 
 export interface SizeUpdateOneInput {
   create?: SizeCreateInput | null
+  connect?: SizeWhereUniqueInput | null
+  disconnect?: boolean | null
+  delete?: boolean | null
   update?: SizeUpdateDataInput | null
   upsert?: SizeUpsertNestedInput | null
-  delete?: boolean | null
-  disconnect?: boolean | null
-  connect?: SizeWhereUniqueInput | null
 }
 
 export interface SizeUpdateWithWhereUniqueNestedInput {
@@ -1788,11 +1790,11 @@ export interface TopSizeUpdateDataInput {
 
 export interface TopSizeUpdateOneInput {
   create?: TopSizeCreateInput | null
+  connect?: TopSizeWhereUniqueInput | null
+  disconnect?: boolean | null
+  delete?: boolean | null
   update?: TopSizeUpdateDataInput | null
   upsert?: TopSizeUpsertNestedInput | null
-  delete?: boolean | null
-  disconnect?: boolean | null
-  connect?: TopSizeWhereUniqueInput | null
 }
 
 export interface TopSizeUpsertNestedInput {
@@ -1830,18 +1832,18 @@ export interface UserUpdateDataInput {
 
 export interface UserUpdateOneInput {
   create?: UserCreateInput | null
+  connect?: UserWhereUniqueInput | null
+  disconnect?: boolean | null
+  delete?: boolean | null
   update?: UserUpdateDataInput | null
   upsert?: UserUpsertNestedInput | null
-  delete?: boolean | null
-  disconnect?: boolean | null
-  connect?: UserWhereUniqueInput | null
 }
 
 export interface UserUpdateOneRequiredInput {
   create?: UserCreateInput | null
+  connect?: UserWhereUniqueInput | null
   update?: UserUpdateDataInput | null
   upsert?: UserUpsertNestedInput | null
-  connect?: UserWhereUniqueInput | null
 }
 
 export interface UserUpsertNestedInput {
