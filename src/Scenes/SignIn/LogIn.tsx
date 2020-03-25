@@ -1,14 +1,17 @@
-import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, CloseButton, Container } from "App/Components"
+import {
+  Box, Button, CloseButton, Container, Flex, PopUp, Sans, Spacer, TextInput
+} from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
+import { useAuthContext } from "App/Navigation/AuthContext"
 import { color } from "App/utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
-import AsyncStorage from "@react-native-community/async-storage"
 import { checkNotifications } from "react-native-permissions"
-import { useAuthContext } from "App/Navigation/AuthContext"
+
+import AsyncStorage from "@react-native-community/async-storage"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -156,7 +159,7 @@ export const LogIn: React.FC<LogInProps> = props => {
           <Box p={4} pb={5}>
             <Text style={{ textAlign: "center" }}>
               <Sans size="2" color="gray">
-                Sign in using the same email and password you used for the wailist.
+                Sign in using the same email and password you used for the waitlist.
               </Sans>
             </Text>
             <Spacer mb={2} />
