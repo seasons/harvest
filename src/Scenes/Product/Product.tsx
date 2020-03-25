@@ -97,7 +97,7 @@ export const Product = screenTrack({
   }
 
   const inStock = selectedVariant && selectedVariant.reservable > 0
-  const shouldShowVariantWant = !inStock && !!selectedVariant.id
+  const shouldShowVariantWant = !inStock && !!selectedVariant?.id
 
   const variantWantTransition = useSpring({
     translateY: shouldShowVariantWant ? 0 : VARIANT_WANT_HEIGHT,
