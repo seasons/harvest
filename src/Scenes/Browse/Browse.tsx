@@ -14,9 +14,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
-
 import { useQuery } from "@apollo/react-hooks"
-
 import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240
@@ -35,6 +33,11 @@ const GET_BROWSE_PRODUCTS = gql`
       name
       children {
         slug
+      }
+    }
+    productsCount: productsConnection(category: $name, sizes: $sizes, where: { status: Available }) {
+      aggregate {
+        count
       }
     }
     products(
@@ -166,6 +169,8 @@ export const Browse = screenTrack()((props: any) => {
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
   }
 
+  const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
+
   return (
     <Container insetsBottom={false}>
       <LoaderContainer mt={insets.top} style={[loaderStyle]}>
@@ -176,7 +181,6 @@ export const Browse = screenTrack()((props: any) => {
           <FlatList
             contentContainerStyle={{
               paddingBottom: filtersButtonHeight,
-              minHeight: Dimensions.get("window").height - 100,
             }}
             data={products}
             ref={ref => (scrollViewEl = ref)}
@@ -196,7 +200,7 @@ export const Browse = screenTrack()((props: any) => {
             onEndReached={() => {
               // If we are sorting alphabetically, all products are returned so we do not need
               // to fetch any more
-              if (!loading) {
+              if (!loading && !reachedEnd) {
                 tracking.trackEvent({
                   actionName: Schema.ActionNames.BrowsePagePaginated,
                   actionType: Schema.ActionTypes.Tap,
