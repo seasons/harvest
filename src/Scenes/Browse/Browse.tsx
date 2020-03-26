@@ -43,7 +43,7 @@ const GET_BROWSE_PRODUCTS = gql`
       skip: $skip
       sizes: $sizes
       orderBy: $orderBy
-      where: { status: Available }
+      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
     ) {
       id
       name
