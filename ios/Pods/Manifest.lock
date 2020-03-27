@@ -290,7 +290,7 @@ PODS:
     - React
   - RNReanimated (1.7.0):
     - React
-  - RNScreens (2.0.0-beta.6):
+  - RNScreens (2.4.0):
     - React
   - RNSentry (1.1.0):
     - React
@@ -615,7 +615,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
   RNPermissions: 2f74237e97b08beda01e914301e12524ddddf5b8
   RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
-  RNScreens: c2c8bdde0146f16eb6bf092dd7485534851f2711
+  RNScreens: b5c0e1b2b04512919e78bd3898e144a157ce2363
   RNSentry: 932ac1c8b2f581b1c8be5812f88ff556c99e7fb7
   RNSVG: f6177f8d7c095fada7cfee2e4bb7388ba426064c
   SDWebImage: 7edb9c3ea661e77a66661f7f044de8c1b55d1120
@@ -635,6 +635,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 1e70fe58b872355f0ecb44fb81bb1a16484047f0
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 30a1c4a931838ecee161f9f9228de43f8240a873
+PODFILE CHECKSUM: 9e7f8a6829443fa6c5c70baac7c63c091e4fc5da
 
 COCOAPODS: 1.9.1

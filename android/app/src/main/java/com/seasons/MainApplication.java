@@ -3,6 +3,7 @@ package com.seasons;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.avishayil.rnrestart.ReactNativeRestartPackage;
 import com.clipsub.RNShake.RNShakeEventPackage;
 import com.segment.analytics.reactnative.core.RNAnalyticsPackage;
@@ -12,7 +13,6 @@ import com.reactnativecommunity.webview.RNCWebViewPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
-import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.auth0.react.A0Auth0Package;
 import com.horcrux.svg.SvgPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
@@ -53,6 +53,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new AsyncStoragePackage(),
             new ReactNativeRestartPackage(),
             new RNAnalyticsPackage(),
             new ReactNativeConfigPackage(),
@@ -83,7 +84,6 @@ public class MainApplication extends Application implements ReactApplication {
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
-            new AsyncStoragePackage(),
             new A0Auth0Package(),
             new ReanimatedPackage(),
             new RNGestureHandlerPackage(),
