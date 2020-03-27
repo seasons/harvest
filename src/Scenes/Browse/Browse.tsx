@@ -14,9 +14,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
-
 import { useQuery } from "@apollo/react-hooks"
-
 import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240

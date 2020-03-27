@@ -26,8 +26,6 @@ export const PopUp: React.FC = () => {
 
   const { data, show } = popUpState
   const height = size ? size.height : 240
-  console.log("data", data)
-  console.log("show", show)
 
   const animation = useSpring({
     translateY: show && mounted ? windowHeight - height : windowHeight,

@@ -66,7 +66,7 @@ export const ProductDetails: React.FC<{
         </Box>
         {!!(selectedVariant && selectedVariant.id) && (
           <SaveButtonWrapper>
-            <SaveProductButton selectedVariant={selectedVariant} product={product} setPopUp={setPopUp} />
+            <SaveProductButton selectedVariant={selectedVariant} product={product} />
           </SaveButtonWrapper>
         )}
       </Flex>

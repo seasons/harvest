@@ -51,9 +51,8 @@ export const PopUpProvider = ({ children }) => {
     hidePopUp: async () => {
       dispatch({ type: "HIDE" })
       clearData = setTimeout(() => {
-        console.log("clearing")
         dispatch({ type: "CLEAR" })
-      }, 500)
+      }, 1000)
     },
     popUpState,
   }

@@ -28,8 +28,7 @@ const SAVE_ITEM = gql`
 export const SaveProductButton: React.FC<{
   selectedVariant: any
   product: any
-  setPopUp: ({ show: boolean, data: any }) => void
-}> = ({ selectedVariant, product, setPopUp }) => {
+}> = ({ selectedVariant, product }) => {
   const navigation = useNavigation()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
