@@ -19,6 +19,7 @@ import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
 import { SavedItem } from "./Components/SavedItem"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const SECTION_HEIGHT = 300
 
@@ -29,6 +30,7 @@ enum BagView {
 
 export const Bag = screenTrack()(props => {
   const { authState } = useAuthContext()
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const { navigation } = props
 
   if (!authState?.userSession) {
@@ -193,29 +195,24 @@ export const Bag = screenTrack()(props => {
     : "Reserve your order below"
   const bagSubtitle = hasActiveReservation ? "Your current rotation" : remainingPiecesDisplay
 
-  const ErrorMessage = () => {
-    const popUpData = {
-      title: "",
-      note: "We couldn't process your order because of an unexpected error, please try again later",
-      buttonText: "Got it",
-      onClose: () => displayReserveError(false),
+  const popUpData = {
+    title: "",
+    note: "We couldn't process your order because of an unexpected error, please try again later",
+    buttonText: "Got it",
+    onClose: () => hidePopUp(),
+  }
+
+  if (showReserveError) {
+    const { code, data } = showReserveError
+    if (code === "511") {
+      popUpData.title = "One or more items have been reserved already"
+      popUpData.note =
+        "Sorry, some of the items you had selected were confirmed before you, please replace them with available items"
+    } else {
+      popUpData.title = "Sorry!"
+      popUpData.note = "We couldn't process your order because of an unexpected error, please try again later"
     }
-
-    if (showReserveError) {
-      const { code, data } = showReserveError
-      if (code === "511") {
-        popUpData.title = "One or more items have been reserved already"
-        popUpData.note =
-          "Sorry, some of the items you had selected were confirmed before you, please replace them with available items"
-      } else {
-        popUpData.title = "Sorry!"
-        popUpData.note = "We couldn't process your order because of an unexpected error, please try again later"
-      }
-
-      return <PopUp data={popUpData} show={showReserveError} />
-    }
-
-    return null
+    showPopUp(popUpData)
   }
 
   const renderItem = ({ item, index }) => {
@@ -336,7 +333,6 @@ export const Bag = screenTrack()(props => {
           )}
         </>
       )}
-      <ErrorMessage />
     </Container>
   )
 })

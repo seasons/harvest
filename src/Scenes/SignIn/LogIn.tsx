@@ -1,6 +1,4 @@
-import {
-  Box, Button, CloseButton, Container, Flex, PopUp, Sans, Spacer, TextInput
-} from "App/Components"
+import { Box, Button, CloseButton, Container, Flex, PopUp, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { color } from "App/utils"
@@ -12,6 +10,7 @@ import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { checkNotifications } from "react-native-permissions"
 
 import AsyncStorage from "@react-native-community/async-storage"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -39,19 +38,25 @@ export const LogIn: React.FC<LogInProps> = props => {
   const [password, setPassword] = useState("")
   const [isMutating, setIsMutating] = useState(false)
   const [emailComplete, setEmailComplete] = useState(false)
-  const [showError, setShowError] = useState(false)
+  const { showPopUp, hidePopUp } = usePopUpContext()
+  const { signIn } = useAuthContext()
+
   const [login] = useMutation(LOG_IN, {
     onCompleted: () => {
       setIsMutating(false)
     },
     onError: err => {
+      const popUpData = {
+        title: "Oops! Try again!",
+        note: "Your email or password may be incorrect. Not a member? Apply for the waitlist.",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
+      }
       console.log("err", err)
-      setShowError(true)
+      showPopUp(popUpData)
       setIsMutating(false)
     },
   })
-
-  const { signIn } = useAuthContext()
 
   const onEmailChange = val => {
     setEmail(val)
@@ -103,13 +108,6 @@ export const LogIn: React.FC<LogInProps> = props => {
   }
 
   const disabled = !(emailComplete && password.length)
-
-  const popUpData = {
-    title: "Oops! Try again!",
-    note: "Your email or password may be incorrect. Not a member? Apply for the waitlist.",
-    buttonText: "Close",
-    onClose: () => setShowError(false),
-  }
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -165,7 +163,6 @@ export const LogIn: React.FC<LogInProps> = props => {
             <Spacer mb={2} />
           </Box>
         </Flex>
-        <PopUp data={popUpData} show={showError} />
       </Flex>
     </Container>
   )

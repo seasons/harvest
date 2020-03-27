@@ -13,10 +13,9 @@ import { SaveProductButton } from "./SaveProductButton"
 
 // FIXME: Fix types here
 export const ProductDetails: React.FC<{
-  setPopUp: any
   selectedVariant: any
   product: GetProduct_product
-}> = ({ setPopUp, selectedVariant, product }) => {
+}> = ({ selectedVariant, product }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
   if (!product || !product.variants) {

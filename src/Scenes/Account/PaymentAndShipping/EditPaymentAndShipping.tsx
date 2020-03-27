@@ -1,19 +1,18 @@
 import gql from "graphql-tag"
-import { get } from "lodash"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { Dimensions } from "react-native"
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeArea } from "react-native-safe-area-context"
-import { Box, Button, Container, Flex, FixedBackArrow, PopUp, Radio, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, Container, Flex, FixedBackArrow, Radio, Sans, Spacer, TextInput } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { PopUpProps } from "App/Components/PopUp"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
 import { chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage } from "src/generated/chargebeeUpdatePaymentPage"
 import {
   GetUserPaymentData_me_customer_billingInfo,
-  GetUserPaymentData_me_customer_detail_shippingAddress
+  GetUserPaymentData_me_customer_detail_shippingAddress,
 } from "src/generated/getUserPaymentData"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 export const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
   query chargebeeUpdatePaymentPage {
@@ -34,15 +33,15 @@ export const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
 
 const UPDATE_PAYMENT_AND_SHIPPING = gql`
   mutation updatePaymentAndShipping(
-    $billingAddress: AddressInput!, 
-    $shippingAddress: AddressInput!, 
+    $billingAddress: AddressInput!
+    $shippingAddress: AddressInput!
     $phoneNumber: String!
   ) {
     updatePaymentAndShipping(
-      billingAddress: $billingAddress, 
-      shippingAddress: $shippingAddress, 
+      billingAddress: $billingAddress
+      shippingAddress: $shippingAddress
       phoneNumber: $phoneNumber
-    ) 
+    )
   }
 `
 
@@ -56,26 +55,25 @@ export const EditPaymentAndShipping: React.FC<{
   navigation: any
   route: any
 }> = ({ navigation, route }) => {
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const billingInfo: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
   const currentPhoneNumber = route?.params?.phoneNumber
-
   const insets = useSafeArea()
   const [isMutating, setIsMutating] = useState(false)
-  const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [shippingAddress, setShippingAddress] = useState({
     address1: currentShippingAddress?.address1 || "",
     address2: currentShippingAddress?.address2 || "",
     city: currentShippingAddress?.city || "",
     state: currentShippingAddress?.state || "",
-    zipCode: currentShippingAddress?.zipCode || ""
+    zipCode: currentShippingAddress?.zipCode || "",
   })
   const [billingAddress, setBillingAddress] = useState({
     address1: billingInfo?.street1 || "",
     address2: billingInfo?.street2 || "",
     city: billingInfo?.city || "",
     state: billingInfo?.state || "",
-    zipCode: billingInfo?.postal_code || ""
+    zipCode: billingInfo?.postal_code || "",
   })
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState(currentPhoneNumber)
@@ -86,16 +84,16 @@ export const EditPaymentAndShipping: React.FC<{
         buttonText: "Got it",
         note: "Make sure your shipping and billing address are valid.",
         title: "Something went wrong!",
-        onClose: () => setPopUp({ show: false, data: null })
+        onClose: () => hidePopUp(),
       }
       if (error.message.includes("SHIPPING_ADDRESS_NOT_NYC")) {
         popUpData = {
           ...popUpData,
           note: "Unfortunately we only ship to Manhattan, Queens, The Bronx, and Brooklyn right now.",
-          title: "Uh oh. That’s not NYC"
+          title: "Uh oh. That’s not NYC",
         }
       }
-      setPopUp({ show: true, data: popUpData })
+      showPopUp(popUpData)
       console.log("error EditView.tsx: ", error)
     },
   })
@@ -111,7 +109,8 @@ export const EditPaymentAndShipping: React.FC<{
     return <Loader />
   }
 
-  const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage = data?.chargebeeUpdatePaymentPage
+  const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage =
+    data?.chargebeeUpdatePaymentPage
 
   const {
     address1: shippingAddress1,
@@ -159,7 +158,7 @@ export const EditPaymentAndShipping: React.FC<{
           postalCode: billingZipCode,
           state: billingState,
           street1: billingAddress1,
-          street2: billingAddress2
+          street2: billingAddress2,
         },
         phoneNumber,
         shippingAddress: {
@@ -167,14 +166,14 @@ export const EditPaymentAndShipping: React.FC<{
           postalCode: shippingZipCode,
           state: shippingState,
           street1: shippingAddress1,
-          street2: shippingAddress2
-        }
+          street2: shippingAddress2,
+        },
       },
       refetchQueries: [
         {
-          query: GET_PAYMENT_DATA
-        }
-      ]
+          query: GET_PAYMENT_DATA,
+        },
+      ],
     })
     setIsMutating(false)
     if (result) {
@@ -186,7 +185,7 @@ export const EditPaymentAndShipping: React.FC<{
     if (chargebeeUpdatePaymentHostedPage?.url) {
       navigation.navigate("Webview", {
         uri: chargebeeUpdatePaymentHostedPage?.url,
-        variant: "whiteBackground"
+        variant: "whiteBackground",
       })
     }
   }
@@ -204,18 +203,46 @@ export const EditPaymentAndShipping: React.FC<{
           <>
             <Sans size="1">{SHIPPING_ADDRESS}</Sans>
             <Spacer mb={2} />
-            <TextInput currentValue={shippingAddress1} placeholder="Address 1" onChangeText={(inputKey, text) => setShippingAddress({ ...shippingAddress, address1: text })} />
+            <TextInput
+              currentValue={shippingAddress1}
+              placeholder="Address 1"
+              onChangeText={(inputKey, text) => setShippingAddress({ ...shippingAddress, address1: text })}
+            />
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
-              <TextInput currentValue={shippingAddress2} placeholder="Address 2" style={{ flex: 1 }} onChangeText={(inputKey, text) => setShippingAddress({ ...shippingAddress, address2: text })} />
+              <TextInput
+                currentValue={shippingAddress2}
+                placeholder="Address 2"
+                style={{ flex: 1 }}
+                onChangeText={(inputKey, text) => setShippingAddress({ ...shippingAddress, address2: text })}
+              />
               <Spacer ml={1} />
-              <TextInput currentValue={shippingZipCode} placeholder="Zipcode" style={{ flex: 1 }} onChangeText={(inputKey, text) => setShippingAddress({ ...shippingAddress, zipCode: text })} />
+              <TextInput
+                currentValue={shippingZipCode}
+                placeholder="Zipcode"
+                style={{ flex: 1 }}
+                onChangeText={(inputKey, text) => setShippingAddress({ ...shippingAddress, zipCode: text })}
+              />
             </Flex>
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput currentValue={shippingCity} placeholder="City" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingAddress({ ...shippingAddress, city: text }) }} />
+              <TextInput
+                currentValue={shippingCity}
+                placeholder="City"
+                style={{ flex: 1 }}
+                onChangeText={(inputKey, text) => {
+                  setShippingAddress({ ...shippingAddress, city: text })
+                }}
+              />
               <Spacer ml={1} />
-              <TextInput currentValue={shippingState} placeholder="State" style={{ flex: 1 }} onChangeText={(inputKey, text) => { setShippingAddress({ ...shippingAddress, state: text }) }} />
+              <TextInput
+                currentValue={shippingState}
+                placeholder="State"
+                style={{ flex: 1 }}
+                onChangeText={(inputKey, text) => {
+                  setShippingAddress({ ...shippingAddress, state: text })
+                }}
+              />
             </Flex>
           </>
         )
@@ -232,18 +259,42 @@ export const EditPaymentAndShipping: React.FC<{
               labelSize="1"
             />
             <Spacer mb={2} />
-            <TextInput currentValue={billingAddress1} placeholder="Address 1" onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, address1: text })} />
+            <TextInput
+              currentValue={billingAddress1}
+              placeholder="Address 1"
+              onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, address1: text })}
+            />
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput currentValue={billingAddress2} placeholder="Address 2" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, address2: text })} />
+              <TextInput
+                currentValue={billingAddress2}
+                placeholder="Address 2"
+                style={{ flex: 1 }}
+                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, address2: text })}
+              />
               <Spacer ml={1} />
-              <TextInput currentValue={billingZipCode} placeholder="Zipcode" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, zipCode: text })} />
+              <TextInput
+                currentValue={billingZipCode}
+                placeholder="Zipcode"
+                style={{ flex: 1 }}
+                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, zipCode: text })}
+              />
             </Flex>
             <Spacer mb={2} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput currentValue={billingCity} placeholder="City" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, city: text })} />
+              <TextInput
+                currentValue={billingCity}
+                placeholder="City"
+                style={{ flex: 1 }}
+                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, city: text })}
+              />
               <Spacer ml={1} />
-              <TextInput currentValue={billingState} placeholder="State" style={{ flex: 1 }} onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, state: text })} />
+              <TextInput
+                currentValue={billingState}
+                placeholder="State"
+                style={{ flex: 1 }}
+                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, state: text })}
+              />
             </Flex>
           </>
         )
@@ -252,7 +303,11 @@ export const EditPaymentAndShipping: React.FC<{
           <>
             <Sans size="1">{PHONE_NUMBER}</Sans>
             <Spacer mb={2} />
-            <TextInput currentValue={phoneNumber} placeholder="Phone number" onChangeText={(inputKey, text) => setPhoneNumber(text)} />
+            <TextInput
+              currentValue={phoneNumber}
+              placeholder="Phone number"
+              onChangeText={(inputKey, text) => setPhoneNumber(text)}
+            />
           </>
         )
       case EDIT_BILLING_INFO:
@@ -269,7 +324,13 @@ export const EditPaymentAndShipping: React.FC<{
             <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
               Cancel
             </Button>
-            <Button loading={isMutating} variant="secondaryBlack" size="large" width={buttonWidth} onPress={handleSaveBtnPressed}>
+            <Button
+              loading={isMutating}
+              variant="secondaryBlack"
+              size="large"
+              width={buttonWidth}
+              onPress={handleSaveBtnPressed}
+            >
               Save
             </Button>
           </Flex>
@@ -299,7 +360,6 @@ export const EditPaymentAndShipping: React.FC<{
           showsVerticalScrollIndicator={false}
         />
       </Box>
-      <PopUp data={popUp.data} show={popUp.show} insetsBottom={true} />
     </Container>
   )
 }
