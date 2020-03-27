@@ -1,8 +1,8 @@
-import React from "react"
-import { mount } from "enzyme"
 import { MockedProvider } from "@apollo/react-testing"
-import { waitForLoad } from "App/testUtils/waitForLoad"
+import { mount } from "enzyme"
+import React from "react"
 import { ReservationFeedback, ReservationFeedbackConfirmation, ReservationFeedbackFinish } from "../"
+import { waitForLoad } from "App/testUtils/waitForLoad"
 
 const VariantFeedbackFixture = {
   id: 123,
