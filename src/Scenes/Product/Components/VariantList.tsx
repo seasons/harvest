@@ -64,6 +64,11 @@ const sizeDataForVariants = (variants = [], type) => {
     const sizeData: any = {}
     for (let variant of variants) {
       const { id, reservable } = variant
+
+      if (!variant.internalSize) {
+        continue
+      }
+
       const size = variant.internalSize?.bottom?.value
 
       sizeData[size] = {
@@ -83,8 +88,6 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
   const type = product?.type
   const [sizeData, setSizeData] = useState({})
   const tracking = useTracking()
-
-  console.log(variants)
 
   useEffect(() => {
     updateSizeData()
