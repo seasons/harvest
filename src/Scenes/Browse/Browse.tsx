@@ -1,11 +1,11 @@
 import { Box, Button, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { Spinner } from "App/Components/Spinner"
+import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { imageResize } from "App/helpers/imageResize"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
-import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import gql from "graphql-tag"
 import get from "lodash/get"
 import React, { useState } from "react"
@@ -14,7 +14,9 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
+
 import { useQuery } from "@apollo/react-hooks"
+
 import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240
@@ -35,7 +37,11 @@ const GET_BROWSE_PRODUCTS = gql`
         slug
       }
     }
-    productsCount: productsConnection(category: $name, sizes: $sizes, where: { status: Available }) {
+    productsCount: productsConnection(
+      category: $name
+      sizes: $sizes
+      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
+    ) {
       aggregate {
         count
       }
@@ -170,6 +176,8 @@ export const Browse = screenTrack()((props: any) => {
   }
 
   const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
+  console.log("Products length", products?.length)
+  console.log("Aggregate count", data?.productsCount?.aggregate?.count)
 
   return (
     <Container insetsBottom={false}>
