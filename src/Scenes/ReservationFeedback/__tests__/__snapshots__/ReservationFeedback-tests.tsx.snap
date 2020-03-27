@@ -1,3 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ReservationFeedback renders properly 1`] = `ReactWrapper {}`;
+
+exports[`ReservationFeedbackConfirmation renders properly 1`] = `ReactWrapper {}`;
+
+exports[`ReservationFeedbackFinish renders properly 1`] = `ReactWrapper {}`;
