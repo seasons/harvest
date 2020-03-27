@@ -46,7 +46,6 @@ target 'seasons' do
   pod 'RNGestureHandler', :podspec => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
   pod 'RNReanimated', :podspec => '../node_modules/react-native-reanimated/RNReanimated.podspec'
   pod 'A0Auth0', :path => '../node_modules/react-native-auth0/ios'
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
   pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
   pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
@@ -64,6 +63,8 @@ target 'seasons' do
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
 
   pod 'RCTRestart', :path => '../node_modules/react-native-restart'
+
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|  

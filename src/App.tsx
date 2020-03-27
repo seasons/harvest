@@ -1,7 +1,9 @@
 import { AppContainer } from "App/Navigation"
 import React, { useEffect, useState } from "react"
 import { SafeAreaProvider } from "react-native-safe-area-context"
+
 import { ApolloProvider } from "@apollo/react-hooks"
+
 import { setupApolloClient } from "./Apollo"
 import { config } from "./utils/config"
 

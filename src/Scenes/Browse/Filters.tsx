@@ -1,13 +1,14 @@
+import { TabBar } from "App/Components/TabBar"
+import { color, space } from "App/utils"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Check } from "Assets/svgs"
 import get from "lodash/get"
 import React, { useState } from "react"
-import { Dimensions, TouchableOpacity, TouchableWithoutFeedback, FlatList } from "react-native"
-import styled from "styled-components/native"
-import { Box, Button, Flex, Radio, Sans, Separator, Spacer, Container } from "../../Components"
-import { useTracking, Schema, screenTrack } from "App/utils/track"
-import { color, space } from "App/utils"
-import { TabBar } from "App/Components/TabBar"
+import { Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
+import styled from "styled-components/native"
+
+import { Box, Button, Container, Flex, Radio, Sans, Separator, Spacer } from "../../Components"
 
 enum FilterView {
   Tops = 0,
@@ -58,7 +59,7 @@ export const Filters = screenTrack()((props: any) => {
             </Sans>
           </Flex>
           <Spacer mt={20} />
-          <Separator color={color("black50")} />
+          <Separator color={color("black15")} />
         </Box>
       </TouchableWithoutFeedback>
     )
