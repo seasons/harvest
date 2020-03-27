@@ -15,7 +15,7 @@ export const VariantSizes: React.FC<{
         return (
           <Box key={variant.id} mr={0.5} style={{ position: "relative" }}>
             <Sans size={size} color={reservable ? "black" : "black15"}>
-              {variant.internalSize.display}
+              {variant?.internalSize?.display}
             </Sans>
             {!reservable && <Strikethrough size={size} />}
           </Box>
