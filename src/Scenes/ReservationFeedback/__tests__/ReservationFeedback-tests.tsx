@@ -2,7 +2,7 @@ import React from "react"
 import { mount } from "enzyme"
 import { MockedProvider } from "@apollo/react-testing"
 import { waitForLoad } from "App/testUtils/waitForLoad"
-import { ReservationFeedback } from "../ReservationFeedback"
+import { ReservationFeedback, ReservationFeedbackConfirmation, ReservationFeedbackFinish } from "../"
 
 const VariantFeedbackFixture = {
   id: 123,
@@ -72,6 +72,45 @@ describe("ReservationFeedback", () => {
 
     expect(component.text()).toContain(
       "ReviewingItem 1 of 3Engineered Garments Hoodie1. How many times did you wear this Engineered Garments Hoodie?More than 6 times3-5 times1-2 times0 times2. Would you buy it at retail for $495?Would buy at a discountBuy below retailBuy at retailWould only rent3. Did it fit as expected?Fit too bigFit true to sizeRan smallDidn't fit at allContinue later"
+    )
+    expect(component).toMatchSnapshot()
+  })
+})
+
+describe("ReservationFeedbackConfirmation", () => {
+  it("renders properly", async () => {
+    const route = {
+      params: {
+        reservationFeedback: ReservationFeedbackFixture,
+      },
+    }
+    const component = mount(
+      <MockedProvider>
+        <ReservationFeedbackConfirmation navigation={null} route={route} />
+      </MockedProvider>
+    )
+
+    await waitForLoad(component)
+
+    expect(component.text()).toContain(
+      "FinishAny other thoughts?SkipSubmitSomething went wrong!An issue occurred while trying to submit your comment. Please try again.Got it"
+    )
+    expect(component).toMatchSnapshot()
+  })
+})
+
+describe("ReservationFeedbackFinish", () => {
+  it("renders properly", async () => {
+    const component = mount(
+      <MockedProvider>
+        <ReservationFeedbackFinish navigation={null} />
+      </MockedProvider>
+    )
+
+    await waitForLoad(component)
+
+    expect(component.text()).toContain(
+      "Thank youThank you for helping us improve your experience with this feedback.Finish"
     )
     expect(component).toMatchSnapshot()
   })
