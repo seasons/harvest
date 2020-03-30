@@ -30,6 +30,10 @@ const sizeToName = size => {
 }
 
 const sizeDataForVariants = (variants = [], type) => {
+  const manufacturerSize = variant => {
+    return (variant.manufacturerSizes?.length > 0 && variant.manufacturerSizes?.[0]?.display) || ""
+  }
+
   if (type === "Top") {
     const sizeData = {
       XS: {},
@@ -51,15 +55,13 @@ const sizeDataForVariants = (variants = [], type) => {
       for (let variant of variants) {
         const { id, internalSize, reservable } = variant
         const size = internalSize.display
-        const manufacturerSize =
-          (variant.manufacturerSizes?.length > 0 && variant.manufacturerSizes?.[0]?.display) || ""
 
         sizeData[size] = {
           id,
           size: sizeToName(size),
           reservable,
           stock: reservable,
-          manufacturerSize,
+          manufacturerSize: manufacturerSize(variant),
         }
       }
     }
@@ -69,13 +71,12 @@ const sizeDataForVariants = (variants = [], type) => {
     for (let variant of variants) {
       const { id, reservable } = variant
       const size = variant.internalSize?.bottom?.value
-      const manufacturerSize = (variant.manufacturerSizes?.length > 0 && variant.manufacturerSizes?.[0]?.display) || ""
 
       sizeData[size] = {
         id,
         size,
         reservable,
-        manufacturerSize,
+        manufacturerSize: manufacturerSize(variant),
         stock: reservable,
       }
     }

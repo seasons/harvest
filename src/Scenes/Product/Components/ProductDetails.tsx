@@ -11,7 +11,6 @@ import { useNavigation } from "@react-navigation/native"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
 
-// FIXME: Fix types here
 export const ProductDetails: React.FC<{
   selectedVariant: any
   product: GetProduct_product
