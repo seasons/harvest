@@ -313,8 +313,8 @@ export const EditPaymentAndShipping: React.FC<{
       case EDIT_BILLING_INFO:
         return (
           <Flex flexDirection="row" justifyContent="space-between">
-            <Button variant="secondaryBlack" size="large" width={buttonWidth} onPress={handleEditBillingInfoBtnPressed}>
-              Edit Billing Info
+            <Button variant="primaryWhite" size="large" width="100%" onPress={handleEditBillingInfoBtnPressed}>
+              Edit payment method
             </Button>
           </Flex>
         )
