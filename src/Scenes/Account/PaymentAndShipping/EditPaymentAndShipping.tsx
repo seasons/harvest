@@ -6,6 +6,7 @@ import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, Radio, Sans, Spacer, TextInput } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import styled from "styled-components/native"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
 import { chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage } from "src/generated/chargebeeUpdatePaymentPage"
 import {
@@ -13,6 +14,7 @@ import {
   GetUserPaymentData_me_customer_detail_shippingAddress,
 } from "src/generated/getUserPaymentData"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { space } from "App/utils"
 
 export const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
   query chargebeeUpdatePaymentPage {
@@ -47,7 +49,6 @@ const UPDATE_PAYMENT_AND_SHIPPING = gql`
 
 const BILLING_ADDRESS = "Billing address"
 const EDIT_BILLING_INFO = "Edit billing info"
-const FINISH_BUTTONS = "Finish buttons"
 const PHONE_NUMBER = "Phone number"
 const SHIPPING_ADDRESS = "Shipping address"
 
@@ -192,7 +193,7 @@ export const EditPaymentAndShipping: React.FC<{
 
   const handleCancelBtnPressed = () => navigation.pop()
 
-  const sections = [SHIPPING_ADDRESS, BILLING_ADDRESS, PHONE_NUMBER, EDIT_BILLING_INFO, FINISH_BUTTONS]
+  const sections = [SHIPPING_ADDRESS, BILLING_ADDRESS, PHONE_NUMBER, EDIT_BILLING_INFO]
 
   const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 40) / 2
@@ -318,23 +319,6 @@ export const EditPaymentAndShipping: React.FC<{
             </Button>
           </Flex>
         )
-      case FINISH_BUTTONS:
-        return (
-          <Flex flexDirection="row" justifyContent="space-between">
-            <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
-              Cancel
-            </Button>
-            <Button
-              loading={isMutating}
-              variant="secondaryBlack"
-              size="large"
-              width={buttonWidth}
-              onPress={handleSaveBtnPressed}
-            >
-              Save
-            </Button>
-          </Flex>
-        )
       default:
         return null
     }
@@ -356,10 +340,33 @@ export const EditPaymentAndShipping: React.FC<{
           ItemSeparatorComponent={() => <Spacer mb={6} />}
           keyExtractor={(item, index) => item + String(index)}
           renderItem={renderItem}
-          ListFooterComponent={() => <Spacer mb={2} />}
+          ListFooterComponent={() => <Spacer mb={space(1) * 8 + 50} />}
           showsVerticalScrollIndicator={false}
         />
       </Box>
+      <ButtonWrapper>
+        <Flex flexDirection="row" justifyContent="space-between" p={2}>
+          <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
+            Cancel
+          </Button>
+          <Button
+            loading={isMutating}
+            variant="secondaryBlack"
+            size="large"
+            width={buttonWidth}
+            onPress={handleSaveBtnPressed}
+          >
+            Save
+          </Button>
+        </Flex>
+      </ButtonWrapper>
     </Container>
   )
 }
+
+const ButtonWrapper = styled(Box)`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+`
