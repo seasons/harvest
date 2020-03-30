@@ -1,5 +1,4 @@
 export { LogIn as SignIn } from "./LogIn"
 export { AllowNotifications } from "./AllowNotifications"
-export { Welcome } from "./Welcome"
 export { ResetPassword } from "./ResetPassword"
 export { ResetPasswordConfirmation } from "./ResetPasswordConfirmation"
