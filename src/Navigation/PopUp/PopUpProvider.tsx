@@ -12,22 +12,28 @@ export interface PopUpData {
   secondaryButtonOnPress?: () => void
 }
 
+enum PopUpAction {
+  Show = "SHOW",
+  Hide = "HIDE",
+  Clear = "CLEAR",
+}
+
 export const PopUpProvider = ({ children }) => {
   const [popUpState, dispatch] = useReducer(
     (prevState, action) => {
       switch (action.type) {
-        case "SHOW":
+        case PopUpAction.Show:
           return {
             ...prevState,
             data: action.data,
             show: true,
           }
-        case "HIDE":
+        case PopUpAction.Hide:
           return {
             ...prevState,
             show: false,
           }
-        case "CLEAR":
+        case PopUpAction.Clear:
           return {
             ...prevState,
             data: null,
@@ -46,12 +52,12 @@ export const PopUpProvider = ({ children }) => {
   const popUpContext = {
     showPopUp: async (data: PopUpData) => {
       clearTimeout(clearData)
-      dispatch({ type: "SHOW", data })
+      dispatch({ type: PopUpAction.Show, data })
     },
     hidePopUp: async () => {
-      dispatch({ type: "HIDE" })
+      dispatch({ type: PopUpAction.Hide })
       clearData = setTimeout(() => {
-        dispatch({ type: "CLEAR" })
+        dispatch({ type: PopUpAction.Clear })
       }, 1000)
     },
     popUpState,
