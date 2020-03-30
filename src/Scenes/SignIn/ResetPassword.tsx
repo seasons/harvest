@@ -2,8 +2,9 @@ import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
-import { Box, Button, PopUp, Flex, CloseButton, Sans, Spacer, TextInput, Container } from "../../Components"
+import { Box, Button, Flex, CloseButton, Sans, Spacer, TextInput, Container } from "../../Components"
 import { isValidEmail } from "../../helpers/regex"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const RESET_PASSWORD = gql`
   mutation ResetPassword($email: String!) {
@@ -16,13 +17,20 @@ const RESET_PASSWORD = gql`
 export const ResetPassword = (props: any) => {
   const [email, setEmail] = useState("")
   const [isEmailComplete, setIsEmailComplete] = useState(false)
-  const [showError, setShowError] = useState(false)
+  const { showPopUp, hidePopUp } = usePopUpContext()
+
+  const popUpData = {
+    title: "Your email didn’t work!",
+    note: "We couldn’t find an account tied to this email. Double check and try again.",
+    buttonText: "Got it",
+    onClose: () => hidePopUp(),
+  }
 
   const [resetPassword] = useMutation(RESET_PASSWORD, {
     onError: error => {
       console.warn("SignIn/ResetPassword.tsx: ", error)
       Keyboard.dismiss()
-      setShowError(true)
+      showPopUp(popUpData)
     },
   })
 
@@ -43,15 +51,8 @@ export const ResetPassword = (props: any) => {
       props.navigation.navigate("Modal", { screen: "ResetPasswordConfirmationModal" })
     } else {
       Keyboard.dismiss()
-      setShowError(true)
+      showPopUp(popUpData)
     }
-  }
-
-  const popUpData = {
-    title: "Your email didn’t work!",
-    note: "We couldn’t find an account tied to this email. Double check and try again.",
-    buttonText: "Got it",
-    onClose: () => setShowError(false),
   }
 
   return (
@@ -83,7 +84,6 @@ export const ResetPassword = (props: any) => {
           </Box>
         </Flex>
       </TouchableWithoutFeedback>
-      <PopUp data={popUpData} show={showError} insetsBottom />
     </Container>
   )
 }

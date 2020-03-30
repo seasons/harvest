@@ -79,7 +79,7 @@ describe("EditPaymentAndShipping", () => {
     await waitForLoad(component)
 
     expect(component.text()).toContain(
-      "Payment & ShippingShipping addressBilling addressSame as Delivery AddressPhone numberEdit Billing InfoCancelSave"
+      "Payment & ShippingShipping addressBilling addressSame as Delivery AddressPhone numberEdit payment methodCancelSave"
     )
     expect(component).toMatchSnapshot()
   })

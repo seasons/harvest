@@ -1,7 +1,6 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Box, Container, FixedBackArrow, PopUp, Spacer, VariantSizes } from "App/Components"
+import { Box, Container, FixedBackArrow, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { PopUpProps } from "App/Components/PopUp"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -13,9 +12,7 @@ import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-
 import { useMutation, useQuery } from "@apollo/react-hooks"
-
 import { GET_HOMEPAGE } from "../Home/Home"
 import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
@@ -44,7 +41,6 @@ export const Product = screenTrack({
   const { authState } = useAuthContext()
   const insets = useSafeArea()
   const userHasSession = !!authState?.userSession
-  const [popUp, setPopUp] = useState({ show: false, data: null } as PopUpProps)
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation, route } = props
   const productID = route?.params?.id
@@ -123,7 +119,7 @@ export const Product = screenTrack({
           />
         )
       case "productDetails":
-        return <ProductDetails product={product} setPopUp={setPopUp} selectedVariant={selectedVariant} />
+        return <ProductDetails product={product} selectedVariant={selectedVariant} />
       case "moreLikeThis":
         return <MoreLikeThis products={images} />
       default:
@@ -149,7 +145,6 @@ export const Product = screenTrack({
         bottom={selectionButtonsBottom}
         productID={productID}
         toggleShowVariantPicker={toggleShowVariantPicker}
-        setPopUp={setPopUp}
         showVariantPicker={showVariantPicker}
         selectedVariant={selectedVariant}
       />
@@ -159,7 +154,6 @@ export const Product = screenTrack({
             productSlug={productSlug}
             isWanted={selectedVariantIsWanted}
             productID={productID}
-            setPopUp={setPopUp}
             variantID={selectedVariant.id}
           />
         )}
@@ -176,7 +170,6 @@ export const Product = screenTrack({
           toggleShowVariantPicker={toggleShowVariantPicker}
         />
       </AnimatedVariantPicker>
-      <PopUp data={popUp.data} show={popUp.show} />
     </Container>
   )
 })

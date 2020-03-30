@@ -34,6 +34,9 @@ export const GET_PRODUCT = gql`
       type
       variants {
         id
+        manufacturerSizes {
+          display
+        }
         internalSize {
           top {
             letter

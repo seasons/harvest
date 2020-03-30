@@ -12,7 +12,6 @@ interface Props {
   toggleShowVariantPicker: (show: boolean) => void
   showVariantPicker: boolean
   selectedVariant: any
-  setPopUp: ({ show: boolean, data: any }) => void
   bottom?: number
 }
 
@@ -20,7 +19,7 @@ const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5
 
 export const SelectionButtons: React.FC<Props> = props => {
   const tracking = useTracking()
-  const { bottom = 0, selectedVariant, showVariantPicker, toggleShowVariantPicker, productID, setPopUp } = props
+  const { bottom = 0, selectedVariant, showVariantPicker, toggleShowVariantPicker, productID } = props
   const inStock = selectedVariant && !!selectedVariant.stock
 
   if (!selectedVariant) {
@@ -65,7 +64,6 @@ export const SelectionButtons: React.FC<Props> = props => {
           <AddToBagButton
             variantInStock={inStock}
             productID={productID}
-            setPopUp={setPopUp}
             width={twoButtonWidth}
             selectedVariant={selectedVariant}
           />
