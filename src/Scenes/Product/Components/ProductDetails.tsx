@@ -11,7 +11,6 @@ import { useNavigation } from "@react-navigation/native"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
 
-// FIXME: Fix types here
 export const ProductDetails: React.FC<{
   selectedVariant: any
   product: GetProduct_product
@@ -71,9 +70,11 @@ export const ProductDetails: React.FC<{
         )}
       </Flex>
       <Spacer mb={1} />
-      <Sans size="1" color={color("black50")} lineHeight={26}>
-        {description}
-      </Sans>
+      {description && (
+        <Sans size="1" color={color("black50")} lineHeight={26}>
+          {description.trim()}
+        </Sans>
+      )}
       <Spacer mb={3} />
       <Separator color={color("black15")} />
       {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
