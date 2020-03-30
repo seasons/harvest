@@ -11,6 +11,7 @@ export interface Size {
   reservable: number
   size: string
   stock: number
+  manufacturerSize: string
 }
 
 const sizeToName = size => {
@@ -50,12 +51,15 @@ const sizeDataForVariants = (variants = [], type) => {
       for (let variant of variants) {
         const { id, internalSize, reservable } = variant
         const size = internalSize.display
+        const manufacturerSize =
+          (variant.manufacturerSizes?.length > 0 && variant.manufacturerSizes?.[0]?.display) || ""
 
         sizeData[size] = {
           id,
           size: sizeToName(size),
           reservable,
           stock: reservable,
+          manufacturerSize,
         }
       }
     }
@@ -65,11 +69,13 @@ const sizeDataForVariants = (variants = [], type) => {
     for (let variant of variants) {
       const { id, reservable } = variant
       const size = variant.internalSize?.bottom?.value
+      const manufacturerSize = (variant.manufacturerSizes?.length > 0 && variant.manufacturerSizes?.[0]?.display) || ""
 
       sizeData[size] = {
         id,
         size,
         reservable,
+        manufacturerSize,
         stock: reservable,
       }
     }
@@ -83,8 +89,6 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
   const type = product?.type
   const [sizeData, setSizeData] = useState({})
   const tracking = useTracking()
-
-  console.log(variants)
 
   useEffect(() => {
     updateSizeData()
@@ -123,7 +127,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
               </Sans>
             </Flex>
             <Sans color="gray" size="1">
-              {size.stock ? "" : "Unavailable"}
+              {size.stock ? size.manufacturerSize : "Unavailable"}
             </Sans>
           </Flex>
         </TouchableOpacity>
