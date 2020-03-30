@@ -71,9 +71,11 @@ export const ProductDetails: React.FC<{
         )}
       </Flex>
       <Spacer mb={1} />
-      <Sans size="1" color={color("black50")} lineHeight={26}>
-        {description.trim()}
-      </Sans>
+      {description && (
+        <Sans size="1" color={color("black50")} lineHeight={26}>
+          {description.trim()}
+        </Sans>
+      )}
       <Spacer mb={3} />
       <Separator color={color("black15")} />
       {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
