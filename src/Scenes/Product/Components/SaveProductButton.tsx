@@ -11,6 +11,7 @@ import { TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useTracking, Schema } from "App/utils/track"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
@@ -27,9 +28,9 @@ const SAVE_ITEM = gql`
 export const SaveProductButton: React.FC<{
   selectedVariant: any
   product: any
-  setPopUp: ({ show: boolean, data: any }) => void
-}> = ({ selectedVariant, product, setPopUp }) => {
+}> = ({ selectedVariant, product }) => {
   const navigation = useNavigation()
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
   if (!product.variants || product?.variants?.length === 0) {
     return <></>
@@ -88,15 +89,12 @@ export const SaveProductButton: React.FC<{
 
       if (!isSaved) {
         const updateText = isSaved ? "been removed from" : "been added to"
-        setPopUp({
-          show: true,
-          data: {
-            icon: <CircledSaveIcon />,
-            title: "Saved for later",
-            note: `The ${product.name}, size ${selectedVariant.size} has ${updateText} your saved items.`,
-            buttonText: "Got It",
-            onClose: () => setPopUp({ show: false, data: null }),
-          },
+        showPopUp({
+          icon: <CircledSaveIcon />,
+          title: "Saved for later",
+          note: `The ${product.name}, size ${selectedVariant.size} has ${updateText} your saved items.`,
+          buttonText: "Got It",
+          onClose: () => hidePopUp(),
         })
       }
     }

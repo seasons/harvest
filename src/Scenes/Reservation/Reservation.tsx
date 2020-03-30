@@ -1,4 +1,4 @@
-import { Box, CloseButton, FixedButton, Flex, PopUp, Sans, Separator, Spacer, Theme, Container } from "App/Components"
+import { Box, CloseButton, FixedButton, Flex, Sans, Separator, Spacer, Container } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import gql from "graphql-tag"
@@ -7,10 +7,10 @@ import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { ScrollView, StatusBar } from "react-native"
 import styled from "styled-components/native"
-
 import { BagItem, BagItemFragment } from "../Bag/Components/BagItem"
 import { space } from "App/utils"
 import { screenTrack, useTracking, Schema } from "App/utils/track"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
@@ -90,7 +90,7 @@ export const Reservation = screenTrack()(props => {
       console.warn("Error reservation.tsx: ", err)
     },
   })
-  const [showError, setShowError] = useState(false)
+  const { showPopUp, hidePopUp } = usePopUpContext()
 
   if (loading) {
     return <Loader />
@@ -111,7 +111,7 @@ export const Reservation = screenTrack()(props => {
     title: "Sorry!",
     note: "We couldn't process your order because of an unexpected error, please try again later",
     buttonText: "Close",
-    onClose: () => setShowError(false),
+    onClose: () => hidePopUp(),
   }
 
   const content = (
@@ -191,7 +191,7 @@ export const Reservation = screenTrack()(props => {
               })
             }
           } catch (e) {
-            setShowError(true)
+            showPopUp(popUpData)
             setIsMutating(false)
           }
         }}
@@ -199,7 +199,6 @@ export const Reservation = screenTrack()(props => {
       >
         Place order
       </FixedButton>
-      <PopUp data={popUpData} show={showError} insetsBottom />
     </Container>
   )
 })

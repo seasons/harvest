@@ -8,6 +8,7 @@ import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Flex, Sans } from "App/Components"
 import { color } from "App/utils"
 import { useTracking, Schema } from "App/utils/track"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const ADD_PRODUCT_VARIANT_WANT = gql`
   mutation AddProductVariantWant($variantID: ID!) {
@@ -22,14 +23,14 @@ const THANKS_MESSAGE = " Thanks! We'll let you know"
 interface VariantWantProps {
   isWanted: boolean
   productID: string
-  setPopUp: ({ show: boolean, data: any }) => void
   variantID: string
   productSlug: string
 }
 
 export const VariantWant = (props: VariantWantProps) => {
   const tracking = useTracking()
-  const { isWanted, productID, setPopUp, variantID, productSlug } = props
+  const { showPopUp, hidePopUp } = usePopUpContext()
+  const { isWanted, productID, variantID, productSlug } = props
   const shouldShowGreenCheck = isWanted
   const plainText = isWanted ? THANKS_MESSAGE : "Want this item? "
   const underlinedText = isWanted ? "" : "Let us know!"
@@ -38,12 +39,12 @@ export const VariantWant = (props: VariantWantProps) => {
     buttonText: "Got it",
     note: "We couldn’t save that you want this item! Try again.",
     title: "Something went wrong!",
-    onClose: () => setPopUp({ show: false, data: null }),
+    onClose: () => hidePopUp(),
   }
   const [addProductVariantWant] = useMutation(ADD_PRODUCT_VARIANT_WANT, {
     onError: error => {
       console.error("error VariantWant.tsx: ", error)
-      setPopUp({ show: true, data: popUpData })
+      showPopUp(popUpData)
     },
     refetchQueries: [
       {
@@ -68,11 +69,11 @@ export const VariantWant = (props: VariantWantProps) => {
         },
       })
       if (!result?.data?.addProductVariantWant) {
-        setPopUp({ show: true, data: popUpData })
+        showPopUp(popUpData)
       }
     } catch (e) {
       console.log("error VariantWant.tsx ", e)
-      setPopUp({ show: true, data: popUpData })
+      showPopUp(popUpData)
     }
   }
 

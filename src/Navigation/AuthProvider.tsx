@@ -5,6 +5,8 @@ import AsyncStorage from "@react-native-community/async-storage"
 import { createStackNavigator } from "@react-navigation/stack"
 import { ModalAndMainScreens } from "./Stacks"
 import { NotificationsProvider } from "App/Notifications"
+import { PopUp } from "App/Navigation/PopUp"
+import { PopUpProvider } from "App/Navigation/PopUp/PopUpProvider"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -43,7 +45,6 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
   )
 
   useEffect(() => {
-    // const navigation = navigationRef.current
     const bootstrapAsync = async () => {
       try {
         const userSession = await getUserSession()
@@ -73,15 +74,18 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
 
   return (
     <AuthContext.Provider value={authContext}>
-      <RootStack.Navigator>
-        <RootStack.Screen name="Root" options={{ headerShown: false }}>
-          {() => (
-            <NotificationsProvider>
-              <ModalAndMainScreens currentScreen={currentScreen} />
-            </NotificationsProvider>
-          )}
-        </RootStack.Screen>
-      </RootStack.Navigator>
+      <PopUpProvider>
+        <RootStack.Navigator>
+          <RootStack.Screen name="Root" options={{ headerShown: false }}>
+            {() => (
+              <NotificationsProvider>
+                <ModalAndMainScreens currentScreen={currentScreen} />
+              </NotificationsProvider>
+            )}
+          </RootStack.Screen>
+        </RootStack.Navigator>
+        <PopUp />
+      </PopUpProvider>
     </AuthContext.Provider>
   )
 }

@@ -14,9 +14,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
-
 import { useQuery } from "@apollo/react-hooks"
-
 import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240
@@ -176,8 +174,6 @@ export const Browse = screenTrack()((props: any) => {
   }
 
   const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
-  console.log("Products length", products?.length)
-  console.log("Aggregate count", data?.productsCount?.aggregate?.count)
 
   return (
     <Container insetsBottom={false}>
