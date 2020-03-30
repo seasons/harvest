@@ -295,7 +295,7 @@ export const Bag = screenTrack()(props => {
             </Box>
           )
         }}
-        keyExtractor={(_item, index) => String(index)}
+        keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
         renderItem={item => {
           return renderItem(item)
         }}
