@@ -39,6 +39,9 @@ export const ProductDetails: React.FC<{
     }
   }
 
+  console.log("product", product)
+  console.log("description", description)
+
   return (
     <Box pt={2} px={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between">
@@ -72,7 +75,7 @@ export const ProductDetails: React.FC<{
       </Flex>
       <Spacer mb={1} />
       <Sans size="1" color={color("black50")} lineHeight={26}>
-        {description}
+        {description.trim()}
       </Sans>
       <Spacer mb={3} />
       <Separator color={color("black15")} />
