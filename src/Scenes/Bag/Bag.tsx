@@ -1,4 +1,4 @@
-import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
+import { Box, FixedButton, Separator, Spacer } from "App/Components"
 import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
@@ -193,7 +193,14 @@ export const Bag = screenTrack()(props => {
   const remainingPiecesDisplay = !bagIsFull
     ? `You have ${remainingPieces} ${remainingPieces === 1 ? "piece" : "pieces"} remaining`
     : "Reserve your order below"
-  const bagSubtitle = hasActiveReservation ? "Your current rotation" : remainingPiecesDisplay
+  let bagSubtitle
+  if (!hasActiveReservation) {
+    bagSubtitle = remainingPiecesDisplay
+  } else if (true) {
+    bagSubtitle = `Return by ${data?.me?.activeReservation?.returnDateDisplay}`
+  } else {
+    bagSubtitle = "Your current rotation"
+  }
 
   const popUpData = {
     title: "",
@@ -214,6 +221,8 @@ export const Bag = screenTrack()(props => {
     }
     showPopUp(popUpData)
   }
+
+  console.log("bag data", data)
 
   const renderItem = ({ item, index }) => {
     const showSavedItems = BagView.Saved == currentView
