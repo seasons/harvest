@@ -222,8 +222,6 @@ export const Bag = screenTrack()((props) => {
     showPopUp(popUpData)
   }
 
-  console.log("bag data", data)
-
   const renderItem = ({ item, index }) => {
     const showSavedItems = BagView.Saved == currentView
     const hideButtons = item.status !== "Added"
