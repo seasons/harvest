@@ -11,6 +11,7 @@ export const GET_BAG = gql`
   query GetBagAndSavedItems {
     me {
       customer {
+        id
         plan
       }
       activeReservation {

@@ -24,6 +24,7 @@ const GET_CUSTOMER = gql`
   query GetCustomer {
     me {
       user {
+        id
         firstName
         lastName
         email

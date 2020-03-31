@@ -332,7 +332,7 @@ export const Bag = screenTrack()((props) => {
                 })
                 !bagIsFull ? displayReserveError(true) : handleReserve(navigation)
               }}
-              disabled={!bagIsFull}
+              disabled={!bagIsFull || isMutating}
               loading={isMutating}
             >
               Reserve
