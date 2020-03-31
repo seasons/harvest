@@ -115,8 +115,6 @@ export const Reservation = screenTrack()(props => {
     onClose: () => hidePopUp(),
   }
 
-  console.log("data", data)
-
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="black100">
       <CloseButton />
