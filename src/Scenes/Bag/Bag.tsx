@@ -1,4 +1,4 @@
-import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
+import { Box, FixedButton, Separator, Spacer } from "App/Components"
 import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
@@ -13,7 +13,6 @@ import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, RefreshControl } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
@@ -107,6 +106,9 @@ export const Bag = screenTrack()(props => {
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
 
+  console.log("data", data)
+  console.log("isLoading", isLoading)
+
   if (isLoading) {
     return <Loader />
   }
@@ -193,7 +195,15 @@ export const Bag = screenTrack()(props => {
   const remainingPiecesDisplay = !bagIsFull
     ? `You have ${remainingPieces} ${remainingPieces === 1 ? "piece" : "pieces"} remaining`
     : "Reserve your order below"
-  const bagSubtitle = hasActiveReservation ? "Your current rotation" : remainingPiecesDisplay
+
+  let bagSubtitle
+  if (!hasActiveReservation) {
+    bagSubtitle = remainingPiecesDisplay
+  } else if (data?.me?.customer?.plan === "Essential" && !!data?.me?.activeReservation?.returnDateDisplay) {
+    bagSubtitle = `Return by ${data?.me?.activeReservation?.returnDateDisplay}`
+  } else {
+    bagSubtitle = "Your current rotation"
+  }
 
   const popUpData = {
     title: "",
@@ -325,7 +335,7 @@ export const Bag = screenTrack()(props => {
                 })
                 !bagIsFull ? displayReserveError(true) : handleReserve(navigation)
               }}
-              disabled={!bagIsFull}
+              disabled={!bagIsFull || isMutating}
               loading={isMutating}
             >
               Reserve

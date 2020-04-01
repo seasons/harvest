@@ -1,6 +1,10 @@
 export const BagFixture = {
   me: {
     activeReservation: null,
+    customer: {
+      id: "12345",
+      plan: "Essential",
+    },
     bag: [
       {
         id: "ck6cn9vi50e6i0722fx0q3bfq",
@@ -438,11 +442,16 @@ export const BagFixture = {
 
 export const BagFixtureWithReservation = {
   me: {
+    customer: {
+      id: "12345",
+      plan: "Essential",
+    },
     bag: [],
     savedItems: [],
     activeReservation: {
       id: "ck6jsqpv6g7bm07030k261a68",
       shipped: false,
+      returnDateDisplay: "Thursday March 30th",
       createdAt: "2020-02-12T20:58:29.105Z",
       products: [
         {
