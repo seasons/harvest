@@ -7,7 +7,7 @@ import styled from "styled-components/native"
 import { Box, Button, FixedBackArrow, Flex, PopUp, Sans, Separator, Spacer, TextInput } from "App/Components"
 import { Schema } from "App/Navigation"
 import { space } from "App/utils"
-import { screenTrack } from "App/utils/track"
+import { screenTrack, useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { Container } from "Components/Container"
 import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
 
@@ -15,6 +15,7 @@ export const ReservationFeedbackConfirmation: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ route, navigation }) => {
+  const tracking = useTracking()
   const reservationFeedback = route?.params?.reservationFeedback
   const [comment, setComment] = useState(reservationFeedback?.comment)
   const [showError, setShowError] = useState(false)
@@ -78,11 +79,23 @@ export const ReservationFeedbackConfirmation: React.FC<{
       </Box>
       <FixedKeyboardAvoidingView behavior="padding" keyboardVerticalOffset={64} style={{ bottom: insets.bottom + 32 }}>
         <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" >
-          <Button block variant="primaryWhite" width={buttonWidth} onPress={submitFeedback}>
+          <Button block variant="primaryWhite" width={buttonWidth} onPress={() => {
+            tracking.trackEvent({
+              actionName: TrackingSchema.ActionNames.ReservationFeedbackConfirmationSkipButtonTapped,
+              actionType: TrackingSchema.ActionTypes.Tap,
+            })
+            submitFeedback()
+          }}>
             Skip
           </Button>
           <Spacer ml={1} />
-          <Button block variant="primaryBlack" width={buttonWidth} onPress={submitFeedback}>
+          <Button block variant="primaryBlack" width={buttonWidth} onPress={() => {
+            tracking.trackEvent({
+              actionName: TrackingSchema.ActionNames.ReservationFeedbackConfirmationSubmitButtonTapped,
+              actionType: TrackingSchema.ActionTypes.Tap,
+            })
+            submitFeedback()
+          }}>
             Submit
           </Button>
         </Flex>

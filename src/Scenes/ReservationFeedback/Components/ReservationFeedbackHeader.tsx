@@ -2,6 +2,7 @@ import React from "react"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import { Box, Flex, ProgressBar, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
+import { useTracking, Schema } from "App/utils/track"
 import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
 
 export interface ReservationFeedbackHeaderProps {
@@ -17,6 +18,7 @@ export const ReservationFeedbackHeader: React.FC<ReservationFeedbackHeaderProps>
   onSelectedProgressBarIndex,
   reservationFeedback,
 }) => {
+  const tracking = useTracking()
   const { feedbacks } = reservationFeedback
   const progressBarCompletedPercentages = feedbacks.map((feedback) => {
     const { questions } = feedback
@@ -42,6 +44,10 @@ export const ReservationFeedbackHeader: React.FC<ReservationFeedbackHeaderProps>
       <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" >
         {progressBarCompletedPercentages.map((progressBarCompletedPercentage, index) =>
           <TouchableWithoutFeedback key={index} onPress={() => {
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.ReservationFeedbackHeaderProgressBarTapped,
+              actionType: Schema.ActionTypes.Tap,
+            })
             if (onSelectedProgressBarIndex) { onSelectedProgressBarIndex(index) }
           }}>
             <Box>
