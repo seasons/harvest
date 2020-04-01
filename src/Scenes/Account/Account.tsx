@@ -25,6 +25,7 @@ export const GET_USER = gql`
           lastName
           email
           pushNotifications
+          role
         }
         detail {
           shippingAddress {
@@ -44,7 +45,9 @@ export const Account = screenTrack()(props => {
   const loaderStyles = useSpring({
     opacity: loading ? 1 : 0,
   })
+
   const { navigation } = props
+
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       refetch?.()
@@ -119,10 +122,19 @@ export const Account = screenTrack()(props => {
         signOut()
       },
     },
+    {
+      text: "Debug menu",
+      onPress: () => {
+        navigation.navigate("Modal", {
+          screen: "DebugMenu",
+        })
+      },
+    },
   ]
 
   const pushNotifications = data?.me?.customer?.user?.pushNotifications
   const userID = data?.me?.customer?.user?.id
+  const role = data?.me?.customer?.user?.role
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -159,6 +171,9 @@ export const Account = screenTrack()(props => {
             <Separator />
             <Box px={2} pt={4}>
               {bottomList.map(listItem => {
+                if (listItem.text === "Debug menu" && role !== "Admin") {
+                  return null
+                }
                 return (
                   <Box key={listItem.text}>
                     <TouchableOpacity onPress={listItem.onPress}>

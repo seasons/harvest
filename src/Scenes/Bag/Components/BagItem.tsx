@@ -11,8 +11,8 @@ import styled from "styled-components/native"
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
     product {
-      name
       id
+      name
       modelSize {
         display
       }
@@ -23,7 +23,9 @@ export const BagItemFragment = gql`
       images
       variants {
         id
-        size
+        internalSize {
+          display
+        }
       }
     }
   }
@@ -61,7 +63,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   }
 
   const imageURL = imageResize(get(product, "images[0].url"), "medium")
-  const variantSize = get(variantToUse, "size")
+  const variantSize = get(variantToUse, "internalSize.display")
   const variantId = bagItem.variantID
 
   return (

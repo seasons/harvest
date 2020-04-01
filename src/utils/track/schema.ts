@@ -187,10 +187,17 @@ export enum ActionNames {
   ProductAddedToBag = "Product Added To Bag",
   ProductVariantSelected = "Product Variant Selected",
 
+  // Size Picker
+  SizePickerCancelTapped = "Size Picker Cancel Tapped",
+  SizeSelected = "Size Selected",
+
   // Shared action names
   ProductTapped = "Product Tapped",
   BrandTapped = "Brand Tapped",
   CarouselSwiped = "Carousel Swiped",
+
+  TopsTabTapped = "Tops Tab Tapped",
+  BottomsTabTapped = "Bottoms Tab Tapped",
 }
 
 /**

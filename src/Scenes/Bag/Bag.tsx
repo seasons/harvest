@@ -1,23 +1,24 @@
-import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
+import { Box, FixedButton, Separator, Spacer } from "App/Components"
+import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
+import { useAuthContext } from "App/Navigation/AuthContext"
 import { color } from "App/utils"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
 import { assign, fill, get } from "lodash"
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, RefreshControl } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
-import { SavedItem } from "./Components/SavedItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
-import { GuestView } from "App/Components/GuestView"
-import { useSafeArea } from "react-native-safe-area-context"
-import { useAuthContext } from "App/Navigation/AuthContext"
-import { screenTrack, useTracking, Schema } from "App/utils/track"
+import { SavedItem } from "./Components/SavedItem"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const SECTION_HEIGHT = 300
 
@@ -28,6 +29,7 @@ enum BagView {
 
 export const Bag = screenTrack()(props => {
   const { authState } = useAuthContext()
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const { navigation } = props
 
   if (!authState?.userSession) {
@@ -43,7 +45,7 @@ export const Bag = screenTrack()(props => {
 
   const tracking = useTracking()
 
-  const { data, loading, refetch } = useQuery(GET_BAG, {
+  const { data, refetch } = useQuery(GET_BAG, {
     fetchPolicy: "cache-and-network",
   })
   useEffect(() => {
@@ -103,6 +105,9 @@ export const Bag = screenTrack()(props => {
   })
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
+
+  console.log("data", data)
+  console.log("isLoading", isLoading)
 
   if (isLoading) {
     return <Loader />
@@ -190,31 +195,34 @@ export const Bag = screenTrack()(props => {
   const remainingPiecesDisplay = !bagIsFull
     ? `You have ${remainingPieces} ${remainingPieces === 1 ? "piece" : "pieces"} remaining`
     : "Reserve your order below"
-  const bagSubtitle = hasActiveReservation ? "Your current rotation" : remainingPiecesDisplay
 
-  const ErrorMessage = () => {
-    const popUpData = {
-      title: "",
-      note: "We couldn't process your order because of an unexpected error, please try again later",
-      buttonText: "Got it",
-      onClose: () => displayReserveError(false),
+  let bagSubtitle
+  if (!hasActiveReservation) {
+    bagSubtitle = remainingPiecesDisplay
+  } else if (data?.me?.customer?.plan === "Essential" && !!data?.me?.activeReservation?.returnDateDisplay) {
+    bagSubtitle = `Return by ${data?.me?.activeReservation?.returnDateDisplay}`
+  } else {
+    bagSubtitle = "Your current rotation"
+  }
+
+  const popUpData = {
+    title: "",
+    note: "We couldn't process your order because of an unexpected error, please try again later",
+    buttonText: "Got it",
+    onClose: () => hidePopUp(),
+  }
+
+  if (showReserveError) {
+    const { code, data } = showReserveError
+    if (code === "511") {
+      popUpData.title = "One or more items have been reserved already"
+      popUpData.note =
+        "Sorry, some of the items you had selected were confirmed before you, please replace them with available items"
+    } else {
+      popUpData.title = "Sorry!"
+      popUpData.note = "We couldn't process your order because of an unexpected error, please try again later"
     }
-
-    if (showReserveError) {
-      const { code, data } = showReserveError
-      if (code === "511") {
-        popUpData.title = "One or more items have been reserved already"
-        popUpData.note =
-          "Sorry, some of the items you had selected were confirmed before you, please replace them with available items"
-      } else {
-        popUpData.title = "Sorry!"
-        popUpData.note = "We couldn't process your order because of an unexpected error, please try again later"
-      }
-
-      return <PopUp data={popUpData} show={showReserveError} />
-    }
-
-    return null
+    showPopUp(popUpData)
   }
 
   const renderItem = ({ item, index }) => {
@@ -294,7 +302,7 @@ export const Bag = screenTrack()(props => {
             </Box>
           )
         }}
-        keyExtractor={(_item, index) => String(index)}
+        keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
         renderItem={item => {
           return renderItem(item)
         }}
@@ -327,7 +335,7 @@ export const Bag = screenTrack()(props => {
                   })
                   !bagIsFull ? displayReserveError(true) : handleReserve(navigation)
                 }}
-                disabled={!bagIsFull}
+                disabled={!bagIsFull || isMutating}
                 loading={isMutating}
               >
                 Reserve
@@ -335,7 +343,6 @@ export const Bag = screenTrack()(props => {
             )}
         </>
       )}
-      <ErrorMessage />
     </Container>
   )
 })

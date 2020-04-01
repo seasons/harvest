@@ -14,9 +14,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
-
 import { useQuery } from "@apollo/react-hooks"
-
 import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240
@@ -37,13 +35,22 @@ const GET_BROWSE_PRODUCTS = gql`
         slug
       }
     }
+    productsCount: productsConnection(
+      category: $name
+      sizes: $sizes
+      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
+    ) {
+      aggregate {
+        count
+      }
+    }
     products(
       category: $name
       first: $first
       skip: $skip
-      orderBy: $orderBy
       sizes: $sizes
-      where: { status: Available }
+      orderBy: $orderBy
+      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
     ) {
       id
       name
@@ -65,12 +72,14 @@ const GET_BROWSE_PRODUCTS = gql`
       }
       variants {
         id
-        size
         total
         reservable
         nonReservable
         reserved
         isSaved
+        internalSize {
+          display
+        }
       }
     }
   }
@@ -112,12 +121,13 @@ export const Browse = screenTrack()((props: any) => {
 
   const PAGE_LENGTH = 10
 
-  // Get all the sizes that we want to query by.
-  // If no size filter is selected, all sizes are queried.
   const sizes =
     sizeFilters && sizeFilters.length > 0
-      ? sizeFilters.map(s => ABBREVIATED_SIZES[s])
-      : Object.values(ABBREVIATED_SIZES)
+      ? sizeFilters.map(s => {
+          return ABBREVIATED_SIZES[s] ? ABBREVIATED_SIZES[s] : s
+        })
+      : []
+
   const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
     variables: {
       name: currentCategory,
@@ -163,6 +173,8 @@ export const Browse = screenTrack()((props: any) => {
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
   }
 
+  const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
+
   return (
     <Container insetsBottom={false}>
       <LoaderContainer mt={insets.top} style={[loaderStyle]}>
@@ -171,7 +183,9 @@ export const Browse = screenTrack()((props: any) => {
       <Flex flexDirection="column" flex={1}>
         <AnimatedBox flex={1} flexGrow={1} style={[productsBoxStyle]}>
           <FlatList
-            contentContainerStyle={{ paddingBottom: filtersButtonHeight }}
+            contentContainerStyle={{
+              paddingBottom: filtersButtonHeight,
+            }}
             data={products}
             ref={ref => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
@@ -190,7 +204,7 @@ export const Browse = screenTrack()((props: any) => {
             onEndReached={() => {
               // If we are sorting alphabetically, all products are returned so we do not need
               // to fetch any more
-              if (!loading) {
+              if (!loading && !reachedEnd) {
                 tracking.trackEvent({
                   actionName: Schema.ActionNames.BrowsePagePaginated,
                   actionType: Schema.ActionTypes.Tap,

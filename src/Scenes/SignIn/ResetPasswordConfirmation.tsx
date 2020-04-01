@@ -5,7 +5,7 @@ import { color } from "App/utils"
 export const ResetPasswordConfirmation = (props: any) => {
   return (
     <Container backgroundColor="black100" insetsTop>
-      <CloseButton navigation={props.navigation} />
+      <CloseButton />
       <Flex flexDirection="column" style={{ flex: 1 }}>
         <Box px={2} pt={2}>
           <Spacer mb={3} />

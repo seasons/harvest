@@ -5,6 +5,7 @@ import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-
 import { Box, PopUp, FixedButton, Flex, Sans, Spacer, TextInput, FixedBackArrow, Container } from "App/Components"
 import { color, space } from "App/utils"
 import { screenTrack, useTracking, Schema } from "App/utils/track"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const ADD_PRODUCT_REQUEST = gql`
   mutation AddProductRequest($reason: String!, $url: String!) {
@@ -26,15 +27,22 @@ const ADD_PRODUCT_REQUEST = gql`
 export const ProductRequest = screenTrack()((props: any) => {
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true)
   const [likeReason, setLikeReason] = useState("")
-  const [showError, setShowError] = useState(false)
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const [url, setURL] = useState("")
   const tracking = useTracking()
+
+  const pupUpData = {
+    buttonText: "Got it",
+    note: "We couldn’t find anything using this URL. Double check and try again.",
+    title: "Your link didn’t work!",
+    onClose: () => hidePopUp(),
+  }
 
   const [addProductRequest] = useMutation(ADD_PRODUCT_REQUEST, {
     onError: error => {
       console.error(error)
       Keyboard.dismiss()
-      setShowError(true)
+      showPopUp(pupUpData)
     },
   })
 
@@ -74,15 +82,8 @@ export const ProductRequest = screenTrack()((props: any) => {
       }
     } else {
       Keyboard.dismiss()
-      setShowError(true)
+      showPopUp(pupUpData)
     }
-  }
-
-  const pupUpData = {
-    buttonText: "Got it",
-    note: "We couldn’t find anything using this URL. Double check and try again.",
-    title: "Your link didn’t work!",
-    onClose: () => setShowError(false),
   }
 
   return (
@@ -123,7 +124,6 @@ export const ProductRequest = screenTrack()((props: any) => {
           Next
         </FixedButton>
       </KeyboardAvoidingView>
-      <PopUp data={pupUpData} show={showError} />
     </Container>
   )
 })

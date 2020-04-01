@@ -1,46 +1,31 @@
-import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
+import { Box, Flex, Sans, Separator, Spacer, Button, Theme } from "App/Components"
 import { color, space } from "App/utils"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import React, { useEffect, useState } from "react"
 import { Dimensions } from "react-native"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-import { Button } from "./Button"
+import { useSafeArea } from "react-native-safe-area-context"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const windowDimensions = Dimensions.get("window")
 const windowHeight = windowDimensions.height
 const twoButtonWidth = windowDimensions.width / 2 - (space(2) + space(0.5))
 
-export interface PopUpData {
-  title?: string
-  icon?: JSX.Element
-  note?: string
-  buttonText?: string
-  onClose: any
-  theme?: "light" | "dark"
-  secondaryButtonText?: string
-  secondaryButtonOnPress?: () => void
-}
-
-export interface PopUpProps {
-  insetsBottom?: boolean
-  show: boolean
-  data?: PopUpData
-}
-
-export const PopUp: React.FC<PopUpProps> = ({ data, show, insetsBottom }) => {
-  if (!data) {
-    return <></>
-  }
-  const { icon, buttonText, onClose, theme = "light", title, note, secondaryButtonText, secondaryButtonOnPress } = data
+export const PopUp: React.FC = () => {
+  const insets = useSafeArea()
+  const { popUpState } = usePopUpContext()
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setTimeout(() => {
       setMounted(true)
     })
   }, [])
+
   const [size, onLayout] = useComponentSize()
-  const height = size ? size.height + 100 : 240
+
+  const { data, show } = popUpState
+  const height = size ? size.height : 240
 
   const animation = useSpring({
     translateY: show && mounted ? windowHeight - height : windowHeight,
@@ -66,39 +51,42 @@ export const PopUp: React.FC<PopUpProps> = ({ data, show, insetsBottom }) => {
     }
   }
 
-  if (!(title && note && buttonText)) {
-    return <></>
+  const colors = colorsForTheme(data?.theme ? data.theme : "light")
+  const showSecondaryButton = !!data?.secondaryButtonText && !!data?.secondaryButtonOnPress
+
+  if (!data) {
+    return null
   }
 
-  const colors = colorsForTheme(theme)
-  const showSecondaryButton = !!secondaryButtonText && !!secondaryButtonOnPress
-
   return (
-    <>
-      <AnimatedPopUp style={{ transform: [{ translateY: animation.translateY }] }} color={colors.backgroundColor}>
-        <Box m={2} onLayout={onLayout}>
-          {!!icon && <Box mt={2}>{icon}</Box>}
+    <Theme>
+      <AnimatedPopUp
+        style={{ transform: [{ translateY: animation.translateY }] }}
+        color={colors?.backgroundColor || color("white100")}
+      >
+        <Box p={2} onLayout={onLayout} pb={insets?.bottom}>
+          {!!data?.icon && <Box mt={2}>{data?.icon}</Box>}
           <Spacer mt={2} />
           <Box>
-            <Sans size="2" color={colors.primaryText}>
-              {title}
+            <Sans size="2" color={colors?.primaryText}>
+              {data?.title}
             </Sans>
-            {note && (
+            {data?.note && (
               <>
                 <Spacer mb={0.5} />
-                <Sans size="1" color={colors.secondaryText}>
-                  {note}
+                <Sans size="1" color={colors?.secondaryText}>
+                  {data?.note}
                 </Sans>
               </>
             )}
           </Box>
           <Spacer mb={3} />
-          <Separator color={colors.separator} />
+          <Separator color={colors?.separator} />
           <Flex flexDirection="row">
             {showSecondaryButton && (
               <>
-                <Button width={twoButtonWidth} variant="primaryWhite" onPress={secondaryButtonOnPress}>
-                  {secondaryButtonText}
+                <Button width={twoButtonWidth} variant="primaryWhite" onPress={data?.secondaryButtonOnPress}>
+                  {data?.secondaryButtonText}
                 </Button>
                 <Spacer mr={1} />
               </>
@@ -107,20 +95,19 @@ export const PopUp: React.FC<PopUpProps> = ({ data, show, insetsBottom }) => {
               width={showSecondaryButton ? twoButtonWidth : null}
               variant="primaryBlack"
               block={!showSecondaryButton}
-              onPress={() => onClose?.()}
+              onPress={() => data?.onClose?.()}
             >
-              {buttonText}
+              {data?.buttonText}
             </Button>
           </Flex>
-          <Spacer mb={insetsBottom ? 4 : 0} />
         </Box>
       </AnimatedPopUp>
-      {show && <AnimatedOuterWrapper style={{ backgroundColor: animation.backgroundColor }} />}
-    </>
+      {show && <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor }} />}
+    </Theme>
   )
 }
 
-const OuterWrapper = styled(Box)`
+const Overlay = styled(Box)`
   position: absolute;
   flex: 1;
   top: 0;
@@ -144,4 +131,4 @@ const Container = styled(Box)`
 `
 
 const AnimatedPopUp = animated(Container)
-const AnimatedOuterWrapper = animated(OuterWrapper)
+const AnimatedOverlay = animated(Overlay)

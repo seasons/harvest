@@ -1,6 +1,4 @@
-import {
-  Box, CloseButton, Container, FixedButton, Flex, Sans, Separator, Spacer
-} from "App/Components"
+import { Box, CloseButton, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
@@ -16,6 +14,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
     me {
       user {
+        id
         firstName
         lastName
         email
@@ -68,7 +67,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
 export const ReservationConfirmation = screenTrack()(props => {
   const reservationID = get(props, "route.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
   const tracking = useTracking()
-  const { data } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
+  const { data, error } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
     variables: {
       reservationID,
     },
@@ -166,7 +165,7 @@ export const ReservationConfirmation = screenTrack()(props => {
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="black100">
-      <CloseButton navigation={props.navigation} />
+      <CloseButton />
       <Box style={{ marginTop: 60 }} m={2}>
         <Sans size="3" color="white">
           We've got your order!

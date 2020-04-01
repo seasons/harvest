@@ -1,12 +1,14 @@
 import Auth0 from "react-native-auth0"
-import Config from "react-native-config"
+import { config, Env } from "App/utils/config"
 import AsyncStorage from "@react-native-community/async-storage"
 
 const auth0 = () => {
-  if (Config.AUTH0_DOMAIN && Config.AUTH0_CLIENT_ID) {
+  const auth0Domain = config.get(Env.MONSOON_ENDPOINT)
+  const auth0ClientId = config.get(Env.MONSOON_ENDPOINT)
+  if (auth0Domain && auth0ClientId) {
     return new Auth0({
-      domain: Config.AUTH0_DOMAIN,
-      clientId: Config.AUTH0_CLIENT_ID,
+      domain: auth0Domain,
+      clientId: auth0ClientId,
     })
   } else {
     return null

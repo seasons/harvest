@@ -4,6 +4,7 @@ export const GET_PRODUCT = gql`
   query GetProduct($productID: ID!) {
     product(where: { id: $productID }) {
       id
+      slug
       name
       description
       retailPrice
@@ -29,14 +30,28 @@ export const GET_PRODUCT = gql`
       outerMaterials
       innerMaterials
       images
-      isSaved
+      type
       variants {
         id
-        size
+        manufacturerSizes {
+          display
+        }
+        internalSize {
+          top {
+            letter
+          }
+          bottom {
+            type
+            value
+          }
+          productType
+          display
+        }
         total
         reservable
         nonReservable
         reserved
+        isInBag
         isSaved
         isWanted
       }

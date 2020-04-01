@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from "react"
-import Config from "react-native-config"
+import { config, Env } from "App/utils/config"
 import AsyncStorage from "@react-native-community/async-storage"
 import { checkNotifications, requestNotifications } from "react-native-permissions"
 import { Platform } from "react-native"
@@ -126,7 +126,7 @@ export const NotificationsProvider = ({ children }) => {
   }
 
   const attachListeners = (email, beamsToken) => {
-    RNPusherPushNotifications.setInstanceId(Config.RN_PUSHER_ID)
+    RNPusherPushNotifications.setInstanceId(config.get(Env.RN_PUSHER_ID))
     // Init interests after registration
     RNPusherPushNotifications.on("registered", () => {
       setUserId(email, beamsToken)

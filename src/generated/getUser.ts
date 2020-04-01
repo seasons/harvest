@@ -1,9 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-// @generated
 // This file was automatically generated and should not be edited.
 
-import { PushNotificationStatus } from "./globalTypes";
+import { PushNotificationStatus, UserRole } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetUser
@@ -16,6 +15,7 @@ export interface GetUser_me_customer_user {
   lastName: string;
   email: string;
   pushNotifications: PushNotificationStatus;
+  role: UserRole;
 }
 
 export interface GetUser_me_customer_detail_shippingAddress {

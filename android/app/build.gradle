@@ -141,6 +141,8 @@ android {
 }
 
 dependencies {
+    implementation project(':@react-native-community_async-storage')
+    implementation project(':react-native-restart')
     implementation project(':@segment_analytics-react-native')
     implementation project(':react-native-config')
     implementation project(':@sentry_react-native')
@@ -148,7 +150,6 @@ dependencies {
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-safe-area-context')
     implementation project(':react-native-screens')
-    implementation project(':@react-native-community_async-storage')
     implementation project(':react-native-auth0')
     implementation project(':react-native-svg')
     implementation project(':react-native-reanimated')

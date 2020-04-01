@@ -1,6 +1,10 @@
 export const BagFixture = {
   me: {
     activeReservation: null,
+    customer: {
+      id: "12345",
+      plan: "Essential",
+    },
     bag: [
       {
         id: "ck6cn9vi50e6i0722fx0q3bfq",
@@ -120,14 +124,23 @@ export const BagFixture = {
               {
                 id: "ck69vklnb06aq072250e2939n",
                 size: "L",
+                internalSize: {
+                  display: "L",
+                },
               },
               {
                 id: "ck69vklqa06b10722lurvl4ca",
                 size: "M",
+                internalSize: {
+                  display: "M",
+                },
               },
               {
                 id: "ck69vklt906bc07224hjd98pu",
                 size: "S",
+                internalSize: {
+                  display: "S",
+                },
               },
             ],
           },
@@ -254,14 +267,23 @@ export const BagFixture = {
               {
                 id: "ck69vkaj705fr0722m0md1hvo",
                 size: "S",
+                internalSize: {
+                  display: "S",
+                },
               },
               {
                 id: "ck69vkaqy05gd0722nxwyy52z",
                 size: "M",
+                internalSize: {
+                  display: "M",
+                },
               },
               {
                 id: "ck69vkaue05go0722dhgizmtn",
                 size: "L",
+                internalSize: {
+                  display: "L",
+                },
               },
             ],
           },
@@ -388,14 +410,23 @@ export const BagFixture = {
               {
                 id: "ck69vkc7n05kn0722xymj54ec",
                 size: "S",
+                internalSize: {
+                  display: "S",
+                },
               },
               {
                 id: "ck69vkcb105ky0722t46yumtv",
                 size: "M",
+                internalSize: {
+                  display: "M",
+                },
               },
               {
                 id: "ck69vkchh05lk07221gnpy5x3",
                 size: "L",
+                internalSize: {
+                  display: "L",
+                },
               },
             ],
           },
@@ -411,11 +442,16 @@ export const BagFixture = {
 
 export const BagFixtureWithReservation = {
   me: {
+    customer: {
+      id: "12345",
+      plan: "Essential",
+    },
     bag: [],
     savedItems: [],
     activeReservation: {
       id: "ck6jsqpv6g7bm07030k261a68",
       shipped: false,
+      returnDateDisplay: "Thursday March 30th",
       createdAt: "2020-02-12T20:58:29.105Z",
       products: [
         {
@@ -661,6 +697,9 @@ export const BagFixtureWithReservation = {
           productStatus: "New",
           productVariant: {
             size: "M",
+            internalSize: {
+              display: "M",
+            },
             product: {
               name: "Fur Jacket",
               retailPrice: 1150,

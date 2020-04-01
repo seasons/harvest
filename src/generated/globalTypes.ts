@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-// @generated
 // This file was automatically generated and should not be edited.
 
 //==============================================================
@@ -84,6 +83,7 @@ export enum LetterSize {
   XXL = "XXL",
 }
 
+<<<<<<< HEAD
 export enum LocationType {
   Cleaner = "Cleaner",
   Customer = "Customer",
@@ -91,6 +91,8 @@ export enum LocationType {
   Warehouse = "Warehouse",
 }
 
+=======
+>>>>>>> nest
 export enum Material {
   Acetate = "Acetate",
   Acrylic = "Acrylic",
@@ -209,6 +211,7 @@ export enum PushNotificationStatus {
   Granted = "Granted",
 }
 
+<<<<<<< HEAD
 export enum QuestionType {
   FreeResponse = "FreeResponse",
   MultipleChoice = "MultipleChoice",
@@ -220,6 +223,8 @@ export enum Rating {
   Ok = "Ok",
 }
 
+=======
+>>>>>>> nest
 export enum UserRole {
   Admin = "Admin",
   Customer = "Customer",
@@ -227,11 +232,11 @@ export enum UserRole {
 }
 
 export interface AddressInput {
-  city: string;
-  postalCode: string;
-  state: string;
-  street1: string;
-  street2?: string | null;
+  city: string
+  postalCode: string
+  state: string
+  street1: string
+  street2?: string | null
 }
 
 export interface BottomSizeCreateInput {
@@ -1630,7 +1635,7 @@ export interface ReservationFeedbackUpdateInput {
 }
 
 export interface ReserveItemsOptions {
-  dryRun?: boolean | null;
+  dryRun?: boolean | null
 }
 
 export interface SizeCreateInput {

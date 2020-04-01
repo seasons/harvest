@@ -1,14 +1,16 @@
-import { Box, Button, Flex, PopUp, Sans, Spacer, TextInput, CloseButton, Container } from "App/Components"
+import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
+import { useAuthContext } from "App/Navigation/AuthContext"
 import { color } from "App/utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
-import AsyncStorage from "@react-native-community/async-storage"
 import { checkNotifications } from "react-native-permissions"
-import { useAuthContext } from "App/Navigation/AuthContext"
+
+import AsyncStorage from "@react-native-community/async-storage"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -36,19 +38,25 @@ export const LogIn: React.FC<LogInProps> = props => {
   const [password, setPassword] = useState("")
   const [isMutating, setIsMutating] = useState(false)
   const [emailComplete, setEmailComplete] = useState(false)
-  const [showError, setShowError] = useState(false)
+  const { showPopUp, hidePopUp } = usePopUpContext()
+  const { signIn } = useAuthContext()
+
   const [login] = useMutation(LOG_IN, {
     onCompleted: () => {
       setIsMutating(false)
     },
     onError: err => {
+      const popUpData = {
+        title: "Oops! Try again!",
+        note: "Your email or password may be incorrect. Not a member? Apply for the waitlist.",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
+      }
       console.log("err", err)
-      setShowError(true)
+      showPopUp(popUpData)
       setIsMutating(false)
     },
   })
-
-  const { signIn } = useAuthContext()
 
   const onEmailChange = val => {
     setEmail(val)
@@ -101,16 +109,9 @@ export const LogIn: React.FC<LogInProps> = props => {
 
   const disabled = !(emailComplete && password.length)
 
-  const popUpData = {
-    title: "Oops! Try again!",
-    note: "Your email or password may be incorrect. Not a member? Apply for the waitlist.",
-    buttonText: "Close",
-    onClose: () => setShowError(false),
-  }
-
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      <CloseButton navigation={props.navigation} />
+      <CloseButton />
       <Flex style={{ flex: 1 }}>
         <Spacer mb={3} />
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
@@ -156,13 +157,12 @@ export const LogIn: React.FC<LogInProps> = props => {
           <Box p={4} pb={5}>
             <Text style={{ textAlign: "center" }}>
               <Sans size="2" color="gray">
-                Sign in using the same email and password you used for the wailist.
+                Sign in using the same email and password you used for the waitlist.
               </Sans>
             </Text>
             <Spacer mb={2} />
           </Box>
         </Flex>
-        <PopUp data={popUpData} show={showError} />
       </Flex>
     </Container>
   )

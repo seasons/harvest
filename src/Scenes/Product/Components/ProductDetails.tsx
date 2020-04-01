@@ -11,12 +11,10 @@ import { useNavigation } from "@react-navigation/native"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
 
-// FIXME: Fix types here
 export const ProductDetails: React.FC<{
-  setPopUp: any
   selectedVariant: any
   product: GetProduct_product
-}> = ({ setPopUp, selectedVariant, product }) => {
+}> = ({ selectedVariant, product }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
   if (!product || !product.variants) {
@@ -67,14 +65,16 @@ export const ProductDetails: React.FC<{
         </Box>
         {!!(selectedVariant && selectedVariant.id) && (
           <SaveButtonWrapper>
-            <SaveProductButton selectedVariant={selectedVariant} product={product} setPopUp={setPopUp} />
+            <SaveProductButton selectedVariant={selectedVariant} product={product} />
           </SaveButtonWrapper>
         )}
       </Flex>
       <Spacer mb={1} />
-      <Sans size="1" color={color("black50")} lineHeight={26}>
-        {description}
-      </Sans>
+      {description && (
+        <Sans size="1" color={color("black50")} lineHeight={26}>
+          {description.trim()}
+        </Sans>
+      )}
       <Spacer mb={3} />
       <Separator color={color("black15")} />
       {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
