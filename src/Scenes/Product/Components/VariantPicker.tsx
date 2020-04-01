@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Sans, Spacer } from "App/Components"
+import { Box, Button, Flex, Sans } from "App/Components"
 import { color, space } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
@@ -9,7 +9,7 @@ import { VariantList } from "./VariantList"
 
 export const VariantPicker = props => {
   const tracking = useTracking()
-  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, productID, height, product } = props
+  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, height, product } = props
 
   return (
     <Flex style={{ flex: 1, height: height + 28, position: "relative" }}>
@@ -42,7 +42,6 @@ export const VariantPicker = props => {
               product={product}
               setSelectedVariant={setSelectedVariant}
               selectedVariant={selectedVariant}
-              productID={productID}
               onSizeSelected={() => {
                 toggleShowVariantPicker(false)
               }}

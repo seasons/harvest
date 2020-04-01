@@ -9,7 +9,6 @@ import { useTracking, Schema } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 interface Props {
-  productID: string
   disabled?: Boolean
   variantInStock: Boolean
   width: number
@@ -18,7 +17,7 @@ interface Props {
 
 export const AddToBagButton: React.FC<Props> = props => {
   const [isMutating, setIsMutating] = useState(false)
-  const { productID, variantInStock, width, selectedVariant } = props
+  const { variantInStock, width, selectedVariant } = props
   const tracking = useTracking()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
@@ -26,6 +25,8 @@ export const AddToBagButton: React.FC<Props> = props => {
   const userHasSession = authState?.userSession
 
   const { data } = useQuery(GET_BAG)
+
+  console.log("selectedVariant", selectedVariant)
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
@@ -79,21 +80,11 @@ export const AddToBagButton: React.FC<Props> = props => {
     }
   }
 
-  const items =
-    (data &&
-      data.me &&
-      data.me.bag.map(item => ({
-        variantID: item.productVariant.id,
-        productID: item.productVariant.product.id,
-      }))) ||
-    []
-
-  const itemInBag = !!items.find(item => item.productID === productID)
-
-  const disabled = !!props.disabled || itemInBag || !variantInStock
+  const isInBag = selectedVariant?.isInBag
+  const disabled = !!props.disabled || isInBag || !variantInStock
 
   let text = "Add to Bag"
-  if (itemInBag) {
+  if (isInBag) {
     text = "Added"
   }
 
@@ -101,7 +92,7 @@ export const AddToBagButton: React.FC<Props> = props => {
     <Button
       width={width}
       loading={isMutating}
-      showCheckMark={itemInBag}
+      showCheckMark={isInBag}
       variant="primaryBlack"
       disabled={disabled}
       onPress={() => {

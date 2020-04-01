@@ -78,6 +78,7 @@ export const Product = screenTrack({
       reservable: 0,
       size: "",
       stock: 0,
+      isInBag: false,
     }
   )
 
@@ -93,7 +94,7 @@ export const Product = screenTrack({
   }
 
   const inStock = selectedVariant && selectedVariant.reservable > 0
-  const shouldShowVariantWant = !inStock && !!selectedVariant?.id
+  const shouldShowVariantWant = !inStock && !!selectedVariant?.id && !selectedVariant.isInBag
 
   const variantWantTransition = useSpring({
     translateY: shouldShowVariantWant ? 0 : VARIANT_WANT_HEIGHT,
@@ -143,7 +144,6 @@ export const Product = screenTrack({
       />
       <SelectionButtons
         bottom={selectionButtonsBottom}
-        productID={productID}
         toggleShowVariantPicker={toggleShowVariantPicker}
         showVariantPicker={showVariantPicker}
         selectedVariant={selectedVariant}
@@ -166,7 +166,6 @@ export const Product = screenTrack({
           selectedVariant={selectedVariant}
           height={variantPickerHeight}
           navigation={navigation}
-          productID={productID}
           toggleShowVariantPicker={toggleShowVariantPicker}
         />
       </AnimatedVariantPicker>
