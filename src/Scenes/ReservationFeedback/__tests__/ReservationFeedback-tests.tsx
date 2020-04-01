@@ -93,7 +93,7 @@ describe("ReservationFeedbackConfirmation", () => {
     await waitForLoad(component)
 
     expect(component.text()).toContain(
-      "FinishAny other thoughts?SkipSubmitSomething went wrong!An issue occurred while trying to submit your comment. Please try again.Got it"
+      "FinishAny other thoughts?SkipSubmit"
     )
     expect(component).toMatchSnapshot()
   })

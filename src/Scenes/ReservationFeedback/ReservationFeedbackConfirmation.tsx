@@ -4,8 +4,9 @@ import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } 
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 
-import { Box, Button, FixedBackArrow, Flex, PopUp, Sans, Separator, Spacer, TextInput } from "App/Components"
+import { Box, Button, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput } from "App/Components"
 import { Schema } from "App/Navigation"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { space } from "App/utils"
 import { screenTrack, useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { Container } from "Components/Container"
@@ -16,9 +17,9 @@ export const ReservationFeedbackConfirmation: React.FC<{
   route: any
 }> = screenTrack()(({ route, navigation }) => {
   const tracking = useTracking()
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const reservationFeedback = route?.params?.reservationFeedback
   const [comment, setComment] = useState(reservationFeedback?.comment)
-  const [showError, setShowError] = useState(false)
   const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK)
   const insets = useSafeArea()
   const { width: windowWidth } = Dimensions.get("window")
@@ -32,7 +33,13 @@ export const ReservationFeedbackConfirmation: React.FC<{
       },
     })
     if (!result?.data) {
-      setShowError(true)
+      const popUpData = {
+        buttonText: "Got it",
+        note: "An issue occurred while trying to submit your comment. Please try again.",
+        title: "Something went wrong!",
+        onClose: () => hidePopUp(),
+      }
+      showPopUp(popUpData)
       return
     }
     navigation.pop()
@@ -41,13 +48,6 @@ export const ReservationFeedbackConfirmation: React.FC<{
       screen: Schema.PageNames.ReservationFeedbackFinishModal,
       params: { reservationFeedback }
     })
-  }
-
-  const popUpData = {
-    buttonText: "Got it",
-    note: "An issue occurred while trying to submit your comment. Please try again.",
-    title: "Something went wrong!",
-    onClose: () => setShowError(false),
   }
 
   return (
@@ -100,7 +100,6 @@ export const ReservationFeedbackConfirmation: React.FC<{
           </Button>
         </Flex>
       </FixedKeyboardAvoidingView>
-      <PopUp data={popUpData} show={showError} insetsBottom={true} />
     </Container >
   )
 })
