@@ -8,7 +8,6 @@ import styled from "styled-components/native"
 import { Schema, useTracking } from "App/utils/track"
 
 interface Props {
-  productID: string
   toggleShowVariantPicker: (show: boolean) => void
   showVariantPicker: boolean
   selectedVariant: any
@@ -19,7 +18,7 @@ const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5
 
 export const SelectionButtons: React.FC<Props> = props => {
   const tracking = useTracking()
-  const { bottom = 0, selectedVariant, showVariantPicker, toggleShowVariantPicker, productID } = props
+  const { bottom = 0, selectedVariant, showVariantPicker, toggleShowVariantPicker } = props
   const inStock = selectedVariant && !!selectedVariant.stock
 
   if (!selectedVariant) {
@@ -61,12 +60,7 @@ export const SelectionButtons: React.FC<Props> = props => {
           </VariantSelectionButton>
         </TouchableWithoutFeedback>
         {inStock && (
-          <AddToBagButton
-            variantInStock={inStock}
-            productID={productID}
-            width={twoButtonWidth}
-            selectedVariant={selectedVariant}
-          />
+          <AddToBagButton variantInStock={inStock} width={twoButtonWidth} selectedVariant={selectedVariant} />
         )}
       </Flex>
     </Wrapper>

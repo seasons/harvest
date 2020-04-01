@@ -53,7 +53,7 @@ const sizeDataForVariants = (variants = [], type) => {
 
     if (variants) {
       for (let variant of variants) {
-        const { id, internalSize, reservable } = variant
+        const { id, internalSize, reservable, isInBag } = variant
         const size = internalSize.display
 
         sizeData[size] = {
@@ -62,6 +62,7 @@ const sizeDataForVariants = (variants = [], type) => {
           reservable,
           stock: reservable,
           manufacturerSize: manufacturerSize(variant),
+          isInBag,
         }
       }
     }
@@ -69,7 +70,7 @@ const sizeDataForVariants = (variants = [], type) => {
   } else if (type === "Bottom") {
     const sizeData: any = {}
     for (let variant of variants) {
-      const { id, reservable } = variant
+      const { id, reservable, isInBag } = variant
 
       if (!variant.internalSize) {
         continue
@@ -83,6 +84,7 @@ const sizeDataForVariants = (variants = [], type) => {
         reservable,
         manufacturerSize: manufacturerSize(variant),
         stock: reservable,
+        isInBag,
       }
     }
 
@@ -105,7 +107,10 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
     setSizeData(sizeData)
 
     // Update size data
-    const firstAvailableSize = find(sizeData, (size: Size) => size.stock > 0) || sizeData[head(Object.keys(sizeData))]
+    const firstAvailableSize =
+      find(sizeData, (size: Size) => size.isInBag) ||
+      find(sizeData, (size: Size) => size.stock > 0) ||
+      sizeData[head(Object.keys(sizeData))]
     setSelectedVariant(firstAvailableSize)
   }
 
