@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { HomePageSectionType, Rating, QuestionType } from "./globalTypes"
+import { HomePageSectionType } from "./globalTypes"
 
 // ====================================================
 // GraphQL query operation: Homepage
@@ -104,5 +104,4 @@ export interface Homepage_reservationFeedback {
 
 export interface Homepage {
   homepage: Homepage_homepage | null
-  reservationFeedback: Homepage_reservationFeedback | null
 }

@@ -40,6 +40,11 @@ export interface GetProduct_product_variants_manufacturerSizes {
   display: string
 }
 
+export interface GetProduct_product_variants_manufacturerSizes {
+  __typename: "Size"
+  display: string
+}
+
 export interface GetProduct_product_variants_internalSize_top {
   __typename: "TopSize"
   letter: LetterSize | null

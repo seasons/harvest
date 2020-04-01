@@ -227,11 +227,11 @@ export enum UserRole {
 }
 
 export interface AddressInput {
-  city: string
-  postalCode: string
-  state: string
-  street1: string
-  street2?: string | null
+  city: string;
+  postalCode: string;
+  state: string;
+  street1: string;
+  street2?: string | null;
 }
 
 export interface BottomSizeCreateInput {
@@ -1628,7 +1628,7 @@ export interface ReservationFeedbackUpdateInput {
 }
 
 export interface ReserveItemsOptions {
-  dryRun?: boolean | null
+  dryRun?: boolean | null;
 }
 
 export interface SizeCreateInput {

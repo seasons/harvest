@@ -32,6 +32,16 @@ export interface GetBrowseProducts_productsCount {
   aggregate: GetBrowseProducts_productsCount_aggregate
 }
 
+export interface GetBrowseProducts_productsCount_aggregate {
+  __typename: "AggregateProduct"
+  count: number
+}
+
+export interface GetBrowseProducts_productsCount {
+  __typename: "ProductConnection"
+  aggregate: GetBrowseProducts_productsCount_aggregate
+}
+
 export interface GetBrowseProducts_products_modelSize {
   __typename: "Size"
   display: string
