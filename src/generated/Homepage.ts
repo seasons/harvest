@@ -1,78 +1,64 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
-<<<<<<< HEAD
 import { HomePageSectionType, Rating, QuestionType } from "./globalTypes";
-=======
-import { HomePageSectionType } from "./globalTypes"
->>>>>>> nest
 
 // ====================================================
 // GraphQL query operation: Homepage
 // ====================================================
 
 export interface Homepage_homepage_sections_results_Collection {
-  __typename: "Collection"
+  __typename: "Collection";
 }
 
 export interface Homepage_homepage_sections_results_Brand {
-  __typename: "Brand"
-  id: string
-  name: string
-  since: any | null
+  __typename: "Brand";
+  id: string;
+  name: string;
+  since: any | null;
 }
 
 export interface Homepage_homepage_sections_results_Product_brand {
-  __typename: "Brand"
-  id: string
-  name: string
+  __typename: "Brand";
+  id: string;
+  name: string;
 }
 
 export interface Homepage_homepage_sections_results_Product_variants_internalSize {
-  __typename: "Size"
-  display: string
+  __typename: "Size";
+  display: string;
 }
 
 export interface Homepage_homepage_sections_results_Product_variants {
-<<<<<<< HEAD
   __typename: "ProductVariant";
   id: string;
-  size: string | null;
+  internalSize: Homepage_homepage_sections_results_Product_variants_internalSize | null;
   reservable: number;
-=======
-  __typename: "ProductVariant"
-  id: string
-  internalSize: Homepage_homepage_sections_results_Product_variants_internalSize | null
-  size: string | null
-  reservable: number
->>>>>>> nest
 }
 
 export interface Homepage_homepage_sections_results_Product {
-  __typename: "Product"
-  id: string
-  slug: string
-  images: any
-  brand: Homepage_homepage_sections_results_Product_brand
-  variants: Homepage_homepage_sections_results_Product_variants[] | null
+  __typename: "Product";
+  id: string;
+  slug: string;
+  images: any;
+  brand: Homepage_homepage_sections_results_Product_brand;
+  variants: Homepage_homepage_sections_results_Product_variants[] | null;
 }
 
-export type Homepage_homepage_sections_results =
-  | Homepage_homepage_sections_results_Collection
-  | Homepage_homepage_sections_results_Brand
-  | Homepage_homepage_sections_results_Product
+export type Homepage_homepage_sections_results = Homepage_homepage_sections_results_Collection | Homepage_homepage_sections_results_Brand | Homepage_homepage_sections_results_Product;
 
 export interface Homepage_homepage_sections {
-  __typename: "HomepageSection"
-  title: string | null
-  type: HomePageSectionType
-  results: Homepage_homepage_sections_results[]
+  __typename: "HomepageSection";
+  title: string | null;
+  type: HomePageSectionType;
+  results: Homepage_homepage_sections_results[];
 }
 
 export interface Homepage_homepage {
-  __typename: "Homepage"
-  sections: Homepage_homepage_sections[]
+  __typename: "Homepage";
+  sections: Homepage_homepage_sections[];
 }
 
 export interface Homepage_reservationFeedback_feedbacks_questions {
@@ -114,10 +100,6 @@ export interface Homepage_reservationFeedback {
 }
 
 export interface Homepage {
-<<<<<<< HEAD
   homepage: Homepage_homepage | null;
   reservationFeedback: Homepage_reservationFeedback | null;
-=======
-  homepage: Homepage_homepage | null
->>>>>>> nest
 }
