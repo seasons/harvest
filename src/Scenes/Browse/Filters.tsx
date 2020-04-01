@@ -7,12 +7,6 @@ import React, { useState } from "react"
 import { Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
-<<<<<<< HEAD
-import { Box, Button, Flex, Handle, Radio, Sans, Separator, Spacer, Theme } from "../../Components"
-import { useTracking, Schema, screenTrack } from "App/utils/track"
-import { color } from "App/utils"
-=======
->>>>>>> nest
 
 import { Box, Button, Container, Flex, Radio, Sans, Separator, Spacer } from "../../Components"
 
@@ -149,26 +143,11 @@ export const Filters = screenTrack()((props: any) => {
   )
 })
 
-<<<<<<< HEAD
-const Container = styled(Box)`
-  background: black;
-  flex: 1;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  overflow: hidden;
-`
-
-const HeaderContainer = styled(Box)`
-  border-color: ${color("black50")};
-  border-style: solid;
-  border-bottom-width: 1px;
-=======
 const Handle = styled(Box)`
 width: 40px;
 height: 5px;
 border - radius: 100;
-background: ${ color("black100") };
+background: ${ color("black100")};
 opacity: 0.5;
 margin: auto;
->>>>>>> nest
 `
