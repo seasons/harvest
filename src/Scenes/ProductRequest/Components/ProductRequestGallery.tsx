@@ -8,26 +8,23 @@ export interface Props {
 }
 
 export const ProductRequestGallery: React.FC<Props> = ({ images }) => {
-  const shouldDisplayImages = images.length >= 4;
+  const shouldDisplayImages = images.length >= 4
   if (!shouldDisplayImages) {
-    return null;
+    return null
   }
 
   return (
     <Container>
-      <ImageContainer
-        resizeMode="contain"
-        style={{ flex: 3, marginRight: 8 }}
-        source={{ uri: images[0] }}
-      />
+      <ImageContainer resizeMode="contain" style={{ flex: 3, marginRight: 8 }} source={{ uri: images[0] }} />
       <ColumnContainer>
-        {images.slice(1, 4).map((image: String, index: number) =>
+        {images.slice(1, 4).map((image: String, index: number) => (
           <ImageContainer
+            key={index}
             resizeMode="contain"
             style={{ flex: 1, marginBottom: index !== 2 ? 8 : 0 }}
             source={{ uri: image }}
           />
-        )}
+        ))}
       </ColumnContainer>
     </Container>
   )
