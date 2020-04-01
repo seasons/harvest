@@ -106,6 +106,9 @@ export const Bag = screenTrack()((props) => {
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
 
+  console.log("data", data)
+  console.log("isLoading", isLoading)
+
   if (isLoading) {
     return <Loader />
   }

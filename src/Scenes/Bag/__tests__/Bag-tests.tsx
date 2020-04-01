@@ -3,9 +3,7 @@ import * as AuthContext from "App/Navigation/AuthContext"
 import { waitForLoad } from "App/testUtils/waitForLoad"
 import { mount } from "enzyme"
 import React from "react"
-
 import { MockedProvider } from "@apollo/react-testing"
-
 import { Bag } from "../"
 import { GET_BAG } from "../BagQueries"
 import { BagItem } from "../Components/BagItem"
@@ -53,9 +51,9 @@ describe("Bag", () => {
       <MockedProvider mocks={mocks} addTypename={false}>
         <Bag navigation={null} />
       </MockedProvider>
-    ).renderUntil(wrapper => {
-      return wrapper.find(BagItem).length > 0
-    })
+    )
+
+    await waitForLoad(component)
 
     expect(component).toMatchSnapshot()
     expect(component.find(BagItem).length).toEqual(3)
