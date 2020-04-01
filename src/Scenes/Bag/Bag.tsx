@@ -13,7 +13,6 @@ import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, RefreshControl } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
@@ -106,6 +105,9 @@ export const Bag = screenTrack()(props => {
   })
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
+
+  console.log("data", data)
+  console.log("isLoading", isLoading)
 
   if (isLoading) {
     return <Loader />
