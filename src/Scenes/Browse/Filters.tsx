@@ -144,10 +144,10 @@ export const Filters = screenTrack()((props: any) => {
 })
 
 const Handle = styled(Box)`
-width: 40px;
-height: 5px;
-border-radius: 100;
-background: ${color("black100")};
-opacity: 0.5;
-margin: auto;
+  width: 40px;
+  height: 5px;
+  border-radius: 100;
+  background: ${color("black100")};
+  opacity: 0.5;
+  margin: auto;
 `
