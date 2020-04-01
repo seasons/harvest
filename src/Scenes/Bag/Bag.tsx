@@ -238,22 +238,22 @@ export const Bag = screenTrack()(props => {
             navigation={navigation}
           />
         ) : (
-          <Box my={2}>
-            <BagItem
-              hideButtons={hideButtons}
-              removeItemFromBag={deleteBagItem}
-              removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-              sectionHeight={SECTION_HEIGHT}
-              index={index}
-              bagItem={item}
-              navigation={navigation}
-            />
-          </Box>
-        )}
+            <Box my={2}>
+              <BagItem
+                hideButtons={hideButtons}
+                removeItemFromBag={deleteBagItem}
+                removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+                sectionHeight={SECTION_HEIGHT}
+                index={index}
+                bagItem={item}
+                navigation={navigation}
+              />
+            </Box>
+          )}
       </Box>
     ) : (
-      <EmptyBagItem navigation={navigation} />
-    )
+        <EmptyBagItem navigation={navigation} />
+      )
   }
 
   const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"
@@ -325,22 +325,22 @@ export const Bag = screenTrack()(props => {
               FAQ
             </FixedButton>
           ) : (
-            <FixedButton
-              block
-              onPress={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.ReserveButtonTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                  bagIsFull,
-                })
-                !bagIsFull ? displayReserveError(true) : handleReserve(navigation)
-              }}
-              disabled={!bagIsFull || isMutating}
-              loading={isMutating}
-            >
-              Reserve
-            </FixedButton>
-          )}
+              <FixedButton
+                block
+                onPress={() => {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.ReserveButtonTapped,
+                    actionType: Schema.ActionTypes.Tap,
+                    bagIsFull,
+                  })
+                  !bagIsFull ? displayReserveError(true) : handleReserve(navigation)
+                }}
+                disabled={!bagIsFull || isMutating}
+                loading={isMutating}
+              >
+                Reserve
+              </FixedButton>
+            )}
         </>
       )}
     </Container>
