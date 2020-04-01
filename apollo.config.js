@@ -1,6 +1,6 @@
 module.exports = {
   client: {
     name: "Seasons | Join",
-    service: "monsoon-prisma",
+    service: "seasons-6642",
   },
 }

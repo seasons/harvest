@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 import { InventoryStatus, PhysicalProductStatus } from "./globalTypes";
@@ -41,7 +42,7 @@ export interface ActiveReservation_me_activeReservation {
   id: string;
   shipped: boolean;
   createdAt: any;
-  products: ActiveReservation_me_activeReservation_products[] | null;
+  products: ActiveReservation_me_activeReservation_products[];
 }
 
 export interface ActiveReservation_me {
