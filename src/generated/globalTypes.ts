@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 //==============================================================
@@ -196,15 +197,15 @@ export enum UserRole {
 }
 
 export interface AddressInput {
-  city: string
-  postalCode: string
-  state: string
-  street1: string
-  street2?: string | null
+  city: string;
+  postalCode: string;
+  state: string;
+  street1: string;
+  street2?: string | null;
 }
 
 export interface ReserveItemsOptions {
-  dryRun?: boolean | null
+  dryRun?: boolean | null;
 }
 
 //==============================================================
