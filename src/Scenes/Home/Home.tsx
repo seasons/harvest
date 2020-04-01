@@ -14,10 +14,10 @@ import * as Animatable from "react-native-animatable"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
 
+import { Schema } from "App/Navigation"
 import { BrandsRail } from "./Components/BrandsRail"
 import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
-import { Schema } from "App/Navigation"
 
 const RESERVATION_FEEDBACK_REMINDER_HEIGHT = 84
 
