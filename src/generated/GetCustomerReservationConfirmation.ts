@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 // ====================================================
@@ -8,6 +9,7 @@
 
 export interface GetCustomerReservationConfirmation_me_user {
   __typename: "User";
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -73,7 +75,7 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations {
   __typename: "Reservation";
   id: string;
   reservationNumber: number;
-  products: GetCustomerReservationConfirmation_me_customer_reservations_products[] | null;
+  products: GetCustomerReservationConfirmation_me_customer_reservations_products[];
 }
 
 export interface GetCustomerReservationConfirmation_me_customer {

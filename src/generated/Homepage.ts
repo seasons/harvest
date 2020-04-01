@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 import { HomePageSectionType, Rating, QuestionType } from "./globalTypes"
@@ -33,7 +34,7 @@ export interface Homepage_homepage_sections_results_Product_variants_internalSiz
 export interface Homepage_homepage_sections_results_Product_variants {
   __typename: "ProductVariant"
   id: string
-  size: string | null
+  internalSize: Homepage_homepage_sections_results_Product_variants_internalSize | null
   reservable: number
 }
 

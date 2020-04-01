@@ -1,8 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
-import { Material } from "./globalTypes"
+import { Material, ProductType, LetterSize, BottomSizeType } from "./globalTypes"
 
 // ====================================================
 // GraphQL query operation: GetProduct
@@ -34,14 +35,40 @@ export interface GetProduct_product_brand {
   since: any | null
 }
 
+export interface GetProduct_product_variants_manufacturerSizes {
+  __typename: "Size"
+  display: string
+}
+
+export interface GetProduct_product_variants_internalSize_top {
+  __typename: "TopSize"
+  letter: LetterSize | null
+}
+
+export interface GetProduct_product_variants_internalSize_bottom {
+  __typename: "BottomSize"
+  type: BottomSizeType | null
+  value: string | null
+}
+
+export interface GetProduct_product_variants_internalSize {
+  __typename: "Size"
+  top: GetProduct_product_variants_internalSize_top | null
+  bottom: GetProduct_product_variants_internalSize_bottom | null
+  productType: ProductType | null
+  display: string
+}
+
 export interface GetProduct_product_variants {
   __typename: "ProductVariant"
   id: string
-  size: string | null
+  manufacturerSizes: GetProduct_product_variants_manufacturerSizes[] | null
+  internalSize: GetProduct_product_variants_internalSize | null
   total: number
   reservable: number
   nonReservable: number
   reserved: number
+  isInBag: boolean
   isSaved: boolean
   isWanted: boolean
 }
@@ -49,6 +76,7 @@ export interface GetProduct_product_variants {
 export interface GetProduct_product {
   __typename: "Product"
   id: string
+  slug: string
   name: string
   description: string | null
   retailPrice: number | null
@@ -60,7 +88,7 @@ export interface GetProduct_product {
   outerMaterials: Material[]
   innerMaterials: Material[]
   images: any
-  isSaved: boolean | null
+  type: ProductType | null
   variants: GetProduct_product_variants[] | null
 }
 

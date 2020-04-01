@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 import { ProductOrderByInput, ProductStatus } from "./globalTypes"
@@ -21,9 +22,14 @@ export interface GetBrowseProducts_categories {
   children: GetBrowseProducts_categories_children[] | null
 }
 
-export interface GetBrowseProducts_products_modelSize {
-  __typename: "Size"
-  display: string
+export interface GetBrowseProducts_productsCount_aggregate {
+  __typename: "AggregateProduct"
+  count: number
+}
+
+export interface GetBrowseProducts_productsCount {
+  __typename: "ProductConnection"
+  aggregate: GetBrowseProducts_productsCount_aggregate
 }
 
 export interface GetBrowseProducts_products_modelSize {
@@ -45,12 +51,12 @@ export interface GetBrowseProducts_products_variants_internalSize {
 export interface GetBrowseProducts_products_variants {
   __typename: "ProductVariant"
   id: string
-  size: string | null
   total: number
   reservable: number
   nonReservable: number
   reserved: number
   isSaved: boolean
+  internalSize: GetBrowseProducts_products_variants_internalSize | null
 }
 
 export interface GetBrowseProducts_products {
@@ -73,6 +79,7 @@ export interface GetBrowseProducts_products {
 
 export interface GetBrowseProducts {
   categories: (GetBrowseProducts_categories | null)[]
+  productsCount: GetBrowseProducts_productsCount
   products: (GetBrowseProducts_products | null)[]
 }
 
