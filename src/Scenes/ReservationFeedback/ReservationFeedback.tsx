@@ -6,16 +6,20 @@ import { Box, Button, Flex, Handle, Sans, Separator, Spacer } from "App/Componen
 import { Schema } from "App/Navigation"
 import { ImageRail } from "App/Scenes/Product/Components"
 import { color } from "App/utils"
-import { screenTrack } from "App/utils/track"
+import { screenTrack, useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { ReservationFeedbackHeader } from "./Components"
 import { Container } from "Components/Container"
 import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
-import { ReservationFeedback_reservationFeedback_feedbacks } from "src/generated/ReservationFeedback"
+import {
+  ReservationFeedback_reservationFeedback_feedbacks,
+  ReservationFeedback_reservationFeedback_feedbacks_questions
+} from "src/generated/ReservationFeedback"
 
 export const ReservationFeedback: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ route, navigation }) => {
+  const tracking = useTracking()
   const [reservationFeedback, setReservationFeedback] = useState(route?.params?.reservationFeedback)
   const { feedbacks } = reservationFeedback
 
@@ -44,11 +48,18 @@ export const ReservationFeedback: React.FC<{
     flatListRef.scrollToIndex({ index: 0 })
   }
 
-  const renderItem = (feedbackQuestion, index) => {
+  const renderItem = (
+    feedbackQuestion: ReservationFeedback_reservationFeedback_feedbacks_questions,
+    index,
+  ) => {
     const { id: feedbackQuestionID, question, options, responses } = feedbackQuestion
     const currFeedback: ReservationFeedback_reservationFeedback_feedbacks = reservationFeedback.feedbacks[currFeedbackIndex]
     const { questions: currQuestions } = currFeedback
     const onOptionPressed = async (option) => {
+      tracking.trackEvent({
+        actionName: TrackingSchema.ActionNames.ReservationFeedbackOptionButtonTapped,
+        actionType: TrackingSchema.ActionTypes.Tap,
+      })
       feedbackQuestion.responses = [option]
       const unansweredFeedbackQuestions = currQuestions.filter((question) => question.responses.length === 0)
       const feedbackIsCompleted =
@@ -130,6 +141,10 @@ export const ReservationFeedback: React.FC<{
   }
 
   const handleContinueLaterPressed = () => {
+    tracking.trackEvent({
+      actionName: TrackingSchema.ActionNames.ReservationFeedbackContinueLaterButtonTapped,
+      actionType: TrackingSchema.ActionTypes.Tap,
+    })
     navigation.pop()
   }
 

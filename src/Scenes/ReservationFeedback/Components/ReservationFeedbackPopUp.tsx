@@ -8,6 +8,7 @@ import styled from "styled-components/native"
 import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { color } from "App/utils"
+import { useTracking, Schema } from "App/utils/track"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
 
@@ -51,6 +52,7 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
   show,
   onSelectedRating,
 }) => {
+  const tracking = useTracking()
   const [mounted, setMounted] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [size, onLayout] = useComponentSize()
@@ -77,6 +79,10 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
   const imageWidth = Math.max((contentWidth - imageHorizontalPadding * (numFeedbacks - 1)) / numFeedbacks, 112)
 
   const onRatingButtonPressed = async (ratingIndex) => {
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.ReservationFeedbackRatingButtonTapped,
+      actionType: Schema.ActionTypes.Tap,
+    })
     setSelectedIndex(ratingIndex)
     let rating
     switch (ratingIndex) {

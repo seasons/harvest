@@ -1,12 +1,13 @@
 import React from "react"
 import { Text } from "react-native"
 import { Box, Button, Flex, Sans, Spacer } from "App/Components"
-import { screenTrack } from "App/utils/track"
+import { screenTrack, useTracking, Schema } from "App/utils/track"
 import { Container } from "Components/Container"
 
 export const ReservationFeedbackFinish: React.FC<{
   navigation: any
 }> = screenTrack()(({ navigation }) => {
+  const tracking = useTracking()
   return (
     <Container >
       <Box px={2} style={{ flex: 1, flexDirection: "column" }}>
@@ -21,7 +22,13 @@ export const ReservationFeedbackFinish: React.FC<{
             </Sans>
           </Text>
         </Flex>
-        <Button block variant="primaryWhite" onPress={() => navigation.pop()}>
+        <Button block variant="primaryWhite" onPress={() => {
+          tracking.trackEvent({
+            actionName: Schema.ActionNames.ReservationFeedbackFinishButtonTapped,
+            actionType: Schema.ActionTypes.Tap,
+          })
+          navigation.pop()
+        }}>
           Finish
         </Button>
         <Spacer mb={4} />
