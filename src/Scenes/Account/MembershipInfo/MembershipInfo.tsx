@@ -116,7 +116,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={88} />
         </Box>
       </ScrollView>
-      <ContactUsButton />
+      <ContactUsButton subject="Membership" />
     </Container>
   )
 })
