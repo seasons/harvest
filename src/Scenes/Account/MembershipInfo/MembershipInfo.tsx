@@ -69,9 +69,9 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
             Membership info
           </Sans>
           <Spacer mb={3} />
-          <MembershipCard memberName={`${firstName} ${lastName}`} planName={planInfo.planName} />
+          <MembershipCard memberName={`${firstName} ${lastName}`} planName={planInfo?.planName} />
           <Spacer mb={4} />
-          {!!planInfo.price && (
+          {!!planInfo?.price && (
             <>
               <Sans size="1" >What you pay</Sans>
               <Spacer mb={12} />
@@ -82,7 +82,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
               </Sans>
             </>
           )}
-          {!!planInfo.whatsIncluded && (
+          {!!planInfo?.whatsIncluded && (
             <>
               <Spacer mb={4} />
               <Sans size="1">Whats included</Sans>
