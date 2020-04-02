@@ -1,5 +1,5 @@
 import React from "react"
-import { Container, Spacer, FixedBackArrow, FixedButton, Flex } from "App/Components"
+import { ContactUsButton, Container, Spacer, FixedBackArrow, FixedButton, Flex } from "App/Components"
 import gql from "graphql-tag"
 import { useQuery } from "react-apollo"
 import { Loader } from "App/Components/Loader"
@@ -43,13 +43,7 @@ export const Faq = ({ navigation }) => {
           ListFooterComponent={() => <Spacer mb={100} />}
         />
       </Flex>
-      <FixedButton
-        block
-        variant="primaryWhite"
-        onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject=Feedback`)}
-      >
-        Contact us
-      </FixedButton>
+      <ContactUsButton />
     </Container>
   )
 }
