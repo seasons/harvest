@@ -19,14 +19,12 @@ const ADD_PRODUCT_VARIANT_WANT = gql`
     }
   }
 `
-const VARIANT_WANT_HEIGHT = 52
-const THANKS_MESSAGE = " Thanks! We'll let you know"
-
 interface VariantWantProps {
   isWanted: boolean
   productID: string
   variantID: string
   productSlug: string
+  setShowWantedConfirmation: (bool) => void
 }
 
 export const VariantWant = (props: VariantWantProps) => {
@@ -34,10 +32,7 @@ export const VariantWant = (props: VariantWantProps) => {
   const navigation = useNavigation()
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
-  const { isWanted, productID, variantID, productSlug } = props
-  const shouldShowGreenCheck = isWanted
-  const plainText = isWanted ? THANKS_MESSAGE : "Want this item? "
-  const underlinedText = isWanted ? "" : "Let us know!"
+  const { isWanted, productID, variantID, productSlug, setShowWantedConfirmation } = props
 
   const popUpData = {
     buttonText: "Got it",
@@ -81,11 +76,17 @@ export const VariantWant = (props: VariantWantProps) => {
       })
       if (!result?.data?.addProductVariantWant) {
         showPopUp(popUpData)
+      } else {
+        setShowWantedConfirmation(true)
       }
     } catch (e) {
       console.log("error VariantWant.tsx ", e)
       showPopUp(popUpData)
     }
+  }
+
+  if (!variantID) {
+    return null
   }
 
   const { width } = Dimensions.get("window")
@@ -95,14 +96,14 @@ export const VariantWant = (props: VariantWantProps) => {
       <LeftCorner />
       <RightCorner />
       <TextContainer>
-        {shouldShowGreenCheck && <GreenCheck width={16} height={16} strokeWidth={6} />}
+        {isWanted && <GreenCheck width={16} height={16} strokeWidth={6} />}
         <Text>
           <Sans size="2" color={color("white100")}>
-            {plainText}
+            {isWanted ? " Thanks! We'll let you know" : "Want this item? "}
           </Sans>
           <TouchableWithoutFeedback onPress={handleWantVariant}>
             <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("white100")}>
-              {underlinedText}
+              {isWanted ? "" : "Let us know!"}
             </Sans>
           </TouchableWithoutFeedback>
         </Text>
@@ -115,7 +116,7 @@ const Container = styled(Flex)`
   position: absolute;
   background: ${color("black100")};
   bottom: 0;
-  height: ${VARIANT_WANT_HEIGHT};
+  height: 52;
 `
 
 const TextContainer = styled(Flex)`
@@ -128,12 +129,12 @@ const TextContainer = styled(Flex)`
 
 const LeftCorner = styled(LeftTabCorner)`
   position: absolute;
-  bottom: ${VARIANT_WANT_HEIGHT};
+  bottom: 52;
   left: 0;
 `
 
 const RightCorner = styled(RightTabCorner)`
   position: absolute;
-  bottom: ${VARIANT_WANT_HEIGHT};
+  bottom: 52;
   right: 0;
 `
