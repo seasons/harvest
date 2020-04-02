@@ -3,7 +3,7 @@ import { Text } from "react-native"
 import styled from "styled-components/native"
 import { Box, Flex, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
-import { SeasonsLogoSVG } from "../../../../../assets/svgs"
+import { SeasonsLogoSVG } from "Assets/svgs"
 
 export interface MembershipCardProps {
   memberName: string
