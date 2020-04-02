@@ -43,7 +43,7 @@ export const Faq = ({ navigation }) => {
           ListFooterComponent={() => <Spacer mb={100} />}
         />
       </Flex>
-      <ContactUsButton />
+      <ContactUsButton subject="Feedback" />
     </Container>
   )
 }
