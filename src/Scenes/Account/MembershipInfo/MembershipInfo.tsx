@@ -3,9 +3,9 @@ import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { color } from "styled-system"
 import { Box, ContactUsButton, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { MembershipCard } from "./Components"
 
@@ -78,7 +78,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
               <Spacer mb={12} />
               <Separator />
               <Spacer mb={1} />
-              <Sans size="1" color="gray">
+              <Sans size="1" color={color("black50")}>
                 {`$${planInfo.price}`} / per month
               </Sans>
             </>
@@ -92,7 +92,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
               {planInfo.whatsIncluded.map(text => (
                 <Box key={text}>
                   <Spacer mb={1} />
-                  <Sans size="1" color="gray">{text}</Sans>
+                  <Sans size="1" color={color("black50")}>{text}</Sans>
                 </Box>
               ))}
             </>
@@ -102,7 +102,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={12} />
           <Separator />
           <Spacer mb={1} />
-          <Sans size="1" color="gray" >
+          <Sans size="1" color={color("black50")} >
             Interested in upgrading or downgrading your current plan? Contact us below.
           </Sans>
           <Spacer mb={4} />
@@ -110,7 +110,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={12} />
           <Separator />
           <Spacer mb={1} />
-          <Sans size="1" color="gray" >
+          <Sans size="1" color={color("black50")} >
             If you’d like to pause or cancel your Seasons membership, contact us below.
           </Sans>
           <Spacer mb={88} />
