@@ -14,10 +14,10 @@ const GET_MEMBERSHIP_INFO = gql`
     me {
       customer {
         plan
-        user {
-          firstName
-          lastName
-        }
+      }
+      user {
+        firstName
+        lastName
       }
     }
   }
@@ -27,10 +27,9 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeArea()
   const { loading, data } = useQuery(GET_MEMBERSHIP_INFO)
 
-  const customer = data?.me?.customer
-  const plan = customer?.plan
-  const firstName = customer?.user?.firstName
-  const lastName = customer?.user?.lastName
+  const plan = data?.me?.customer?.plan
+  const firstName = data?.me?.user?.firstName
+  const lastName = data?.me?.user?.lastName
   let planInfo = null
 
   if (plan === "Essential") {
