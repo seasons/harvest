@@ -9,6 +9,8 @@ import { Flex, Sans } from "App/Components"
 import { color } from "App/utils"
 import { useTracking, Schema } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { useNavigation } from "@react-navigation/native"
 
 const ADD_PRODUCT_VARIANT_WANT = gql`
   mutation AddProductVariantWant($variantID: ID!) {
@@ -29,6 +31,8 @@ interface VariantWantProps {
 
 export const VariantWant = (props: VariantWantProps) => {
   const tracking = useTracking()
+  const navigation = useNavigation()
+  const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { isWanted, productID, variantID, productSlug } = props
   const shouldShowGreenCheck = isWanted
@@ -61,7 +65,14 @@ export const VariantWant = (props: VariantWantProps) => {
       actionName: Schema.ActionNames.ProductWanted,
       actionType: Schema.ActionTypes.Tap,
       variantID,
+      productID,
+      productSlug,
     })
+
+    if (!authState?.userSession) {
+      return navigation.navigate("Modal", { screen: "SignInModal" })
+    }
+
     try {
       const result = await addProductVariantWant({
         variables: {
