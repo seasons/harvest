@@ -27,7 +27,7 @@ export const MembershipCard: React.FC<MembershipCardProps> = ({
       break;
   }
 
-  if (!backgroundColor || !planNameColor) {
+  if (!memberName || !planName || !backgroundColor || !planNameColor) {
     return null
   }
 
