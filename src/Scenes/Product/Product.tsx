@@ -72,6 +72,7 @@ export const Product = screenTrack({
   }, [])
 
   const product: GetProduct_product = data && data.product
+  console.log("PRODUCT:", product)
   const [selectedVariant, setSelectedVariant] = useState(
     product?.variants?.[0] || {
       id: "",

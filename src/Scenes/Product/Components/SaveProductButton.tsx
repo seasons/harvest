@@ -1,5 +1,6 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box } from "App/Components"
+import { GetProduct_product } from "App/generated/GetProduct"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { SaveIcon } from "Assets/icons"
 import { CircledSaveIcon } from "Assets/icons/CircledSaveIcon"
@@ -27,23 +28,11 @@ const SAVE_ITEM = gql`
 
 export const SaveProductButton: React.FC<{
   selectedVariant: any
-  product: any
+  product: GetProduct_product
 }> = ({ selectedVariant, product }) => {
   const navigation = useNavigation()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
-  if (!product.variants || product?.variants?.length === 0) {
-    return <></>
-  }
-  const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
-  const { authState } = useAuthContext()
-  const userHasSession = !!authState?.userSession
-
-  if (!variantToUse) {
-    return <></>
-  }
-  const { isSaved } = variantToUse
-
   const [saveItem] = useMutation(SAVE_ITEM, {
     refetchQueries: [
       {
@@ -57,6 +46,18 @@ export const SaveProductButton: React.FC<{
       },
     ],
   })
+
+  if (!product.variants || product?.variants?.length === 0) {
+    return <></>
+  }
+  const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
+  const { authState } = useAuthContext()
+  const userHasSession = !!authState?.userSession
+
+  if (!variantToUse) {
+    return <></>
+  }
+  const { isSaved } = variantToUse
 
   const handleSaveButton = () => {
     if (!userHasSession) {
