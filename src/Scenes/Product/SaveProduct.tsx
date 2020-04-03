@@ -1,5 +1,5 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Box, Container, FadeInImage, Flex, Handle, Radio, Sans, Separator, Spacer } from "App/Components"
+import { Box, Button, Container, FadeInImage, Flex, Handle, Radio, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { GetProduct, GetProduct_product, GetProduct_product_variants } from "App/generated/GetProduct"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
@@ -34,6 +34,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
   navigation,
 }) => {
   const [selectedVariantID, setSelectedVariantID] = useState(null)
+  const insets = useSafeArea()
   const product: GetProduct_product = route?.params?.product
   console.log("PRODUCT EHRE:", product)
   if (!product) {
@@ -44,10 +45,11 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
     description,
     images,
     name,
+    type,
     variants,
   } = product
 
-  if (!images || images.length === 0) {
+  if (!type || !images || images.length === 0) {
     return <Loader />
   }
 
@@ -57,8 +59,16 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
 
   const renderItem = (item: GetProduct_product_variants) => {
     console.log("VAR:", item)
-    const { id, internalSize: { display } } = item
-    console.log("DIS", sizeToName("HELLO"))
+    const { id, internalSize: { bottom, top } } = item
+    let sizeName
+    switch (type) {
+      case "Top":
+        sizeName = sizeToName(top?.letter)
+        break;
+      case "Bottom":
+        sizeName = bottom?.value
+        break;
+    }
     return (
       <TouchableWithoutFeedback onPress={() => onSelectSize(id)}>
         <Box px={2}>
@@ -66,7 +76,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
           <Flex flexDirection="row">
             <Radio selected={id === selectedVariantID} onSelect={() => onSelectSize(id)} />
             <Sans color={color("black100")} ml={2} size="1" weight="medium">
-              {sizeToName(display) || display}
+              {sizeName}
             </Sans>
           </Flex>
           <Spacer mt={20} />
@@ -76,14 +86,15 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
     )
   }
 
+  const screenWidth = Dimensions.get("window").width
+  const buttonWidth = (screenWidth - 39) / 2
   const buttonHeight = 48
 
   return (
     <Container insetsTop={false}>
       <Box px={2} >
         <Handle color="black15" style={{ marginTop: space(2) }} />
-        {/* <Flex flexDirection="column"> */}
-        <ScrollView style={{ flex: 1, flexDirection: "column" }}>
+        <ScrollView >
           <Spacer mt={68} />
           <Flex flexDirection="row" justifyContent="space-between" >
             <Flex flexDirection="column" justifyContent="flex-end">
@@ -103,7 +114,28 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
             ListFooterComponent={() => <Spacer mb={buttonHeight + space(4)} />}
           />
         </ScrollView>
-        {/* </Flex> */}
+      </Box>
+      <Box style={{ position: "absolute", left: space(2), bottom: space(2) + insets.bottom }}>
+        <Button
+          variant="primaryWhite"
+          width={buttonWidth}
+          onPress={() => {
+            navigation.pop()
+          }}
+        >
+          Cancel
+        </Button>
+      </Box>
+      <Box style={{ position: "absolute", left: screenWidth / 2 + 3.5, bottom: space(2) + insets.bottom }}>
+        <Button
+          disabled={selectedVariantID === null}
+          variant="primaryBlack"
+          width={buttonWidth}
+          onPress={() => {
+          }}
+        >
+          Save
+        </Button>
       </Box>
     </Container>
   )
