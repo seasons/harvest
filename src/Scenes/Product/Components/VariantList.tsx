@@ -14,7 +14,7 @@ export interface Size {
   manufacturerSize: string
 }
 
-const sizeToName = size => {
+export const sizeToName = size => {
   switch (size) {
     case "XS":
       return "X-Small"

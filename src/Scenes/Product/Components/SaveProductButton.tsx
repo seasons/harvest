@@ -1,6 +1,7 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box } from "App/Components"
 import { GetProduct_product } from "App/generated/GetProduct"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { SaveIcon } from "Assets/icons"
 import { CircledSaveIcon } from "Assets/icons/CircledSaveIcon"
@@ -61,8 +62,13 @@ export const SaveProductButton: React.FC<{
 
   const handleSaveButton = () => {
     if (!userHasSession) {
-      navigation.navigate("Modal", { screen: "SignInModal" })
+      navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SignInModal })
     } else {
+      navigation.navigate("Modal", {
+        screen: NavigationSchema.PageNames.SaveProductModal,
+        params: { product }
+      })
+      return
       const updatedState = !isSaved
       tracking.trackEvent({
         actionName: Schema.ActionNames.ProductSaved,
