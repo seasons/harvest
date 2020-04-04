@@ -40,6 +40,7 @@ export const Product = screenTrack({
 })((props: ProductProps) => {
   const { authState } = useAuthContext()
   const insets = useSafeArea()
+  const [showWantedConfirmation, setShowWantedConfirmation] = useState(false)
   const userHasSession = !!authState?.userSession
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation, route } = props
@@ -79,22 +80,20 @@ export const Product = screenTrack({
       size: "",
       stock: 0,
       isInBag: false,
+      isWanted: false,
     }
   )
 
   let selectedVariantIsWanted = false
-  if (product?.variants?.length > 0 && selectedVariant.size) {
-    const selectedVariantData = find(
-      product.variants,
-      variant => variant.size === get(ABBREVIATED_SIZES, selectedVariant.size) || variant.size === selectedVariant.size
-    )
-    if (selectedVariantData?.isWanted) {
-      selectedVariantIsWanted = selectedVariantData.isWanted
-    }
+  if (product?.variants?.length > 0 && selectedVariant.id) {
+    const selectedVariantData = find(product.variants, variant => variant.id === selectedVariant.id)
+    selectedVariantIsWanted = selectedVariantData?.isWanted || false
   }
 
   const inStock = selectedVariant && selectedVariant.reservable > 0
-  const shouldShowVariantWant = !inStock && !!selectedVariant?.id && !selectedVariant.isInBag
+  const shouldShowVariantWant =
+    (!inStock && !!selectedVariant?.id && !selectedVariant.isInBag && !selectedVariant.isWanted) ||
+    showWantedConfirmation
 
   const variantWantTransition = useSpring({
     translateY: shouldShowVariantWant ? 0 : VARIANT_WANT_HEIGHT,
@@ -151,6 +150,7 @@ export const Product = screenTrack({
       <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
         {shouldShowVariantWant && (
           <VariantWant
+            setShowWantedConfirmation={setShowWantedConfirmation}
             productSlug={productSlug}
             isWanted={selectedVariantIsWanted}
             productID={productID}
