@@ -71,7 +71,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
     }
     return (
       <TouchableWithoutFeedback onPress={() => onSelectSize(id)}>
-        <Box px={2}>
+        <Box>
           <Spacer mt={20} />
           <Flex flexDirection="row">
             <Radio selected={id === selectedVariantID} onSelect={() => onSelectSize(id)} />
