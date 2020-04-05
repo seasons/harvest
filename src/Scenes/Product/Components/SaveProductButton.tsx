@@ -63,13 +63,20 @@ export const SaveProductButton: React.FC<{
   const handleSaveButton = () => {
     if (!userHasSession) {
       navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SignInModal })
-    } else {
+      return
+    }
+
+    const updatedState = !isSaved
+    if (updatedState) {
       navigation.navigate("Modal", {
         screen: NavigationSchema.PageNames.SaveProductModal,
-        params: { product }
+        params: {
+          hidePopUp,
+          product,
+          showPopUp,
+        }
       })
-      return
-      const updatedState = !isSaved
+    } else {
       tracking.trackEvent({
         actionName: Schema.ActionNames.ProductSaved,
         actionType: Schema.ActionTypes.Tap,
@@ -78,7 +85,7 @@ export const SaveProductButton: React.FC<{
       saveItem({
         variables: {
           item: selectedVariant.id,
-          save: updatedState,
+          save: false,
         },
         optimisticResponse: {
           __typename: "Mutation",
@@ -87,23 +94,12 @@ export const SaveProductButton: React.FC<{
             id: product.id,
             productVariant: {
               __typename: "ProductVariant",
-              isSaved: updatedState,
+              isSaved: false,
               id: selectedVariant.id,
             },
           },
         },
       })
-
-      if (!isSaved) {
-        const updateText = isSaved ? "been removed from" : "been added to"
-        showPopUp({
-          icon: <CircledSaveIcon />,
-          title: "Saved for later",
-          note: `The ${product.name}, size ${selectedVariant.size} has ${updateText} your saved items.`,
-          buttonText: "Got It",
-          onClose: () => hidePopUp(),
-        })
-      }
     }
   }
 
