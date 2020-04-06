@@ -44,7 +44,7 @@ const sizeDataForVariants = (variants = [], type) => {
     }
     for (let size in sizeData) {
       sizeData[size] = {
-        id: size,
+        id: "",
         size: sizeToName(size),
         reservable: 0,
         stock: 0,
