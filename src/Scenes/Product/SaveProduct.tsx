@@ -1,29 +1,17 @@
+import { useMutation } from "@apollo/react-hooks"
+import React, { useState } from "react"
+import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
+import styled from "styled-components/native"
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box, Button, Container, FadeInImage, Flex, Handle, Radio, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { GetProduct, GetProduct_product, GetProduct_product_variants } from "App/generated/GetProduct"
-import { ABBREVIATED_SIZES } from "App/helpers/constants"
-import { useAuthContext } from "App/Navigation/AuthContext"
+import { GetProduct_product } from "App/generated/GetProduct"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { color, space } from "App/utils"
-import { Schema, screenTrack } from "App/utils/track"
-import gql from "graphql-tag"
-import { find, get } from "lodash"
-import React, { useEffect, useState } from "react"
-import { Dimensions, FlatList, ScrollView, TouchableWithoutFeedback } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
-import { animated, useSpring } from "react-spring"
-import styled from "styled-components/native"
-import { useMutation, useQuery } from "@apollo/react-hooks"
-import { GET_HOMEPAGE } from "../Home/Home"
-import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
-import { SelectionButtons } from "./Components/SelectionButtons"
-import { VariantPicker } from "./Components/VariantPicker"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { sizeToName } from "./Components/VariantList"
 import { SAVE_ITEM } from "./Components/SaveProductButton"
-
-const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
-const VARIANT_WANT_HEIGHT = 52
 
 interface SaveProductProps {
   route: any
@@ -35,6 +23,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
   navigation,
 }) => {
   const insets = useSafeArea()
+  const tracking = useTracking()
   const [selectedVariantID, setSelectedVariantID] = useState(null)
   const product: GetProduct_product = route?.params?.product
   const showPopUp = route?.params?.showPopUp
@@ -69,6 +58,10 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
   }
 
   const onSelectSize = (variantID) => {
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.SizeButtonTapped,
+      actionType: Schema.ActionTypes.Tap,
+    })
     setSelectedVariantID(variantID)
   }
 
@@ -93,7 +86,6 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
         )
       case "Sizes":
         const renderSizeRow = (item) => {
-          console.log("VAR:", item)
           const { id, internalSize: { bottom, top }, isSaved } = item
           let sizeName
           switch (type) {
@@ -191,6 +183,10 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
           variant="primaryWhite"
           width={buttonWidth}
           onPress={() => {
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.SaveProductModalCancelTapped,
+              actionType: Schema.ActionTypes.Tap,
+            })
             navigation.pop()
           }}
         >
@@ -203,6 +199,10 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
           variant="primaryBlack"
           width={buttonWidth}
           onPress={() => {
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.SaveProductModalSaveTapped,
+              actionType: Schema.ActionTypes.Tap,
+            })
             onPressSaveBtn()
           }}
         >

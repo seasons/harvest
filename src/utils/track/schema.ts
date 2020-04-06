@@ -182,10 +182,13 @@ export enum ActionNames {
 
   // Product page action names
   ProductSaved = "Product Saved",
+  SaveProductButtonTapped = "Save Product Button Tapped",
   ProductWanted = "Product Wanted",
   SizeButtonTapped = "Size Button Tapped",
   ProductAddedToBag = "Product Added To Bag",
   ProductVariantSelected = "Product Variant Selected",
+  SaveProductModalCancelTapped = "Save Product Modal Cancel Tapped",
+  SaveProductModalSaveTapped = "Save Product Modal Save Tapped",
 
   // Size Picker
   SizePickerCancelTapped = "Size Picker Cancel Tapped",

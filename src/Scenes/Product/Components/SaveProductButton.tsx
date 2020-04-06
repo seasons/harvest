@@ -30,11 +30,13 @@ export const SAVE_ITEM = gql`
 export interface SaveProductButtonProps {
   product: GetProduct_product
   selectedVariant?: any
+  onPressSaveButton: () => void
 }
 
 export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
   product,
   selectedVariant,
+  onPressSaveButton,
 }) => {
   const navigation = useNavigation()
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -68,6 +70,7 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
   }
 
   const handleSaveButton = () => {
+    onPressSaveButton()
     if (!userHasSession) {
       navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SignInModal })
       return
@@ -90,7 +93,7 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
       tracking.trackEvent({
         actionName: Schema.ActionNames.ProductSaved,
         actionType: Schema.ActionTypes.Tap,
-        saved: updatedState,
+        saved: false,
       })
       saveItem({
         variables: {
