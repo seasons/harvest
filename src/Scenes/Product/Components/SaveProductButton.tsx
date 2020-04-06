@@ -15,7 +15,7 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { useTracking, Schema } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
-const SAVE_ITEM = gql`
+export const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
     saveProduct(item: $item, save: $save) {
       id
@@ -27,10 +27,15 @@ const SAVE_ITEM = gql`
   }
 `
 
-export const SaveProductButton: React.FC<{
-  selectedVariant: any
+export interface SaveProductButtonProps {
   product: GetProduct_product
-}> = ({ selectedVariant, product }) => {
+  selectedVariant?: any
+}
+
+export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
+  product,
+  selectedVariant,
+}) => {
   const navigation = useNavigation()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
@@ -47,18 +52,20 @@ export const SaveProductButton: React.FC<{
       },
     ],
   })
+  const { authState } = useAuthContext()
+  const userHasSession = !!authState?.userSession
 
   if (!product.variants || product?.variants?.length === 0) {
     return <></>
   }
-  const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
-  const { authState } = useAuthContext()
-  const userHasSession = !!authState?.userSession
 
-  if (!variantToUse) {
-    return <></>
+  let isSaved
+  if (selectedVariant) {
+    const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
+    isSaved = variantToUse.isSaved
+  } else {
+    isSaved = product.variants.filter(variant => variant.isSaved).length > 0
   }
-  const { isSaved } = variantToUse
 
   const handleSaveButton = () => {
     if (!userHasSession) {
@@ -67,7 +74,10 @@ export const SaveProductButton: React.FC<{
     }
 
     const updatedState = !isSaved
-    if (updatedState) {
+    // Open SaveProductModal if:
+    // 1) User wants to save a specific variant OR
+    // 2) User clicked Save button on outside of ProductDetails screen
+    if (updatedState || !selectedVariant) {
       navigation.navigate("Modal", {
         screen: NavigationSchema.PageNames.SaveProductModal,
         params: {

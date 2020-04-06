@@ -20,21 +20,10 @@ import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Componen
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 import { sizeToName } from "./Components/VariantList"
+import { SAVE_ITEM } from "./Components/SaveProductButton"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
-
-const SAVE_ITEM = gql`
-  mutation SaveItem($item: ID!, $save: Boolean!) {
-    saveProduct(item: $item, save: $save) {
-      id
-      productVariant {
-        id
-        isSaved
-      }
-    }
-  }
-`
 
 interface SaveProductProps {
   route: any
@@ -63,7 +52,6 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
       },
     ],
   })
-  console.log("PRODUCT EHRE:", product)
   if (!product || !showPopUp || !hidePopUp) {
     return <Loader />
   }

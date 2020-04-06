@@ -6,6 +6,7 @@ import { imageResize } from "App/helpers/imageResize"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
+import { SaveProductButton } from "../Product/Components"
 import gql from "graphql-tag"
 import get from "lodash/get"
 import React, { useState } from "react"
@@ -64,6 +65,7 @@ const GET_BROWSE_PRODUCTS = gql`
       tags
       retailPrice
       status
+      type
       createdAt
       updatedAt
       brand {
@@ -79,6 +81,12 @@ const GET_BROWSE_PRODUCTS = gql`
         isSaved
         internalSize {
           display
+          top {
+            letter
+          }
+          bottom {
+            value
+          }
         }
       }
     }
@@ -103,10 +111,13 @@ const renderItem = ({ item }, i, navigation) => {
     <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
       <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
         <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
-        <Box my={0.5} mx={1}>
-          {brandName && <Sans size="0">{brandName}</Sans>}
-          <VariantSizes size="0" variants={product.variants} />
-        </Box>
+        <Flex flexDirection="row" justifyContent="space-between">
+          <Box my={0.5} mx={1}>
+            {brandName && <Sans size="0">{brandName}</Sans>}
+            <VariantSizes size="0" variants={product.variants} />
+          </Box>
+          <SaveProductButton product={product} />
+        </Flex>
         <Spacer mb={0.5} />
       </Box>
     </TouchableWithoutFeedback>
@@ -124,8 +135,8 @@ export const Browse = screenTrack()((props: any) => {
   const sizes =
     sizeFilters && sizeFilters.length > 0
       ? sizeFilters.map(s => {
-          return ABBREVIATED_SIZES[s] ? ABBREVIATED_SIZES[s] : s
-        })
+        return ABBREVIATED_SIZES[s] ? ABBREVIATED_SIZES[s] : s
+      })
       : []
 
   const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
