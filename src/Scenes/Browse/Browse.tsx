@@ -171,7 +171,7 @@ export const Browse = screenTrack()((props: any) => {
       <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
         <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
           <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
-          <Flex flexDirection="row" justifyContent="space-between">
+          <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
             <Box my={0.5} mx={1}>
               {brandName && <Sans size="0">{brandName}</Sans>}
               <VariantSizes size="0" variants={product.variants} />
