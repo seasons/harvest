@@ -41,9 +41,11 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
       },
     ],
   })
+
   if (!product || !showPopUp || !hidePopUp) {
     return <Loader />
   }
+
   const {
     brand: { name: brandName },
     description,
@@ -130,7 +132,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
     }
   }
 
-  const onPressSaveBtn = async () => {
+  const onPressSaveBtn = () => {
     saveItem({
       variables: {
         item: selectedVariantID,
