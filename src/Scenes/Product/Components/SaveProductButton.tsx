@@ -75,8 +75,8 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
 
     const updatedState = !isSaved
     // Open SaveProductModal if:
-    // 1) User wants to save a specific variant OR
-    // 2) User clicked Save button on outside of ProductDetails screen
+    // 1) User wants to save a specific variant inside ProductDetails screen OR
+    // 2) User wants to save the product, i.e. clicked button outside of ProductDetails screen
     if (updatedState || !selectedVariant) {
       navigation.navigate("Modal", {
         screen: NavigationSchema.PageNames.SaveProductModal,
