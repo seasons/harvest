@@ -78,7 +78,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
                 <Sans size="1">{name}</Sans>
                 <Sans size="1" color={color("black50")}>{brandName}</Sans>
               </Flex>
-              <ImageContainer height={112} imageWidth={90} source={{ uri: images[0].url }} />
+              <ImageContainer height={112} imageWidth={90} source={{ uri: images?.[0]?.url || "" }} />
             </Flex>
             <Spacer mt={20} />
             <Sans size="1" color={color("black50")}>{description}</Sans>
