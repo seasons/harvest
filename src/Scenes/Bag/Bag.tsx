@@ -3,6 +3,7 @@ import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { color } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
@@ -18,7 +19,6 @@ import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
 import { SavedItem } from "./Components/SavedItem"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { ReservationHistoryItem } from "./Components"
 
 const SECTION_HEIGHT = 300
@@ -156,7 +156,7 @@ export const Bag = screenTrack()((props) => {
         },
       })
       if (data.checkItemsAvailability) {
-        navigation.navigate("Modal", { screen: "ReservationModal" })
+        navigation.navigate("BagStack", { screen: Schema.PageNames.ReservationPage })
       }
       setMutating(false)
     } catch (e) {

@@ -1,16 +1,16 @@
-import { Box, CloseButton, FixedButton, Flex, Sans, Separator, Spacer, Container } from "App/Components"
+import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { space } from "App/utils"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import { ScrollView, StatusBar } from "react-native"
+import { ScrollView } from "react-native"
 import styled from "styled-components/native"
-import { BagItem, BagItemFragment } from "../Bag/Components/BagItem"
-import { space } from "App/utils"
-import { screenTrack, useTracking, Schema } from "App/utils/track"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { color } from "styled-system"
+import { BagItemFragment } from "../Bag/Components/BagItem"
+import { ReservationItem } from "./Components/ReservationItem"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
@@ -110,24 +110,39 @@ export const Reservation = screenTrack()((props) => {
   const items = data?.me?.bag ?? []
 
   return (
-    <Container insetsTop insetsBottom={false} backgroundColor="black100">
-      <CloseButton />
-      <Box px={2} pb={3}>
-        <Sans size="3" color="white">
-          Review your order
-        </Sans>
-      </Box>
+    <Container insetsTop insetsBottom={false} backgroundColor="white100">
+      <FixedBackArrow navigation={props.navigation} variant={"whiteBackground"}></FixedBackArrow>
       <ContentWrapper>
-        <StatusBar backgroundColor="dark" barStyle="light-content" />
         <Flex flex={1} px={2}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+            <Spacer mb={80}></Spacer>
+            <Box pb={1}>
+              <Sans size="3" color="black100">
+                Review your order
+              </Sans>
+            </Box>
+            <Box mb={4}>
+              <Sans size="2" color="black50">
+                As a reminder, orders placed after{" "}
+                <Sans size="2" color="black100" style={{ textDecorationLine: "underline" }}>
+                  5:00pm
+                </Sans>{" "}
+                will be processed the following business day.
+              </Sans>
+            </Box>
+            <Box mb={4}>
+              <SectionHeader title="Delivery Time" />
+              <Sans size="2" color="black50" mt={1}>
+                2-day Shipping
+              </Sans>
+            </Box>
             {address && (
-              <Box mt={2} mb={4}>
+              <Box mb={4}>
                 <SectionHeader title="Shipping address" />
-                <Sans size="2" color={color("black50")} mt={1}>
-                  {`${address.address1}${address.address2 ? address.address2 : ""}`}
+                <Sans size="2" color="black50" mt={1}>
+                  {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
                 </Sans>
-                <Sans size="2" color={color("black50")}>
+                <Sans size="2" color="black50">
                   {`${address.city}, ${address.state} ${address.zipCode}`}
                 </Sans>
               </Box>
@@ -135,25 +150,19 @@ export const Reservation = screenTrack()((props) => {
             {!!phoneNumber && (
               <Box mb={4}>
                 <SectionHeader title="Phone number" />
-                <Sans size="2" color={color("black50")} mt={1}>
+                <Sans size="2" color="black50" mt={1}>
                   {phoneNumber}
                 </Sans>
               </Box>
             )}
             <Box mb={5}>
               <SectionHeader title="Items" />
-              <Box mt={2} mb="80">
+              <Box mt={1} mb="80">
                 {!!items &&
                   items.map((item, i) => {
                     return (
                       <Box key={item.id}>
-                        <BagItem
-                          sectionHeight={200}
-                          index={i}
-                          bagItem={item}
-                          navigation={props.navigation}
-                          hideButtons
-                        />
+                        <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
                         <Spacer mb={2} />
                       </Box>
                     )
@@ -165,8 +174,8 @@ export const Reservation = screenTrack()((props) => {
       </ContentWrapper>
       <FixedButton
         positionBottom={space(4)}
-        loading={isMutating}
-        disabled={isMutating}
+        // loading={isMutating}
+        // disabled={isMutating}
         onPress={async () => {
           if (isMutating) {
             return
@@ -203,6 +212,7 @@ export const Reservation = screenTrack()((props) => {
       >
         Place order
       </FixedButton>
+      {isMutating && <Loader variant="blackOpaque85"></Loader>}
     </Container>
   )
 })
