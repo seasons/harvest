@@ -1,14 +1,14 @@
-import { Box, CloseButton, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
+import { Box, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
+import { GreenCheck } from "Assets/svgs"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
 import styled from "styled-components/native"
-
-import { BagItem } from "../Bag/Components/BagItem"
+import { ReservationItem } from "./Components/ReservationItem"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -64,7 +64,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   }
 `
 
-export const ReservationConfirmation = screenTrack()(props => {
+export const ReservationConfirmation = screenTrack()((props) => {
   const reservationID = get(props, "route.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
   const tracking = useTracking()
   const { data, error } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
@@ -99,82 +99,78 @@ export const ReservationConfirmation = screenTrack()(props => {
     )
   }
 
-  const content = (
-    <>
-      <Flex flex={1} p={2}>
-        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-          <Box>
-            <Flex flexDirection="row" flex={1} width="100%">
-              <Sans size="2" color="black">
-                Order number
-              </Sans>
-              <Sans size="2" color="black" ml="auto">
-                {reservation.reservationNumber}
-              </Sans>
-            </Flex>
-            <Spacer mb={1} />
-            <Separator color="#e5e5e5" />
-          </Box>
-          <Box>
-            <Flex flexDirection="row" flex={1} width="100%">
-              <Box py={1}>
-                <Sans size="2" color="black">
-                  Shipping
-                </Sans>
-              </Box>
-              <Box ml="auto" py={1}>
-                <Sans size="2" color="gray" mt={1} textAlign="right">
-                  {`${address.address1} ${address.address2}`}
-                </Sans>
-                <Sans size="2" color="gray" textAlign="right">
-                  {`${address.city}, ${address.state} ${address.zipCode}`}
-                </Sans>
-              </Box>
-            </Flex>
-            <Spacer mb={1} />
-            <Separator color="#e5e5e5" />
-          </Box>
-          <Box>
-            <Flex flexDirection="row" flex={1} width="100%" py={1}>
-              <Sans size="2" color="black">
-                Delivery
-              </Sans>
-              <Sans size="2" color="black" ml="auto">
-                {`UPS Ground - 2 day shipping`}
-              </Sans>
-            </Flex>
-            <Spacer mb={1} />
-          </Box>
-          <Box mt={4} mb={5}>
-            <SectionHeader title="Items" />
-            <Box mt={2} mb="80">
-              {items.map((item, i) => {
-                return (
-                  <Box key={item.id}>
-                    <BagItem hideButtons removeItemFromBag={() => null} sectionHeight={200} index={i} bagItem={item} />
-                    <Spacer mb={2} />
-                  </Box>
-                )
-              })}
-            </Box>
-          </Box>
-        </ScrollView>
-      </Flex>
-    </>
-  )
-
   return (
-    <Container insetsTop insetsBottom={false} backgroundColor="black100">
-      <CloseButton />
-      <Box style={{ marginTop: 60 }} m={2}>
-        <Sans size="3" color="white">
-          We've got your order!
-        </Sans>
-        <Sans size="1" color="gray">
-          We've emailed you a confirmation and we'll notify you when its out for delivery.
-        </Sans>
-      </Box>
-      <Content>{content}</Content>
+    <Container insetsTop insetsBottom={false} backgroundColor="white100">
+      <Content>
+        <Flex flex={1} p={2}>
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+            <Spacer mb={52}></Spacer>
+            <GreenCheck></GreenCheck>
+            <Box mt={4} mb={4}>
+              <Sans size="3" color="black">
+                We've got your order!
+              </Sans>
+              <Sans size="1" color="gray">
+                We've emailed you a confirmation and we'll notify you when its out for delivery.
+              </Sans>
+            </Box>
+            <Box>
+              <Flex flexDirection="row" flex={1} width="100%">
+                <Sans size="2" color="black">
+                  Order number
+                </Sans>
+                <Sans size="2" color="black" ml="auto">
+                  {reservation.reservationNumber}
+                </Sans>
+              </Flex>
+              <Spacer mb={1} />
+              <Separator color="#e5e5e5" />
+            </Box>
+            <Box pt={1}>
+              <Flex flexDirection="row" flex={1} width="100%">
+                <Box>
+                  <Sans size="2" color="black">
+                    Shipping
+                  </Sans>
+                </Box>
+                <Box ml="auto">
+                  <Sans size="2" color="black" textAlign="right">
+                    {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
+                  </Sans>
+                  <Sans size="2" color="black" textAlign="right">
+                    {`${address.city}, ${address.state} ${address.zipCode}`}
+                  </Sans>
+                </Box>
+              </Flex>
+              <Spacer mb={3} />
+              <Separator color="#e5e5e5" />
+            </Box>
+            <Box pt={1}>
+              <Flex flexDirection="row" flex={1} width="100%">
+                <Sans size="2" color="black">
+                  Delivery
+                </Sans>
+                <Sans size="2" color="black" ml="auto" textAlign="right">
+                  {`UPS Ground\n2 day shipping`}
+                </Sans>
+              </Flex>
+            </Box>
+            <Box mt={4} mb={5}>
+              <SectionHeader title="Items" />
+              <Box mt={1} mb="80">
+                {items.map((item, i) => {
+                  return (
+                    <Box key={item.id}>
+                      <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
+                      <Spacer mb={2} />
+                    </Box>
+                  )
+                })}
+              </Box>
+            </Box>
+          </ScrollView>
+        </Flex>
+      </Content>
       <FixedButton
         positionBottom={space(4)}
         onPress={() => {

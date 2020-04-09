@@ -174,8 +174,6 @@ export const Reservation = screenTrack()((props) => {
       </ContentWrapper>
       <FixedButton
         positionBottom={space(4)}
-        // loading={isMutating}
-        // disabled={isMutating}
         onPress={async () => {
           if (isMutating) {
             return
@@ -193,8 +191,8 @@ export const Reservation = screenTrack()((props) => {
               },
             })
             if (data.reserveItems) {
-              props.navigation.navigate("Modal", {
-                screen: "ReservationConfirmationModal",
+              props.navigation.navigate("BagStack", {
+                screen: "ReservationConfirmation",
                 params: { reservationID: data.reserveItems.id },
               })
             }

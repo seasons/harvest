@@ -97,8 +97,6 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordModal} component={ResetPassword} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />
-      <ModalStack.Screen name={Schema.PageNames.ReservationConfirmationModal} component={ReservationConfirmation} />
-      {/* <ModalStack.Screen name={Schema.PageNames.ReservationModal} component={Reservation} /> */}
       <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackModal} component={ReservationFeedback} />
       <ModalStack.Screen
         name={Schema.PageNames.ReservationFeedbackConfirmationModal}
@@ -142,6 +140,7 @@ const BagStackScreen = () => {
       <BagStack.Screen name={Schema.PageNames.CurrentRotation} component={CurrentRotation} />
       <BagStack.Screen name={Schema.PageNames.Faq} component={Faq} />
       <BagStack.Screen name={Schema.PageNames.Reservation} component={Reservation} />
+      <BagStack.Screen name={Schema.PageNames.ReservationConfirmation} component={ReservationConfirmation} />
     </BagStack.Navigator>
   )
 }

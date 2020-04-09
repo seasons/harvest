@@ -4,7 +4,6 @@ export enum PageNames {
   ResetPasswordModal = "ResetPasswordModal",
   ResetPasswordConfirmationModal = "ResetPasswordConfirmationModal",
   SignInModal = "SignInModal",
-  ReservationConfirmationModal = "ReservationConfirmationModal",
   ReservationFeedbackModal = "ReservationFeedbackModal",
   ReservationFeedbackConfirmationModal = "ReservationFeedbackConfirmationModal",
   ReservationFeedbackFinishModal = "ReservationFeedbackFinishModal",
@@ -24,6 +23,7 @@ export enum PageNames {
   CurrentRotation = "CurrentRotation",
   Faq = "Faq",
   Reservation = "Reservation",
+  ReservationConfirmation = "ReservationConfirmation",
 
   // Account
   Account = "Account",
