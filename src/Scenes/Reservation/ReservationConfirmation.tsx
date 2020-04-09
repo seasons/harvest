@@ -1,5 +1,5 @@
 import { Box, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
-import { space } from "App/utils"
+import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { GreenCheck } from "Assets/svgs"
 import gql from "graphql-tag"
@@ -85,16 +85,17 @@ export const ReservationConfirmation = screenTrack()((props) => {
 
   const items = reservation?.products ?? []
 
-  const SectionHeader = ({ title }) => {
+  const SectionHeader = ({ title, content = null, bottomSpacing = 1, hideSeparator = false }) => {
     return (
       <>
         <Flex flexDirection="row" flex={1} width="100%">
-          <Sans size="2" color="black">
+          <Sans size="2" color="black100">
             {title}
           </Sans>
+          {content && <Box ml="auto">{content}</Box>}
         </Flex>
-        <Spacer mb={1} />
-        <Separator color="#e5e5e5" />
+        <Spacer mb={bottomSpacing} />
+        {!hideSeparator && <Separator color={color("seperatorGrey")} />}
       </>
     )
   }
@@ -104,58 +105,55 @@ export const ReservationConfirmation = screenTrack()((props) => {
       <Content>
         <Flex flex={1} p={2}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-            <Spacer mb={52}></Spacer>
-            <GreenCheck></GreenCheck>
+            <Spacer mb={52} />
+            <GreenCheck />
             <Box mt={4} mb={4}>
-              <Sans size="3" color="black">
+              <Sans size="3" color="black100">
                 We've got your order!
               </Sans>
-              <Sans size="1" color="gray">
+              <Sans size="1" color="black50">
                 We've emailed you a confirmation and we'll notify you when its out for delivery.
               </Sans>
             </Box>
             <Box>
-              <Flex flexDirection="row" flex={1} width="100%">
-                <Sans size="2" color="black">
-                  Order number
-                </Sans>
-                <Sans size="2" color="black" ml="auto">
-                  {reservation.reservationNumber}
-                </Sans>
-              </Flex>
-              <Spacer mb={1} />
-              <Separator color="#e5e5e5" />
+              <SectionHeader
+                title="Order number"
+                content={
+                  <Sans size="2" color="black100" textAlign="right" ml="auto">
+                    {reservation.reservationNumber}
+                  </Sans>
+                }
+              ></SectionHeader>
             </Box>
             <Box pt={1}>
-              <Flex flexDirection="row" flex={1} width="100%">
-                <Box>
-                  <Sans size="2" color="black">
-                    Shipping
-                  </Sans>
-                </Box>
-                <Box ml="auto">
-                  <Sans size="2" color="black" textAlign="right">
-                    {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
-                  </Sans>
-                  <Sans size="2" color="black" textAlign="right">
-                    {`${address.city}, ${address.state} ${address.zipCode}`}
-                  </Sans>
-                </Box>
-              </Flex>
-              <Spacer mb={3} />
-              <Separator color="#e5e5e5" />
+              <SectionHeader
+                title="Shipping"
+                content={
+                  <>
+                    <Sans size="2" color="black100" textAlign="right">
+                      {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
+                    </Sans>
+                    <Sans size="2" color="black100" textAlign="right">
+                      {`${address.city}, ${address.state} ${address.zipCode}`}
+                    </Sans>
+                  </>
+                }
+                bottomSpacing={3}
+              ></SectionHeader>
             </Box>
             <Box pt={1}>
-              <Flex flexDirection="row" flex={1} width="100%">
-                <Sans size="2" color="black">
-                  Delivery
-                </Sans>
-                <Sans size="2" color="black" ml="auto" textAlign="right">
-                  {`UPS Ground\n2 day shipping`}
-                </Sans>
-              </Flex>
+              <SectionHeader
+                title="Delivery"
+                content={
+                  <Sans size="2" color="black100" ml="auto" textAlign="right">
+                    {`UPS Ground\n2 day shipping`}
+                  </Sans>
+                }
+                hideSeparator
+                bottomSpacing={4}
+              ></SectionHeader>
             </Box>
-            <Box mt={4} mb={5}>
+            <Box mb={5}>
               <SectionHeader title="Items" />
               <Box mt={1} mb="80">
                 {items.map((item, i) => {
@@ -172,7 +170,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
         </Flex>
       </Content>
       <FixedButton
-        positionBottom={space(4)}
+        positionBottom={space(2)}
         onPress={() => {
           tracking.trackEvent({
             actionName: Schema.ActionNames.ReservationConfirmationDoneButtonTapped,

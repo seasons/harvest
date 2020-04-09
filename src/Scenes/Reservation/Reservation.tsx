@@ -2,7 +2,7 @@ import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spa
 import { Loader } from "App/Components/Loader"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { space } from "App/utils"
+import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useState } from "react"
@@ -68,7 +68,7 @@ const SectionHeader = ({ title }) => {
         </Sans>
       </Flex>
       <Spacer mb={1} />
-      <Separator color="#e5e5e5" />
+      <Separator color={color("seperatorGrey")} />
     </>
   )
 }
@@ -115,7 +115,7 @@ export const Reservation = screenTrack()((props) => {
       <ContentWrapper>
         <Flex flex={1} px={2}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-            <Spacer mb={80}></Spacer>
+            <Spacer mb={80} />
             <Box pb={1}>
               <Sans size="3" color="black100">
                 Review your order
@@ -173,7 +173,7 @@ export const Reservation = screenTrack()((props) => {
         </Flex>
       </ContentWrapper>
       <FixedButton
-        positionBottom={space(4)}
+        positionBottom={space(2)}
         onPress={async () => {
           if (isMutating) {
             return

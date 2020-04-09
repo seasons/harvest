@@ -35,6 +35,7 @@ export const themeProps = {
     green: "#44524A",
     lightGreen: "#989F9B",
     blue: "#2B50DF",
+    seperatorGrey: "#e5e5e5",
   },
 
   fontFamily,

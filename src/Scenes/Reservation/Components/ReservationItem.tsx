@@ -22,7 +22,7 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
   const variantToUse = head(
     (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
   )
-  const product = get(bagItem, "productVariant.product")
+  const product = bagItem?.productVariant?.product
   if (!product) {
     return null
   }
@@ -48,10 +48,10 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
             <Box>
               <Sans size="2">{index + 1}</Sans>
               <Sans size="2">{product.brand.name}</Sans>
-              <Sans size="2" color="gray">
+              <Sans size="2" color="black50">
                 {product.name}
               </Sans>
-              <Sans size="2" color="gray">
+              <Sans size="2" color="black50">
                 Size {variantSize}
               </Sans>
             </Box>
