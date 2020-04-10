@@ -1,20 +1,21 @@
+import { useFocusEffect } from "@react-navigation/native"
 import { Box, Flex, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { Schema } from "App/Navigation"
+import { NetworkContext } from "App/NetworkProvider"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
+import { NoInternet } from "Components/NoInternet"
 import { LogoText } from "Components/Typography"
-import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import gql from "graphql-tag"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
-import { useFocusEffect } from '@react-navigation/native';
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
-
-import { Schema } from "App/Navigation"
+import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { BrandsRail } from "./Components/BrandsRail"
 import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
@@ -79,17 +80,17 @@ export const GET_HOMEPAGE = gql`
   }
 `
 
-
 export const Home = screenTrack()(({ navigation }) => {
   const [sections, setSections] = useState([])
   const [showLoader, toggleLoader] = useState(true)
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
   const { loading, error, data, refetch } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)
+  const network = useContext(NetworkContext)
 
   useEffect(() => {
     if (data?.homepage?.sections?.length) {
-      const dataSections = data.homepage.sections.filter(section => section?.results?.length)
+      const dataSections = data.homepage.sections.filter((section) => section?.results?.length)
       setSections(dataSections)
     }
   }, [data])
@@ -105,10 +106,23 @@ export const Home = screenTrack()(({ navigation }) => {
   }, [loading])
 
   useFocusEffect(() => {
-    refetch()
+    if (network.isConnected) {
+      refetch()
+    }
   })
 
+  const NoInternetComponent = (
+    <NoInternet
+      refreshAction={() => {
+        refetch()
+      }}
+    />
+  )
+
   if (error) {
+    if (!network.isConnected) {
+      return NoInternetComponent
+    }
     console.error("error /home/index.tsx: ", error)
   }
 
@@ -121,7 +135,7 @@ export const Home = screenTrack()(({ navigation }) => {
   const goToReservationFeedbackScreen = () => {
     navigation.navigate("Modal", {
       screen: Schema.PageNames.ReservationFeedbackModal,
-      params: { reservationFeedback }
+      params: { reservationFeedback },
     })
   }
 
@@ -134,7 +148,7 @@ export const Home = screenTrack()(({ navigation }) => {
     goToReservationFeedbackScreen()
   }
 
-  const renderItem = item => {
+  const renderItem = (item) => {
     switch (item.type) {
       case "Brands":
         return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
@@ -144,7 +158,9 @@ export const Home = screenTrack()(({ navigation }) => {
     }
   }
 
-  return (
+  return !network.isConnected && !data ? (
+    NoInternetComponent
+  ) : (
     <Container insetsBottom={true}>
       <Animatable.View animation="fadeIn" duration={300}>
         <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
@@ -160,23 +176,29 @@ export const Home = screenTrack()(({ navigation }) => {
           }}
           ListHeaderComponent={() => <Spacer mb={2} />}
           renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
-          ListFooterComponent={() =>
+          ListFooterComponent={() => (
             <HomeFooter
               navigation={navigation}
               bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
-            />}
+            />
+          )}
         />
-        {reservationFeedback
-          ? (reservationFeedback.rating
-            ? <ReservationFeedbackReminderWrapper>
-              <ReservationFeedbackReminder reservationFeedback={reservationFeedback} onPress={onPressReservationFeedbackReminder} />
+        {reservationFeedback ? (
+          reservationFeedback.rating ? (
+            <ReservationFeedbackReminderWrapper>
+              <ReservationFeedbackReminder
+                reservationFeedback={reservationFeedback}
+                onPress={onPressReservationFeedbackReminder}
+              />
             </ReservationFeedbackReminderWrapper>
-            : <ReservationFeedbackPopUp
+          ) : (
+            <ReservationFeedbackPopUp
               reservationFeedback={reservationFeedback}
               show={showReservationFeedbackPopUp}
-              onSelectedRating={onSelectedReviewRating} />)
-          : null
-        }
+              onSelectedRating={onSelectedReviewRating}
+            />
+          )
+        ) : null}
       </Animatable.View>
     </Container>
   )
