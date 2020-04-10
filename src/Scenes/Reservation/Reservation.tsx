@@ -68,7 +68,7 @@ const SectionHeader = ({ title }) => {
         </Sans>
       </Flex>
       <Spacer mb={1} />
-      <Separator color={color("seperatorGrey")} />
+      <Separator color={color("separatorGrey")} />
     </>
   )
 }

@@ -95,7 +95,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
           {content && <Box ml="auto">{content}</Box>}
         </Flex>
         <Spacer mb={bottomSpacing} />
-        {!hideSeparator && <Separator color={color("seperatorGrey")} />}
+        {!hideSeparator && <Separator color={color("separatorGrey")} />}
       </>
     )
   }
@@ -123,7 +123,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
                     {reservation.reservationNumber}
                   </Sans>
                 }
-              ></SectionHeader>
+              />
             </Box>
             <Box pt={1}>
               <SectionHeader
@@ -139,7 +139,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
                   </>
                 }
                 bottomSpacing={3}
-              ></SectionHeader>
+              />
             </Box>
             <Box pt={1}>
               <SectionHeader
@@ -151,7 +151,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
                 }
                 hideSeparator
                 bottomSpacing={4}
-              ></SectionHeader>
+              />
             </Box>
             <Box mb={5}>
               <SectionHeader title="Items" />
