@@ -1,12 +1,12 @@
 import { useFocusEffect } from "@react-navigation/native"
 import { Box, Flex, Separator, Spacer } from "App/Components"
+import { ErrorScreen } from "App/Components/ErrorScreen"
 import { Loader } from "App/Components/Loader"
 import { Schema } from "App/Navigation"
 import { NetworkContext } from "App/NetworkProvider"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
-import { NoInternet } from "Components/NoInternet"
 import { LogoText } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useContext, useEffect, useState } from "react"
@@ -112,7 +112,8 @@ export const Home = screenTrack()(({ navigation }) => {
   })
 
   const NoInternetComponent = (
-    <NoInternet
+    <ErrorScreen
+      variant="No Internet"
       refreshAction={() => {
         refetch()
       }}
