@@ -171,7 +171,7 @@ export const Browse = screenTrack()((props: any) => {
     return (
       <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
         <FlatList
-          data={product.images.map((image) => image.url || "")}
+          data={product.images.filter((image) => image.url)}
           renderItem={({ item }: { item: string }) => {
             const imageUrl: string = item
             const resizedImage = imageResize(imageUrl, "large")
@@ -211,7 +211,6 @@ export const Browse = screenTrack()((props: any) => {
           </Box>
         </TouchableWithoutFeedback>
       </Box>
-      // </TouchableWithoutFeedback>
     )
   }
 
