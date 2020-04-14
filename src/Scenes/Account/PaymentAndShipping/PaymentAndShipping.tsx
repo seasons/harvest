@@ -89,23 +89,23 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
   useEffect(() => {
     // The Chargebee address update takes multiple seconds to update
     // therefore we must check and refetch data if the user leaves this view
-    const unsubscribe = navigation.addListener("focus", () => {
+    const unsubscribe = navigation?.addListener("focus", () => {
       if (data) {
         clearTimeout(timeout1)
         clearTimeout(timeout2)
         clearTimeout(timeout3)
         clearTimeout(timeout4)
         timeout1 = setTimeout(() => {
-          refetch()
+          refetch?.()
         }, 1000)
         timeout2 = setTimeout(() => {
-          refetch()
+          refetch?.()
         }, 5000)
         timeout3 = setTimeout(() => {
-          refetch()
+          refetch?.()
         }, 10000)
         timeout4 = setTimeout(() => {
-          refetch()
+          refetch?.()
         }, 20000)
       }
     })
