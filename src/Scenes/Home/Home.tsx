@@ -1,21 +1,21 @@
-import { useFocusEffect } from "@react-navigation/native"
 import { Box, Flex, Separator, Spacer } from "App/Components"
-import { ErrorScreen } from "App/Components/ErrorScreen"
 import { Loader } from "App/Components/Loader"
-import { Schema } from "App/Navigation"
-import { NetworkContext } from "App/NetworkProvider"
 import { color } from "App/utils"
+import { NetworkContext } from "App/NetworkProvider"
 import { screenTrack } from "App/utils/track"
+import { ErrorScreen } from "App/Components/ErrorScreen"
 import { Container } from "Components/Container"
 import { LogoText } from "Components/Typography"
+import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import gql from "graphql-tag"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import { useQuery } from "react-apollo"
+import { useFocusEffect } from "@react-navigation/native"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
-import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
+import { Schema } from "App/Navigation"
 import { BrandsRail } from "./Components/BrandsRail"
 import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
@@ -106,7 +106,7 @@ export const Home = screenTrack()(({ navigation }) => {
   }, [loading])
 
   useFocusEffect(() => {
-    if (network.isConnected) {
+    if (network?.isConnected) {
       refetch()
     }
   })
@@ -149,6 +149,14 @@ export const Home = screenTrack()(({ navigation }) => {
     goToReservationFeedbackScreen()
   }
 
+  if (error) {
+    console.error("error /home/index.tsx: ", error)
+  }
+
+  if (showLoader || !data) {
+    return <Loader />
+  }
+
   const renderItem = (item) => {
     switch (item.type) {
       case "Brands":
@@ -159,7 +167,7 @@ export const Home = screenTrack()(({ navigation }) => {
     }
   }
 
-  return !network.isConnected && !data ? (
+  return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
     <Container insetsBottom={true}>

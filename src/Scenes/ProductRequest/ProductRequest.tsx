@@ -39,19 +39,19 @@ export const ProductRequest = screenTrack()((props: any) => {
   }
 
   const [addProductRequest] = useMutation(ADD_PRODUCT_REQUEST, {
-    onError: error => {
+    onError: (error) => {
       console.error(error)
       Keyboard.dismiss()
       showPopUp(pupUpData)
     },
   })
 
-  const onURLChange = val => {
+  const onURLChange = (val) => {
     setURL(val)
     setIsNextButtonDisabled(val === "" || likeReason === "")
   }
 
-  const onLikeReasonChange = val => {
+  const onLikeReasonChange = (val) => {
     setLikeReason(val)
     setIsNextButtonDisabled(url === "" || val === "")
   }

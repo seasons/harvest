@@ -73,7 +73,7 @@ const SectionHeader = ({ title }) => {
   )
 }
 
-export const Reservation = screenTrack()(props => {
+export const Reservation = screenTrack()((props) => {
   const [isMutating, setIsMutating] = useState(false)
   const tracking = useTracking()
   const { data, loading } = useQuery(GET_CUSTOMER)
@@ -86,7 +86,7 @@ export const Reservation = screenTrack()(props => {
     onCompleted: () => {
       setIsMutating(false)
     },
-    onError: err => {
+    onError: (err) => {
       setIsMutating(false)
       console.warn("Error reservation.tsx: ", err)
     },
@@ -186,7 +186,7 @@ export const Reservation = screenTrack()(props => {
           try {
             const { data } = await reserveItems({
               variables: {
-                items: items?.map(item => item?.productVariant?.id),
+                items: items?.map((item) => item?.productVariant?.id),
               },
             })
             if (data.reserveItems) {

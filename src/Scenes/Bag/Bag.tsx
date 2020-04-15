@@ -27,7 +27,7 @@ enum BagView {
   Saved = 1,
 }
 
-export const Bag = screenTrack()(props => {
+export const Bag = screenTrack()((props) => {
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { navigation } = props
@@ -59,7 +59,7 @@ export const Bag = screenTrack()(props => {
       const { me } = cache.readQuery({ query: GET_BAG })
       const key = currentView === BagView.Bag ? "bag" : "savedItems"
       const list = me[key]
-      const filteredList = list.filter(a => a.id !== data.removeFromBag.id)
+      const filteredList = list.filter((a) => a.id !== data.removeFromBag.id)
       cache.writeQuery({
         query: GET_BAG,
         data: {
@@ -83,8 +83,8 @@ export const Bag = screenTrack()(props => {
       const old = currentView === BagView.Bag ? "bag" : "savedItems"
       const newKey = currentView === BagView.Bag ? "savedItems" : "bag"
       const list = me[old]
-      const filteredList = list.filter(a => a.id !== data.removeFromBag.id)
-      const item = list.find(a => a.id === data.removeFromBag.id)
+      const filteredList = list.filter((a) => a.id !== data.removeFromBag.id)
+      const item = list.find((a) => a.id === data.removeFromBag.id)
 
       cache.writeQuery({
         query: GET_BAG,
@@ -119,7 +119,7 @@ export const Bag = screenTrack()(props => {
   const items =
     (data &&
       data.me &&
-      data.me.bag.map(item => ({
+      data.me.bag.map((item) => ({
         ...item,
         variantID: item.productVariant.id,
         productID: item.productVariant.product.id,
@@ -129,7 +129,7 @@ export const Bag = screenTrack()(props => {
   const savedItems =
     (data &&
       data.me &&
-      data.me.savedItems.map(item => ({
+      data.me.savedItems.map((item) => ({
         ...item,
         variantID: item.productVariant.id,
         productID: item.productVariant.product.id,
@@ -139,12 +139,12 @@ export const Bag = screenTrack()(props => {
   const paddedItems = assign(fill(new Array(3), { variantID: "", productID: "" }), items)
   const hasActiveReservation = !!get(data, "me.activeReservation")
 
-  const handleReserve = async navigation => {
+  const handleReserve = async (navigation) => {
     setMutating(true)
     try {
       const { data } = await checkItemsAvailability({
         variables: {
-          items: items.map(item => item.variantID),
+          items: items.map((item) => item.variantID),
         },
         refetchQueries: [
           {
@@ -168,8 +168,8 @@ export const Bag = screenTrack()(props => {
         let data
         if (code === "511") {
           data = Object.values(exception)
-            .filter(a => !!a.reserved)
-            .map(a => ({
+            .filter((a) => !!a.reserved)
+            .map((a) => ({
               variantID: a.id,
             }))
           refetch()
@@ -300,7 +300,7 @@ export const Bag = screenTrack()(props => {
           )
         }}
         keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
-        renderItem={item => {
+        renderItem={(item) => {
           return renderItem(item)
         }}
         ListFooterComponent={() => <Spacer mb={footerMarginBottom} />}
