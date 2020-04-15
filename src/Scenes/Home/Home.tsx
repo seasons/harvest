@@ -1,12 +1,14 @@
 import { Box, Flex, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
+import { NetworkContext } from "App/NetworkProvider"
 import { screenTrack } from "App/utils/track"
+import { ErrorScreen } from "App/Components/ErrorScreen"
 import { Container } from "Components/Container"
 import { LogoText } from "Components/Typography"
 import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import gql from "graphql-tag"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import { useQuery } from "react-apollo"
 import { useFocusEffect } from "@react-navigation/native"
 import { FlatList } from "react-native"
@@ -84,6 +86,7 @@ export const Home = screenTrack()(({ navigation }) => {
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
   const { loading, error, data, refetch } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)
+  const network = useContext(NetworkContext)
 
   useEffect(() => {
     if (data?.homepage?.sections?.length) {
@@ -103,10 +106,24 @@ export const Home = screenTrack()(({ navigation }) => {
   }, [loading])
 
   useFocusEffect(() => {
-    refetch()
+    if (network?.isConnected) {
+      refetch()
+    }
   })
 
+  const NoInternetComponent = (
+    <ErrorScreen
+      variant="No Internet"
+      refreshAction={() => {
+        refetch()
+      }}
+    />
+  )
+
   if (error) {
+    if (!network.isConnected) {
+      return NoInternetComponent
+    }
     console.error("error /home/index.tsx: ", error)
   }
 
@@ -150,7 +167,9 @@ export const Home = screenTrack()(({ navigation }) => {
     }
   }
 
-  return (
+  return !network?.isConnected && !data ? (
+    NoInternetComponent
+  ) : (
     <Container insetsBottom={true}>
       <Animatable.View animation="fadeIn" duration={300}>
         <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
