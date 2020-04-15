@@ -81,46 +81,19 @@ export const createBillingAddress = (billingInfo) => {
 }
 
 export const PaymentAndShipping = screenTrack()(({ navigation }) => {
-  let timeout1
-  let timeout2
-  let timeout3
-  let timeout4
-  const { error, data, refetch } = useQuery(GET_PAYMENT_DATA)
+  const { error, data, startPolling, stopPolling } = useQuery(GET_PAYMENT_DATA)
   useEffect(() => {
     // The Chargebee address update takes multiple seconds to update
     // therefore we must check and refetch data if the user leaves this view
     const unsubscribe = navigation?.addListener("focus", () => {
       if (data) {
-        clearTimeout(timeout1)
-        clearTimeout(timeout2)
-        clearTimeout(timeout3)
-        clearTimeout(timeout4)
-        timeout1 = setTimeout(() => {
-          refetch?.()
-        }, 1000)
-        timeout2 = setTimeout(() => {
-          refetch?.()
-        }, 5000)
-        timeout3 = setTimeout(() => {
-          refetch?.()
-        }, 10000)
-        timeout4 = setTimeout(() => {
-          refetch?.()
-        }, 20000)
+        startPolling(1500)
+        setTimeout(stopPolling, 20000)
       }
     })
 
     return unsubscribe
   }, [navigation])
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(timeout1)
-      clearTimeout(timeout2)
-      clearTimeout(timeout3)
-      clearTimeout(timeout4)
-    }
-  }, [])
 
   if (!data) {
     return <Loader />
