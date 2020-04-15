@@ -39,7 +39,6 @@ export const Bag = screenTrack()((props) => {
   const insets = useSafeArea()
   const [isMutating, setMutating] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [showReserveError, displayReserveError] = useState(false)
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
   const [refreshing, setRefreshing] = useState(false)
 
@@ -52,7 +51,6 @@ export const Bag = screenTrack()((props) => {
     if (data) {
       setIsLoading(false)
     }
-    return displayReserveError(false)
   }, [data])
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {
@@ -173,12 +171,22 @@ export const Bag = screenTrack()((props) => {
               variantID: a.id,
             }))
           refetch()
-        } else if (code === "510") {
+
+          showPopUp({
+            title: "One or more items have been reserved already",
+            note:
+              "Sorry, some of the items you had selected were confirmed before you, please replace them with available items",
+            buttonText: "Got it",
+            onClose: () => hidePopUp(),
+          })
+        } else {
+          showPopUp({
+            title: "Sorry!",
+            note: "We couldn't process your order because of an unexpected error, please try again later",
+            buttonText: "Got it",
+            onClose: () => hidePopUp(),
+          })
         }
-        displayReserveError({
-          code,
-          data,
-        })
       }
       setMutating(false)
     }
@@ -200,26 +208,6 @@ export const Bag = screenTrack()((props) => {
     bagSubtitle = `Return by ${data?.me?.activeReservation?.returnDateDisplay}`
   } else {
     bagSubtitle = "Your current rotation"
-  }
-
-  const popUpData = {
-    title: "",
-    note: "We couldn't process your order because of an unexpected error, please try again later",
-    buttonText: "Got it",
-    onClose: () => hidePopUp(),
-  }
-
-  if (showReserveError) {
-    const { code, data } = showReserveError
-    if (code === "511") {
-      popUpData.title = "One or more items have been reserved already"
-      popUpData.note =
-        "Sorry, some of the items you had selected were confirmed before you, please replace them with available items"
-    } else {
-      popUpData.title = "Sorry!"
-      popUpData.note = "We couldn't process your order because of an unexpected error, please try again later"
-    }
-    showPopUp(popUpData)
   }
 
   const renderItem = ({ item, index }) => {
@@ -330,7 +318,7 @@ export const Bag = screenTrack()((props) => {
                   actionType: Schema.ActionTypes.Tap,
                   bagIsFull,
                 })
-                !bagIsFull ? displayReserveError(true) : handleReserve(navigation)
+                handleReserve(navigation)
               }}
               disabled={!bagIsFull || isMutating}
               loading={isMutating}
