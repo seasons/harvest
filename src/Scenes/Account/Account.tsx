@@ -38,7 +38,7 @@ export const GET_USER = gql`
   }
 `
 
-export const Account = screenTrack()(props => {
+export const Account = screenTrack()((props) => {
   const { authState, signOut } = useAuthContext()
   const tracking = useTracking()
   const { loading, error, data, refetch } = useQuery(GET_USER)
@@ -49,7 +49,7 @@ export const Account = screenTrack()(props => {
   const { navigation } = props
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+    const unsubscribe = navigation?.addListener("focus", () => {
       refetch?.()
     })
 
@@ -170,7 +170,7 @@ export const Account = screenTrack()(props => {
             <NotificationToggle userID={userID} userNotificationStatus={pushNotifications} />
             <Separator />
             <Box px={2} pt={4}>
-              {bottomList.map(listItem => {
+              {bottomList.map((listItem) => {
                 if (listItem.text === "Debug menu" && role !== "Admin") {
                   return null
                 }
