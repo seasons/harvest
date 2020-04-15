@@ -15,8 +15,9 @@ interface Props {
   selectedVariant: any
 }
 
-export const AddToBagButton: React.FC<Props> = props => {
+export const AddToBagButton: React.FC<Props> = (props) => {
   const [isMutating, setIsMutating] = useState(false)
+  const [added, setAdded] = useState(false)
   const { variantInStock, width, selectedVariant } = props
   const tracking = useTracking()
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -25,8 +26,6 @@ export const AddToBagButton: React.FC<Props> = props => {
   const userHasSession = authState?.userSession
 
   const { data } = useQuery(GET_BAG)
-
-  console.log("selectedVariant", selectedVariant)
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
@@ -39,7 +38,7 @@ export const AddToBagButton: React.FC<Props> = props => {
     ],
     onCompleted: () => {
       setIsMutating(false)
-
+      setAdded(true)
       if (data?.me?.bag?.length >= 2) {
         showPopUp({
           icon: <GreenCheck />,
@@ -56,7 +55,7 @@ export const AddToBagButton: React.FC<Props> = props => {
         })
       }
     },
-    onError: err => {
+    onError: (err) => {
       setIsMutating(false)
       if (err && err.graphQLErrors) {
         showPopUp({
@@ -80,8 +79,8 @@ export const AddToBagButton: React.FC<Props> = props => {
     }
   }
 
-  const isInBag = selectedVariant?.isInBag
-  const disabled = !!props.disabled || isInBag || !variantInStock
+  const isInBag = selectedVariant?.isInBag || added
+  const disabled = !!props.disabled || isInBag || !variantInStock || isMutating
 
   let text = "Add to Bag"
   if (isInBag) {
