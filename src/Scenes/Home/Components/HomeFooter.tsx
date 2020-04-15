@@ -5,7 +5,12 @@ import styled from "styled-components/native"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import { Schema, useTracking } from "App/utils/track"
 
-export const HomeFooter: React.FC<{ navigation: any }> = ({ navigation }) => {
+export interface HomeFooterProps {
+  navigation: any
+  bottom?: number
+}
+
+export const HomeFooter: React.FC<HomeFooterProps> = ({ bottom = 0, navigation }) => {
   const tracking = useTracking()
 
   return (
@@ -13,7 +18,7 @@ export const HomeFooter: React.FC<{ navigation: any }> = ({ navigation }) => {
       <Spacer mt={3} />
       <LeftCorner />
       <RightCorner />
-      <Box style={{ backgroundColor: color("black100"), height: 320, overflow: "visible" }}>
+      <Box style={{ backgroundColor: color("black100"), height: 280 + bottom, overflow: "visible" }}>
         <Spacer mb={60} />
         <Flex justifyContent="center" flexDirection="column">
           <Sans size="2" color={color("white100")} style={{ textAlign: "center" }}>
@@ -39,6 +44,7 @@ export const HomeFooter: React.FC<{ navigation: any }> = ({ navigation }) => {
             </Button>
           </Flex>
         </Flex>
+        <Spacer mb={80 + bottom} />
         <Box style={{ height: 1000, backgroundColor: color("black100") }} />
       </Box>
     </>

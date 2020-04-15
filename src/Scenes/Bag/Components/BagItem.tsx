@@ -11,8 +11,8 @@ import styled from "styled-components/native"
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
     product {
-      name
       id
+      name
       modelSize {
         display
       }

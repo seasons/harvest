@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 import { Plan } from "./globalTypes";
@@ -13,9 +14,16 @@ export interface GetMembershipInfo_me_customer {
   plan: Plan | null;
 }
 
+export interface GetMembershipInfo_me_user {
+  __typename: "User";
+  firstName: string;
+  lastName: string;
+}
+
 export interface GetMembershipInfo_me {
   __typename: "Me";
   customer: GetMembershipInfo_me_customer;
+  user: GetMembershipInfo_me_user;
 }
 
 export interface GetMembershipInfo {

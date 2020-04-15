@@ -128,6 +128,20 @@ export enum ActionNames {
   // Reservation Confirmation
   ReservationConfirmationDoneButtonTapped = "Reservation Confirmation Done Button Tapped",
 
+  // Reservation Feedback
+  ReservationFeedbackRatingButtonTapped = "Reservation Feedback Rating Button Tapped",
+  ReservationFeedbackHeaderTapped = "Reservation Feedback Header Tapped",
+  ReservationFeedbackHeaderProgressBarTapped = "Reservation Feedback Header Progress Bar Tapped",
+  ReservationFeedbackOptionButtonTapped = "Reservation Feedback Option Button Tapped",
+  ReservationFeedbackContinueLaterButtonTapped = "Reservation Feedback Continue Later Button Tapped",
+
+  // Reservation Feedback Confirmation
+  ReservationFeedbackConfirmationSkipButtonTapped = "Reservation Feedback Confirmation Skip Button Tapped",
+  ReservationFeedbackConfirmationSubmitButtonTapped = "Reservation Feedback Confirmation Submit Button Tapped",
+
+  // Reservation Feedback Finish
+  ReservationFeedbackFinishButtonTapped = "Reservation Feedback Finish Button Tapped",
+
   // Account
   MembershipInfoTapped = "Membership Info Tapped",
   PersonalPreferencesTapped = "Personal Preferences Tapped",
@@ -168,10 +182,13 @@ export enum ActionNames {
 
   // Product page action names
   ProductSaved = "Product Saved",
+  SaveProductButtonTapped = "Save Product Button Tapped",
   ProductWanted = "Product Wanted",
   SizeButtonTapped = "Size Button Tapped",
   ProductAddedToBag = "Product Added To Bag",
   ProductVariantSelected = "Product Variant Selected",
+  SaveProductModalCancelTapped = "Save Product Modal Cancel Tapped",
+  SaveProductModalSaveTapped = "Save Product Modal Save Tapped",
 
   // Size Picker
   SizePickerCancelTapped = "Size Picker Cancel Tapped",
@@ -189,4 +206,4 @@ export enum ActionNames {
 /**
  * The component from which the action originates
  */
-export enum ContextModules {}
+export enum ContextModules { }

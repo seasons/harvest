@@ -30,7 +30,6 @@ export const GET_PRODUCT = gql`
       outerMaterials
       innerMaterials
       images
-      isSaved
       type
       variants {
         id
@@ -52,6 +51,7 @@ export const GET_PRODUCT = gql`
         reservable
         nonReservable
         reserved
+        isInBag
         isSaved
         isWanted
       }

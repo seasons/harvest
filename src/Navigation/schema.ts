@@ -6,6 +6,10 @@ export enum PageNames {
   SignInModal = "SignInModal",
   ReservationConfirmationModal = "ReservationConfirmationModal",
   ReservationModal = "ReservationModal",
+  ReservationFeedbackModal = "ReservationFeedbackModal",
+  ReservationFeedbackConfirmationModal = "ReservationFeedbackConfirmationModal",
+  ReservationFeedbackFinishModal = "ReservationFeedbackFinishModal",
+  SaveProductModal = "SaveProductModal",
   AllowNotificationsModal = "AllowNotificationsModal",
   DebugMenu = "DebugMenu",
 

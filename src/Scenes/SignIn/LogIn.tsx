@@ -1,4 +1,4 @@
-import { Box, Button, CloseButton, Container, Flex, PopUp, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { color } from "App/utils"

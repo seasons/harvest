@@ -3,11 +3,12 @@ import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
 import { Browse, Filters } from "App/Scenes/Browse"
 import { Home } from "App/Scenes/Home"
-import { Product } from "App/Scenes/Product"
+import { Product, SaveProduct } from "App/Scenes/Product"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn } from "App/Scenes/SignIn"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
+import { ReservationFeedback, ReservationFeedbackConfirmation, ReservationFeedbackFinish } from "App/Scenes/ReservationFeedback"
 import { Webview } from "App/Scenes/Webview"
 import React from "react"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
@@ -94,6 +95,10 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />
       <ModalStack.Screen name={Schema.PageNames.ReservationConfirmationModal} component={ReservationConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ReservationModal} component={Reservation} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackModal} component={ReservationFeedback} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackConfirmationModal} component={ReservationFeedbackConfirmation} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackFinishModal} component={ReservationFeedbackFinish} />
+      <ModalStack.Screen name={Schema.PageNames.SaveProductModal} component={SaveProduct} />
       <ModalStack.Screen name={Schema.PageNames.AllowNotificationsModal} component={AllowNotifications} />
       <ModalStack.Screen name={Schema.PageNames.DebugMenu} component={DebugMenu} />
     </ModalStack.Navigator>
