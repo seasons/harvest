@@ -6,6 +6,7 @@ import { imageResize } from "App/helpers/imageResize"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
+import { SaveProductButton } from "../Product/Components"
 import gql from "graphql-tag"
 import get from "lodash/get"
 import React, { useState } from "react"
@@ -64,6 +65,7 @@ const GET_BROWSE_PRODUCTS = gql`
       tags
       retailPrice
       status
+      type
       createdAt
       updatedAt
       brand {
@@ -79,39 +81,17 @@ const GET_BROWSE_PRODUCTS = gql`
         isSaved
         internalSize {
           display
+          top {
+            letter
+          }
+          bottom {
+            value
+          }
         }
       }
     }
   }
 `
-
-const renderItem = ({ item }, i, navigation) => {
-  const itemWidth = Dimensions.get("window").width / 2 - 2
-  const product = item
-
-  const image = get(product, "images[0]", { url: "" })
-  const resizedImage = imageResize(image.url, "large")
-  const isLeft = i % 2 === 0
-
-  const brandName = get(product, "brand.name")
-
-  if (!product) {
-    return null
-  }
-
-  return (
-    <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
-      <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
-        <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
-        <Box my={0.5} mx={1}>
-          {brandName && <Sans size="0">{brandName}</Sans>}
-          <VariantSizes size="0" variants={product.variants} />
-        </Box>
-        <Spacer mb={0.5} />
-      </Box>
-    </TouchableWithoutFeedback>
-  )
-}
 
 export const Browse = screenTrack()((props: any) => {
   const sizeFilters = get(props, "route.params.sizeFilters") || []
@@ -124,8 +104,8 @@ export const Browse = screenTrack()((props: any) => {
   const sizes =
     sizeFilters && sizeFilters.length > 0
       ? sizeFilters.map(s => {
-          return ABBREVIATED_SIZES[s] ? ABBREVIATED_SIZES[s] : s
-        })
+        return ABBREVIATED_SIZES[s] ? ABBREVIATED_SIZES[s] : s
+      })
       : []
 
   const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
@@ -173,7 +153,44 @@ export const Browse = screenTrack()((props: any) => {
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
   }
 
+  const renderItem = ({ item }, i, navigation) => {
+    const itemWidth = Dimensions.get("window").width / 2 - 2
+    const product = item
+
+    const image = get(product, "images[0]", { url: "" })
+    const resizedImage = imageResize(image.url, "large")
+    const isLeft = i % 2 === 0
+
+    const brandName = get(product, "brand.name")
+
+    if (!product) {
+      return null
+    }
+
+    return (
+      <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
+        <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
+          <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
+          <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Box my={0.5} mx={1}>
+              {brandName && <Sans size="0">{brandName}</Sans>}
+              <VariantSizes size="0" variants={product.variants} />
+            </Box>
+            <SaveProductButton product={product} onPressSaveButton={() => {
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.SaveProductButtonTapped,
+                actionType: Schema.ActionTypes.Tap,
+              })
+            }} />
+          </Flex>
+          <Spacer mb={0.5} />
+        </Box>
+      </TouchableWithoutFeedback>
+    )
+  }
+
   const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
+
 
   return (
     <Container insetsBottom={false}>

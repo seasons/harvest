@@ -1,10 +1,9 @@
+import { ApolloProvider } from "@apollo/react-hooks"
 import { AppContainer } from "App/Navigation"
 import React, { useEffect, useState } from "react"
 import { SafeAreaProvider } from "react-native-safe-area-context"
-
-import { ApolloProvider } from "@apollo/react-hooks"
-
 import { setupApolloClient } from "./Apollo"
+import { NetworkProvider } from "./NetworkProvider"
 import { config } from "./utils/config"
 
 export const App = () => {
@@ -25,7 +24,9 @@ export const App = () => {
   return (
     <ApolloProvider client={apolloClient}>
       <SafeAreaProvider>
-        <AppContainer />
+        <NetworkProvider>
+          <AppContainer />
+        </NetworkProvider>
       </SafeAreaProvider>
     </ApolloProvider>
   )

@@ -65,7 +65,12 @@ export const ProductDetails: React.FC<{
         </Box>
         {!!(selectedVariant && selectedVariant.id) && (
           <SaveButtonWrapper>
-            <SaveProductButton selectedVariant={selectedVariant} product={product} />
+            <SaveProductButton selectedVariant={selectedVariant} product={product} onPressSaveButton={() => {
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.SaveProductButtonTapped,
+                actionType: Schema.ActionTypes.Tap,
+              })
+            }} />
           </SaveButtonWrapper>
         )}
       </Flex>

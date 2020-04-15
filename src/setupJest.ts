@@ -8,10 +8,17 @@ import track, { useTracking } from "react-tracking"
 import diff from "snapshot-diff"
 import { format } from "util"
 import mockAsyncStorage from "@react-native-community/async-storage/jest/async-storage-mock"
+import { NativeModules } from "react-native"
+
+NativeModules.RNCNetInfo = {
+  getCurrentState: jest.fn(() => Promise.resolve()),
+  addListener: jest.fn(),
+  removeListeners: jest.fn(),
+}
 
 jest.mock("react-tracking")
 const trackEvent = jest.fn()
-;(track as jest.Mock).mockImplementation((_ => x => x) as any)
+;(track as jest.Mock).mockImplementation(((_) => (x) => x) as any)
 ;(useTracking as jest.Mock).mockImplementation(() => {
   return {
     trackEvent,
@@ -96,9 +103,9 @@ if (process.env.ALLOW_CONSOLE_LOGS !== "true") {
     return null
   }
 
-  beforeEach(done => {
+  beforeEach((done) => {
     const types: Array<"error" | "warn"> = ["error", "warn"]
-    types.forEach(type => {
+    types.forEach((type) => {
       // Don't spy on loggers that have been modified by the current test.
       if (console[type] === originalLoggers[type]) {
         const handler = (...args) => {
