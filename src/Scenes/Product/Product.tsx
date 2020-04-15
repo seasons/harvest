@@ -86,7 +86,7 @@ export const Product = screenTrack({
 
   let selectedVariantIsWanted = false
   if (product?.variants?.length > 0 && selectedVariant.id) {
-    const selectedVariantData = find(product.variants, variant => variant.id === selectedVariant.id)
+    const selectedVariantData = find(product.variants, (variant) => variant.id === selectedVariant.id)
     selectedVariantIsWanted = selectedVariantData?.isWanted || false
   }
 
@@ -138,8 +138,8 @@ export const Product = screenTrack({
         ListHeaderComponent={() => <Spacer mb={insets.top} />}
         data={sections}
         ListFooterComponent={() => <Spacer mb={listFooterSpacing} />}
-        keyExtractor={item => item}
-        renderItem={item => renderItem(item)}
+        keyExtractor={(item) => item}
+        renderItem={(item) => renderItem(item)}
       />
       <SelectionButtons
         bottom={selectionButtonsBottom}
