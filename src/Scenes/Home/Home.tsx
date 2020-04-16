@@ -105,6 +105,10 @@ export const Home = screenTrack()(({ navigation }) => {
     }
   }, [loading])
 
+  useFocusEffect(() => {
+    refetch()
+  })
+
   const NoInternetComponent = (
     <ErrorScreen
       variant="No Internet"
@@ -164,47 +168,47 @@ export const Home = screenTrack()(({ navigation }) => {
   return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
-    <Container insetsBottom={true}>
-      <Animatable.View animation="fadeIn" duration={300}>
-        <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
-          <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
-            <LogoText>SEASONS</LogoText>
-          </Flex>
-        </Box>
-        <Separator />
-        <FlatList
-          data={sections}
-          keyExtractor={(item, index) => {
-            return item.type + index
-          }}
-          ListHeaderComponent={() => <Spacer mb={2} />}
-          renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
-          ListFooterComponent={() => (
-            <HomeFooter
-              navigation={navigation}
-              bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
-            />
-          )}
-        />
-        {reservationFeedback ? (
-          reservationFeedback.rating ? (
-            <ReservationFeedbackReminderWrapper>
-              <ReservationFeedbackReminder
-                reservationFeedback={reservationFeedback}
-                onPress={onPressReservationFeedbackReminder}
+      <Container insetsBottom={true}>
+        <Animatable.View animation="fadeIn" duration={300}>
+          <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
+            <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
+              <LogoText>SEASONS</LogoText>
+            </Flex>
+          </Box>
+          <Separator />
+          <FlatList
+            data={sections}
+            keyExtractor={(item, index) => {
+              return item.type + index
+            }}
+            ListHeaderComponent={() => <Spacer mb={2} />}
+            renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
+            ListFooterComponent={() => (
+              <HomeFooter
+                navigation={navigation}
+                bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
               />
-            </ReservationFeedbackReminderWrapper>
-          ) : (
-            <ReservationFeedbackPopUp
-              reservationFeedback={reservationFeedback}
-              show={showReservationFeedbackPopUp}
-              onSelectedRating={onSelectedReviewRating}
-            />
-          )
-        ) : null}
-      </Animatable.View>
-    </Container>
-  )
+            )}
+          />
+          {reservationFeedback ? (
+            reservationFeedback.rating ? (
+              <ReservationFeedbackReminderWrapper>
+                <ReservationFeedbackReminder
+                  reservationFeedback={reservationFeedback}
+                  onPress={onPressReservationFeedbackReminder}
+                />
+              </ReservationFeedbackReminderWrapper>
+            ) : (
+                <ReservationFeedbackPopUp
+                  reservationFeedback={reservationFeedback}
+                  show={showReservationFeedbackPopUp}
+                  onSelectedRating={onSelectedReviewRating}
+                />
+              )
+          ) : null}
+        </Animatable.View>
+      </Container>
+    )
 })
 
 const ReservationFeedbackReminderWrapper = styled(Box)`
