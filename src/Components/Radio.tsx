@@ -29,6 +29,7 @@ export interface RadioProps extends FlexProps {
   /** The label content, if not specified the children will be used  */
   label?: React.ReactNode
   labelSize?: SansSize
+  pointerEventsNone?: boolean
 }
 
 export interface RadioToggleProps extends RadioProps, BorderProps, SizeProps, SpaceProps {}
@@ -38,11 +39,12 @@ export interface RadioToggleProps extends RadioProps, BorderProps, SizeProps, Sp
  *
  * Spec: zpl.io/bAvnwlB
  */
-export const Radio: React.SFC<RadioProps> = props => {
+export const Radio: React.SFC<RadioProps> = (props) => {
   const {
     borderRadius = 100,
     children,
     disabled,
+    pointerEventsNone,
     name,
     onSelect: _onSelect,
     selected,
@@ -59,7 +61,7 @@ export const Radio: React.SFC<RadioProps> = props => {
   const innerComponent = children || <InnerCircle style={{ borderRadius }} />
 
   return (
-    <Flex flexDirection="row" alignItems="center">
+    <Flex flexDirection="row" alignItems="center" pointerEvents={pointerEventsNone ? "none" : "auto"}>
       <TouchableWithoutFeedback onPress={() => !disabled && onSelect && onSelect({ selected: !selected, value })}>
         <Container disabled={disabled} alignItems="center" selected={selected} {...others}>
           <RadioButton

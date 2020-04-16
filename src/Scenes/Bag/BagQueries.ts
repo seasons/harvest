@@ -28,8 +28,8 @@ export const GET_BAG = gql`
               product {
                 id
                 images
-                name
                 brand {
+                  id
                   name
                 }
               }
