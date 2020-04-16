@@ -46,9 +46,8 @@ export const Bag = screenTrack()((props) => {
 
   const tracking = useTracking()
 
-  const { data, refetch } = useQuery(GET_BAG, {
-    fetchPolicy: "cache-and-network",
-  })
+  const { data } = useQuery(GET_BAG)
+
   useEffect(() => {
     if (data) {
       setIsLoading(false)
@@ -112,7 +111,8 @@ export const Bag = screenTrack()((props) => {
 
   const onRefresh = () => {
     setRefreshing(true)
-    refetch()
+    console.log("refetching")
+    // refetch()
     setRefreshing(false)
   }
 
@@ -161,7 +161,7 @@ export const Bag = screenTrack()((props) => {
       setMutating(false)
     } catch (e) {
       const { graphQLErrors } = e
-      console.warn(graphQLErrors)
+      console.log("Bag.tsx handleReserve: ", graphQLErrors)
       const error = graphQLErrors.length > 0 ? graphQLErrors[0] : null
       if (error) {
         const { code, exception } = error.extensions

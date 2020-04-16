@@ -24,14 +24,9 @@ export const GET_BAG = gql`
               id
               internalSize {
                 display
-                top {
-                  letter
-                }
-                bottom {
-                  value
-                }
               }
               product {
+                id
                 images
                 name
                 brand {

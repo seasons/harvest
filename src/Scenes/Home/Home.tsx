@@ -105,12 +105,6 @@ export const Home = screenTrack()(({ navigation }) => {
     }
   }, [loading])
 
-  useFocusEffect(() => {
-    if (network?.isConnected) {
-      refetch()
-    }
-  })
-
   const NoInternetComponent = (
     <ErrorScreen
       variant="No Internet"

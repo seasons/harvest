@@ -7,7 +7,6 @@ import { get } from "lodash"
 import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
-import styled from "styled-components/native"
 import { ReservationItem } from "./Components/ReservationItem"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
