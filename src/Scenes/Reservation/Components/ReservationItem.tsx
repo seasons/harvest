@@ -57,7 +57,7 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
           </Flex>
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
             {!!imageURL && (
-              <ImageContainer
+              <FadeInImage
                 style={{ height: sectionHeight, width: 170 }}
                 resizeMode="contain"
                 source={{ uri: imageURL }}

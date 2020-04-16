@@ -72,6 +72,9 @@ export const ReservationConfirmation = screenTrack()((props) => {
       reservationID,
     },
   })
+  if (error) {
+    console.log("error reservationConfirmation:", error)
+  }
 
   const customer = get(data, "me.customer")
   const address = get(customer, "detail.shippingAddress", {
@@ -102,73 +105,71 @@ export const ReservationConfirmation = screenTrack()((props) => {
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
-      <Content>
-        <Flex flex={1} p={2}>
-          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-            <Spacer mb={52} />
-            <GreenCheck />
-            <Box mt={4} mb={4}>
-              <Sans size="3" color="black100">
-                We've got your order!
-              </Sans>
-              <Sans size="1" color="black50">
-                We've emailed you a confirmation and we'll notify you when its out for delivery.
-              </Sans>
-            </Box>
-            <Box>
-              <SectionHeader
-                title="Order number"
-                content={
-                  <Sans size="2" color="black100" textAlign="right" ml="auto">
-                    {reservation.reservationNumber}
+      <Flex flex={1} px={2}>
+        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+          <Spacer mb={52} />
+          <GreenCheck />
+          <Box my={4}>
+            <Sans size="3" color="black100">
+              We've got your order!
+            </Sans>
+            <Sans size="1" color="black50">
+              We've emailed you a confirmation and we'll notify you when its out for delivery.
+            </Sans>
+          </Box>
+          <Box>
+            <SectionHeader
+              title="Order number"
+              content={
+                <Sans size="2" color="black100" textAlign="right" ml="auto">
+                  {reservation.reservationNumber}
+                </Sans>
+              }
+            />
+          </Box>
+          <Box pt={1}>
+            <SectionHeader
+              title="Shipping"
+              content={
+                <>
+                  <Sans size="2" color="black100" textAlign="right">
+                    {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
                   </Sans>
-                }
-              />
-            </Box>
-            <Box pt={1}>
-              <SectionHeader
-                title="Shipping"
-                content={
-                  <>
-                    <Sans size="2" color="black100" textAlign="right">
-                      {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
-                    </Sans>
-                    <Sans size="2" color="black100" textAlign="right">
-                      {`${address.city}, ${address.state} ${address.zipCode}`}
-                    </Sans>
-                  </>
-                }
-                bottomSpacing={3}
-              />
-            </Box>
-            <Box pt={1}>
-              <SectionHeader
-                title="Delivery"
-                content={
-                  <Sans size="2" color="black100" ml="auto" textAlign="right">
-                    {`UPS Ground\n2 day shipping`}
+                  <Sans size="2" color="black100" textAlign="right">
+                    {`${address.city}, ${address.state} ${address.zipCode}`}
                   </Sans>
-                }
-                hideSeparator
-                bottomSpacing={4}
-              />
+                </>
+              }
+              bottomSpacing={3}
+            />
+          </Box>
+          <Box pt={1}>
+            <SectionHeader
+              title="Delivery"
+              content={
+                <Sans size="2" color="black100" ml="auto" textAlign="right">
+                  {`UPS Ground\n2 day shipping`}
+                </Sans>
+              }
+              hideSeparator
+              bottomSpacing={4}
+            />
+          </Box>
+          <Box mb={5}>
+            <SectionHeader title="Items" />
+            <Box mt={1} mb={4}>
+              {items.map((item, i) => {
+                return (
+                  <Box key={item.id}>
+                    <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
+                    <Spacer mb={2} />
+                  </Box>
+                )
+              })}
             </Box>
-            <Box mb={5}>
-              <SectionHeader title="Items" />
-              <Box mt={1} mb="80">
-                {items.map((item, i) => {
-                  return (
-                    <Box key={item.id}>
-                      <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
-                      <Spacer mb={2} />
-                    </Box>
-                  )
-                })}
-              </Box>
-            </Box>
-          </ScrollView>
-        </Flex>
-      </Content>
+          </Box>
+        </ScrollView>
+      </Flex>
       <FixedButton
         positionBottom={space(2)}
         onPress={() => {
@@ -185,11 +186,3 @@ export const ReservationConfirmation = screenTrack()((props) => {
     </Container>
   )
 })
-
-const Content = styled(Box)`
-  background: white;
-  border-top-left-radius: 30;
-  border-top-right-radius: 30;
-  overflow: hidden;
-  flex: 1;
-`
