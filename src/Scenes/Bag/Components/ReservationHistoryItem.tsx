@@ -31,6 +31,7 @@ export const ReservationHistoryItem = ({ item }) => {
           const variant = physicalProduct?.productVariant
           const variantSizeDisplay = variant?.internalSize?.display
           const product = variant?.product
+          const brandName = product?.brand?.name
           const image = product?.images?.[0]
           const imageURL = imageResize(image && image.url, "small")
           return (
@@ -41,7 +42,7 @@ export const ReservationHistoryItem = ({ item }) => {
               <Box width={imageWidth}>
                 <ImageContainer height={imageWidth * aspectRatio} imageWidth={imageWidth} source={{ uri: imageURL }} />
                 <Spacer mb={0.5} />
-                {!!product?.name && <Sans size="0">{product.name}</Sans>}
+                {!!brandName && <Sans size="0">{brandName}</Sans>}
                 {!!variantSizeDisplay && (
                   <Sans size="0" color="black50">
                     {`Size ${variantSizeDisplay}`}
