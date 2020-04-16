@@ -46,7 +46,7 @@ export const Bag = screenTrack()((props) => {
 
   const tracking = useTracking()
 
-  const { data } = useQuery(GET_BAG)
+  const { data, refetch } = useQuery(GET_BAG)
 
   useEffect(() => {
     if (data) {
@@ -111,8 +111,7 @@ export const Bag = screenTrack()((props) => {
 
   const onRefresh = () => {
     setRefreshing(true)
-    console.log("refetching")
-    // refetch()
+    refetch()
     setRefreshing(false)
   }
 

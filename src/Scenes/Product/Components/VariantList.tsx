@@ -14,7 +14,7 @@ export interface Size {
   manufacturerSize: string
 }
 
-export const sizeToName = size => {
+export const sizeToName = (size) => {
   switch (size) {
     case "XS":
       return "X-Small"
@@ -30,7 +30,7 @@ export const sizeToName = size => {
 }
 
 const sizeDataForVariants = (variants = [], type) => {
-  const manufacturerSize = variant => {
+  const manufacturerSize = (variant) => {
     return (variant.manufacturerSizes?.length > 0 && variant.manufacturerSizes?.[0]?.display) || ""
   }
 
@@ -131,7 +131,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
         >
           <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap" my={2}>
             <Flex flexDirection="row" alignItems="center">
-              <Radio selected={selectedVariant.id === size.id} />
+              <Radio selected={selectedVariant.id === size.id} pointerEventsNone />
               <Spacer mr={1} />
               <Sans color={size.stock ? color("white100") : color("black50")} size="1">
                 {capitalize(size.size)}
