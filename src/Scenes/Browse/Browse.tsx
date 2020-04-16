@@ -19,7 +19,6 @@ import { SaveProductButton } from "../Product/Components"
 import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240
-// const IMAGE_WIDTH = 200
 
 const GET_BROWSE_PRODUCTS = gql`
   query GetBrowseProducts(
@@ -154,27 +153,24 @@ export const Browse = screenTrack()((props: any) => {
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
   }
 
-  const renderItem = ({ item }, i, navigation) => {
+  const renderItem = ({ item }, i) => {
     const itemWidth = Dimensions.get("window").width / 2 - 2
-    const product = item
-
-    const image = get(product, "images[0]", { url: "" })
-    const resizedImage = imageResize(image.url, "large")
     const isLeft = i % 2 === 0
-
-    const brandName = get(product, "brand.name")
+    const product = item
+    const brandName = get(item, "brand.name")
 
     if (!product) {
       return null
     }
 
+    const data = product.images?.filter((image) => image.url) || []
+
     return (
-      <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
+      <Box mr={isLeft ? 0 : "4px"} mb={0.5} width={itemWidth}>
         <FlatList
-          data={product.images.filter((image) => image.url)}
+          data={data}
           renderItem={({ item }: { item: string }) => {
-            const imageUrl: string = item
-            const resizedImage = imageResize(imageUrl, "large")
+            const resizedImage = item?.url && imageResize(item?.url, "medium")
             return (
               <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
                 <Box>
@@ -188,14 +184,14 @@ export const Browse = screenTrack()((props: any) => {
           horizontal
           pagingEnabled
           snapToInterval={itemWidth}
-          decelerationRate={"fast"}
+          decelerationRate="fast"
         />
         <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
           <Box>
             <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
               <Box my={0.5} mx={1}>
                 {brandName && <Sans size="0">{brandName}</Sans>}
-                <VariantSizes size="0" variants={product.variants} />
+                <VariantSizes size="0" variants={item.variants} />
               </Box>
               <SaveProductButton
                 product={product}
@@ -230,7 +226,7 @@ export const Browse = screenTrack()((props: any) => {
             data={products}
             ref={(ref) => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
-            renderItem={(item, i) => renderItem(item, i, navigation)}
+            renderItem={(item, i) => renderItem(item, i)}
             numColumns={2}
             ListFooterComponent={() => (
               <>
