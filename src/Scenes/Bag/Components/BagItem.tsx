@@ -7,6 +7,7 @@ import { get, head } from "lodash"
 import React from "react"
 import { Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
+import { color } from "App/utils"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -55,7 +56,7 @@ export const BagItem: React.FC<BagItemProps> = ({
     return <></>
   }
   const variantToUse = head(
-    (get(bagItem, "productVariant.product.variants") || []).filter(a => a.id === bagItem.productVariant.id)
+    (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
   )
   const product = get(bagItem, "productVariant.product")
   if (!product) {
@@ -168,7 +169,7 @@ export const BagItem: React.FC<BagItemProps> = ({
 }
 
 const RemoveButton = styled(Box)`
-  background: #f6f6f6;
+  background: ${color("black04")};
   border-radius: 5px;
   height: 48px;
   padding: 11px 8px 8px;
@@ -184,7 +185,7 @@ const SaveForLaterButton = styled(Box)`
 `
 
 const BagItemContainer = styled(Box)`
-  background: #f6f6f6;
+  background: ${color("black04")};
   border-radius: 8px;
   overflow: hidden;
   height: 210px;

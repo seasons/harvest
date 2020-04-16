@@ -13,6 +13,34 @@ export const GET_BAG = gql`
       customer {
         id
         plan
+        reservations(orderBy: createdAt_DESC) {
+          id
+          status
+          reservationNumber
+          createdAt
+          products {
+            id
+            productVariant {
+              id
+              internalSize {
+                display
+                top {
+                  letter
+                }
+                bottom {
+                  value
+                }
+              }
+              product {
+                images
+                name
+                brand {
+                  name
+                }
+              }
+            }
+          }
+        }
       }
       activeReservation {
         id

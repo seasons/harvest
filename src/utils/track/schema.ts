@@ -115,6 +115,7 @@ export enum ActionNames {
   SavedTabTapped = "Saved Tab Tapped",
   FAQButtonTapped = "FAQ Button Tapped",
   ReserveButtonTapped = "Reserve Button Tapped",
+  ReservationHistoryTabTapped = "Reservation History Tab Tapped",
 
   // Brand view
   ReadMoreTapped = "Read More Tapped",
@@ -206,4 +207,4 @@ export enum ActionNames {
 /**
  * The component from which the action originates
  */
-export enum ContextModules { }
+export enum ContextModules {}

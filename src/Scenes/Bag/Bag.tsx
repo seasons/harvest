@@ -19,12 +19,14 @@ import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { SavedEmptyState } from "./Components/SavedEmptyState"
 import { SavedItem } from "./Components/SavedItem"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { ReservationHistoryItem } from "./Components"
 
 const SECTION_HEIGHT = 300
 
 enum BagView {
   Bag = 0,
   Saved = 1,
+  History = 2,
 }
 
 export const Bag = screenTrack()((props) => {
@@ -194,6 +196,7 @@ export const Bag = screenTrack()((props) => {
 
   const isBagView = BagView.Bag == currentView
   const isSavedView = BagView.Saved == currentView
+  const reservations = data?.me?.customer?.reservations
   const bagCount = items.length
   const remainingPieces = BAG_NUM_ITEMS - bagCount
   const bagIsFull = bagCount === BAG_NUM_ITEMS
@@ -211,44 +214,61 @@ export const Bag = screenTrack()((props) => {
   }
 
   const renderItem = ({ item, index }) => {
-    const showSavedItems = BagView.Saved == currentView
-    const hideButtons = item.status !== "Added"
-    return item.productID.length ? (
-      <Box mx={showSavedItems ? 0 : 2} mt={isSavedView && index === 0 ? 1 : 0}>
-        {showSavedItems ? (
+    if (isBagView) {
+      const hideButtons = item.status !== "Added"
+      return item.productID.length ? (
+        <Box m={2}>
+          <BagItem
+            hideButtons={hideButtons}
+            removeItemFromBag={deleteBagItem}
+            removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+            sectionHeight={SECTION_HEIGHT}
+            index={index}
+            bagItem={item}
+            navigation={navigation}
+          />
+        </Box>
+      ) : (
+        <EmptyBagItem navigation={navigation} />
+      )
+    } else if (isSavedView) {
+      return (
+        <Box mt={index === 0 ? 1 : 0}>
           <SavedItem
             removeItemFromBag={deleteBagItem}
             sectionHeight={SECTION_HEIGHT}
             bagItem={item}
             navigation={navigation}
           />
-        ) : (
-          <Box my={2}>
-            <BagItem
-              hideButtons={hideButtons}
-              removeItemFromBag={deleteBagItem}
-              removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-              sectionHeight={SECTION_HEIGHT}
-              index={index}
-              bagItem={item}
-              navigation={navigation}
-            />
-          </Box>
-        )}
-      </Box>
-    ) : (
-      <EmptyBagItem navigation={navigation} />
-    )
+        </Box>
+      )
+    } else {
+      return <ReservationHistoryItem item={item} />
+    }
   }
 
-  const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"
+  let headerTitle
+  let headerSubtitle
+  let dataToUse
+  if (currentView === BagView.Bag) {
+    headerTitle = "My bag"
+    headerSubtitle = bagSubtitle
+    dataToUse = paddedItems
+  } else if (currentView === BagView.Saved) {
+    headerTitle = "Saved"
+    headerSubtitle = "Tucked away for later"
+    dataToUse = savedItems
+  } else {
+    headerTitle = "History"
+    headerSubtitle = "Your past reservations"
+    dataToUse = reservations
+  }
   const footerMarginBottom = currentView === BagView.Bag ? 96 : 2
-  const headerSubtitle = currentView === BagView.Bag ? bagSubtitle : "Tucked away for later"
   return (
     <Container insetsBottom={false} insetsTop={false}>
       <FlatList
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        data={currentView === BagView.Bag ? paddedItems : savedItems}
+        data={dataToUse}
         ListHeaderComponent={() => (
           <>
             <Spacer mb={insets.top} />
@@ -262,11 +282,19 @@ export const Bag = screenTrack()((props) => {
             </Box>
             <TabBar
               spaceEvenly
-              tabs={["Bag", "Saved"]}
+              tabs={["Bag", "Saved", "History"]}
               activeTab={currentView}
               goToPage={(page: BagView) => {
                 tracking.trackEvent({
-                  actionName: page === 0 ? Schema.ActionNames.BagTabTapped : Schema.ActionNames.SavedTabTapped,
+                  actionName: () => {
+                    if (page === 0) {
+                      return Schema.ActionNames.BagTabTapped
+                    } else if (page === 1) {
+                      return Schema.ActionNames.SavedTabTapped
+                    } else {
+                      return Schema.ActionNames.ReservationHistoryTabTapped
+                    }
+                  },
                   actionType: Schema.ActionTypes.Tap,
                 })
                 setCurrentView(page)

@@ -3,12 +3,13 @@ import { ImageProps, View } from "react-native"
 import FastImage from "react-native-fast-image"
 import styled from "styled-components/native"
 import FadeIn from "@expo/react-native-fade-in-image"
+import { color } from "App/utils"
 
 interface FadeInImageProps extends ImageProps {
   radius?: boolean
 }
 
-export const FadeInImage: React.FC<FadeInImageProps> = props => {
+export const FadeInImage: React.FC<FadeInImageProps> = (props) => {
   return (
     <Container radius={props.radius}>
       <FadeIn>
@@ -19,7 +20,7 @@ export const FadeInImage: React.FC<FadeInImageProps> = props => {
 }
 
 const Container = styled(View)`
-  background-color: #f6f6f6;
+  background-color: ${color("black04")};
   overflow: hidden;
-  border-radius: ${p => (p.radius ? 15 : 0)};
+  border-radius: ${(p) => (p.radius ? 15 : 0)};
 `
