@@ -68,7 +68,7 @@ const SectionHeader = ({ title }) => {
         </Sans>
       </Flex>
       <Spacer mb={1} />
-      <Separator color={color("separatorGrey")} />
+      <Separator color={color("black04")} />
     </>
   )
 }
@@ -111,7 +111,7 @@ export const Reservation = screenTrack()((props) => {
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
-      <FixedBackArrow navigation={props.navigation} variant={"whiteBackground"}></FixedBackArrow>
+      <FixedBackArrow navigation={props.navigation} variant="whiteBackground" />
       <ContentWrapper>
         <Flex flex={1} px={2}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>

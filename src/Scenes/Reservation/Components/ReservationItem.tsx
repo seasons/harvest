@@ -16,14 +16,11 @@ interface ReservationItemProps {
 
 export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index, sectionHeight, navigation }) => {
   const tracking = useTracking()
-  if (!bagItem) {
-    return <></>
-  }
-  const variantToUse = head(
-    (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
-  )
   const product = bagItem?.productVariant?.product
-  if (!product) {
+  const variantToUse = head(
+    (bagItem?.productVariant?.product?.variants || []).filter((a) => a.id === bagItem?.productVariant?.id)
+  )
+  if (!product || !variantToUse) {
     return null
   }
 
@@ -51,9 +48,11 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
               <Sans size="2" color="black50">
                 {product.name}
               </Sans>
-              <Sans size="2" color="black50">
-                Size {variantSize}
-              </Sans>
+              {!!variantSize && (
+                <Sans size="2" color="black50">
+                  Size {variantSize}
+                </Sans>
+              )}
             </Box>
           </Flex>
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
@@ -76,8 +75,4 @@ const ReservationItemContainer = styled(Box)`
   border-radius: 8px;
   overflow: hidden;
   height: 210px;
-`
-
-const ImageContainer = styled(FadeInImage)`
-  height: 214;
 `

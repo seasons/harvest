@@ -95,7 +95,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
           {content && <Box ml="auto">{content}</Box>}
         </Flex>
         <Spacer mb={bottomSpacing} />
-        {!hideSeparator && <Separator color={color("separatorGrey")} />}
+        {!hideSeparator && <Separator color={color("black04")} />}
       </>
     )
   }
