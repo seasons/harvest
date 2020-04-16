@@ -16,14 +16,14 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
-import { SavedEmptyState } from "./Components/SavedEmptyState"
+import { BagEmptyState } from "./Components/BagEmptyState"
 import { SavedItem } from "./Components/SavedItem"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { ReservationHistoryItem } from "./Components"
 
 const SECTION_HEIGHT = 300
 
-enum BagView {
+export enum BagView {
   Bag = 0,
   Saved = 1,
   History = 2,
@@ -250,11 +250,11 @@ export const Bag = screenTrack()((props) => {
   let headerTitle
   let headerSubtitle
   let dataToUse
-  if (currentView === BagView.Bag) {
+  if (isBagView) {
     headerTitle = "My bag"
     headerSubtitle = bagSubtitle
     dataToUse = paddedItems
-  } else if (currentView === BagView.Saved) {
+  } else if (isSavedView) {
     headerTitle = "Saved"
     headerSubtitle = "Tucked away for later"
     dataToUse = savedItems
@@ -303,7 +303,7 @@ export const Bag = screenTrack()((props) => {
           </>
         )}
         ListEmptyComponent={() => {
-          return <SavedEmptyState navigation={navigation} />
+          return <BagEmptyState currentView={currentView} />
         }}
         ItemSeparatorComponent={() => {
           if (isSavedView) {
