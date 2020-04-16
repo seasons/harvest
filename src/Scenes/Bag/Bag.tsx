@@ -260,7 +260,7 @@ export const Bag = screenTrack()((props) => {
     dataToUse = savedItems
   } else {
     headerTitle = "History"
-    headerSubtitle = "You past reservations"
+    headerSubtitle = "Your past reservations"
     dataToUse = reservations
   }
   const footerMarginBottom = currentView === BagView.Bag ? 96 : 2

@@ -3,7 +3,7 @@ import React from "react"
 import { Dimensions } from "react-native"
 import { DateTime } from "luxon"
 import { imageResize } from "App/helpers/imageResize"
-import { space } from "App/utils"
+import { space, color } from "App/utils"
 import styled from "styled-components/native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useNavigation } from "@react-navigation/native"
@@ -12,7 +12,6 @@ export const ReservationHistoryItem = ({ item }) => {
   const navigation = useNavigation()
   const date = item?.createdAt && DateTime.fromISO(item?.createdAt).toUTC().toFormat("MM/dd")
   const imageWidth = (Dimensions.get("window").width - space(5)) / 3
-  const imageHeight = 141
   const aspectRatio = 1.25
   return (
     <Box px={2}>
@@ -59,7 +58,7 @@ export const ReservationHistoryItem = ({ item }) => {
 }
 
 const ImageContainer = styled(FadeInImage)`
-  background: #f6f6f6;
+  background: ${color("black04")};
   height: ${(props) => props.height};
   width: ${(props) => props.imageWidth};
 `

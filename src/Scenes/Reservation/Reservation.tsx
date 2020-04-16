@@ -177,7 +177,6 @@ export const Reservation = screenTrack()((props) => {
           })
           setIsMutating(true)
           const itemIDs = items?.map((item) => item?.productVariant?.id)
-          console.log("itemIDs", itemIDs)
           try {
             const { data } = await reserveItems({
               variables: {
