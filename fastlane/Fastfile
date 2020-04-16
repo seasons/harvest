@@ -17,8 +17,8 @@ platform :ios do
 
     desc 'Fetch certificates, build and upload to App Center.'
     lane :beta do
-        # build
-        # changelog_from_git_commits
+        build
+        changelog_from_git_commits
         upload_to_testflight
     end
 end
