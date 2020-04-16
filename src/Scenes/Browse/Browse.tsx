@@ -188,7 +188,7 @@ export const Browse = screenTrack()((props: any) => {
         />
         <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
           <Box>
-            <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Flex flexDirection="row" justifyContent="space-between">
               <Box my={0.5} mx={1}>
                 {brandName && <Sans size="0">{brandName}</Sans>}
                 <VariantSizes size="0" variants={item.variants} />

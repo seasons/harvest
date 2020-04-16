@@ -4,7 +4,6 @@ import { GetProduct_product } from "App/generated/GetProduct"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { SaveIcon } from "Assets/icons"
-import { CircledSaveIcon } from "Assets/icons/CircledSaveIcon"
 import gql from "graphql-tag"
 import { head } from "lodash"
 import React from "react"
@@ -63,10 +62,10 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
 
   let isSaved
   if (selectedVariant) {
-    const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
+    const variantToUse: any = head((product.variants || []).filter((a) => a.id === selectedVariant.id))
     isSaved = variantToUse.isSaved
   } else {
-    isSaved = product.variants.filter(variant => variant.isSaved).length > 0
+    isSaved = product.variants.filter((variant) => variant.isSaved).length > 0
   }
 
   const handleSaveButton = () => {
@@ -87,7 +86,7 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
           hidePopUp,
           product,
           showPopUp,
-        }
+        },
       })
     } else {
       tracking.trackEvent({
@@ -117,12 +116,10 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
   }
 
   return (
-    <Box>
-      <TouchableOpacity onPress={handleSaveButton}>
-        <Box p={2}>
-          <SaveIcon enabled={isSaved} />
-        </Box>
-      </TouchableOpacity>
-    </Box>
+    <TouchableOpacity onPress={handleSaveButton}>
+      <Box px={2} pb={2} pt={0.5}>
+        <SaveIcon width={12} height={16} enabled={isSaved} grayStroke />
+      </Box>
+    </TouchableOpacity>
   )
 }
