@@ -26,6 +26,7 @@ export const GET_BAG = gql`
                 display
               }
               product {
+                id
                 images
                 name
                 brand {

@@ -85,7 +85,7 @@ export const themeProps = {
   },
 }
 
-export const Theme = props => {
+export const Theme = (props) => {
   return <ThemeProvider theme={themeProps}>{props.children}</ThemeProvider>
 }
 

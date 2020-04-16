@@ -3,6 +3,7 @@ import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { color } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
@@ -18,7 +19,6 @@ import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { BagEmptyState } from "./Components/BagEmptyState"
 import { SavedItem } from "./Components/SavedItem"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { ReservationHistoryItem } from "./Components"
 
 const SECTION_HEIGHT = 300
@@ -46,9 +46,8 @@ export const Bag = screenTrack()((props) => {
 
   const tracking = useTracking()
 
-  const { data, refetch } = useQuery(GET_BAG, {
-    fetchPolicy: "cache-and-network",
-  })
+  const { data } = useQuery(GET_BAG)
+
   useEffect(() => {
     if (data) {
       setIsLoading(false)
@@ -112,7 +111,8 @@ export const Bag = screenTrack()((props) => {
 
   const onRefresh = () => {
     setRefreshing(true)
-    refetch()
+    console.log("refetching")
+    // refetch()
     setRefreshing(false)
   }
 
@@ -156,12 +156,12 @@ export const Bag = screenTrack()((props) => {
         },
       })
       if (data.checkItemsAvailability) {
-        navigation.navigate("Modal", { screen: "ReservationModal" })
+        navigation.navigate("BagStack", { screen: Schema.PageNames.ReservationPage })
       }
       setMutating(false)
     } catch (e) {
       const { graphQLErrors } = e
-      console.warn(graphQLErrors)
+      console.log("Bag.tsx handleReserve: ", graphQLErrors)
       const error = graphQLErrors.length > 0 ? graphQLErrors[0] : null
       if (error) {
         const { code, exception } = error.extensions
