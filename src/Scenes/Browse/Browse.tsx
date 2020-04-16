@@ -20,7 +20,7 @@ import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240
 
-const GET_BROWSE_PRODUCTS = gql`
+export const GET_BROWSE_PRODUCTS = gql`
   query GetBrowseProducts(
     $name: String!
     $first: Int!
@@ -194,6 +194,9 @@ export const Browse = screenTrack()((props: any) => {
                 <VariantSizes size="0" variants={item.variants} />
               </Box>
               <SaveProductButton
+                grayStroke
+                height={16}
+                width={12}
                 product={product}
                 onPressSaveButton={() => {
                   tracking.trackEvent({
