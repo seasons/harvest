@@ -109,13 +109,6 @@ export const Reservation = screenTrack()((props) => {
   const phoneNumber = customer?.detail?.phoneNumber
   const items = data?.me?.bag ?? []
 
-  const popUpData = {
-    title: "Sorry!",
-    note: "We couldn't process your order because of an unexpected error, please try again later",
-    buttonText: "Close",
-    onClose: () => hidePopUp(),
-  }
-
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="black100">
       <CloseButton />
@@ -132,7 +125,7 @@ export const Reservation = screenTrack()((props) => {
               <Box mt={2} mb={4}>
                 <SectionHeader title="Shipping address" />
                 <Sans size="2" color={color("black50")} mt={1}>
-                  {`${address.address1} ${address.address2}`}
+                  {`${address.address1}${address.address2 ? address.address2 : ""}`}
                 </Sans>
                 <Sans size="2" color={color("black50")}>
                   {`${address.city}, ${address.state} ${address.zipCode}`}
@@ -183,12 +176,15 @@ export const Reservation = screenTrack()((props) => {
             actionType: Schema.ActionTypes.Tap,
           })
           setIsMutating(true)
+          const itemIDs = items?.map((item) => item?.productVariant?.id)
+          console.log("itemIDs", itemIDs)
           try {
             const { data } = await reserveItems({
               variables: {
-                items: items?.map((item) => item?.productVariant?.id),
+                items: itemIDs,
               },
             })
+            console.log("data!!!", data)
             if (data.reserveItems) {
               props.navigation.navigate("Modal", {
                 screen: "ReservationConfirmationModal",
@@ -196,7 +192,12 @@ export const Reservation = screenTrack()((props) => {
               })
             }
           } catch (e) {
-            showPopUp(popUpData)
+            showPopUp({
+              title: "Sorry!",
+              note: "We couldn't process your order because of an unexpected error, please try again later",
+              buttonText: "Close",
+              onClose: () => hidePopUp(),
+            })
             setIsMutating(false)
           }
         }}
