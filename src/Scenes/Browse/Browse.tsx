@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/react-hooks"
 import { Box, Button, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { Spinner } from "App/Components/Spinner"
@@ -6,7 +7,6 @@ import { imageResize } from "App/helpers/imageResize"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
-import { SaveProductButton } from "../Product/Components"
 import gql from "graphql-tag"
 import get from "lodash/get"
 import React, { useState } from "react"
@@ -15,7 +15,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
-import { useQuery } from "@apollo/react-hooks"
+import { SaveProductButton } from "../Product/Components"
 import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240
@@ -103,9 +103,9 @@ export const Browse = screenTrack()((props: any) => {
 
   const sizes =
     sizeFilters && sizeFilters.length > 0
-      ? sizeFilters.map(s => {
-        return ABBREVIATED_SIZES[s] ? ABBREVIATED_SIZES[s] : s
-      })
+      ? sizeFilters.map((s) => {
+          return ABBREVIATED_SIZES[s] ? ABBREVIATED_SIZES[s] : s
+        })
       : []
 
   const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
@@ -133,7 +133,7 @@ export const Browse = screenTrack()((props: any) => {
   const filtersButtonText = numFiltersSelected > 0 ? `Filters +${numFiltersSelected}` : "Filters"
   const filtersButtonTextColor = numFiltersSelected > 0 ? "white100" : "black100"
 
-  const onCategoryPress = item => {
+  const onCategoryPress = (item) => {
     tracking.trackEvent({
       actionName: Schema.ActionNames.CategoryTapped,
       actionType: Schema.ActionTypes.Tap,
@@ -153,44 +153,64 @@ export const Browse = screenTrack()((props: any) => {
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
   }
 
-  const renderItem = ({ item }, i, navigation) => {
+  const renderItem = ({ item }, i) => {
     const itemWidth = Dimensions.get("window").width / 2 - 2
-    const product = item
-
-    const image = get(product, "images[0]", { url: "" })
-    const resizedImage = imageResize(image.url, "large")
     const isLeft = i % 2 === 0
-
-    const brandName = get(product, "brand.name")
+    const product = item
+    const brandName = get(item, "brand.name")
 
     if (!product) {
       return null
     }
 
+    const data = product.images?.filter((image) => image.url) || []
+
     return (
-      <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
-        <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
-          <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
-          <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-            <Box my={0.5} mx={1}>
-              {brandName && <Sans size="0">{brandName}</Sans>}
-              <VariantSizes size="0" variants={product.variants} />
-            </Box>
-            <SaveProductButton product={product} onPressSaveButton={() => {
-              tracking.trackEvent({
-                actionName: Schema.ActionNames.SaveProductButtonTapped,
-                actionType: Schema.ActionTypes.Tap,
-              })
-            }} />
-          </Flex>
-          <Spacer mb={0.5} />
-        </Box>
-      </TouchableWithoutFeedback>
+      <Box mr={isLeft ? 0 : "4px"} mb={0.5} width={itemWidth}>
+        <FlatList
+          data={data}
+          renderItem={({ item }: { item: string }) => {
+            const resizedImage = item?.url && imageResize(item?.url, "medium")
+            return (
+              <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
+                <Box>
+                  <FadeInImage source={{ uri: resizedImage }} style={{ width: itemWidth, height: IMAGE_HEIGHT }} />
+                </Box>
+              </TouchableWithoutFeedback>
+            )
+          }}
+          keyExtractor={(item, index) => index.toString()}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          pagingEnabled
+          snapToInterval={itemWidth}
+          decelerationRate="fast"
+        />
+        <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
+          <Box>
+            <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+              <Box my={0.5} mx={1}>
+                {brandName && <Sans size="0">{brandName}</Sans>}
+                <VariantSizes size="0" variants={item.variants} />
+              </Box>
+              <SaveProductButton
+                product={product}
+                onPressSaveButton={() => {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.SaveProductButtonTapped,
+                    actionType: Schema.ActionTypes.Tap,
+                  })
+                }}
+              />
+            </Flex>
+            <Spacer mb={0.5} />
+          </Box>
+        </TouchableWithoutFeedback>
+      </Box>
     )
   }
 
   const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
-
 
   return (
     <Container insetsBottom={false}>
@@ -204,9 +224,9 @@ export const Browse = screenTrack()((props: any) => {
               paddingBottom: filtersButtonHeight,
             }}
             data={products}
-            ref={ref => (scrollViewEl = ref)}
+            ref={(ref) => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
-            renderItem={(item, i) => renderItem(item, i, navigation)}
+            renderItem={(item, i) => renderItem(item, i)}
             numColumns={2}
             ListFooterComponent={() => (
               <>
@@ -306,7 +326,7 @@ const LoaderContainer = animated(styled(Box)`
 const AnimatedBox = animated(Box)
 
 const Category = styled(Box)`
-  ${p =>
+  ${(p) =>
     p.selected &&
     `
     border-bottom-color: black;

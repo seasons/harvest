@@ -17,7 +17,7 @@ export const ImageRail: React.FC<{
   const tracking = useTracking()
   const [currentPage, setCurrentPage] = useState(1)
 
-  const onScroll = e => {
+  const onScroll = (e) => {
     const newPageNum = Math.round(e.nativeEvent.contentOffset.x / imageWidth + 1)
 
     if (newPageNum !== currentPage) {
@@ -43,7 +43,7 @@ export const ImageRail: React.FC<{
           )
         }}
         onScroll={onScroll}
-        keyExtractor={item => {
+        keyExtractor={(item) => {
           const itemID = item && item.id
           return itemID
         }}
@@ -63,7 +63,7 @@ export const ImageRail: React.FC<{
             {!!TextComponent && <TextComponent />}
             {showPageDots && (
               <Flex style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-                {images.map((_, i) => {
+                {images?.map((_, i) => {
                   return (
                     <Box
                       key={i}
@@ -89,6 +89,6 @@ export const ImageRail: React.FC<{
 
 const ImageContainer = styled(FadeInImage)`
   background: #f6f6f6;
-  height: ${props => props.height};
-  width: ${props => props.imageWidth};
+  height: ${(props) => props.height};
+  width: ${(props) => props.imageWidth};
 `
