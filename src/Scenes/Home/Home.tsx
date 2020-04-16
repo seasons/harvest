@@ -10,7 +10,6 @@ import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../Reserv
 import gql from "graphql-tag"
 import React, { useEffect, useState, useContext } from "react"
 import { useQuery } from "react-apollo"
-import { useFocusEffect } from "@react-navigation/native"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import SplashScreen from "react-native-splash-screen"
@@ -105,9 +104,12 @@ export const Home = screenTrack()(({ navigation }) => {
     }
   }, [loading])
 
-  useFocusEffect(() => {
-    refetch()
-  })
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      refetch()
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const NoInternetComponent = (
     <ErrorScreen
