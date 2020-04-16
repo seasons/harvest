@@ -112,66 +112,64 @@ export const Reservation = screenTrack()((props) => {
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
       <FixedBackArrow navigation={props.navigation} variant="whiteBackground" />
-      <ContentWrapper>
-        <Flex flex={1} px={2}>
-          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-            <Spacer mb={80} />
-            <Box pb={1}>
-              <Sans size="3" color="black100">
-                Review your order
-              </Sans>
-            </Box>
+      <Flex flex={1} px={2}>
+        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+          <Spacer mb={80} />
+          <Box pb={1}>
+            <Sans size="3" color="black100">
+              Review your order
+            </Sans>
+          </Box>
+          <Box mb={4}>
+            <Sans size="2" color="black50">
+              As a reminder, orders placed{" "}
+              <Sans size="2" color="black100" style={{ textDecorationLine: "underline" }}>
+                after 5:00pm
+              </Sans>{" "}
+              will be processed the following business day.
+            </Sans>
+          </Box>
+          <Box mb={4}>
+            <SectionHeader title="Delivery Time" />
+            <Sans size="2" color="black50" mt={1}>
+              2-day Shipping
+            </Sans>
+          </Box>
+          {address && (
             <Box mb={4}>
-              <Sans size="2" color="black50">
-                As a reminder, orders placed{" "}
-                <Sans size="2" color="black100" style={{ textDecorationLine: "underline" }}>
-                  after 5:00pm
-                </Sans>{" "}
-                will be processed the following business day.
-              </Sans>
-            </Box>
-            <Box mb={4}>
-              <SectionHeader title="Delivery Time" />
+              <SectionHeader title="Shipping address" />
               <Sans size="2" color="black50" mt={1}>
-                2-day Shipping
+                {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
+              </Sans>
+              <Sans size="2" color="black50">
+                {`${address.city}, ${address.state} ${address.zipCode}`}
               </Sans>
             </Box>
-            {address && (
-              <Box mb={4}>
-                <SectionHeader title="Shipping address" />
-                <Sans size="2" color="black50" mt={1}>
-                  {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
-                </Sans>
-                <Sans size="2" color="black50">
-                  {`${address.city}, ${address.state} ${address.zipCode}`}
-                </Sans>
-              </Box>
-            )}
-            {!!phoneNumber && (
-              <Box mb={4}>
-                <SectionHeader title="Phone number" />
-                <Sans size="2" color="black50" mt={1}>
-                  {phoneNumber}
-                </Sans>
-              </Box>
-            )}
-            <Box mb={5}>
-              <SectionHeader title="Items" />
-              <Box mt={1} mb="80">
-                {!!items &&
-                  items.map((item, i) => {
-                    return (
-                      <Box key={item.id}>
-                        <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
-                        <Spacer mb={2} />
-                      </Box>
-                    )
-                  })}
-              </Box>
+          )}
+          {!!phoneNumber && (
+            <Box mb={4}>
+              <SectionHeader title="Phone number" />
+              <Sans size="2" color="black50" mt={1}>
+                {phoneNumber}
+              </Sans>
             </Box>
-          </ScrollView>
-        </Flex>
-      </ContentWrapper>
+          )}
+          <Box mb={5}>
+            <SectionHeader title="Items" />
+            <Box mt={1} mb={4}>
+              {!!items &&
+                items.map((item, i) => {
+                  return (
+                    <Box key={item.id}>
+                      <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
+                      <Spacer mb={2} />
+                    </Box>
+                  )
+                })}
+            </Box>
+          </Box>
+        </ScrollView>
+      </Flex>
       <FixedButton
         positionBottom={space(2)}
         onPress={async () => {
@@ -214,11 +212,3 @@ export const Reservation = screenTrack()((props) => {
     </Container>
   )
 })
-
-const ContentWrapper = styled(Box)`
-  background: white;
-  border-top-left-radius: 30;
-  border-top-right-radius: 30;
-  overflow: hidden;
-  flex: 1;
-`
