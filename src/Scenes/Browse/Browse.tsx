@@ -20,7 +20,7 @@ import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240
 
-const GET_BROWSE_PRODUCTS = gql`
+export const GET_BROWSE_PRODUCTS = gql`
   query GetBrowseProducts(
     $name: String!
     $first: Int!
@@ -188,12 +188,15 @@ export const Browse = screenTrack()((props: any) => {
         />
         <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
           <Box>
-            <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Flex flexDirection="row" justifyContent="space-between">
               <Box my={0.5} mx={1}>
                 {brandName && <Sans size="0">{brandName}</Sans>}
                 <VariantSizes size="0" variants={item.variants} />
               </Box>
               <SaveProductButton
+                grayStroke
+                height={16}
+                width={12}
                 product={product}
                 onPressSaveButton={() => {
                   tracking.trackEvent({

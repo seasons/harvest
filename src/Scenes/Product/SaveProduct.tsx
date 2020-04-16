@@ -18,10 +18,7 @@ interface SaveProductProps {
   navigation: any
 }
 
-export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
-  route,
-  navigation,
-}) => {
+export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, navigation }) => {
   const insets = useSafeArea()
   const tracking = useTracking()
   const [selectedVariantID, setSelectedVariantID] = useState(null)
@@ -73,47 +70,55 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
         return (
           <>
             <Spacer mt={68} />
-            <Flex flexDirection="row" justifyContent="space-between" >
+            <Flex flexDirection="row" justifyContent="space-between">
               <Flex flexDirection="column" justifyContent="flex-end">
                 <Sans size="1">{name}</Sans>
-                <Sans size="1" color={color("black50")}>{brandName}</Sans>
+                <Sans size="1" color={color("black50")}>
+                  {brandName}
+                </Sans>
               </Flex>
               <ImageContainer height={112} imageWidth={90} source={{ uri: images?.[0]?.url || "" }} />
             </Flex>
             <Spacer mt={20} />
-            <Sans size="1" color={color("black50")}>{description}</Sans>
+            <Sans size="1" color={color("black50")}>
+              {description}
+            </Sans>
             <Spacer mt={3} />
             <Separator />
           </>
         )
       case "Sizes":
         const renderSizeRow = (item) => {
-          const { id, internalSize: { bottom, top }, isSaved } = item
+          const {
+            id,
+            internalSize: { bottom, top },
+            isSaved,
+          } = item
           let sizeName
           switch (type) {
             case "Top":
               sizeName = sizeToName(top?.letter)
-              break;
+              break
             case "Bottom":
               sizeName = bottom?.value
-              break;
+              break
           }
           return (
             <TouchableWithoutFeedback onPress={() => onSelectSize(id)}>
               <Box>
                 <Spacer mt={20} />
                 <Flex flexDirection="row" justifyContent="space-between">
-                  <Flex flexDirection="row" >
+                  <Flex flexDirection="row">
                     <Radio selected={id === selectedVariantID} onSelect={() => onSelectSize(id)} />
                     <Sans color={color("black100")} ml={1} size="1" weight="medium">
                       {sizeName}
                     </Sans>
                   </Flex>
-                  {isSaved &&
+                  {isSaved && (
                     <Sans color={color("black50")} size="1" weight="medium">
                       (Saved)
                     </Sans>
-                  }
+                  )}
                 </Flex>
                 <Spacer mt={20} />
                 <Separator color={color("black15")} />
@@ -128,7 +133,8 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
             renderItem={({ item }) => renderSizeRow(item)}
           />
         )
-      default: return null
+      default:
+        return null
     }
   }
 
@@ -152,26 +158,16 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
       },
     })
     navigation.pop()
-    const popUpData = {
-      buttonText: "Got it",
-      note: `The ${product.name} has been saved for later in your bag.`,
-      title: "Saved for later",
-      onClose: () => hidePopUp(),
-    }
-    showPopUp(popUpData)
   }
 
   const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 39) / 2
   const buttonHeight = 48
-  const sections = [
-    { type: "Header" },
-    { type: "Sizes", variants }
-  ]
+  const sections = [{ type: "Header" }, { type: "Sizes", variants }]
 
   return (
     <Container insetsTop={false}>
-      <Box px={2} >
+      <Box px={2}>
         <Handle color="black15" style={{ marginTop: space(2) }} />
         <FlatList
           data={sections}
@@ -217,6 +213,6 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({
 
 const ImageContainer = styled(FadeInImage)`
   background: #f6f6f6;
-  height: ${props => props.height};
-  width: ${props => props.imageWidth};
+  height: ${(props) => props.height};
+  width: ${(props) => props.imageWidth};
 `
