@@ -184,7 +184,6 @@ export const Reservation = screenTrack()((props) => {
                 items: itemIDs,
               },
             })
-            console.log("data!!!", data)
             if (data.reserveItems) {
               props.navigation.navigate("Modal", {
                 screen: "ReservationConfirmationModal",

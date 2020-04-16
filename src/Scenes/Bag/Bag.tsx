@@ -189,7 +189,6 @@ export const Bag = screenTrack()((props) => {
             onClose: () => hidePopUp(),
           })
         }
-        console.log("error", error)
       }
       setMutating(false)
     }
