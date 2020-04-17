@@ -27,7 +27,7 @@ export const ProductDetails: React.FC<{
     brand: { name: brandName },
   } = product
 
-  const modelHeightDisplay = modelHeight => {
+  const modelHeightDisplay = (modelHeight) => {
     const height = parseInt(modelHeight)
     const feet = Math.floor(height / 12)
     const inches = height % 12
@@ -65,12 +65,19 @@ export const ProductDetails: React.FC<{
         </Box>
         {!!(selectedVariant && selectedVariant.id) && (
           <SaveButtonWrapper>
-            <SaveProductButton selectedVariant={selectedVariant} product={product} onPressSaveButton={() => {
-              tracking.trackEvent({
-                actionName: Schema.ActionNames.SaveProductButtonTapped,
-                actionType: Schema.ActionTypes.Tap,
-              })
-            }} />
+            <Spacer mb={0.5} />
+            <SaveProductButton
+              height={21}
+              width={16}
+              selectedVariant={selectedVariant}
+              product={product}
+              onPressSaveButton={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.SaveProductButtonTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                })
+              }}
+            />
           </SaveButtonWrapper>
         )}
       </Flex>

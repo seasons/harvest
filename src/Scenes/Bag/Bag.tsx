@@ -20,6 +20,7 @@ import { EmptyBagItem } from "./Components/EmptyBagItem"
 import { BagEmptyState } from "./Components/BagEmptyState"
 import { SavedItem } from "./Components/SavedItem"
 import { ReservationHistoryItem } from "./Components"
+import { GET_BROWSE_PRODUCTS } from "../Browse/Browse"
 
 const SECTION_HEIGHT = 300
 
@@ -72,6 +73,16 @@ export const Bag = screenTrack()((props) => {
     refetchQueries: [
       {
         query: GET_BAG,
+      },
+      {
+        query: GET_BROWSE_PRODUCTS,
+        variables: {
+          name: "all",
+          first: 10,
+          skip: 0,
+          orderBy: "createdAt_DESC",
+          sizes: [],
+        },
       },
     ],
   })
