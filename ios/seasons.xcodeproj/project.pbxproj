@@ -11,7 +11,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		226FEF582449367500C517D1 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
+		226FEF5C244A3E2C00C517D1 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		353337DDECE045818531A967 /* ProximaNova-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */; };
 		561412F00DEC2537DA601F26 /* libPods-seasons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E634A1E0700DED4FFBC51F /* libPods-seasons.a */; };
 		5A4B65ED798E475A826CC2F0 /* ProximaNova-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */; };
@@ -221,7 +221,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				226FEF582449367500C517D1 /* main.jsbundle in Resources */,
+				226FEF5C244A3E2C00C517D1 /* main.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				819937AD2350CA0900D4B049 /* AppCenter-Config.plist in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
@@ -249,7 +249,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=$(which node)\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		3261F32DA76948D5AD526F2F /* Upload Debug Symbols to Sentry */ = {
 			isa = PBXShellScriptBuildPhase;
