@@ -9,7 +9,7 @@ import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import get from "lodash/get"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
@@ -17,6 +17,7 @@ import styled from "styled-components/native"
 import { color } from "styled-system"
 import { SaveProductButton } from "../Product/Components"
 import { BrowseLoader } from "./Loader"
+import { BrowseEmptyState } from "./BrowseEmptyState"
 
 const IMAGE_HEIGHT = 240
 
@@ -94,12 +95,18 @@ export const GET_BROWSE_PRODUCTS = gql`
 `
 
 export const Browse = screenTrack()((props: any) => {
-  const sizeFilters = get(props, "route.params.sizeFilters") || []
+  const { navigation } = props
+  const currentFilters = props?.route?.params?.sizeFilters || []
+  const [sizeFilters, setSizeFilters] = useState(currentFilters)
   const [currentCategory, setCurrentCategory] = useState("all")
   const insets = useSafeArea()
   const tracking = useTracking()
 
   const PAGE_LENGTH = 10
+
+  useEffect(() => {
+    setSizeFilters(currentFilters)
+  }, [currentFilters])
 
   const sizes =
     sizeFilters && sizeFilters.length > 0
@@ -120,14 +127,15 @@ export const Browse = screenTrack()((props: any) => {
 
   const products = data && data.products
 
-  const loaderStyle = useSpring({ opacity: loading && !data ? 1 : 0 })
-  const productsBoxStyle = useSpring({ opacity: loading && !data ? 0 : 1 })
+  const loaderAnimation = useSpring({
+    loaderStyle: !data ? 1 : 0,
+    productsBoxStyle: !data ? 0 : 1,
+  })
 
   let scrollViewEl = null
-  const { navigation } = props
   const categories = (data && data.categories) || []
   const filtersButtonHeight = 36
-  const numFiltersSelected = sizeFilters.length
+  const numFiltersSelected = sizeFilters?.length
 
   const filtersButtonVariant = numFiltersSelected > 0 ? "primaryBlack" : "primaryWhite"
   const filtersButtonText = numFiltersSelected > 0 ? `Filters +${numFiltersSelected}` : "Filters"
@@ -217,15 +225,22 @@ export const Browse = screenTrack()((props: any) => {
 
   return (
     <Container insetsBottom={false}>
-      <LoaderContainer mt={insets.top} style={[loaderStyle]}>
+      <LoaderContainer mt={insets.top} style={{ opacity: loaderAnimation.loaderStyle }}>
         <BrowseLoader imageHeight={IMAGE_HEIGHT} />
       </LoaderContainer>
       <Flex flexDirection="column" flex={1}>
-        <AnimatedBox flex={1} flexGrow={1} style={[productsBoxStyle]}>
+        <AnimatedBox flex={1} flexGrow={1} style={{ opacity: loaderAnimation.productsBoxStyle }}>
           <FlatList
-            contentContainerStyle={{
-              paddingBottom: filtersButtonHeight,
-            }}
+            contentContainerStyle={
+              products?.length
+                ? {
+                    paddingBottom: filtersButtonHeight,
+                  }
+                : { flex: 1 }
+            }
+            ListEmptyComponent={() => (
+              <BrowseEmptyState setCurrentCategory={setCurrentCategory} setSizeFilters={setSizeFilters} />
+            )}
             data={products}
             ref={(ref) => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
