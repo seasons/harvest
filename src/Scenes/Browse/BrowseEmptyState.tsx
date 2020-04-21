@@ -23,7 +23,6 @@ export const BrowseEmptyState: React.FC<{ setSizeFilters: (size) => void; setCur
         </Box>
         <Spacer mb={2} />
         <Button
-          size="small"
           onPress={() => {
             tracking.trackEvent({
               actionName: Schema.ActionNames.FiltersCleared,
