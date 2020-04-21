@@ -43,7 +43,7 @@ export interface ButtonProps extends BoxProps {
   block?: boolean
 }
 
-export type ButtonVariant = "primaryBlack" | "secondaryWhite" | "primaryWhite" | "black85" | "secondaryBlack"
+export type ButtonVariant = "primaryBlack" | "secondaryWhite" | "primaryWhite" | "black85" | "secondaryBlack" | "tertiaryWhite"
 export type ButtonSize = "small" | "large"
 
 /** Default button size */
@@ -107,6 +107,24 @@ export function getColorsForVariant(variant: ButtonVariant) {
           backgroundColor: black50,
           borderColor: black15,
           color: black100,
+        },
+        disabled: {
+          backgroundColor: black15,
+          borderColor: black15,
+          color: black50,
+        },
+      }
+    case "tertiaryWhite":
+      return {
+        default: {
+          backgroundColor: white100,
+          borderColor: black15,
+          color: black100,
+        },
+        pressed: {
+          backgroundColor: black100,
+          borderColor: black100,
+          color: white100,
         },
         disabled: {
           backgroundColor: black15,
