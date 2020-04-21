@@ -1,4 +1,4 @@
-import { Box, Flex, Sans } from "App/Components"
+import { Box, Flex, Sans, Button, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
 import { Schema, useTracking } from "App/utils/track"
@@ -8,6 +8,8 @@ import React from "react"
 import { Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { color } from "App/utils"
+import { SaveProductButton } from "App/Scenes/Product/Components"
+import { SaveIcon } from "Assets/icons"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -53,7 +55,7 @@ export const BagItem: React.FC<BagItemProps> = ({
 }) => {
   const tracking = useTracking()
   if (!bagItem) {
-    return <></>
+    return null
   }
   const variantToUse = head(
     (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
@@ -81,23 +83,72 @@ export const BagItem: React.FC<BagItemProps> = ({
         }}
       >
         <BagItemContainer flexDirection="row">
-          <Flex style={{ flex: 2 }} p={2} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
+          <Flex
+            style={{ flex: 2, width: "100%" }}
+            flexWrap="nowrap"
+            flexDirection="column"
+            justifyContent="space-between"
+          >
             <Box>
-              <Sans size="3" pb={1}>
-                {index + 1}
-              </Sans>
-              <Sans size="2">{product.brand.name}</Sans>
-              <Sans size="2" color="gray">
-                {product.name}
-              </Sans>
-            </Box>
-            <Box>
-              <Text>
-                <Sans size="2" color="gray">
+              <Box style={{ width: "100%" }}>
+                <Sans size="1">{`${index + 1}. ${product?.brand?.name}`}</Sans>
+                <Sans size="1" color="gray">
+                  {product.name}
+                </Sans>
+                <Sans size="1" color="gray">
                   Size {variantSize}
                 </Sans>
-              </Text>
+                <Spacer mb={3} />
+                <TouchableOpacity
+                  onPress={() => {
+                    tracking.trackEvent({
+                      actionName: Schema.ActionNames.BagItemSaved,
+                      actionType: Schema.ActionTypes.Tap,
+                      productSlug: product.slug,
+                      productId: product.id,
+                      variantId: variantId,
+                    })
+                    removeFromBagAndSaveItem({
+                      variables: {
+                        id: variantId,
+                        saved: false,
+                      },
+                    })
+                  }}
+                >
+                  <Sans size="1" style={{ textDecorationLine: "underline" }}>
+                    Save for later
+                  </Sans>
+                </TouchableOpacity>
+              </Box>
             </Box>
+            {!hideButtons && (
+              <Flex flexDirection="row" pt={1}>
+                <Box flex={1}>
+                  <Button
+                    size="small"
+                    variant="secondaryWhite"
+                    onPress={() => {
+                      tracking.trackEvent({
+                        actionName: Schema.ActionNames.BagItemRemoved,
+                        actionType: Schema.ActionTypes.Tap,
+                        productSlug: product.slug,
+                        productId: product.id,
+                        variantId: variantId,
+                      })
+                      removeItemFromBag({
+                        variables: {
+                          id: variantId,
+                          saved: false,
+                        },
+                      })
+                    }}
+                  >
+                    Remove
+                  </Button>
+                </Box>
+              </Flex>
+            )}
           </Flex>
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
             {!!imageURL && (
@@ -110,85 +161,13 @@ export const BagItem: React.FC<BagItemProps> = ({
           </Flex>
         </BagItemContainer>
       </TouchableWithoutFeedback>
-      {!hideButtons && (
-        <Flex flexDirection="row" pt={1}>
-          <Box flex={1} pr={1}>
-            <TouchableOpacity
-              onPress={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.BagItemRemoved,
-                  actionType: Schema.ActionTypes.Tap,
-                  productSlug: product.slug,
-                  productId: product.id,
-                  variantId: variantId,
-                })
-                removeItemFromBag({
-                  variables: {
-                    id: variantId,
-                    saved: false,
-                  },
-                })
-              }}
-            >
-              <RemoveButton>
-                <Sans size="1" textAlign="center">
-                  Remove
-                </Sans>
-              </RemoveButton>
-            </TouchableOpacity>
-          </Box>
-          <Box flex={1}>
-            <TouchableOpacity
-              onPress={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.BagItemSaved,
-                  actionType: Schema.ActionTypes.Tap,
-                  productSlug: product.slug,
-                  productId: product.id,
-                  variantId: variantId,
-                })
-                removeFromBagAndSaveItem({
-                  variables: {
-                    id: variantId,
-                    saved: false,
-                  },
-                })
-              }}
-            >
-              <SaveForLaterButton>
-                <Sans size="1" textAlign="center">
-                  Save for later
-                </Sans>
-              </SaveForLaterButton>
-            </TouchableOpacity>
-          </Box>
-        </Flex>
-      )}
     </Box>
   )
 }
 
-const RemoveButton = styled(Box)`
-  background: ${color("black04")};
-  border-radius: 5px;
-  height: 48px;
-  padding: 11px 8px 8px;
-`
-
-const SaveForLaterButton = styled(Box)`
-  height: 48px;
-  border-radius: 5px;
-  border: 1px;
-  border-color: #e5e5e5;
-  background: transparent;
-  padding: 11px 8px 8px;
-`
-
 const BagItemContainer = styled(Box)`
-  background: ${color("black04")};
-  border-radius: 8px;
   overflow: hidden;
-  height: 210px;
+  height: 216px;
 `
 
 const ImageContainer = styled(FadeInImage)`

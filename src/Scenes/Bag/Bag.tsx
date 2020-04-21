@@ -211,7 +211,7 @@ export const Bag = screenTrack()((props) => {
   const remainingPieces = BAG_NUM_ITEMS - bagCount
   const bagIsFull = bagCount === BAG_NUM_ITEMS
   const remainingPiecesDisplay = !bagIsFull
-    ? `You have ${remainingPieces} ${remainingPieces === 1 ? "piece" : "pieces"} remaining`
+    ? `You have ${remainingPieces} ${remainingPieces === 1 ? "slot" : "slots"} remaining`
     : "Reserve your order below"
 
   let bagSubtitle
@@ -227,7 +227,7 @@ export const Bag = screenTrack()((props) => {
     if (isBagView) {
       const hideButtons = item.status !== "Added"
       return item.productID.length ? (
-        <Box m={2}>
+        <Box p={2}>
           <BagItem
             hideButtons={hideButtons}
             removeItemFromBag={deleteBagItem}
@@ -239,7 +239,7 @@ export const Bag = screenTrack()((props) => {
           />
         </Box>
       ) : (
-        <EmptyBagItem navigation={navigation} />
+        <EmptyBagItem index={index} />
       )
     } else if (isSavedView) {
       return (
