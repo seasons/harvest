@@ -11,9 +11,10 @@ import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { useMutation } from "react-apollo"
 import { ADD_TO_BAG, GET_BAG } from "../BagQueries"
 import { GreenCheck } from "Assets/svgs"
+import { Spinner } from "App/Components/Spinner"
 
 interface BagItemProps {
-  bagLength: number
+  bagIsFull: boolean
   bagItem: any
   sectionHeight: number
   navigation?: any
@@ -21,13 +22,14 @@ interface BagItemProps {
 }
 
 export const SavedItem: React.FC<BagItemProps> = ({
-  bagLength,
+  bagIsFull,
   bagItem,
   sectionHeight,
   navigation,
   removeItemFromBag,
 }) => {
   const [isMutating, setIsMutating] = useState(false)
+  const [addingToBag, setAddingToBag] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
   if (!bagItem) {
@@ -55,7 +57,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
     ],
     onCompleted: () => {
       setIsMutating(false)
-      if (bagLength >= 2) {
+      if (bagIsFull) {
         showPopUp({
           icon: <GreenCheck />,
           title: "Added to bag",
@@ -94,32 +96,40 @@ export const SavedItem: React.FC<BagItemProps> = ({
                 Size {variantSize}
               </Sans>
               <Spacer mb={3} />
-              <TouchableOpacity
-                onPress={() => {
-                  if (!isMutating) {
-                    setIsMutating(true)
-                    addToBag()
-                    tracking.trackEvent({
-                      actionName: Schema.ActionNames.SavedItemAddedToBag,
-                      actionType: Schema.ActionTypes.Tap,
-                      productSlug: product.slug,
-                      productId: product.id,
-                      variantId: variantToUse.id,
-                    })
-                  }
-                }}
-              >
-                <Sans size="1" style={{ textDecorationLine: "underline" }}>
-                  Add to bag
-                </Sans>
-              </TouchableOpacity>
+              {!addingToBag ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (!addingToBag) {
+                      setAddingToBag(true)
+                      addToBag()
+                      tracking.trackEvent({
+                        actionName: Schema.ActionNames.SavedItemAddedToBag,
+                        actionType: Schema.ActionTypes.Tap,
+                        productSlug: product.slug,
+                        productId: product.id,
+                        variantId: variantToUse.id,
+                      })
+                    }
+                  }}
+                >
+                  <Sans size="1" style={{ textDecorationLine: "underline" }}>
+                    Add to bag
+                  </Sans>
+                </TouchableOpacity>
+              ) : (
+                <Flex
+                  style={{ width: 100, height: 20 }}
+                  flexDirection="row"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Spinner />
+                </Flex>
+              )}
             </Box>
             <Button
               width={91}
               onPress={() => {
-                if (isMutating) {
-                  return
-                }
                 setIsMutating(true)
                 tracking.trackEvent({
                   actionName: Schema.ActionNames.BagItemRemoved,
@@ -137,7 +147,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
               }}
               variant="secondaryWhite"
               size="small"
-              disabled={isMutating}
+              disabled={isMutating || addingToBag}
               loading={isMutating}
             >
               Remove

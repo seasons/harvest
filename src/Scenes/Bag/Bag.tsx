@@ -230,7 +230,6 @@ export const Bag = screenTrack()((props) => {
           <BagItem
             removeItemFromBag={deleteBagItem}
             removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-            sectionHeight={SECTION_HEIGHT}
             index={index}
             bagItem={item}
             navigation={navigation}
@@ -243,6 +242,7 @@ export const Bag = screenTrack()((props) => {
       return (
         <Box mt={index === 0 ? 1 : 0}>
           <SavedItem
+            bagIsFull={bagIsFull}
             removeItemFromBag={deleteBagItem}
             sectionHeight={SECTION_HEIGHT}
             bagItem={item}
