@@ -3,26 +3,38 @@ import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
 import { get, head } from "lodash"
 import React, { useState } from "react"
-import { TouchableWithoutFeedback } from "react-native"
+import { TouchableWithoutFeedback, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { useMutation } from "react-apollo"
+import { ADD_TO_BAG, GET_BAG } from "../BagQueries"
+import { GreenCheck } from "Assets/svgs"
 
 interface BagItemProps {
+  bagLength: number
   bagItem: any
   sectionHeight: number
   navigation?: any
   removeItemFromBag?: Function
 }
 
-export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navigation, removeItemFromBag }) => {
+export const SavedItem: React.FC<BagItemProps> = ({
+  bagLength,
+  bagItem,
+  sectionHeight,
+  navigation,
+  removeItemFromBag,
+}) => {
   const [isMutating, setIsMutating] = useState(false)
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
   if (!bagItem) {
-    return <></>
+    return null
   }
   const variantToUse = head(
-    (get(bagItem, "productVariant.product.variants") || []).filter(a => a.id === bagItem.productVariant.id)
+    (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
   )
   const product = get(bagItem, "productVariant.product")
   if (!product) {
@@ -31,6 +43,40 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navi
 
   const imageURL = imageResize(get(product, "images[0].url"), "medium")
   const variantSize = get(variantToUse, "size")
+
+  const [addToBag] = useMutation(ADD_TO_BAG, {
+    variables: {
+      id: variantToUse.id,
+    },
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+    ],
+    onCompleted: () => {
+      setIsMutating(false)
+      if (bagLength >= 2) {
+        showPopUp({
+          icon: <GreenCheck />,
+          title: "Added to bag",
+          note: "Your bag is full. Place your reservation from the bag tab.",
+          buttonText: "Got It",
+          onClose: () => hidePopUp(),
+        })
+      }
+    },
+    onError: (err) => {
+      setIsMutating(false)
+      if (err && err.graphQLErrors) {
+        showPopUp({
+          title: "Your bag is full",
+          note: "Remove one or more items from your bag to continue adding this item.",
+          buttonText: "Got It",
+          onClose: () => hidePopUp(),
+        })
+      }
+    },
+  })
 
   return (
     <Box py={1} key={product.id}>
@@ -47,6 +93,26 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagItem, sectionHeight, navi
               <Sans size="1" color={color("black50")}>
                 Size {variantSize}
               </Sans>
+              <Spacer mb={3} />
+              <TouchableOpacity
+                onPress={() => {
+                  if (!isMutating) {
+                    setIsMutating(true)
+                    addToBag()
+                    tracking.trackEvent({
+                      actionName: Schema.ActionNames.SavedItemAddedToBag,
+                      actionType: Schema.ActionTypes.Tap,
+                      productSlug: product.slug,
+                      productId: product.id,
+                      variantId: variantToUse.id,
+                    })
+                  }
+                }}
+              >
+                <Sans size="1" style={{ textDecorationLine: "underline" }}>
+                  Add to bag
+                </Sans>
+              </TouchableOpacity>
             </Box>
             <Button
               width={91}

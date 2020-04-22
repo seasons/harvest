@@ -225,11 +225,9 @@ export const Bag = screenTrack()((props) => {
 
   const renderItem = ({ item, index }) => {
     if (isBagView) {
-      const hideButtons = item.status !== "Added"
       return item.productID.length ? (
-        <Box p={2}>
+        <Box px={2} pt={hasActiveReservation ? 1 : 2} pb={hasActiveReservation ? 0 : 2}>
           <BagItem
-            hideButtons={hideButtons}
             removeItemFromBag={deleteBagItem}
             removeFromBagAndSaveItem={removeFromBagAndSaveItem}
             sectionHeight={SECTION_HEIGHT}
@@ -316,7 +314,7 @@ export const Bag = screenTrack()((props) => {
           return <BagEmptyState currentView={currentView} />
         }}
         ItemSeparatorComponent={() => {
-          if (isSavedView) {
+          if (hasActiveReservation) {
             return null
           }
           return (
@@ -335,7 +333,7 @@ export const Bag = screenTrack()((props) => {
         <>
           {hasActiveReservation ? (
             <FixedButton
-              block
+              rightAligned
               variant="primaryWhite"
               onPress={() => {
                 tracking.trackEvent({

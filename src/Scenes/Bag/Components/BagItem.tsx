@@ -5,11 +5,9 @@ import { Schema, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { get, head } from "lodash"
 import React from "react"
-import { Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
+import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { color } from "App/utils"
-import { SaveProductButton } from "App/Scenes/Product/Components"
-import { SaveIcon } from "Assets/icons"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -41,7 +39,6 @@ interface BagItemProps {
   navigation?: any
   removeItemFromBag?: Function
   removeFromBagAndSaveItem?: Function
-  hideButtons?: boolean
 }
 
 export const BagItem: React.FC<BagItemProps> = ({
@@ -51,7 +48,6 @@ export const BagItem: React.FC<BagItemProps> = ({
   navigation,
   removeItemFromBag,
   removeFromBagAndSaveItem,
-  hideButtons,
 }) => {
   const tracking = useTracking()
   if (!bagItem) {
@@ -65,9 +61,105 @@ export const BagItem: React.FC<BagItemProps> = ({
     return null
   }
 
+  console.log("bag item", bagItem)
+  const isReserved = bagItem.status !== "Added"
+
   const imageURL = imageResize(get(product, "images[0].url"), "medium")
   const variantSize = get(variantToUse, "internalSize.display")
   const variantId = bagItem.variantID
+
+  const ReservedItemContent = () => {
+    return (
+      <Flex
+        style={{
+          flex: 2,
+          width: "100%",
+        }}
+        flexWrap="nowrap"
+        flexDirection="column"
+        justifyContent="flex-end"
+      >
+        <Box style={{ width: "100%" }} p={2}>
+          <Sans size="1">{`${index + 1}.`}</Sans>
+          <Spacer mb={1} />
+          <Sans size="1">{product?.brand?.name}</Sans>
+          <Sans size="1" color="black50">
+            {product.name}
+          </Sans>
+          <Sans size="1" color="black50">
+            Size {variantSize}
+          </Sans>
+        </Box>
+      </Flex>
+    )
+  }
+
+  const NonReservedItemContent = () => {
+    return (
+      <Flex style={{ flex: 2, width: "100%" }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
+        <Box>
+          <Box style={{ width: "100%" }}>
+            <Sans size="1">{`${index + 1}. ${product?.brand?.name}`}</Sans>
+            <Sans size="1" color="black50">
+              {product.name}
+            </Sans>
+            <Sans size="1" color="black50">
+              Size {variantSize}
+            </Sans>
+            <Spacer mb={3} />
+            <TouchableOpacity
+              onPress={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.BagItemSaved,
+                  actionType: Schema.ActionTypes.Tap,
+                  productSlug: product.slug,
+                  productId: product.id,
+                  variantId: variantId,
+                })
+                removeFromBagAndSaveItem({
+                  variables: {
+                    id: variantId,
+                    saved: false,
+                  },
+                })
+              }}
+            >
+              <Sans size="1" style={{ textDecorationLine: "underline" }}>
+                Save for later
+              </Sans>
+            </TouchableOpacity>
+          </Box>
+        </Box>
+        {!isReserved && (
+          <Flex flexDirection="row" pt={1}>
+            <Box flex={1}>
+              <Button
+                size="small"
+                variant="secondaryWhite"
+                onPress={() => {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.BagItemRemoved,
+                    actionType: Schema.ActionTypes.Tap,
+                    productSlug: product.slug,
+                    productId: product.id,
+                    variantId: variantId,
+                  })
+                  removeItemFromBag({
+                    variables: {
+                      id: variantId,
+                      saved: false,
+                    },
+                  })
+                }}
+              >
+                Remove
+              </Button>
+            </Box>
+          </Flex>
+        )}
+      </Flex>
+    )
+  }
 
   return (
     <Box key={product.id}>
@@ -82,92 +174,36 @@ export const BagItem: React.FC<BagItemProps> = ({
           navigation?.navigate("Product", { id: product.id, slug: product.slug })
         }}
       >
-        <BagItemContainer flexDirection="row">
-          <Flex
-            style={{ flex: 2, width: "100%" }}
-            flexWrap="nowrap"
-            flexDirection="column"
-            justifyContent="space-between"
-          >
-            <Box>
-              <Box style={{ width: "100%" }}>
-                <Sans size="1">{`${index + 1}. ${product?.brand?.name}`}</Sans>
-                <Sans size="1" color="gray">
-                  {product.name}
-                </Sans>
-                <Sans size="1" color="gray">
-                  Size {variantSize}
-                </Sans>
-                <Spacer mb={3} />
-                <TouchableOpacity
-                  onPress={() => {
-                    tracking.trackEvent({
-                      actionName: Schema.ActionNames.BagItemSaved,
-                      actionType: Schema.ActionTypes.Tap,
-                      productSlug: product.slug,
-                      productId: product.id,
-                      variantId: variantId,
-                    })
-                    removeFromBagAndSaveItem({
-                      variables: {
-                        id: variantId,
-                        saved: false,
-                      },
-                    })
-                  }}
-                >
-                  <Sans size="1" style={{ textDecorationLine: "underline" }}>
-                    Save for later
-                  </Sans>
-                </TouchableOpacity>
-              </Box>
-            </Box>
-            {!hideButtons && (
-              <Flex flexDirection="row" pt={1}>
-                <Box flex={1}>
-                  <Button
-                    size="small"
-                    variant="secondaryWhite"
-                    onPress={() => {
-                      tracking.trackEvent({
-                        actionName: Schema.ActionNames.BagItemRemoved,
-                        actionType: Schema.ActionTypes.Tap,
-                        productSlug: product.slug,
-                        productId: product.id,
-                        variantId: variantId,
-                      })
-                      removeItemFromBag({
-                        variables: {
-                          id: variantId,
-                          saved: false,
-                        },
-                      })
-                    }}
-                  >
-                    Remove
-                  </Button>
-                </Box>
-              </Flex>
-            )}
-          </Flex>
-          <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
-            {!!imageURL && (
-              <ImageContainer
-                style={{ height: sectionHeight, width: 170 }}
-                resizeMode="contain"
-                source={{ uri: imageURL }}
-              />
-            )}
-          </Flex>
-        </BagItemContainer>
+        <Box
+          style={{
+            shadowColor: "black",
+            shadowRadius: 10,
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0.1,
+            elevation: 1,
+          }}
+        >
+          <BagItemContainer isReserved={isReserved} flexDirection="row">
+            {isReserved ? <ReservedItemContent /> : <NonReservedItemContent />}
+            <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
+              {!!imageURL && (
+                <ImageContainer style={{ height: 216, width: 170 }} resizeMode="contain" source={{ uri: imageURL }} />
+              )}
+            </Flex>
+          </BagItemContainer>
+        </Box>
       </TouchableWithoutFeedback>
     </Box>
   )
 }
 
-const BagItemContainer = styled(Box)`
-  overflow: hidden;
+const BagItemContainer = styled(Box)<{ isReserved: boolean }>`
   height: 216px;
+  overflow: hidden;
+  background-color: ${color("white100")};
+  border-color: ${color("black15")};
+  border-width: ${(p) => (p.isReserved ? "1px" : "0px")};
+  border-radius: ${(p) => (p.isReserved ? "8px" : "0px")};
 `
 
 const ImageContainer = styled(FadeInImage)`
