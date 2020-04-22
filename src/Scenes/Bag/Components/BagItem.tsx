@@ -61,7 +61,6 @@ export const BagItem: React.FC<BagItemProps> = ({
     return null
   }
 
-  console.log("bag item", bagItem)
   const isReserved = bagItem.status !== "Added"
 
   const imageURL = imageResize(get(product, "images[0].url"), "medium")
