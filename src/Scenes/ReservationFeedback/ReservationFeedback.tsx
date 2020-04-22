@@ -124,7 +124,7 @@ export const ReservationFeedback: React.FC<{
         keyExtractor={item => item}
         renderItem={({ item }) => (
           <Button
-            variant="secondaryWhite"
+            variant="tertiaryWhite"
             width={contentWidth}
             selected={responses.includes(item)}
             height={48}
