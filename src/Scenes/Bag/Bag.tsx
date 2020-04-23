@@ -226,7 +226,11 @@ export const Bag = screenTrack()((props) => {
   const renderItem = ({ item, index }) => {
     if (isBagView) {
       return item.productID.length ? (
-        <Box px={2} pt={hasActiveReservation ? 1 : 2} pb={hasActiveReservation ? 0 : 2}>
+        <Box
+          px={2}
+          pt={(index === 0 && hasActiveReservation) || !hasActiveReservation ? 2 : 1}
+          pb={hasActiveReservation ? 0 : 2}
+        >
           <BagItem
             removeItemFromBag={deleteBagItem}
             removeFromBagAndSaveItem={removeFromBagAndSaveItem}
