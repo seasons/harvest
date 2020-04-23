@@ -15,6 +15,7 @@ import { Spinner } from "App/Components/Spinner"
 
 interface BagItemProps {
   bagIsFull: boolean
+  hasActiveReservation: boolean
   bagItem: any
   sectionHeight: number
   navigation?: any
@@ -27,6 +28,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
   sectionHeight,
   navigation,
   removeItemFromBag,
+  hasActiveReservation,
 }) => {
   const [isMutating, setIsMutating] = useState(false)
   const [addingToBag, setAddingToBag] = useState(false)
@@ -57,6 +59,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
     ],
     onCompleted: () => {
       setIsMutating(false)
+      setAddingToBag(false)
       if (bagIsFull) {
         showPopUp({
           icon: <GreenCheck />,
@@ -69,6 +72,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
     },
     onError: (err) => {
       setIsMutating(false)
+      setAddingToBag(false)
       if (err && err.graphQLErrors) {
         showPopUp({
           title: "Your bag is full",
@@ -96,35 +100,39 @@ export const SavedItem: React.FC<BagItemProps> = ({
                 Size {variantSize}
               </Sans>
               <Spacer mb={3} />
-              {!addingToBag ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    if (!addingToBag) {
-                      setAddingToBag(true)
-                      addToBag()
-                      tracking.trackEvent({
-                        actionName: Schema.ActionNames.SavedItemAddedToBag,
-                        actionType: Schema.ActionTypes.Tap,
-                        productSlug: product.slug,
-                        productId: product.id,
-                        variantId: variantToUse.id,
-                      })
-                    }
-                  }}
-                >
-                  <Sans size="1" style={{ textDecorationLine: "underline" }}>
-                    Add to bag
-                  </Sans>
-                </TouchableOpacity>
-              ) : (
-                <Flex
-                  style={{ width: 100, height: 20 }}
-                  flexDirection="row"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Spinner />
-                </Flex>
+              {!hasActiveReservation && (
+                <>
+                  {!addingToBag ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (!addingToBag) {
+                          setAddingToBag(true)
+                          addToBag()
+                          tracking.trackEvent({
+                            actionName: Schema.ActionNames.SavedItemAddedToBag,
+                            actionType: Schema.ActionTypes.Tap,
+                            productSlug: product.slug,
+                            productId: product.id,
+                            variantId: variantToUse.id,
+                          })
+                        }
+                      }}
+                    >
+                      <Sans size="1" style={{ textDecorationLine: "underline" }}>
+                        Add to bag
+                      </Sans>
+                    </TouchableOpacity>
+                  ) : (
+                    <Flex
+                      style={{ width: 100, height: 20 }}
+                      flexDirection="row"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Spinner />
+                    </Flex>
+                  )}
+                </>
               )}
             </Box>
             <Button

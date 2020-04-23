@@ -242,6 +242,7 @@ export const Bag = screenTrack()((props) => {
       return (
         <Box mt={index === 0 ? 1 : 0}>
           <SavedItem
+            hasActiveReservation={hasActiveReservation}
             bagIsFull={bagIsFull}
             removeItemFromBag={deleteBagItem}
             sectionHeight={SECTION_HEIGHT}
