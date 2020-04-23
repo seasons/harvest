@@ -286,21 +286,24 @@ export const Browse = screenTrack()((props: any) => {
             }}
           />
           <FixedButtonContainer bottom={space(2)}>
-            <Button size="small" variant={filtersButtonVariant} onPress={onFilterBtnPress}>
-              <Sans color={color(filtersButtonTextColor)} size="1" weight="medium">
-                {filtersButtonText}
-              </Sans>
+            <Button
+              color={color(filtersButtonTextColor)}
+              size="small"
+              variant={filtersButtonVariant}
+              onPress={onFilterBtnPress}
+            >
+              {filtersButtonText}
             </Button>
           </FixedButtonContainer>
         </AnimatedBox>
-        <Box height={60} style={{ opacity: !data ? 0 : 1 }}>
+        <Box height={56} style={{ opacity: !data ? 0 : 1 }}>
           <CategoryPicker
             data={[{ slug: "all", name: "All" }, ...categories]}
             renderItem={({ item }) => {
               const selected = currentCategory == item.slug
               return (
                 <TouchableOpacity onPress={() => onCategoryPress(item)}>
-                  <Category mr={3} mt={1} selected={selected}>
+                  <Category mr={4} selected={selected}>
                     <Sans size="1" style={{ opacity: selected ? 1.0 : 0.5 }}>
                       {item.name}
                     </Sans>
