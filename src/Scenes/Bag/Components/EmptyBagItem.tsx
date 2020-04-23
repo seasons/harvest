@@ -3,12 +3,9 @@ import { Sans } from "Components/Typography"
 import React from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
-
 import { BagPlus } from "../../../../assets/svgs"
 
-export const EmptyBagItem = props => {
-  const { navigation } = props
-
+export const EmptyBagItem: React.FC<{ index: number; navigation: any }> = ({ index, navigation }) => {
   return (
     <Box p={2}>
       <EmptyBagItemContainer>
@@ -19,8 +16,8 @@ export const EmptyBagItem = props => {
                 <Box my={1} mx="auto">
                   <BagPlus />
                 </Box>
-                <Sans size="2" color="black" textAlign="center">
-                  Add item
+                <Sans size="2" color="black50" textAlign="center">
+                  {`Slot ${index + 1}`}
                 </Sans>
               </Box>
             </TouchableOpacity>

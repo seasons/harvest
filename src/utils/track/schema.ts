@@ -116,6 +116,7 @@ export enum ActionNames {
   FAQButtonTapped = "FAQ Button Tapped",
   ReserveButtonTapped = "Reserve Button Tapped",
   ReservationHistoryTabTapped = "Reservation History Tab Tapped",
+  SavedItemAddedToBag = "Saved Item Added To Bag",
 
   // Brand view
   ReadMoreTapped = "Read More Tapped",
