@@ -240,7 +240,7 @@ export const Bag = screenTrack()((props) => {
           />
         </Box>
       ) : (
-        <EmptyBagItem index={index} />
+        <EmptyBagItem index={index} navigation={navigation} />
       )
     } else if (isSavedView) {
       return (

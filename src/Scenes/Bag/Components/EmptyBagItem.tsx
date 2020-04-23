@@ -4,10 +4,8 @@ import React from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 import { BagPlus } from "../../../../assets/svgs"
-import { useNavigation } from "@react-navigation/native"
 
-export const EmptyBagItem: React.FC<{ index: number }> = ({ index }) => {
-  const navigation = useNavigation()
+export const EmptyBagItem: React.FC<{ index: number; navigation: any }> = ({ index, navigation }) => {
   return (
     <Box p={2}>
       <EmptyBagItemContainer>
