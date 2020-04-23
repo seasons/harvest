@@ -211,7 +211,7 @@ export const Bag = screenTrack()((props) => {
   const remainingPieces = BAG_NUM_ITEMS - bagCount
   const bagIsFull = bagCount === BAG_NUM_ITEMS
   const remainingPiecesDisplay = !bagIsFull
-    ? `You have ${remainingPieces} ${remainingPieces === 1 ? "piece" : "pieces"} remaining`
+    ? `You have ${remainingPieces} ${remainingPieces === 1 ? "slot" : "slots"} remaining`
     : "Reserve your order below"
 
   let bagSubtitle
@@ -225,26 +225,29 @@ export const Bag = screenTrack()((props) => {
 
   const renderItem = ({ item, index }) => {
     if (isBagView) {
-      const hideButtons = item.status !== "Added"
       return item.productID.length ? (
-        <Box m={2}>
+        <Box
+          px={2}
+          pt={(index === 0 && hasActiveReservation) || !hasActiveReservation ? 2 : 1}
+          pb={hasActiveReservation ? 0 : 2}
+        >
           <BagItem
-            hideButtons={hideButtons}
             removeItemFromBag={deleteBagItem}
             removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-            sectionHeight={SECTION_HEIGHT}
             index={index}
             bagItem={item}
             navigation={navigation}
           />
         </Box>
       ) : (
-        <EmptyBagItem navigation={navigation} />
+        <EmptyBagItem index={index} navigation={navigation} />
       )
     } else if (isSavedView) {
       return (
         <Box mt={index === 0 ? 1 : 0}>
           <SavedItem
+            hasActiveReservation={hasActiveReservation}
+            bagIsFull={bagIsFull}
             removeItemFromBag={deleteBagItem}
             sectionHeight={SECTION_HEIGHT}
             bagItem={item}
@@ -316,7 +319,7 @@ export const Bag = screenTrack()((props) => {
           return <BagEmptyState currentView={currentView} />
         }}
         ItemSeparatorComponent={() => {
-          if (isSavedView) {
+          if (hasActiveReservation) {
             return null
           }
           return (
@@ -335,7 +338,7 @@ export const Bag = screenTrack()((props) => {
         <>
           {hasActiveReservation ? (
             <FixedButton
-              block
+              rightAligned
               variant="primaryWhite"
               onPress={() => {
                 tracking.trackEvent({

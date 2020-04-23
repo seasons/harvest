@@ -133,7 +133,7 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
             <Spacer mb={3} />
             {options.map((option, index) => (
               <Box key={index}>
-                <Button variant="secondaryWhite" selected={selectedIndex === index} width={contentWidth} height={48} onPress={() => onRatingButtonPressed(index)}>
+                <Button variant="tertiaryWhite" selected={selectedIndex === index} width={contentWidth} height={48} onPress={() => onRatingButtonPressed(index)}>
                   {option}
                 </Button>
                 <Spacer mt={1} />

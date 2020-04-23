@@ -18,7 +18,7 @@ export const ProductDetails: React.FC<{
   const tracking = useTracking()
   const navigation = useNavigation()
   if (!product || !product.variants) {
-    return <></>
+    return null
   }
 
   const {

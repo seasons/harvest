@@ -1,6 +1,5 @@
 import LottieView from "lottie-react-native"
 import React from "react"
-import { Dimensions } from "react-native"
 import styled from "styled-components/native"
 import { Box } from "./Box"
 import { themeProps } from "./Theme"
@@ -45,9 +44,9 @@ export const Loader: React.FC<{
 
 const Container = styled(Box)`
   background-color: ${(p) => p.backgroundColor};
-  width: ${Dimensions.get("window").width};
-  height: ${Dimensions.get("window").height};
   opacity: ${(p) => p.opacity};
+  width: 100%;
+  height: 100%;
   z-index: 51;
   position: absolute;
   flex: 1;
