@@ -136,7 +136,6 @@ export const SavedItem: React.FC<BagItemProps> = ({
               )}
             </Box>
             <Button
-              width={91}
               onPress={() => {
                 setIsMutating(true)
                 tracking.trackEvent({

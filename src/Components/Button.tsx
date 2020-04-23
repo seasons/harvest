@@ -43,7 +43,13 @@ export interface ButtonProps extends BoxProps {
   block?: boolean
 }
 
-export type ButtonVariant = "primaryBlack" | "secondaryWhite" | "primaryWhite" | "black85" | "secondaryBlack" | "tertiaryWhite"
+export type ButtonVariant =
+  | "primaryBlack"
+  | "secondaryWhite"
+  | "primaryWhite"
+  | "black85"
+  | "secondaryBlack"
+  | "tertiaryWhite"
 export type ButtonSize = "small" | "large"
 
 /** Default button size */
@@ -199,7 +205,9 @@ export class Button extends Component<ButtonProps, ButtonState> {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { selected } = nextProps
-    if (selected === undefined) { return prevState }
+    if (selected === undefined) {
+      return prevState
+    }
     const { current: currentState, previous: previousState } = prevState
     const previous = selected ? currentState : previousState
     const current = selected ? DisplayState.Pressed : DisplayState.Default
@@ -211,7 +219,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
     const { selected = false } = props
     this.state = {
       previous: DisplayState.Default,
-      current: selected ? DisplayState.Pressed : DisplayState.Default
+      current: selected ? DisplayState.Pressed : DisplayState.Default,
     }
   }
 
@@ -228,13 +236,13 @@ export class Button extends Component<ButtonProps, ButtonState> {
   getSize(): { height: number | string; size: "0" | "1" | "2"; px: number } {
     switch (this.props.size) {
       case "small":
-        return { height: 32, size: "1", px: 2 }
+        return { height: 36, size: "1", px: 21 }
       default:
         return { height: 48, size: "1", px: 30 }
     }
   }
 
-  onPress = args => {
+  onPress = (args) => {
     if (this.props.disabled || this.props.loading) {
       return
     }
@@ -285,7 +293,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
 
     return (
       <Spring native from={from} to={to}>
-        {props => (
+        {(props) => (
           <TouchableWithoutFeedback
             onPress={this.onPress}
             onPressIn={() => {
@@ -338,7 +346,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 }
 
-const Container = styled(Box) <ButtonProps>`
+const Container = styled(Box)<ButtonProps>`
   align-items: center;
   justify-content: center;
   position: relative;
@@ -346,7 +354,7 @@ const Container = styled(Box) <ButtonProps>`
   flex-direction: row;
   border-width: 1;
   border-radius: 28;
-  width: ${p => {
+  width: ${(p) => {
     if (p.width) {
       return p.width
     } else {
