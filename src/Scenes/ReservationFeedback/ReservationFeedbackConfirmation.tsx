@@ -68,6 +68,9 @@ export const ReservationFeedbackConfirmation: React.FC<{
             <Separator />
             <Spacer mb={2} />
             <TextInput
+              autoCapitalize="sentences"
+              autoFocus
+              blurOnSubmit={false}
               currentValue={comment}
               style={{ height: 200, paddingLeft: 0, paddingTop: 0, borderWidth: 0 }}
               placeholder="Tell us anything else on your mind"
