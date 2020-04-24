@@ -15,7 +15,7 @@ export const GET_BAG = gql`
         plan
         reservations(orderBy: createdAt_DESC) {
           id
-          status
+          status(display: true)
           reservationNumber
           createdAt
           products {
