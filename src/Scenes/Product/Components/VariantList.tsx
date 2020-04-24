@@ -106,6 +106,8 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
     const sizeData = sizeDataForVariants(variants, type)
     setSizeData(sizeData)
 
+    console.log("sizeData", sizeData)
+
     // Update size data
     const firstAvailableSize =
       find(sizeData, (size: Size) => size.isInBag) ||
@@ -131,7 +133,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
         >
           <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap" my={2}>
             <Flex flexDirection="row" alignItems="center">
-              <Radio selected={selectedVariant.id === size.id} pointerEventsNone />
+              <Radio selected={!!selectedVariant.id && selectedVariant.id === size.id} pointerEventsNone />
               <Spacer mr={1} />
               <Sans color={size.stock ? color("white100") : color("black50")} size="1">
                 {capitalize(size.size)}
