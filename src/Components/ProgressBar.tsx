@@ -12,20 +12,16 @@ export interface ProgressBarProps extends BoxProps {
 /**
  * A progress bar used to indicate the progress or loading of something
  */
-export const ProgressBar: React.SFC<ProgressBarProps> = ({
-  height = 3,
-  percentCompleted,
-  width,
-}) => {
+export const ProgressBar: React.SFC<ProgressBarProps> = ({ height = 3, percentCompleted, width }) => {
   return (
-    <OuterBar style={{ height, width }} >
+    <OuterBar style={{ height, width }}>
       <InnerBar style={{ height, width: width * percentCompleted }} />
     </OuterBar>
   )
 }
 
-const OuterBar = styled(Box) <ProgressBarProps>`
-  background: ${color("black15")};
+const OuterBar = styled(Box)<ProgressBarProps>`
+  background: ${color("black10")};
   border-radius: 100;
 `
 

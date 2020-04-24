@@ -54,6 +54,7 @@ export const Bag = screenTrack()((props) => {
       setIsLoading(false)
     }
   }, [data])
+  console.log("data", data)
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {
       const { me } = cache.readQuery({ query: GET_BAG })
@@ -319,12 +320,12 @@ export const Bag = screenTrack()((props) => {
           return <BagEmptyState currentView={currentView} />
         }}
         ItemSeparatorComponent={() => {
-          if (hasActiveReservation) {
+          if (hasActiveReservation || isSavedView) {
             return null
           }
           return (
             <Box>
-              <Separator color={color("black15")} />
+              <Separator color={color("black10")} />
             </Box>
           )
         }}

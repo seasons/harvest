@@ -14,7 +14,7 @@ export const FixedBackArrow: React.FC<{
 }> = ({ navigation, variant }) => {
   const getColorsForVariant = (variant: FixedBackArrowVariant) => {
     const {
-      colors: { black100, white100, black15, black04 },
+      colors: { black100, white100, black10, black04 },
     } = themeProps
 
     switch (variant) {
@@ -35,7 +35,7 @@ export const FixedBackArrow: React.FC<{
         }
       default:
         return {
-          backgroundColor: black15,
+          backgroundColor: black10,
           arrowColor: black100,
         }
     }
@@ -67,7 +67,7 @@ const Wrapper = styled(Box)`
 
 const ArrowWrapper = styled(Flex)`
   flex-direction: row;
-  background-color: ${p => p.backgroundColor};
+  background-color: ${(p) => p.backgroundColor};
   border-radius: 100;
   height: 40;
   width: 40;

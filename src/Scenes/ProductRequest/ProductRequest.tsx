@@ -97,7 +97,7 @@ export const ProductRequest = screenTrack()((props: any) => {
               Submit an item
             </Sans>
             <Spacer mb={14} />
-            <Sans size="2" color={color("black15")} weight="medium">
+            <Sans size="2" color={color("black25")} weight="medium">
               Recommend something for us to carry by pasting the link to the item below.
             </Sans>
             <Spacer mb={4} />

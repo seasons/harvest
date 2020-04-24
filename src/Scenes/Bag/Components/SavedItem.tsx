@@ -3,7 +3,7 @@ import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
 import { get, head } from "lodash"
 import React, { useState } from "react"
-import { TouchableWithoutFeedback, TouchableOpacity } from "react-native"
+import { TouchableWithoutFeedback, Text } from "react-native"
 import styled from "styled-components/native"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
@@ -46,7 +46,10 @@ export const SavedItem: React.FC<BagItemProps> = ({
   }
 
   const imageURL = imageResize(get(product, "images[0].url"), "medium")
-  const variantSize = get(variantToUse, "size")
+  const variantSize = variantToUse?.internalSize?.display
+  const reservable = variantToUse?.reservable
+
+  console.log("variantToUse", variantToUse)
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
@@ -100,40 +103,58 @@ export const SavedItem: React.FC<BagItemProps> = ({
                 Size {variantSize}
               </Sans>
               <Spacer mb={3} />
-              {!hasActiveReservation && (
-                <>
-                  {!addingToBag ? (
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (!addingToBag) {
-                          setAddingToBag(true)
-                          addToBag()
-                          tracking.trackEvent({
-                            actionName: Schema.ActionNames.SavedItemAddedToBag,
-                            actionType: Schema.ActionTypes.Tap,
-                            productSlug: product.slug,
-                            productId: product.id,
-                            variantId: variantToUse.id,
-                          })
-                        }
-                      }}
-                    >
-                      <Sans size="1" style={{ textDecorationLine: "underline" }}>
-                        Add to bag
+
+              <Flex flexDirection="row" alignItems="center">
+                <ColoredDot reservable={reservable} />
+                {!addingToBag ? (
+                  <>
+                    {!!reservable ? (
+                      <>
+                        {!hasActiveReservation ? (
+                          <>
+                            <Sans
+                              size="1"
+                              style={{ textDecorationLine: "underline" }}
+                              onPress={() => {
+                                if (!addingToBag) {
+                                  setAddingToBag(true)
+                                  addToBag()
+                                  tracking.trackEvent({
+                                    actionName: Schema.ActionNames.SavedItemAddedToBag,
+                                    actionType: Schema.ActionTypes.Tap,
+                                    productSlug: product.slug,
+                                    productId: product.id,
+                                    variantId: variantToUse.id,
+                                  })
+                                }
+                              }}
+                            >
+                              {"  "}Add to bag
+                            </Sans>
+                          </>
+                        ) : (
+                          <Sans size="1" color="black50">
+                            {"  "}Available
+                          </Sans>
+                        )}
+                      </>
+                    ) : (
+                      <Sans size="1" color="black50">
+                        {"  "}Unavailable
                       </Sans>
-                    </TouchableOpacity>
-                  ) : (
-                    <Flex
-                      style={{ width: 100, height: 20 }}
-                      flexDirection="row"
-                      justifyContent="center"
-                      alignItems="center"
-                    >
-                      <Spinner />
-                    </Flex>
-                  )}
-                </>
-              )}
+                    )}
+                  </>
+                ) : (
+                  <Flex
+                    style={{ width: 100, height: 20 }}
+                    flexDirection="row"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Spinner />
+                  </Flex>
+                )}
+              </Flex>
             </Box>
             <Button
               onPress={() => {
@@ -175,7 +196,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
         </BagItemContainer>
       </TouchableWithoutFeedback>
       <Spacer mb={2} />
-      <Separator color={color("black15")} />
+      <Separator color={color("black10")} />
     </Box>
   )
 }
@@ -192,4 +213,11 @@ const ImageContainer = styled(FadeInImage)`
 const ImageWrapper = styled(FadeInImage)`
   border-radius: 30px;
   overflow: hidden;
+`
+
+const ColoredDot = styled(Box)`
+  height: 10;
+  width: 10;
+  background-color: ${(p) => (!!p.reservable ? color("green100") : color("black50"))};
+  border-radius: 100;
 `

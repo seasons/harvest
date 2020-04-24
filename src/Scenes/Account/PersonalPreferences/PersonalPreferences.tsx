@@ -41,10 +41,10 @@ export const AccountSection: React.FC<{ title: string; value: string | [string] 
     <Box key={title} px={2}>
       <Sans size="2">{title}</Sans>
       <Box mb={1} />
-      <Separator color={color("black15")} />
+      <Separator color={color("black10")} />
       <Box mb={1} />
       {Array.isArray(value) ? (
-        value.map(text => (
+        value.map((text) => (
           <Sans key={text} size="2" color="gray">
             {text}
           </Sans>
@@ -69,9 +69,7 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
       const details = data.me.customer.detail
 
       if (details.birthday) {
-        const birthdayAsDate = DateTime.fromISO(details.birthday)
-          .toUTC()
-          .toLocaleString(DateTime.DATE_FULL)
+        const birthdayAsDate = DateTime.fromISO(details.birthday).toUTC().toLocaleString(DateTime.DATE_FULL)
         sectionsArray.push({ title: "Birthday", value: birthdayAsDate })
       }
 
@@ -152,7 +150,7 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
     return null
   }
 
-  const renderItem = item => {
+  const renderItem = (item) => {
     return <AccountSection title={item.title} value={item.value} />
   }
 
@@ -168,7 +166,7 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
             <Spacer mb={3} />
           </Box>
         )}
-        keyExtractor={item => item.title}
+        keyExtractor={(item) => item.title}
         renderItem={({ item }) => renderItem(item)}
       />
     </Container>
