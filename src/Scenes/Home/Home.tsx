@@ -12,6 +12,7 @@ import React, { useEffect, useState, useContext } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
+import { useSafeArea } from "react-native-safe-area-context"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
 import { Schema } from "App/Navigation"
@@ -86,6 +87,7 @@ export const Home = screenTrack()(({ navigation }) => {
   const { loading, error, data, refetch } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
+  const insets = useSafeArea()
 
   useEffect(() => {
     if (data?.homepage?.sections?.length) {
@@ -170,9 +172,9 @@ export const Home = screenTrack()(({ navigation }) => {
   return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
-      <Container insetsBottom={true}>
+      <Container insetsTop={false}>
         <Animatable.View animation="fadeIn" duration={300}>
-          <Box pb={2} px={2} pt={1} style={{ backgroundColor: color("white100") }}>
+          <Box pb={2} px={2} pt={insets.top + 8} style={{ backgroundColor: color("white100") }}>
             <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
               <LogoText>SEASONS</LogoText>
             </Flex>
