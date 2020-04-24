@@ -106,7 +106,6 @@ export const BagItem: React.FC<BagItemProps> = ({
               Size {variantSize}
             </Sans>
             <Spacer mb={3} />
-            <Box style={{ height: 50, width: 50, backgroundColor: "#BFBFBF" }} />
             {!isMutating ? (
               <TouchableOpacity
                 onPress={() => {

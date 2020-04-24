@@ -1,5 +1,5 @@
 import React from "react"
-import Svg, { G, Path, SvgProps } from "react-native-svg"
+import Svg, { Path, SvgProps } from "react-native-svg"
 import { color } from "App/utils"
 
 interface SaveIconProps extends SvgProps {

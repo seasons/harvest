@@ -67,7 +67,7 @@ const SectionHeader = ({ title }) => {
         </Sans>
       </Flex>
       <Spacer mb={1} />
-      <Separator color={color("black04")} />
+      <Separator />
     </>
   )
 }
@@ -162,7 +162,9 @@ export const Reservation = screenTrack()((props) => {
                     return (
                       <Box key={item.id}>
                         <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
-                        <Spacer mb={2} />
+                        <Spacer mb={1} />
+                        <Separator />
+                        <Spacer mb={1} />
                       </Box>
                     )
                   })}

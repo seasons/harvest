@@ -161,7 +161,9 @@ export const ReservationConfirmation = screenTrack()((props) => {
                 return (
                   <Box key={item.id}>
                     <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
-                    <Spacer mb={2} />
+                    <Spacer mb={1} />
+                    <Separator />
+                    <Spacer mb={1} />
                   </Box>
                 )
               })}
