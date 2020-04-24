@@ -196,7 +196,7 @@ export const Home = screenTrack()(({ navigation }) => {
           />
           {reservationFeedback ? (
             reservationFeedback.rating ? (
-              <ReservationFeedbackReminderWrapper>
+              <ReservationFeedbackReminderWrapper style={{ bottom: insets.bottom + 8 }}>
                 <ReservationFeedbackReminder
                   reservationFeedback={reservationFeedback}
                   onPress={onPressReservationFeedbackReminder}
@@ -217,7 +217,6 @@ export const Home = screenTrack()(({ navigation }) => {
 
 const ReservationFeedbackReminderWrapper = styled(Box)`
   position: absolute;
-  bottom: 0;
   left: 0;
   background: ${color("white100")};
   width: 100%;
