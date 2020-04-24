@@ -25,6 +25,7 @@ export const BagItemFragment = gql`
       images
       variants {
         id
+        reservable
         internalSize {
           display
         }
