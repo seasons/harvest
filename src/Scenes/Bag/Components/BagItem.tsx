@@ -106,6 +106,7 @@ export const BagItem: React.FC<BagItemProps> = ({
               Size {variantSize}
             </Sans>
             <Spacer mb={3} />
+            <Box style={{ height: 50, width: 50, backgroundColor: "#BFBFBF" }} />
             {!isMutating ? (
               <TouchableOpacity
                 onPress={() => {
@@ -212,7 +213,7 @@ const BagItemContainer = styled(Box)<{ isReserved: boolean }>`
   height: 216px;
   overflow: hidden;
   background-color: ${color("white100")};
-  border-color: ${color("black15")};
+  border-color: ${color("black10")};
   border-width: ${(p) => (p.isReserved ? "1px" : "0px")};
   border-radius: ${(p) => (p.isReserved ? "8px" : "0px")};
 `

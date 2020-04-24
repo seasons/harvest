@@ -57,7 +57,7 @@ export const Filters = screenTrack()((props: any) => {
             </Sans>
           </Flex>
           <Spacer mt={20} />
-          <Separator color={color("black15")} />
+          <Separator color={color("black10")} />
         </Box>
       </TouchableWithoutFeedback>
     )

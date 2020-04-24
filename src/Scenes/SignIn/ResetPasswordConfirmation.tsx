@@ -13,7 +13,7 @@ export const ResetPasswordConfirmation = (props: any) => {
             Reset Password Link Sent
           </Sans>
           <Spacer mb={1} />
-          <Sans size="2" color={color("black15")} weight="medium">
+          <Sans size="2" color={color("black25")} weight="medium">
             Check your email for a link to reset your password.
           </Sans>
           <Spacer mb={3} />

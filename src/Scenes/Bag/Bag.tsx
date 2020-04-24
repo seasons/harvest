@@ -325,7 +325,7 @@ export const Bag = screenTrack()((props) => {
           }
           return (
             <Box>
-              <Separator color={color("black15")} />
+              <Separator color={color("black10")} />
             </Box>
           )
         }}

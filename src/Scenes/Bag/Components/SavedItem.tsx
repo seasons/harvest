@@ -196,7 +196,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
         </BagItemContainer>
       </TouchableWithoutFeedback>
       <Spacer mb={2} />
-      <Separator color={color("black15")} />
+      <Separator color={color("black10")} />
     </Box>
   )
 }
