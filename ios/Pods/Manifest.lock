@@ -1,11 +1,11 @@
 PODS:
-  - A0Auth0 (2.1.0):
+  - A0Auth0 (2.3.0):
     - React
-  - Analytics (3.7.1)
+  - Analytics (3.8.0)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - EXAppLoaderProvider (7.0.0)
-  - EXConstants (7.0.0):
+  - EXConstants (7.0.1):
     - UMConstantsInterface
     - UMCore
   - EXFileSystem (7.0.0):
@@ -61,7 +61,7 @@ PODS:
   - lottie-react-native (3.3.2):
     - lottie-ios (~> 3.1.3)
     - React
-  - Permission-Notifications (2.0.9):
+  - Permission-Notifications (2.1.3):
     - RNPermissions
   - PushNotifications (3.0.4)
   - RCTRequired (0.61.5)
@@ -231,7 +231,7 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-config (0.12.0):
     - React
-  - react-native-netinfo (5.7.0):
+  - react-native-netinfo (5.8.0):
     - React
   - react-native-pusher-push-notifications (2.4.0):
     - PushNotifications (>= 2.1.2)
@@ -280,28 +280,28 @@ PODS:
   - RNAnalytics (1.1.0):
     - Analytics
     - React
-  - RNCAsyncStorage (1.6.2):
+  - RNCAsyncStorage (1.9.0):
     - React
   - RNFastImage (7.0.2):
     - React
     - SDWebImage (~> 5.0)
     - SDWebImageWebPCoder (~> 0.2.3)
-  - RNGestureHandler (1.6.0):
+  - RNGestureHandler (1.6.1):
     - React
-  - RNPermissions (2.0.9):
+  - RNPermissions (2.1.3):
     - React
-  - RNReanimated (1.7.0):
+  - RNReanimated (1.8.0):
     - React
-  - RNScreens (2.4.0):
+  - RNScreens (2.6.0):
     - React
-  - RNSentry (1.1.0):
+  - RNSentry (1.3.7):
     - React
     - Sentry (~> 4.4.0)
   - RNSVG (9.13.3):
     - React
-  - SDWebImage (5.6.1):
-    - SDWebImage/Core (= 5.6.1)
-  - SDWebImage/Core (5.6.1)
+  - SDWebImage (5.7.3):
+    - SDWebImage/Core (= 5.7.3)
+  - SDWebImage/Core (5.7.3)
   - SDWebImageWebPCoder (0.2.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.0)
@@ -566,12 +566,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  A0Auth0: 351b3b07e58db39b3bb33f58acf35a878fbba74d
-  Analytics: f82f3cd6d3c8fbfd76ce25773199576656981a4a
+  A0Auth0: 802f5f5add8ac5265cfeea125caa2720dafccfa6
+  Analytics: fcf79ebc393a7d77befb8d43ce296353ba9ede3d
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   EXAppLoaderProvider: 5d348813a9cf09b03bbe5b8b55437bc1bfbddbd1
-  EXConstants: 31e5318521be6175009af6ccd3e97dedf39da96a
+  EXConstants: 857aa7b1c84e2878f8402d712061860bca16a697
   EXFileSystem: 7e53a2c30a2eb6987ba6d5158ab908f947523228
   EXFont: 71d07dc5d2153db7d1a23f1e0cc1b6341d55c432
   EXKeepAwake: d4caf9a1a7691126ade4ca0b76592e93250a8f29
@@ -587,7 +587,7 @@ SPEC CHECKSUMS:
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   lottie-ios: 496ac5cea1bbf1a7bd1f1f472f3232eb1b8d744b
   lottie-react-native: 2a1a82bb326ae51331a5520de0cf706733c6db69
-  Permission-Notifications: 1e03f5c43612ac4f9cdcaf6504695fc4e15f33d9
+  Permission-Notifications: 5d8c88b22dbbf1f0fe278b223caae0d0675c11bc
   PushNotifications: 6e3d148e5e129af9d4a9279b288c934f9a7f9066
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTRestart: 3915cac548a37703970941ca33de79a304b8b247
@@ -600,7 +600,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
-  react-native-netinfo: becc6dd2bb2335aa85a8adbaefc8e206125e6177
+  react-native-netinfo: b9650ab1b8b4362b3c455b1274e4bc48223cc957
   react-native-pusher-push-notifications: 2ed16a965a4ade4d2e51ecc632b47a7f41e7f7c6
   react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
@@ -616,15 +616,15 @@ SPEC CHECKSUMS:
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   RNAnalytics: 35a54cb740c472a0a6a3de765176b82cccc2d1ef
-  RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
+  RNCAsyncStorage: 453cd7c335ec9ba3b877e27d02238956b76f3268
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
-  RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
-  RNPermissions: 2f74237e97b08beda01e914301e12524ddddf5b8
-  RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
-  RNScreens: b5c0e1b2b04512919e78bd3898e144a157ce2363
-  RNSentry: 932ac1c8b2f581b1c8be5812f88ff556c99e7fb7
+  RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
+  RNPermissions: 6772df08e03565f718f7e140d9fccae441b8ca8b
+  RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
+  RNScreens: 19fee34a46de81b66e26960f5ac14ea616a5d089
+  RNSentry: 370623102247ebea20191b5fb549ecc7a275b324
   RNSVG: f6177f8d7c095fada7cfee2e4bb7388ba426064c
-  SDWebImage: 7edb9c3ea661e77a66661f7f044de8c1b55d1120
+  SDWebImage: 97351f6582ceca541ea294ba66a1fcb342a331c2
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390
   UMBarCodeScannerInterface: d5a6fdc98ed6241225b0a8432a7f4e2b397668bc
@@ -641,6 +641,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 1e70fe58b872355f0ecb44fb81bb1a16484047f0
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 8ca47b8fc2c8497f4f120e0f05bad96538285387
+PODFILE CHECKSUM: 40e842227e48518ddd277852780611c9fca9652b
 
 COCOAPODS: 1.9.1
