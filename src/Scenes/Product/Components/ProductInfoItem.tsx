@@ -21,7 +21,7 @@ export const ProductInfoItem: React.FC<Props> = ({ detailType, detailValue, hide
         </Sans>
       </Flex>
       <Spacer mb={2} />
-      {!hideSeparator && <Separator color={color("black15")} />}
+      {!hideSeparator && <Separator color={color("black10")} />}
     </>
   )
 }

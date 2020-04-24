@@ -62,7 +62,7 @@ export const defaultVariant: ButtonVariant = "primaryBlack"
  */
 export function getColorsForVariant(variant: ButtonVariant) {
   const {
-    colors: { black100, white100, black50, black15, black85 },
+    colors: { black100, white100, black50, black10, black85 },
   } = themeProps
 
   switch (variant) {
@@ -79,8 +79,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: white100,
         },
         disabled: {
-          backgroundColor: black15,
-          borderColor: black15,
+          backgroundColor: black10,
+          borderColor: black10,
           color: black50,
         },
       }
@@ -97,8 +97,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: black100,
         },
         disabled: {
-          backgroundColor: black15,
-          borderColor: black15,
+          backgroundColor: black10,
+          borderColor: black10,
           color: black50,
         },
       }
@@ -106,17 +106,17 @@ export function getColorsForVariant(variant: ButtonVariant) {
       return {
         default: {
           backgroundColor: white100,
-          borderColor: black15,
+          borderColor: black10,
           color: black100,
         },
         pressed: {
           backgroundColor: black50,
-          borderColor: black15,
+          borderColor: black10,
           color: black100,
         },
         disabled: {
-          backgroundColor: black15,
-          borderColor: black15,
+          backgroundColor: black10,
+          borderColor: black10,
           color: black50,
         },
       }
@@ -124,7 +124,7 @@ export function getColorsForVariant(variant: ButtonVariant) {
       return {
         default: {
           backgroundColor: white100,
-          borderColor: black15,
+          borderColor: black10,
           color: black100,
         },
         pressed: {
@@ -133,8 +133,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: white100,
         },
         disabled: {
-          backgroundColor: black15,
-          borderColor: black15,
+          backgroundColor: black10,
+          borderColor: black10,
           color: black50,
         },
       }
@@ -151,8 +151,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: white100,
         },
         disabled: {
-          backgroundColor: black15,
-          borderColor: black15,
+          backgroundColor: black10,
+          borderColor: black10,
           color: white100,
         },
       }
@@ -187,8 +187,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: white100,
         },
         disabled: {
-          backgroundColor: black15,
-          borderColor: black15,
+          backgroundColor: black10,
+          borderColor: black10,
           color: black100,
         },
       }

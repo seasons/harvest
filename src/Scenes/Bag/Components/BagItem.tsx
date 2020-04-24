@@ -25,6 +25,7 @@ export const BagItemFragment = gql`
       images
       variants {
         id
+        reservable
         internalSize {
           display
         }
@@ -211,7 +212,7 @@ const BagItemContainer = styled(Box)<{ isReserved: boolean }>`
   height: 216px;
   overflow: hidden;
   background-color: ${color("white100")};
-  border-color: ${color("black15")};
+  border-color: ${color("black10")};
   border-width: ${(p) => (p.isReserved ? "1px" : "0px")};
   border-radius: ${(p) => (p.isReserved ? "8px" : "0px")};
 `

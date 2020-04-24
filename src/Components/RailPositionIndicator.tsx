@@ -9,7 +9,7 @@ export const RailPositionIndicator = ({ length, currentPage }) => {
     <Wrapper>
       <Flex flexDirection="row" flexWrap="nowrap" style={{ flex: 1 }}>
         {Array.apply(null, { length }).map((_e, i) => {
-          const backgroundColor = i === currentPage - 1 ? color("black100") : color("black15")
+          const backgroundColor = i === currentPage - 1 ? color("black100") : color("black10")
           return (
             <Flex
               flexDirection="row"

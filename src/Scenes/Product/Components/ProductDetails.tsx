@@ -88,7 +88,7 @@ export const ProductDetails: React.FC<{
         </Sans>
       )}
       <Spacer mb={3} />
-      <Separator color={color("black15")} />
+      <Separator color={color("black10")} />
       {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
       {!!product.modelSize && !!product.modelHeight && (
         <ProductInfoItem

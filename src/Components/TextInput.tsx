@@ -96,7 +96,7 @@ export const TextInput: React.FC<TextInputProps> = ({
     }
   })
 
-  const handleOnChangeText = text => {
+  const handleOnChangeText = (text) => {
     setValue(text)
     if (text.length) {
       setCurrent(DisplayState.Active)
@@ -116,7 +116,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   return (
     <Box style={{ height, flex }}>
       <Spring native from={from} to={to}>
-        {props => (
+        {(props) => (
           <AnimatedTextInput
             autoFocus={autoFocus}
             blurOnSubmit={blurOnSubmit}
@@ -125,7 +125,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             placeholder={placeholder}
             style={{ ...style, ...props }}
             autoCapitalize={autoCapitalize}
-            placeholderTextColor={variant === "light" ? color("black50") : color("black15")}
+            placeholderTextColor={variant === "light" ? color("black50") : color("black25")}
             onChangeText={text => handleOnChangeText(text)}
             value={value}
           />

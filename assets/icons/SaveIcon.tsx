@@ -1,5 +1,5 @@
 import React from "react"
-import Svg, { G, Path, SvgProps } from "react-native-svg"
+import Svg, { Path, SvgProps } from "react-native-svg"
 import { color } from "App/utils"
 
 interface SaveIconProps extends SvgProps {
@@ -9,7 +9,7 @@ interface SaveIconProps extends SvgProps {
 
 export const SaveIcon = (props: SaveIconProps) => {
   const fillColor = props.enabled ? "#000" : "#fff"
-  const strokeColor = props.grayStroke && !props.enabled ? color("black15") : "#000"
+  const strokeColor = props.grayStroke && !props.enabled ? color("black10") : "#000"
   return (
     <Svg width={props.width || 16} height={props.height || 21} viewBox="0 0 16 21" {...props}>
       <Path

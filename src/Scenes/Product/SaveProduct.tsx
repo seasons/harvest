@@ -121,7 +121,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
                   )}
                 </Flex>
                 <Spacer mt={20} />
-                <Separator color={color("black15")} />
+                <Separator color={color("black10")} />
               </Box>
             </TouchableWithoutFeedback>
           )
@@ -168,7 +168,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
   return (
     <Container insetsTop={false}>
       <Box px={2}>
-        <Handle color="black15" style={{ marginTop: space(2) }} />
+        <Handle color="black10" style={{ marginTop: space(2) }} />
         <FlatList
           data={sections}
           keyExtractor={(_item, index) => String(index)}
