@@ -37,6 +37,7 @@ export const UPDATE_RESERVATION_FEEDBACK = gql`
         variant {
           id
           product {
+            id
             images
             name
             retailPrice
