@@ -241,8 +241,8 @@ export const Bag = screenTrack()((props) => {
           />
         </Box>
       ) : (
-        <EmptyBagItem index={index} navigation={navigation} />
-      )
+          <EmptyBagItem index={index} navigation={navigation} />
+        )
     } else if (isSavedView) {
       return (
         <Box mt={index === 0 ? 1 : 0}>
@@ -352,22 +352,22 @@ export const Bag = screenTrack()((props) => {
               FAQ
             </FixedButton>
           ) : (
-            <FixedButton
-              block
-              onPress={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.ReserveButtonTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                  bagIsFull,
-                })
-                handleReserve(navigation)
-              }}
-              disabled={!bagIsFull || isMutating}
-              loading={isMutating}
-            >
-              Reserve
-            </FixedButton>
-          )}
+              <FixedButton
+                block
+                onPress={() => {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.ReserveButtonTapped,
+                    actionType: Schema.ActionTypes.Tap,
+                    bagIsFull,
+                  })
+                  handleReserve(navigation)
+                }}
+                disabled={!bagIsFull || isMutating}
+                loading={isMutating}
+              >
+                Reserve
+              </FixedButton>
+            )}
         </>
       )}
     </Container>
