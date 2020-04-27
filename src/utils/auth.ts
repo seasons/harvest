@@ -1,19 +1,15 @@
-import Auth0 from "react-native-auth0"
 import { config, Env } from "App/utils/config"
+import Auth0 from "react-native-auth0"
+
 import AsyncStorage from "@react-native-community/async-storage"
 
-const auth0 = () => {
-  const auth0Domain = config.get(Env.MONSOON_ENDPOINT)
-  const auth0ClientId = config.get(Env.MONSOON_ENDPOINT)
-  if (auth0Domain && auth0ClientId) {
-    return new Auth0({
-      domain: auth0Domain,
-      clientId: auth0ClientId,
-    })
-  } else {
-    return null
-  }
-}
+const auth0Domain = config.get(Env.AUTH0_DOMAIN)
+const auth0ClientId = config.get(Env.AUTH0_CLIENT_ID)
+
+const auth0 = new Auth0({
+  domain: auth0Domain,
+  clientId: auth0ClientId,
+})
 
 export interface UserSession {
   token: string
@@ -28,7 +24,7 @@ export const getUserSession: () => Promise<UserSession | null> = async () => {
     return userSession
   } catch (e) {}
 
-  return null
+  return {}
 }
 
 export const getAccessTokenFromSession = async () => {
@@ -51,7 +47,7 @@ export const getAccessTokenOrRefresh = async () => {
         .then(() => {
           resolve(accessToken)
         })
-        .catch(async e => {
+        .catch(async (e) => {
           console.log(e)
 
           try {
@@ -66,7 +62,9 @@ export const getAccessTokenOrRefresh = async () => {
 }
 
 export const getNewToken = async () => {
-  const { refreshToken } = await getUserSession()
+  const session = await getUserSession()
+  const { refreshToken } = session
+
   const newToken = await auth0.auth.refreshToken({
     refreshToken,
   })
