@@ -203,9 +203,6 @@ export const Browse = screenTrack()((props: any) => {
 
   return (
     <Container insetsBottom={false}>
-      <LoaderContainer mt={insets.top} style={{ opacity: loaderAnimation.loaderStyle }}>
-        <BrowseLoader imageHeight={IMAGE_HEIGHT} />
-      </LoaderContainer>
       <Flex flexDirection="column" flex={1}>
         <AnimatedBox flex={1} flexGrow={1} style={{ opacity: loaderAnimation.productsBoxStyle }}>
           <FlatList
@@ -300,6 +297,9 @@ export const Browse = screenTrack()((props: any) => {
           />
         </Box>
       </Flex>
+      <LoaderContainer mt={insets.top} style={{ opacity: loaderAnimation.loaderStyle }}>
+        <BrowseLoader imageHeight={IMAGE_HEIGHT} />
+      </LoaderContainer>
     </Container>
   )
 })
@@ -320,6 +320,7 @@ const LoaderContainer = animated(styled(Box)`
   position: absolute;
   left: 0;
   top: 0;
+  z-index: -1;
 `)
 
 const AnimatedBox = animated(Box)
