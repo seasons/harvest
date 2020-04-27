@@ -16,7 +16,7 @@ export const VariantSizes: React.FC<{
         const reservable = variant.reservable !== null && !!variant.reservable
         return (
           <Box key={variant.id} mr={0.5} style={{ position: "relative" }}>
-            <Sans size={size} color={reservable ? "black100" : "black50"}>
+            <Sans size={size} color={reservable ? "black100" : "black25"}>
               {variant?.internalSize?.display}
             </Sans>
             {!reservable && <Strikethrough size={size} />}
@@ -28,7 +28,7 @@ export const VariantSizes: React.FC<{
 }
 
 const Strikethrough = styled.View`
-  background-color: ${color("black50")};
+  background-color: ${color("black25")};
   height: 2;
   width: 100%;
   position: absolute;

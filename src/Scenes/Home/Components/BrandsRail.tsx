@@ -20,8 +20,8 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation
     createRowGroups(rows)
   }, [])
 
-  const row = rowGroup => {
-    return rowGroup.map(brand => {
+  const row = (rowGroup) => {
+    return rowGroup.map((brand) => {
       return (
         <Flex flexDirection="row" key={brand.name}>
           <TouchableOpacity onPress={() => navigation.navigate("Brand", { id: brand?.id })}>
