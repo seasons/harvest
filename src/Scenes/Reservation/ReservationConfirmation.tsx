@@ -95,8 +95,9 @@ export const ReservationConfirmation = screenTrack()((props) => {
     )
   }
 
-  const formatedAddress1 = `${address?.address1}${address?.address2 ? " " + address?.address2 : ""},`
-  const formatedAddress2 = `${address?.city}, ${address?.state} ${address?.zipCode}`
+  const formatedAddress1 =
+    !!address?.address1 && `${address?.address1}${address?.address2 ? " " + address?.address2 : ""},`
+  const formatedAddress2 = !!address?.city && `${address?.city}, ${address?.state} ${address?.zipCode}`
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
