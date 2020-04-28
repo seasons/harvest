@@ -319,7 +319,7 @@ export const Bag = screenTrack()((props) => {
           return <BagEmptyState currentView={currentView} />
         }}
         ItemSeparatorComponent={() => {
-          if (hasActiveReservation || isSavedView) {
+          if ((isBagView && hasActiveReservation) || isSavedView) {
             return null
           }
           return (
