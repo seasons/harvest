@@ -171,53 +171,31 @@ export const Browse = screenTrack()((props: any) => {
       return null
     }
 
-    const data = product.images?.filter((image) => image.url) || []
+    const image = product?.images?.[0]
+    const resizedImage = imageResize(image?.url || "", "large")
 
     return (
-      <Box mr={isLeft ? 0 : "4px"} mb={0.5} width={itemWidth}>
-        <FlatList
-          data={data}
-          renderItem={({ item }: { item: string }) => {
-            const resizedImage = item?.url && imageResize(item?.url, "medium")
-            return (
-              <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
-                <Box>
-                  <FadeInImage source={{ uri: resizedImage }} style={{ width: itemWidth, height: IMAGE_HEIGHT }} />
-                </Box>
-              </TouchableWithoutFeedback>
-            )
-          }}
-          keyExtractor={(item, index) => index.toString()}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          pagingEnabled
-          snapToInterval={itemWidth}
-          decelerationRate="fast"
-        />
-        <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
-          <Box>
-            <Flex flexDirection="row" justifyContent="space-between">
-              <Box my={0.5} mx={1}>
-                {brandName && <Sans size="0">{brandName}</Sans>}
-                <VariantSizes size="0" variants={item.variants} />
-              </Box>
-              <SaveProductButton
-                grayStroke
-                height={16}
-                width={12}
-                product={product}
-                onPressSaveButton={() => {
-                  tracking.trackEvent({
-                    actionName: Schema.ActionNames.SaveProductButtonTapped,
-                    actionType: Schema.ActionTypes.Tap,
-                  })
-                }}
-              />
-            </Flex>
-            <Spacer mb={0.5} />
-          </Box>
-        </TouchableWithoutFeedback>
-      </Box>
+      <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
+        <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
+          <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
+          <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Box my={0.5} mx={1}>
+              {brandName && <Sans size="0">{brandName}</Sans>}
+              <VariantSizes size="0" variants={product.variants} />
+            </Box>
+            <SaveProductButton
+              product={product}
+              onPressSaveButton={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.SaveProductButtonTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                })
+              }}
+            />
+          </Flex>
+          <Spacer mb={0.5} />
+        </Box>
+      </TouchableWithoutFeedback>
     )
   }
 
@@ -225,9 +203,6 @@ export const Browse = screenTrack()((props: any) => {
 
   return (
     <Container insetsBottom={false}>
-      <LoaderContainer mt={insets.top} style={{ opacity: loaderAnimation.loaderStyle }}>
-        <BrowseLoader imageHeight={IMAGE_HEIGHT} />
-      </LoaderContainer>
       <Flex flexDirection="column" flex={1}>
         <AnimatedBox flex={1} flexGrow={1} style={{ opacity: loaderAnimation.productsBoxStyle }}>
           <FlatList
@@ -322,6 +297,9 @@ export const Browse = screenTrack()((props: any) => {
           />
         </Box>
       </Flex>
+      <LoaderContainer mt={insets.top} style={{ opacity: loaderAnimation.loaderStyle }}>
+        <BrowseLoader imageHeight={IMAGE_HEIGHT} />
+      </LoaderContainer>
     </Container>
   )
 })
@@ -342,6 +320,7 @@ const LoaderContainer = animated(styled(Box)`
   position: absolute;
   left: 0;
   top: 0;
+  z-index: -1;
 `)
 
 const AnimatedBox = animated(Box)

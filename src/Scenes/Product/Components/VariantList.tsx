@@ -106,8 +106,6 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
     const sizeData = sizeDataForVariants(variants, type)
     setSizeData(sizeData)
 
-    console.log("sizeData", sizeData)
-
     // Update size data
     const firstAvailableSize =
       find(sizeData, (size: Size) => size.isInBag) ||

@@ -3,7 +3,6 @@ import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { GreenCheck } from "Assets/svgs"
 import gql from "graphql-tag"
-import { get } from "lodash"
 import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
@@ -64,8 +63,8 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
 `
 
 export const ReservationConfirmation = screenTrack()((props) => {
-  const reservationID = get(props, "route.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
   const tracking = useTracking()
+  const reservationID = props?.route?.params?.reservationID
   const { data, error } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
     variables: {
       reservationID,
@@ -75,15 +74,9 @@ export const ReservationConfirmation = screenTrack()((props) => {
     console.log("error reservationConfirmation:", error)
   }
 
-  const customer = get(data, "me.customer")
-  const address = get(customer, "detail.shippingAddress", {
-    address1: "",
-    address2: "",
-    city: "",
-    state: "",
-    zipCode: "",
-  })
-  const reservation = get(data, "me.customer.reservations[0]", { reservationNumber: "", products: [] })
+  const customer = data?.me?.customer
+  const address = customer?.detail?.shippingAddress
+  const reservation = customer?.reservations?.[0] || { reservationNumber: "", products: [] }
 
   const items = reservation?.products ?? []
 
@@ -101,6 +94,9 @@ export const ReservationConfirmation = screenTrack()((props) => {
       </>
     )
   }
+
+  const formatedAddress1 = `${address?.address1}${address?.address2 ? " " + address?.address2 : ""},`
+  const formatedAddress2 = `${address?.city}, ${address?.state} ${address?.zipCode}`
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
@@ -120,9 +116,13 @@ export const ReservationConfirmation = screenTrack()((props) => {
             <SectionHeader
               title="Order number"
               content={
-                <Sans size="2" color="black100" textAlign="right" ml="auto">
-                  {reservation.reservationNumber}
-                </Sans>
+                <>
+                  {!!reservation.reservationNumber && (
+                    <Sans size="2" color="black100" textAlign="right" ml="auto">
+                      {reservation.reservationNumber}
+                    </Sans>
+                  )}
+                </>
               }
             />
           </Box>
@@ -131,12 +131,16 @@ export const ReservationConfirmation = screenTrack()((props) => {
               title="Shipping"
               content={
                 <>
-                  <Sans size="2" color="black100" textAlign="right">
-                    {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
-                  </Sans>
-                  <Sans size="2" color="black100" textAlign="right">
-                    {`${address.city}, ${address.state} ${address.zipCode}`}
-                  </Sans>
+                  {!!formatedAddress1 && (
+                    <Sans size="2" color="black100" textAlign="right">
+                      {formatedAddress1}
+                    </Sans>
+                  )}
+                  {!!formatedAddress2 && (
+                    <Sans size="2" color="black100" textAlign="right">
+                      {formatedAddress2}
+                    </Sans>
+                  )}
                 </>
               }
               bottomSpacing={3}

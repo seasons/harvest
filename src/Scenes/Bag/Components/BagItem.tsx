@@ -106,36 +106,30 @@ export const BagItem: React.FC<BagItemProps> = ({
               Size {variantSize}
             </Sans>
             <Spacer mb={3} />
-            {!isMutating ? (
-              <TouchableOpacity
-                onPress={() => {
-                  if (!isMutating) {
-                    setIsMutating(true)
-                    tracking.trackEvent({
-                      actionName: Schema.ActionNames.BagItemSaved,
-                      actionType: Schema.ActionTypes.Tap,
-                      productSlug: product.slug,
-                      productId: product.id,
-                      variantId: variantId,
-                    })
-                    removeFromBagAndSaveItem({
-                      variables: {
-                        id: variantId,
-                        saved: false,
-                      },
-                    })
-                  }
-                }}
-              >
-                <Sans size="1" style={{ textDecorationLine: "underline" }}>
-                  Save for later
-                </Sans>
-              </TouchableOpacity>
-            ) : (
-              <Flex style={{ width: 100, height: 20 }} alignItems="center" flexDirection="row" justifyContent="center">
-                <Spinner />
-              </Flex>
-            )}
+            <TouchableOpacity
+              onPress={() => {
+                if (!isMutating) {
+                  setIsMutating(true)
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.BagItemSaved,
+                    actionType: Schema.ActionTypes.Tap,
+                    productSlug: product.slug,
+                    productId: product.id,
+                    variantId: variantId,
+                  })
+                  removeFromBagAndSaveItem({
+                    variables: {
+                      id: variantId,
+                      saved: false,
+                    },
+                  })
+                }
+              }}
+            >
+              <Sans size="1" style={{ textDecorationLine: "underline" }}>
+                Save for later
+              </Sans>
+            </TouchableOpacity>
           </Box>
         </Box>
         {!isReserved && (
@@ -204,6 +198,13 @@ export const BagItem: React.FC<BagItemProps> = ({
           </BagItemContainer>
         </Box>
       </TouchableWithoutFeedback>
+      {isMutating && (
+        <Overlay>
+          <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
+            <Spinner />
+          </Flex>
+        </Overlay>
+      )}
     </Box>
   )
 }
@@ -219,4 +220,14 @@ const BagItemContainer = styled(Box)<{ isReserved: boolean }>`
 
 const ImageContainer = styled(FadeInImage)`
   height: 214;
+`
+
+const Overlay = styled(Box)`
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
 `

@@ -62,7 +62,6 @@ export const SavedItem: React.FC<BagItemProps> = ({
     ],
     onCompleted: () => {
       setIsMutating(false)
-      setAddingToBag(false)
       if (bagIsFull) {
         showPopUp({
           icon: <GreenCheck />,
@@ -75,7 +74,6 @@ export const SavedItem: React.FC<BagItemProps> = ({
     },
     onError: (err) => {
       setIsMutating(false)
-      setAddingToBag(false)
       if (err && err.graphQLErrors) {
         showPopUp({
           title: "Your bag is full",
@@ -106,53 +104,40 @@ export const SavedItem: React.FC<BagItemProps> = ({
 
               <Flex flexDirection="row" alignItems="center">
                 <ColoredDot reservable={reservable} />
-                {!addingToBag ? (
+                {!!reservable ? (
                   <>
-                    {!!reservable ? (
+                    {!hasActiveReservation ? (
                       <>
-                        {!hasActiveReservation ? (
-                          <>
-                            <Sans
-                              size="1"
-                              style={{ textDecorationLine: "underline" }}
-                              onPress={() => {
-                                if (!addingToBag) {
-                                  setAddingToBag(true)
-                                  addToBag()
-                                  tracking.trackEvent({
-                                    actionName: Schema.ActionNames.SavedItemAddedToBag,
-                                    actionType: Schema.ActionTypes.Tap,
-                                    productSlug: product.slug,
-                                    productId: product.id,
-                                    variantId: variantToUse.id,
-                                  })
-                                }
-                              }}
-                            >
-                              {"  "}Add to bag
-                            </Sans>
-                          </>
-                        ) : (
-                          <Sans size="1" color="black50">
-                            {"  "}Available
-                          </Sans>
-                        )}
+                        <Sans
+                          size="1"
+                          style={{ textDecorationLine: "underline" }}
+                          onPress={() => {
+                            if (!addingToBag) {
+                              setAddingToBag(true)
+                              addToBag()
+                              tracking.trackEvent({
+                                actionName: Schema.ActionNames.SavedItemAddedToBag,
+                                actionType: Schema.ActionTypes.Tap,
+                                productSlug: product.slug,
+                                productId: product.id,
+                                variantId: variantToUse.id,
+                              })
+                            }
+                          }}
+                        >
+                          {"  "}Add to bag
+                        </Sans>
                       </>
                     ) : (
                       <Sans size="1" color="black50">
-                        {"  "}Unavailable
+                        {"  "}Available
                       </Sans>
                     )}
                   </>
                 ) : (
-                  <Flex
-                    style={{ width: 100, height: 20 }}
-                    flexDirection="row"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Spinner />
-                  </Flex>
+                  <Sans size="1" color="black50">
+                    {"  "}Unavailable
+                  </Sans>
                 )}
               </Flex>
             </Box>
@@ -197,9 +182,26 @@ export const SavedItem: React.FC<BagItemProps> = ({
       </TouchableWithoutFeedback>
       <Spacer mb={2} />
       <Separator color={color("black10")} />
+      {addingToBag && (
+        <Overlay>
+          <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
+            <Spinner />
+          </Flex>
+        </Overlay>
+      )}
     </Box>
   )
 }
+
+const Overlay = styled(Box)`
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+`
 
 const BagItemContainer = styled(Box)`
   overflow: hidden;

@@ -21,7 +21,7 @@ export interface TextInputProps {
   currentValue?: string
   autoCapitalize?: string
   autoFocus?: boolean
-  blurOnSubmit?: boolean,
+  blurOnSubmit?: boolean
   onChangeText?: (inputKey: string, text: string) => void
 }
 
@@ -126,7 +126,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             style={{ ...style, ...props }}
             autoCapitalize={autoCapitalize}
             placeholderTextColor={variant === "light" ? color("black50") : color("black25")}
-            onChangeText={text => handleOnChangeText(text)}
+            onChangeText={(text) => handleOnChangeText(text)}
             value={value}
           />
         )}
@@ -135,7 +135,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   )
 }
 
-const StyledTextInput = styled(RNTextInput) <TextInputProps>`
+const StyledTextInput = styled(RNTextInput)<TextInputProps>`
   border-width: 1;
   height: 56;
   border-radius: 8;
