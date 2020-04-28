@@ -1,11 +1,10 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Box, Sans } from "App/Components"
+import { Box } from "App/Components"
 import { GetProduct_product } from "App/generated/GetProduct"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { SaveIcon } from "Assets/icons"
 import gql from "graphql-tag"
-import { head } from "lodash"
 import React from "react"
 import { useMutation } from "react-apollo"
 import { TouchableOpacity } from "react-native"
@@ -63,16 +62,10 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
   const userHasSession = !!authState?.userSession
 
   if (!product.variants || product?.variants?.length === 0) {
-    return <></>
+    return null
   }
 
-  let isSaved
-  if (selectedVariant) {
-    const variantToUse: any = head((product.variants || []).filter((a) => a.id === selectedVariant.id))
-    isSaved = variantToUse.isSaved
-  } else {
-    isSaved = product.variants.filter((variant) => variant.isSaved).length > 0
-  }
+  const isSaved = product.variants.filter((variant) => variant.isSaved).length > 0
 
   const handleSaveButton = () => {
     onPressSaveButton()
