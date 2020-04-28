@@ -98,8 +98,6 @@ export const Product = screenTrack({
     translateY: shouldShowVariantWant ? 0 : VARIANT_WANT_HEIGHT,
   })
 
-  console.log("selectedVariant", selectedVariant)
-
   if (loading || !data) {
     return <Loader />
   }
