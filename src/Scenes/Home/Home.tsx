@@ -70,6 +70,7 @@ export const GET_HOMEPAGE = gql`
         variant {
           id
           product {
+            id
             images
             name
             retailPrice

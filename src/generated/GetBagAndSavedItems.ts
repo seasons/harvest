@@ -9,10 +9,51 @@ import { Plan, BagItemStatus } from "./globalTypes";
 // GraphQL query operation: GetBagAndSavedItems
 // ====================================================
 
+export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_internalSize {
+  __typename: "Size";
+  display: string;
+}
+
+export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_brand {
+  __typename: "Brand";
+  id: string;
+  name: string;
+}
+
+export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product {
+  __typename: "Product";
+  id: string;
+  images: any;
+  brand: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_brand;
+}
+
+export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant {
+  __typename: "ProductVariant";
+  id: string;
+  internalSize: GetBagAndSavedItems_me_customer_reservations_products_productVariant_internalSize | null;
+  product: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product;
+}
+
+export interface GetBagAndSavedItems_me_customer_reservations_products {
+  __typename: "PhysicalProduct";
+  id: string;
+  productVariant: GetBagAndSavedItems_me_customer_reservations_products_productVariant;
+}
+
+export interface GetBagAndSavedItems_me_customer_reservations {
+  __typename: "Reservation";
+  id: string;
+  status: string;
+  reservationNumber: number;
+  createdAt: any;
+  products: GetBagAndSavedItems_me_customer_reservations_products[];
+}
+
 export interface GetBagAndSavedItems_me_customer {
   __typename: "Customer";
   id: string;
   plan: Plan | null;
+  reservations: GetBagAndSavedItems_me_customer_reservations[] | null;
 }
 
 export interface GetBagAndSavedItems_me_activeReservation {
@@ -42,6 +83,7 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_variants_inte
 export interface GetBagAndSavedItems_me_bag_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
+  reservable: number;
   internalSize: GetBagAndSavedItems_me_bag_productVariant_product_variants_internalSize | null;
 }
 
@@ -89,6 +131,7 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_varian
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
+  reservable: number;
   internalSize: GetBagAndSavedItems_me_savedItems_productVariant_product_variants_internalSize | null;
 }
 

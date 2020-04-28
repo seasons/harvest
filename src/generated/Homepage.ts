@@ -72,6 +72,7 @@ export interface Homepage_reservationFeedback_feedbacks_questions {
 
 export interface Homepage_reservationFeedback_feedbacks_variant_product {
   __typename: "Product";
+  id: string;
   images: any;
   name: string;
   retailPrice: number | null;

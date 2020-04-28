@@ -20,6 +20,7 @@ export interface UpdateReservationFeedback_updateReservationFeedback_feedbacks_q
 
 export interface UpdateReservationFeedback_updateReservationFeedback_feedbacks_variant_product {
   __typename: "Product";
+  id: string;
   images: any;
   name: string;
   retailPrice: number | null;
