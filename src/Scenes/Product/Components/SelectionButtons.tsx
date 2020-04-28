@@ -25,8 +25,6 @@ export const SelectionButtons: React.FC<Props> = (props) => {
     return null
   }
 
-  console.log("selectedVariant", selectedVariant)
-
   return (
     <Wrapper style={{ bottom }}>
       <Flex px={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">

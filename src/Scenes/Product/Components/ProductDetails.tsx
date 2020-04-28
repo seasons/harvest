@@ -5,9 +5,7 @@ import { Schema, useTracking } from "App/utils/track"
 import React from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
-
 import { useNavigation } from "@react-navigation/native"
-
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
 
