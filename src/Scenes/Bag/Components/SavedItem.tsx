@@ -62,6 +62,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
     ],
     onCompleted: () => {
       setIsMutating(false)
+      setAddingToBag(false)
       if (bagIsFull) {
         showPopUp({
           icon: <GreenCheck />,
@@ -74,6 +75,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
     },
     onError: (err) => {
       setIsMutating(false)
+      setAddingToBag(false)
       if (err && err.graphQLErrors) {
         showPopUp({
           title: "Your bag is full",
