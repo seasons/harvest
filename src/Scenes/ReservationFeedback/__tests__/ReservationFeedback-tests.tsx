@@ -28,31 +28,40 @@ const VariantFeedbackFixture = {
       options: ["Fit too big", "Fit true to size", "Ran small", "Didn't fit at all"],
       responses: [],
       type: "MultipleChoice",
-    }
+    },
   ],
   variant: {
     id: 123,
     product: {
+      id: "1234",
       images: [
-        { id: 1, url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
-        { id: 2, url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
-        { id: 3, url: "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png" },
+        {
+          id: 1,
+          url:
+            "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png",
+        },
+        {
+          id: 2,
+          url:
+            "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png",
+        },
+        {
+          id: 3,
+          url:
+            "https://dl.airtable.com/.attachments/fe38470dce974a874d39c4737c610129/cf9627dc/JudyTurner_.Front-final.png",
+        },
       ],
       name: "Engineered Garments Hoodie",
       retailPrice: 495,
     },
-  }
+  },
 }
 
 const ReservationFeedbackFixture = {
   id: 123,
   comment: "Sample comment",
   rating: "Loved it",
-  feedbacks: [
-    VariantFeedbackFixture,
-    VariantFeedbackFixture,
-    VariantFeedbackFixture,
-  ],
+  feedbacks: [VariantFeedbackFixture, VariantFeedbackFixture, VariantFeedbackFixture],
 }
 
 describe("ReservationFeedback", () => {
@@ -92,9 +101,7 @@ describe("ReservationFeedbackConfirmation", () => {
 
     await waitForLoad(component)
 
-    expect(component.text()).toContain(
-      "FinishAny other thoughts?SkipSubmit"
-    )
+    expect(component.text()).toContain("FinishAny other thoughts?SkipSubmit")
     expect(component).toMatchSnapshot()
   })
 })

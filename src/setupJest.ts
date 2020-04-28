@@ -33,6 +33,8 @@ jest.mock("react-native-safe-area-context", () => ({
   }),
 }))
 
+jest.mock("react-native-auth0")
+
 jest.mock("react-native-permissions", () => ({
   checkNotifications: () => jest.fn(),
 }))
