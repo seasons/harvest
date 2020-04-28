@@ -16,13 +16,13 @@ interface Props {
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
 
-export const SelectionButtons: React.FC<Props> = props => {
+export const SelectionButtons: React.FC<Props> = (props) => {
   const tracking = useTracking()
   const { bottom = 0, selectedVariant, showVariantPicker, toggleShowVariantPicker } = props
-  const inStock = selectedVariant && !!selectedVariant.stock
+  const inStock = selectedVariant && selectedVariant.reservable > 0
 
   if (!selectedVariant) {
-    return <></>
+    return null
   }
 
   return (
@@ -46,7 +46,7 @@ export const SelectionButtons: React.FC<Props> = props => {
             >
               <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
                 <Sans size="1" color="black">
-                  {selectedVariant.size}
+                  {selectedVariant.sizeDisplay}
                 </Sans>
                 <Spacer mr={1} />
                 <DownChevronIcon color={color("black")} rotate={showVariantPicker} />
@@ -73,7 +73,7 @@ const VariantSelectionButton = styled.View<{ inStock: boolean }>`
   border-width: 1;
   border-radius: 28;
   background-color: white;
-  width: ${p => (p.inStock ? twoButtonWidth : "100%")};
+  width: ${(p) => (p.inStock ? twoButtonWidth : "100%")};
   display: flex;
   align-items: center;
   justify-content: center;
