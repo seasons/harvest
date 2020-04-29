@@ -160,6 +160,7 @@ export const Product = screenTrack({
       {showVariantPicker && <Overlay />}
       <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
         <VariantPicker
+          variantPickerHeight={variantPickerHeight}
           product={product}
           setSelectedVariant={setSelectedVariant}
           selectedVariant={selectedVariant}

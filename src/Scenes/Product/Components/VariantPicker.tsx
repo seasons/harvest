@@ -7,9 +7,9 @@ import { ScrollView } from "react-native"
 import styled from "styled-components/native"
 import { VariantList } from "./VariantList"
 
-export const VariantPicker = props => {
+export const VariantPicker = (props) => {
   const tracking = useTracking()
-  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, height, product } = props
+  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, height, product, variantPickerHeight } = props
 
   return (
     <Flex style={{ flex: 1, height: height + 28, position: "relative" }}>
@@ -39,6 +39,7 @@ export const VariantPicker = props => {
         <StyledScrollview>
           <Box px={2}>
             <VariantList
+              variantPickerHeight={variantPickerHeight}
               product={product}
               setSelectedVariant={setSelectedVariant}
               selectedVariant={selectedVariant}
@@ -47,7 +48,6 @@ export const VariantPicker = props => {
               }}
             />
           </Box>
-          <Box style={{ paddingBottom: 180 }} />
         </StyledScrollview>
       </Box>
     </Flex>
