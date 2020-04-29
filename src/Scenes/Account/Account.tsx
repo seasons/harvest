@@ -60,24 +60,8 @@ export const Account = screenTrack()((props) => {
     return <GuestView navigation={navigation} />
   }
 
-  const {
-    me: {
-      customer: {
-        user: { firstName, lastName },
-        detail: {
-          shippingAddress: { city, state },
-        },
-      },
-    },
-  } = data || {
-    me: {
-      customer: {
-        user: { firstName: "", lastName: "" },
-        detail: {
-          shippingAddress: { city: "", state: "" },
-        },
-      },
-    },
+  if (error) {
+    console.log("Error Account.tsx", error)
   }
 
   const bottomList = [
@@ -134,6 +118,9 @@ export const Account = screenTrack()((props) => {
   const pushNotifications = data?.me?.customer?.user?.pushNotifications
   const userID = data?.me?.customer?.user?.id
   const role = data?.me?.customer?.user?.role
+  const email = data?.me?.customer?.user?.email
+  const firstName = data?.me?.customer?.user?.firstName
+  const lastName = data?.me?.customer?.user?.lastName
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -153,9 +140,9 @@ export const Account = screenTrack()((props) => {
                     {`${firstName} ${lastName}`}
                   </Sans>
                 )}
-                {!!city && !!state && (
+                {!!email && (
                   <Sans size="2" color="gray">
-                    {`${city}, ${state}`}
+                    {email}
                   </Sans>
                 )}
               </Flex>
