@@ -78,6 +78,12 @@ export const GET_HOMEPAGE = gql`
         }
       }
     }
+    me {
+      customer {
+        id
+        shouldRequestFeedback
+      }
+    }
   }
 `
 
@@ -108,11 +114,11 @@ export const Home = screenTrack()(({ navigation }) => {
   }, [loading])
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       refetch()
-    });
-    return unsubscribe;
-  }, [navigation]);
+    })
+    return unsubscribe
+  }, [navigation])
 
   const NoInternetComponent = (
     <ErrorScreen
@@ -135,6 +141,7 @@ export const Home = screenTrack()(({ navigation }) => {
   }
 
   const reservationFeedback = data?.reservationFeedback
+  const shouldRequestFeedback = data?.me?.customer?.shouldRequestFeedback
 
   const goToReservationFeedbackScreen = () => {
     navigation.navigate("Modal", {
@@ -173,47 +180,47 @@ export const Home = screenTrack()(({ navigation }) => {
   return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
-      <Container insetsTop={false}>
-        <Animatable.View animation="fadeIn" duration={300}>
-          <Box pb={2} px={2} pt={insets.top + 8} style={{ backgroundColor: color("white100") }}>
-            <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
-              <LogoText>SEASONS</LogoText>
-            </Flex>
-          </Box>
-          <Separator />
-          <FlatList
-            data={sections}
-            keyExtractor={(item, index) => {
-              return item.type + index
-            }}
-            ListHeaderComponent={() => <Spacer mb={2} />}
-            renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
-            ListFooterComponent={() => (
-              <HomeFooter
-                navigation={navigation}
-                bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
+    <Container insetsTop={false}>
+      <Animatable.View animation="fadeIn" duration={300}>
+        <Box pb={2} px={2} pt={insets.top + 8} style={{ backgroundColor: color("white100") }}>
+          <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
+            <LogoText>SEASONS</LogoText>
+          </Flex>
+        </Box>
+        <Separator />
+        <FlatList
+          data={sections}
+          keyExtractor={(item, index) => {
+            return item.type + index
+          }}
+          ListHeaderComponent={() => <Spacer mb={2} />}
+          renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
+          ListFooterComponent={() => (
+            <HomeFooter
+              navigation={navigation}
+              bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
+            />
+          )}
+        />
+        {reservationFeedback &&
+          shouldRequestFeedback &&
+          (reservationFeedback.rating ? (
+            <ReservationFeedbackReminderWrapper style={{ bottom: insets.bottom + 8 }}>
+              <ReservationFeedbackReminder
+                reservationFeedback={reservationFeedback}
+                onPress={onPressReservationFeedbackReminder}
               />
-            )}
-          />
-          {reservationFeedback ? (
-            reservationFeedback.rating ? (
-              <ReservationFeedbackReminderWrapper style={{ bottom: insets.bottom + 8 }}>
-                <ReservationFeedbackReminder
-                  reservationFeedback={reservationFeedback}
-                  onPress={onPressReservationFeedbackReminder}
-                />
-              </ReservationFeedbackReminderWrapper>
-            ) : (
-                <ReservationFeedbackPopUp
-                  reservationFeedback={reservationFeedback}
-                  show={showReservationFeedbackPopUp}
-                  onSelectedRating={onSelectedReviewRating}
-                />
-              )
-          ) : null}
-        </Animatable.View>
-      </Container>
-    )
+            </ReservationFeedbackReminderWrapper>
+          ) : (
+            <ReservationFeedbackPopUp
+              reservationFeedback={reservationFeedback}
+              show={showReservationFeedbackPopUp}
+              onSelectedRating={onSelectedReviewRating}
+            />
+          ))}
+      </Animatable.View>
+    </Container>
+  )
 })
 
 const ReservationFeedbackReminderWrapper = styled(Box)`
