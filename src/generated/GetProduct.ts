@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Material, ProductType, LetterSize, BottomSizeType } from "./globalTypes";
+import { ProductType, LetterSize, BottomSizeType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetProduct
@@ -85,8 +85,8 @@ export interface GetProduct_product {
   color: GetProduct_product_color;
   secondaryColor: GetProduct_product_secondaryColor | null;
   brand: GetProduct_product_brand;
-  outerMaterials: Material[];
-  innerMaterials: Material[];
+  outerMaterials: string[];
+  innerMaterials: string[];
   images: any;
   type: ProductType | null;
   variants: GetProduct_product_variants[] | null;
