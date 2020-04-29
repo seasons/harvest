@@ -102,65 +102,6 @@ export enum LocationType {
   Warehouse = "Warehouse",
 }
 
-export enum Material {
-  Acetate = "Acetate",
-  Acrylic = "Acrylic",
-  Alpaca = "Alpaca",
-  CalfLeather = "CalfLeather",
-  Camel = "Camel",
-  CamelHair = "CamelHair",
-  Cashmere = "Cashmere",
-  Cotton = "Cotton",
-  CottonPoplin = "CottonPoplin",
-  CowLeather = "CowLeather",
-  Cupro = "Cupro",
-  Denim = "Denim",
-  DuckDown = "DuckDown",
-  DuckFeathers = "DuckFeathers",
-  Elastane = "Elastane",
-  Esterlane = "Esterlane",
-  Feather = "Feather",
-  FeatherDown = "FeatherDown",
-  GooseDown = "GooseDown",
-  LambLeather = "LambLeather",
-  LambSkin = "LambSkin",
-  Lambswool = "Lambswool",
-  Leather = "Leather",
-  Linen = "Linen",
-  Lyocell = "Lyocell",
-  MerinoWool = "MerinoWool",
-  Mesh = "Mesh",
-  Modacrylic = "Modacrylic",
-  Mohair = "Mohair",
-  Nylon = "Nylon",
-  OrganicCotton = "OrganicCotton",
-  PVC = "PVC",
-  PolyAcetate = "PolyAcetate",
-  PolySatin = "PolySatin",
-  Polyamide = "Polyamide",
-  Polyester = "Polyester",
-  Polyethylene = "Polyethylene",
-  Polyurethane = "Polyurethane",
-  PolyurethanicResin = "PolyurethanicResin",
-  Rayon = "Rayon",
-  RecycledPolyester = "RecycledPolyester",
-  RecycledWool = "RecycledWool",
-  SheepLeather = "SheepLeather",
-  Silk = "Silk",
-  Spandex = "Spandex",
-  Suede = "Suede",
-  Taffeta = "Taffeta",
-  Tartan = "Tartan",
-  Triacetate = "Triacetate",
-  Velcro = "Velcro",
-  VirginWool = "VirginWool",
-  Viscose = "Viscose",
-  WaxCoating = "WaxCoating",
-  WhiteDuckDown = "WhiteDuckDown",
-  WhiteGooseDown = "WhiteGooseDown",
-  Wool = "Wool",
-}
-
 export enum PhysicalProductStatus {
   Clean = "Clean",
   Damaged = "Damaged",
@@ -1321,11 +1262,11 @@ export interface ProductCreateWithoutVariantsInput {
 }
 
 export interface ProductCreateinnerMaterialsInput {
-  set?: Material[] | null;
+  set?: string[] | null;
 }
 
 export interface ProductCreateouterMaterialsInput {
-  set?: Material[] | null;
+  set?: string[] | null;
 }
 
 export interface ProductFunctionCreateInput {
@@ -1676,11 +1617,11 @@ export interface ProductUpdateWithoutVariantsDataInput {
 }
 
 export interface ProductUpdateinnerMaterialsInput {
-  set?: Material[] | null;
+  set?: string[] | null;
 }
 
 export interface ProductUpdateouterMaterialsInput {
-  set?: Material[] | null;
+  set?: string[] | null;
 }
 
 export interface ProductUpsertWithWhereUniqueWithoutCategoryInput {
