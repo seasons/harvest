@@ -462,7 +462,7 @@ export const BagFixtureWithReservation = {
     activeReservation: {
       id: "ck6jsqpv6g7bm07030k261a68",
       shipped: false,
-      returnDateDisplay: "Thursday March 30th",
+      returnAt: "Thursday March 30th",
       createdAt: "2020-02-12T20:58:29.105Z",
       products: [
         {

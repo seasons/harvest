@@ -39,7 +39,7 @@ export const GET_BAG = gql`
       }
       activeReservation {
         id
-        returnDateDisplay
+        returnAt
         shipped
         createdAt
       }

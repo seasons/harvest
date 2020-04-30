@@ -18,6 +18,7 @@ export const GET_USER = gql`
   query GetUser {
     me {
       customer {
+        id
         user {
           id
           firstName
