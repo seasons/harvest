@@ -37,7 +37,7 @@ const sizeDataForVariants = (variants = [], type) => {
   }
 }
 
-export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelected, product }) => {
+export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelected, product, variantPickerHeight }) => {
   const variants = product?.variants
   const type = product?.type
   const [sizeData, setSizeData] = useState([])
@@ -98,9 +98,10 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
   })
 
   return (
-    <>
+    <Box style={{ minHeight: variantPickerHeight - 60 }}>
       <Separator color={color("black85")} />
       {rows}
-    </>
+      <Box pb="180px" />
+    </Box>
   )
 }

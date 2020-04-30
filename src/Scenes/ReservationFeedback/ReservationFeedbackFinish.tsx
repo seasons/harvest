@@ -9,9 +9,9 @@ export const ReservationFeedbackFinish: React.FC<{
 }> = screenTrack()(({ navigation }) => {
   const tracking = useTracking()
   return (
-    <Container >
+    <Container>
       <Box px={2} style={{ flex: 1, flexDirection: "column" }}>
-        <Flex flexDirection="column" justifyContent="center" alignItems="center" style={{ flex: 1 }} >
+        <Flex flexDirection="column" justifyContent="center" alignItems="center" style={{ flex: 1 }}>
           <Sans size="3" color={"black100"}>
             Thank you
           </Sans>
@@ -22,18 +22,21 @@ export const ReservationFeedbackFinish: React.FC<{
             </Sans>
           </Text>
         </Flex>
-        <Button block variant="primaryWhite" onPress={() => {
-          tracking.trackEvent({
-            actionName: Schema.ActionNames.ReservationFeedbackFinishButtonTapped,
-            actionType: Schema.ActionTypes.Tap,
-          })
-          navigation.pop()
-        }}>
+        <Button
+          block
+          variant="primaryWhite"
+          onPress={() => {
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.ReservationFeedbackFinishButtonTapped,
+              actionType: Schema.ActionTypes.Tap,
+            })
+            navigation.popToTop()
+          }}
+        >
           Finish
         </Button>
         <Spacer mb={4} />
       </Box>
-    </Container >
+    </Container>
   )
 })
-

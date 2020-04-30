@@ -29,7 +29,7 @@ export const ReservationFeedbackConfirmation: React.FC<{
     const result = await updateReservationFeedback({
       variables: {
         id: reservationFeedback?.id,
-        input: { comment }
+        input: { comment, respondedAt: new Date() },
       },
     })
     if (!result?.data) {
@@ -46,16 +46,16 @@ export const ReservationFeedbackConfirmation: React.FC<{
     navigation.pop()
     navigation.navigate("Modal", {
       screen: Schema.PageNames.ReservationFeedbackFinishModal,
-      params: { reservationFeedback }
+      params: { reservationFeedback },
     })
   }
 
   return (
-    <Container >
+    <Container>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      <Box px={2} >
+      <Box px={2}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" >
+          <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center">
             <Spacer mb={68} />
             <Sans size="1" color="black50" weight="medium">
               Finish
@@ -78,32 +78,42 @@ export const ReservationFeedbackConfirmation: React.FC<{
               onChangeText={(_, val) => setComment(val)}
             />
           </Flex>
-        </TouchableWithoutFeedback >
+        </TouchableWithoutFeedback>
       </Box>
       <FixedKeyboardAvoidingView behavior="padding" keyboardVerticalOffset={64} style={{ bottom: insets.bottom + 32 }}>
-        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" >
-          <Button block variant="primaryWhite" width={buttonWidth} onPress={() => {
-            tracking.trackEvent({
-              actionName: TrackingSchema.ActionNames.ReservationFeedbackConfirmationSkipButtonTapped,
-              actionType: TrackingSchema.ActionTypes.Tap,
-            })
-            submitFeedback()
-          }}>
+        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
+          <Button
+            block
+            variant="primaryWhite"
+            width={buttonWidth}
+            onPress={() => {
+              tracking.trackEvent({
+                actionName: TrackingSchema.ActionNames.ReservationFeedbackConfirmationSkipButtonTapped,
+                actionType: TrackingSchema.ActionTypes.Tap,
+              })
+              submitFeedback()
+            }}
+          >
             Skip
           </Button>
           <Spacer ml={1} />
-          <Button block variant="primaryBlack" width={buttonWidth} onPress={() => {
-            tracking.trackEvent({
-              actionName: TrackingSchema.ActionNames.ReservationFeedbackConfirmationSubmitButtonTapped,
-              actionType: TrackingSchema.ActionTypes.Tap,
-            })
-            submitFeedback()
-          }}>
+          <Button
+            block
+            variant="primaryBlack"
+            width={buttonWidth}
+            onPress={() => {
+              tracking.trackEvent({
+                actionName: TrackingSchema.ActionNames.ReservationFeedbackConfirmationSubmitButtonTapped,
+                actionType: TrackingSchema.ActionTypes.Tap,
+              })
+              submitFeedback()
+            }}
+          >
             Submit
           </Button>
         </Flex>
       </FixedKeyboardAvoidingView>
-    </Container >
+    </Container>
   )
 })
 
@@ -111,4 +121,3 @@ const FixedKeyboardAvoidingView = styled(KeyboardAvoidingView)`
   position: absolute;
   left: ${space(2)};
 `
-

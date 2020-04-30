@@ -3,7 +3,7 @@ import { FadeInImage } from "App/Components/FadeInImage"
 import { imageResize } from "App/helpers/imageResize"
 import { get, head } from "lodash"
 import React, { useState } from "react"
-import { TouchableWithoutFeedback, Text } from "react-native"
+import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
@@ -12,6 +12,7 @@ import { useMutation } from "react-apollo"
 import { ADD_TO_BAG, GET_BAG } from "../BagQueries"
 import { GreenCheck } from "Assets/svgs"
 import { Spinner } from "App/Components/Spinner"
+import { Variant } from "App/Scenes/Product/Components/VariantList"
 
 interface BagItemProps {
   bagIsFull: boolean
@@ -37,7 +38,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
   if (!bagItem) {
     return null
   }
-  const variantToUse = head(
+  const variantToUse: Variant = head(
     (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
   )
   const product = get(bagItem, "productVariant.product")
