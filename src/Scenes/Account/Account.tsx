@@ -115,12 +115,13 @@ export const Account = screenTrack()((props) => {
     },
   ]
 
-  const pushNotifications = data?.me?.customer?.user?.pushNotifications
-  const userID = data?.me?.customer?.user?.id
-  const role = data?.me?.customer?.user?.role
-  const email = data?.me?.customer?.user?.email
-  const firstName = data?.me?.customer?.user?.firstName
-  const lastName = data?.me?.customer?.user?.lastName
+  const user = data?.me?.customer?.user
+  const pushNotifications = user?.pushNotifications
+  const userID = user?.id
+  const role = user?.role
+  const email = user?.email
+  const firstName = user?.firstName
+  const lastName = user?.lastName
 
   return (
     <Container insetsBottom={false} insetsTop={false}>

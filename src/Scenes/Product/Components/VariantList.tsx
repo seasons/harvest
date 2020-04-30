@@ -101,7 +101,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
     <Box style={{ minHeight: variantPickerHeight - 60 }}>
       <Separator color={color("black85")} />
       {rows}
-      <Box style={{ paddingBottom: 180 }} />
+      <Box pb="180px" />
     </Box>
   )
 }
