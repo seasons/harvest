@@ -217,8 +217,8 @@ export const Bag = screenTrack()((props) => {
   let bagSubtitle
   if (!hasActiveReservation) {
     bagSubtitle = remainingPiecesDisplay
-  } else if (data?.me?.customer?.plan === "Essential" && !!data?.me?.activeReservation?.returnDateDisplay) {
-    bagSubtitle = `Return by ${data?.me?.activeReservation?.returnDateDisplay}`
+  } else if (data?.me?.customer?.plan === "Essential" && !!data?.me?.activeReservation?.returnAt) {
+    bagSubtitle = `Return by ${data?.me?.activeReservation?.returnAt}`
   } else {
     bagSubtitle = "Your current rotation"
   }
