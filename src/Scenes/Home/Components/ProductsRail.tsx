@@ -18,7 +18,7 @@ export const ProductsRail: React.FC<{
   const [currentPage, setCurrentPage] = useState(1)
   const tracking = useTracking()
 
-  const onScroll = e => {
+  const onScroll = (e) => {
     const newPageNum = Math.round(e.nativeEvent.contentOffset.x / slideWidth + 1)
 
     if (newPageNum !== currentPage) {
@@ -40,7 +40,7 @@ export const ProductsRail: React.FC<{
         data={items}
         renderItem={({ item }: { item: Homepage_homepage_sections_results_Product; index: number }) => {
           const image = item.images && item.images.length && item.images[0]
-          const resizedImage = imageResize(image.url, "medium")
+          const resizedImage = image && imageResize(image.url, "medium")
           const brandName = item.brand && item.brand.name
           return (
             <Animatable.View animation="fadeIn" duration={300}>
@@ -50,7 +50,7 @@ export const ProductsRail: React.FC<{
                 <Box mr={0.5} style={{ width: slideWidth }}>
                   <FadeInImage source={{ uri: resizedImage }} style={{ width: slideWidth, height: 180 }} />
                   <Spacer mb={0.5} />
-                  {brandName && <Sans size="0">{brandName}</Sans>}
+                  {!!brandName && <Sans size="0">{brandName}</Sans>}
                   {item.variants && <VariantSizes size="0" variants={item.variants} />}
                 </Box>
               </TouchableWithoutFeedback>
