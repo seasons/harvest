@@ -1,7 +1,7 @@
 import { Box, Flex } from "App/Components"
 import { color, space } from "App/utils"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
@@ -9,15 +9,9 @@ import { Image } from "react-native"
 
 export const NavBar = ({ state, descriptors, navigation, currentScreen }) => {
   const insets = useSafeArea()
-  const [hideNav, setHideNav] = useState(false)
+  const hideNav = currentScreen === "Product"
   const buttonHeight = 50
   const trayHeight = buttonHeight + insets.bottom
-
-  useEffect(() => {
-    setTimeout(() => {
-      setHideNav(currentScreen === "Product")
-    })
-  }, [currentScreen])
 
   const tabs = state.routes.map((route, routeIndex) => {
     const isRouteActive = state.index === routeIndex
