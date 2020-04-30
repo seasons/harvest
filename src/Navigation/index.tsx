@@ -4,7 +4,7 @@ import { AuthProvider } from "./AuthProvider"
 import * as Schema from "./schema"
 export { Schema }
 
-const getActiveRouteName = state => {
+const getActiveRouteName = (state) => {
   const route = state.routes[state.index]
 
   if (route.state) {
@@ -22,7 +22,7 @@ export const AppContainer = () => {
   return (
     <NavigationContainer
       ref={navigationRef}
-      onStateChange={state => {
+      onStateChange={(state) => {
         const previousRouteName = routeNameRef.current
         const currentRouteName = getActiveRouteName(state)
 
