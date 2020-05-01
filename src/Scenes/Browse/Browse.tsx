@@ -184,6 +184,9 @@ export const Browse = screenTrack()((props: any) => {
               <VariantSizes size="0" variants={product.variants} />
             </Box>
             <SaveProductButton
+              grayStroke
+              height={16}
+              width={12}
               product={product}
               onPressSaveButton={() => {
                 tracking.trackEvent({
