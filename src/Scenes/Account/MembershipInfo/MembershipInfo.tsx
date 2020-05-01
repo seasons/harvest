@@ -13,9 +13,11 @@ const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
     me {
       customer {
+        id
         plan
       }
       user {
+        id
         firstName
         lastName
       }
@@ -65,15 +67,13 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
       <ScrollView>
         <Box px={2} pb={insets.bottom}>
           <Spacer mb={80} />
-          <Sans size="3">
-            Membership info
-          </Sans>
+          <Sans size="3">Membership info</Sans>
           <Spacer mb={3} />
           <MembershipCard memberName={`${firstName} ${lastName}`} planName={planInfo?.planName} />
           <Spacer mb={4} />
           {!!planInfo?.price && (
             <>
-              <Sans size="1" >What you pay</Sans>
+              <Sans size="1">What you pay</Sans>
               <Spacer mb={12} />
               <Separator />
               <Spacer mb={1} />
@@ -88,10 +88,12 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
               <Sans size="1">Whats included</Sans>
               <Spacer mb={12} />
               <Separator />
-              {planInfo.whatsIncluded.map(text => (
+              {planInfo.whatsIncluded.map((text) => (
                 <Box key={text}>
                   <Spacer mb={1} />
-                  <Sans size="1" color={color("black50")}>{text}</Sans>
+                  <Sans size="1" color={color("black50")}>
+                    {text}
+                  </Sans>
                 </Box>
               ))}
             </>
@@ -101,7 +103,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={12} />
           <Separator />
           <Spacer mb={1} />
-          <Sans size="1" color={color("black50")} >
+          <Sans size="1" color={color("black50")}>
             Interested in upgrading or downgrading your current plan? Contact us below.
           </Sans>
           <Spacer mb={4} />
@@ -109,7 +111,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={12} />
           <Separator />
           <Spacer mb={1} />
-          <Sans size="1" color={color("black50")} >
+          <Sans size="1" color={color("black50")}>
             If you’d like to pause or cancel your Seasons membership, contact us below.
           </Sans>
           <Spacer mb={88} />

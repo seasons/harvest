@@ -12,6 +12,7 @@ const GET_PREFERENCES = gql`
   query GetUserPreferences {
     me {
       customer {
+        id
         detail {
           phoneNumber
           birthday
