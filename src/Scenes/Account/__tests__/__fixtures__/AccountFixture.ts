@@ -1,6 +1,7 @@
 export const GetUserFixture = {
   me: {
     customer: {
+      id: 1234,
       user: {
         firstName: "Santa",
         lastName: "Claus",
@@ -18,6 +19,7 @@ export const GetUserFixture = {
 export const GetPaymentDataFixture = {
   me: {
     customer: {
+      id: 1234,
       detail: {
         phoneNumber: "123-456-1234",
         shippingAddress: {
@@ -44,7 +46,9 @@ export const GetPaymentDataFixture = {
       },
     },
     activeReservation: {
+      id: 1234,
       customer: {
+        id: 1234,
         billingInfo: {
           last_digits: "4242",
           street1: "1 Bedford Avenue",
@@ -61,15 +65,15 @@ export const GetPaymentDataFixture = {
 export const GetChargebeeUpdatePaymentPageDataFixture = {
   chargebeeUpdatePaymentPage: {
     __typename: "ChargebeeHostedPagePayload",
-    "created_at": 1583200000,
-    "embed": false,
-    "expires_at": 1583300000,
-    "id": "alsdjfaklsjdfkladsjf",
-    "object": "hosted_page",
-    "resource_version": 1583300000,
-    "state": "created",
-    "type": "manage_payment_sources",
-    "updated_at": 1583300000,
-    "url": "https://chargebee.com/pages/v3/alsdjfaklsjdfkladsjf/"
-  }
+    created_at: 1583200000,
+    embed: false,
+    expires_at: 1583300000,
+    id: "alsdjfaklsjdfkladsjf",
+    object: "hosted_page",
+    resource_version: 1583300000,
+    state: "created",
+    type: "manage_payment_sources",
+    updated_at: 1583300000,
+    url: "https://chargebee.com/pages/v3/alsdjfaklsjdfkladsjf/",
+  },
 }

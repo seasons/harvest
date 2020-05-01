@@ -7,6 +7,7 @@ import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { color } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
+import { DateTime } from "luxon"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
 import { assign, fill, get } from "lodash"
@@ -218,7 +219,8 @@ export const Bag = screenTrack()((props) => {
   if (!hasActiveReservation) {
     bagSubtitle = remainingPiecesDisplay
   } else if (data?.me?.customer?.plan === "Essential" && !!data?.me?.activeReservation?.returnAt) {
-    bagSubtitle = `Return by ${data?.me?.activeReservation?.returnAt}`
+    const luxonDate = DateTime.fromISO(data?.me?.activeReservation?.returnAt)
+    bagSubtitle = `Return by ${luxonDate.weekdayLong} ${luxonDate.monthShort} ${luxonDate.day}`
   } else {
     bagSubtitle = "Your current rotation"
   }

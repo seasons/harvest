@@ -11,6 +11,7 @@ export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
     me {
       customer {
+        id
         detail {
           phoneNumber
           shippingAddress {
@@ -37,7 +38,9 @@ export const GET_PAYMENT_DATA = gql`
         }
       }
       activeReservation {
+        id
         customer {
+          id
           billingInfo {
             last_digits
             street1
