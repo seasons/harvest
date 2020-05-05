@@ -19,6 +19,8 @@ import { Schema } from "App/Navigation"
 import { BrandsRail } from "./Components/BrandsRail"
 import { HomeFooter } from "./Components/HomeFooter"
 import { ProductsRail } from "./Components/ProductsRail"
+import { BagItemFragment } from "../Bag/Components/BagItem"
+import { BagView } from "../Bag/Bag"
 
 const RESERVATION_FEEDBACK_REMINDER_HEIGHT = 84
 
@@ -83,8 +85,17 @@ export const GET_HOMEPAGE = gql`
         id
         shouldRequestFeedback
       }
+      savedItems {
+        id
+        productVariant {
+          id
+          ...BagItemProductVariant
+        }
+        saved
+      }
     }
   }
+  ${BagItemFragment}
 `
 
 export const Home = screenTrack()(({ navigation }) => {
@@ -99,6 +110,10 @@ export const Home = screenTrack()(({ navigation }) => {
   useEffect(() => {
     if (data?.homepage?.sections?.length) {
       const dataSections = data.homepage.sections.filter((section) => section?.results?.length)
+      if (data?.me?.savedItems?.length) {
+        const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
+        dataSections.splice(4, 0, { type: "SavedProducts", title: "Saved for later", results })
+      }
       setSections(dataSections)
     }
   }, [data])
@@ -170,10 +185,24 @@ export const Home = screenTrack()(({ navigation }) => {
   const renderItem = (item) => {
     switch (item.type) {
       case "Brands":
-        return <BrandsRail title={item.title} navigation={navigation} items={item.results} />
+        return <BrandsRail title={item.title} items={item.results} />
       case "Products":
       case "HomepageProductRails":
-        return <ProductsRail title={item.title} navigation={navigation} items={item.results} />
+        return <ProductsRail title={item.title} items={item.results} />
+      case "SavedProducts":
+        return (
+          <ProductsRail
+            large
+            title={item.title}
+            items={item.results}
+            onViewAll={() => {
+              navigation.navigate(Schema.StackNames.BagStack, {
+                screen: Schema.PageNames.Bag,
+                params: { tab: BagView.Saved },
+              })
+            }}
+          />
+        )
     }
   }
 
