@@ -36,7 +36,7 @@ export const Bag = screenTrack()((props) => {
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { navigation, route } = props
   const initialTab = route?.params?.tab
-  console.log("initialTab", initialTab)
+
   if (!authState?.userSession) {
     return <GuestView navigation={navigation} />
   }
