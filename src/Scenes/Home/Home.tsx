@@ -91,7 +91,6 @@ export const GET_HOMEPAGE = gql`
           id
           ...BagItemProductVariant
         }
-        saved
       }
     }
   }
