@@ -16,6 +16,19 @@ NativeModules.RNCNetInfo = {
   removeListeners: jest.fn(),
 }
 
+jest.mock("react-native-share", () => ({
+  Social: {
+    FACEBOOK: "facebook",
+    PAGESMANAGER: "pagesmanager",
+    TWITTER: "twitter",
+    WHATSAPP: "whatsapp",
+    INSTAGRAM: "instagram",
+    GOOGLEPLUS: "googleplus",
+    EMAIL: "email",
+    PINTEREST: "pinterest",
+  },
+}))
+
 jest.mock("react-tracking")
 const trackEvent = jest.fn()
 ;(track as jest.Mock).mockImplementation(((_) => (x) => x) as any)
