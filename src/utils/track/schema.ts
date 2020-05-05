@@ -94,6 +94,8 @@ export enum ActionTypes {
  * Action event discriptors / names
  */
 export enum ActionNames {
+  // Web view
+  ShareButtonTapped = "Share button tapped",
   // Home page
   BrowseButtonTapped = "Browse Button Tapped",
   ViewAllBrandsTapped = "View All Brands Tapped",
