@@ -297,6 +297,8 @@ PODS:
   - RNSentry (1.3.7):
     - React
     - Sentry (~> 4.4.0)
+  - RNShare (3.3.0):
+    - React
   - RNSVG (9.13.3):
     - React
   - SDWebImage (5.7.3):
@@ -382,6 +384,7 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated/RNReanimated.podspec`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
+  - RNShare (from `../node_modules/react-native-share`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
   - UMCameraInterface (from `../node_modules/unimodules-camera-interface/ios`)
@@ -524,6 +527,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSentry:
     :path: "../node_modules/@sentry/react-native"
+  RNShare:
+    :path: "../node_modules/react-native-share"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   UMBarCodeScannerInterface:
@@ -623,6 +628,7 @@ SPEC CHECKSUMS:
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
   RNScreens: 19fee34a46de81b66e26960f5ac14ea616a5d089
   RNSentry: 370623102247ebea20191b5fb549ecc7a275b324
+  RNShare: fea1801315aa8875d6db73a4010b14afcd568765
   RNSVG: f6177f8d7c095fada7cfee2e4bb7388ba426064c
   SDWebImage: 97351f6582ceca541ea294ba66a1fcb342a331c2
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
@@ -641,6 +647,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 1e70fe58b872355f0ecb44fb81bb1a16484047f0
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 40e842227e48518ddd277852780611c9fca9652b
+PODFILE CHECKSUM: 5343b69a6350425c83716d39eff0d1b44b57c706
 
 COCOAPODS: 1.9.1
