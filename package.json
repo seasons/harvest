@@ -69,6 +69,7 @@
     "react-native-webview": "7.4.3",
     "react-spring": "^8.0.27",
     "react-tracking": "^7.3.0",
+    "reanimated-bottom-sheet": "^1.0.0-alpha.20",
     "styled-components": "^4.3.2",
     "styled-system": "^5.1.1",
     "tipsi-stripe": "^7.5.1",

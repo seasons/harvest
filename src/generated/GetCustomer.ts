@@ -91,9 +91,9 @@ export interface GetCustomer_me_customer {
 
 export interface GetCustomer_me {
   __typename: "Me";
-  user: GetCustomer_me_user;
-  bag: GetCustomer_me_bag[];
-  customer: GetCustomer_me_customer;
+  user: GetCustomer_me_user | null;
+  bag: GetCustomer_me_bag[] | null;
+  customer: GetCustomer_me_customer | null;
 }
 
 export interface GetCustomer {

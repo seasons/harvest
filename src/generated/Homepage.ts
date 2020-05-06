@@ -100,7 +100,30 @@ export interface Homepage_reservationFeedback {
   feedbacks: Homepage_reservationFeedback_feedbacks[] | null;
 }
 
+export interface Homepage_me_customer {
+  __typename: "Customer";
+  id: string;
+  shouldRequestFeedback: boolean | null;
+}
+
+export interface Homepage_me {
+  __typename: "Me";
+  customer: Homepage_me_customer | null;
+}
+
+export interface Homepage_blogPosts {
+  __typename: "BlogPost";
+  id: string;
+  url: string | null;
+  name: string | null;
+  imageURL: string | null;
+  tags: (string | null)[] | null;
+  body: string | null;
+}
+
 export interface Homepage {
   homepage: Homepage_homepage | null;
   reservationFeedback: Homepage_reservationFeedback | null;
+  me: Homepage_me | null;
+  blogPosts: Homepage_blogPosts[];
 }

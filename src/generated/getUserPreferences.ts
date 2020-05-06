@@ -30,12 +30,13 @@ export interface GetUserPreferences_me_customer_detail {
 
 export interface GetUserPreferences_me_customer {
   __typename: "Customer";
+  id: string;
   detail: GetUserPreferences_me_customer_detail | null;
 }
 
 export interface GetUserPreferences_me {
   __typename: "Me";
-  customer: GetUserPreferences_me_customer;
+  customer: GetUserPreferences_me_customer | null;
 }
 
 export interface GetUserPreferences {

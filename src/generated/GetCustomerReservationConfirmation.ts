@@ -87,8 +87,8 @@ export interface GetCustomerReservationConfirmation_me_customer {
 
 export interface GetCustomerReservationConfirmation_me {
   __typename: "Me";
-  user: GetCustomerReservationConfirmation_me_user;
-  customer: GetCustomerReservationConfirmation_me_customer;
+  user: GetCustomerReservationConfirmation_me_user | null;
+  customer: GetCustomerReservationConfirmation_me_customer | null;
 }
 
 export interface GetCustomerReservationConfirmation {

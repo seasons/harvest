@@ -11,19 +11,21 @@ import { Plan } from "./globalTypes";
 
 export interface GetMembershipInfo_me_customer {
   __typename: "Customer";
+  id: string;
   plan: Plan | null;
 }
 
 export interface GetMembershipInfo_me_user {
   __typename: "User";
+  id: string;
   firstName: string;
   lastName: string;
 }
 
 export interface GetMembershipInfo_me {
   __typename: "Me";
-  customer: GetMembershipInfo_me_customer;
-  user: GetMembershipInfo_me_user;
+  customer: GetMembershipInfo_me_customer | null;
+  user: GetMembershipInfo_me_user | null;
 }
 
 export interface GetMembershipInfo {
