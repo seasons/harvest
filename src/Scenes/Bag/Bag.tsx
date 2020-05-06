@@ -34,7 +34,8 @@ export enum BagView {
 export const Bag = screenTrack()((props) => {
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
-  const { navigation } = props
+  const { navigation, route } = props
+  const initialTab = route?.params?.tab
 
   if (!authState?.userSession) {
     return <GuestView navigation={navigation} />
@@ -43,7 +44,7 @@ export const Bag = screenTrack()((props) => {
   const insets = useSafeArea()
   const [isMutating, setMutating] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+  const [currentView, setCurrentView] = useState<BagView>(initialTab || BagView.Bag)
   const [refreshing, setRefreshing] = useState(false)
 
   const tracking = useTracking()

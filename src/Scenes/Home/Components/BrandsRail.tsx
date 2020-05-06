@@ -4,15 +4,16 @@ import { TouchableOpacity, ScrollView } from "react-native"
 import { chunk } from "lodash"
 import { useTracking } from "react-tracking"
 import { Schema } from "App/utils/track"
+import { useNavigation } from "@react-navigation/native"
 
 interface BrandsRailProps {
   items: any
   title?: string
-  navigation: any
 }
 
-export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title, navigation }) => {
+export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title }) => {
   const [rowGroups, createRowGroups] = useState([])
+  const navigation = useNavigation()
   const tracking = useTracking()
 
   useEffect(() => {
