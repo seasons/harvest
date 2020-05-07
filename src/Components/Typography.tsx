@@ -194,4 +194,5 @@ export const LogoText = styled.Text`
   letter-spacing: 2;
   line-height: 24;
   color: white;
+  text-align: center;
 `

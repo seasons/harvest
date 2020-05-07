@@ -168,7 +168,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
   return (
     <Container insetsTop={false}>
       <Box px={2}>
-        <Handle color="black10" style={{ marginTop: space(2) }} />
+        <Handle backgroundColor="black10" style={{ marginTop: space(2) }} />
         <FlatList
           data={sections}
           keyExtractor={(_item, index) => String(index)}
