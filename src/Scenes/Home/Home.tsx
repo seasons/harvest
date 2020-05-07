@@ -17,6 +17,7 @@ import { Schema } from "App/Navigation"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
 import { BagItemFragment } from "../Bag/Components/BagItem"
 import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
+import { StatusBar } from "react-native"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -172,30 +173,29 @@ export const Home = screenTrack()(({ navigation }) => {
   return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
-    <>
-      <Container insetsTop={false} insetsBottom={false}>
-        <HomeBlogContent items={data?.blogPosts} />
-        <Animatable.View animation="fadeIn" duration={300}>
-          {reservationFeedback &&
-            shouldRequestFeedback &&
-            (reservationFeedback.rating ? (
-              <ReservationFeedbackReminderWrapper style={{ bottom: insets.bottom + 8 }}>
-                <ReservationFeedbackReminder
-                  reservationFeedback={reservationFeedback}
-                  onPress={onPressReservationFeedbackReminder}
-                />
-              </ReservationFeedbackReminderWrapper>
-            ) : (
-              <ReservationFeedbackPopUp
+    <Container insetsTop={false} insetsBottom={false}>
+      <StatusBar barStyle="light-content" />
+      <HomeBlogContent items={data?.blogPosts} />
+      <Animatable.View animation="fadeIn" duration={300}>
+        {reservationFeedback &&
+          shouldRequestFeedback &&
+          (reservationFeedback.rating ? (
+            <ReservationFeedbackReminderWrapper style={{ bottom: insets.bottom + 8 }}>
+              <ReservationFeedbackReminder
                 reservationFeedback={reservationFeedback}
-                show={showReservationFeedbackPopUp}
-                onSelectedRating={onSelectedReviewRating}
+                onPress={onPressReservationFeedbackReminder}
               />
-            ))}
-        </Animatable.View>
-        <HomeBottomSheet data={data} />
-      </Container>
-    </>
+            </ReservationFeedbackReminderWrapper>
+          ) : (
+            <ReservationFeedbackPopUp
+              reservationFeedback={reservationFeedback}
+              show={showReservationFeedbackPopUp}
+              onSelectedRating={onSelectedReviewRating}
+            />
+          ))}
+      </Animatable.View>
+      <HomeBottomSheet data={data} />
+    </Container>
   )
 })
 

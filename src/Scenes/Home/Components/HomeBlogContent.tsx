@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Box, Flex, FadeInImage } from "App/Components"
 import { LogoText, Sans } from "App/Components/Typography"
 import { useSafeArea } from "react-native-safe-area-context"
-import { space } from "App/utils"
+import { space, color } from "App/utils"
 import styled from "styled-components/native"
 import { FlatList, TouchableWithoutFeedback, Dimensions } from "react-native"
 import { imageResize } from "App/helpers/imageResize"
@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { useTracking, Schema as TrackingSchema } from "App/utils/track"
+import { FadeTop, FadeBottom } from "Assets/svgs"
 
 const windowWidth = Dimensions.get("window").width
 const slideHeight = windowWidth * PRODUCT_ASPECT_RATIO
@@ -71,6 +72,12 @@ export const HomeBlogContent = ({ items }) => {
             })}
           </Flex>
         </IndexContainer>
+        <FadeWrapper style={{ top: 0 }}>
+          <FadeTop width={windowWidth} />
+        </FadeWrapper>
+        <FadeWrapper style={{ bottom: 0 }}>
+          <FadeBottom width={windowWidth} />
+        </FadeWrapper>
       </Overlay>
       <FlatList
         pagingEnabled
@@ -87,6 +94,13 @@ export const HomeBlogContent = ({ items }) => {
   )
 }
 
+const FadeWrapper = styled(Box)`
+  position: absolute;
+  left: 0;
+  z-index: -1;
+  width: ${windowWidth};
+`
+
 const Wrapper = styled(Box)`
   height: ${slideHeight};
   overflow: hidden;
@@ -99,7 +113,6 @@ const Overlay = styled(Box)`
   height: 100%;
   width: 100%;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.3);
 `
 
 const IndexContainer = styled(Box)`
