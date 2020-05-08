@@ -10,7 +10,7 @@ import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import get from "lodash/get"
 import React, { useState, useEffect } from "react"
-import { Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
+import { Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback, StatusBar } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
@@ -18,6 +18,7 @@ import { color } from "styled-system"
 import { SaveProductButton } from "../Product/Components"
 import { BrowseLoader } from "./Loader"
 import { BrowseEmptyState } from "./BrowseEmptyState"
+import { useFocusEffect } from "@react-navigation/native"
 
 const IMAGE_HEIGHT = 240
 
@@ -100,6 +101,12 @@ export const Browse = screenTrack()((props: any) => {
   const [currentCategory, setCurrentCategory] = useState("all")
   const insets = useSafeArea()
   const tracking = useTracking()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle("dark-content")
+    }, [])
+  )
 
   const PAGE_LENGTH = 10
 

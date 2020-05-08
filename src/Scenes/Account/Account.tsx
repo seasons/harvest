@@ -6,7 +6,7 @@ import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
 import ContentLoader, { Rect } from "react-content-loader/native"
-import { Linking, ScrollView, TouchableOpacity } from "react-native"
+import { Linking, ScrollView, TouchableOpacity, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
@@ -50,6 +50,7 @@ export const Account = screenTrack()((props) => {
 
   useEffect(() => {
     const unsubscribe = navigation?.addListener("focus", () => {
+      StatusBar.setBarStyle("dark-content")
       refetch?.()
     })
 
