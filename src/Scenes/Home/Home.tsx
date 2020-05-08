@@ -118,6 +118,7 @@ export const Home = screenTrack()(({ navigation }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
+      StatusBar.setBarStyle("light-content")
       refetch()
     })
     return unsubscribe

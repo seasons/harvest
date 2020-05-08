@@ -13,7 +13,7 @@ import { Sans } from "Components/Typography"
 import { assign, fill, get } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import { FlatList, RefreshControl } from "react-native"
+import { FlatList, RefreshControl, StatusBar } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
@@ -22,6 +22,7 @@ import { BagEmptyState } from "./Components/BagEmptyState"
 import { SavedItem } from "./Components/SavedItem"
 import { ReservationHistoryItem } from "./Components"
 import { GET_BROWSE_PRODUCTS } from "../Browse/Browse"
+import { useFocusEffect } from "@react-navigation/native"
 
 const SECTION_HEIGHT = 300
 
@@ -37,6 +38,12 @@ export const Bag = screenTrack()((props) => {
   const { navigation, route } = props
   const initialTab = route?.params?.tab
 
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle("dark-content")
+    }, [])
+  )
+
   if (!authState?.userSession) {
     return <GuestView navigation={navigation} />
   }
@@ -46,7 +53,6 @@ export const Bag = screenTrack()((props) => {
   const [isLoading, setIsLoading] = useState(true)
   const [currentView, setCurrentView] = useState<BagView>(initialTab || BagView.Bag)
   const [refreshing, setRefreshing] = useState(false)
-
   const tracking = useTracking()
 
   const { data, refetch } = useQuery(GET_BAG)

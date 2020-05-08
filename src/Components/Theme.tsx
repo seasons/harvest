@@ -78,11 +78,6 @@ export const themeProps = {
       fontSize: 24,
       lineHeight: 32,
     },
-    /** Equivalent to 40px size / 40px line-height  */
-    "4": {
-      fontSize: 40,
-      lineHeight: 40,
-    },
   },
 }
 
