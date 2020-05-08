@@ -29,7 +29,6 @@ const GET_BRAND = gql`
         images
         modelHeight
         externalURL
-        tags
         retailPrice
         status
         createdAt
