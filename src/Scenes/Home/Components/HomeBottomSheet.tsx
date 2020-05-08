@@ -78,7 +78,7 @@ export const HomeBottomSheet = ({ data }) => {
           data={sections}
           onScroll={(event) => {
             const y = event.nativeEvent.contentOffset.y
-            const thresholdTop = -50
+            const thresholdTop = -10
             const thresholdBottom = 0
 
             if (y < thresholdTop) {
