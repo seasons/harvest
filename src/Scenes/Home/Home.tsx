@@ -1,28 +1,23 @@
-import { Box, Flex, Separator, Spacer } from "App/Components"
+import { Box } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { NetworkContext } from "App/NetworkProvider"
 import { screenTrack } from "App/utils/track"
 import { ErrorScreen } from "App/Components/ErrorScreen"
 import { Container } from "Components/Container"
-import { LogoText } from "Components/Typography"
 import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import gql from "graphql-tag"
 import React, { useEffect, useState, useContext } from "react"
 import { useQuery } from "react-apollo"
-import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
 import { Schema } from "App/Navigation"
-import { BrandsRail } from "./Components/BrandsRail"
-import { HomeFooter } from "./Components/HomeFooter"
-import { ProductsRail } from "./Components/ProductsRail"
+import { HomeBlogContent, HomeBottomSheet } from "./Components"
 import { BagItemFragment } from "../Bag/Components/BagItem"
-import { BagView } from "../Bag/Bag"
-
-const RESERVATION_FEEDBACK_REMINDER_HEIGHT = 84
+import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
+import { StatusBar } from "react-native"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -93,29 +88,23 @@ export const GET_HOMEPAGE = gql`
         }
       }
     }
+    blogPosts(collection: "5e72a4bad1075fcf7313bf38", count: 6) {
+      id
+      url
+      name
+      imageURL
+    }
   }
   ${BagItemFragment}
 `
 
 export const Home = screenTrack()(({ navigation }) => {
-  const [sections, setSections] = useState([])
   const [showLoader, toggleLoader] = useState(true)
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
   const { loading, error, data, refetch } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
   const insets = useSafeArea()
-
-  useEffect(() => {
-    if (data?.homepage?.sections?.length) {
-      const dataSections = data.homepage.sections.filter((section) => section?.results?.length)
-      if (data?.me?.savedItems?.length) {
-        const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
-        dataSections.splice(4, 0, { type: "SavedProducts", title: "Saved for later", results })
-      }
-      setSections(dataSections)
-    }
-  }, [data])
 
   useEffect(() => {
     if (!loading && showSplash) {
@@ -181,55 +170,13 @@ export const Home = screenTrack()(({ navigation }) => {
     return <Loader />
   }
 
-  const renderItem = (item) => {
-    switch (item.type) {
-      case "Brands":
-        return <BrandsRail title={item.title} items={item.results} />
-      case "Products":
-      case "HomepageProductRails":
-        return <ProductsRail title={item.title} items={item.results} />
-      case "SavedProducts":
-        return (
-          <ProductsRail
-            large
-            title={item.title}
-            items={item.results}
-            onViewAll={() => {
-              navigation.navigate(Schema.StackNames.BagStack, {
-                screen: Schema.PageNames.Bag,
-                params: { tab: BagView.Saved },
-              })
-            }}
-          />
-        )
-    }
-  }
-
   return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
-    <Container insetsTop={false}>
+    <Container insetsTop={false} insetsBottom={false}>
+      <StatusBar barStyle="light-content" />
+      <HomeBlogContent items={data?.blogPosts} />
       <Animatable.View animation="fadeIn" duration={300}>
-        <Box pb={2} px={2} pt={insets.top + 8} style={{ backgroundColor: color("white100") }}>
-          <Flex flexDirection="row" justifyContent="center" flexWrap="nowrap" alignContent="center">
-            <LogoText>SEASONS</LogoText>
-          </Flex>
-        </Box>
-        <Separator />
-        <FlatList
-          data={sections}
-          keyExtractor={(item, index) => {
-            return item.type + index
-          }}
-          ListHeaderComponent={() => <Spacer mb={2} />}
-          renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
-          ListFooterComponent={() => (
-            <HomeFooter
-              navigation={navigation}
-              bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
-            />
-          )}
-        />
         {reservationFeedback &&
           shouldRequestFeedback &&
           (reservationFeedback.rating ? (
@@ -247,6 +194,7 @@ export const Home = screenTrack()(({ navigation }) => {
             />
           ))}
       </Animatable.View>
+      <HomeBottomSheet data={data} />
     </Container>
   )
 })

@@ -32,13 +32,14 @@ export interface GetUser_me_customer_detail {
 
 export interface GetUser_me_customer {
   __typename: "Customer";
+  id: string;
   user: GetUser_me_customer_user;
   detail: GetUser_me_customer_detail | null;
 }
 
 export interface GetUser_me {
   __typename: "Me";
-  customer: GetUser_me_customer;
+  customer: GetUser_me_customer | null;
 }
 
 export interface GetUser {

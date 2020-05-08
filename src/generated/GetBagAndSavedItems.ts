@@ -59,7 +59,7 @@ export interface GetBagAndSavedItems_me_customer {
 export interface GetBagAndSavedItems_me_activeReservation {
   __typename: "Reservation";
   id: string;
-  returnDateDisplay: any | null;
+  returnAt: any | null;
   shipped: boolean;
   createdAt: any;
 }
@@ -160,10 +160,10 @@ export interface GetBagAndSavedItems_me_savedItems {
 
 export interface GetBagAndSavedItems_me {
   __typename: "Me";
-  customer: GetBagAndSavedItems_me_customer;
+  customer: GetBagAndSavedItems_me_customer | null;
   activeReservation: GetBagAndSavedItems_me_activeReservation | null;
-  bag: GetBagAndSavedItems_me_bag[];
-  savedItems: GetBagAndSavedItems_me_savedItems[];
+  bag: GetBagAndSavedItems_me_bag[] | null;
+  savedItems: GetBagAndSavedItems_me_savedItems[] | null;
 }
 
 export interface GetBagAndSavedItems {

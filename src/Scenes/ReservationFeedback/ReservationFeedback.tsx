@@ -163,7 +163,7 @@ export const ReservationFeedback: React.FC<{
     <Container insetsBottom={false} insetsTop={false}>
       <Box px={2} style={{ flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
         <Box>
-          <Handle color="black10" style={{ marginTop: 12, marginBottom: 16 }} />
+          <Handle backgroundColor="black10" style={{ marginTop: 12, marginBottom: 16 }} />
           <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center">
             <ReservationFeedbackHeader
               currentItem={currFeedbackIndex + 1}

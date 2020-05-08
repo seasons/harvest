@@ -115,8 +115,9 @@ const HomeStackScreen = () => {
     <HomeStack.Navigator initialRouteName={Schema.PageNames.Home} screenOptions={{ ...defaultOptions }}>
       <HomeStack.Screen name={Schema.PageNames.Home} component={Home} />
       <HomeStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
-      <BrowseStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
-      <BrowseStack.Screen name={Schema.PageNames.Brands} component={Brands} />
+      <HomeStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
+      <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
+      <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />
     </HomeStack.Navigator>
   )
 }

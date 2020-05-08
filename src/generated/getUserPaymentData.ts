@@ -40,6 +40,7 @@ export interface GetUserPaymentData_me_customer_billingInfo {
 
 export interface GetUserPaymentData_me_customer {
   __typename: "Customer";
+  id: string;
   detail: GetUserPaymentData_me_customer_detail | null;
   billingInfo: GetUserPaymentData_me_customer_billingInfo | null;
 }
@@ -56,17 +57,19 @@ export interface GetUserPaymentData_me_activeReservation_customer_billingInfo {
 
 export interface GetUserPaymentData_me_activeReservation_customer {
   __typename: "Customer";
+  id: string;
   billingInfo: GetUserPaymentData_me_activeReservation_customer_billingInfo | null;
 }
 
 export interface GetUserPaymentData_me_activeReservation {
   __typename: "Reservation";
+  id: string;
   customer: GetUserPaymentData_me_activeReservation_customer;
 }
 
 export interface GetUserPaymentData_me {
   __typename: "Me";
-  customer: GetUserPaymentData_me_customer;
+  customer: GetUserPaymentData_me_customer | null;
   activeReservation: GetUserPaymentData_me_activeReservation | null;
 }
 
