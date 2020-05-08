@@ -13,7 +13,6 @@ import { useSafeArea } from "react-native-safe-area-context"
 
 export const HomeBottomSheet = ({ data }) => {
   const [sections, setSections] = useState([])
-  const flatList = useRef(null)
   const bottomSheet = useRef(null)
   const insets = useSafeArea()
   const navigation = useNavigation()
@@ -76,7 +75,6 @@ export const HomeBottomSheet = ({ data }) => {
         </TouchableWithoutFeedback>
         <Spacer mb={2} />
         <FlatList
-          ref={flatList}
           data={sections}
           onScroll={(event) => {
             const y = event.nativeEvent.contentOffset.y
