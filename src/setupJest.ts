@@ -8,7 +8,7 @@ import track, { useTracking } from "react-tracking"
 import diff from "snapshot-diff"
 import { format } from "util"
 import mockAsyncStorage from "@react-native-community/async-storage/jest/async-storage-mock"
-import { NativeModules } from "react-native"
+import { NativeModules, View } from "react-native"
 
 NativeModules.RNCNetInfo = {
   getCurrentState: jest.fn(() => Promise.resolve()),
@@ -28,6 +28,10 @@ jest.mock("react-native-share", () => ({
     PINTEREST: "pinterest",
   },
 }))
+
+jest.doMock("reanimated-bottom-sheet", () => {
+  BottomSheet: View
+})
 
 jest.mock("react-tracking")
 const trackEvent = jest.fn()
