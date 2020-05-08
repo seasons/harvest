@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react"
-import { Box, Handle, Sans } from "App/Components"
+import { Box, Handle, Spacer } from "App/Components"
 import { color, space } from "App/utils"
 import { FlatList } from "react-native-gesture-handler"
-import { Dimensions } from "react-native"
+import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import { HomeFooter, BrandsRail, ProductsRail } from "./"
 import { PRODUCT_ASPECT_RATIO, NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { useNavigation } from "@react-navigation/native"
@@ -66,7 +66,15 @@ export const HomeBottomSheet = ({ data }) => {
 
     return (
       <Box style={{ backgroundColor: color("white100") }}>
-        <Handle style={{ marginTop: space(2) }} backgroundColor="black10" />
+        <TouchableWithoutFeedback
+          onPress={() => {
+            // FIXME: Add snapTo to different position
+            return null
+          }}
+        >
+          <Handle style={{ marginTop: space(2) }} backgroundColor="black10" />
+        </TouchableWithoutFeedback>
+        <Spacer mb={2} />
         <FlatList
           ref={flatList}
           data={sections}

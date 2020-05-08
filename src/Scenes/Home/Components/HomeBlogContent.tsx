@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Box, Flex, FadeInImage } from "App/Components"
 import { LogoText, Sans } from "App/Components/Typography"
 import { useSafeArea } from "react-native-safe-area-context"
-import { space, color } from "App/utils"
+import { space } from "App/utils"
 import styled from "styled-components/native"
 import { FlatList, TouchableWithoutFeedback, Dimensions } from "react-native"
 import { imageResize } from "App/helpers/imageResize"
@@ -26,11 +26,12 @@ export const HomeBlogContent = ({ items }) => {
     return (
       <TouchableWithoutFeedback
         onPress={() => {
-          console.log("clicky")
           navigation.navigate(Schema.PageNames.Webview, { uri: item.url })
         }}
       >
-        <FadeInImage source={{ uri: resizedImage }} style={{ width: windowWidth, height: slideHeight }} />
+        <Box>
+          <FadeInImage source={{ uri: resizedImage }} style={{ width: windowWidth, height: slideHeight }} />
+        </Box>
       </TouchableWithoutFeedback>
     )
   }
@@ -50,6 +51,17 @@ export const HomeBlogContent = ({ items }) => {
 
   return (
     <Wrapper>
+      <FlatList
+        pagingEnabled
+        overScrollMode="always"
+        snapToAlignment="start"
+        decelerationRate="fast"
+        scrollEventThrottle={299}
+        onScroll={onScroll}
+        data={items}
+        keyExtractor={(item, index) => item.id + index}
+        renderItem={(item) => renderItem(item)}
+      />
       <Overlay pt={insets.top + space(2)} pointerEvents="none">
         <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="space-between" alignContent="center">
           <LogoText>SEASONS</LogoText>
@@ -73,23 +85,12 @@ export const HomeBlogContent = ({ items }) => {
           </Flex>
         </IndexContainer>
         <FadeWrapper style={{ top: 0 }}>
-          <FadeTop width={windowWidth} />
+          <FadeTop />
         </FadeWrapper>
         <FadeWrapper style={{ bottom: 0 }}>
-          <FadeBottom width={windowWidth} />
+          <FadeBottom />
         </FadeWrapper>
       </Overlay>
-      <FlatList
-        pagingEnabled
-        overScrollMode="always"
-        snapToAlignment="start"
-        decelerationRate="fast"
-        scrollEventThrottle={299}
-        onScroll={onScroll}
-        data={items}
-        keyExtractor={(item, index) => item.id + index}
-        renderItem={(item) => renderItem(item)}
-      />
     </Wrapper>
   )
 }
