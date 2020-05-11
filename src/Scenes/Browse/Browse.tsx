@@ -58,7 +58,10 @@ export const GET_BROWSE_PRODUCTS = gql`
       id
       name
       description
-      images
+      images {
+        id
+        url
+      }
       modelSize {
         display
       }

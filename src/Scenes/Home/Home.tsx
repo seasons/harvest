@@ -34,7 +34,9 @@ export const GET_HOMEPAGE = gql`
           ... on Product {
             id
             slug
-            images
+            images {
+              url
+            }
             brand {
               id
               name
@@ -68,7 +70,9 @@ export const GET_HOMEPAGE = gql`
           id
           product {
             id
-            images
+            images {
+              url
+            }
             name
             retailPrice
           }

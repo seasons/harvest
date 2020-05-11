@@ -38,7 +38,9 @@ export const UPDATE_RESERVATION_FEEDBACK = gql`
           id
           product {
             id
-            images
+            images {
+              url
+            }
             name
             retailPrice
           }
@@ -72,7 +74,7 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
     backgroundColor: show && mounted ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0)",
   })
 
-  const images = reservationFeedback.feedbacks.map(feedback => feedback?.variant?.product?.images?.[0]?.url)
+  const images = reservationFeedback.feedbacks.map((feedback) => feedback?.variant?.product?.images?.[0]?.url)
   const options = ["Loved it", "It was ok", "Didn't like it"]
   const contentWidth = windowWidth - 32
   const imageHorizontalPadding = 4
@@ -99,7 +101,7 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
     const result = await updateReservationFeedback({
       variables: {
         id: reservationFeedback.id,
-        input: { rating }
+        input: { rating },
       },
     })
     if (result?.data) {
@@ -112,14 +114,14 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
       <AnimatedPopUp style={{ transform: [{ translateY: animation.translateY }] }} color={color("white100")}>
         <Box p={2} onLayout={onLayout}>
           <Spacer mt={4} />
-          <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" >
+          <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center">
             <Sans size="2" color={color("black100")}>
               What'd you think?
             </Sans>
             <Spacer mb={1} />
             <Sans size="1" color={color("black50")}>
               Help us improve your experience by sharing what you thought of your last order
-              </Sans>
+            </Sans>
             <Spacer mb={3} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" alignItems="center">
               {images.map((image, index) => (
@@ -134,7 +136,13 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
             <Spacer mb={3} />
             {options.map((option, index) => (
               <Box key={index}>
-                <Button variant="tertiaryWhite" selected={selectedIndex === index} width={contentWidth} height={48} onPress={() => onRatingButtonPressed(index)}>
+                <Button
+                  variant="tertiaryWhite"
+                  selected={selectedIndex === index}
+                  width={contentWidth}
+                  height={48}
+                  onPress={() => onRatingButtonPressed(index)}
+                >
                   {option}
                 </Button>
                 <Spacer mt={1} />
@@ -162,7 +170,7 @@ const OuterWrapper = styled(Box)`
 const Container = styled(Box)`
   border-top-left-radius: 30;
   border-top-right-radius: 30;
-  background-color: ${p => p.color};
+  background-color: ${(p) => p.color};
   position: absolute;
   width: 100%;
   height: 100%;

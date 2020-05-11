@@ -26,7 +26,10 @@ const GET_BRAND = gql`
         slug
         name
         description
-        images
+        images {
+          id
+          url
+        }
         modelHeight
         externalURL
         retailPrice

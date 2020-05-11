@@ -22,7 +22,9 @@ export const BagItemFragment = gql`
         id
         name
       }
-      images
+      images {
+        url
+      }
       variants {
         id
         reservable
