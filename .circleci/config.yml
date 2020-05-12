@@ -3,6 +3,9 @@
 version: 2
 jobs:
   build-and-test:
+    machine:
+      node:
+        version: v13.7.0
     macos:
       xcode: "11.3.1"
     shell: /bin/bash --login -o pipefail
