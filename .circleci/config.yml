@@ -11,6 +11,19 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
+      - install_yarn:
+          name: Install yarn
+          command: curl -o- -L https://yarnpkg.com/install.sh | bash
+      - install_nvm:
+          name: Install Node Version Manager
+          command: |
+            curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            nvm install v13.7.0
+            nvm alias default v13.7.0
+            echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
+            echo "[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"" >> $BASH_EN
       - restore_cache:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
