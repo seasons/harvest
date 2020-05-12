@@ -11,10 +11,10 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
-      - install_yarn:
+      - run:
           name: Install yarn
           command: curl -o- -L https://yarnpkg.com/install.sh | bash
-      - install_nvm:
+      - run:
           name: Install Node Version Manager
           command: |
             curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
