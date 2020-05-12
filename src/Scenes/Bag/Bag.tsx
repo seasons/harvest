@@ -1,35 +1,48 @@
-import { Box, FixedButton, PopUp, Separator, Spacer } from "App/Components"
+import { Box, FixedButton, Separator, Spacer } from "App/Components"
 import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { color } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
+import { DateTime } from "luxon"
 import { TabBar } from "Components/TabBar"
 import { Sans } from "Components/Typography"
 import { assign, fill, get } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import { FlatList, RefreshControl } from "react-native"
+import { FlatList, RefreshControl, StatusBar } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagItem } from "./Components/BagItem"
 import { EmptyBagItem } from "./Components/EmptyBagItem"
-import { SavedEmptyState } from "./Components/SavedEmptyState"
+import { BagEmptyState } from "./Components/BagEmptyState"
 import { SavedItem } from "./Components/SavedItem"
+import { ReservationHistoryItem } from "./Components"
+import { GET_BROWSE_PRODUCTS } from "../Browse/Browse"
+import { useFocusEffect } from "@react-navigation/native"
 
 const SECTION_HEIGHT = 300
 
-enum BagView {
+export enum BagView {
   Bag = 0,
   Saved = 1,
+  History = 2,
 }
 
-export const Bag = screenTrack()(props => {
+export const Bag = screenTrack()((props) => {
   const { authState } = useAuthContext()
-  const { navigation } = props
+  const { showPopUp, hidePopUp } = usePopUpContext()
+  const { navigation, route } = props
+  const initialTab = route?.params?.tab
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle("dark-content")
+    }, [])
+  )
 
   if (!authState?.userSession) {
     return <GuestView navigation={navigation} />
@@ -38,27 +51,23 @@ export const Bag = screenTrack()(props => {
   const insets = useSafeArea()
   const [isMutating, setMutating] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [showReserveError, displayReserveError] = useState(false)
-  const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+  const [currentView, setCurrentView] = useState<BagView>(initialTab || BagView.Bag)
   const [refreshing, setRefreshing] = useState(false)
-
   const tracking = useTracking()
 
-  const { data, refetch } = useQuery(GET_BAG, {
-    fetchPolicy: "cache-and-network",
-  })
+  const { data, refetch } = useQuery(GET_BAG)
+
   useEffect(() => {
     if (data) {
       setIsLoading(false)
     }
-    return displayReserveError(false)
   }, [data])
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {
       const { me } = cache.readQuery({ query: GET_BAG })
       const key = currentView === BagView.Bag ? "bag" : "savedItems"
       const list = me[key]
-      const filteredList = list.filter(a => a.id !== data.removeFromBag.id)
+      const filteredList = list.filter((a) => a.id !== data.removeFromBag.id)
       cache.writeQuery({
         query: GET_BAG,
         data: {
@@ -73,6 +82,16 @@ export const Bag = screenTrack()(props => {
       {
         query: GET_BAG,
       },
+      {
+        query: GET_BROWSE_PRODUCTS,
+        variables: {
+          name: "all",
+          first: 10,
+          skip: 0,
+          orderBy: "createdAt_DESC",
+          sizes: [],
+        },
+      },
     ],
   })
 
@@ -82,8 +101,8 @@ export const Bag = screenTrack()(props => {
       const old = currentView === BagView.Bag ? "bag" : "savedItems"
       const newKey = currentView === BagView.Bag ? "savedItems" : "bag"
       const list = me[old]
-      const filteredList = list.filter(a => a.id !== data.removeFromBag.id)
-      const item = list.find(a => a.id === data.removeFromBag.id)
+      const filteredList = list.filter((a) => a.id !== data.removeFromBag.id)
+      const item = list.find((a) => a.id === data.removeFromBag.id)
 
       cache.writeQuery({
         query: GET_BAG,
@@ -118,7 +137,7 @@ export const Bag = screenTrack()(props => {
   const items =
     (data &&
       data.me &&
-      data.me.bag.map(item => ({
+      data.me.bag.map((item) => ({
         ...item,
         variantID: item.productVariant.id,
         productID: item.productVariant.product.id,
@@ -128,7 +147,7 @@ export const Bag = screenTrack()(props => {
   const savedItems =
     (data &&
       data.me &&
-      data.me.savedItems.map(item => ({
+      data.me.savedItems.map((item) => ({
         ...item,
         variantID: item.productVariant.id,
         productID: item.productVariant.product.id,
@@ -138,12 +157,12 @@ export const Bag = screenTrack()(props => {
   const paddedItems = assign(fill(new Array(3), { variantID: "", productID: "" }), items)
   const hasActiveReservation = !!get(data, "me.activeReservation")
 
-  const handleReserve = async navigation => {
+  const handleReserve = async (navigation) => {
     setMutating(true)
     try {
       const { data } = await checkItemsAvailability({
         variables: {
-          items: items.map(item => item.variantID),
+          items: items.map((item) => item.variantID),
         },
         refetchQueries: [
           {
@@ -155,29 +174,39 @@ export const Bag = screenTrack()(props => {
         },
       })
       if (data.checkItemsAvailability) {
-        navigation.navigate("Modal", { screen: "ReservationModal" })
+        navigation.navigate("BagStack", { screen: Schema.PageNames.ReservationPage })
       }
       setMutating(false)
     } catch (e) {
       const { graphQLErrors } = e
-      console.warn(graphQLErrors)
+      console.log("Bag.tsx handleReserve: ", graphQLErrors)
       const error = graphQLErrors.length > 0 ? graphQLErrors[0] : null
       if (error) {
         const { code, exception } = error.extensions
         let data
         if (code === "511") {
           data = Object.values(exception)
-            .filter(a => !!a.reserved)
-            .map(a => ({
+            .filter((a) => !!a.reserved)
+            .map((a) => ({
               variantID: a.id,
             }))
           refetch()
-        } else if (code === "510") {
+
+          showPopUp({
+            title: "One or more items have been reserved already",
+            note:
+              "Sorry, some of the items you had selected were confirmed before you, please replace them with available items",
+            buttonText: "Got it",
+            onClose: () => hidePopUp(),
+          })
+        } else {
+          showPopUp({
+            title: "Sorry!",
+            note: "We couldn't process your order because of an unexpected error, please try again later",
+            buttonText: "Got it",
+            onClose: () => hidePopUp(),
+          })
         }
-        displayReserveError({
-          code,
-          data,
-        })
       }
       setMutating(false)
     }
@@ -185,78 +214,83 @@ export const Bag = screenTrack()(props => {
 
   const isBagView = BagView.Bag == currentView
   const isSavedView = BagView.Saved == currentView
+  const reservations = data?.me?.customer?.reservations
   const bagCount = items.length
   const remainingPieces = BAG_NUM_ITEMS - bagCount
   const bagIsFull = bagCount === BAG_NUM_ITEMS
   const remainingPiecesDisplay = !bagIsFull
-    ? `You have ${remainingPieces} ${remainingPieces === 1 ? "piece" : "pieces"} remaining`
+    ? `You have ${remainingPieces} ${remainingPieces === 1 ? "slot" : "slots"} remaining`
     : "Reserve your order below"
-  const bagSubtitle = hasActiveReservation ? "Your current rotation" : remainingPiecesDisplay
 
-  const ErrorMessage = () => {
-    const popUpData = {
-      title: "",
-      note: "We couldn't process your order because of an unexpected error, please try again later",
-      buttonText: "Got it",
-      onClose: () => displayReserveError(false),
-    }
-
-    if (showReserveError) {
-      const { code, data } = showReserveError
-      if (code === "511") {
-        popUpData.title = "One or more items have been reserved already"
-        popUpData.note =
-          "Sorry, some of the items you had selected were confirmed before you, please replace them with available items"
-      } else {
-        popUpData.title = "Sorry!"
-        popUpData.note = "We couldn't process your order because of an unexpected error, please try again later"
-      }
-
-      return <PopUp data={popUpData} show={showReserveError} />
-    }
-
-    return null
+  let bagSubtitle
+  if (!hasActiveReservation) {
+    bagSubtitle = remainingPiecesDisplay
+  } else if (data?.me?.customer?.plan === "Essential" && !!data?.me?.activeReservation?.returnAt) {
+    const luxonDate = DateTime.fromISO(data?.me?.activeReservation?.returnAt)
+    bagSubtitle = `Return by ${luxonDate.weekdayLong} ${luxonDate.monthShort} ${luxonDate.day}`
+  } else {
+    bagSubtitle = "Your current rotation"
   }
 
   const renderItem = ({ item, index }) => {
-    const showSavedItems = BagView.Saved == currentView
-    const hideButtons = item.status !== "Added"
-    return item.productID.length ? (
-      <Box mx={showSavedItems ? 0 : 2} mt={isSavedView && index === 0 ? 1 : 0}>
-        {showSavedItems ? (
+    if (isBagView) {
+      return item.productID.length ? (
+        <Box
+          px={2}
+          pt={(index === 0 && hasActiveReservation) || !hasActiveReservation ? 2 : 1}
+          pb={hasActiveReservation ? 0 : 2}
+        >
+          <BagItem
+            removeItemFromBag={deleteBagItem}
+            removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+            index={index}
+            bagItem={item}
+            navigation={navigation}
+          />
+        </Box>
+      ) : (
+        <EmptyBagItem index={index} navigation={navigation} />
+      )
+    } else if (isSavedView) {
+      return (
+        <Box mt={index === 0 ? 1 : 0}>
           <SavedItem
+            hasActiveReservation={hasActiveReservation}
+            bagIsFull={bagIsFull}
             removeItemFromBag={deleteBagItem}
             sectionHeight={SECTION_HEIGHT}
             bagItem={item}
             navigation={navigation}
           />
-        ) : (
-          <Box my={2}>
-            <BagItem
-              hideButtons={hideButtons}
-              removeItemFromBag={deleteBagItem}
-              removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-              sectionHeight={SECTION_HEIGHT}
-              index={index}
-              bagItem={item}
-              navigation={navigation}
-            />
-          </Box>
-        )}
-      </Box>
-    ) : (
-      <EmptyBagItem navigation={navigation} />
-    )
+        </Box>
+      )
+    } else {
+      return <ReservationHistoryItem item={item} />
+    }
   }
 
-  const headerTitle = currentView === BagView.Bag ? "My Bag" : "Saved"
+  let headerTitle
+  let headerSubtitle
+  let dataToUse
+  if (isBagView) {
+    headerTitle = "My bag"
+    headerSubtitle = bagSubtitle
+    dataToUse = paddedItems
+  } else if (isSavedView) {
+    headerTitle = "Saved"
+    headerSubtitle = "Tucked away for later"
+    dataToUse = savedItems
+  } else {
+    headerTitle = "History"
+    headerSubtitle = "Your past reservations"
+    dataToUse = reservations
+  }
   const footerMarginBottom = currentView === BagView.Bag ? 96 : 2
-  const headerSubtitle = currentView === BagView.Bag ? bagSubtitle : "Tucked away for later"
   return (
     <Container insetsBottom={false} insetsTop={false}>
       <FlatList
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        data={currentView === BagView.Bag ? paddedItems : savedItems}
+        data={dataToUse}
         ListHeaderComponent={() => (
           <>
             <Spacer mb={insets.top} />
@@ -270,11 +304,19 @@ export const Bag = screenTrack()(props => {
             </Box>
             <TabBar
               spaceEvenly
-              tabs={["Bag", "Saved"]}
+              tabs={["Bag", "Saved", "History"]}
               activeTab={currentView}
               goToPage={(page: BagView) => {
                 tracking.trackEvent({
-                  actionName: page === 0 ? Schema.ActionNames.BagTabTapped : Schema.ActionNames.SavedTabTapped,
+                  actionName: () => {
+                    if (page === 0) {
+                      return Schema.ActionNames.BagTabTapped
+                    } else if (page === 1) {
+                      return Schema.ActionNames.SavedTabTapped
+                    } else {
+                      return Schema.ActionNames.ReservationHistoryTabTapped
+                    }
+                  },
                   actionType: Schema.ActionTypes.Tap,
                 })
                 setCurrentView(page)
@@ -283,20 +325,20 @@ export const Bag = screenTrack()(props => {
           </>
         )}
         ListEmptyComponent={() => {
-          return <SavedEmptyState navigation={navigation} />
+          return <BagEmptyState currentView={currentView} />
         }}
         ItemSeparatorComponent={() => {
-          if (isSavedView) {
+          if ((isBagView && hasActiveReservation) || isSavedView) {
             return null
           }
           return (
             <Box>
-              <Separator color={color("black15")} />
+              <Separator color={color("black10")} />
             </Box>
           )
         }}
-        keyExtractor={(_item, index) => String(index)}
-        renderItem={item => {
+        keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
+        renderItem={(item) => {
           return renderItem(item)
         }}
         ListFooterComponent={() => <Spacer mb={footerMarginBottom} />}
@@ -305,7 +347,7 @@ export const Bag = screenTrack()(props => {
         <>
           {hasActiveReservation ? (
             <FixedButton
-              block
+              rightAligned
               variant="primaryWhite"
               onPress={() => {
                 tracking.trackEvent({
@@ -326,9 +368,9 @@ export const Bag = screenTrack()(props => {
                   actionType: Schema.ActionTypes.Tap,
                   bagIsFull,
                 })
-                !bagIsFull ? displayReserveError(true) : handleReserve(navigation)
+                handleReserve(navigation)
               }}
-              disabled={!bagIsFull}
+              disabled={!bagIsFull || isMutating}
               loading={isMutating}
             >
               Reserve
@@ -336,7 +378,6 @@ export const Bag = screenTrack()(props => {
           )}
         </>
       )}
-      <ErrorMessage />
     </Container>
   )
 })

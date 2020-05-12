@@ -7,18 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D270BFDBD0324A40AEA2A9E /* libPods-seasons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86CE5701D26A0A53ACC8FD4A /* libPods-seasons.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		353337DDECE045818531A967 /* ProximaNova-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */; };
-		561412F00DEC2537DA601F26 /* libPods-seasons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E634A1E0700DED4FFBC51F /* libPods-seasons.a */; };
 		5A4B65ED798E475A826CC2F0 /* ProximaNova-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */; };
 		61AEAAE2A041469D81CC3E09 /* ProximaNova-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */; };
 		787223015CE542C59F68F85C /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5321E38396C047298EF03D57 /* libz.tbd */; };
 		7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0E1F500ACFA44888E6CB0C1 /* ProximaNova-Regular.ttf */; };
 		7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5AF8182310CACF00A9E513 /* ProximaNova-Semibold.ttf */; };
-		816425C023453D8800D069F3 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		816425C023453D8800D069F3 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		8189590723F2650000CD52B5 /* seasons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8189590623F2650000CD52B5 /* seasons.swift */; };
 		819937AD2350CA0900D4B049 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 819937AC2350CA0900D4B049 /* AppCenter-Config.plist */; };
 		E48E9866ED8A424C835E1727 /* apercu-mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */; };
@@ -33,9 +33,8 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = seasons/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = seasons/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = seasons/main.m; sourceTree = "<group>"; };
+		158A000AF1F9C35529698234 /* Pods-seasons.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-seasons.release.xcconfig"; path = "Target Support Files/Pods-seasons/Pods-seasons.release.xcconfig"; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		34E634A1E0700DED4FFBC51F /* libPods-seasons.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-seasons.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		373CF887D83AD215DBD3E5DC /* Pods-seasons.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-seasons.debug.xcconfig"; path = "Target Support Files/Pods-seasons/Pods-seasons.debug.xcconfig"; sourceTree = "<group>"; };
 		519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "apercu-mono.ttf"; path = "../assets/fonts/apercu-mono.ttf"; sourceTree = "<group>"; };
 		5321E38396C047298EF03D57 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		67317E5959E04BF38074190A /* ProximaNova-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Semibold.ttf"; path = "../assets/fonts/ProximaNova-Semibold.ttf"; sourceTree = "<group>"; };
@@ -43,8 +42,9 @@
 		810F2133237A7D0300F20F91 /* seasons.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = seasons.entitlements; path = seasons/seasons.entitlements; sourceTree = "<group>"; };
 		8189590623F2650000CD52B5 /* seasons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = seasons.swift; sourceTree = "<group>"; };
 		819937AC2350CA0900D4B049 /* AppCenter-Config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "Resources/AppCenter-Config.plist"; sourceTree = "<group>"; };
+		86CE5701D26A0A53ACC8FD4A /* libPods-seasons.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-seasons.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C7D434023564E9BBF557405 /* ProximaNova-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Medium.otf"; path = "../assets/fonts/ProximaNova-Medium.otf"; sourceTree = "<group>"; };
-		8F22EDD95844A43233B43461 /* Pods-seasons.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-seasons.release.xcconfig"; path = "Target Support Files/Pods-seasons/Pods-seasons.release.xcconfig"; sourceTree = "<group>"; };
+		8D8C431DF16147FA901AB02D /* Pods-seasons.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-seasons.debug.xcconfig"; path = "Target Support Files/Pods-seasons/Pods-seasons.debug.xcconfig"; sourceTree = "<group>"; };
 		9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Bold.otf"; path = "../assets/fonts/ProximaNova-Bold.otf"; sourceTree = "<group>"; };
 		A7B0C299497B48D6B1F7FEDC /* ProximaNova-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ProximaNova-Thin.otf"; path = "../assets/fonts/ProximaNova-Thin.otf"; sourceTree = "<group>"; };
 		E0E1F500ACFA44888E6CB0C1 /* ProximaNova-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = file; name = "ProximaNova-Regular.ttf"; path = "../../assets/fonts/ProximaNova-Regular.ttf"; sourceTree = "<group>"; };
@@ -59,7 +59,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				787223015CE542C59F68F85C /* libz.tbd in Frameworks */,
-				561412F00DEC2537DA601F26 /* libPods-seasons.a in Frameworks */,
+				0D270BFDBD0324A40AEA2A9E /* libPods-seasons.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,7 +103,7 @@
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				5321E38396C047298EF03D57 /* libz.tbd */,
-				34E634A1E0700DED4FFBC51F /* libPods-seasons.a */,
+				86CE5701D26A0A53ACC8FD4A /* libPods-seasons.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -111,8 +111,8 @@
 		3BD55FE360A62A070F8543E0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				373CF887D83AD215DBD3E5DC /* Pods-seasons.debug.xcconfig */,
-				8F22EDD95844A43233B43461 /* Pods-seasons.release.xcconfig */,
+				8D8C431DF16147FA901AB02D /* Pods-seasons.debug.xcconfig */,
+				158A000AF1F9C35529698234 /* Pods-seasons.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -164,7 +164,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "seasons" */;
 			buildPhases = (
-				B6436861F3CC265EB7711A0A /* [CP] Check Pods Manifest.lock */,
+				AE53EE62178B21000232FA00 /* [CP] Check Pods Manifest.lock */,
 				FD4C38642228810C00325AF5 /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
@@ -263,7 +263,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
 		};
-		B6436861F3CC265EB7711A0A /* [CP] Check Pods Manifest.lock */ = {
+		AE53EE62178B21000232FA00 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -283,6 +283,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		FD4C38642228810C00325AF5 /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -311,7 +312,7 @@
 			files = (
 				8189590723F2650000CD52B5 /* seasons.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				816425C023453D8800D069F3 /* (null) in Sources */,
+				816425C023453D8800D069F3 /* BuildFile in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -333,7 +334,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 373CF887D83AD215DBD3E5DC /* Pods-seasons.debug.xcconfig */;
+			baseConfigurationReference = 8D8C431DF16147FA901AB02D /* Pods-seasons.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -353,7 +354,7 @@
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 47;
+				CURRENT_PROJECT_VERSION = 70;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QY3QKXPU37;
@@ -381,7 +382,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8F22EDD95844A43233B43461 /* Pods-seasons.release.xcconfig */;
+			baseConfigurationReference = 158A000AF1F9C35529698234 /* Pods-seasons.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -400,7 +401,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 47;
+				CURRENT_PROJECT_VERSION = 70;
 				DEVELOPMENT_TEAM = QY3QKXPU37;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;

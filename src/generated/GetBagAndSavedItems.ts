@@ -1,16 +1,65 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
-import { BagItemStatus } from "./globalTypes";
+import { Plan, BagItemStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBagAndSavedItems
 // ====================================================
 
+export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_internalSize {
+  __typename: "Size";
+  display: string;
+}
+
+export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_brand {
+  __typename: "Brand";
+  id: string;
+  name: string;
+}
+
+export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product {
+  __typename: "Product";
+  id: string;
+  images: any;
+  brand: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_brand;
+}
+
+export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant {
+  __typename: "ProductVariant";
+  id: string;
+  internalSize: GetBagAndSavedItems_me_customer_reservations_products_productVariant_internalSize | null;
+  product: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product;
+}
+
+export interface GetBagAndSavedItems_me_customer_reservations_products {
+  __typename: "PhysicalProduct";
+  id: string;
+  productVariant: GetBagAndSavedItems_me_customer_reservations_products_productVariant;
+}
+
+export interface GetBagAndSavedItems_me_customer_reservations {
+  __typename: "Reservation";
+  id: string;
+  status: string;
+  reservationNumber: number;
+  createdAt: any;
+  products: GetBagAndSavedItems_me_customer_reservations_products[];
+}
+
+export interface GetBagAndSavedItems_me_customer {
+  __typename: "Customer";
+  id: string;
+  plan: Plan | null;
+  reservations: GetBagAndSavedItems_me_customer_reservations[] | null;
+}
+
 export interface GetBagAndSavedItems_me_activeReservation {
   __typename: "Reservation";
   id: string;
+  returnAt: any | null;
   shipped: boolean;
   createdAt: any;
 }
@@ -26,16 +75,22 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_brand {
   name: string;
 }
 
+export interface GetBagAndSavedItems_me_bag_productVariant_product_variants_internalSize {
+  __typename: "Size";
+  display: string;
+}
+
 export interface GetBagAndSavedItems_me_bag_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
-  size: string | null;
+  reservable: number;
+  internalSize: GetBagAndSavedItems_me_bag_productVariant_product_variants_internalSize | null;
 }
 
 export interface GetBagAndSavedItems_me_bag_productVariant_product {
   __typename: "Product";
-  name: string;
   id: string;
+  name: string;
   modelSize: GetBagAndSavedItems_me_bag_productVariant_product_modelSize | null;
   brand: GetBagAndSavedItems_me_bag_productVariant_product_brand;
   images: any;
@@ -68,16 +123,22 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_brand 
   name: string;
 }
 
+export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants_internalSize {
+  __typename: "Size";
+  display: string;
+}
+
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
-  size: string | null;
+  reservable: number;
+  internalSize: GetBagAndSavedItems_me_savedItems_productVariant_product_variants_internalSize | null;
 }
 
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product {
   __typename: "Product";
-  name: string;
   id: string;
+  name: string;
   modelSize: GetBagAndSavedItems_me_savedItems_productVariant_product_modelSize | null;
   brand: GetBagAndSavedItems_me_savedItems_productVariant_product_brand;
   images: any;
@@ -99,9 +160,10 @@ export interface GetBagAndSavedItems_me_savedItems {
 
 export interface GetBagAndSavedItems_me {
   __typename: "Me";
+  customer: GetBagAndSavedItems_me_customer | null;
   activeReservation: GetBagAndSavedItems_me_activeReservation | null;
-  bag: GetBagAndSavedItems_me_bag[];
-  savedItems: GetBagAndSavedItems_me_savedItems[];
+  bag: GetBagAndSavedItems_me_bag[] | null;
+  savedItems: GetBagAndSavedItems_me_savedItems[] | null;
 }
 
 export interface GetBagAndSavedItems {

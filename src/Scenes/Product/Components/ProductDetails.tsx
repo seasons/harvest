@@ -5,22 +5,18 @@ import { Schema, useTracking } from "App/utils/track"
 import React from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
-
 import { useNavigation } from "@react-navigation/native"
-
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
 
-// FIXME: Fix types here
 export const ProductDetails: React.FC<{
-  setPopUp: any
   selectedVariant: any
   product: GetProduct_product
-}> = ({ setPopUp, selectedVariant, product }) => {
+}> = ({ selectedVariant, product }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
   if (!product || !product.variants) {
-    return <></>
+    return null
   }
 
   const {
@@ -29,7 +25,7 @@ export const ProductDetails: React.FC<{
     brand: { name: brandName },
   } = product
 
-  const modelHeightDisplay = modelHeight => {
+  const modelHeightDisplay = (modelHeight) => {
     const height = parseInt(modelHeight)
     const feet = Math.floor(height / 12)
     const inches = height % 12
@@ -67,16 +63,30 @@ export const ProductDetails: React.FC<{
         </Box>
         {!!(selectedVariant && selectedVariant.id) && (
           <SaveButtonWrapper>
-            <SaveProductButton selectedVariant={selectedVariant} product={product} setPopUp={setPopUp} />
+            <Spacer mb={0.5} />
+            <SaveProductButton
+              height={21}
+              width={16}
+              selectedVariant={selectedVariant}
+              product={product}
+              onPressSaveButton={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.SaveProductButtonTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                })
+              }}
+            />
           </SaveButtonWrapper>
         )}
       </Flex>
       <Spacer mb={1} />
-      <Sans size="1" color={color("black50")} lineHeight={26}>
-        {description}
-      </Sans>
+      {description && (
+        <Sans size="1" color={color("black50")} lineHeight={26}>
+          {description.trim()}
+        </Sans>
+      )}
       <Spacer mb={3} />
-      <Separator color={color("black15")} />
+      <Separator color={color("black10")} />
       {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
       {!!product.modelSize && !!product.modelHeight && (
         <ProductInfoItem

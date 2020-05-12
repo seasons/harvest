@@ -1,5 +1,4 @@
 import "./testUtils/renderUntil"
-
 import chalk from "chalk"
 import Enzyme from "enzyme"
 import Adapter from "enzyme-adapter-react-16"
@@ -8,12 +7,35 @@ import track, { useTracking } from "react-tracking"
 // Waiting on https://github.com/thymikee/snapshot-diff/pull/17
 import diff from "snapshot-diff"
 import { format } from "util"
-
 import mockAsyncStorage from "@react-native-community/async-storage/jest/async-storage-mock"
+import { NativeModules, View } from "react-native"
+
+NativeModules.RNCNetInfo = {
+  getCurrentState: jest.fn(() => Promise.resolve()),
+  addListener: jest.fn(),
+  removeListeners: jest.fn(),
+}
+
+jest.mock("react-native-share", () => ({
+  Social: {
+    FACEBOOK: "facebook",
+    PAGESMANAGER: "pagesmanager",
+    TWITTER: "twitter",
+    WHATSAPP: "whatsapp",
+    INSTAGRAM: "instagram",
+    GOOGLEPLUS: "googleplus",
+    EMAIL: "email",
+    PINTEREST: "pinterest",
+  },
+}))
+
+jest.doMock("reanimated-bottom-sheet", () => {
+  BottomSheet: View
+})
 
 jest.mock("react-tracking")
 const trackEvent = jest.fn()
-;(track as jest.Mock).mockImplementation((_ => x => x) as any)
+;(track as jest.Mock).mockImplementation(((_) => (x) => x) as any)
 ;(useTracking as jest.Mock).mockImplementation(() => {
   return {
     trackEvent,
@@ -27,6 +49,8 @@ jest.mock("react-native-safe-area-context", () => ({
     top: 0,
   }),
 }))
+
+jest.mock("react-native-auth0")
 
 jest.mock("react-native-permissions", () => ({
   checkNotifications: () => jest.fn(),
@@ -98,9 +122,9 @@ if (process.env.ALLOW_CONSOLE_LOGS !== "true") {
     return null
   }
 
-  beforeEach(done => {
+  beforeEach((done) => {
     const types: Array<"error" | "warn"> = ["error", "warn"]
-    types.forEach(type => {
+    types.forEach((type) => {
       // Don't spy on loggers that have been modified by the current test.
       if (console[type] === originalLoggers[type]) {
         const handler = (...args) => {

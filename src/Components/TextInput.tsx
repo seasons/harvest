@@ -19,6 +19,9 @@ export interface TextInputProps {
   inputKey?: string
   multiline?: boolean
   currentValue?: string
+  autoCapitalize?: string
+  autoFocus?: boolean
+  blurOnSubmit?: boolean
   onChangeText?: (inputKey: string, text: string) => void
 }
 
@@ -73,8 +76,11 @@ export const TextInput: React.FC<TextInputProps> = ({
   onChangeText,
   style,
   inputKey,
-  multiline,
+  multiline = false,
   currentValue,
+  autoCapitalize = "none",
+  autoFocus,
+  blurOnSubmit = true,
 }) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
   const [current, setCurrent] = React.useState(currentValue ? DisplayState.Active : DisplayState.Inactive)
@@ -90,7 +96,7 @@ export const TextInput: React.FC<TextInputProps> = ({
     }
   })
 
-  const handleOnChangeText = text => {
+  const handleOnChangeText = (text) => {
     setValue(text)
     if (text.length) {
       setCurrent(DisplayState.Active)
@@ -110,16 +116,17 @@ export const TextInput: React.FC<TextInputProps> = ({
   return (
     <Box style={{ height, flex }}>
       <Spring native from={from} to={to}>
-        {props => (
+        {(props) => (
           <AnimatedTextInput
-            blurOnSubmit
-            multiline={multiline || false}
+            autoFocus={autoFocus}
+            blurOnSubmit={blurOnSubmit}
+            multiline={multiline}
             secureTextEntry={secureTextEntry}
             placeholder={placeholder}
             style={{ ...style, ...props }}
-            autoCapitalize="none"
-            placeholderTextColor={variant === "light" ? color("black50") : color("black15")}
-            onChangeText={text => handleOnChangeText(text)}
+            autoCapitalize={autoCapitalize}
+            placeholderTextColor={variant === "light" ? color("black50") : color("black25")}
+            onChangeText={(text) => handleOnChangeText(text)}
             value={value}
           />
         )}

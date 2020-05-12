@@ -11,16 +11,12 @@ import { groupBy, map, sortBy, toPairs } from "lodash"
 import { Loader } from "App/Components/Loader"
 import { screenTrack, useTracking, Schema } from "App/utils/track"
 
-// NOTE: We need to query products here to filter out brands with 0 products in Monsoon
 const GET_BRANDS = gql`
   query GetBrands($orderBy: BrandOrderByInput!) {
-    brands(orderBy: $orderBy) {
+    brands(orderBy: $orderBy, where: { products_some: { id_not: null } }) {
       id
       slug
       name
-      products {
-        id
-      }
     }
   }
 `
@@ -42,7 +38,7 @@ export const Brands = screenTrack()((props: any) => {
     },
   })
 
-  const groupBrands = brands => {
+  const groupBrands = (brands) => {
     const brandPairs = toPairs(
       groupBy(brands, ({ name }) => {
         const char = name.charAt(0)
@@ -61,7 +57,7 @@ export const Brands = screenTrack()((props: any) => {
       })),
       ({ letter }) => letter
     )
-    setAlphabet(groupedBrands.map(brand => brand.letter))
+    setAlphabet(groupedBrands.map((brand) => brand.letter))
     setGroupedBrands(groupedBrands)
   }
 
@@ -75,7 +71,7 @@ export const Brands = screenTrack()((props: any) => {
     return <Loader />
   }
 
-  const getTouchedLetter = y => {
+  const getTouchedLetter = (y) => {
     const top = y - (containerSize.containerTop || 0) - 5
 
     if (top >= 1 && top <= containerSize.containerHeight) {
@@ -97,26 +93,20 @@ export const Brands = screenTrack()((props: any) => {
     handleOnTouchLetter(getTouchedLetter(gestureState.moveY))
   }
 
-  const scrollTo = touchedLetter => {
+  const scrollTo = (touchedLetter) => {
     let index
     if (touchedLetter === "#") {
       index = 0
       listRef?.current?.scrollToOffset({ animated: false, offset: index })
     } else {
-      index = data?.brands.findIndex(
-        item =>
-          item["name"]
-            .charAt(0)
-            .toUpperCase()
-            .localeCompare(touchedLetter) === 0
-      )
+      index = data?.brands.findIndex((item) => item["name"].charAt(0).toUpperCase().localeCompare(touchedLetter) === 0)
       if (index > -1) {
         listRef?.current?.scrollToOffset({ animated: false, offset: index * ITEM_HEIGHT })
       }
     }
   }
 
-  const handleOnTouchLetter = touchedLetter => {
+  const handleOnTouchLetter = (touchedLetter) => {
     scrollTo(touchedLetter)
   }
 
@@ -172,7 +162,7 @@ export const Brands = screenTrack()((props: any) => {
       <Scrubber insetsTop={insets.top}>
         <Flex flexDirection="column" style={{ flex: 1 }} justifyContent="center">
           <Box py={2} pr={2} pl={3} {...panResponder?.panHandlers} onLayout={handleOnLayout} ref={alphabetContainer}>
-            {alphabet.map(letter => (
+            {alphabet.map((letter) => (
               <Box key={letter}>
                 <Box>
                   <Sans color={color("black50")} size="0">
@@ -190,7 +180,7 @@ export const Brands = screenTrack()((props: any) => {
         }}
         data={data?.brands}
         ref={listRef}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={(item, i) => renderItem(item, i, navigation)}
       />
     </Container>
@@ -199,7 +189,7 @@ export const Brands = screenTrack()((props: any) => {
 
 const Scrubber = styled(Flex)`
   position: absolute;
-  top: ${p => p.insetsTop};
+  top: ${(p) => p.insetsTop};
   right: 0;
   bottom: 0;
   z-index: 1000;

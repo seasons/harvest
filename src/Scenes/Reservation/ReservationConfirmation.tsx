@@ -1,21 +1,18 @@
-import {
-  Box, CloseButton, Container, FixedButton, Flex, Sans, Separator, Spacer
-} from "App/Components"
-import { space } from "App/utils"
+import { Box, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
+import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
+import { GreenCheck } from "Assets/svgs"
 import gql from "graphql-tag"
-import { get } from "lodash"
 import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
-import styled from "styled-components/native"
-
-import { BagItem } from "../Bag/Components/BagItem"
+import { ReservationItem } from "./Components/ReservationItem"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
     me {
       user {
+        id
         firstName
         lastName
         email
@@ -65,95 +62,113 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   }
 `
 
-export const ReservationConfirmation = screenTrack()(props => {
-  const reservationID = get(props, "route.params.reservationID", "ck2tvabt6172l07017jcsr2a1")
+export const ReservationConfirmation = screenTrack()((props) => {
   const tracking = useTracking()
-  const { data } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
+  const reservationID = props?.route?.params?.reservationID
+  const { data, error } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
     variables: {
       reservationID,
     },
   })
+  if (error) {
+    console.log("error reservationConfirmation:", error)
+  }
 
-  const customer = get(data, "me.customer")
-  const address = get(customer, "detail.shippingAddress", {
-    address1: "",
-    address2: "",
-    city: "",
-    state: "",
-    zipCode: "",
-  })
-  const reservation = get(data, "me.customer.reservations[0]", { reservationNumber: "", products: [] })
+  const customer = data?.me?.customer
+  const address = customer?.detail?.shippingAddress
+  const reservation = customer?.reservations?.[0] || { reservationNumber: "", products: [] }
 
   const items = reservation?.products ?? []
 
-  const SectionHeader = ({ title }) => {
+  const SectionHeader = ({ title, content = null, bottomSpacing = 1, hideSeparator = false }) => {
     return (
       <>
         <Flex flexDirection="row" flex={1} width="100%">
-          <Sans size="2" color="black">
+          <Sans size="2" color="black100">
             {title}
           </Sans>
+          {content && <Box ml="auto">{content}</Box>}
         </Flex>
-        <Spacer mb={1} />
-        <Separator color="#e5e5e5" />
+        <Spacer mb={bottomSpacing} />
+        {!hideSeparator && <Separator color={color("black04")} />}
       </>
     )
   }
 
-  const content = (
-    <>
-      <Flex flex={1} p={2}>
+  const formatedAddress1 =
+    !!address?.address1 && `${address?.address1}${address?.address2 ? " " + address?.address2 : ""},`
+  const formatedAddress2 = !!address?.city && `${address?.city}, ${address?.state} ${address?.zipCode}`
+
+  return (
+    <Container insetsTop insetsBottom={false} backgroundColor="white100">
+      <Flex flex={1} px={2}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-          <Box>
-            <Flex flexDirection="row" flex={1} width="100%">
-              <Sans size="2" color="black">
-                Order number
-              </Sans>
-              <Sans size="2" color="black" ml="auto">
-                {reservation.reservationNumber}
-              </Sans>
-            </Flex>
-            <Spacer mb={1} />
-            <Separator color="#e5e5e5" />
+          <Spacer mb={52} />
+          <GreenCheck />
+          <Box my={4}>
+            <Sans size="3" color="black100">
+              We've got your order!
+            </Sans>
+            <Sans size="1" color="black50">
+              We've emailed you a confirmation and we'll notify you when its out for delivery.
+            </Sans>
           </Box>
           <Box>
-            <Flex flexDirection="row" flex={1} width="100%">
-              <Box py={1}>
-                <Sans size="2" color="black">
-                  Shipping
-                </Sans>
-              </Box>
-              <Box ml="auto" py={1}>
-                <Sans size="2" color="gray" mt={1} textAlign="right">
-                  {`${address.address1} ${address.address2}`}
-                </Sans>
-                <Sans size="2" color="gray" textAlign="right">
-                  {`${address.city}, ${address.state} ${address.zipCode}`}
-                </Sans>
-              </Box>
-            </Flex>
-            <Spacer mb={1} />
-            <Separator color="#e5e5e5" />
+            <SectionHeader
+              title="Order number"
+              content={
+                <>
+                  {!!reservation.reservationNumber && (
+                    <Sans size="2" color="black100" textAlign="right" ml="auto">
+                      {reservation.reservationNumber}
+                    </Sans>
+                  )}
+                </>
+              }
+            />
           </Box>
-          <Box>
-            <Flex flexDirection="row" flex={1} width="100%" py={1}>
-              <Sans size="2" color="black">
-                Delivery
-              </Sans>
-              <Sans size="2" color="black" ml="auto">
-                {`UPS Ground - 2 day shipping`}
-              </Sans>
-            </Flex>
-            <Spacer mb={1} />
+          <Box pt={1}>
+            <SectionHeader
+              title="Shipping"
+              content={
+                <>
+                  {!!formatedAddress1 && (
+                    <Sans size="2" color="black100" textAlign="right">
+                      {formatedAddress1}
+                    </Sans>
+                  )}
+                  {!!formatedAddress2 && (
+                    <Sans size="2" color="black100" textAlign="right">
+                      {formatedAddress2}
+                    </Sans>
+                  )}
+                </>
+              }
+              bottomSpacing={3}
+            />
           </Box>
-          <Box mt={4} mb={5}>
+          <Box pt={1}>
+            <SectionHeader
+              title="Delivery"
+              content={
+                <Sans size="2" color="black100" ml="auto" textAlign="right">
+                  {`UPS Ground\n2 day shipping`}
+                </Sans>
+              }
+              hideSeparator
+              bottomSpacing={4}
+            />
+          </Box>
+          <Box mb={5}>
             <SectionHeader title="Items" />
-            <Box mt={2} mb="80">
+            <Box mt={1} mb={4}>
               {items.map((item, i) => {
                 return (
                   <Box key={item.id}>
-                    <BagItem hideButtons removeItemFromBag={() => null} sectionHeight={200} index={i} bagItem={item} />
-                    <Spacer mb={2} />
+                    <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
+                    <Spacer mb={1} />
+                    <Separator />
+                    <Spacer mb={1} />
                   </Box>
                 )
               })}
@@ -161,23 +176,8 @@ export const ReservationConfirmation = screenTrack()(props => {
           </Box>
         </ScrollView>
       </Flex>
-    </>
-  )
-
-  return (
-    <Container insetsTop insetsBottom={false} backgroundColor="black100">
-      <CloseButton />
-      <Box style={{ marginTop: 60 }} m={2}>
-        <Sans size="3" color="white">
-          We've got your order!
-        </Sans>
-        <Sans size="1" color="gray">
-          We've emailed you a confirmation and we'll notify you when its out for delivery.
-        </Sans>
-      </Box>
-      <Content>{content}</Content>
       <FixedButton
-        positionBottom={space(4)}
+        positionBottom={space(2)}
         onPress={() => {
           tracking.trackEvent({
             actionName: Schema.ActionNames.ReservationConfirmationDoneButtonTapped,
@@ -192,11 +192,3 @@ export const ReservationConfirmation = screenTrack()(props => {
     </Container>
   )
 })
-
-const Content = styled(Box)`
-  background: white;
-  border-top-left-radius: 30;
-  border-top-right-radius: 30;
-  overflow: hidden;
-  flex: 1;
-`

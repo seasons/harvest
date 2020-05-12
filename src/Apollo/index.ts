@@ -16,7 +16,6 @@ export const setupApolloClient = async () => {
 
   const cache = new InMemoryCache({ fragmentMatcher })
 
-  console.log("config.get(Env.MONSOON_ENDPOINT)", config.get(Env.MONSOON_ENDPOINT))
   const link = new HttpLink({
     uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/",
     // FIXME: unfetch here is being used for this fix https://github.com/jhen0409/react-native-debugger/issues/432
@@ -48,9 +47,9 @@ export const setupApolloClient = async () => {
       if (networkError.statusCode === 401) {
         // We assume we have both tokens needed to run the async request
         // Let's refresh token through async request
-        return new Observable(observer => {
+        return new Observable((observer) => {
           getNewToken()
-            .then(userSession => {
+            .then((userSession) => {
               operation.setContext(({ headers = {} }) => ({
                 headers: {
                   // Re-add old headers
@@ -70,7 +69,7 @@ export const setupApolloClient = async () => {
               // Retry last failed request
               forward(operation).subscribe(subscriber)
             })
-            .catch(error => {
+            .catch((error) => {
               // No refresh or client token available, we force user to login
               observer.error(error)
             })

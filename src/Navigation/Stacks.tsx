@@ -1,25 +1,30 @@
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
+import { Schema } from "App/Navigation"
 import { Account, EditPaymentAndShipping, PaymentAndShipping } from "App/Scenes/Account"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
+import { Brand } from "App/Scenes/Brand"
+import { Brands } from "App/Scenes/Brands"
 import { Browse, Filters } from "App/Scenes/Browse"
+import { DebugMenu } from "App/Scenes/DebugMenu"
+import { Faq } from "App/Scenes/Faq"
 import { Home } from "App/Scenes/Home"
-import { Product } from "App/Scenes/Product"
+import { Product, SaveProduct } from "App/Scenes/Product"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
-import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
-import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn, Welcome } from "App/Scenes/SignIn"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
+import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
+import {
+  ReservationFeedback,
+  ReservationFeedbackConfirmation,
+  ReservationFeedbackFinish,
+} from "App/Scenes/ReservationFeedback"
+import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn } from "App/Scenes/SignIn"
 import { Webview } from "App/Scenes/Webview"
+import { color } from "App/utils"
 import React from "react"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { NavBar } from "./NavBar"
-import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { color } from "App/utils"
-import { Faq } from "App/Scenes/Faq"
-import { Brand } from "App/Scenes/Brand"
-import { Brands } from "App/Scenes/Brands"
-import { Schema } from "App/Navigation"
-import { DebugMenu } from "App/Scenes/DebugMenu"
 
 const HomeStack = createStackNavigator()
 const BagStack = createStackNavigator()
@@ -68,7 +73,7 @@ const TabsStack = ({ currentScreen }) => {
         // @ts-ignore
         safeAreaInset: { bottom: "never" },
       }}
-      tabBar={props => {
+      tabBar={(props) => {
         return <NavBar {...props} currentScreen={currentScreen} />
       }}
     >
@@ -92,9 +97,14 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordModal} component={ResetPassword} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />
-      <ModalStack.Screen name={Schema.PageNames.ReservationConfirmationModal} component={ReservationConfirmation} />
-      <ModalStack.Screen name={Schema.PageNames.ReservationModal} component={Reservation} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackModal} component={ReservationFeedback} />
+      <ModalStack.Screen
+        name={Schema.PageNames.ReservationFeedbackConfirmationModal}
+        component={ReservationFeedbackConfirmation}
+      />
+      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackFinishModal} component={ReservationFeedbackFinish} />
       <ModalStack.Screen name={Schema.PageNames.AllowNotificationsModal} component={AllowNotifications} />
+      <ModalStack.Screen name={Schema.PageNames.SaveProductModal} component={SaveProduct} />
       <ModalStack.Screen name={Schema.PageNames.DebugMenu} component={DebugMenu} />
     </ModalStack.Navigator>
   )
@@ -105,8 +115,9 @@ const HomeStackScreen = () => {
     <HomeStack.Navigator initialRouteName={Schema.PageNames.Home} screenOptions={{ ...defaultOptions }}>
       <HomeStack.Screen name={Schema.PageNames.Home} component={Home} />
       <HomeStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
-      <BrowseStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
-      <BrowseStack.Screen name={Schema.PageNames.Brands} component={Brands} />
+      <HomeStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
+      <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
+      <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />
     </HomeStack.Navigator>
   )
 }
@@ -130,6 +141,8 @@ const BagStackScreen = () => {
       <BrowseStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
       <BagStack.Screen name={Schema.PageNames.CurrentRotation} component={CurrentRotation} />
       <BagStack.Screen name={Schema.PageNames.Faq} component={Faq} />
+      <BagStack.Screen name={Schema.PageNames.Reservation} component={Reservation} />
+      <BagStack.Screen name={Schema.PageNames.ReservationConfirmation} component={ReservationConfirmation} />
     </BagStack.Navigator>
   )
 }

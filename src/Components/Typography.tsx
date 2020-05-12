@@ -139,7 +139,7 @@ export function determineFontSizes(size: string | string[]) {
   }
 
   return size
-    .map(s => themeProps.typeSizes[s])
+    .map((s) => themeProps.typeSizes[s])
     .reduce(
       (accumulator, current) => {
         return {
@@ -172,7 +172,7 @@ export interface SansProps extends Partial<TextProps> {
  * The Sans typeface is the main Seasons typeface
  */
 
-export const Sans: React.SFC<SansProps> = props => {
+export const Sans: React.SFC<SansProps> = (props) => {
   const { size, weight, numberOfLines } = props
   const color = props.color ? colorHelper(props.color) : colorHelper("black")
   return (
@@ -193,5 +193,6 @@ export const LogoText = styled.Text`
   font-size: 20;
   letter-spacing: 2;
   line-height: 24;
-  color: #101010;
+  color: white;
+  text-align: center;
 `

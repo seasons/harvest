@@ -10,8 +10,36 @@ export const CHECK_ITEMS = gql`
 export const GET_BAG = gql`
   query GetBagAndSavedItems {
     me {
+      customer {
+        id
+        plan
+        reservations(orderBy: createdAt_DESC) {
+          id
+          status(display: true)
+          reservationNumber
+          createdAt
+          products {
+            id
+            productVariant {
+              id
+              internalSize {
+                display
+              }
+              product {
+                id
+                images
+                brand {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
       activeReservation {
         id
+        returnAt
         shipped
         createdAt
       }

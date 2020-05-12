@@ -1,13 +1,12 @@
+import { TabBar } from "App/Components/TabBar"
+import { color, space } from "App/utils"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Check } from "Assets/svgs"
 import get from "lodash/get"
 import React, { useState } from "react"
-import { Dimensions, TouchableOpacity, TouchableWithoutFeedback, FlatList } from "react-native"
-import styled from "styled-components/native"
-import { Box, Button, Flex, Radio, Sans, Separator, Spacer, Container } from "../../Components"
-import { useTracking, Schema, screenTrack } from "App/utils/track"
-import { color, space } from "App/utils"
-import { TabBar } from "App/Components/TabBar"
+import { Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
+import { Box, Button, Flex, Handle, Radio, Sans, Separator, Spacer, Container } from "../../Components"
 
 enum FilterView {
   Tops = 0,
@@ -39,7 +38,7 @@ export const Filters = screenTrack()((props: any) => {
         filterValue: item,
       })
       if (sizeFilters.includes(item)) {
-        setSizeFilters(sizeFilters.filter(f => f !== item))
+        setSizeFilters(sizeFilters.filter((f) => f !== item))
       } else {
         setSizeFilters([...sizeFilters, item])
       }
@@ -58,7 +57,7 @@ export const Filters = screenTrack()((props: any) => {
             </Sans>
           </Flex>
           <Spacer mt={20} />
-          <Separator color={color("black50")} />
+          <Separator color={color("black10")} />
         </Box>
       </TouchableWithoutFeedback>
     )
@@ -102,7 +101,7 @@ export const Filters = screenTrack()((props: any) => {
       <FlatList
         data={currentView === FilterView.Tops ? filterData.tops : filterData.bottoms}
         keyExtractor={(_item, index) => String(index)}
-        renderItem={item => {
+        renderItem={(item) => {
           return renderItem(item)
         }}
         ListFooterComponent={() => <Spacer mb={buttonHeight + space(4)} />}
@@ -141,12 +140,3 @@ export const Filters = screenTrack()((props: any) => {
     </Container>
   )
 })
-
-const Handle = styled(Box)`
-  width: 40px;
-  height: 5px;
-  border-radius: 100;
-  background: ${color("black100")};
-  opacity: 0.5;
-  margin: auto;
-`

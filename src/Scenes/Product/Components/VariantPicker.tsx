@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Sans, Spacer } from "App/Components"
+import { Box, Button, Flex, Sans } from "App/Components"
 import { color, space } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
@@ -7,9 +7,9 @@ import { ScrollView } from "react-native"
 import styled from "styled-components/native"
 import { VariantList } from "./VariantList"
 
-export const VariantPicker = props => {
+export const VariantPicker = (props) => {
   const tracking = useTracking()
-  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, productID, height, product } = props
+  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, height, product, variantPickerHeight } = props
 
   return (
     <Flex style={{ flex: 1, height: height + 28, position: "relative" }}>
@@ -39,16 +39,15 @@ export const VariantPicker = props => {
         <StyledScrollview>
           <Box px={2}>
             <VariantList
+              variantPickerHeight={variantPickerHeight}
               product={product}
               setSelectedVariant={setSelectedVariant}
               selectedVariant={selectedVariant}
-              productID={productID}
               onSizeSelected={() => {
                 toggleShowVariantPicker(false)
               }}
             />
           </Box>
-          <Box style={{ paddingBottom: 180 }} />
         </StyledScrollview>
       </Box>
     </Flex>

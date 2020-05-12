@@ -1,18 +1,19 @@
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box } from "App/Components"
+import { GetProduct_product } from "App/generated/GetProduct"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { SaveIcon } from "Assets/icons"
-import { CircledSaveIcon } from "Assets/icons/CircledSaveIcon"
 import gql from "graphql-tag"
-import { head } from "lodash"
 import React from "react"
 import { useMutation } from "react-apollo"
 import { TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useTracking, Schema } from "App/utils/track"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
-const SAVE_ITEM = gql`
+export const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
     saveProduct(item: $item, save: $save) {
       id
@@ -24,25 +25,26 @@ const SAVE_ITEM = gql`
   }
 `
 
-export const SaveProductButton: React.FC<{
-  selectedVariant: any
-  product: any
-  setPopUp: ({ show: boolean, data: any }) => void
-}> = ({ selectedVariant, product, setPopUp }) => {
+export interface SaveProductButtonProps {
+  product: GetProduct_product
+  selectedVariant?: any
+  onPressSaveButton: () => void
+  grayStroke?: boolean
+  height?: number
+  width?: number
+}
+
+export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
+  product,
+  selectedVariant,
+  onPressSaveButton,
+  grayStroke,
+  height,
+  width,
+}) => {
   const navigation = useNavigation()
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
-  if (!product.variants || product?.variants?.length === 0) {
-    return <></>
-  }
-  const variantToUse: any = head((product.variants || []).filter(a => a.id === selectedVariant.id))
-  const { authState } = useAuthContext()
-  const userHasSession = !!authState?.userSession
-
-  if (!variantToUse) {
-    return <></>
-  }
-  const { isSaved } = variantToUse
-
   const [saveItem] = useMutation(SAVE_ITEM, {
     refetchQueries: [
       {
@@ -56,21 +58,45 @@ export const SaveProductButton: React.FC<{
       },
     ],
   })
+  const { authState } = useAuthContext()
+  const userHasSession = !!authState?.userSession
+
+  if (!product.variants || product?.variants?.length === 0) {
+    return null
+  }
+
+  const isSaved = product.variants.filter((variant) => variant.isSaved).length > 0
 
   const handleSaveButton = () => {
+    onPressSaveButton()
     if (!userHasSession) {
-      navigation.navigate("Modal", { screen: "SignInModal" })
+      navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SignInModal })
+      return
+    }
+
+    const updatedState = !isSaved
+    // Open SaveProductModal if:
+    // 1) User wants to save a specific variant inside ProductDetails screen OR
+    // 2) User wants to save the product, i.e. clicked button outside of ProductDetails screen
+    if (updatedState || !selectedVariant) {
+      navigation.navigate("Modal", {
+        screen: NavigationSchema.PageNames.SaveProductModal,
+        params: {
+          hidePopUp,
+          product,
+          showPopUp,
+        },
+      })
     } else {
-      const updatedState = !isSaved
       tracking.trackEvent({
         actionName: Schema.ActionNames.ProductSaved,
         actionType: Schema.ActionTypes.Tap,
-        saved: updatedState,
+        saved: false,
       })
       saveItem({
         variables: {
           item: selectedVariant.id,
-          save: updatedState,
+          save: false,
         },
         optimisticResponse: {
           __typename: "Mutation",
@@ -79,36 +105,20 @@ export const SaveProductButton: React.FC<{
             id: product.id,
             productVariant: {
               __typename: "ProductVariant",
-              isSaved: updatedState,
+              isSaved: false,
               id: selectedVariant.id,
             },
           },
         },
       })
-
-      if (!isSaved) {
-        const updateText = isSaved ? "been removed from" : "been added to"
-        setPopUp({
-          show: true,
-          data: {
-            icon: <CircledSaveIcon />,
-            title: "Saved for later",
-            note: `The ${product.name}, size ${selectedVariant.size} has ${updateText} your saved items.`,
-            buttonText: "Got It",
-            onClose: () => setPopUp({ show: false, data: null }),
-          },
-        })
-      }
     }
   }
 
   return (
-    <Box>
-      <TouchableOpacity onPress={handleSaveButton}>
-        <Box p={2}>
-          <SaveIcon enabled={isSaved} />
-        </Box>
-      </TouchableOpacity>
-    </Box>
+    <TouchableOpacity onPress={handleSaveButton}>
+      <Box px={2} pb={2} pt={0.5}>
+        <SaveIcon width={width} height={height} enabled={isSaved} grayStroke={grayStroke} />
+      </Box>
+    </TouchableOpacity>
   )
 }

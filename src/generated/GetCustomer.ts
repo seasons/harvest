@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 // ====================================================
@@ -8,6 +9,7 @@
 
 export interface GetCustomer_me_user {
   __typename: "User";
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -24,16 +26,22 @@ export interface GetCustomer_me_bag_productVariant_product_brand {
   name: string;
 }
 
+export interface GetCustomer_me_bag_productVariant_product_variants_internalSize {
+  __typename: "Size";
+  display: string;
+}
+
 export interface GetCustomer_me_bag_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
-  size: string | null;
+  reservable: number;
+  internalSize: GetCustomer_me_bag_productVariant_product_variants_internalSize | null;
 }
 
 export interface GetCustomer_me_bag_productVariant_product {
   __typename: "Product";
-  name: string;
   id: string;
+  name: string;
   modelSize: GetCustomer_me_bag_productVariant_product_modelSize | null;
   brand: GetCustomer_me_bag_productVariant_product_brand;
   images: any;
@@ -83,9 +91,9 @@ export interface GetCustomer_me_customer {
 
 export interface GetCustomer_me {
   __typename: "Me";
-  user: GetCustomer_me_user;
-  bag: GetCustomer_me_bag[];
-  customer: GetCustomer_me_customer;
+  user: GetCustomer_me_user | null;
+  bag: GetCustomer_me_bag[] | null;
+  customer: GetCustomer_me_customer | null;
 }
 
 export interface GetCustomer {

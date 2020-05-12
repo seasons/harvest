@@ -27,11 +27,12 @@ export const themeProps = {
   colors: {
     black100: "#000",
     black85: "#252525",
-    // black65: "#5A5A5A",
     black50: "#7F7F7F",
-    black15: "#D9D9D9",
+    black25: "#BFBFBF",
+    black10: "#E5E5E5",
     black04: "#F6F6F6",
     white100: "#fff",
+    green100: "#06BC6F",
     green: "#44524A",
     lightGreen: "#989F9B",
     blue: "#2B50DF",
@@ -77,15 +78,10 @@ export const themeProps = {
       fontSize: 24,
       lineHeight: 32,
     },
-    /** Equivalent to 40px size / 40px line-height  */
-    "4": {
-      fontSize: 40,
-      lineHeight: 40,
-    },
   },
 }
 
-export const Theme = props => {
+export const Theme = (props) => {
   return <ThemeProvider theme={themeProps}>{props.children}</ThemeProvider>
 }
 

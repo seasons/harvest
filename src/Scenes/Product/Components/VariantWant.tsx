@@ -8,6 +8,9 @@ import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Flex, Sans } from "App/Components"
 import { color } from "App/utils"
 import { useTracking, Schema } from "App/utils/track"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { useNavigation } from "@react-navigation/native"
 
 const ADD_PRODUCT_VARIANT_WANT = gql`
   mutation AddProductVariantWant($variantID: ID!) {
@@ -16,34 +19,31 @@ const ADD_PRODUCT_VARIANT_WANT = gql`
     }
   }
 `
-const VARIANT_WANT_HEIGHT = 52
-const THANKS_MESSAGE = " Thanks! We'll let you know"
-
 interface VariantWantProps {
   isWanted: boolean
   productID: string
-  setPopUp: ({ show: boolean, data: any }) => void
   variantID: string
   productSlug: string
+  setShowWantedConfirmation: (bool) => void
 }
 
 export const VariantWant = (props: VariantWantProps) => {
   const tracking = useTracking()
-  const { isWanted, productID, setPopUp, variantID, productSlug } = props
-  const shouldShowGreenCheck = isWanted
-  const plainText = isWanted ? THANKS_MESSAGE : "Want this item? "
-  const underlinedText = isWanted ? "" : "Let us know!"
+  const navigation = useNavigation()
+  const { authState } = useAuthContext()
+  const { showPopUp, hidePopUp } = usePopUpContext()
+  const { isWanted, productID, variantID, productSlug, setShowWantedConfirmation } = props
 
   const popUpData = {
     buttonText: "Got it",
     note: "We couldn’t save that you want this item! Try again.",
     title: "Something went wrong!",
-    onClose: () => setPopUp({ show: false, data: null }),
+    onClose: () => hidePopUp(),
   }
   const [addProductVariantWant] = useMutation(ADD_PRODUCT_VARIANT_WANT, {
     onError: error => {
       console.error("error VariantWant.tsx: ", error)
-      setPopUp({ show: true, data: popUpData })
+      showPopUp(popUpData)
     },
     refetchQueries: [
       {
@@ -60,7 +60,14 @@ export const VariantWant = (props: VariantWantProps) => {
       actionName: Schema.ActionNames.ProductWanted,
       actionType: Schema.ActionTypes.Tap,
       variantID,
+      productID,
+      productSlug,
     })
+
+    if (!authState?.userSession) {
+      return navigation.navigate("Modal", { screen: "SignInModal" })
+    }
+
     try {
       const result = await addProductVariantWant({
         variables: {
@@ -68,12 +75,18 @@ export const VariantWant = (props: VariantWantProps) => {
         },
       })
       if (!result?.data?.addProductVariantWant) {
-        setPopUp({ show: true, data: popUpData })
+        showPopUp(popUpData)
+      } else {
+        setShowWantedConfirmation(true)
       }
     } catch (e) {
       console.log("error VariantWant.tsx ", e)
-      setPopUp({ show: true, data: popUpData })
+      showPopUp(popUpData)
     }
+  }
+
+  if (!variantID) {
+    return null
   }
 
   const { width } = Dimensions.get("window")
@@ -83,14 +96,14 @@ export const VariantWant = (props: VariantWantProps) => {
       <LeftCorner />
       <RightCorner />
       <TextContainer>
-        {shouldShowGreenCheck && <GreenCheck width={16} height={16} strokeWidth={6} />}
+        {isWanted && <GreenCheck width={16} height={16} strokeWidth={6} />}
         <Text>
           <Sans size="2" color={color("white100")}>
-            {plainText}
+            {isWanted ? " Thanks! We'll let you know" : "Want this item? "}
           </Sans>
           <TouchableWithoutFeedback onPress={handleWantVariant}>
             <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("white100")}>
-              {underlinedText}
+              {isWanted ? "" : "Let us know!"}
             </Sans>
           </TouchableWithoutFeedback>
         </Text>
@@ -103,7 +116,7 @@ const Container = styled(Flex)`
   position: absolute;
   background: ${color("black100")};
   bottom: 0;
-  height: ${VARIANT_WANT_HEIGHT};
+  height: 52;
 `
 
 const TextContainer = styled(Flex)`
@@ -116,12 +129,12 @@ const TextContainer = styled(Flex)`
 
 const LeftCorner = styled(LeftTabCorner)`
   position: absolute;
-  bottom: ${VARIANT_WANT_HEIGHT};
+  bottom: 52;
   left: 0;
 `
 
 const RightCorner = styled(RightTabCorner)`
   position: absolute;
-  bottom: ${VARIANT_WANT_HEIGHT};
+  bottom: 52;
   right: 0;
 `

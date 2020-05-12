@@ -32,6 +32,7 @@ export interface ButtonProps extends BoxProps {
   /** React Native only, Callback on press, use instead of onClick */
   onPress?: (e) => void
   disabled?: boolean
+  selected?: boolean
   showCheckMark?: boolean
   height?: number
   width?: number | string
@@ -42,7 +43,13 @@ export interface ButtonProps extends BoxProps {
   block?: boolean
 }
 
-export type ButtonVariant = "primaryBlack" | "secondaryWhite" | "primaryWhite" | "black85" | "secondaryBlack"
+export type ButtonVariant =
+  | "primaryBlack"
+  | "secondaryWhite"
+  | "primaryWhite"
+  | "black85"
+  | "secondaryBlack"
+  | "tertiaryWhite"
 export type ButtonSize = "small" | "large"
 
 /** Default button size */
@@ -55,7 +62,7 @@ export const defaultVariant: ButtonVariant = "primaryBlack"
  */
 export function getColorsForVariant(variant: ButtonVariant) {
   const {
-    colors: { black100, white100, black50, black15, black85 },
+    colors: { black100, white100, black50, black10, black85 },
   } = themeProps
 
   switch (variant) {
@@ -72,8 +79,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: white100,
         },
         disabled: {
-          backgroundColor: black15,
-          borderColor: black15,
+          backgroundColor: black10,
+          borderColor: black10,
           color: black50,
         },
       }
@@ -90,8 +97,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: black100,
         },
         disabled: {
-          backgroundColor: black15,
-          borderColor: black15,
+          backgroundColor: black10,
+          borderColor: black10,
           color: black50,
         },
       }
@@ -99,17 +106,35 @@ export function getColorsForVariant(variant: ButtonVariant) {
       return {
         default: {
           backgroundColor: white100,
-          borderColor: black15,
+          borderColor: black10,
           color: black100,
         },
         pressed: {
           backgroundColor: black50,
-          borderColor: black15,
+          borderColor: black10,
           color: black100,
         },
         disabled: {
-          backgroundColor: black15,
-          borderColor: black15,
+          backgroundColor: black10,
+          borderColor: black10,
+          color: black50,
+        },
+      }
+    case "tertiaryWhite":
+      return {
+        default: {
+          backgroundColor: white100,
+          borderColor: black10,
+          color: black100,
+        },
+        pressed: {
+          backgroundColor: black100,
+          borderColor: black100,
+          color: white100,
+        },
+        disabled: {
+          backgroundColor: black10,
+          borderColor: black10,
           color: black50,
         },
       }
@@ -126,8 +151,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: white100,
         },
         disabled: {
-          backgroundColor: black15,
-          borderColor: black15,
+          backgroundColor: black10,
+          borderColor: black10,
           color: white100,
         },
       }
@@ -162,8 +187,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: white100,
         },
         disabled: {
-          backgroundColor: black15,
-          borderColor: black15,
+          backgroundColor: black10,
+          borderColor: black10,
           color: black100,
         },
       }
@@ -178,9 +203,24 @@ export class Button extends Component<ButtonProps, ButtonState> {
     theme: themeProps,
   }
 
-  state = {
-    previous: DisplayState.Default,
-    current: DisplayState.Default,
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { selected } = nextProps
+    if (selected === undefined) {
+      return prevState
+    }
+    const { current: currentState, previous: previousState } = prevState
+    const previous = selected ? currentState : previousState
+    const current = selected ? DisplayState.Pressed : DisplayState.Default
+    return { previous, current }
+  }
+
+  constructor(props: ButtonProps) {
+    super(props)
+    const { selected = false } = props
+    this.state = {
+      previous: DisplayState.Default,
+      current: selected ? DisplayState.Pressed : DisplayState.Default,
+    }
   }
 
   get spinnerColor() {
@@ -196,13 +236,13 @@ export class Button extends Component<ButtonProps, ButtonState> {
   getSize(): { height: number | string; size: "0" | "1" | "2"; px: number } {
     switch (this.props.size) {
       case "small":
-        return { height: 32, size: "1", px: 2 }
+        return { height: 36, size: "1", px: 21 }
       default:
         return { height: 48, size: "1", px: 30 }
     }
   }
 
-  onPress = args => {
+  onPress = (args) => {
     if (this.props.disabled || this.props.loading) {
       return
     }
@@ -241,6 +281,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
       loading,
       showChevron,
       rotateChevron,
+      selected = false,
       ...rest
     } = this.props
     const { px, size, height } = this.getSize()
@@ -252,7 +293,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
 
     return (
       <Spring native from={from} to={to}>
-        {props => (
+        {(props) => (
           <TouchableWithoutFeedback
             onPress={this.onPress}
             onPressIn={() => {
@@ -313,7 +354,7 @@ const Container = styled(Box)<ButtonProps>`
   flex-direction: row;
   border-width: 1;
   border-radius: 28;
-  width: ${p => {
+  width: ${(p) => {
     if (p.width) {
       return p.width
     } else {

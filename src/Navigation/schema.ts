@@ -4,9 +4,11 @@ export enum PageNames {
   ResetPasswordModal = "ResetPasswordModal",
   ResetPasswordConfirmationModal = "ResetPasswordConfirmationModal",
   SignInModal = "SignInModal",
-  ReservationConfirmationModal = "ReservationConfirmationModal",
-  ReservationModal = "ReservationModal",
+  ReservationFeedbackModal = "ReservationFeedbackModal",
+  ReservationFeedbackConfirmationModal = "ReservationFeedbackConfirmationModal",
+  ReservationFeedbackFinishModal = "ReservationFeedbackFinishModal",
   AllowNotificationsModal = "AllowNotificationsModal",
+  SaveProductModal = "SaveProductModal",
   DebugMenu = "DebugMenu",
 
   // Home
@@ -21,6 +23,8 @@ export enum PageNames {
   Bag = "Bag",
   CurrentRotation = "CurrentRotation",
   Faq = "Faq",
+  Reservation = "Reservation",
+  ReservationConfirmation = "ReservationConfirmation",
 
   // Account
   Account = "Account",

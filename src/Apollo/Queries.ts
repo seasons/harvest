@@ -30,10 +30,12 @@ export const GET_PRODUCT = gql`
       outerMaterials
       innerMaterials
       images
-      isSaved
       type
       variants {
         id
+        manufacturerSizes {
+          display
+        }
         internalSize {
           top {
             letter
@@ -49,6 +51,7 @@ export const GET_PRODUCT = gql`
         reservable
         nonReservable
         reserved
+        isInBag
         isSaved
         isWanted
       }

@@ -8,14 +8,16 @@ export const VariantSizes: React.FC<{
   variants: Homepage_homepage_sections_results_Product_variants[]
   size: "0" | "1"
 }> = ({ variants, size }) => {
+  const availableVariants = variants.filter((a) => !!a?.internalSize?.display)
+
   return (
     <Flex flexDirection="row">
-      {variants.map((variant: any) => {
+      {availableVariants.map((variant: any) => {
         const reservable = variant.reservable !== null && !!variant.reservable
         return (
           <Box key={variant.id} mr={0.5} style={{ position: "relative" }}>
-            <Sans size={size} color={reservable ? "black" : "black15"}>
-              {variant.internalSize.display}
+            <Sans size={size} color={reservable ? "black100" : "black25"}>
+              {variant?.internalSize?.display}
             </Sans>
             {!reservable && <Strikethrough size={size} />}
           </Box>
@@ -26,10 +28,10 @@ export const VariantSizes: React.FC<{
 }
 
 const Strikethrough = styled.View`
-  background-color: ${color("black15")};
+  background-color: ${color("black25")};
   height: 2;
   width: 100%;
   position: absolute;
-  top: ${p => (p.size === "0" ? 7 : 11)};
+  top: ${(p) => (p.size === "0" ? 7 : 11)};
   left: 0;
 `

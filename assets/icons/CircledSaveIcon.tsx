@@ -2,7 +2,7 @@ import React from "react"
 import Svg, { Circle, G, Path } from "react-native-svg"
 
 export const CircledSaveIcon = props => (
-  <Svg width={56} height={56} {...props}>
+  <Svg width={40} height={40} {...props} viewBox="0 0 56 56">
     <G fill="none" fillRule="evenodd">
       <Circle fill="#000" cx={28} cy={28} r={28} />
       <Path
