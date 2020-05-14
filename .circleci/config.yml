@@ -103,7 +103,7 @@ jobs:
             npm install -g react-native-version
       - run:
           name: Build entry file
-          command: react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios --verbose
+          command: react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios
       - run:
           name: Fastlane
           command: bundle exec fastlane $FASTLANE_LANE
