@@ -35,8 +35,11 @@ export enum BagView {
 export const Bag = screenTrack()((props) => {
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
-  const { navigation, route } = props
-  const initialTab = route?.params?.tab
+  const insets = useSafeArea()
+  const [isMutating, setMutating] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+  const tracking = useTracking()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -44,24 +47,17 @@ export const Bag = screenTrack()((props) => {
     }, [])
   )
 
-  if (!authState?.userSession) {
-    return <GuestView navigation={navigation} />
-  }
-
-  const insets = useSafeArea()
-  const [isMutating, setMutating] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const { navigation, route } = props
+  const initialTab = route?.params?.tab
   const [currentView, setCurrentView] = useState<BagView>(initialTab || BagView.Bag)
-  const [refreshing, setRefreshing] = useState(false)
-  const tracking = useTracking()
 
   const { data, refetch } = useQuery(GET_BAG)
-
   useEffect(() => {
     if (data) {
       setIsLoading(false)
     }
   }, [data])
+
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {
       const { me } = cache.readQuery({ query: GET_BAG })
@@ -124,6 +120,10 @@ export const Bag = screenTrack()((props) => {
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
 
+  if (!authState?.userSession) {
+    return <GuestView navigation={navigation} />
+  }
+
   if (isLoading) {
     return <Loader />
   }
@@ -135,24 +135,18 @@ export const Bag = screenTrack()((props) => {
   }
 
   const items =
-    (data &&
-      data.me &&
-      data.me.bag.map((item) => ({
-        ...item,
-        variantID: item.productVariant.id,
-        productID: item.productVariant.product.id,
-      }))) ||
-    []
+    data?.me?.bag?.map((item) => ({
+      ...item,
+      variantID: item.productVariant.id,
+      productID: item.productVariant.product.id,
+    })) || []
 
   const savedItems =
-    (data &&
-      data.me &&
-      data.me.savedItems.map((item) => ({
-        ...item,
-        variantID: item.productVariant.id,
-        productID: item.productVariant.product.id,
-      }))) ||
-    []
+    data?.me?.savedItems?.map((item) => ({
+      ...item,
+      variantID: item.productVariant.id,
+      productID: item.productVariant.product.id,
+    })) || []
 
   const paddedItems = assign(fill(new Array(3), { variantID: "", productID: "" }), items)
   const hasActiveReservation = !!get(data, "me.activeReservation")
