@@ -39,6 +39,7 @@ export const UPDATE_RESERVATION_FEEDBACK = gql`
           product {
             id
             images {
+              id
               url
             }
             name

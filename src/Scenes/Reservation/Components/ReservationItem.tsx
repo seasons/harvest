@@ -24,7 +24,7 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
     return null
   }
 
-  const imageURL = imageResize(get(product, "images[0].url"), "medium")
+  const imageURL = imageResize(get(product, "images[0].url"), "thumb")
   const variantSize = get(variantToUse, "internalSize.display")
 
   return (

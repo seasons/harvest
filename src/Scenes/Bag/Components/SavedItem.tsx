@@ -46,11 +46,9 @@ export const SavedItem: React.FC<BagItemProps> = ({
     return null
   }
 
-  const imageURL = imageResize(get(product, "images[0].url"), "medium")
+  const imageURL = imageResize(get(product, "images[0].url"), "thumb")
   const variantSize = variantToUse?.internalSize?.display
   const reservable = variantToUse?.reservable
-
-  console.log("variantToUse", variantToUse)
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {

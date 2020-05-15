@@ -29,7 +29,10 @@ export const GET_PRODUCT = gql`
       }
       outerMaterials
       innerMaterials
-      images
+      images {
+        id
+        url
+      }
       type
       variants {
         id
@@ -82,7 +85,10 @@ export const GET_COLLECTION = gql`
         brand {
           name
         }
-        images
+        images {
+          id
+          url
+        }
       }
     }
   }
@@ -108,7 +114,10 @@ export const ACTIVE_RESERVATION = gql`
               brand {
                 name
               }
-              images
+              images {
+                id
+                url
+              }
             }
           }
         }

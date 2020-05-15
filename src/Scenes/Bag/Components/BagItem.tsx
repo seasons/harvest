@@ -23,6 +23,7 @@ export const BagItemFragment = gql`
         name
       }
       images {
+        id
         url
       }
       variants {
@@ -65,7 +66,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   }
 
   const isReserved = bagItem.status !== "Added"
-  const imageURL = imageResize(get(product, "images[0].url"), "medium")
+  const imageURL = imageResize(get(product, "images[0].url"), "thumb")
   const variantSize = get(variantToUse, "internalSize.display")
   const variantId = bagItem.variantID
 

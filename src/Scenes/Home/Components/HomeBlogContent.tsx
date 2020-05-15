@@ -22,7 +22,7 @@ export const HomeBlogContent = ({ items }) => {
   const navigation = useNavigation()
 
   const renderItem = ({ item }) => {
-    const resizedImage = !!item.imageURL && imageResize(item.imageURL, "large")
+    const resizedImage = !!item.imageURL && imageResize(item.imageURL, "medium")
     return (
       <TouchableWithoutFeedback
         onPress={() => {

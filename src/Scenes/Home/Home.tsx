@@ -35,6 +35,7 @@ export const GET_HOMEPAGE = gql`
             id
             slug
             images {
+              id
               url
             }
             brand {
@@ -71,6 +72,7 @@ export const GET_HOMEPAGE = gql`
           product {
             id
             images {
+              id
               url
             }
             name
@@ -174,6 +176,8 @@ export const Home = screenTrack()(({ navigation }) => {
   if (showLoader || !data) {
     return <Loader />
   }
+
+  console.log("data", data)
 
   return !network?.isConnected && !data ? (
     NoInternetComponent

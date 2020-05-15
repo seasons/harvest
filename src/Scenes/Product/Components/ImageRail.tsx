@@ -38,7 +38,7 @@ export const ImageRail: React.FC<{
       <FlatList
         data={images}
         renderItem={({ item }) => {
-          const imageURL = imageResize(item && item.url, "x-large")
+          const imageURL = imageResize(item && item.url, "thumb")
           return (
             <Box mr={0.5}>
               <ImageContainer height={imageHeight} imageWidth={imageWidth} source={{ uri: imageURL }} />

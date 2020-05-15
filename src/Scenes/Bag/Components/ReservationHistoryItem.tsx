@@ -33,7 +33,7 @@ export const ReservationHistoryItem = ({ item }) => {
           const product = variant?.product
           const brandName = product?.brand?.name
           const image = product?.images?.[0]
-          const imageURL = imageResize(image && image.url, "small")
+          const imageURL = imageResize(image && image.url, "thumb")
           return (
             <TouchableOpacity
               onPress={() => product?.id && navigation.navigate("Product", { id: product?.id })}
