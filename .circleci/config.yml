@@ -105,6 +105,6 @@ workflows:
       - beta:
           filters:
             branches:
-              only: release-2
+              only: release
           requires:
             - build-and-test
