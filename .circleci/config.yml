@@ -89,17 +89,14 @@ jobs:
           name: run ls
           command: cd src; ls; cd ..;
       - run:
-          name: checkout release-2
-          command: git checkout release-2;
-      - run:
-          name: run ls
-          command: cd src; ls; cd ..;
+          name: run ls on utils
+          command: cd src/Utils; ls; cd ../..;
       - run:
           name: manual fix
           command: |
             git mv src/Utils src/utils2  
             git mv src/utils2 Utils
-            cd src
+            cd src/Utils
             ls
             cd ..
       - run:
@@ -115,10 +112,10 @@ workflows:
   version: 2
   beta-release:
     jobs:
-      - build-and-test
+      # - build-and-test
       - beta:
           filters:
             branches:
               only: release-2
-          requires:
-            - build-and-test
+          # requires:
+          #   - build-and-test
