@@ -101,10 +101,10 @@ workflows:
   version: 2
   beta-release:
     jobs:
-      - build-and-test
+      # - build-and-test
       - beta:
           filters:
             branches:
               only: release-2
-          requires:
-            - build-and-test
+          # requires:
+          #   - build-and-test
