@@ -85,12 +85,12 @@ jobs:
           command: |
             npm install -g react-native-cli
             npm install -g react-native-version
-      # TODO: Fix this. Somewhere in the git history, we ran into an issue with the casing of the file src/Utils.
-      # More specifically, we renamed from src/Utils -> src/utils but we're running into issues getting this change
-      # to propogate in the CircleCI environment.
-      - run:
-          name: manual fix
-          command: mv src/Utils src/utils
+      # # TODO: Fix this. Somewhere in the git history, we ran into an issue with the casing of the file src/Utils.
+      # # More specifically, we renamed from src/Utils -> src/utils but we're running into issues getting this change
+      # # to propogate in the CircleCI environment.
+      # - run:
+      #     name: manual fix
+      #     command: mv src/Utils src/utils
       - run:
           name: Build entry file
           command: react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios --verbose
