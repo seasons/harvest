@@ -32,6 +32,9 @@ jobs:
           key: bundle-v5-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
+      - run:
+          name: Test suites
+          command: yarn test
       - store_artifacts:
           path: output
       - store_test_results:
