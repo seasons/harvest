@@ -177,8 +177,6 @@ export const Home = screenTrack()(({ navigation }) => {
     return <Loader />
   }
 
-  console.log("data", data)
-
   return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
