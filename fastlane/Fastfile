@@ -20,6 +20,7 @@ platform :ios do
     lane :beta do
         build
         changelog_from_git_commits
+        
         upload_to_testflight(
             skip_waiting_for_build_processing: true
         )
