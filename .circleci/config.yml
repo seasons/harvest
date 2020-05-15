@@ -62,9 +62,10 @@ jobs:
       - run:
           name: install node@12.0.0
           command: |
-            set +e
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-            echo nvm install 12.0.0 >> $BASH_ENV
+            brew install node@12
+            brew unlink node
+            brew link --force --overwrite node@12
+
       # echo nvm alias default 12.0.0 >> $BASH_ENVV
 
       # - restore_cache:
