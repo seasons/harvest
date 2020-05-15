@@ -9,27 +9,27 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
-          key: node-v5-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v6-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install dependencies
           command: yarn install
       - save_cache:
-          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: node-v5-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v6-{{ checksum "package.json" }}-{{ arch }}
           paths:
             - node_modules
       - restore_cache:
-          key: bundle-v5-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v6-{{ checksum "Gemfile.lock" }}-{{ arch }}
       - run:
           name: Bundle install
           command: bundle check || bundle install
       - save_cache:
-          key: bundle-v5-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v6-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
       # - run:
@@ -50,37 +50,37 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
-          key: node-v5-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v6-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install dependencies
           command: yarn install
       - save_cache:
-          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: node-v5-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v6-{{ checksum "package.json" }}-{{ arch }}
           paths:
             - node_modules
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
       - restore_cache:
-          key: bundle-v5-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v6-{{ checksum "Gemfile.lock" }}-{{ arch }}
       - run: bundle install
       - save_cache:
-          key: bundle-g5-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-g6-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
       - restore_cache:
-          key: pods-v5-{{ checksum "ios/Podfile.lock" }}
+          key: pods-v6-{{ checksum "ios/Podfile.lock" }}
       - run:
           name: Install CocoaPods
           command: cd ios ; pod install ;
       - save_cache:
-          key: pods-v5-{{ checksum "ios/Podfile.lock" }}
+          key: pods-v6-{{ checksum "ios/Podfile.lock" }}
           paths:
             - ./Pods
       - run:
