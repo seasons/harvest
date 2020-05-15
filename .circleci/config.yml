@@ -8,19 +8,6 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
-      - run:
-          name: install node@12.0.0
-          command: |
-            set +e         
-            touch $BASH_ENV    
-            curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.5/install.sh | bash
-            echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
-            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
-            echo nvm install 12.0.0 >> $BASH_ENV
-            echo nvm alias default 12.0.0 >> $BASH_ENV
-      - run:
-          name: verify node version
-          command: node --version
       - restore_cache:
           key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
@@ -45,6 +32,9 @@ jobs:
           key: bundle-v5-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
+      # - run:
+      #     name: Test suites
+      #     command: yarn test
       - store_artifacts:
           path: output
       - store_test_results:
@@ -59,16 +49,6 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
-      - run:
-          name: install node@12.0.0
-          command: |
-            set +e         
-            touch $BASH_ENV    
-            curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.5/install.sh | bash
-            echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
-            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
-            echo nvm install 12.0.0 >> $BASH_ENV
-            echo nvm alias default 12.0.0 >> $BASH_ENVV
       - restore_cache:
           key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
