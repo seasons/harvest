@@ -13,7 +13,7 @@ export const CurrentRotationItem = ({ physicalProduct }) => {
     return null
   }
 
-  const imageURL = imageResize(get(product, "images[0].url"), "medium")
+  const imageURL = imageResize(get(product, "images[0].url"), "thumb")
 
   return (
     <Container key={product.id}>

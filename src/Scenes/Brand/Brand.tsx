@@ -26,7 +26,10 @@ const GET_BRAND = gql`
         slug
         name
         description
-        images
+        images {
+          id
+          url
+        }
         modelHeight
         externalURL
         retailPrice
@@ -83,7 +86,7 @@ export const Brand = screenTrack({
     const product = item
 
     const image = get(product, "images[0]", { url: "" })
-    const resizedImage = imageResize(image.url, "large")
+    const resizedImage = imageResize(image.url, "thumb")
     const isLeft = i % 2 === 0
 
     if (!product) {

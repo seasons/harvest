@@ -16,6 +16,7 @@ import { GET_HOMEPAGE } from "../Home/Home"
 import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
+import { space } from "App/utils"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -82,6 +83,7 @@ export const Product = screenTrack({
       isWanted: false,
     }
   )
+  const imageWidth = Dimensions.get("window").width - space(3)
 
   let selectedVariantIsWanted = false
   if (product?.variants?.length > 0 && selectedVariant.id) {
@@ -114,6 +116,7 @@ export const Product = screenTrack({
           <ImageRail
             images={images}
             showPageDots
+            imageWidth={imageWidth}
             TextComponent={() => <VariantSizes size="1" variants={product.variants} />}
           />
         )

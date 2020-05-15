@@ -6,6 +6,7 @@ import { FlatList } from "react-native"
 import styled from "styled-components/native"
 import { GetProduct_product } from "App/generated/GetProduct"
 import { Schema, useTracking } from "App/utils/track"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 export const ImageRail: React.FC<{
   height?: number
@@ -13,7 +14,7 @@ export const ImageRail: React.FC<{
   imageWidth?: number
   showPageDots: Boolean
   TextComponent?: React.ComponentType
-}> = ({ height = 400, imageWidth = 320, images, showPageDots, TextComponent }) => {
+}> = ({ height, imageWidth = 320, images, showPageDots, TextComponent }) => {
   const tracking = useTracking()
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -30,15 +31,17 @@ export const ImageRail: React.FC<{
     }
   }
 
+  const imageHeight = height || imageWidth * PRODUCT_ASPECT_RATIO
+
   return (
     <Box>
       <FlatList
         data={images}
         renderItem={({ item }) => {
-          const imageURL = imageResize(item && item.url, "x-large")
+          const imageURL = imageResize(item && item.url, "thumb")
           return (
             <Box mr={0.5}>
-              <ImageContainer height={height} imageWidth={imageWidth} source={{ uri: imageURL }} />
+              <ImageContainer height={imageHeight} imageWidth={imageWidth} source={{ uri: imageURL }} />
             </Box>
           )
         }}

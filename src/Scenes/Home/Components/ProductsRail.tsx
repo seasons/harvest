@@ -58,8 +58,8 @@ export const ProductsRail: React.FC<{
       <FlatList
         data={items}
         renderItem={({ item }: { item: Homepage_homepage_sections_results_Product; index: number }) => {
-          const image = item.images && item.images.length && item.images[0]
-          const resizedImage = image && imageResize(image.url, large ? "x-large" : "medium")
+          const image = item?.images?.[0]
+          const resizedImage = image && imageResize(image?.url, large ? "small" : "thumb")
           const brandName = item.brand && item.brand.name
           return (
             <Animatable.View animation="fadeIn" duration={300}>

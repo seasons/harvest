@@ -58,7 +58,10 @@ export const GET_BROWSE_PRODUCTS = gql`
       id
       name
       description
-      images
+      images {
+        id
+        url
+      }
       modelSize {
         display
       }
@@ -178,7 +181,7 @@ export const Browse = screenTrack()((props: any) => {
     }
 
     const image = product?.images?.[0]
-    const resizedImage = imageResize(image?.url || "", "large")
+    const resizedImage = imageResize(image?.url || "", "thumb")
 
     return (
       <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
@@ -186,7 +189,7 @@ export const Browse = screenTrack()((props: any) => {
           <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
             <Box my={0.5} mx={1}>
-              {brandName && <Sans size="0">{brandName}</Sans>}
+              {!!brandName && <Sans size="0">{brandName}</Sans>}
               <VariantSizes size="0" variants={product.variants} />
             </Box>
             <SaveProductButton

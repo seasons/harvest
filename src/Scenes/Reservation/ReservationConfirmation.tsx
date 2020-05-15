@@ -48,7 +48,9 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
                   id
                   name
                 }
-                images
+                images {
+                  url
+                }
                 variants {
                   id
                   size
