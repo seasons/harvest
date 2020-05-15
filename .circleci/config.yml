@@ -93,12 +93,7 @@ jobs:
           command: cd src/Utils; ls; cd ../..;
       - run:
           name: manual fix
-          command: |
-            git mv src/Utils src/utils2  
-            git mv src/utils2 Utils
-            cd src/Utils
-            ls
-            cd ..
+          command: mv src/Utils src/utils
       - run:
           name: Build entry file
           command: react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios --verbose
