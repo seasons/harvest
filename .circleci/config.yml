@@ -89,6 +89,12 @@ jobs:
           name: run ls
           command: cd src; ls; cd ..;
       - run:
+          name: checkout release-2
+          command: git checkout release-2;
+      - run:
+          name: run ls
+          command: cd src; ls; cd ..;
+      - run:
           name: Build entry file
           command: react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios --verbose
       - run:
