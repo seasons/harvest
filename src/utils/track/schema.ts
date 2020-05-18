@@ -123,6 +123,9 @@ export enum ActionNames {
   // Brand view
   ReadMoreTapped = "Read More Tapped",
 
+  // Tags rail
+  ViewAllProductsByTagsTapped = "View All Products By Tags Tapped",
+
   // Brands view
   AlphabetTapped = "Alphabet Tapped",
 

@@ -100,6 +100,18 @@ export const GET_HOMEPAGE = gql`
       name
       imageURL
     }
+    archivalProducts: products(where: { tags_some: { name: "Tie-dye" } }, first: 12, orderBy: createdAt_DESC) {
+      id
+      slug
+      images {
+        id
+        url
+      }
+      brand {
+        id
+        name
+      }
+    }
   }
   ${BagItemFragment}
 `

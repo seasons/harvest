@@ -3,7 +3,7 @@ import { Box, Handle, Spacer } from "App/Components"
 import { color, space } from "App/utils"
 import { FlatList } from "react-native-gesture-handler"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
-import { HomeFooter, BrandsRail, ProductsRail } from "./"
+import { HomeFooter, BrandsRail, ProductsRail, TagsRail } from "./"
 import { PRODUCT_ASPECT_RATIO, NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
@@ -27,6 +27,14 @@ export const HomeBottomSheet = ({ data }) => {
         const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
         dataSections.splice(4, 0, { type: "SavedProducts", title: "Saved for later", results })
       }
+      if (data?.archivalProducts?.length) {
+        dataSections.splice(4, 0, {
+          type: "ArchivalProducts",
+          tagType: "Archival",
+          title: "Just added archival",
+          results: data?.archivalProducts,
+        })
+      }
       sections.push(...dataSections)
       setSections(sections)
     }
@@ -40,6 +48,8 @@ export const HomeBottomSheet = ({ data }) => {
     switch (item.type) {
       case "Brands":
         return <BrandsRail title={item.title} items={item.results} />
+      case "ArchivalProducts":
+        return <TagsRail title={item.title} items={item.results} tagType={item.tagType} />
       case "Products":
       case "HomepageProductRails":
         return <ProductsRail title={item.title} items={item.results} />
