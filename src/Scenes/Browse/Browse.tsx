@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/react-hooks"
 import { Box, Button, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { Spinner } from "App/Components/Spinner"
@@ -9,16 +8,21 @@ import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import get from "lodash/get"
-import React, { useState, useEffect } from "react"
-import { Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback, StatusBar } from "react-native"
+import React, { useEffect, useState } from "react"
+import {
+  Dimensions, FlatList, StatusBar, TouchableOpacity, TouchableWithoutFeedback
+} from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
-import { SaveProductButton } from "../Product/Components"
-import { BrowseLoader } from "./Loader"
-import { BrowseEmptyState } from "./BrowseEmptyState"
+
+import { useQuery } from "@apollo/react-hooks"
 import { useFocusEffect } from "@react-navigation/native"
+
+import { SaveProductButton } from "../Product/Components"
+import { BrowseEmptyState } from "./BrowseEmptyState"
+import { BrowseLoader } from "./Loader"
 
 const IMAGE_HEIGHT = 240
 
@@ -53,7 +57,7 @@ export const GET_BROWSE_PRODUCTS = gql`
       skip: $skip
       sizes: $sizes
       orderBy: $orderBy
-      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
+      where: { status: Available }
     ) {
       id
       name

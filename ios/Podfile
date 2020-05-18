@@ -62,11 +62,8 @@ target 'seasons' do
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
 
   pod 'RCTRestart', :path => '../node_modules/react-native-restart'
-
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
-
   pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
-
   pod 'RNShare', :path => '../node_modules/react-native-share'
 
   post_install do |installer|
