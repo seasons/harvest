@@ -12,7 +12,7 @@ import { PopUpProvider } from "App/Navigation/PopUp/PopUpProvider"
 
 const RootStack = createStackNavigator()
 
-export const AuthProvider = ({ currentScreen, navigationRef }) => {
+export const AuthProvider = ({ currentScreen, navigationRef, apolloClient }) => {
   const [authState, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -60,13 +60,15 @@ export const AuthProvider = ({ currentScreen, navigationRef }) => {
   }, [])
 
   const authContext = {
-    signIn: async session => {
+    signIn: async (session) => {
       dispatch({ type: "SIGN_IN", token: session.token })
+      apolloClient.resetStore()
     },
     signOut: async () => {
       await AsyncStorage.removeItem("userSession")
       await AsyncStorage.removeItem("beamsData")
       dispatch({ type: "SIGN_OUT" })
+      apolloClient.resetStore()
     },
     authState,
     userSession: authState.userSession,
