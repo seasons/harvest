@@ -62,12 +62,13 @@ export const AuthProvider = ({ currentScreen, navigationRef, apolloClient }) => 
   const authContext = {
     signIn: async (session) => {
       dispatch({ type: "SIGN_IN", token: session.token })
+      apolloClient.resetStore()
     },
     signOut: async () => {
       await AsyncStorage.removeItem("userSession")
       await AsyncStorage.removeItem("beamsData")
-      apolloClient.resetStore()
       dispatch({ type: "SIGN_OUT" })
+      apolloClient.resetStore()
     },
     authState,
     userSession: authState.userSession,
