@@ -28,7 +28,7 @@ export const App = () => {
     <ApolloProvider client={apolloClient}>
       <SafeAreaProvider>
         <NetworkProvider>
-          <AppContainer />
+          <AppContainer apolloClient={apolloClient} />
         </NetworkProvider>
       </SafeAreaProvider>
     </ApolloProvider>
