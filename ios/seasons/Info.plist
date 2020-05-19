@@ -52,7 +52,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow Seasons to access your microphone</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Allow Seasons to access your device's accelerometer</string>
+	<string>Allow Seasons to access your device&apos;s accelerometer</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Give Seasons periences permission to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
