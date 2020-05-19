@@ -18,32 +18,39 @@ export const HomeBottomSheet = ({ data }) => {
   const navigation = useNavigation()
   useEffect(() => {
     const sections = []
-    if (data?.homepage?.sections?.length) {
-      if (data?.blogPosts) {
-        sections.push({ type: "BlogPosts", results: data?.blogPosts })
-      }
-      const dataSections = data.homepage.sections.filter((section) => section?.results?.length)
-      if (data?.me?.savedItems?.length) {
-        const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
-        dataSections.splice(4, 0, { type: "SavedProducts", title: "Saved for later", results })
-      }
-      if (data?.archivalProducts?.length) {
-        dataSections.splice(4, 0, {
-          type: "ArchivalProducts",
-          tagData: {
-            tag: "Tie-dye",
-            title: "Archives",
-            description:
-              "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
-          },
-          title: "Just added archival",
-          results: data?.archivalProducts,
-        })
-      }
-      sections.push(...dataSections)
-      setSections(sections)
+    if (data?.blogPosts) {
+      sections.push({ type: "BlogPosts", results: data?.blogPosts })
     }
+    if (data?.justAddedTops?.length) {
+      sections.push({ type: "Products", results: data?.justAddedTops, title: "Just added tops" })
+    }
+    if (data?.homepage?.sections?.length) {
+      sections.push(...data?.homepage?.sections)
+    }
+    if (data?.me?.savedItems?.length) {
+      const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
+      sections.push({ type: "SavedProducts", title: "Saved for later", results })
+    }
+    if (data?.archivalProducts?.length) {
+      sections.push({
+        type: "ArchivalProducts",
+        tagData: {
+          tag: "Tie-dye",
+          title: "Archives",
+          description:
+            "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+        },
+        title: "Just added archival",
+        results: data?.archivalProducts,
+      })
+    }
+    if (data?.justAddedPants?.length) {
+      sections.push({ type: "Products", results: data?.justAddedPants, title: "Just added pants" })
+    }
+    setSections(sections)
   }, [data])
+
+  console.log("data", data)
 
   const dimensions = Dimensions.get("window")
   const blogContentHeight = dimensions.width * PRODUCT_ASPECT_RATIO
@@ -56,7 +63,6 @@ export const HomeBottomSheet = ({ data }) => {
       case "ArchivalProducts":
         return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
       case "Products":
-      case "HomepageProductRails":
         return <ProductsRail title={item.title} items={item.results} />
       case "SavedProducts":
         return (
