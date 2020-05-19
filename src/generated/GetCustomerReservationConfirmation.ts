@@ -43,6 +43,11 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_pro
   name: string;
 }
 
+export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_images {
+  __typename: "Image";
+  url: string | null;
+}
+
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
@@ -55,7 +60,7 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_pro
   id: string;
   modelSize: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_modelSize | null;
   brand: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_brand;
-  images: any;
+  images: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_images[];
   variants: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_variants[] | null;
 }
 

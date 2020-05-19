@@ -18,10 +18,16 @@ export interface UpdateReservationFeedback_updateReservationFeedback_feedbacks_q
   type: QuestionType;
 }
 
+export interface UpdateReservationFeedback_updateReservationFeedback_feedbacks_variant_product_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface UpdateReservationFeedback_updateReservationFeedback_feedbacks_variant_product {
   __typename: "Product";
   id: string;
-  images: any;
+  images: UpdateReservationFeedback_updateReservationFeedback_feedbacks_variant_product_images[];
   name: string;
   retailPrice: number | null;
 }

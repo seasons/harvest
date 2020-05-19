@@ -9,6 +9,12 @@ import { ProductOrderByInput, ProductStatus, LetterSize, BottomSizeType, Product
 // GraphQL query operation: GetBrandAndProducts
 // ====================================================
 
+export interface GetBrandAndProducts_brand_products_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetBrandAndProducts_brand_products_variants_internalSize_top {
   __typename: "TopSize";
   letter: LetterSize | null;
@@ -45,10 +51,9 @@ export interface GetBrandAndProducts_brand_products {
   slug: string;
   name: string;
   description: string | null;
-  images: any;
+  images: GetBrandAndProducts_brand_products_images[];
   modelHeight: number | null;
   externalURL: string | null;
-  tags: any | null;
   retailPrice: number | null;
   status: ProductStatus | null;
   createdAt: any;

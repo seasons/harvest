@@ -32,6 +32,12 @@ export interface GetBrowseProducts_productsCount {
   aggregate: GetBrowseProducts_productsCount_aggregate;
 }
 
+export interface GetBrowseProducts_products_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetBrowseProducts_products_modelSize {
   __typename: "Size";
   display: string;
@@ -76,11 +82,10 @@ export interface GetBrowseProducts_products {
   id: string;
   name: string;
   description: string | null;
-  images: any;
+  images: GetBrowseProducts_products_images[];
   modelSize: GetBrowseProducts_products_modelSize | null;
   modelHeight: number | null;
   externalURL: string | null;
-  tags: any | null;
   retailPrice: number | null;
   status: ProductStatus | null;
   type: ProductType | null;
