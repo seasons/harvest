@@ -61,9 +61,6 @@ jobs:
       - deploy:
           command: |
             git config credential.helper 'cache --timeout=120'
-            git config user.email "oyr2@cornell.edu"
-            git config user.name "Omar Rasheed"
-            git commit --allow-empty -m "Test push from circleCI"
             git remote set-url origin https://seasons:219f55b3ad3f2c7bc2797ed56fe61124b31e31ea@github.com/seasons/harvest.git
 
             # Push quietly to prevent showing the token in log
