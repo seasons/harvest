@@ -40,7 +40,7 @@ export const ImageRail: React.FC<{
         renderItem={({ item }) => {
           const imageURL = imageResize(item && item.url, "medium")
           return (
-            <Box mr={0.5}>
+            <Box mr={images?.length > 1 ? 0.5 : 0}>
               <ImageContainer height={imageHeight} imageWidth={imageWidth} source={{ uri: imageURL }} />
             </Box>
           )
@@ -66,21 +66,22 @@ export const ImageRail: React.FC<{
             {!!TextComponent && <TextComponent />}
             {showPageDots && (
               <Flex style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-                {images?.map((_, i) => {
-                  return (
-                    <Box
-                      key={i}
-                      style={{
-                        height: 8,
-                        width: 8,
-                        backgroundColor: currentPage - 1 === i ? "black" : "white",
-                        marginLeft: 3,
-                        borderColor: "black",
-                        borderWidth: 1,
-                      }}
-                    />
-                  )
-                })}
+                {images?.length > 1 &&
+                  images?.map((_, i) => {
+                    return (
+                      <Box
+                        key={i}
+                        style={{
+                          height: 8,
+                          width: 8,
+                          backgroundColor: currentPage - 1 === i ? "black" : "white",
+                          marginLeft: 3,
+                          borderColor: "black",
+                          borderWidth: 1,
+                        }}
+                      />
+                    )
+                  })}
               </Flex>
             )}
           </Flex>
