@@ -17,6 +17,7 @@ platform :ios do
         )
         gym(scheme: 'seasons', 
             workspace: './ios/seasons.xcworkspace', export_method: 'app-store')
+        push_to_git_remote(remote: 'origin', local_branch: 'release', remote_branch: 'release')
     end
 
     desc 'Fetch certificates, build and upload to App Center.'
