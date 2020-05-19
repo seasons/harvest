@@ -73,6 +73,7 @@ export enum EntityTypes {
   Brand = "Brand",
   Product = "Product",
   Reservation = "Reservation",
+  Tag = "Tag",
 }
 
 export enum ActionTypes {

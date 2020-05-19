@@ -53,7 +53,7 @@ export const ProductDetails: React.FC<{
                 brandSlug,
                 brandID,
               })
-              navigation.navigate("Brand", { id: brandID, slug: brandSlug })
+              navigation.navigate("Collection", { brandID, slug: brandSlug })
             }}
           >
             <Sans size="1" color={color("black50")} style={{ textDecorationLine: "underline" }}>

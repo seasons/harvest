@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Box, Sans, Flex, Spacer, FadeInImage, VariantSizes } from "App/Components"
+import { Box, Sans, Flex, Spacer, FadeInImage } from "App/Components"
 import { TouchableOpacity, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { chunk } from "lodash"
 import { useTracking } from "react-tracking"
@@ -8,16 +8,22 @@ import { useNavigation } from "@react-navigation/native"
 import { imageResize } from "App/helpers/imageResize"
 import * as Animatable from "react-native-animatable"
 
+interface TagData {
+  title: string
+  tag: string
+  description: string
+}
+
 interface TagsRailProps {
   items: any
   title?: string
-  tagType: String
+  tagData: TagData
 }
 
 const ARCHIVAL_PRODUCT_RATIO = 132 / 104
 const slideWidth = 104
 
-export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagType }) => {
+export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData }) => {
   const [rowGroups, createRowGroups] = useState([])
   const navigation = useNavigation()
   const tracking = useTracking()
@@ -58,9 +64,9 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagType }) => 
             tracking.trackEvent({
               actionName: Schema.ActionNames.ViewAllProductsByTagsTapped,
               actionType: Schema.ActionTypes.Tap,
-              tag: tagType,
+              tag: tagData.tag,
             })
-            navigation.navigate("Brands")
+            navigation.navigate("Tag", { tagData })
           }}
         >
           <Sans size="1" style={{ textDecorationLine: "underline" }}>

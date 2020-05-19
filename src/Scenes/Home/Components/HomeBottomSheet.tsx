@@ -30,7 +30,12 @@ export const HomeBottomSheet = ({ data }) => {
       if (data?.archivalProducts?.length) {
         dataSections.splice(4, 0, {
           type: "ArchivalProducts",
-          tagType: "Archival",
+          tagData: {
+            tag: "Tie-dye",
+            title: "Archives",
+            description:
+              "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+          },
           title: "Just added archival",
           results: data?.archivalProducts,
         })
@@ -49,7 +54,7 @@ export const HomeBottomSheet = ({ data }) => {
       case "Brands":
         return <BrandsRail title={item.title} items={item.results} />
       case "ArchivalProducts":
-        return <TagsRail title={item.title} items={item.results} tagType={item.tagType} />
+        return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
       case "Products":
       case "HomepageProductRails":
         return <ProductsRail title={item.title} items={item.results} />
