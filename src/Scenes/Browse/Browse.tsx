@@ -1,26 +1,18 @@
-import { Box, Button, Flex, Sans, Spacer, VariantSizes } from "App/Components"
-import { FadeInImage } from "App/Components/FadeInImage"
+import { Box, Button, Flex, Sans, ProductGridItem } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
-import { imageResize } from "App/helpers/imageResize"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
-import get from "lodash/get"
 import React, { useEffect, useState } from "react"
-import {
-  Dimensions, FlatList, StatusBar, TouchableOpacity, TouchableWithoutFeedback
-} from "react-native"
+import { FlatList, StatusBar, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
-
 import { useQuery } from "@apollo/react-hooks"
 import { useFocusEffect } from "@react-navigation/native"
-
-import { SaveProductButton } from "../Product/Components"
 import { BrowseEmptyState } from "./BrowseEmptyState"
 import { BrowseLoader } from "./Loader"
 
@@ -102,7 +94,6 @@ export const GET_BROWSE_PRODUCTS = gql`
 `
 
 export const Browse = screenTrack()((props: any) => {
-  const { navigation } = props
   const currentFilters = props?.route?.params?.sizeFilters || []
   const [sizeFilters, setSizeFilters] = useState(currentFilters)
   const [currentCategory, setCurrentCategory] = useState("all")
@@ -174,47 +165,6 @@ export const Browse = screenTrack()((props: any) => {
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
   }
 
-  const renderItem = ({ item }, i) => {
-    const itemWidth = Dimensions.get("window").width / 2 - 2
-    const isLeft = i % 2 === 0
-    const product = item
-    const brandName = get(item, "brand.name")
-
-    if (!product) {
-      return null
-    }
-
-    const image = product?.images?.[0]
-    const resizedImage = imageResize(image?.url || "", "thumb")
-
-    return (
-      <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: product.id })}>
-        <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
-          <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
-          <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-            <Box my={0.5} mx={1}>
-              {!!brandName && <Sans size="0">{brandName}</Sans>}
-              <VariantSizes size="0" variants={product.variants} />
-            </Box>
-            <SaveProductButton
-              grayStroke
-              height={16}
-              width={12}
-              product={product}
-              onPressSaveButton={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.SaveProductButtonTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                })
-              }}
-            />
-          </Flex>
-          <Spacer mb={0.5} />
-        </Box>
-      </TouchableWithoutFeedback>
-    )
-  }
-
   const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
 
   return (
@@ -235,7 +185,7 @@ export const Browse = screenTrack()((props: any) => {
             data={products}
             ref={(ref) => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
-            renderItem={(item, i) => renderItem(item, i)}
+            renderItem={({ item }, i) => <ProductGridItem showBrandName product={item} index={i} />}
             numColumns={2}
             ListFooterComponent={() => (
               <>
