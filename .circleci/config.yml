@@ -67,8 +67,7 @@ jobs:
             git remote set-url origin https://seasons:219f55b3ad3f2c7bc2797ed56fe61124b31e31ea@github.com/seasons/harvest.git
 
             # Push quietly to prevent showing the token in log
-            git add .; git commit -m "Commit test file"; git push -q;
-            git push -q https://219f55b3ad3f2c7bc2797ed56fe61124b31e31ea@github.com/giantswarm/docs.git master
+            git add .; git commit -m "Commit test file"; git push -q --set-upstream origin release;
       - run:
           name: install node@12.0.0
           command: |
