@@ -1,0 +1,45 @@
+{
+  "__schema": {
+    "types": [
+      { "kind": "UNION", "name": "SearchResultType", "possibleTypes": [{ "name": "Product" }, { "name": "Brand" }] },
+      {
+        "kind": "INTERFACE",
+        "name": "Node",
+        "possibleTypes": [
+          { "name": "Brand" },
+          { "name": "Category" },
+          { "name": "Size" },
+          { "name": "TopSize" },
+          { "name": "BottomSize" },
+          { "name": "Color" },
+          { "name": "Location" },
+          { "name": "User" },
+          { "name": "WarehouseLocation" },
+          { "name": "WarehouseLocationConstraint" },
+          { "name": "Tag" },
+          { "name": "ProductFunction" },
+          { "name": "CustomerDetail" },
+          { "name": "BillingInfo" },
+          { "name": "BagItem" },
+          { "name": "Package" },
+          { "name": "Label" },
+          { "name": "ReservationFeedback" },
+          { "name": "ProductVariantFeedback" },
+          { "name": "ProductVariantFeedbackQuestion" },
+          { "name": "Collection" },
+          { "name": "ProductModel" },
+          { "name": "ProductRequest" },
+          { "name": "HomepageProductRail" },
+          { "name": "RecentlyViewedProduct" },
+          { "name": "ProductVariantWant" },
+          { "name": "CollectionGroup" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "HomepageResult",
+        "possibleTypes": [{ "name": "Product" }, { "name": "Collection" }, { "name": "Brand" }]
+      }
+    ]
+  }
+}
