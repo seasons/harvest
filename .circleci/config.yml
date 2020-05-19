@@ -8,12 +8,6 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
-      - run:
-          name: install node@12.0.0
-          command: |
-            brew install node@12
-            brew unlink node
-            brew link --force --overwrite node@12
       - restore_cache:
           key: yarn-v8-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
@@ -83,7 +77,7 @@ jobs:
           key: bundle-v8-{{ checksum "Gemfile.lock" }}-{{ arch }}
       - run: bundle install
       - save_cache:
-          key: bundle-g6-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v8-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
       - restore_cache:
