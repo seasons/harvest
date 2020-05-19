@@ -59,8 +59,6 @@ export const Tag = screenTrack({
 
   const products = data?.products
 
-  console.log("data", data)
-
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
@@ -107,10 +105,7 @@ export const Tag = screenTrack({
                 }
 
                 return Object.assign({}, prev, {
-                  brand: {
-                    ...prev.products,
-                    products: [...prev.products, ...fetchMoreResult.products],
-                  },
+                  products: [...prev.products, ...fetchMoreResult.products],
                 })
               },
             })
