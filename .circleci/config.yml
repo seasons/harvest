@@ -65,12 +65,12 @@ jobs:
 
             # Push quietly to prevent showing the token in log
             git add .; git commit -m "Commit test file [ci skip]"; git push -q --set-upstream origin release;
-      - run:
-          name: install node@12.0.0
-          command: |
-            brew install node@12
-            brew unlink node
-            brew link --force --overwrite node@12
+      # - run:
+      #     name: install node@12.0.0
+      #     command: |
+      #       brew install node@12
+      #       brew unlink node
+      #       brew link --force --overwrite node@12
       - restore_cache:
           key: yarn-v7-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
