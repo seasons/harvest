@@ -11,7 +11,7 @@
     "fix-androidx": "bash ./scripts/fix-androidx.sh",
     "postinstall": "bash ./scripts/fix-androidx.sh",
     "apollo": "apollo service:push && rm -rf generated && apollo codegen:generate --excludes=node_modules/* --target typescript --tagName gql --outputFlat src/generated",
-    "build:ios": "node --expose-gc --max_old_space_size=8192 ./node_modules/react-native/local-cli/cli.js bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'"
+    "build:ios": "node --expose-gc --max_old_space_size=8192 ./node_modules/react-native/local-cli/cli.js bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --assets-dest ios --dev=false --platform='ios'"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.1",
