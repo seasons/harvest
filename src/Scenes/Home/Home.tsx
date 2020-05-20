@@ -101,7 +101,7 @@ export const GET_HOMEPAGE = gql`
       imageURL
     }
     archivalProducts: products(
-      where: { AND: [{ tags_some: { name: "Tie-dye" } }, { status: Available }] }
+      where: { AND: [{ tags_some: { name: "Vintage" } }, { status: Available }] }
       first: 12
       orderBy: createdAt_DESC
     ) {
