@@ -1,5 +1,5 @@
 import gql from "graphql-tag"
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { useQuery, useMutation } from "react-apollo"
 import { ScrollView, Linking } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
@@ -32,37 +32,15 @@ const GET_MEMBERSHIP_INFO = gql`
   }
 `
 
-const RENEW_MEMBERRSHIP = gql`
-  mutation RenewMembership($subscriptionID: String!) {
-    renewMembership(subscriptionID: $subscriptionID) {
-      customer {
-        id
-        plan
-        status
-        invoices {
-          id
-          subscriptionId
-          dueDate
-        }
-      }
-    }
+const RESUME_MEMBERRSHIP = gql`
+  mutation ResumeMembership($subscriptionID: String!) {
+    resumeMembership(subscriptionID: $subscriptionID)
   }
 `
 
 const PAUSE_MEMBERRSHIP = gql`
   mutation PauseMembership($subscriptionID: String!) {
-    pauseMembership(subscriptionID: $subscriptionID) {
-      customer {
-        id
-        plan
-        status
-        invoices {
-          id
-          subscriptionId
-          dueDate
-        }
-      }
-    }
+    pauseMembership(subscriptionID: $subscriptionID)
   }
 `
 
@@ -73,6 +51,11 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const { loading, data } = useQuery(GET_MEMBERSHIP_INFO)
 
   const [pauseMembership] = useMutation(PAUSE_MEMBERRSHIP, {
+    refetchQueries: [
+      {
+        query: GET_MEMBERSHIP_INFO,
+      },
+    ],
     onCompleted: () => {
       setIsMutating(false)
     },
@@ -89,14 +72,19 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
     },
   })
 
-  const [renewMembership] = useMutation(RENEW_MEMBERRSHIP, {
+  const [resumeMembership] = useMutation(RESUME_MEMBERRSHIP, {
+    refetchQueries: [
+      {
+        query: GET_MEMBERSHIP_INFO,
+      },
+    ],
     onCompleted: () => {
       setIsMutating(false)
     },
     onError: (err) => {
       const popUpData = {
         title: "Oops!",
-        note: "There was an error renewing your membership, please contact us.",
+        note: "There was an error resuming your membership, please contact us.",
         buttonText: "Close",
         onClose: () => hidePopUp(),
       }
@@ -150,7 +138,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
       },
     }
     if (membershipPaused) {
-      await renewMembership(vars)
+      await resumeMembership(vars)
     } else {
       await pauseMembership(vars)
     }
@@ -217,9 +205,9 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
             disabled={isMutating}
             loading={isMutating}
             block
-            variant="primaryGray"
+            variant={membershipPaused ? "primaryBlack" : "primaryGray"}
           >
-            {membershipPaused ? "Renew membership" : "Pause membership"}
+            {membershipPaused ? "Resume membership" : "Pause membership"}
           </Button>
           <Spacer mb={1} />
           <Button
