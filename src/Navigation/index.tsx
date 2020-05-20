@@ -14,7 +14,7 @@ const getActiveRouteName = (state) => {
   return route.name
 }
 
-export const AppContainer = () => {
+export const AppContainer = ({ apolloClient }) => {
   const routeNameRef = React.useRef()
   const navigationRef = React.useRef()
   const [currentScreen, setCurrentScreen] = useState("HomeStack")
@@ -33,7 +33,7 @@ export const AppContainer = () => {
         routeNameRef.current = currentRouteName
       }}
     >
-      <AuthProvider currentScreen={currentScreen} navigationRef={navigationRef} />
+      <AuthProvider apolloClient={apolloClient} currentScreen={currentScreen} navigationRef={navigationRef} />
     </NavigationContainer>
   )
 }
