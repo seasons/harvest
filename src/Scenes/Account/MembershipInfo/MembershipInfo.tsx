@@ -1,13 +1,14 @@
 import gql from "graphql-tag"
-import React from "react"
-import { useQuery } from "react-apollo"
-import { ScrollView } from "react-native"
+import React, { useState, useEffect } from "react"
+import { useQuery, useMutation } from "react-apollo"
+import { ScrollView, Linking } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { Box, ContactUsButton, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
+import { Box, Container, FixedBackArrow, Sans, Separator, Spacer, Button } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { MembershipCard } from "./Components"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
@@ -15,6 +16,12 @@ const GET_MEMBERSHIP_INFO = gql`
       customer {
         id
         plan
+        status
+        invoices {
+          id
+          subscriptionId
+          dueDate
+        }
       }
       user {
         id
@@ -25,14 +32,87 @@ const GET_MEMBERSHIP_INFO = gql`
   }
 `
 
+const RENEW_MEMBERRSHIP = gql`
+  mutation RenewMembership($subscriptionID: String!) {
+    renewMembership(subscriptionID: $subscriptionID) {
+      customer {
+        id
+        plan
+        status
+        invoices {
+          id
+          subscriptionId
+          dueDate
+        }
+      }
+    }
+  }
+`
+
+const PAUSE_MEMBERRSHIP = gql`
+  mutation PauseMembership($subscriptionID: String!) {
+    pauseMembership(subscriptionID: $subscriptionID) {
+      customer {
+        id
+        plan
+        status
+        invoices {
+          id
+          subscriptionId
+          dueDate
+        }
+      }
+    }
+  }
+`
+
 export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeArea()
+  const [isMutating, setIsMutating] = useState(false)
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const { loading, data } = useQuery(GET_MEMBERSHIP_INFO)
+
+  const [pauseMembership] = useMutation(PAUSE_MEMBERRSHIP, {
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: (err) => {
+      const popUpData = {
+        title: "Oops!",
+        note: "There was an error pausing your membership, please contact us.",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
+      }
+      console.log("err", err)
+      showPopUp(popUpData)
+      setIsMutating(false)
+    },
+  })
+
+  const [renewMembership] = useMutation(RENEW_MEMBERRSHIP, {
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: (err) => {
+      const popUpData = {
+        title: "Oops!",
+        note: "There was an error renewing your membership, please contact us.",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
+      }
+      console.log("err", err)
+      showPopUp(popUpData)
+      setIsMutating(false)
+    },
+  })
 
   const plan = data?.me?.customer?.plan
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
+  const customerStatus = data?.me?.customer?.status
   let planInfo = null
+
+  const membershipPaused = customerStatus && (customerStatus === "Paused" || customerStatus === "PausePending")
 
   if (plan === "Essential") {
     planInfo = {
@@ -45,7 +125,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
         "Insurance included",
       ],
     }
-  } else if (plan === "AllAccess") {
+  } else {
     planInfo = {
       planName: "All Access",
       price: "195",
@@ -58,9 +138,30 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
     }
   }
 
+  const toggleSubscriptionStatus = async () => {
+    if (isMutating) {
+      return
+    }
+    setIsMutating(true)
+    const subscriptionId = data?.me?.customer?.invoices?.[0]?.subscriptionId || ""
+    const vars = {
+      variables: {
+        subscriptionId,
+      },
+    }
+    if (membershipPaused) {
+      await renewMembership(vars)
+    } else {
+      await pauseMembership(vars)
+    }
+    setIsMutating(false)
+  }
+
   if (loading || !planInfo) {
     return <Loader />
   }
+
+  console.log("data", data)
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
@@ -111,13 +212,29 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={12} />
           <Separator />
           <Spacer mb={1} />
-          <Sans size="1" color={color("black50")}>
-            If you’d like to pause or cancel your Seasons membership, contact us below.
+          <Button
+            onPress={toggleSubscriptionStatus}
+            disabled={isMutating}
+            loading={isMutating}
+            block
+            variant="primaryGray"
+          >
+            {membershipPaused ? "Renew membership" : "Pause membership"}
+          </Button>
+          <Spacer mb={1} />
+          <Button
+            variant="secondaryWhite"
+            onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
+            block
+          >
+            Contact us
+          </Button>
+          <Spacer mb={2} />
+          <Sans size="1" color={color("black50")} style={{ textAlign: "center" }}>
+            If you’d like cancel your membership, contact us using the button above. We’re happy to help with this.
           </Sans>
-          <Spacer mb={88} />
         </Box>
       </ScrollView>
-      <ContactUsButton subject="Membership" />
     </Container>
   )
 })

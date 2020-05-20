@@ -47,9 +47,9 @@ export type ButtonVariant =
   | "primaryBlack"
   | "secondaryWhite"
   | "primaryWhite"
-  | "black85"
   | "secondaryBlack"
   | "tertiaryWhite"
+  | "primaryGray"
 export type ButtonSize = "small" | "large"
 
 /** Default button size */
@@ -62,7 +62,7 @@ export const defaultVariant: ButtonVariant = "primaryBlack"
  */
 export function getColorsForVariant(variant: ButtonVariant) {
   const {
-    colors: { black100, white100, black50, black10, black85 },
+    colors: { black100, white100, black50, black10, black85, black04 },
   } = themeProps
 
   switch (variant) {
@@ -138,22 +138,22 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: black50,
         },
       }
-    case "black85":
+    case "primaryGray":
       return {
         default: {
-          backgroundColor: black85,
-          borderColor: black85,
-          color: white100,
+          backgroundColor: black04,
+          borderColor: black04,
+          color: black100,
         },
         pressed: {
-          backgroundColor: black100,
-          borderColor: black100,
-          color: white100,
+          backgroundColor: black10,
+          borderColor: black10,
+          color: black100,
         },
         disabled: {
           backgroundColor: black10,
           borderColor: black10,
-          color: white100,
+          color: black100,
         },
       }
     case "secondaryBlack":
