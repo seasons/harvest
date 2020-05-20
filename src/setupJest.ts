@@ -29,6 +29,14 @@ jest.mock("react-native-share", () => ({
   },
 }))
 
+jest.mock("@react-navigation/native", () => {
+  const actualNav = jest.requireActual("@react-navigation/native")
+  return {
+    ...actualNav,
+    useFocusEffect: () => jest.fn(),
+  }
+})
+
 jest.doMock("reanimated-bottom-sheet", () => {
   BottomSheet: View
 })
