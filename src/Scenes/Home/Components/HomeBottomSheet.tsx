@@ -37,8 +37,7 @@ export const HomeBottomSheet = ({ data }) => {
         tagData: {
           tag: "Vintage",
           title: "Archives",
-          description:
-            "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+          description: "",
         },
         title: "Just added archival",
         results: data?.archivalProducts,
