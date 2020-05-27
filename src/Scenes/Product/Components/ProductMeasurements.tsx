@@ -19,9 +19,8 @@ export const ProductMeasurements: React.FC<{
 
   return (
     <Box px={2} mb={3}>
-      {topSizes?.letter && (
-        <ProductInfoItem detailType="Measurements" detailValue={`Size ${sizeToName(topSizes?.letter)}`} />
-      )}
+      <ProductInfoItem detailType="Measurements" detailValue="" />
+      {topSizes?.letter && <ProductInfoItem detailType="Size" detailValue={`${sizeToName(topSizes?.letter)}`} />}
       {topSizes?.length && <ProductInfoItem detailType="Length" detailValue={`${topSizes?.length}"`} />}
       {topSizes?.sleeve && <ProductInfoItem detailType="Sleeve" detailValue={`${topSizes?.sleeve}"`} />}
       {topSizes?.shoulder && <ProductInfoItem detailType="Shoulders" detailValue={`${topSizes?.shoulder}"`} />}
