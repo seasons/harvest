@@ -10,6 +10,9 @@ export enum PageNames {
   AllowNotificationsModal = "AllowNotificationsModal",
   SaveProductModal = "SaveProductModal",
   DebugMenu = "DebugMenu",
+  ResumeConfirmation = "ResumeConfirmation",
+  PauseConfirmation = "PauseConfirmation",
+  ExtendPauseConfirmation = "ExtendPauseConfirmation",
 
   // Home
   Home = "Home",

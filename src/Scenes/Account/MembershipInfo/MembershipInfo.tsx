@@ -9,6 +9,10 @@ import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { MembershipCard } from "./Components"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { ButtonVariant } from "App/Components/Button"
+import { Schema } from "App/Navigation"
+
+type PauseStatus = "active" | "pending" | "paused"
 
 const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
@@ -22,6 +26,15 @@ const GET_MEMBERSHIP_INFO = gql`
           subscriptionId
           dueDate
         }
+        membership {
+          id
+          pauseRequests {
+            id
+            resumeDate
+            pauseDate
+            pausePending
+          }
+        }
       }
       user {
         id
@@ -32,15 +45,21 @@ const GET_MEMBERSHIP_INFO = gql`
   }
 `
 
-const RESUME_MEMBERRSHIP = gql`
-  mutation ResumeMembership($subscriptionID: String!) {
-    resumeMembership(subscriptionID: $subscriptionID)
+const RESUME_MEMBERSHIP = gql`
+  mutation ResumeSubscription($subscriptionID: String!) {
+    resumeSubscription(subscriptionID: $subscriptionID)
   }
 `
 
-const PAUSE_MEMBERRSHIP = gql`
-  mutation PauseMembership($subscriptionID: String!) {
-    pauseMembership(subscriptionID: $subscriptionID)
+const REMOVE_SCHEDULED_PAUSE = gql`
+  mutation RemoveScheduledPause($subscriptionID: String!) {
+    removeScheduledPause(subscriptionID: $subscriptionID)
+  }
+`
+
+const PAUSE_MEMBERSHIP = gql`
+  mutation PauseSubscription($subscriptionID: String!) {
+    pauseSubscription(subscriptionID: $subscriptionID)
   }
 `
 
@@ -50,13 +69,37 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { loading, data } = useQuery(GET_MEMBERSHIP_INFO)
 
-  const [pauseMembership] = useMutation(PAUSE_MEMBERRSHIP, {
+  const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
     refetchQueries: [
       {
         query: GET_MEMBERSHIP_INFO,
       },
     ],
     onCompleted: () => {
+      setIsMutating(false)
+      // navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
+    },
+    onError: (err) => {
+      const popUpData = {
+        title: "Oops!",
+        note: "There was an error canceling the pause on your membership, please contact us.",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
+      }
+      console.log("err", err)
+      showPopUp(popUpData)
+      setIsMutating(false)
+    },
+  })
+
+  const [pauseSubscription] = useMutation(PAUSE_MEMBERSHIP, {
+    refetchQueries: [
+      {
+        query: GET_MEMBERSHIP_INFO,
+      },
+    ],
+    onCompleted: () => {
+      navigation.navigate("Modal", { screen: Schema.PageNames.PauseConfirmation })
       setIsMutating(false)
     },
     onError: (err) => {
@@ -72,13 +115,14 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
     },
   })
 
-  const [resumeMembership] = useMutation(RESUME_MEMBERRSHIP, {
+  const [resumeSubscription] = useMutation(RESUME_MEMBERSHIP, {
     refetchQueries: [
       {
         query: GET_MEMBERSHIP_INFO,
       },
     ],
     onCompleted: () => {
+      navigation.navigate("Modal", { screen: Schema.PageNames.ResumeConfirmation })
       setIsMutating(false)
     },
     onError: (err) => {
@@ -94,13 +138,27 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
     },
   })
 
-  const plan = data?.me?.customer?.plan
+  const customer = data?.me?.customer
+  const plan = customer?.plan
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
-  const customerStatus = data?.me?.customer?.status
+  const customerStatus = customer?.status
+  const pauseRequest = customer?.membership?.pauseRequests?.[0]
+  const pausePending = pauseRequest?.pausePending
   let planInfo = null
+  let pauseStatus: PauseStatus = "active"
+  let pauseButtonVariant: ButtonVariant = "primaryGray"
+  let pauseButtonText = "Pause membership"
 
-  const membershipPaused = customerStatus && (customerStatus === "Paused" || customerStatus === "PausePending")
+  if (customerStatus === "Paused") {
+    pauseStatus = "paused"
+    pauseButtonText = "Resume membership"
+    pauseButtonVariant = "primaryBlack"
+  } else if (pausePending) {
+    pauseStatus = "pending"
+    pauseButtonText = "Resume membership"
+    pauseButtonVariant = "primaryBlack"
+  }
 
   if (plan === "Essential") {
     planInfo = {
@@ -137,10 +195,12 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
         subscriptionId,
       },
     }
-    if (membershipPaused) {
-      await resumeMembership(vars)
+    if (pauseStatus === "paused") {
+      await resumeSubscription(vars)
+    } else if (pauseStatus === "pending") {
+      await removeScheduledPause(vars)
     } else {
-      await pauseMembership(vars)
+      await pauseSubscription(vars)
     }
     setIsMutating(false)
   }
@@ -205,9 +265,9 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
             disabled={isMutating}
             loading={isMutating}
             block
-            variant={membershipPaused ? "primaryBlack" : "primaryGray"}
+            variant={pauseButtonVariant}
           >
-            {membershipPaused ? "Resume membership" : "Pause membership"}
+            {pauseButtonText}
           </Button>
           <Spacer mb={1} />
           <Button
