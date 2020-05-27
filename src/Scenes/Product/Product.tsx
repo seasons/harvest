@@ -13,7 +13,7 @@ import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import { GET_HOMEPAGE } from "../Home/Home"
-import { ImageRail, MoreLikeThis, ProductDetails, VariantWant } from "./Components"
+import { ImageRail, MoreLikeThis, ProductDetails, VariantWant, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 import { space } from "App/utils"
@@ -122,6 +122,8 @@ export const Product = screenTrack({
             TextComponent={() => <VariantSizes size="1" variants={product.variants} />}
           />
         )
+      case "productMeasurements":
+        return <ProductMeasurements selectedVariant={selectedVariant} />
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
       case "moreLikeThis":
@@ -133,7 +135,7 @@ export const Product = screenTrack({
 
   const selectionButtonsBottom = shouldShowVariantWant ? VARIANT_WANT_HEIGHT : 0
   const listFooterSpacing = selectionButtonsBottom + 58
-  const sections = ["imageRail", "productDetails", "aboutTheBrand"]
+  const sections = ["imageRail", "productDetails", "productMeasurements", "aboutTheBrand"]
 
   return (
     <Container insetsTop={false}>

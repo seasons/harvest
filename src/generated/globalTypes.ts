@@ -118,7 +118,7 @@ export enum PhysicalProductStatus {
   Dirty = "Dirty",
   Lost = "Lost",
   New = "New",
-  PermenantlyDamaged = "PermenantlyDamaged",
+  PermanentlyDamaged = "PermanentlyDamaged",
   Used = "Used",
 }
 
@@ -148,6 +148,8 @@ export enum ProductOrderByInput {
   modelHeight_DESC = "modelHeight_DESC",
   name_ASC = "name_ASC",
   name_DESC = "name_DESC",
+  publishedAt_ASC = "publishedAt_ASC",
+  publishedAt_DESC = "publishedAt_DESC",
   retailPrice_ASC = "retailPrice_ASC",
   retailPrice_DESC = "retailPrice_DESC",
   season_ASC = "season_ASC",
@@ -739,6 +741,7 @@ export interface CustomerCreateWithoutReservationsInput {
   user: UserCreateOneInput;
   detail?: CustomerDetailCreateOneInput | null;
   billingInfo?: BillingInfoCreateOneInput | null;
+  membership?: CustomerMembershipCreateOneWithoutCustomerInput | null;
   bagItems?: BagItemCreateManyWithoutCustomerInput | null;
 }
 
@@ -810,6 +813,38 @@ export interface CustomerDetailWhereUniqueInput {
   id?: string | null;
 }
 
+export interface CustomerMembershipCreateOneWithoutCustomerInput {
+  create?: CustomerMembershipCreateWithoutCustomerInput | null;
+  connect?: CustomerMembershipWhereUniqueInput | null;
+}
+
+export interface CustomerMembershipCreateWithoutCustomerInput {
+  id?: string | null;
+  pauseRequests?: PauseRequestCreateManyWithoutMembershipInput | null;
+}
+
+export interface CustomerMembershipUpdateOneWithoutCustomerInput {
+  create?: CustomerMembershipCreateWithoutCustomerInput | null;
+  connect?: CustomerMembershipWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: CustomerMembershipUpdateWithoutCustomerDataInput | null;
+  upsert?: CustomerMembershipUpsertWithoutCustomerInput | null;
+}
+
+export interface CustomerMembershipUpdateWithoutCustomerDataInput {
+  pauseRequests?: PauseRequestUpdateManyWithoutMembershipInput | null;
+}
+
+export interface CustomerMembershipUpsertWithoutCustomerInput {
+  update: CustomerMembershipUpdateWithoutCustomerDataInput;
+  create: CustomerMembershipCreateWithoutCustomerInput;
+}
+
+export interface CustomerMembershipWhereUniqueInput {
+  id?: string | null;
+}
+
 export interface CustomerUpdateOneRequiredWithoutReservationsInput {
   create?: CustomerCreateWithoutReservationsInput | null;
   connect?: CustomerWhereUniqueInput | null;
@@ -823,6 +858,7 @@ export interface CustomerUpdateWithoutReservationsDataInput {
   user?: UserUpdateOneRequiredInput | null;
   detail?: CustomerDetailUpdateOneInput | null;
   billingInfo?: BillingInfoUpdateOneInput | null;
+  membership?: CustomerMembershipUpdateOneWithoutCustomerInput | null;
   bagItems?: BagItemUpdateManyWithoutCustomerInput | null;
 }
 
@@ -1186,6 +1222,116 @@ export interface PackageWhereUniqueInput {
   id?: string | null;
 }
 
+export interface PauseRequestCreateManyWithoutMembershipInput {
+  create?: PauseRequestCreateWithoutMembershipInput[] | null;
+  connect?: PauseRequestWhereUniqueInput[] | null;
+}
+
+export interface PauseRequestCreateWithoutMembershipInput {
+  id?: string | null;
+  pausePending: boolean;
+  pauseDate?: any | null;
+  resumeDate?: any | null;
+}
+
+export interface PauseRequestScalarWhereInput {
+  AND?: PauseRequestScalarWhereInput[] | null;
+  OR?: PauseRequestScalarWhereInput[] | null;
+  NOT?: PauseRequestScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+  pausePending?: boolean | null;
+  pausePending_not?: boolean | null;
+  pauseDate?: any | null;
+  pauseDate_not?: any | null;
+  pauseDate_in?: any[] | null;
+  pauseDate_not_in?: any[] | null;
+  pauseDate_lt?: any | null;
+  pauseDate_lte?: any | null;
+  pauseDate_gt?: any | null;
+  pauseDate_gte?: any | null;
+  resumeDate?: any | null;
+  resumeDate_not?: any | null;
+  resumeDate_in?: any[] | null;
+  resumeDate_not_in?: any[] | null;
+  resumeDate_lt?: any | null;
+  resumeDate_lte?: any | null;
+  resumeDate_gt?: any | null;
+  resumeDate_gte?: any | null;
+}
+
+export interface PauseRequestUpdateManyDataInput {
+  pausePending?: boolean | null;
+  pauseDate?: any | null;
+  resumeDate?: any | null;
+}
+
+export interface PauseRequestUpdateManyWithWhereNestedInput {
+  where: PauseRequestScalarWhereInput;
+  data: PauseRequestUpdateManyDataInput;
+}
+
+export interface PauseRequestUpdateManyWithoutMembershipInput {
+  create?: PauseRequestCreateWithoutMembershipInput[] | null;
+  connect?: PauseRequestWhereUniqueInput[] | null;
+  set?: PauseRequestWhereUniqueInput[] | null;
+  disconnect?: PauseRequestWhereUniqueInput[] | null;
+  delete?: PauseRequestWhereUniqueInput[] | null;
+  update?: PauseRequestUpdateWithWhereUniqueWithoutMembershipInput[] | null;
+  updateMany?: PauseRequestUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: PauseRequestScalarWhereInput[] | null;
+  upsert?: PauseRequestUpsertWithWhereUniqueWithoutMembershipInput[] | null;
+}
+
+export interface PauseRequestUpdateWithWhereUniqueWithoutMembershipInput {
+  where: PauseRequestWhereUniqueInput;
+  data: PauseRequestUpdateWithoutMembershipDataInput;
+}
+
+export interface PauseRequestUpdateWithoutMembershipDataInput {
+  pausePending?: boolean | null;
+  pauseDate?: any | null;
+  resumeDate?: any | null;
+}
+
+export interface PauseRequestUpsertWithWhereUniqueWithoutMembershipInput {
+  where: PauseRequestWhereUniqueInput;
+  update: PauseRequestUpdateWithoutMembershipDataInput;
+  create: PauseRequestCreateWithoutMembershipInput;
+}
+
+export interface PauseRequestWhereUniqueInput {
+  id?: string | null;
+}
+
 export interface PhysicalProductCreateInput {
   id?: string | null;
   seasonsUID: string;
@@ -1194,6 +1340,9 @@ export interface PhysicalProductCreateInput {
   offloadMethod?: PhysicalProductOffloadMethod | null;
   offloadNotes?: string | null;
   sequenceNumber: number;
+  dateOrdered?: any | null;
+  dateReceived?: any | null;
+  unitCost?: number | null;
   location?: LocationCreateOneWithoutPhysicalProductsInput | null;
   productVariant: ProductVariantCreateOneWithoutPhysicalProductsInput;
   warehouseLocation?: WarehouseLocationCreateOneWithoutPhysicalProductsInput | null;
@@ -1214,6 +1363,11 @@ export interface PhysicalProductCreateManyWithoutProductVariantInput {
   connect?: PhysicalProductWhereUniqueInput[] | null;
 }
 
+export interface PhysicalProductCreateOneInput {
+  create?: PhysicalProductCreateInput | null;
+  connect?: PhysicalProductWhereUniqueInput | null;
+}
+
 export interface PhysicalProductCreateWithoutLocationInput {
   id?: string | null;
   seasonsUID: string;
@@ -1222,6 +1376,9 @@ export interface PhysicalProductCreateWithoutLocationInput {
   offloadMethod?: PhysicalProductOffloadMethod | null;
   offloadNotes?: string | null;
   sequenceNumber: number;
+  dateOrdered?: any | null;
+  dateReceived?: any | null;
+  unitCost?: number | null;
   productVariant: ProductVariantCreateOneWithoutPhysicalProductsInput;
   warehouseLocation?: WarehouseLocationCreateOneWithoutPhysicalProductsInput | null;
 }
@@ -1234,6 +1391,9 @@ export interface PhysicalProductCreateWithoutProductVariantInput {
   offloadMethod?: PhysicalProductOffloadMethod | null;
   offloadNotes?: string | null;
   sequenceNumber: number;
+  dateOrdered?: any | null;
+  dateReceived?: any | null;
+  unitCost?: number | null;
   location?: LocationCreateOneWithoutPhysicalProductsInput | null;
   warehouseLocation?: WarehouseLocationCreateOneWithoutPhysicalProductsInput | null;
 }
@@ -1304,6 +1464,30 @@ export interface PhysicalProductScalarWhereInput {
   sequenceNumber_lte?: number | null;
   sequenceNumber_gt?: number | null;
   sequenceNumber_gte?: number | null;
+  dateOrdered?: any | null;
+  dateOrdered_not?: any | null;
+  dateOrdered_in?: any[] | null;
+  dateOrdered_not_in?: any[] | null;
+  dateOrdered_lt?: any | null;
+  dateOrdered_lte?: any | null;
+  dateOrdered_gt?: any | null;
+  dateOrdered_gte?: any | null;
+  dateReceived?: any | null;
+  dateReceived_not?: any | null;
+  dateReceived_in?: any[] | null;
+  dateReceived_not_in?: any[] | null;
+  dateReceived_lt?: any | null;
+  dateReceived_lte?: any | null;
+  dateReceived_gt?: any | null;
+  dateReceived_gte?: any | null;
+  unitCost?: number | null;
+  unitCost_not?: number | null;
+  unitCost_in?: number[] | null;
+  unitCost_not_in?: number[] | null;
+  unitCost_lt?: number | null;
+  unitCost_lte?: number | null;
+  unitCost_gt?: number | null;
+  unitCost_gte?: number | null;
   createdAt?: any | null;
   createdAt_not?: any | null;
   createdAt_in?: any[] | null;
@@ -1329,6 +1513,9 @@ export interface PhysicalProductUpdateDataInput {
   offloadMethod?: PhysicalProductOffloadMethod | null;
   offloadNotes?: string | null;
   sequenceNumber?: number | null;
+  dateOrdered?: any | null;
+  dateReceived?: any | null;
+  unitCost?: number | null;
   location?: LocationUpdateOneWithoutPhysicalProductsInput | null;
   productVariant?: ProductVariantUpdateOneRequiredWithoutPhysicalProductsInput | null;
   warehouseLocation?: WarehouseLocationUpdateOneWithoutPhysicalProductsInput | null;
@@ -1341,6 +1528,9 @@ export interface PhysicalProductUpdateManyDataInput {
   offloadMethod?: PhysicalProductOffloadMethod | null;
   offloadNotes?: string | null;
   sequenceNumber?: number | null;
+  dateOrdered?: any | null;
+  dateReceived?: any | null;
+  unitCost?: number | null;
 }
 
 export interface PhysicalProductUpdateManyInput {
@@ -1384,6 +1574,13 @@ export interface PhysicalProductUpdateManyWithoutProductVariantInput {
   upsert?: PhysicalProductUpsertWithWhereUniqueWithoutProductVariantInput[] | null;
 }
 
+export interface PhysicalProductUpdateOneRequiredInput {
+  create?: PhysicalProductCreateInput | null;
+  connect?: PhysicalProductWhereUniqueInput | null;
+  update?: PhysicalProductUpdateDataInput | null;
+  upsert?: PhysicalProductUpsertNestedInput | null;
+}
+
 export interface PhysicalProductUpdateWithWhereUniqueNestedInput {
   where: PhysicalProductWhereUniqueInput;
   data: PhysicalProductUpdateDataInput;
@@ -1406,6 +1603,9 @@ export interface PhysicalProductUpdateWithoutLocationDataInput {
   offloadMethod?: PhysicalProductOffloadMethod | null;
   offloadNotes?: string | null;
   sequenceNumber?: number | null;
+  dateOrdered?: any | null;
+  dateReceived?: any | null;
+  unitCost?: number | null;
   productVariant?: ProductVariantUpdateOneRequiredWithoutPhysicalProductsInput | null;
   warehouseLocation?: WarehouseLocationUpdateOneWithoutPhysicalProductsInput | null;
 }
@@ -1417,8 +1617,16 @@ export interface PhysicalProductUpdateWithoutProductVariantDataInput {
   offloadMethod?: PhysicalProductOffloadMethod | null;
   offloadNotes?: string | null;
   sequenceNumber?: number | null;
+  dateOrdered?: any | null;
+  dateReceived?: any | null;
+  unitCost?: number | null;
   location?: LocationUpdateOneWithoutPhysicalProductsInput | null;
   warehouseLocation?: WarehouseLocationUpdateOneWithoutPhysicalProductsInput | null;
+}
+
+export interface PhysicalProductUpsertNestedInput {
+  update: PhysicalProductUpdateDataInput;
+  create: PhysicalProductCreateInput;
 }
 
 export interface PhysicalProductUpsertWithWhereUniqueNestedInput {
@@ -1466,6 +1674,7 @@ export interface ProductCreateWithoutCategoryInput {
   status?: ProductStatus | null;
   season?: string | null;
   architecture?: ProductArchitecture | null;
+  publishedAt?: any | null;
   innerMaterials?: ProductCreateinnerMaterialsInput | null;
   outerMaterials?: ProductCreateouterMaterialsInput | null;
   brand: BrandCreateOneWithoutProductsInput;
@@ -1491,6 +1700,7 @@ export interface ProductCreateWithoutVariantsInput {
   status?: ProductStatus | null;
   season?: string | null;
   architecture?: ProductArchitecture | null;
+  publishedAt?: any | null;
   innerMaterials?: ProductCreateinnerMaterialsInput | null;
   outerMaterials?: ProductCreateouterMaterialsInput | null;
   brand: BrandCreateOneWithoutProductsInput;
@@ -1748,6 +1958,14 @@ export interface ProductScalarWhereInput {
   architecture_not?: ProductArchitecture | null;
   architecture_in?: ProductArchitecture[] | null;
   architecture_not_in?: ProductArchitecture[] | null;
+  publishedAt?: any | null;
+  publishedAt_not?: any | null;
+  publishedAt_in?: any[] | null;
+  publishedAt_not_in?: any[] | null;
+  publishedAt_lt?: any | null;
+  publishedAt_lte?: any | null;
+  publishedAt_gt?: any | null;
+  publishedAt_gte?: any | null;
   createdAt?: any | null;
   createdAt_not?: any | null;
   createdAt_in?: any[] | null;
@@ -1777,6 +1995,7 @@ export interface ProductUpdateManyDataInput {
   status?: ProductStatus | null;
   season?: string | null;
   architecture?: ProductArchitecture | null;
+  publishedAt?: any | null;
   innerMaterials?: ProductUpdateinnerMaterialsInput | null;
   outerMaterials?: ProductUpdateouterMaterialsInput | null;
 }
@@ -1821,6 +2040,7 @@ export interface ProductUpdateWithoutCategoryDataInput {
   status?: ProductStatus | null;
   season?: string | null;
   architecture?: ProductArchitecture | null;
+  publishedAt?: any | null;
   innerMaterials?: ProductUpdateinnerMaterialsInput | null;
   outerMaterials?: ProductUpdateouterMaterialsInput | null;
   brand?: BrandUpdateOneRequiredWithoutProductsInput | null;
@@ -1845,6 +2065,7 @@ export interface ProductUpdateWithoutVariantsDataInput {
   status?: ProductStatus | null;
   season?: string | null;
   architecture?: ProductArchitecture | null;
+  publishedAt?: any | null;
   innerMaterials?: ProductUpdateinnerMaterialsInput | null;
   outerMaterials?: ProductUpdateouterMaterialsInput | null;
   brand?: BrandUpdateOneRequiredWithoutProductsInput | null;
@@ -2480,6 +2701,7 @@ export interface ReservationCreateInput {
   returnedPackage?: PackageCreateOneInput | null;
   location?: LocationCreateOneInput | null;
   products?: PhysicalProductCreateManyInput | null;
+  receipt?: ReservationReceiptCreateOneWithoutReservationInput | null;
 }
 
 export interface ReservationFeedbackUpdateInput {
@@ -2489,6 +2711,131 @@ export interface ReservationFeedbackUpdateInput {
   feedbacks?: ProductVariantFeedbackUpdateManyWithoutReservationFeedbackInput | null;
   user?: UserUpdateOneRequiredInput | null;
   reservation?: ReservationUpdateOneRequiredInput | null;
+}
+
+export interface ReservationReceiptCreateOneWithoutReservationInput {
+  create?: ReservationReceiptCreateWithoutReservationInput | null;
+  connect?: ReservationReceiptWhereUniqueInput | null;
+}
+
+export interface ReservationReceiptCreateWithoutReservationInput {
+  id?: string | null;
+  items?: ReservationReceiptItemCreateManyInput | null;
+}
+
+export interface ReservationReceiptItemCreateInput {
+  id?: string | null;
+  productStatus: PhysicalProductStatus;
+  notes?: string | null;
+  product: PhysicalProductCreateOneInput;
+}
+
+export interface ReservationReceiptItemCreateManyInput {
+  create?: ReservationReceiptItemCreateInput[] | null;
+  connect?: ReservationReceiptItemWhereUniqueInput[] | null;
+}
+
+export interface ReservationReceiptItemScalarWhereInput {
+  AND?: ReservationReceiptItemScalarWhereInput[] | null;
+  OR?: ReservationReceiptItemScalarWhereInput[] | null;
+  NOT?: ReservationReceiptItemScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  productStatus?: PhysicalProductStatus | null;
+  productStatus_not?: PhysicalProductStatus | null;
+  productStatus_in?: PhysicalProductStatus[] | null;
+  productStatus_not_in?: PhysicalProductStatus[] | null;
+  notes?: string | null;
+  notes_not?: string | null;
+  notes_in?: string[] | null;
+  notes_not_in?: string[] | null;
+  notes_lt?: string | null;
+  notes_lte?: string | null;
+  notes_gt?: string | null;
+  notes_gte?: string | null;
+  notes_contains?: string | null;
+  notes_not_contains?: string | null;
+  notes_starts_with?: string | null;
+  notes_not_starts_with?: string | null;
+  notes_ends_with?: string | null;
+  notes_not_ends_with?: string | null;
+}
+
+export interface ReservationReceiptItemUpdateDataInput {
+  productStatus?: PhysicalProductStatus | null;
+  notes?: string | null;
+  product?: PhysicalProductUpdateOneRequiredInput | null;
+}
+
+export interface ReservationReceiptItemUpdateManyDataInput {
+  productStatus?: PhysicalProductStatus | null;
+  notes?: string | null;
+}
+
+export interface ReservationReceiptItemUpdateManyInput {
+  create?: ReservationReceiptItemCreateInput[] | null;
+  connect?: ReservationReceiptItemWhereUniqueInput[] | null;
+  set?: ReservationReceiptItemWhereUniqueInput[] | null;
+  disconnect?: ReservationReceiptItemWhereUniqueInput[] | null;
+  delete?: ReservationReceiptItemWhereUniqueInput[] | null;
+  update?: ReservationReceiptItemUpdateWithWhereUniqueNestedInput[] | null;
+  updateMany?: ReservationReceiptItemUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: ReservationReceiptItemScalarWhereInput[] | null;
+  upsert?: ReservationReceiptItemUpsertWithWhereUniqueNestedInput[] | null;
+}
+
+export interface ReservationReceiptItemUpdateManyWithWhereNestedInput {
+  where: ReservationReceiptItemScalarWhereInput;
+  data: ReservationReceiptItemUpdateManyDataInput;
+}
+
+export interface ReservationReceiptItemUpdateWithWhereUniqueNestedInput {
+  where: ReservationReceiptItemWhereUniqueInput;
+  data: ReservationReceiptItemUpdateDataInput;
+}
+
+export interface ReservationReceiptItemUpsertWithWhereUniqueNestedInput {
+  where: ReservationReceiptItemWhereUniqueInput;
+  update: ReservationReceiptItemUpdateDataInput;
+  create: ReservationReceiptItemCreateInput;
+}
+
+export interface ReservationReceiptItemWhereUniqueInput {
+  id?: string | null;
+}
+
+export interface ReservationReceiptUpdateOneWithoutReservationInput {
+  create?: ReservationReceiptCreateWithoutReservationInput | null;
+  connect?: ReservationReceiptWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: ReservationReceiptUpdateWithoutReservationDataInput | null;
+  upsert?: ReservationReceiptUpsertWithoutReservationInput | null;
+}
+
+export interface ReservationReceiptUpdateWithoutReservationDataInput {
+  items?: ReservationReceiptItemUpdateManyInput | null;
+}
+
+export interface ReservationReceiptUpsertWithoutReservationInput {
+  update: ReservationReceiptUpdateWithoutReservationDataInput;
+  create: ReservationReceiptCreateWithoutReservationInput;
+}
+
+export interface ReservationReceiptWhereUniqueInput {
+  id?: string | null;
 }
 
 export interface ReservationUpdateDataInput {
@@ -2504,6 +2851,7 @@ export interface ReservationUpdateDataInput {
   returnedPackage?: PackageUpdateOneInput | null;
   location?: LocationUpdateOneInput | null;
   products?: PhysicalProductUpdateManyInput | null;
+  receipt?: ReservationReceiptUpdateOneWithoutReservationInput | null;
 }
 
 export interface ReservationUpdateOneRequiredInput {

@@ -203,10 +203,84 @@ export interface Homepage_archivalProducts {
   brand: Homepage_archivalProducts_brand;
 }
 
+export interface Homepage_justAddedTops_images {
+  __typename: "Image";
+  url: string | null;
+  id: string;
+}
+
+export interface Homepage_justAddedTops_brand {
+  __typename: "Brand";
+  id: string;
+  name: string;
+}
+
+export interface Homepage_justAddedTops_variants_internalSize {
+  __typename: "Size";
+  display: string;
+}
+
+export interface Homepage_justAddedTops_variants {
+  __typename: "ProductVariant";
+  id: string;
+  total: number;
+  reservable: number;
+  nonReservable: number;
+  reserved: number;
+  internalSize: Homepage_justAddedTops_variants_internalSize | null;
+}
+
+export interface Homepage_justAddedTops {
+  __typename: "Product";
+  id: string;
+  slug: string;
+  images: Homepage_justAddedTops_images[];
+  brand: Homepage_justAddedTops_brand;
+  variants: Homepage_justAddedTops_variants[] | null;
+}
+
+export interface Homepage_justAddedPants_images {
+  __typename: "Image";
+  url: string | null;
+  id: string;
+}
+
+export interface Homepage_justAddedPants_brand {
+  __typename: "Brand";
+  id: string;
+  name: string;
+}
+
+export interface Homepage_justAddedPants_variants_internalSize {
+  __typename: "Size";
+  display: string;
+}
+
+export interface Homepage_justAddedPants_variants {
+  __typename: "ProductVariant";
+  id: string;
+  total: number;
+  reservable: number;
+  nonReservable: number;
+  reserved: number;
+  internalSize: Homepage_justAddedPants_variants_internalSize | null;
+}
+
+export interface Homepage_justAddedPants {
+  __typename: "Product";
+  id: string;
+  slug: string;
+  images: Homepage_justAddedPants_images[];
+  brand: Homepage_justAddedPants_brand;
+  variants: Homepage_justAddedPants_variants[] | null;
+}
+
 export interface Homepage {
   homepage: Homepage_homepage | null;
   reservationFeedback: Homepage_reservationFeedback | null;
   me: Homepage_me | null;
   blogPosts: Homepage_blogPosts[];
   archivalProducts: (Homepage_archivalProducts | null)[];
+  justAddedTops: (Homepage_justAddedTops | null)[];
+  justAddedPants: (Homepage_justAddedPants | null)[];
 }

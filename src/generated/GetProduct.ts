@@ -48,7 +48,13 @@ export interface GetProduct_product_variants_manufacturerSizes {
 
 export interface GetProduct_product_variants_internalSize_top {
   __typename: "TopSize";
+  id: string;
   letter: LetterSize | null;
+  sleeve: number | null;
+  shoulder: number | null;
+  chest: number | null;
+  neck: number | null;
+  length: number | null;
 }
 
 export interface GetProduct_product_variants_internalSize_bottom {
