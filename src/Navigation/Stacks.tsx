@@ -26,7 +26,7 @@ import { color } from "App/utils"
 import React from "react"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { NavBar } from "./NavBar"
-import { ResumeConfirmation, PauseConfirmation, ExtendPauseConfirmation } from "App/Components/PauseConfirmations"
+import { ResumeConfirmation, PauseConfirmation, ExtendPauseConfirmation } from "App/Components/Pause"
 
 const HomeStack = createStackNavigator()
 const BagStack = createStackNavigator()

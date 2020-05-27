@@ -1,20 +1,16 @@
 import gql from "graphql-tag"
-import React, { useState } from "react"
-import { useQuery, useMutation } from "react-apollo"
-import { ScrollView, Linking } from "react-native"
+import React from "react"
+import { useQuery } from "react-apollo"
+import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Box, Container, FixedBackArrow, Sans, Separator, Spacer, Button } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { MembershipCard } from "./Components"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { ButtonVariant } from "App/Components/Button"
-import { Schema } from "App/Navigation"
+import { PauseButtons } from "App/Components/Pause"
 
-type PauseStatus = "active" | "pending" | "paused"
-
-const GET_MEMBERSHIP_INFO = gql`
+export const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
     me {
       customer {
@@ -45,120 +41,17 @@ const GET_MEMBERSHIP_INFO = gql`
   }
 `
 
-const RESUME_MEMBERSHIP = gql`
-  mutation ResumeSubscription($subscriptionID: String!) {
-    resumeSubscription(subscriptionID: $subscriptionID)
-  }
-`
-
-const REMOVE_SCHEDULED_PAUSE = gql`
-  mutation RemoveScheduledPause($subscriptionID: String!) {
-    removeScheduledPause(subscriptionID: $subscriptionID)
-  }
-`
-
-const PAUSE_MEMBERSHIP = gql`
-  mutation PauseSubscription($subscriptionID: String!) {
-    pauseSubscription(subscriptionID: $subscriptionID)
-  }
-`
-
 export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeArea()
-  const [isMutating, setIsMutating] = useState(false)
-  const { showPopUp, hidePopUp } = usePopUpContext()
   const { loading, data } = useQuery(GET_MEMBERSHIP_INFO)
 
-  const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
-    refetchQueries: [
-      {
-        query: GET_MEMBERSHIP_INFO,
-      },
-    ],
-    onCompleted: () => {
-      setIsMutating(false)
-      // navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
-    },
-    onError: (err) => {
-      const popUpData = {
-        title: "Oops!",
-        note: "There was an error canceling the pause on your membership, please contact us.",
-        buttonText: "Close",
-        onClose: () => hidePopUp(),
-      }
-      console.log("err", err)
-      showPopUp(popUpData)
-      setIsMutating(false)
-    },
-  })
-
-  const [pauseSubscription] = useMutation(PAUSE_MEMBERSHIP, {
-    refetchQueries: [
-      {
-        query: GET_MEMBERSHIP_INFO,
-      },
-    ],
-    onCompleted: () => {
-      navigation.navigate("Modal", { screen: Schema.PageNames.PauseConfirmation })
-      setIsMutating(false)
-    },
-    onError: (err) => {
-      const popUpData = {
-        title: "Oops!",
-        note: "There was an error pausing your membership, please contact us.",
-        buttonText: "Close",
-        onClose: () => hidePopUp(),
-      }
-      console.log("err", err)
-      showPopUp(popUpData)
-      setIsMutating(false)
-    },
-  })
-
-  const [resumeSubscription] = useMutation(RESUME_MEMBERSHIP, {
-    refetchQueries: [
-      {
-        query: GET_MEMBERSHIP_INFO,
-      },
-    ],
-    onCompleted: () => {
-      navigation.navigate("Modal", { screen: Schema.PageNames.ResumeConfirmation })
-      setIsMutating(false)
-    },
-    onError: (err) => {
-      const popUpData = {
-        title: "Oops!",
-        note: "There was an error resuming your membership, please contact us.",
-        buttonText: "Close",
-        onClose: () => hidePopUp(),
-      }
-      console.log("err", err)
-      showPopUp(popUpData)
-      setIsMutating(false)
-    },
-  })
+  console.log("data", data)
 
   const customer = data?.me?.customer
   const plan = customer?.plan
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
-  const customerStatus = customer?.status
-  const pauseRequest = customer?.membership?.pauseRequests?.[0]
-  const pausePending = pauseRequest?.pausePending
   let planInfo = null
-  let pauseStatus: PauseStatus = "active"
-  let pauseButtonVariant: ButtonVariant = "primaryGray"
-  let pauseButtonText = "Pause membership"
-
-  if (customerStatus === "Paused") {
-    pauseStatus = "paused"
-    pauseButtonText = "Resume membership"
-    pauseButtonVariant = "primaryBlack"
-  } else if (pausePending) {
-    pauseStatus = "pending"
-    pauseButtonText = "Resume membership"
-    pauseButtonVariant = "primaryBlack"
-  }
 
   if (plan === "Essential") {
     planInfo = {
@@ -182,27 +75,6 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
         "Insurance included",
       ],
     }
-  }
-
-  const toggleSubscriptionStatus = async () => {
-    if (isMutating) {
-      return
-    }
-    setIsMutating(true)
-    const subscriptionId = data?.me?.customer?.invoices?.[0]?.subscriptionId || ""
-    const vars = {
-      variables: {
-        subscriptionId,
-      },
-    }
-    if (pauseStatus === "paused") {
-      await resumeSubscription(vars)
-    } else if (pauseStatus === "pending") {
-      await removeScheduledPause(vars)
-    } else {
-      await pauseSubscription(vars)
-    }
-    setIsMutating(false)
   }
 
   if (loading || !planInfo) {
@@ -260,23 +132,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={12} />
           <Separator />
           <Spacer mb={1} />
-          <Button
-            onPress={toggleSubscriptionStatus}
-            disabled={isMutating}
-            loading={isMutating}
-            block
-            variant={pauseButtonVariant}
-          >
-            {pauseButtonText}
-          </Button>
-          <Spacer mb={1} />
-          <Button
-            variant="secondaryWhite"
-            onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
-            block
-          >
-            Contact us
-          </Button>
+          <PauseButtons customer={customer} />
           <Spacer mb={2} />
           <Sans size="1" color={color("black50")} style={{ textAlign: "center" }}>
             If you’d like cancel your membership, contact us using the button above. We’re happy to help with this.
