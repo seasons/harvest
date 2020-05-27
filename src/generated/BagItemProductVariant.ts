@@ -18,6 +18,12 @@ export interface BagItemProductVariant_product_brand {
   name: string;
 }
 
+export interface BagItemProductVariant_product_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface BagItemProductVariant_product_variants_internalSize {
   __typename: "Size";
   display: string;
@@ -36,7 +42,7 @@ export interface BagItemProductVariant_product {
   name: string;
   modelSize: BagItemProductVariant_product_modelSize | null;
   brand: BagItemProductVariant_product_brand;
-  images: any;
+  images: BagItemProductVariant_product_images[];
   variants: BagItemProductVariant_product_variants[] | null;
 }
 

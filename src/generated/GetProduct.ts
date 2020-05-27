@@ -35,6 +35,12 @@ export interface GetProduct_product_brand {
   since: any | null;
 }
 
+export interface GetProduct_product_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetProduct_product_variants_manufacturerSizes {
   __typename: "Size";
   display: string;
@@ -87,7 +93,7 @@ export interface GetProduct_product {
   brand: GetProduct_product_brand;
   outerMaterials: string[];
   innerMaterials: string[];
-  images: any;
+  images: GetProduct_product_images[];
   type: ProductType | null;
   variants: GetProduct_product_variants[] | null;
 }

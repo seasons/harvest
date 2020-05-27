@@ -14,6 +14,12 @@ export interface GetBagAndSavedItems_me_customer_reservations_products_productVa
   display: string;
 }
 
+export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_brand {
   __typename: "Brand";
   id: string;
@@ -23,7 +29,7 @@ export interface GetBagAndSavedItems_me_customer_reservations_products_productVa
 export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product {
   __typename: "Product";
   id: string;
-  images: any;
+  images: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_images[];
   brand: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_brand;
 }
 
@@ -75,6 +81,12 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_brand {
   name: string;
 }
 
+export interface GetBagAndSavedItems_me_bag_productVariant_product_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetBagAndSavedItems_me_bag_productVariant_product_variants_internalSize {
   __typename: "Size";
   display: string;
@@ -93,7 +105,7 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product {
   name: string;
   modelSize: GetBagAndSavedItems_me_bag_productVariant_product_modelSize | null;
   brand: GetBagAndSavedItems_me_bag_productVariant_product_brand;
-  images: any;
+  images: GetBagAndSavedItems_me_bag_productVariant_product_images[];
   variants: GetBagAndSavedItems_me_bag_productVariant_product_variants[] | null;
 }
 
@@ -123,6 +135,12 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_brand 
   name: string;
 }
 
+export interface GetBagAndSavedItems_me_savedItems_productVariant_product_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants_internalSize {
   __typename: "Size";
   display: string;
@@ -141,7 +159,7 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product {
   name: string;
   modelSize: GetBagAndSavedItems_me_savedItems_productVariant_product_modelSize | null;
   brand: GetBagAndSavedItems_me_savedItems_productVariant_product_brand;
-  images: any;
+  images: GetBagAndSavedItems_me_savedItems_productVariant_product_images[];
   variants: GetBagAndSavedItems_me_savedItems_productVariant_product_variants[] | null;
 }
 

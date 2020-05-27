@@ -1,78 +1,63 @@
 import { Box, Container, FixedBackArrow, Sans, Spacer, ProductGridItem } from "App/Components"
 import { ReadMore } from "App/Components/ReadMore"
-import { GetBrand } from "App/generated/GetBrand"
-import { color, space } from "App/utils"
-import { Schema, screenTrack, useTracking } from "App/utils/track"
+import { space } from "App/utils"
+import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { FlatList } from "react-native"
+
 import { useQuery } from "@apollo/react-hooks"
 
-const GET_BRAND = gql`
-  query GetBrandAndProducts($brandID: ID!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!) {
-    brand(where: { id: $brandID }) {
+const GET_TAG = gql`
+  query GetProductsByTag($tag: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!) {
+    products(where: { tags_some: { name: $tag } }, first: $first, skip: $skip, orderBy: $orderBy) {
       id
+      slug
       name
-      basedIn
-      description
-      products(first: $first, skip: $skip, orderBy: $orderBy, where: { status: Available }) {
+      images {
         id
-        slug
-        name
-        description
-        images {
-          id
-          url
-        }
-        modelHeight
-        externalURL
-        retailPrice
-        status
-        createdAt
-        updatedAt
-        variants {
-          id
-          internalSize {
-            top {
-              letter
-            }
-            bottom {
-              type
-              value
-            }
-            productType
-            display
+        url
+      }
+      variants {
+        id
+        internalSize {
+          top {
+            letter
           }
-          total
-          reservable
-          nonReservable
-          reserved
-          isSaved
+          bottom {
+            type
+            value
+          }
+          productType
+          display
         }
+        total
+        reservable
+        nonReservable
+        reserved
+        isSaved
       }
     }
   }
 `
 
-export const Brand = screenTrack({
-  entityType: Schema.EntityTypes.Brand,
+export const Tag = screenTrack({
+  entityType: Schema.EntityTypes.Tag,
 })((props: any) => {
   const [readMoreExpanded, setReadMoreExpanded] = useState(false)
   const { navigation, route } = props
-  const brandID = route?.params?.id
+  const { tag, title, description } = route?.params?.tagData
 
-  const { data, loading, fetchMore } = useQuery<GetBrand>(GET_BRAND, {
+  const { data, loading, fetchMore } = useQuery(GET_TAG, {
     variables: {
-      brandID,
+      tag,
       first: 10,
       skip: 0,
       orderBy: "createdAt_DESC",
     },
   })
 
-  const products = data?.brand?.products
-  const basedIn = data?.brand?.basedIn
-  const description = data?.brand?.description
+  const products = data?.products
 
   return (
     <Container insetsBottom={false}>
@@ -82,13 +67,8 @@ export const Brand = screenTrack({
           <Box px={2}>
             <Spacer mb={80} />
             <Sans size="3" style={{ textDecorationLine: "underline" }}>
-              {data?.brand?.name}
+              {title}
             </Sans>
-            {basedIn && (
-              <Sans size="2" color={color("black50")}>
-                {basedIn}
-              </Sans>
-            )}
             {description && (
               <>
                 <Spacer mb={3} />
@@ -125,10 +105,7 @@ export const Brand = screenTrack({
                 }
 
                 return Object.assign({}, prev, {
-                  brand: {
-                    ...prev.brand,
-                    products: [...prev.brand.products, ...fetchMoreResult.brand.products],
-                  },
+                  products: [...prev.products, ...fetchMoreResult.products],
                 })
               },
             })

@@ -6,6 +6,7 @@ import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
 import { Brand } from "App/Scenes/Brand"
 import { Brands } from "App/Scenes/Brands"
+import { Tag } from "App/Scenes/Tag"
 import { Browse, Filters } from "App/Scenes/Browse"
 import { DebugMenu } from "App/Scenes/DebugMenu"
 import { Faq } from "App/Scenes/Faq"
@@ -116,6 +117,7 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name={Schema.PageNames.Home} component={Home} />
       <HomeStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
       <HomeStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
+      <HomeStack.Screen name={Schema.PageNames.Tag} component={Tag} />
       <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
       <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />
     </HomeStack.Navigator>

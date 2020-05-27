@@ -100,6 +100,76 @@ export const GET_HOMEPAGE = gql`
       name
       imageURL
     }
+    archivalProducts: products(
+      where: { AND: [{ tags_some: { name: "Vintage" } }, { status: Available }] }
+      first: 12
+      orderBy: createdAt_DESC
+    ) {
+      id
+      slug
+      images {
+        id
+        url
+      }
+      brand {
+        id
+        name
+      }
+    }
+    justAddedTops: products(
+      first: 8
+      category: "tops"
+      orderBy: createdAt_DESC
+      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
+    ) {
+      id
+      slug
+      images {
+        url
+        id
+      }
+      brand {
+        id
+        name
+      }
+      variants {
+        id
+        total
+        reservable
+        nonReservable
+        reserved
+        internalSize {
+          display
+        }
+      }
+    }
+    justAddedPants: products(
+      first: 8
+      category: "pants"
+      orderBy: createdAt_DESC
+      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
+    ) {
+      id
+      slug
+      images {
+        url
+        id
+      }
+      brand {
+        id
+        name
+      }
+      variants {
+        id
+        total
+        reservable
+        nonReservable
+        reserved
+        internalSize {
+          display
+        }
+      }
+    }
   }
   ${BagItemFragment}
 `

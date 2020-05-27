@@ -3,7 +3,7 @@ import { Box, Handle, Spacer } from "App/Components"
 import { color, space } from "App/utils"
 import { FlatList } from "react-native-gesture-handler"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
-import { HomeFooter, BrandsRail, ProductsRail } from "./"
+import { HomeFooter, BrandsRail, ProductsRail, TagsRail } from "./"
 import { PRODUCT_ASPECT_RATIO, NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
@@ -18,18 +18,35 @@ export const HomeBottomSheet = ({ data }) => {
   const navigation = useNavigation()
   useEffect(() => {
     const sections = []
-    if (data?.homepage?.sections?.length) {
-      if (data?.blogPosts) {
-        sections.push({ type: "BlogPosts", results: data?.blogPosts })
-      }
-      const dataSections = data.homepage.sections.filter((section) => section?.results?.length)
-      if (data?.me?.savedItems?.length) {
-        const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
-        dataSections.splice(4, 0, { type: "SavedProducts", title: "Saved for later", results })
-      }
-      sections.push(...dataSections)
-      setSections(sections)
+    if (data?.blogPosts) {
+      sections.push({ type: "BlogPosts", results: data?.blogPosts })
     }
+    if (data?.justAddedTops?.length) {
+      sections.push({ type: "Products", results: data?.justAddedTops, title: "Just added tops" })
+    }
+    if (data?.homepage?.sections?.length) {
+      sections.push(...data?.homepage?.sections)
+    }
+    if (data?.me?.savedItems?.length) {
+      const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
+      sections.push({ type: "SavedProducts", title: "Saved for later", results })
+    }
+    if (data?.archivalProducts?.length) {
+      sections.push({
+        type: "ArchivalProducts",
+        tagData: {
+          tag: "Vintage",
+          title: "Archives",
+          description: "",
+        },
+        title: "Just added archival",
+        results: data?.archivalProducts,
+      })
+    }
+    if (data?.justAddedPants?.length) {
+      sections.push({ type: "Products", results: data?.justAddedPants, title: "Just added pants" })
+    }
+    setSections(sections)
   }, [data])
 
   const dimensions = Dimensions.get("window")
@@ -40,8 +57,9 @@ export const HomeBottomSheet = ({ data }) => {
     switch (item.type) {
       case "Brands":
         return <BrandsRail title={item.title} items={item.results} />
+      case "ArchivalProducts":
+        return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
       case "Products":
-      case "HomepageProductRails":
         return <ProductsRail title={item.title} items={item.results} />
       case "SavedProducts":
         return (

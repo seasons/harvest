@@ -15,9 +15,10 @@ export enum PageNames {
   Home = "Home",
   Brand = "Brand",
   Brands = "Brands",
-
   // Browse
   Browse = "Browse",
+
+  Tag = "Tag",
 
   // Bag
   Bag = "Bag",

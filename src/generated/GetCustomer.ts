@@ -26,6 +26,12 @@ export interface GetCustomer_me_bag_productVariant_product_brand {
   name: string;
 }
 
+export interface GetCustomer_me_bag_productVariant_product_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetCustomer_me_bag_productVariant_product_variants_internalSize {
   __typename: "Size";
   display: string;
@@ -44,7 +50,7 @@ export interface GetCustomer_me_bag_productVariant_product {
   name: string;
   modelSize: GetCustomer_me_bag_productVariant_product_modelSize | null;
   brand: GetCustomer_me_bag_productVariant_product_brand;
-  images: any;
+  images: GetCustomer_me_bag_productVariant_product_images[];
   variants: GetCustomer_me_bag_productVariant_product_variants[] | null;
 }
 

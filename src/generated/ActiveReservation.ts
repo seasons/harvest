@@ -14,12 +14,18 @@ export interface ActiveReservation_me_activeReservation_products_productVariant_
   name: string;
 }
 
+export interface ActiveReservation_me_activeReservation_products_productVariant_product_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface ActiveReservation_me_activeReservation_products_productVariant_product {
   __typename: "Product";
   name: string;
   retailPrice: number | null;
   brand: ActiveReservation_me_activeReservation_products_productVariant_product_brand;
-  images: any;
+  images: ActiveReservation_me_activeReservation_products_productVariant_product_images[];
 }
 
 export interface ActiveReservation_me_activeReservation_products_productVariant {

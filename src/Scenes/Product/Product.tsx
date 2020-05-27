@@ -83,7 +83,10 @@ export const Product = screenTrack({
       isWanted: false,
     }
   )
-  const imageWidth = Dimensions.get("window").width - space(3)
+
+  const viewWidth = Dimensions.get("window").width
+  const images = product && product.images
+  const imageWidth = images?.length > 1 ? viewWidth - space(3) : viewWidth
 
   let selectedVariantIsWanted = false
   if (product?.variants?.length > 0 && selectedVariant.id) {
@@ -109,7 +112,6 @@ export const Product = screenTrack({
   }
 
   const renderItem = ({ item: section }) => {
-    const images = product && product.images
     switch (section) {
       case "imageRail":
         return (

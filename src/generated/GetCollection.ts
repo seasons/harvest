@@ -17,6 +17,12 @@ export interface GetCollection_collection_products_brand {
   name: string;
 }
 
+export interface GetCollection_collection_products_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetCollection_collection_products {
   __typename: "Product";
   id: string;
@@ -27,7 +33,7 @@ export interface GetCollection_collection_products {
   modelSize: GetCollection_collection_products_modelSize | null;
   modelHeight: number | null;
   brand: GetCollection_collection_products_brand;
-  images: any;
+  images: GetCollection_collection_products_images[];
 }
 
 export interface GetCollection_collection {
