@@ -20,8 +20,6 @@ export const ProductGridItem = ({ product, index, showBrandName }) => {
   const productName = product?.name || ""
   const brandName = product?.brand?.name || ""
 
-  console.log("product", product)
-
   return (
     <TouchableWithoutFeedback
       key={product.id}

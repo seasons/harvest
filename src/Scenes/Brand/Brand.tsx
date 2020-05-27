@@ -59,7 +59,7 @@ export const Brand = screenTrack({
 })((props: any) => {
   const [readMoreExpanded, setReadMoreExpanded] = useState(false)
   const { navigation, route } = props
-  const brandID = route?.params?.brandID
+  const brandID = route?.params?.id
 
   const { data, loading, fetchMore } = useQuery<GetBrand>(GET_BRAND, {
     variables: {

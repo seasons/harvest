@@ -49,8 +49,6 @@ export const HomeBottomSheet = ({ data }) => {
     setSections(sections)
   }, [data])
 
-  console.log("data", data)
-
   const dimensions = Dimensions.get("window")
   const blogContentHeight = dimensions.width * PRODUCT_ASPECT_RATIO
   const snapPoint = dimensions.height - blogContentHeight - NAV_HEIGHT
