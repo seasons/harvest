@@ -41,7 +41,13 @@ export const GET_PRODUCT = gql`
         }
         internalSize {
           top {
+            id
             letter
+            sleeve
+            shoulder
+            chest
+            neck
+            length
           }
           bottom {
             type

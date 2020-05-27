@@ -15,12 +15,6 @@ export interface GetProductsByTag_products_images {
   url: string | null;
 }
 
-export interface GetProductsByTag_products_brand {
-  __typename: "Brand";
-  id: string;
-  name: string;
-}
-
 export interface GetProductsByTag_products_variants_internalSize_top {
   __typename: "TopSize";
   letter: LetterSize | null;
@@ -55,8 +49,8 @@ export interface GetProductsByTag_products {
   __typename: "Product";
   id: string;
   slug: string;
+  name: string;
   images: GetProductsByTag_products_images[];
-  brand: GetProductsByTag_products_brand;
   variants: GetProductsByTag_products_variants[] | null;
 }
 
