@@ -5,6 +5,7 @@ import { ButtonVariant } from "../Button"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { useMutation } from "react-apollo"
 import gql from "graphql-tag"
+import { DateTime } from "luxon"
 import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
 import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
@@ -65,7 +66,11 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer }>
       },
     ],
     onCompleted: () => {
-      navigation.navigate("Modal", { screen: Schema.PageNames.PauseConfirmation })
+      const dueDate = DateTime.fromISO(customer?.invoices?.[0]?.dueDate).toFormat("MM/dd")
+      navigation.navigate("Modal", {
+        screen: Schema.PageNames.PauseConfirmation,
+        params: { dueDate },
+      })
       setIsMutating(false)
     },
     onError: (err) => {
@@ -130,9 +135,10 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer }>
     }
     setIsMutating(true)
     const subscriptionId = customer?.invoices?.[0]?.subscriptionId || ""
+    console.log("subscriptionId", subscriptionId)
     const vars = {
       variables: {
-        subscriptionId,
+        subscriptionID: subscriptionId,
       },
     }
     if (pauseStatus === "paused") {
