@@ -1,4 +1,4 @@
-import { Spacer, Button } from "App/Components"
+import { Spacer, Button, Sans } from "App/Components"
 import React, { useState } from "react"
 import { Linking } from "react-native"
 import { ButtonVariant } from "../Button"
@@ -66,7 +66,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer }>
       },
     ],
     onCompleted: () => {
-      const dueDate = DateTime.fromISO(customer?.invoices?.[0]?.dueDate).toFormat("MM/dd")
+      const dueDate = DateTime.fromISO(customer?.invoices?.[0]?.dueDate).toFormat("LLL dd")
       navigation.navigate("Modal", {
         screen: Schema.PageNames.PauseConfirmation,
         params: { dueDate },
@@ -153,6 +153,14 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer }>
 
   return (
     <>
+      {pauseStatus === "pending" && (
+        <>
+          <Sans size="1">{`Your membership is scheduled to be paused on ${DateTime.fromISO(
+            pauseRequest.pauseDate
+          ).toFormat("EEEE LLLL dd")}.`}</Sans>
+          <Spacer mb={2} />
+        </>
+      )}
       <Button
         onPress={toggleSubscriptionStatus}
         disabled={isMutating}
