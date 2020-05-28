@@ -10,6 +10,7 @@ import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/Membershi
 import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
 import { GetMembershipInfo_me_customer } from "App/generated/GetMembershipInfo"
+import { color } from "App/utils"
 
 export type PauseStatus = "active" | "pending" | "paused"
 
@@ -31,7 +32,10 @@ const PAUSE_MEMBERSHIP = gql`
   }
 `
 
-export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer }> = ({ customer }) => {
+export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; showPausedNote?: boolean }> = ({
+  customer,
+  showPausedNote = true,
+}) => {
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
@@ -127,15 +131,12 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer }>
     pauseButtonVariant = "primaryBlack"
   }
 
-  console.log("customer", customer)
-
   const toggleSubscriptionStatus = async () => {
     if (isMutating) {
       return
     }
     setIsMutating(true)
     const subscriptionId = customer?.invoices?.[0]?.subscriptionId || ""
-    console.log("subscriptionId", subscriptionId)
     const vars = {
       variables: {
         subscriptionID: subscriptionId,
@@ -151,6 +152,36 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer }>
     setIsMutating(false)
   }
 
+  const SubText = () => {
+    return pauseStatus === "paused" ? (
+      <Sans size="1" color={color("black50")} style={{ textAlign: "center" }}>
+        Have a question?{" "}
+        <Sans
+          size="1"
+          style={{ textDecorationLine: "underline" }}
+          onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
+        >
+          Contact us
+        </Sans>
+      </Sans>
+    ) : (
+      <Sans size="1" color={color("black50")} style={{ textAlign: "center" }}>
+        If you’d like cancel your membership, contact us using the button above. We’re happy to help with this.
+      </Sans>
+    )
+  }
+
+  const resumeDate =
+    customer?.membership?.pauseRequests?.[0]?.resumeDate &&
+    DateTime.fromISO(customer?.membership?.pauseRequests?.[0]?.resumeDate)
+
+  const resumeDatePlusOneMonth = resumeDate && resumeDate.plus({ months: 1 })
+  const pauseExtendDateDisplay = !!resumeDatePlusOneMonth && resumeDatePlusOneMonth.toFormat("LLLL dd")
+  const resumeDateDiffNow = resumeDatePlusOneMonth && resumeDatePlusOneMonth.diffNow("months")
+
+  const isExtended = resumeDate && resumeDate.diffNow("months") >= 1
+  const canExtend = resumeDateDiffNow && resumeDateDiffNow >= 1 && !isExtended
+
   return (
     <>
       {pauseStatus === "pending" && (
@@ -158,6 +189,19 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer }>
           <Sans size="1">{`Your membership is scheduled to be paused on ${DateTime.fromISO(
             pauseRequest.pauseDate
           ).toFormat("EEEE LLLL dd")}.`}</Sans>
+          <Spacer mb={2} />
+        </>
+      )}
+      {pauseStatus === "paused" && showPausedNote && (
+        <>
+          <Sans size="1">{`Your membership is paused until ${DateTime.fromISO(resumeDate).toFormat(
+            "EEEE LLLL dd"
+          )}.`}</Sans>
+          {isExtended && !canExtend && (
+            <Sans size="1" color="black50">{`You can extend this again after ${DateTime.fromISO(resumeDate)
+              .minus({ months: 1 })
+              .toFormat("EEEE LLLL dd")}.`}</Sans>
+          )}
           <Spacer mb={2} />
         </>
       )}
@@ -171,13 +215,26 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer }>
         {pauseButtonText}
       </Button>
       <Spacer mb={1} />
-      <Button
-        variant="secondaryWhite"
-        onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
-        block
-      >
-        Contact us
-      </Button>
+      {pauseStatus === "paused" ? (
+        <Button
+          variant="secondaryWhite"
+          disabled={isExtended && !canExtend}
+          onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
+          block
+        >
+          {`Pause until ${pauseExtendDateDisplay}`}
+        </Button>
+      ) : (
+        <Button
+          variant="secondaryWhite"
+          onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
+          block
+        >
+          Contact us
+        </Button>
+      )}
+      <Spacer mb={2} />
+      <SubText />
     </>
   )
 }

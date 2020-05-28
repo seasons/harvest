@@ -133,10 +133,6 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Separator />
           <Spacer mb={1} />
           <PauseButtons customer={customer} />
-          <Spacer mb={2} />
-          <Sans size="1" color={color("black50")} style={{ textAlign: "center" }}>
-            If you’d like cancel your membership, contact us using the button above. We’re happy to help with this.
-          </Sans>
         </Box>
       </ScrollView>
     </Container>
