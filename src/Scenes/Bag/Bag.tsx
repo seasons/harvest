@@ -1,4 +1,4 @@
-import { FixedButton, Spacer } from "App/Components"
+import { FixedButton, Spacer, Flex } from "App/Components"
 import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -15,6 +15,7 @@ import { BagTab, SavedItemsTab, ReservationHistoryTab } from "./Components"
 import { GET_BROWSE_PRODUCTS } from "../Browse/Browse"
 import { useFocusEffect } from "@react-navigation/native"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
+import { PauseStatus, PauseButtons } from "App/Components/Pause/PauseButtons"
 
 export enum BagView {
   Bag = 0,
@@ -197,17 +198,37 @@ export const Bag = screenTrack()((props) => {
   const bagCount = items.length
   const bagIsFull = bagCount === BAG_NUM_ITEMS
 
+  const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
+  const customerStatus = me?.customer?.status
+  const pausePending = pauseRequest?.pausePending
+  let pauseStatus: PauseStatus = "active"
+
+  if (customerStatus === "Paused") {
+    pauseStatus = "paused"
+  } else if (pausePending) {
+    pauseStatus = "pending"
+  }
+
   const renderItem = ({ item }) => {
     if (isBagView) {
-      return (
-        <BagTab
-          me={data?.me}
-          items={item.data}
-          removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-          hasActiveReservation={hasActiveReservation}
-          deleteBagItem={deleteBagItem}
-        />
-      )
+      if (pauseStatus === "paused") {
+        return (
+          <Flex flexDirection="column" justifyContent="center" style={{ backgroundColor: "pink", flexGrow: 1 }}>
+            <PauseButtons customer={me?.customer} />
+          </Flex>
+        )
+      } else {
+        return (
+          <BagTab
+            me={data?.me}
+            pauseStatus={pauseStatus}
+            items={item.data}
+            removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+            hasActiveReservation={hasActiveReservation}
+            deleteBagItem={deleteBagItem}
+          />
+        )
+      }
     } else if (isSavedView) {
       return (
         <SavedItemsTab
@@ -231,6 +252,7 @@ export const Bag = screenTrack()((props) => {
     sections = [{ data: reservations }]
   }
   const footerMarginBottom = currentView === BagView.Bag ? 96 : 2
+
   return (
     <Container insetsBottom={false}>
       <TabBar
@@ -256,46 +278,29 @@ export const Bag = screenTrack()((props) => {
       <FlatList
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         data={sections}
+        contentContainerStyle={{ flexGrow: 1 }}
         keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
         renderItem={(item) => {
           return renderItem(item)
         }}
         ListFooterComponent={() => <Spacer mb={footerMarginBottom} />}
       />
-      {isBagView && (
-        <>
-          {hasActiveReservation ? (
-            <FixedButton
-              rightAligned
-              variant="primaryWhite"
-              onPress={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.FAQButtonTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                })
-                navigation.navigate("Faq")
-              }}
-            >
-              FAQ
-            </FixedButton>
-          ) : (
-            <FixedButton
-              block
-              onPress={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.ReserveButtonTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                  bagIsFull,
-                })
-                handleReserve(navigation)
-              }}
-              disabled={!bagIsFull || isMutating}
-              loading={isMutating}
-            >
-              Reserve
-            </FixedButton>
-          )}
-        </>
+      {isBagView && pauseStatus !== "paused" && !hasActiveReservation && (
+        <FixedButton
+          block
+          onPress={() => {
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.ReserveButtonTapped,
+              actionType: Schema.ActionTypes.Tap,
+              bagIsFull,
+            })
+            handleReserve(navigation)
+          }}
+          disabled={!bagIsFull || isMutating}
+          loading={isMutating}
+        >
+          Reserve
+        </FixedButton>
       )}
     </Container>
   )

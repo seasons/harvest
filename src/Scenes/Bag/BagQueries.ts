@@ -13,6 +13,7 @@ export const GET_BAG = gql`
       customer {
         id
         plan
+        status
         invoices {
           id
           subscriptionId

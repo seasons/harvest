@@ -6,18 +6,19 @@ import { useNavigation } from "@react-navigation/native"
 import { color } from "App/utils"
 import { DateTime } from "luxon"
 import { Schema, useTracking } from "App/utils/track"
-import { PauseStatus, REMOVE_SCHEDULED_PAUSE } from "App/Components/Pause/PauseButtons"
+import { REMOVE_SCHEDULED_PAUSE, PauseStatus } from "App/Components/Pause/PauseButtons"
 import { GET_BAG } from "../BagQueries"
 import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
-export const BagTab: React.FC<{ me; items; deleteBagItem; hasActiveReservation; removeFromBagAndSaveItem }> = ({
-  items,
-  deleteBagItem,
-  hasActiveReservation,
-  removeFromBagAndSaveItem,
-  me,
-}) => {
+export const BagTab: React.FC<{
+  pauseStatus: PauseStatus
+  me
+  items
+  deleteBagItem
+  hasActiveReservation
+  removeFromBagAndSaveItem
+}> = ({ pauseStatus, items, deleteBagItem, hasActiveReservation, removeFromBagAndSaveItem, me }) => {
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
@@ -50,17 +51,6 @@ export const BagTab: React.FC<{ me; items; deleteBagItem; hasActiveReservation; 
   if (hasActiveReservation && me?.customer?.plan === "Essential" && !!me?.activeReservation?.returnAt) {
     const luxonDate = DateTime.fromISO(data?.me?.activeReservation?.returnAt)
     returnReminder = `Return by ${luxonDate.weekdayLong}, ${luxonDate.monthShort} ${luxonDate.day}`
-  }
-
-  const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
-  const customerStatus = me?.customer?.status
-  const pausePending = pauseRequest?.pausePending
-  let pauseStatus: PauseStatus = "active"
-
-  if (customerStatus === "Paused") {
-    pauseStatus = "paused"
-  } else if (pausePending) {
-    pauseStatus = "pending"
   }
 
   return (
