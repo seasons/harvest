@@ -37,7 +37,8 @@ export const HomeBottomSheet = ({ data }) => {
         tagData: {
           tag: "Vintage",
           title: "Archives",
-          description: "",
+          description:
+            "Great clothes are great clothes and we believe the past still lends itself to dressing for the now. What archive items lack in newness, they make up for by way of history. Through the Seasons archival section, we hope to add unique history and vibrance to our catalog, made possible by yesterday’s clothes.\n\nHere you’ll find garments celebrating historic eras of fashion, music, film, media and beyond. From 80s concert merchandise to early 2000s runway pieces, the archive section encompasses a unique field of textile designs, production styles and comfortable wear that can bring style and biography to any outfit or wardrobe.",
         },
         title: "Just added archival",
         results: data?.archivalProducts,
@@ -77,6 +78,8 @@ export const HomeBottomSheet = ({ data }) => {
         )
     }
   }
+
+  console.log("data", data)
 
   const bottomSheetContent = () => {
     const reservationFeedback = data?.reservationFeedback
