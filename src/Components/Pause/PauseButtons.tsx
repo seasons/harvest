@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
 import { GetMembershipInfo_me_customer } from "App/generated/GetMembershipInfo"
 
-type PauseStatus = "active" | "pending" | "paused"
+export type PauseStatus = "active" | "pending" | "paused"
 
 const RESUME_MEMBERSHIP = gql`
   mutation ResumeSubscription($subscriptionID: String!) {
@@ -19,7 +19,7 @@ const RESUME_MEMBERSHIP = gql`
   }
 `
 
-const REMOVE_SCHEDULED_PAUSE = gql`
+export const REMOVE_SCHEDULED_PAUSE = gql`
   mutation RemoveScheduledPause($subscriptionID: String!) {
     removeScheduledPause(subscriptionID: $subscriptionID)
   }

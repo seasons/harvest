@@ -13,6 +13,14 @@ export const GET_BAG = gql`
       customer {
         id
         plan
+        membership {
+          id
+          pauseRequests {
+            id
+            pauseDate
+            pausePending
+          }
+        }
         reservations(orderBy: createdAt_DESC) {
           id
           status(display: true)
