@@ -13,9 +13,13 @@ export const GET_BAG = gql`
       customer {
         id
         plan
+        invoices {
+          id
+          subscriptionId
+        }
         membership {
           id
-          pauseRequests {
+          pauseRequests(orderBy: createdAt_DESC) {
             id
             pauseDate
             pausePending

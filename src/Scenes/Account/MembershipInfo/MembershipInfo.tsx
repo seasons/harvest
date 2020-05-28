@@ -24,7 +24,7 @@ export const GET_MEMBERSHIP_INFO = gql`
         }
         membership {
           id
-          pauseRequests {
+          pauseRequests(orderBy: createdAt_DESC) {
             id
             resumeDate
             pauseDate
