@@ -29,7 +29,7 @@ export const PauseConfirmation: React.FC<{ route: any }> = ({ route }) => {
               you will be billed. If you have any questions, contact us below at membership@seasons.nyc
             </Sans>
             <Spacer mb={3} />
-            <Button block onPress={() => navigation.pop()}>
+            <Button block onPress={() => navigation.goBack()}>
               Finish
             </Button>
             <Spacer mb={1} />
