@@ -111,10 +111,6 @@ export const GET_HOMEPAGE = gql`
         id
         url
       }
-      brand {
-        id
-        name
-      }
     }
     justAddedTops: products(
       first: 8

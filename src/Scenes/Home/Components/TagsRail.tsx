@@ -37,7 +37,6 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData }) => 
     return rowGroup.map((item) => {
       const image = item?.images?.[0]
       const resizedImage = image && imageResize(image?.url, "thumb")
-      const brandName = item.brand && item.brand.name
       return (
         <Animatable.View animation="fadeIn" duration={300} key={item.id}>
           <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: item.id, slug: item.slug })}>
@@ -46,8 +45,6 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData }) => 
                 source={{ uri: resizedImage }}
                 style={{ width: slideWidth, height: slideWidth * ARCHIVAL_PRODUCT_RATIO }}
               />
-              <Spacer mb={0.5} />
-              {!!brandName && <Sans size="0">{brandName}</Sans>}
             </Box>
           </TouchableWithoutFeedback>
         </Animatable.View>
@@ -74,14 +71,15 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData }) => 
           </Sans>
         </TouchableOpacity>
       </Flex>
+      <Spacer mb={1} />
       <Box>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Flex flexDirection="column">
             {rowGroups.map((rowItem, index) => {
               return (
                 <Box key={index}>
-                  <Spacer mb={index > 0 ? 2 : 1} />
                   <Flex flexDirection="row">{row(rowItem)}</Flex>
+                  <Spacer mb={index !== rowGroups.length - 1 ? 0.5 : 0} />
                 </Box>
               )
             })}

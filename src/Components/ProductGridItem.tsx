@@ -39,7 +39,7 @@ export const ProductGridItem = ({ product, index, showBrandName }) => {
           <Box my={0.5} mx={1}>
             {(!!productName || !!brandName) && (
               <Sans size="0" style={{ maxWidth: itemWidth - 50 }}>
-                {!!showBrandName ? brandName : productName}
+                {!!showBrandName && brandName !== "Vintage" ? brandName : productName}
               </Sans>
             )}
             <VariantSizes size="0" variants={product?.variants} />
