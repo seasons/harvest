@@ -10,7 +10,12 @@ import { useQuery } from "@apollo/react-hooks"
 
 const GET_TAG = gql`
   query GetProductsByTag($tag: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!) {
-    products(where: { tags_some: { name: $tag } }, first: $first, skip: $skip, orderBy: $orderBy) {
+    products(
+      where: { AND: [{ tags_some: { name: $tag } }, { status: Available }] }
+      first: $first
+      skip: $skip
+      orderBy: $orderBy
+    ) {
       id
       slug
       name
