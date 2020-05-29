@@ -2,8 +2,7 @@ import { Box, ProductGridItem, Sans, Spacer } from "App/Components"
 import React from "react"
 import { FlatList } from "react-native"
 
-export const MoreLikeThis = ({ products }) => {
-  console.log("PRODUCTS: ", products)
+export const MoreFromBrand = ({ products }) => {
   return (
     <>
       <Box p={2}>

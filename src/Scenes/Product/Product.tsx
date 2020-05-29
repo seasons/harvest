@@ -14,7 +14,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { GET_HOMEPAGE } from "../Home/Home"
-import { ImageRail, MoreLikeThis, ProductDetails, ProductMeasurements, VariantWant } from "./Components"
+import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 
@@ -105,8 +105,6 @@ export const Product = screenTrack({
   })
 
   if (loading || !data) {
-    console.log("HI", loading)
-    console.log("H: ", data)
     return <Loader />
   }
 
@@ -130,7 +128,7 @@ export const Product = screenTrack({
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
       case "moreLikeThis":
-        return <MoreLikeThis products={brandProducts} />
+        return <MoreFromBrand products={brandProducts} />
       default:
         return null
     }
