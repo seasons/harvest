@@ -17,6 +17,7 @@ platform :ios do
         )
         gym(scheme: 'seasons', 
             workspace: './ios/seasons.xcworkspace', export_method: 'app-store')
+        clean_build_artifacts
         push_to_git_remote(remote: 'origin', local_branch: 'release', remote_branch: 'release')
     end
 
