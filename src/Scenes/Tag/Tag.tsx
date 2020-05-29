@@ -62,6 +62,7 @@ export const Tag = screenTrack({
   })
 
   const products = data?.products
+  const numColumns = 2
 
   return (
     <Container insetsBottom={false}>
@@ -91,7 +92,7 @@ export const Tag = screenTrack({
         )}
         ListFooterComponent={() => <Spacer mb={space(2)} />}
         data={products}
-        numColumns={2}
+        numColumns={numColumns}
         onEndReachedThreshold={0.7}
         onEndReached={() => {
           if (!loading) {
@@ -116,7 +117,7 @@ export const Tag = screenTrack({
           }
         }}
         keyExtractor={(item, index) => item.id + index}
-        renderItem={({ item }, i) => <ProductGridItem product={item} addLeftSpacing={i % 2 !== 0} />}
+        renderItem={({ item }, i) => <ProductGridItem product={item} addLeftSpacing={i % numColumns !== 0} />}
       />
     </Container>
   )

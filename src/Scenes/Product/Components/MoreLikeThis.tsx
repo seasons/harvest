@@ -1,7 +1,6 @@
 import { Box, ProductGridItem, Sans, Spacer } from "App/Components"
 import React from "react"
 import { FlatList } from "react-native"
-import styled from "styled-components/native"
 
 export const MoreLikeThis = ({ products }) => {
   console.log("PRODUCTS: ", products)
@@ -22,13 +21,6 @@ export const MoreLikeThis = ({ products }) => {
                 <ProductGridItem product={item} addLeftSpacing={false} showBrandName />
               </Box>
             )
-
-            // const imageURL = item && item.images[0].url
-            // return (
-            //   <Box mr={1}>
-            //     <ImageContainer source={{ uri: imageURL }}></ImageContainer>
-            //   </Box>
-            // )
           }}
           keyExtractor={(item) => {
             const itemID = item && item.id
@@ -41,9 +33,3 @@ export const MoreLikeThis = ({ products }) => {
     </>
   )
 }
-
-const ImageContainer = styled.Image`
-  background: rgba(0, 0, 0, 0.3);
-  height: 360;
-  width: 240;
-`

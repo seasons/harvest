@@ -140,6 +140,7 @@ export const Browse = screenTrack()((props: any) => {
   const categories = (data && data.categories) || []
   const filtersButtonHeight = 36
   const numFiltersSelected = sizeFilters?.length
+  const numColumns = 2
 
   const filtersButtonVariant = numFiltersSelected > 0 ? "primaryBlack" : "primaryWhite"
   const filtersButtonText = numFiltersSelected > 0 ? `Filters +${numFiltersSelected}` : "Filters"
@@ -185,8 +186,10 @@ export const Browse = screenTrack()((props: any) => {
             data={products}
             ref={(ref) => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
-            renderItem={({ item }, i) => <ProductGridItem showBrandName product={item} addLeftSpacing={i % 2 !== 0} />}
-            numColumns={2}
+            renderItem={({ item }, i) => (
+              <ProductGridItem showBrandName product={item} addLeftSpacing={i % numColumns !== 0} />
+            )}
+            numColumns={numColumns}
             ListFooterComponent={() => (
               <>
                 {loading && (

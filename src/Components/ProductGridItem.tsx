@@ -15,7 +15,6 @@ export const ProductGridItem = ({ product, addLeftSpacing, showBrandName }) => {
   const itemWidth = Dimensions.get("window").width / 2 - 2
   const image = get(product, "images[0]", { url: "" })
   const resizedImage = imageResize(image.url, "thumb")
-  // const isLeft = index % 2 === 0
   const productName = product?.name || ""
   const brandName = product?.brand?.name || ""
 

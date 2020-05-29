@@ -105,6 +105,8 @@ export const Product = screenTrack({
   })
 
   if (loading || !data) {
+    console.log("HI", loading)
+    console.log("H: ", data)
     return <Loader />
   }
 
@@ -138,7 +140,7 @@ export const Product = screenTrack({
   const listFooterSpacing = selectionButtonsBottom + 58
   const sections = ["imageRail", "productDetails", "productMeasurements", "aboutTheBrand", "moreLikeThis"]
 
-  console.log(data.product.brand.products)
+  console.log("HELLO: ", data.product.brand)
   return (
     <Container insetsTop={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "black04Background"} />
