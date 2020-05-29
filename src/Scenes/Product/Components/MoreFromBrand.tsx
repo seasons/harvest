@@ -1,15 +1,14 @@
-import { Box, ProductGridItem, Sans, Spacer } from "App/Components"
+import { Box, ProductGridItem, Sans } from "App/Components"
 import React from "react"
 import { FlatList } from "react-native"
 
-export const MoreFromBrand = ({ products }) => {
+export const MoreFromBrand = ({ products, brandName }) => {
   return (
     <>
-      <Box p={2}>
+      <Box pl={2} py={1}>
         <Sans color="black" size="2">
-          More like this
+          More from {brandName}
         </Sans>
-        <Spacer mb={2} />
       </Box>
       <Box ml={2}>
         <FlatList

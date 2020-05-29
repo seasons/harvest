@@ -128,7 +128,7 @@ export const Product = screenTrack({
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
       case "moreLikeThis":
-        return <MoreFromBrand products={brandProducts} />
+        return <MoreFromBrand products={brandProducts} brandName={product.brand.name} />
       default:
         return null
     }
@@ -138,7 +138,6 @@ export const Product = screenTrack({
   const listFooterSpacing = selectionButtonsBottom + 58
   const sections = ["imageRail", "productDetails", "productMeasurements", "aboutTheBrand", "moreLikeThis"]
 
-  console.log("HELLO: ", data.product.brand)
   return (
     <Container insetsTop={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "black04Background"} />
