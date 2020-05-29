@@ -44,8 +44,8 @@ export const HomeBottomSheet = ({ data }) => {
         results: data?.archivalProducts,
       })
     }
-    if (data?.justAddedPants?.length) {
-      sections.push({ type: "Products", results: data?.justAddedPants, title: "Just added pants" })
+    if (data?.justAddedBottoms?.length) {
+      sections.push({ type: "Products", results: data?.justAddedBottoms, title: "Just added bottoms" })
     }
     setSections(sections)
   }, [data])
