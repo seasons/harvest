@@ -1,5 +1,5 @@
 PODS:
-  - A0Auth0 (2.3.1):
+  - A0Auth0 (2.3.0):
     - React
   - Analytics (3.8.0)
   - boost-for-react-native (1.63.0)
@@ -61,7 +61,7 @@ PODS:
   - lottie-react-native (3.3.2):
     - lottie-ios (~> 3.1.3)
     - React
-  - Permission-Notifications (2.1.4):
+  - Permission-Notifications (2.1.3):
     - RNPermissions
   - PushNotifications (3.0.4)
   - RCTRequired (0.61.5)
@@ -231,7 +231,7 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-config (0.12.0):
     - React
-  - react-native-netinfo (5.8.1):
+  - react-native-netinfo (5.8.0):
     - React
   - react-native-pusher-push-notifications (2.4.0):
     - PushNotifications (>= 2.1.2)
@@ -280,7 +280,7 @@ PODS:
   - RNAnalytics (1.1.0):
     - Analytics
     - React
-  - RNCAsyncStorage (1.10.0):
+  - RNCAsyncStorage (1.9.0):
     - React
   - RNFastImage (7.0.2):
     - React
@@ -288,16 +288,16 @@ PODS:
     - SDWebImageWebPCoder (~> 0.2.3)
   - RNGestureHandler (1.6.1):
     - React
-  - RNPermissions (2.1.4):
+  - RNPermissions (2.1.3):
     - React
   - RNReanimated (1.8.0):
     - React
-  - RNScreens (2.7.0):
+  - RNScreens (2.6.0):
     - React
-  - RNSentry (1.3.8):
+  - RNSentry (1.3.7):
     - React
     - Sentry (~> 4.4.0)
-  - RNShare (3.3.2):
+  - RNShare (3.3.0):
     - React
   - RNSVG (9.13.3):
     - React
@@ -571,7 +571,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  A0Auth0: 672afa3f770b06befa3a6d57c8fd26730344b6db
+  A0Auth0: 802f5f5add8ac5265cfeea125caa2720dafccfa6
   Analytics: fcf79ebc393a7d77befb8d43ce296353ba9ede3d
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
@@ -592,7 +592,7 @@ SPEC CHECKSUMS:
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   lottie-ios: 496ac5cea1bbf1a7bd1f1f472f3232eb1b8d744b
   lottie-react-native: 2a1a82bb326ae51331a5520de0cf706733c6db69
-  Permission-Notifications: d437cafc026900006d35981d35a2d694f883f44e
+  Permission-Notifications: 5d8c88b22dbbf1f0fe278b223caae0d0675c11bc
   PushNotifications: 6e3d148e5e129af9d4a9279b288c934f9a7f9066
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTRestart: 3915cac548a37703970941ca33de79a304b8b247
@@ -605,7 +605,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
-  react-native-netinfo: 73d0d151215683d128908796063e344030ef20fa
+  react-native-netinfo: b9650ab1b8b4362b3c455b1274e4bc48223cc957
   react-native-pusher-push-notifications: 2ed16a965a4ade4d2e51ecc632b47a7f41e7f7c6
   react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
@@ -621,14 +621,14 @@ SPEC CHECKSUMS:
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   RNAnalytics: 35a54cb740c472a0a6a3de765176b82cccc2d1ef
-  RNCAsyncStorage: 6d99641f8e6f15d169d695d8ef184bf187903f11
+  RNCAsyncStorage: 453cd7c335ec9ba3b877e27d02238956b76f3268
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
-  RNPermissions: 3635b407c15f2fe591bd2101c8f20aa0912caba8
+  RNPermissions: 6772df08e03565f718f7e140d9fccae441b8ca8b
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
-  RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706
-  RNSentry: 05cc998036c027785e466c896211b5c75b3e0ffd
-  RNShare: bd6518701db274b8ba282b33620885f2225a5bcf
+  RNScreens: 19fee34a46de81b66e26960f5ac14ea616a5d089
+  RNSentry: 370623102247ebea20191b5fb549ecc7a275b324
+  RNShare: fea1801315aa8875d6db73a4010b14afcd568765
   RNSVG: f6177f8d7c095fada7cfee2e4bb7388ba426064c
   SDWebImage: 97351f6582ceca541ea294ba66a1fcb342a331c2
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
@@ -649,4 +649,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: d5a29b17538d34d92c25417e62f63184c261ad7b
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3
