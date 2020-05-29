@@ -741,7 +741,6 @@ export interface CustomerCreateWithoutReservationsInput {
   user: UserCreateOneInput;
   detail?: CustomerDetailCreateOneInput | null;
   billingInfo?: BillingInfoCreateOneInput | null;
-  membership?: CustomerMembershipCreateOneWithoutCustomerInput | null;
   bagItems?: BagItemCreateManyWithoutCustomerInput | null;
 }
 
@@ -813,38 +812,6 @@ export interface CustomerDetailWhereUniqueInput {
   id?: string | null;
 }
 
-export interface CustomerMembershipCreateOneWithoutCustomerInput {
-  create?: CustomerMembershipCreateWithoutCustomerInput | null;
-  connect?: CustomerMembershipWhereUniqueInput | null;
-}
-
-export interface CustomerMembershipCreateWithoutCustomerInput {
-  id?: string | null;
-  pauseRequests?: PauseRequestCreateManyWithoutMembershipInput | null;
-}
-
-export interface CustomerMembershipUpdateOneWithoutCustomerInput {
-  create?: CustomerMembershipCreateWithoutCustomerInput | null;
-  connect?: CustomerMembershipWhereUniqueInput | null;
-  disconnect?: boolean | null;
-  delete?: boolean | null;
-  update?: CustomerMembershipUpdateWithoutCustomerDataInput | null;
-  upsert?: CustomerMembershipUpsertWithoutCustomerInput | null;
-}
-
-export interface CustomerMembershipUpdateWithoutCustomerDataInput {
-  pauseRequests?: PauseRequestUpdateManyWithoutMembershipInput | null;
-}
-
-export interface CustomerMembershipUpsertWithoutCustomerInput {
-  update: CustomerMembershipUpdateWithoutCustomerDataInput;
-  create: CustomerMembershipCreateWithoutCustomerInput;
-}
-
-export interface CustomerMembershipWhereUniqueInput {
-  id?: string | null;
-}
-
 export interface CustomerUpdateOneRequiredWithoutReservationsInput {
   create?: CustomerCreateWithoutReservationsInput | null;
   connect?: CustomerWhereUniqueInput | null;
@@ -858,7 +825,6 @@ export interface CustomerUpdateWithoutReservationsDataInput {
   user?: UserUpdateOneRequiredInput | null;
   detail?: CustomerDetailUpdateOneInput | null;
   billingInfo?: BillingInfoUpdateOneInput | null;
-  membership?: CustomerMembershipUpdateOneWithoutCustomerInput | null;
   bagItems?: BagItemUpdateManyWithoutCustomerInput | null;
 }
 
@@ -1219,116 +1185,6 @@ export interface PackageUpsertNestedInput {
 }
 
 export interface PackageWhereUniqueInput {
-  id?: string | null;
-}
-
-export interface PauseRequestCreateManyWithoutMembershipInput {
-  create?: PauseRequestCreateWithoutMembershipInput[] | null;
-  connect?: PauseRequestWhereUniqueInput[] | null;
-}
-
-export interface PauseRequestCreateWithoutMembershipInput {
-  id?: string | null;
-  pausePending: boolean;
-  pauseDate?: any | null;
-  resumeDate?: any | null;
-}
-
-export interface PauseRequestScalarWhereInput {
-  AND?: PauseRequestScalarWhereInput[] | null;
-  OR?: PauseRequestScalarWhereInput[] | null;
-  NOT?: PauseRequestScalarWhereInput[] | null;
-  id?: string | null;
-  id_not?: string | null;
-  id_in?: string[] | null;
-  id_not_in?: string[] | null;
-  id_lt?: string | null;
-  id_lte?: string | null;
-  id_gt?: string | null;
-  id_gte?: string | null;
-  id_contains?: string | null;
-  id_not_contains?: string | null;
-  id_starts_with?: string | null;
-  id_not_starts_with?: string | null;
-  id_ends_with?: string | null;
-  id_not_ends_with?: string | null;
-  createdAt?: any | null;
-  createdAt_not?: any | null;
-  createdAt_in?: any[] | null;
-  createdAt_not_in?: any[] | null;
-  createdAt_lt?: any | null;
-  createdAt_lte?: any | null;
-  createdAt_gt?: any | null;
-  createdAt_gte?: any | null;
-  updatedAt?: any | null;
-  updatedAt_not?: any | null;
-  updatedAt_in?: any[] | null;
-  updatedAt_not_in?: any[] | null;
-  updatedAt_lt?: any | null;
-  updatedAt_lte?: any | null;
-  updatedAt_gt?: any | null;
-  updatedAt_gte?: any | null;
-  pausePending?: boolean | null;
-  pausePending_not?: boolean | null;
-  pauseDate?: any | null;
-  pauseDate_not?: any | null;
-  pauseDate_in?: any[] | null;
-  pauseDate_not_in?: any[] | null;
-  pauseDate_lt?: any | null;
-  pauseDate_lte?: any | null;
-  pauseDate_gt?: any | null;
-  pauseDate_gte?: any | null;
-  resumeDate?: any | null;
-  resumeDate_not?: any | null;
-  resumeDate_in?: any[] | null;
-  resumeDate_not_in?: any[] | null;
-  resumeDate_lt?: any | null;
-  resumeDate_lte?: any | null;
-  resumeDate_gt?: any | null;
-  resumeDate_gte?: any | null;
-}
-
-export interface PauseRequestUpdateManyDataInput {
-  pausePending?: boolean | null;
-  pauseDate?: any | null;
-  resumeDate?: any | null;
-}
-
-export interface PauseRequestUpdateManyWithWhereNestedInput {
-  where: PauseRequestScalarWhereInput;
-  data: PauseRequestUpdateManyDataInput;
-}
-
-export interface PauseRequestUpdateManyWithoutMembershipInput {
-  create?: PauseRequestCreateWithoutMembershipInput[] | null;
-  connect?: PauseRequestWhereUniqueInput[] | null;
-  set?: PauseRequestWhereUniqueInput[] | null;
-  disconnect?: PauseRequestWhereUniqueInput[] | null;
-  delete?: PauseRequestWhereUniqueInput[] | null;
-  update?: PauseRequestUpdateWithWhereUniqueWithoutMembershipInput[] | null;
-  updateMany?: PauseRequestUpdateManyWithWhereNestedInput[] | null;
-  deleteMany?: PauseRequestScalarWhereInput[] | null;
-  upsert?: PauseRequestUpsertWithWhereUniqueWithoutMembershipInput[] | null;
-}
-
-export interface PauseRequestUpdateWithWhereUniqueWithoutMembershipInput {
-  where: PauseRequestWhereUniqueInput;
-  data: PauseRequestUpdateWithoutMembershipDataInput;
-}
-
-export interface PauseRequestUpdateWithoutMembershipDataInput {
-  pausePending?: boolean | null;
-  pauseDate?: any | null;
-  resumeDate?: any | null;
-}
-
-export interface PauseRequestUpsertWithWhereUniqueWithoutMembershipInput {
-  where: PauseRequestWhereUniqueInput;
-  update: PauseRequestUpdateWithoutMembershipDataInput;
-  create: PauseRequestCreateWithoutMembershipInput;
-}
-
-export interface PauseRequestWhereUniqueInput {
   id?: string | null;
 }
 

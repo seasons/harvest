@@ -26,6 +26,13 @@ export const GET_PRODUCT = gql`
         name
         logo
         since
+        products(first: 5, where: { id_not: $productID }) {
+          id
+          images {
+            id
+            url
+          }
+        }
       }
       outerMaterials
       innerMaterials

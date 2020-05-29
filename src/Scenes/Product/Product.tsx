@@ -1,8 +1,10 @@
+import { useMutation, useQuery } from "@apollo/react-hooks"
 import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box, Container, FixedBackArrow, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { space } from "App/utils"
 import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
 import { find } from "lodash"
@@ -11,12 +13,10 @@ import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-import { useMutation, useQuery } from "@apollo/react-hooks"
 import { GET_HOMEPAGE } from "../Home/Home"
-import { ImageRail, MoreLikeThis, ProductDetails, VariantWant, ProductMeasurements } from "./Components"
+import { ImageRail, MoreLikeThis, ProductDetails, ProductMeasurements, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
-import { space } from "App/utils"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -87,6 +87,7 @@ export const Product = screenTrack({
   const viewWidth = Dimensions.get("window").width
   const images = product && product.images
   const imageWidth = images?.length > 1 ? viewWidth - space(3) : viewWidth
+  const brandProducts = product && product.brand.products
 
   let selectedVariantIsWanted = false
   if (product?.variants?.length > 0 && selectedVariant.id) {
@@ -127,7 +128,7 @@ export const Product = screenTrack({
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
       case "moreLikeThis":
-        return <MoreLikeThis products={images} />
+        return <MoreLikeThis products={brandProducts} />
       default:
         return null
     }
@@ -135,8 +136,9 @@ export const Product = screenTrack({
 
   const selectionButtonsBottom = shouldShowVariantWant ? VARIANT_WANT_HEIGHT : 0
   const listFooterSpacing = selectionButtonsBottom + 58
-  const sections = ["imageRail", "productDetails", "productMeasurements", "aboutTheBrand"]
+  const sections = ["imageRail", "productDetails", "productMeasurements", "aboutTheBrand", "moreLikeThis"]
 
+  console.log(data.product.brand.products)
   return (
     <Container insetsTop={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "black04Background"} />

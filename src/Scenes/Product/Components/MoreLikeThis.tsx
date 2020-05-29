@@ -1,9 +1,10 @@
-import React from "react"
 import { Box, Sans, Spacer } from "App/Components"
+import React from "react"
 import { FlatList } from "react-native"
 import styled from "styled-components/native"
 
 export const MoreLikeThis = ({ products }) => {
+  console.log("PRODUCTS: ", products)
   return (
     <>
       <Box p={2}>
@@ -16,14 +17,14 @@ export const MoreLikeThis = ({ products }) => {
         <FlatList
           data={products}
           renderItem={({ item }) => {
-            const imageURL = item && item.url
+            const imageURL = item && item.images[0].url
             return (
               <Box mr={1}>
                 <ImageContainer source={{ uri: imageURL }}></ImageContainer>
               </Box>
             )
           }}
-          keyExtractor={item => {
+          keyExtractor={(item) => {
             const itemID = item && item.id
             return itemID
           }}

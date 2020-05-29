@@ -26,6 +26,18 @@ export interface GetProduct_product_secondaryColor {
   name: string;
 }
 
+export interface GetProduct_product_brand_products_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
+export interface GetProduct_product_brand_products {
+  __typename: "Product";
+  id: string;
+  images: GetProduct_product_brand_products_images[];
+}
+
 export interface GetProduct_product_brand {
   __typename: "Brand";
   id: string;
@@ -33,6 +45,7 @@ export interface GetProduct_product_brand {
   name: string;
   logo: any | null;
   since: any | null;
+  products: GetProduct_product_brand_products[] | null;
 }
 
 export interface GetProduct_product_images {
