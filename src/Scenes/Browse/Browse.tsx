@@ -1,4 +1,6 @@
-import { Box, Button, Flex, Sans, ProductGridItem } from "App/Components"
+import { useQuery } from "@apollo/react-hooks"
+import { useFocusEffect } from "@react-navigation/native"
+import { Box, Button, Flex, ProductGridItem, Sans } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { space } from "App/utils"
@@ -11,8 +13,6 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
-import { useQuery } from "@apollo/react-hooks"
-import { useFocusEffect } from "@react-navigation/native"
 import { BrowseEmptyState } from "./BrowseEmptyState"
 import { BrowseLoader } from "./Loader"
 
@@ -185,7 +185,7 @@ export const Browse = screenTrack()((props: any) => {
             data={products}
             ref={(ref) => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
-            renderItem={({ item }, i) => <ProductGridItem showBrandName product={item} index={i} />}
+            renderItem={({ item }, i) => <ProductGridItem showBrandName product={item} addLeftSpacing={i % 2 !== 0} />}
             numColumns={2}
             ListFooterComponent={() => (
               <>

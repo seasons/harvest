@@ -1,4 +1,4 @@
-import { Box, Sans, Spacer } from "App/Components"
+import { Box, ProductGridItem, Sans, Spacer } from "App/Components"
 import React from "react"
 import { FlatList } from "react-native"
 import styled from "styled-components/native"
@@ -16,13 +16,19 @@ export const MoreLikeThis = ({ products }) => {
       <Box ml={2}>
         <FlatList
           data={products}
-          renderItem={({ item }) => {
-            const imageURL = item && item.images[0].url
+          renderItem={({ item, index }) => {
             return (
               <Box mr={1}>
-                <ImageContainer source={{ uri: imageURL }}></ImageContainer>
+                <ProductGridItem product={item} addLeftSpacing={false} showBrandName />
               </Box>
             )
+
+            // const imageURL = item && item.images[0].url
+            // return (
+            //   <Box mr={1}>
+            //     <ImageContainer source={{ uri: imageURL }}></ImageContainer>
+            //   </Box>
+            // )
           }}
           keyExtractor={(item) => {
             const itemID = item && item.id
