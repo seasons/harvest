@@ -143,9 +143,9 @@ export const GET_HOMEPAGE = gql`
         }
       }
     }
-    justAddedPants: products(
+    justAddedBottoms: products(
       first: 8
-      category: "pants"
+      category: "bottoms"
       orderBy: createdAt_DESC
       where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
     ) {
