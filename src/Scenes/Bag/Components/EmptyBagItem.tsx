@@ -6,7 +6,6 @@ import styled from "styled-components/native"
 import { BagPlus } from "../../../../assets/svgs"
 
 export const EmptyBagItem: React.FC<{ index: number; navigation: any }> = ({ index, navigation }) => {
-  console.log("rendering")
   return (
     <Box p={2}>
       <EmptyBagItemContainer>
