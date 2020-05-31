@@ -1,8 +1,12 @@
 import { Box, ProductGridItem, Sans } from "App/Components"
+import { Loader } from "App/Components/Loader"
 import React from "react"
 import { FlatList } from "react-native"
 
 export const MoreFromBrand = ({ products, brandName }) => {
+  if (!products) {
+    return <Loader />
+  }
   return (
     <>
       <Box pl={2} py={1}>

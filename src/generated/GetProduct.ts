@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { LetterSize, BottomSizeType, ProductType } from "./globalTypes";
+import { ProductType, LetterSize, BottomSizeType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetProduct
@@ -26,69 +26,6 @@ export interface GetProduct_product_secondaryColor {
   name: string;
 }
 
-export interface GetProduct_product_brand_products_images {
-  __typename: "Image";
-  id: string;
-  url: string | null;
-}
-
-export interface GetProduct_product_brand_products_brand {
-  __typename: "Brand";
-  name: string;
-}
-
-export interface GetProduct_product_brand_products_variants_manufacturerSizes {
-  __typename: "Size";
-  display: string;
-}
-
-export interface GetProduct_product_brand_products_variants_internalSize_top {
-  __typename: "TopSize";
-  id: string;
-  letter: LetterSize | null;
-  sleeve: number | null;
-  shoulder: number | null;
-  chest: number | null;
-  neck: number | null;
-  length: number | null;
-}
-
-export interface GetProduct_product_brand_products_variants_internalSize_bottom {
-  __typename: "BottomSize";
-  type: BottomSizeType | null;
-  value: string | null;
-}
-
-export interface GetProduct_product_brand_products_variants_internalSize {
-  __typename: "Size";
-  top: GetProduct_product_brand_products_variants_internalSize_top | null;
-  bottom: GetProduct_product_brand_products_variants_internalSize_bottom | null;
-  productType: ProductType | null;
-  display: string;
-}
-
-export interface GetProduct_product_brand_products_variants {
-  __typename: "ProductVariant";
-  id: string;
-  manufacturerSizes: GetProduct_product_brand_products_variants_manufacturerSizes[] | null;
-  internalSize: GetProduct_product_brand_products_variants_internalSize | null;
-  total: number;
-  reservable: number;
-  nonReservable: number;
-  reserved: number;
-  isInBag: boolean;
-  isSaved: boolean;
-  isWanted: boolean;
-}
-
-export interface GetProduct_product_brand_products {
-  __typename: "Product";
-  id: string;
-  images: GetProduct_product_brand_products_images[];
-  brand: GetProduct_product_brand_products_brand;
-  variants: GetProduct_product_brand_products_variants[] | null;
-}
-
 export interface GetProduct_product_brand {
   __typename: "Brand";
   id: string;
@@ -96,7 +33,6 @@ export interface GetProduct_product_brand {
   name: string;
   logo: any | null;
   since: any | null;
-  products: GetProduct_product_brand_products[] | null;
 }
 
 export interface GetProduct_product_images {

@@ -33,6 +33,26 @@ const commonProductVariantFragment = gql`
   }
 `
 
+export const GET_BRAND_PRODUCTS = gql`
+  query GetBrandProducts($brandID: ID!, $excludeProductID: ID!) {
+    products(first: 5, where: { brand: { id: $brandID }, id_not: $excludeProductID }) {
+      id
+      images {
+        id
+        url
+      }
+      brand {
+        id
+        name
+      }
+      variants {
+        ...CommonProductVariant
+      }
+    }
+  }
+  ${commonProductVariantFragment}
+`
+
 export const GET_PRODUCT = gql`
   query GetProduct($productID: ID!) {
     product(where: { id: $productID }) {
@@ -59,19 +79,6 @@ export const GET_PRODUCT = gql`
         name
         logo
         since
-        products(first: 5, where: { id_not: $productID }) {
-          id
-          images {
-            id
-            url
-          }
-          brand {
-            name
-          }
-          variants {
-            ...CommonProductVariant
-          }
-        }
       }
       outerMaterials
       innerMaterials
