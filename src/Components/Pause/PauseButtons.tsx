@@ -32,6 +32,12 @@ const PAUSE_MEMBERSHIP = gql`
   }
 `
 
+const UPDATE_RESUME_DATE = gql`
+  mutation UpdateResumeDate($subscriptionID: String!, $date: String!) {
+    updateResumeDate(subscriptionID: $subscriptionID, date: $date)
+  }
+`
+
 export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; fullScreen?: boolean }> = ({
   customer,
   fullScreen,
@@ -39,6 +45,29 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
+
+  const [updateResumeDate] = useMutation(UPDATE_RESUME_DATE, {
+    refetchQueries: [
+      {
+        query: GET_MEMBERSHIP_INFO,
+      },
+    ],
+    onCompleted: () => {
+      setIsMutating(false)
+      // navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
+    },
+    onError: (err) => {
+      const popUpData = {
+        title: "Oops!",
+        note: "There was an error updating your resume date, please contact us.",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
+      }
+      console.log("err", err)
+      showPopUp(popUpData)
+      setIsMutating(false)
+    },
+  })
 
   const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
     refetchQueries: [
@@ -131,15 +160,16 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
     pauseButtonVariant = "primaryBlack"
   }
 
+  const subscriptionID = customer?.invoices?.[0]?.subscriptionId || ""
+
   const toggleSubscriptionStatus = async () => {
     if (isMutating) {
       return
     }
     setIsMutating(true)
-    const subscriptionId = customer?.invoices?.[0]?.subscriptionId || ""
     const vars = {
       variables: {
-        subscriptionID: subscriptionId,
+        subscriptionID,
       },
     }
     if (pauseStatus === "paused") {
@@ -170,8 +200,6 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
       </Sans>
     )
   }
-
-  console.log("data", customer)
 
   const resumeDate =
     customer?.membership?.pauseRequests?.[0]?.resumeDate &&
@@ -235,7 +263,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
           <Button
             variant="secondaryWhite"
             disabled={isExtended && !canExtend}
-            onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
+            onPress={() => updateResumeDate({ variables: { subscriptionID, date: resumeDatePlusOneMonth?.toISO() } })}
             block
           >
             {`Pause until ${pauseExtendDateDisplay}`}
