@@ -1,4 +1,4 @@
-import { Spacer, Button, Sans } from "App/Components"
+import { Spacer, Button, Sans, Flex, Box } from "App/Components"
 import React, { useState } from "react"
 import { Linking } from "react-native"
 import { ButtonVariant } from "../Button"
@@ -32,9 +32,9 @@ const PAUSE_MEMBERSHIP = gql`
   }
 `
 
-export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; showPausedNote?: boolean }> = ({
+export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; fullScreen?: boolean }> = ({
   customer,
-  showPausedNote = true,
+  fullScreen,
 }) => {
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -171,70 +171,87 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; s
     )
   }
 
+  console.log("data", customer)
+
   const resumeDate =
     customer?.membership?.pauseRequests?.[0]?.resumeDate &&
     DateTime.fromISO(customer?.membership?.pauseRequests?.[0]?.resumeDate)
 
   const resumeDatePlusOneMonth = resumeDate && resumeDate.plus({ months: 1 })
-  const pauseExtendDateDisplay = !!resumeDatePlusOneMonth && resumeDatePlusOneMonth.toFormat("LLLL dd")
+  const pauseExtendDateDisplay = (!!resumeDatePlusOneMonth && resumeDatePlusOneMonth.toFormat("LLLL dd")) || ""
   const resumeDateDiffNow = resumeDatePlusOneMonth && resumeDatePlusOneMonth.diffNow("months")
 
   const isExtended = resumeDate && resumeDate.diffNow("months") >= 1
   const canExtend = resumeDateDiffNow && resumeDateDiffNow >= 1 && !isExtended
 
   return (
-    <>
-      {pauseStatus === "pending" && (
-        <>
-          <Sans size="1">{`Your membership is scheduled to be paused on ${DateTime.fromISO(
-            pauseRequest.pauseDate
-          ).toFormat("EEEE LLLL dd")}.`}</Sans>
-          <Spacer mb={2} />
-        </>
-      )}
-      {pauseStatus === "paused" && showPausedNote && (
-        <>
-          <Sans size="1">{`Your membership is paused until ${DateTime.fromISO(resumeDate).toFormat(
-            "EEEE LLLL dd"
-          )}.`}</Sans>
-          {isExtended && !canExtend && (
-            <Sans size="1" color="black50">{`You can extend this again after ${DateTime.fromISO(resumeDate)
-              .minus({ months: 1 })
-              .toFormat("EEEE LLLL dd")}.`}</Sans>
-          )}
-          <Spacer mb={2} />
-        </>
-      )}
-      <Button
-        onPress={toggleSubscriptionStatus}
-        disabled={isMutating}
-        loading={isMutating}
-        block
-        variant={pauseButtonVariant}
-      >
-        {pauseButtonText}
-      </Button>
-      <Spacer mb={1} />
-      {pauseStatus === "paused" ? (
+    <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
+      <Box>
+        {fullScreen && <Spacer mb={100} />}
+        {pauseStatus === "pending" && (
+          <>
+            <Sans size="1">{`Your membership is scheduled to be paused on ${DateTime.fromISO(
+              pauseRequest.pauseDate
+            ).toFormat("EEEE LLLL dd")}.`}</Sans>
+            <Spacer mb={2} />
+          </>
+        )}
+        {pauseStatus === "paused" && (
+          <>
+            <Sans size={fullScreen ? "3" : "1"}>
+              Your membership is paused until{" "}
+              <Sans size={fullScreen ? "3" : "1"} style={{ textDecorationLine: "underline" }}>
+                {DateTime.fromISO(resumeDate).toFormat("EEEE LLLL dd")}
+              </Sans>
+              .
+            </Sans>
+            <Spacer mb={1} />
+            {fullScreen && (
+              <Sans color="black50" size="1">
+                It will automatically resume at this date.
+              </Sans>
+            )}
+            {isExtended && !canExtend && (
+              <Sans size="1" color="black50">{`You can extend this again after ${DateTime.fromISO(resumeDate)
+                .minus({ months: 1 })
+                .toFormat("EEEE LLLL dd")}.`}</Sans>
+            )}
+            <Spacer mb={2} />
+          </>
+        )}
+      </Box>
+      <Box>
         <Button
-          variant="secondaryWhite"
-          disabled={isExtended && !canExtend}
-          onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
+          onPress={toggleSubscriptionStatus}
+          disabled={isMutating}
+          loading={isMutating}
           block
+          variant={pauseButtonVariant}
         >
-          {`Pause until ${pauseExtendDateDisplay}`}
+          {pauseButtonText}
         </Button>
-      ) : (
-        <Button
-          variant="secondaryWhite"
-          onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
-          block
-        >
-          Contact us
-        </Button>
-      )}
-      <Spacer mb={2} />
-      <SubText />
-    </>
+        <Spacer mb={1} />
+        {pauseStatus === "paused" ? (
+          <Button
+            variant="secondaryWhite"
+            disabled={isExtended && !canExtend}
+            onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
+            block
+          >
+            {`Pause until ${pauseExtendDateDisplay}`}
+          </Button>
+        ) : (
+          <Button
+            variant="secondaryWhite"
+            onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
+            block
+          >
+            Contact us
+          </Button>
+        )}
+        <Spacer mb={2} />
+        <SubText />
+      </Box>
+    </Flex>
   )
 }

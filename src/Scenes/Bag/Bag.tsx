@@ -1,4 +1,4 @@
-import { FixedButton, Spacer, Flex } from "App/Components"
+import { FixedButton, Spacer, Flex, Box } from "App/Components"
 import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -213,9 +213,17 @@ export const Bag = screenTrack()((props) => {
     if (isBagView) {
       if (pauseStatus === "paused") {
         return (
-          <Flex flexDirection="column" justifyContent="center" style={{ backgroundColor: "pink", flexGrow: 1 }}>
-            <PauseButtons customer={me?.customer} />
-          </Flex>
+          <Box
+            style={{
+              position: "relative",
+              height: "100%",
+              width: "100%",
+            }}
+            px={2}
+            pb={5}
+          >
+            <PauseButtons customer={me?.customer} fullScreen />
+          </Box>
         )
       } else {
         return (
@@ -278,7 +286,7 @@ export const Bag = screenTrack()((props) => {
       <FlatList
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         data={sections}
-        contentContainerStyle={{ flexGrow: 1 }}
+        contentContainerStyle={{ height: "100%", width: "100%", position: "relative" }}
         keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
         renderItem={(item) => {
           return renderItem(item)

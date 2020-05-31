@@ -52,6 +52,7 @@ export const BagTab: React.FC<{
     const luxonDate = DateTime.fromISO(data?.me?.activeReservation?.returnAt)
     returnReminder = `Return by ${luxonDate.weekdayLong}, ${luxonDate.monthShort} ${luxonDate.day}`
   }
+  const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
 
   return (
     <Box>
@@ -78,7 +79,7 @@ export const BagTab: React.FC<{
           <Separator color={color("black10")} />
         </>
       )}
-      {pauseStatus === "pending" && (
+      {pauseStatus === "pending" && !!pauseRequest?.pauseDate && (
         <Box px={2} py={2}>
           <Sans size="1" color="black50">
             {`Your membership is scheduled to be paused on ${DateTime.fromISO(pauseRequest.pauseDate).toFormat(

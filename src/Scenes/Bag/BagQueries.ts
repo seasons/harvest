@@ -22,6 +22,7 @@ export const GET_BAG = gql`
           id
           pauseRequests(orderBy: createdAt_DESC) {
             id
+            resumeDate
             pauseDate
             pausePending
           }
