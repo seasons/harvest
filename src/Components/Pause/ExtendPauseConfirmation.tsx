@@ -1,27 +1,35 @@
-import { Flex, Container, Sans, Box, Spacer } from "App/Components"
+import { Flex, Container, Sans, Box, Spacer, Button } from "App/Components"
 import React from "react"
-import { Check } from "Assets/svgs"
-import { FixedButton } from "../FixedButton"
+import { GreenCheck } from "Assets/svgs"
+import { color } from "App/utils"
+import { useNavigation } from "@react-navigation/native"
 
-export const ExtendPauseConfirmation: React.FC = () => {
+export const ExtendPauseConfirmation: React.FC<{ route: any }> = ({ route }) => {
+  const navigation = useNavigation()
+  const dueDate = route?.params?.dueDate || "the end of your subscription term"
+
   return (
     <Container>
       <Flex style={{ flex: 1 }}>
-        <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="space-between">
+        <Flex px={2} style={{ flex: 1 }} flexDirection="column" justifyContent="space-between">
           <Box>
             <Spacer mb={100} />
-            <Check />
+            <GreenCheck backgroundColor={color("black100")} />
             <Spacer mb={3} />
             <Sans size="3">You’re membership is paused for another month</Sans>
             <Spacer mb={1} />
             <Sans size="1" color="black50">
-              It will automatically resume June 18.
+              {`It will automatically resume ${dueDate}.`}
             </Sans>
           </Box>
-          <Sans size="1" color="black50">
-            If you change your mind, you can still resume your membership before this date.
-          </Sans>
-          <FixedButton>Finish</FixedButton>
+          <Box>
+            <Sans size="1" color="black50">
+              If you change your mind, you can still resume your membership before this date.
+            </Sans>
+            <Button block onPress={() => navigation.goBack()}>
+              Finish
+            </Button>
+          </Box>
         </Flex>
       </Flex>
     </Container>

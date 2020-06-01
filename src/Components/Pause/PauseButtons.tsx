@@ -46,6 +46,22 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
 
+  const pauseRequest = customer?.membership?.pauseRequests?.[0]
+  const customerStatus = customer?.status
+  const pausePending = pauseRequest?.pausePending
+  const dueDate = pauseRequest?.pauseDate && DateTime.fromISO(pauseRequest?.pauseDate).toFormat("EEEE LLLL dd")
+
+  const resumeDate =
+    customer?.membership?.pauseRequests?.[0]?.resumeDate &&
+    DateTime.fromISO(customer?.membership?.pauseRequests?.[0]?.resumeDate)
+
+  const resumeDatePlusOneMonth = resumeDate && resumeDate.plus({ months: 1 })
+  const pauseExtendDateDisplay = (!!resumeDatePlusOneMonth && resumeDatePlusOneMonth.toFormat("LLLL dd")) || ""
+  const resumeDateDiffNow = resumeDatePlusOneMonth && resumeDatePlusOneMonth.diffNow("months")
+
+  const isExtended = resumeDate && resumeDate.diffNow("months") >= 1
+  const canExtend = resumeDateDiffNow && resumeDateDiffNow >= 1 && !isExtended
+
   const [updateResumeDate] = useMutation(UPDATE_RESUME_DATE, {
     refetchQueries: [
       {
@@ -54,7 +70,10 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
     ],
     onCompleted: () => {
       setIsMutating(false)
-      // navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
+      navigation.navigate("Modal", {
+        screen: Schema.PageNames.ExtendPauseConfirmation,
+        params: { dueDate: pauseExtendDateDisplay },
+      })
     },
     onError: (err) => {
       const popUpData = {
@@ -77,7 +96,13 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
     ],
     onCompleted: () => {
       setIsMutating(false)
-      // navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
+      const popUpData = {
+        title: "Got it!",
+        note: "Your membership pause is no longer scheduled.",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
+      }
+      showPopUp(popUpData)
     },
     onError: (err) => {
       const popUpData = {
@@ -99,7 +124,6 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
       },
     ],
     onCompleted: () => {
-      const dueDate = DateTime.fromISO(customer?.invoices?.[0]?.dueDate).toFormat("LLL dd")
       navigation.navigate("Modal", {
         screen: Schema.PageNames.PauseConfirmation,
         params: { dueDate },
@@ -141,10 +165,6 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
       setIsMutating(false)
     },
   })
-
-  const pauseRequest = customer?.membership?.pauseRequests?.[0]
-  const customerStatus = customer?.status
-  const pausePending = pauseRequest?.pausePending
 
   let pauseStatus: PauseStatus = "active"
   let pauseButtonVariant: ButtonVariant = "primaryGray"
@@ -200,17 +220,6 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
       </Sans>
     )
   }
-
-  const resumeDate =
-    customer?.membership?.pauseRequests?.[0]?.resumeDate &&
-    DateTime.fromISO(customer?.membership?.pauseRequests?.[0]?.resumeDate)
-
-  const resumeDatePlusOneMonth = resumeDate && resumeDate.plus({ months: 1 })
-  const pauseExtendDateDisplay = (!!resumeDatePlusOneMonth && resumeDatePlusOneMonth.toFormat("LLLL dd")) || ""
-  const resumeDateDiffNow = resumeDatePlusOneMonth && resumeDatePlusOneMonth.diffNow("months")
-
-  const isExtended = resumeDate && resumeDate.diffNow("months") >= 1
-  const canExtend = resumeDateDiffNow && resumeDateDiffNow >= 1 && !isExtended
 
   return (
     <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
