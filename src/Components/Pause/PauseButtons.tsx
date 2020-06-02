@@ -33,8 +33,8 @@ const PAUSE_MEMBERSHIP = gql`
 `
 
 const UPDATE_RESUME_DATE = gql`
-  mutation UpdateResumeDate($subscriptionID: String!, $date: DateTime!) {
-    updateResumeDate(subscriptionID: $subscriptionID, date: $date)
+  mutation UpdateResumeDate($date: DateTime!) {
+    updateResumeDate(date: $date)
   }
 `
 
@@ -49,14 +49,14 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
   const pauseRequest = customer?.membership?.pauseRequests?.[0]
   const customerStatus = customer?.status
   const pausePending = pauseRequest?.pausePending
-  const dueDate = pauseRequest?.pauseDate && DateTime.fromISO(pauseRequest?.pauseDate).toFormat("EEEE LLLL dd")
+  const dueDate = pauseRequest?.pauseDate && DateTime.fromISO(pauseRequest?.pauseDate).toFormat("EEEE LLLL d")
 
   const resumeDate =
     customer?.membership?.pauseRequests?.[0]?.resumeDate &&
     DateTime.fromISO(customer?.membership?.pauseRequests?.[0]?.resumeDate)
 
   const resumeDatePlusOneMonth = resumeDate && resumeDate.plus({ months: 1 })
-  const pauseExtendDateDisplay = (!!resumeDatePlusOneMonth && resumeDatePlusOneMonth.toFormat("LLLL dd")) || ""
+  const pauseExtendDateDisplay = (!!resumeDatePlusOneMonth && resumeDatePlusOneMonth.toFormat("LLLL d")) || ""
 
   const pauseDateCanExtend =
     resumeDate?.diffNow("months")?.values?.months && resumeDate.diffNow("months")?.values?.months < 1
@@ -230,7 +230,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
           <>
             <Sans size="1">{`Your membership is scheduled to be paused on ${DateTime.fromISO(
               pauseRequest.pauseDate
-            ).toFormat("EEEE LLLL dd")}.`}</Sans>
+            ).toFormat("EEEE LLLL d")}.`}</Sans>
             <Spacer mb={2} />
           </>
         )}
@@ -239,7 +239,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
             <Sans size={fullScreen ? "3" : "1"}>
               Your membership is paused until{" "}
               <Sans size={fullScreen ? "3" : "1"} style={{ textDecorationLine: "underline" }}>
-                {DateTime.fromISO(resumeDate).toFormat("EEEE LLLL dd")}
+                {DateTime.fromISO(resumeDate).toFormat("EEEE LLLL d")}
               </Sans>
               .
             </Sans>
@@ -252,7 +252,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
             {!pauseDateCanExtend && (
               <Sans size="1" color="black50">{`You can extend this again after ${DateTime.fromISO(resumeDate)
                 .minus({ months: 1 })
-                .toFormat("EEEE LLLL dd")}.`}</Sans>
+                .toFormat("EEEE LLLL d")}.`}</Sans>
             )}
             <Spacer mb={2} />
           </>
@@ -275,7 +275,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
             disabled={!pauseDateCanExtend}
             onPress={() =>
               updateResumeDate({
-                variables: { subscriptionID, date: resumeDatePlusOneMonth?.toISO() },
+                variables: { date: resumeDatePlusOneMonth?.toISO() },
                 awaitRefetchQueries: true,
               })
             }
