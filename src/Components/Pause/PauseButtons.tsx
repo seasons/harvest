@@ -33,7 +33,7 @@ const PAUSE_MEMBERSHIP = gql`
 `
 
 const UPDATE_RESUME_DATE = gql`
-  mutation UpdateResumeDate($subscriptionID: String!, $date: String!) {
+  mutation UpdateResumeDate($subscriptionID: String!, $date: DateTime!) {
     updateResumeDate(subscriptionID: $subscriptionID, date: $date)
   }
 `
@@ -98,7 +98,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
       setIsMutating(false)
       const popUpData = {
         title: "Got it!",
-        note: "Your membership pause is no longer scheduled.",
+        note: "Your membership is no longer scheduled to be paused.",
         buttonText: "Close",
         onClose: () => hidePopUp(),
       }
@@ -191,6 +191,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
       variables: {
         subscriptionID,
       },
+      awaitRefetchQueries: true,
     }
     if (pauseStatus === "paused") {
       await resumeSubscription(vars)
@@ -272,7 +273,12 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
           <Button
             variant="secondaryWhite"
             disabled={!pauseDateCanExtend}
-            onPress={() => updateResumeDate({ variables: { subscriptionID, date: resumeDatePlusOneMonth?.toISO() } })}
+            onPress={() =>
+              updateResumeDate({
+                variables: { subscriptionID, date: resumeDatePlusOneMonth?.toISO() },
+                awaitRefetchQueries: true,
+              })
+            }
             block
           >
             {`Pause until ${pauseExtendDateDisplay}`}
