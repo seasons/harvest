@@ -57,10 +57,10 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
 
   const resumeDatePlusOneMonth = resumeDate && resumeDate.plus({ months: 1 })
   const pauseExtendDateDisplay = (!!resumeDatePlusOneMonth && resumeDatePlusOneMonth.toFormat("LLLL dd")) || ""
-  const resumeDateDiffNow = resumeDatePlusOneMonth && resumeDatePlusOneMonth.diffNow("months")
 
-  const isExtended = resumeDate && resumeDate.diffNow("months") >= 1
-  const canExtend = resumeDateDiffNow && resumeDateDiffNow >= 1 && !isExtended
+  const pauseDateCanExtend =
+    resumeDate?.diffNow("months")?.values?.months && resumeDate.diffNow("months")?.values?.months < 1
+  console.log("pauseDateCanExtend", pauseDateCanExtend)
 
   const [updateResumeDate] = useMutation(UPDATE_RESUME_DATE, {
     refetchQueries: [
@@ -248,7 +248,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
                 It will automatically resume at this date.
               </Sans>
             )}
-            {isExtended && !canExtend && (
+            {!pauseDateCanExtend && (
               <Sans size="1" color="black50">{`You can extend this again after ${DateTime.fromISO(resumeDate)
                 .minus({ months: 1 })
                 .toFormat("EEEE LLLL dd")}.`}</Sans>
@@ -271,7 +271,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
         {pauseStatus === "paused" ? (
           <Button
             variant="secondaryWhite"
-            disabled={isExtended && !canExtend}
+            disabled={!pauseDateCanExtend}
             onPress={() => updateResumeDate({ variables: { subscriptionID, date: resumeDatePlusOneMonth?.toISO() } })}
             block
           >
