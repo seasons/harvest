@@ -20,6 +20,7 @@ export const GET_BEAMS_DATA = gql`
       user {
         email
         beamsToken
+        roles
       }
     }
   }
@@ -84,7 +85,8 @@ export const NotificationsProvider = ({ children }) => {
       if (!beamsData && userSession && userSession.token) {
         const beamsToken = data?.me?.user?.beamsToken
         const email = data?.me?.user?.email
-        const beamsData = { beamsToken, email }
+        const roles = data?.me?.user?.roles
+        const beamsData = { beamsToken, email, roles }
         AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
         return beamsToken
       }
@@ -126,7 +128,7 @@ export const NotificationsProvider = ({ children }) => {
     }
   }
 
-  const attachListeners = (email, beamsToken) => {
+  const attachListeners = (email, roles, beamsToken) => {
     RNPusherPushNotifications.setInstanceId(config.get(Env.RN_PUSHER_ID))
     // Init interests after registration
     RNPusherPushNotifications.on("registered", () => {
@@ -140,6 +142,17 @@ export const NotificationsProvider = ({ children }) => {
           console.log("Success subscribe in attachListeners")
         }
       )
+      if (roles.includes("Admin")) {
+        RNPusherPushNotifications.subscribe(
+          `debug-${seasonsNotifInterest}`,
+          (statusCode, response) => {
+            console.error(statusCode, response)
+          },
+          () => {
+            console.log("Success subscribe in attachListeners (debug)")
+          }
+        )
+      }
     })
 
     AsyncStorage.setItem("subscribedToNotifs", "true")
@@ -161,8 +174,8 @@ export const NotificationsProvider = ({ children }) => {
         if (status === "granted") {
           const beamsData = await AsyncStorage.getItem("beamsData")
           if (beamsData) {
-            const { beamsToken, email } = JSON.parse(beamsData)
-            attachListeners(email, beamsToken)
+            const { beamsToken, email, roles } = JSON.parse(beamsData)
+            attachListeners(email, roles, beamsToken)
             notificationsContext.setDeviceNotifStatus("Granted")
           }
         } else {
@@ -177,8 +190,8 @@ export const NotificationsProvider = ({ children }) => {
       if (subscription && subscription === "true") {
         const beamsData = await AsyncStorage.getItem("beamsData")
         if (beamsData) {
-          const { beamsToken, email } = JSON.parse(beamsData)
-          attachListeners(email, beamsToken)
+          const { beamsToken, roles, email } = JSON.parse(beamsData)
+          attachListeners(email, roles, beamsToken)
         }
       } else if (subscription && subscription === "false") {
         return
@@ -188,8 +201,8 @@ export const NotificationsProvider = ({ children }) => {
             if (status === "granted") {
               const beamsData = await AsyncStorage.getItem("beamsData")
               if (beamsData) {
-                const { beamsToken, email } = JSON.parse(beamsData)
-                attachListeners(email, beamsToken)
+                const { beamsToken, roles, email } = JSON.parse(beamsData)
+                attachListeners(email, roles, beamsToken)
               }
             }
           })
@@ -201,8 +214,8 @@ export const NotificationsProvider = ({ children }) => {
     init: async () => {
       const beamsData = await AsyncStorage.getItem("beamsData")
       if (beamsData) {
-        const { beamsToken, email } = JSON.parse(beamsData)
-        attachListeners(email, beamsToken)
+        const { beamsToken, roles, email } = JSON.parse(beamsData)
+        attachListeners(email, roles, beamsToken)
       }
     },
     setDeviceNotifStatus: async (status) => {
