@@ -19,6 +19,7 @@ const LOG_IN = gql`
         email
         firstName
         lastName
+        roles
       }
       token
       refreshToken
@@ -33,7 +34,7 @@ interface LogInProps {
   navigation: any
 }
 
-export const LogIn: React.FC<LogInProps> = props => {
+export const LogIn: React.FC<LogInProps> = (props) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isMutating, setIsMutating] = useState(false)
@@ -45,7 +46,7 @@ export const LogIn: React.FC<LogInProps> = props => {
     onCompleted: () => {
       setIsMutating(false)
     },
-    onError: err => {
+    onError: (err) => {
       const popUpData = {
         title: "Oops! Try again!",
         note: "Your email or password may be incorrect. Not a member? Apply for the waitlist.",
@@ -58,12 +59,12 @@ export const LogIn: React.FC<LogInProps> = props => {
     },
   })
 
-  const onEmailChange = val => {
+  const onEmailChange = (val) => {
     setEmail(val)
     setEmailComplete(isValidEmail(val))
   }
 
-  const checkPermissions = beamsToken => {
+  const checkPermissions = (beamsToken) => {
     checkNotifications()
       .then(({ status }) => {
         if (status === "denied") {
@@ -73,7 +74,7 @@ export const LogIn: React.FC<LogInProps> = props => {
           props.navigation.navigate("Main")
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("error checking for permission", error)
         props.navigation.navigate("Main")
       })
@@ -95,7 +96,8 @@ export const LogIn: React.FC<LogInProps> = props => {
         } = result
         signIn(userSession)
         const beamsToken = result?.data?.login?.beamsToken
-        const beamsData = { beamsToken, email }
+        const roles = result?.data?.login?.user?.roles
+        const beamsData = { beamsToken, email, roles }
         AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
         checkPermissions(beamsToken)
