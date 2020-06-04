@@ -60,18 +60,6 @@ describe("Bag", () => {
     expect(component.text()).toContain("All Saints")
   })
 
-  it("renders the FAQ button if user has a reservation", async () => {
-    const component = mount(
-      <MockedProvider mocks={mockWithReservation} addTypename={false}>
-        <Bag navigation={null} />
-      </MockedProvider>
-    )
-
-    await waitForLoad(component)
-
-    expect(component.find(FixedButton).text()).toContain("FAQ")
-  })
-
   it("renders the Reserve button if no reservation", async () => {
     const component = mount(
       <MockedProvider mocks={mocks} addTypename={false}>

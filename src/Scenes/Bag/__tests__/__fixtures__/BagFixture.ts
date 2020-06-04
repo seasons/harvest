@@ -5,6 +5,9 @@ export const BagFixture = {
       id: "12345",
       plan: "Essential",
       reservations: [],
+      status: "Active",
+      invoices: [],
+      membership: null,
     },
     bag: [
       {
@@ -456,6 +459,9 @@ export const BagFixtureWithReservation = {
       id: "12345",
       plan: "Essential",
       reservations: [],
+      status: "Active",
+      invoices: [],
+      membership: null,
     },
     bag: [],
     savedItems: [],
