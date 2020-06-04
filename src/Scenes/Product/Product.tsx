@@ -1,8 +1,7 @@
-import { useLazyQuery, useMutation, useQuery } from "@apollo/react-hooks"
-import { GET_BRAND_PRODUCTS, GET_PRODUCT } from "App/Apollo/Queries"
+import { useMutation, useQuery } from "@apollo/react-hooks"
+import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box, Container, FixedBackArrow, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { GetBrandProducts, GetBrandProducts_products } from "App/generated/GetBrandProducts"
 import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { space } from "App/utils"
@@ -85,10 +84,7 @@ export const Product = screenTrack({
     }
   )
 
-  const [getBrandProducts, { data: brandProductsData, loading: brandProductsLoading }] = useLazyQuery<GetBrandProducts>(
-    GET_BRAND_PRODUCTS
-  )
-  const brandProducts: GetBrandProducts_products[] = brandProductsData && brandProductsData.products
+  const brandProducts = product?.brand?.products
 
   const viewWidth = Dimensions.get("window").width
   const images = product && product.images
@@ -109,7 +105,7 @@ export const Product = screenTrack({
     translateY: shouldShowVariantWant ? 0 : VARIANT_WANT_HEIGHT,
   })
 
-  if (loading || !data) {
+  if (!data) {
     return <Loader />
   }
 
@@ -139,17 +135,6 @@ export const Product = screenTrack({
     }
   }
 
-  const loadMoreFromBrand = () => {
-    if (!brandProducts && !brandProductsLoading) {
-      getBrandProducts({
-        variables: {
-          brandID: product.brand.id,
-          excludeProductID: product.id,
-        },
-      })
-    }
-  }
-
   const selectionButtonsBottom = shouldShowVariantWant ? VARIANT_WANT_HEIGHT : 0
   const listFooterSpacing = selectionButtonsBottom + 58
   const sections = ["imageRail", "productDetails", "productMeasurements", "aboutTheBrand", "moreLikeThis"]
@@ -163,8 +148,6 @@ export const Product = screenTrack({
         ListFooterComponent={() => <Spacer mb={listFooterSpacing} />}
         keyExtractor={(item) => item}
         renderItem={(item) => renderItem(item)}
-        onEndReached={loadMoreFromBrand}
-        onEndReachedThreshold={0.1}
       />
       <SelectionButtons
         bottom={selectionButtonsBottom}
