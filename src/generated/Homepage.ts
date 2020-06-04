@@ -189,18 +189,11 @@ export interface Homepage_archivalProducts_images {
   url: string | null;
 }
 
-export interface Homepage_archivalProducts_brand {
-  __typename: "Brand";
-  id: string;
-  name: string;
-}
-
 export interface Homepage_archivalProducts {
   __typename: "Product";
   id: string;
   slug: string;
   images: Homepage_archivalProducts_images[];
-  brand: Homepage_archivalProducts_brand;
 }
 
 export interface Homepage_justAddedTops_images {
@@ -239,40 +232,40 @@ export interface Homepage_justAddedTops {
   variants: Homepage_justAddedTops_variants[] | null;
 }
 
-export interface Homepage_justAddedPants_images {
+export interface Homepage_justAddedBottoms_images {
   __typename: "Image";
   url: string | null;
   id: string;
 }
 
-export interface Homepage_justAddedPants_brand {
+export interface Homepage_justAddedBottoms_brand {
   __typename: "Brand";
   id: string;
   name: string;
 }
 
-export interface Homepage_justAddedPants_variants_internalSize {
+export interface Homepage_justAddedBottoms_variants_internalSize {
   __typename: "Size";
   display: string;
 }
 
-export interface Homepage_justAddedPants_variants {
+export interface Homepage_justAddedBottoms_variants {
   __typename: "ProductVariant";
   id: string;
   total: number;
   reservable: number;
   nonReservable: number;
   reserved: number;
-  internalSize: Homepage_justAddedPants_variants_internalSize | null;
+  internalSize: Homepage_justAddedBottoms_variants_internalSize | null;
 }
 
-export interface Homepage_justAddedPants {
+export interface Homepage_justAddedBottoms {
   __typename: "Product";
   id: string;
   slug: string;
-  images: Homepage_justAddedPants_images[];
-  brand: Homepage_justAddedPants_brand;
-  variants: Homepage_justAddedPants_variants[] | null;
+  images: Homepage_justAddedBottoms_images[];
+  brand: Homepage_justAddedBottoms_brand;
+  variants: Homepage_justAddedBottoms_variants[] | null;
 }
 
 export interface Homepage {
@@ -282,5 +275,5 @@ export interface Homepage {
   blogPosts: Homepage_blogPosts[];
   archivalProducts: (Homepage_archivalProducts | null)[];
   justAddedTops: (Homepage_justAddedTops | null)[];
-  justAddedPants: (Homepage_justAddedPants | null)[];
+  justAddedBottoms: (Homepage_justAddedBottoms | null)[];
 }

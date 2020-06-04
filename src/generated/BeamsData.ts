@@ -4,15 +4,20 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: BeamsData
+// GraphQL query operation: BeamsData
 // ====================================================
 
-export interface BeamsData_beamsData {
-  __typename: "BeamsData";
+export interface BeamsData_me_user {
+  __typename: "User";
   email: string;
   beamsToken: string;
 }
 
+export interface BeamsData_me {
+  __typename: "Me";
+  user: BeamsData_me_user | null;
+}
+
 export interface BeamsData {
-  beamsData: BeamsData_beamsData;
+  me: BeamsData_me | null;
 }
