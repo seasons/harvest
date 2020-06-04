@@ -1,12 +1,12 @@
-import { Box, Container, FixedBackArrow, Sans, Spacer, ProductGridItem } from "App/Components"
+import { useQuery } from "@apollo/react-hooks"
+import { Box, Container, FixedBackArrow, ProductGridItem, Sans, Spacer } from "App/Components"
 import { ReadMore } from "App/Components/ReadMore"
 import { GetBrand } from "App/generated/GetBrand"
 import { color, space } from "App/utils"
-import { Schema, screenTrack, useTracking } from "App/utils/track"
+import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { FlatList } from "react-native"
-import { useQuery } from "@apollo/react-hooks"
 
 const GET_BRAND = gql`
   query GetBrandAndProducts($brandID: ID!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!) {
@@ -73,6 +73,7 @@ export const Brand = screenTrack({
   const products = data?.brand?.products
   const basedIn = data?.brand?.basedIn
   const description = data?.brand?.description
+  const numColumns = 2
 
   return (
     <Container insetsBottom={false}>
@@ -107,7 +108,7 @@ export const Brand = screenTrack({
         )}
         ListFooterComponent={() => <Spacer mb={space(2)} />}
         data={products}
-        numColumns={2}
+        numColumns={numColumns}
         onEndReachedThreshold={0.7}
         onEndReached={() => {
           if (!loading) {
@@ -135,7 +136,7 @@ export const Brand = screenTrack({
           }
         }}
         keyExtractor={(item, index) => item.id + index}
-        renderItem={({ item }, i) => <ProductGridItem product={item} index={i} />}
+        renderItem={({ item }, i) => <ProductGridItem product={item} addLeftSpacing={i % numColumns !== 0} />}
       />
     </Container>
   )

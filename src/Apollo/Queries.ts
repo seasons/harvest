@@ -1,5 +1,38 @@
 import gql from "graphql-tag"
 
+const commonProductVariantFragment = gql`
+  fragment CommonProductVariant on ProductVariant {
+    id
+    manufacturerSizes {
+      display
+    }
+    internalSize {
+      top {
+        id
+        letter
+        sleeve
+        shoulder
+        chest
+        neck
+        length
+      }
+      bottom {
+        type
+        value
+      }
+      productType
+      display
+    }
+    total
+    reservable
+    nonReservable
+    reserved
+    isInBag
+    isSaved
+    isWanted
+  }
+`
+
 export const GET_PRODUCT = gql`
   query GetProduct($productID: ID!) {
     product(where: { id: $productID }) {
@@ -26,6 +59,19 @@ export const GET_PRODUCT = gql`
         name
         logo
         since
+        products(first: 5, orderBy: createdAt_DESC, where: { AND: [{ id_not: $productID }, { status: Available }] }) {
+          id
+          images {
+            id
+            url
+          }
+          brand {
+            name
+          }
+          variants {
+            ...CommonProductVariant
+          }
+        }
       }
       outerMaterials
       innerMaterials
@@ -35,37 +81,11 @@ export const GET_PRODUCT = gql`
       }
       type
       variants {
-        id
-        manufacturerSizes {
-          display
-        }
-        internalSize {
-          top {
-            id
-            letter
-            sleeve
-            shoulder
-            chest
-            neck
-            length
-          }
-          bottom {
-            type
-            value
-          }
-          productType
-          display
-        }
-        total
-        reservable
-        nonReservable
-        reserved
-        isInBag
-        isSaved
-        isWanted
+        ...CommonProductVariant
       }
     }
   }
+  ${commonProductVariantFragment}
 `
 
 export const GET_COLLECTION = gql`

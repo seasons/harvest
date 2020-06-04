@@ -1,4 +1,6 @@
-import { Box, Button, Flex, Sans, ProductGridItem } from "App/Components"
+import { useQuery } from "@apollo/react-hooks"
+import { useFocusEffect } from "@react-navigation/native"
+import { Box, Button, Flex, ProductGridItem, Sans, Skeleton, Spacer } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { space } from "App/utils"
@@ -7,16 +9,11 @@ import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { FlatList, StatusBar, TouchableOpacity } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
-import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { color } from "styled-system"
-import { useQuery } from "@apollo/react-hooks"
-import { useFocusEffect } from "@react-navigation/native"
 import { BrowseEmptyState } from "./BrowseEmptyState"
-import { BrowseLoader } from "./Loader"
-
-const IMAGE_HEIGHT = 240
+import { ProductGridItemSkeleton } from "../Product/Components"
+import { GetBrowseProducts } from "App/generated/GetBrowseProducts"
 
 export const GET_BROWSE_PRODUCTS = gql`
   query GetBrowseProducts(
@@ -93,11 +90,14 @@ export const GET_BROWSE_PRODUCTS = gql`
   }
 `
 
+const PAGE_LENGTH = 10
+
 export const Browse = screenTrack()((props: any) => {
   const currentFilters = props?.route?.params?.sizeFilters || []
+  const [items, setItems] = useState(new Array(PAGE_LENGTH).fill({ id: "" }))
+  const [categoryItems, setCategoryItems] = useState(new Array(PAGE_LENGTH).fill({ slug: "" }))
   const [sizeFilters, setSizeFilters] = useState(currentFilters)
   const [currentCategory, setCurrentCategory] = useState("all")
-  const insets = useSafeArea()
   const tracking = useTracking()
 
   useFocusEffect(
@@ -105,8 +105,6 @@ export const Browse = screenTrack()((props: any) => {
       StatusBar.setBarStyle("dark-content")
     }, [])
   )
-
-  const PAGE_LENGTH = 10
 
   useEffect(() => {
     setSizeFilters(currentFilters)
@@ -119,7 +117,7 @@ export const Browse = screenTrack()((props: any) => {
         })
       : []
 
-  const { data, loading, fetchMore } = useQuery(GET_BROWSE_PRODUCTS, {
+  const { data, loading, fetchMore } = useQuery<GetBrowseProducts>(GET_BROWSE_PRODUCTS, {
     variables: {
       name: currentCategory,
       first: PAGE_LENGTH,
@@ -129,17 +127,22 @@ export const Browse = screenTrack()((props: any) => {
     },
   })
 
-  const products = data && data.products
+  const products = data?.products
+  const categories = data && data.categories
 
-  const loaderAnimation = useSpring({
-    loaderStyle: !data ? 1 : 0,
-    productsBoxStyle: !data ? 0 : 1,
-  })
+  useEffect(() => {
+    if (products) {
+      setItems(products)
+    }
+    if (categories) {
+      setCategoryItems([{ slug: "all", name: "All" }, ...categories])
+    }
+  }, [data])
 
   let scrollViewEl = null
-  const categories = (data && data.categories) || []
   const filtersButtonHeight = 36
   const numFiltersSelected = sizeFilters?.length
+  const numColumns = 2
 
   const filtersButtonVariant = numFiltersSelected > 0 ? "primaryBlack" : "primaryWhite"
   const filtersButtonText = numFiltersSelected > 0 ? `Filters +${numFiltersSelected}` : "Filters"
@@ -170,7 +173,7 @@ export const Browse = screenTrack()((props: any) => {
   return (
     <Container insetsBottom={false}>
       <Flex flexDirection="column" flex={1}>
-        <AnimatedBox flex={1} flexGrow={1} style={{ opacity: loaderAnimation.productsBoxStyle }}>
+        <Box flex={1} flexGrow={1}>
           <FlatList
             contentContainerStyle={
               products?.length
@@ -182,11 +185,21 @@ export const Browse = screenTrack()((props: any) => {
             ListEmptyComponent={() => (
               <BrowseEmptyState setCurrentCategory={setCurrentCategory} setSizeFilters={setSizeFilters} />
             )}
-            data={products}
+            data={items}
             ref={(ref) => (scrollViewEl = ref)}
             keyExtractor={(item, index) => item.id + index}
-            renderItem={({ item }, i) => <ProductGridItem showBrandName product={item} index={i} />}
-            numColumns={2}
+            renderItem={({ item }, index) => {
+              return (
+                <Box key={index}>
+                  {item.id ? (
+                    <ProductGridItem showBrandName product={item} addLeftSpacing={index % numColumns !== 0} />
+                  ) : (
+                    <ProductGridItemSkeleton addLeftSpacing={index % numColumns !== 0} />
+                  )}
+                </Box>
+              )
+            }}
+            numColumns={numColumns}
             ListFooterComponent={() => (
               <>
                 {loading && (
@@ -198,8 +211,6 @@ export const Browse = screenTrack()((props: any) => {
             )}
             onEndReachedThreshold={0.7}
             onEndReached={() => {
-              // If we are sorting alphabetically, all products are returned so we do not need
-              // to fetch any more
               if (!loading && !reachedEnd) {
                 tracking.trackEvent({
                   actionName: Schema.ActionNames.BrowsePagePaginated,
@@ -210,7 +221,7 @@ export const Browse = screenTrack()((props: any) => {
                   variables: {
                     skip: products.length,
                   },
-                  updateQuery: (prev, { fetchMoreResult }) => {
+                  updateQuery: (prev: GetBrowseProducts, { fetchMoreResult }) => {
                     if (!prev) {
                       return []
                     }
@@ -236,20 +247,29 @@ export const Browse = screenTrack()((props: any) => {
               {filtersButtonText}
             </Button>
           </FixedButtonContainer>
-        </AnimatedBox>
-        <Box height={56} style={{ opacity: !data ? 0 : 1 }}>
+        </Box>
+        <Box height={56}>
           <CategoryPicker
-            data={[{ slug: "all", name: "All" }, ...categories]}
-            renderItem={({ item }) => {
+            data={categoryItems}
+            renderItem={({ item }, index) => {
               const selected = currentCategory == item.slug
               return (
-                <TouchableOpacity onPress={() => onCategoryPress(item)}>
-                  <Category mr={4} selected={selected}>
-                    <Sans size="1" style={{ opacity: selected ? 1.0 : 0.5 }}>
-                      {item.name}
-                    </Sans>
-                  </Category>
-                </TouchableOpacity>
+                <Box key={index}>
+                  {!!item.name ? (
+                    <TouchableOpacity onPress={() => onCategoryPress(item)}>
+                      <Category mr={4} selected={selected}>
+                        <Sans size="1" style={{ opacity: selected ? 1.0 : 0.5 }}>
+                          {item.name}
+                        </Sans>
+                      </Category>
+                    </TouchableOpacity>
+                  ) : (
+                    <Box mr={4}>
+                      <Spacer mb="5px" />
+                      <Skeleton width={50} height={15} />
+                    </Box>
+                  )}
+                </Box>
               )
             }}
             contentContainerStyle={{
@@ -257,15 +277,12 @@ export const Browse = screenTrack()((props: any) => {
               paddingLeft: 20,
               paddingRight: 20,
             }}
-            keyExtractor={({ slug }) => slug}
+            keyExtractor={(item, index) => item.slug + index}
             showsHorizontalScrollIndicator={false}
             horizontal
           />
         </Box>
       </Flex>
-      <LoaderContainer mt={insets.top} style={{ opacity: loaderAnimation.loaderStyle }}>
-        <BrowseLoader imageHeight={IMAGE_HEIGHT} />
-      </LoaderContainer>
     </Container>
   )
 })
@@ -280,16 +297,6 @@ const CategoryPicker = styled.FlatList`
   border-style: solid;
   border-top-width: 1px;
 `
-
-const LoaderContainer = animated(styled(Box)`
-  flex: 1;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: -1;
-`)
-
-const AnimatedBox = animated(Box)
 
 const Category = styled(Box)`
   ${(p) =>
