@@ -1,5 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Bag renders properly 1`] = `ReactWrapper {}`;
-
-exports[`Bag renders the FAQ button if user has a reservation 1`] = `ReactWrapper {}`;
