@@ -1,32 +1,43 @@
 import { Box, ProductGridItem, Sans } from "App/Components"
-import { Loader } from "App/Components/Loader"
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { FlatList } from "react-native"
+import { ProductGridItemSkeleton } from "./ProductGridItemSkeleton"
 
 export const MoreFromBrand = ({ products, brandName }) => {
-  if (!products) {
-    return <Loader />
-  }
+  const [items, setItems] = useState(new Array(2).fill({ id: "" }))
+
+  useEffect(() => {
+    if (products) {
+      setItems(products)
+    }
+  }, [products])
+
   return (
     <>
-      <Box pl={2} py={1}>
-        <Sans color="black" size="2">
-          More from {brandName}
-        </Sans>
-      </Box>
+      {brandName && (
+        <Box pl={2} py={1}>
+          <Sans color="black" size="2">
+            More from {brandName}
+          </Sans>
+        </Box>
+      )}
       <Box ml={2}>
         <FlatList
-          data={products}
-          renderItem={({ item, index }) => {
+          data={items}
+          renderItem={({ item }) => {
             return (
               <Box mr={1}>
-                <ProductGridItem product={item} addLeftSpacing={false} showBrandName />
+                {item.id ? (
+                  <ProductGridItem product={item} addLeftSpacing={false} showBrandName />
+                ) : (
+                  <ProductGridItemSkeleton />
+                )}
               </Box>
             )
           }}
-          keyExtractor={(item) => {
-            const itemID = item && item.id
-            return itemID
+          keyExtractor={(item, index) => {
+            const itemID = (item && item.id) || ""
+            return itemID + index
           }}
           showsHorizontalScrollIndicator={false}
           horizontal
