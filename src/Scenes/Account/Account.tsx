@@ -1,4 +1,4 @@
-import { Box, Flex, GuestView, Sans, Separator, Spacer } from "App/Components"
+import { Box, Flex, GuestView, Sans, Separator, Spacer, Skeleton } from "App/Components"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { color } from "App/utils"
 import { Container } from "Components/Container"
@@ -127,15 +127,23 @@ export const Account = screenTrack()((props) => {
             <Spacer mb={6} />
             <Box px={2} style={{ height: 60 }}>
               <Flex>
-                {!!firstName && !!lastName && (
+                {!!firstName && !!lastName ? (
                   <Sans size="3" color="black">
                     {`${firstName} ${lastName}`}
                   </Sans>
+                ) : (
+                  <Box mt="3px">
+                    <Skeleton width={180} height={20} />
+                  </Box>
                 )}
-                {!!email && (
+                {!!email ? (
                   <Sans size="2" color="gray">
                     {email}
                   </Sans>
+                ) : (
+                  <Box mt="13px">
+                    <Skeleton width={160} height={16} />
+                  </Box>
                 )}
               </Flex>
             </Box>
