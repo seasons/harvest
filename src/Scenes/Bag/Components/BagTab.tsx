@@ -48,7 +48,6 @@ export const BagTab: React.FC<{
 
   let returnReminder
   if (hasActiveReservation && me?.customer?.plan === "Essential" && !!me?.activeReservation?.returnAt) {
-    console.log("data?.me?.activeReservation?.returnAt", me?.activeReservation?.returnAt)
     const luxonDate = DateTime.fromISO(me?.activeReservation?.returnAt)
     returnReminder = `Return by ${luxonDate.weekdayLong}, ${luxonDate.monthLong} ${luxonDate.day}`
   }
