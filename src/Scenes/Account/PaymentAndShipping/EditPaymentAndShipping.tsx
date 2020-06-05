@@ -80,7 +80,7 @@ export const EditPaymentAndShipping: React.FC<{
   const [phoneNumber, setPhoneNumber] = useState(currentPhoneNumber)
 
   const [updatePaymentAndShipping] = useMutation(UPDATE_PAYMENT_AND_SHIPPING, {
-    onError: error => {
+    onError: (error) => {
       let popUpData = {
         buttonText: "Got it",
         note: "Make sure your shipping and billing address are valid.",
@@ -178,7 +178,7 @@ export const EditPaymentAndShipping: React.FC<{
     })
     setIsMutating(false)
     if (result) {
-      navigation.pop()
+      navigation.goBack()
     }
   }
 
@@ -191,7 +191,7 @@ export const EditPaymentAndShipping: React.FC<{
     }
   }
 
-  const handleCancelBtnPressed = () => navigation.pop()
+  const handleCancelBtnPressed = () => navigation.goBack()
 
   const sections = [SHIPPING_ADDRESS, BILLING_ADDRESS, PHONE_NUMBER, EDIT_BILLING_INFO]
 

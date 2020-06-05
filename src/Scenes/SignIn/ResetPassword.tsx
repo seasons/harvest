@@ -27,14 +27,14 @@ export const ResetPassword = (props: any) => {
   }
 
   const [resetPassword] = useMutation(RESET_PASSWORD, {
-    onError: error => {
+    onError: (error) => {
       console.warn("SignIn/ResetPassword.tsx: ", error)
       Keyboard.dismiss()
       showPopUp(popUpData)
     },
   })
 
-  const onEmailChange = val => {
+  const onEmailChange = (val) => {
     setEmail(val)
     setIsEmailComplete(isValidEmail(val))
   }
@@ -47,7 +47,7 @@ export const ResetPassword = (props: any) => {
     })
 
     if (result && result.data && result.data.resetPassword) {
-      props.navigation.pop()
+      props.navigation.goBack()
       props.navigation.navigate("Modal", { screen: "ResetPasswordConfirmationModal" })
     } else {
       Keyboard.dismiss()

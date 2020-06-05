@@ -3,18 +3,34 @@ import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { Box, ContactUsButton, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
+import { Box, Container, FixedBackArrow, Sans, Separator, Spacer, Button } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { MembershipCard } from "./Components"
+import { PauseButtons } from "App/Components/Pause"
 
-const GET_MEMBERSHIP_INFO = gql`
+export const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
     me {
       customer {
         id
         plan
+        status
+        invoices {
+          id
+          subscriptionId
+          dueDate
+        }
+        membership {
+          id
+          pauseRequests(orderBy: createdAt_DESC) {
+            id
+            resumeDate
+            pauseDate
+            pausePending
+          }
+        }
       }
       user {
         id
@@ -29,7 +45,10 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeArea()
   const { loading, data } = useQuery(GET_MEMBERSHIP_INFO)
 
-  const plan = data?.me?.customer?.plan
+  console.log("data", data)
+
+  const customer = data?.me?.customer
+  const plan = customer?.plan
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
   let planInfo = null
@@ -45,7 +64,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
         "Insurance included",
       ],
     }
-  } else if (plan === "AllAccess") {
+  } else {
     planInfo = {
       planName: "All Access",
       price: "195",
@@ -61,6 +80,8 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   if (loading || !planInfo) {
     return <Loader />
   }
+
+  console.log("data", data)
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
@@ -111,13 +132,9 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={12} />
           <Separator />
           <Spacer mb={1} />
-          <Sans size="1" color={color("black50")}>
-            If you’d like to pause or cancel your Seasons membership, contact us below.
-          </Sans>
-          <Spacer mb={88} />
+          <PauseButtons customer={customer} />
         </Box>
       </ScrollView>
-      <ContactUsButton subject="Membership" />
     </Container>
   )
 })

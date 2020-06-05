@@ -157,7 +157,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
         },
       },
     })
-    navigation.pop()
+    navigation.goBack()
   }
 
   const screenWidth = Dimensions.get("window").width
@@ -185,7 +185,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
               actionName: Schema.ActionNames.SaveProductModalCancelTapped,
               actionType: Schema.ActionTypes.Tap,
             })
-            navigation.pop()
+            navigation.goBack()
           }}
         >
           Cancel

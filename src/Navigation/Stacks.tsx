@@ -26,6 +26,7 @@ import { color } from "App/utils"
 import React from "react"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { NavBar } from "./NavBar"
+import { ResumeConfirmation, PauseConfirmation, ExtendPauseConfirmation } from "App/Components/Pause"
 
 const HomeStack = createStackNavigator()
 const BagStack = createStackNavigator()
@@ -107,6 +108,9 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.AllowNotificationsModal} component={AllowNotifications} />
       <ModalStack.Screen name={Schema.PageNames.SaveProductModal} component={SaveProduct} />
       <ModalStack.Screen name={Schema.PageNames.DebugMenu} component={DebugMenu} />
+      <ModalStack.Screen name={Schema.PageNames.ResumeConfirmation} component={ResumeConfirmation} />
+      <ModalStack.Screen name={Schema.PageNames.PauseConfirmation} component={PauseConfirmation} />
+      <ModalStack.Screen name={Schema.PageNames.ExtendPauseConfirmation} component={ExtendPauseConfirmation} />
     </ModalStack.Navigator>
   )
 }

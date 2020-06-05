@@ -1,11 +1,18 @@
 import React from "react"
 import Svg, { G, Circle, Path } from "react-native-svg"
 
-export const GreenCheck = props => {
+interface Props {
+  backgroundColor?: string
+  width?: number
+  height?: number
+  strokeWidth?: number
+}
+
+export const GreenCheck: React.FC<Props> = (props) => {
   return (
     <Svg width={props.width || 42} height={props.height || 42} {...props} viewBox="0 0 56 56">
       <G fill="none" fillRule="evenodd">
-        <Circle fill="#04B853" cx={28} cy={28} r={28} />
+        <Circle fill={props.backgroundColor ? props.backgroundColor : "#04B853"} cx={28} cy={28} r={28} />
         <Path
           stroke="#FFF"
           strokeWidth={props.strokeWidth ? props.strokeWidth : 2}

@@ -141,7 +141,7 @@ export const ReservationFeedback: React.FC<{
       actionName: TrackingSchema.ActionNames.ReservationFeedbackContinueLaterButtonTapped,
       actionType: TrackingSchema.ActionTypes.Tap,
     })
-    navigation.pop()
+    navigation.goBack()
   }
 
   const onQuestionsFlatListScrollEnd = (event) => {

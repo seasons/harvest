@@ -9,6 +9,25 @@ import { Plan, BagItemStatus } from "./globalTypes";
 // GraphQL query operation: GetBagAndSavedItems
 // ====================================================
 
+export interface GetBagAndSavedItems_me_customer_invoices {
+  __typename: "Invoice";
+  id: string;
+  subscriptionId: string | null;
+}
+
+export interface GetBagAndSavedItems_me_customer_membership_pauseRequests {
+  __typename: "PauseRequest";
+  id: string;
+  pauseDate: any | null;
+  pausePending: boolean;
+}
+
+export interface GetBagAndSavedItems_me_customer_membership {
+  __typename: "CustomerMembership";
+  id: string;
+  pauseRequests: GetBagAndSavedItems_me_customer_membership_pauseRequests[] | null;
+}
+
 export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_internalSize {
   __typename: "Size";
   display: string;
@@ -59,6 +78,8 @@ export interface GetBagAndSavedItems_me_customer {
   __typename: "Customer";
   id: string;
   plan: Plan | null;
+  invoices: (GetBagAndSavedItems_me_customer_invoices | null)[] | null;
+  membership: GetBagAndSavedItems_me_customer_membership | null;
   reservations: GetBagAndSavedItems_me_customer_reservations[] | null;
 }
 

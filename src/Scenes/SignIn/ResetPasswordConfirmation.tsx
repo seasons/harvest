@@ -17,7 +17,7 @@ export const ResetPasswordConfirmation = (props: any) => {
             Check your email for a link to reset your password.
           </Sans>
           <Spacer mb={3} />
-          <Button block variant="primaryWhite" onPress={() => props.navigation.pop()}>
+          <Button block variant="primaryWhite" onPress={() => props.navigation.goBack()}>
             Got it
           </Button>
         </Box>
