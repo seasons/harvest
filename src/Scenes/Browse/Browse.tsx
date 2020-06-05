@@ -28,6 +28,7 @@ export const GET_BROWSE_PRODUCTS = gql`
       slug
       name
       children {
+        id
         slug
       }
     }
@@ -56,6 +57,7 @@ export const GET_BROWSE_PRODUCTS = gql`
         url
       }
       modelSize {
+        id
         display
       }
       modelHeight
@@ -77,11 +79,13 @@ export const GET_BROWSE_PRODUCTS = gql`
         reserved
         isSaved
         internalSize {
+          id
           display
           top {
             letter
           }
           bottom {
+            id
             value
           }
         }
@@ -168,6 +172,7 @@ export const Browse = screenTrack()((props: any) => {
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
   }
 
+  console.log("data browse", data)
   const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
 
   return (

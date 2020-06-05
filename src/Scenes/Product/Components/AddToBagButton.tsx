@@ -47,9 +47,9 @@ export const AddToBagButton: React.FC<Props> = (props) => {
           buttonText: "Got It",
           secondaryButtonText: "Go to bag",
           secondaryButtonOnPress: () => {
-            hidePopUp()
             navigation.popToTop()
             navigation.navigate("BagStack")
+            hidePopUp()
           },
           onClose: () => hidePopUp(),
         })

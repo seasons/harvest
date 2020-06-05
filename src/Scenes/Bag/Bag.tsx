@@ -118,6 +118,8 @@ export const Bag = screenTrack()((props) => {
     return <Loader />
   }
 
+  console.log("bag", data)
+
   const onRefresh = () => {
     setRefreshing(true)
     refetch()
@@ -141,7 +143,7 @@ export const Bag = screenTrack()((props) => {
     })) || []
 
   const paddedItems = assign(fill(new Array(3), { variantID: "", productID: "" }), items)
-  const hasActiveReservation = !!get(data, "me?.activeReservation")
+  const hasActiveReservation = !!me?.activeReservation
 
   const handleReserve = async (navigation) => {
     setMutating(true)
@@ -286,7 +288,7 @@ export const Bag = screenTrack()((props) => {
       <FlatList
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         data={sections}
-        contentContainerStyle={{ height: "100%", width: "100%", position: "relative" }}
+        contentContainerStyle={pauseStatus === "paused" ? { height: "100%", width: "100%", position: "relative" } : {}}
         keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
         renderItem={(item) => {
           return renderItem(item)

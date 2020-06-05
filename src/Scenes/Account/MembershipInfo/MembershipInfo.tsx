@@ -45,8 +45,6 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeArea()
   const { loading, data } = useQuery(GET_MEMBERSHIP_INFO)
 
-  console.log("data", data)
-
   const customer = data?.me?.customer
   const plan = customer?.plan
   const firstName = data?.me?.user?.firstName
@@ -81,7 +79,6 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
     return <Loader />
   }
 
-  console.log("data", data)
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
