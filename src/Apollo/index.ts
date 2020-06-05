@@ -40,7 +40,10 @@ export const setupApolloClient = async () => {
     // return the headers to the context so httpLink can read them
   })
 
-  const errorLink = onError(({ networkError, operation, forward }) => {
+  const errorLink = onError(({ graphQLErrors, networkError, operation, forward, response }) => {
+    if (graphQLErrors) {
+      console.log("graphQLErrors", graphQLErrors)
+    }
     if (networkError) {
       console.log("networkError", networkError)
       // User access token has expired

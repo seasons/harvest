@@ -28,6 +28,7 @@ export const GET_BROWSE_PRODUCTS = gql`
       slug
       name
       children {
+        id
         slug
       }
     }
@@ -56,6 +57,7 @@ export const GET_BROWSE_PRODUCTS = gql`
         url
       }
       modelSize {
+        id
         display
       }
       modelHeight
@@ -77,11 +79,13 @@ export const GET_BROWSE_PRODUCTS = gql`
         reserved
         isSaved
         internalSize {
+          id
           display
           top {
             letter
           }
           bottom {
+            id
             value
           }
         }

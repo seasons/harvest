@@ -62,7 +62,7 @@ const Wrapper = styled(Box)`
   position: absolute;
   top: 50;
   left: 7;
-  z-index: 50;
+  z-index: 2000;
 `
 
 const ArrowWrapper = styled(Flex)`

@@ -79,8 +79,6 @@ export const HomeBottomSheet = ({ data }) => {
     }
   }
 
-  console.log("data", data)
-
   const bottomSheetContent = () => {
     const reservationFeedback = data?.reservationFeedback
 

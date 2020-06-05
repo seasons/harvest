@@ -46,7 +46,7 @@ export const Product = screenTrack({
   const { navigation, route } = props
   const productID = route?.params?.id
   const productSlug = route?.params?.slug
-  const { data, loading, error } = useQuery<GetProduct>(GET_PRODUCT, {
+  const { data, error } = useQuery<GetProduct>(GET_PRODUCT, {
     variables: {
       productID,
     },
@@ -105,8 +105,15 @@ export const Product = screenTrack({
     translateY: shouldShowVariantWant ? 0 : VARIANT_WANT_HEIGHT,
   })
 
+  console.log("data", data)
+
   if (!data) {
-    return <Loader />
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
   }
 
   if (error) {

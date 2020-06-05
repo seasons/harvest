@@ -47,21 +47,22 @@ export const BagTab: React.FC<{
   })
 
   let returnReminder
-  const data = null
   if (hasActiveReservation && me?.customer?.plan === "Essential" && !!me?.activeReservation?.returnAt) {
-    const luxonDate = DateTime.fromISO(data?.me?.activeReservation?.returnAt)
-    returnReminder = `Return by ${luxonDate.weekdayLong}, ${luxonDate.monthShort} ${luxonDate.day}`
+    const luxonDate = DateTime.fromISO(me?.activeReservation?.returnAt)
+    returnReminder = `Return by ${luxonDate.weekdayLong}, ${luxonDate.monthLong} ${luxonDate.day}`
   }
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
+
+  const showPendingMessage = pauseStatus === "pending" && !!pauseRequest?.pauseDate
 
   return (
     <Box>
       {hasActiveReservation && (
-        <>
+        <Box px={2} pt={3}>
           <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
             <Sans size="2">Current rotation</Sans>
             <Sans
-              size="2"
+              size="1"
               style={{ textDecorationLine: "underline" }}
               onPress={() => {
                 tracking.trackEvent({
@@ -74,12 +75,20 @@ export const BagTab: React.FC<{
               View FAQ
             </Sans>
           </Flex>
-          {!!returnReminder && <Sans size="2">{returnReminder}</Sans>}
+          {!!returnReminder && (
+            <Sans size="2" color="black50">
+              {returnReminder}
+            </Sans>
+          )}
           <Spacer mb={2} />
-          <Separator color={color("black10")} />
-        </>
+        </Box>
       )}
-      {pauseStatus === "pending" && !!pauseRequest?.pauseDate && (
+      {showPendingMessage && hasActiveReservation && (
+        <Box px={2}>
+          <Separator color={color("black10")} />
+        </Box>
+      )}
+      {showPendingMessage && (
         <Box px={2} py={2}>
           <Sans size="1" color="black50">
             {`Your membership is scheduled to be paused on ${DateTime.fromISO(pauseRequest.pauseDate).toFormat(
@@ -105,18 +114,11 @@ export const BagTab: React.FC<{
             </Sans>
             .
           </Sans>
-          <Spacer mb={2} />
-          <Separator color={color("black10")} />
         </Box>
       )}
       {items.map((bagItem, index) => {
         return bagItem.productID.length > 0 ? (
-          <Box
-            key={bagItem.productID}
-            px={2}
-            pt={(index === 0 && hasActiveReservation) || !hasActiveReservation ? 2 : 1}
-            pb={hasActiveReservation ? 0 : 2}
-          >
+          <Box key={bagItem.productID} px={2} pt={hasActiveReservation ? 0 : 2}>
             <BagItem
               removeItemFromBag={deleteBagItem}
               removeFromBagAndSaveItem={removeFromBagAndSaveItem}

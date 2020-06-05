@@ -16,6 +16,7 @@ export const BagItemFragment = gql`
       id
       name
       modelSize {
+        id
         display
       }
       brand {
@@ -30,6 +31,7 @@ export const BagItemFragment = gql`
         id
         reservable
         internalSize {
+          id
           display
         }
       }
@@ -199,6 +201,7 @@ export const BagItem: React.FC<BagItemProps> = ({
               )}
             </Flex>
           </BagItemContainer>
+          <Spacer mb={2} />
         </Box>
       </TouchableWithoutFeedback>
       {isMutating && (

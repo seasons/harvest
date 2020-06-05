@@ -45,6 +45,7 @@ export const GET_HOMEPAGE = gql`
             variants {
               id
               internalSize {
+                id
                 display
               }
               reservable
@@ -121,8 +122,8 @@ export const GET_HOMEPAGE = gql`
       id
       slug
       images {
-        url
         id
+        url
       }
       brand {
         id
@@ -135,6 +136,7 @@ export const GET_HOMEPAGE = gql`
         nonReservable
         reserved
         internalSize {
+          id
           display
         }
       }
@@ -162,6 +164,7 @@ export const GET_HOMEPAGE = gql`
         nonReservable
         reserved
         internalSize {
+          id
           display
         }
       }
