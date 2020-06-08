@@ -9,7 +9,6 @@ import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../Reserv
 import gql from "graphql-tag"
 import React, { useEffect, useState, useContext } from "react"
 import { useQuery } from "react-apollo"
-import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
@@ -179,7 +178,6 @@ export const Home = screenTrack()(({ navigation }) => {
   const { loading, error, data, refetch } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
-  const insets = useSafeArea()
 
   useEffect(() => {
     if (!loading && showSplash) {
@@ -249,36 +247,36 @@ export const Home = screenTrack()(({ navigation }) => {
   return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
-    <Container insetsTop={false} insetsBottom={false}>
-      <StatusBar barStyle="light-content" />
-      <HomeBlogContent items={data?.blogPosts} />
-      <Animatable.View animation="fadeIn" duration={300}>
+      <Container insetsTop={false} insetsBottom={false}>
+        <StatusBar barStyle="light-content" />
+        <HomeBlogContent items={data?.blogPosts} />
+        <HomeBottomSheet data={data} />
         {reservationFeedback &&
           shouldRequestFeedback &&
           (reservationFeedback.rating ? (
-            <ReservationFeedbackReminderWrapper style={{ bottom: insets.bottom + 8 }}>
+            <ReservationFeedbackReminderWrapper>
               <ReservationFeedbackReminder
                 reservationFeedback={reservationFeedback}
                 onPress={onPressReservationFeedbackReminder}
               />
             </ReservationFeedbackReminderWrapper>
           ) : (
-            <ReservationFeedbackPopUp
-              reservationFeedback={reservationFeedback}
-              show={showReservationFeedbackPopUp}
-              onSelectedRating={onSelectedReviewRating}
-            />
-          ))}
-      </Animatable.View>
-      <HomeBottomSheet data={data} />
-    </Container>
-  )
+              <ReservationFeedbackPopUp
+                reservationFeedback={reservationFeedback}
+                show={showReservationFeedbackPopUp}
+                onSelectedRating={onSelectedReviewRating}
+              />
+            ))}
+      </Container>
+    )
 })
 
 const ReservationFeedbackReminderWrapper = styled(Box)`
   position: absolute;
   left: 0;
+  bottom: 0;
   background: ${color("white100")};
   width: 100%;
   height: ${RESERVATION_FEEDBACK_REMINDER_HEIGHT};
+  z-index: 100;
 `

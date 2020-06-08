@@ -60,7 +60,7 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
   const [mounted, setMounted] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [size, onLayout] = useComponentSize()
-  const height = size ? size.height + 100 : 240
+  const height = size ? size.height + 75 : 240
   const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK)
 
   useEffect(() => {
@@ -109,7 +109,6 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
       onSelectedRating()
     }
   }
-
   return (
     <>
       <AnimatedPopUp style={{ transform: [{ translateY: animation.translateY }] }} color={color("white100")}>
