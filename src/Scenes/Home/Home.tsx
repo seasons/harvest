@@ -1,4 +1,4 @@
-import { Box } from "App/Components"
+import { Box, Sans } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { NetworkContext } from "App/NetworkProvider"
@@ -221,6 +221,8 @@ export const Home = screenTrack()(({ navigation }) => {
 
   const reservationFeedback = data?.reservationFeedback
   const shouldRequestFeedback = data?.me?.customer?.shouldRequestFeedback
+  console.log("RESV FEEDBACK", reservationFeedback)
+  console.log("SHOULD REQ:", shouldRequestFeedback)
 
   const goToReservationFeedbackScreen = () => {
     navigation.navigate("Modal", {
@@ -249,36 +251,36 @@ export const Home = screenTrack()(({ navigation }) => {
   return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
-    <Container insetsTop={false} insetsBottom={false}>
-      <StatusBar barStyle="light-content" />
-      <HomeBlogContent items={data?.blogPosts} />
-      <Animatable.View animation="fadeIn" duration={300}>
+      <Container insetsTop={false} insetsBottom={false}>
+        <StatusBar barStyle="light-content" />
+        <HomeBlogContent items={data?.blogPosts} />
+        <HomeBottomSheet data={data} />
         {reservationFeedback &&
           shouldRequestFeedback &&
           (reservationFeedback.rating ? (
-            <ReservationFeedbackReminderWrapper style={{ bottom: insets.bottom + 8 }}>
+            <ReservationFeedbackReminderWrapper>
               <ReservationFeedbackReminder
                 reservationFeedback={reservationFeedback}
                 onPress={onPressReservationFeedbackReminder}
               />
             </ReservationFeedbackReminderWrapper>
           ) : (
-            <ReservationFeedbackPopUp
-              reservationFeedback={reservationFeedback}
-              show={showReservationFeedbackPopUp}
-              onSelectedRating={onSelectedReviewRating}
-            />
-          ))}
-      </Animatable.View>
-      <HomeBottomSheet data={data} />
-    </Container>
-  )
+              <ReservationFeedbackPopUp
+                reservationFeedback={reservationFeedback}
+                show={showReservationFeedbackPopUp}
+                onSelectedRating={onSelectedReviewRating}
+              />
+            ))}
+      </Container>
+    )
 })
 
 const ReservationFeedbackReminderWrapper = styled(Box)`
   position: absolute;
   left: 0;
+  bottom: 0;
   background: ${color("white100")};
   width: 100%;
   height: ${RESERVATION_FEEDBACK_REMINDER_HEIGHT};
+  z-index: 100;
 `
