@@ -56,7 +56,6 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
   show,
   onSelectedRating,
 }) => {
-  console.log("RESV FEEDBACK POPUP SHOW")
   const tracking = useTracking()
   const [mounted, setMounted] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(null)
@@ -110,8 +109,6 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
       onSelectedRating()
     }
   }
-  console.log("WINDOW HEIGHT VS HEIGHT", windowHeight, height)
-  console.log("TRANSLATE Y:", show && mounted ? windowHeight - height : windowHeight)
   return (
     <>
       <AnimatedPopUp style={{ transform: [{ translateY: animation.translateY }] }} color={color("white100")}>

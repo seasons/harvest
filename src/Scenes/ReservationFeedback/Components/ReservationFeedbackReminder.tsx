@@ -14,7 +14,6 @@ export const ReservationFeedbackReminder: React.FC<ReservationFeedbackHeaderProp
   onPress,
   reservationFeedback,
 }) => {
-  console.log("RESV FEEDBACK REMINDER")
   const tracking = useTracking()
   const { feedbacks } = reservationFeedback
   const incompleteFeedbackIndex = feedbacks.findIndex(feedback => !feedback.isCompleted)

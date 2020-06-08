@@ -1,4 +1,4 @@
-import { Box, Sans } from "App/Components"
+import { Box } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { NetworkContext } from "App/NetworkProvider"
@@ -9,7 +9,6 @@ import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../Reserv
 import gql from "graphql-tag"
 import React, { useEffect, useState, useContext } from "react"
 import { useQuery } from "react-apollo"
-import * as Animatable from "react-native-animatable"
 import { useSafeArea } from "react-native-safe-area-context"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
@@ -179,7 +178,6 @@ export const Home = screenTrack()(({ navigation }) => {
   const { loading, error, data, refetch } = useQuery(GET_HOMEPAGE, {})
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
-  const insets = useSafeArea()
 
   useEffect(() => {
     if (!loading && showSplash) {
@@ -221,8 +219,6 @@ export const Home = screenTrack()(({ navigation }) => {
 
   const reservationFeedback = data?.reservationFeedback
   const shouldRequestFeedback = data?.me?.customer?.shouldRequestFeedback
-  console.log("RESV FEEDBACK", reservationFeedback)
-  console.log("SHOULD REQ:", shouldRequestFeedback)
 
   const goToReservationFeedbackScreen = () => {
     navigation.navigate("Modal", {
