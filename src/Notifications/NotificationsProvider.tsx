@@ -236,6 +236,7 @@ export const NotificationsProvider = ({ children }) => {
         }
       )
       AsyncStorage.setItem("subscribedToNotifs", "false")
+      RNPusherPushNotifications.clearAllState()
       dispatch({ type: "UNSUBSCRIBE" })
     },
     subscribedToNotifs: notificationState.subscribedToNotifs,
