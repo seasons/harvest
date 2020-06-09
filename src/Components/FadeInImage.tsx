@@ -10,7 +10,6 @@ interface FadeInImageProps extends ImageProps {
 }
 
 export const FadeInImage: React.FC<FadeInImageProps> = (props) => {
-  console.log("props.source", props.source)
   return (
     <Container radius={props.radius}>
       <FadeIn>
