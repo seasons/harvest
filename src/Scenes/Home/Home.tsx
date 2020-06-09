@@ -9,12 +9,10 @@ import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../Reserv
 import gql from "graphql-tag"
 import React, { useEffect, useState, useContext } from "react"
 import { useQuery } from "react-apollo"
-import { useSafeArea } from "react-native-safe-area-context"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
 import { Schema } from "App/Navigation"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { BagItemFragment } from "../Bag/Components/BagItem"
 import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { StatusBar } from "react-native"
 
@@ -191,7 +189,6 @@ export const GET_HOMEPAGE = gql`
       }
     }
   }
-  ${BagItemFragment}
 `
 
 export const Home = screenTrack()(({ navigation }) => {
