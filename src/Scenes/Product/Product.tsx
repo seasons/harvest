@@ -105,8 +105,6 @@ export const Product = screenTrack({
     translateY: shouldShowVariantWant ? 0 : VARIANT_WANT_HEIGHT,
   })
 
-  console.log("data", data)
-
   if (!data) {
     return (
       <>

@@ -5,7 +5,6 @@ import { chunk } from "lodash"
 import { useTracking } from "react-tracking"
 import { Schema } from "App/utils/track"
 import { useNavigation } from "@react-navigation/native"
-import { imageResize } from "App/helpers/imageResize"
 import * as Animatable from "react-native-animatable"
 
 interface TagData {
@@ -35,14 +34,13 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData }) => 
 
   const row = (rowGroup) => {
     return rowGroup.map((item) => {
-      const image = item?.images?.[0]
-      const resizedImage = image && imageResize(image?.url, "thumb")
+      const uri = item?.images?.[0]?.url || ""
       return (
         <Animatable.View animation="fadeIn" duration={300} key={item.id}>
           <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: item.id, slug: item.slug })}>
             <Box mr={0.5} style={{ width: slideWidth }}>
               <FadeInImage
-                source={{ uri: resizedImage }}
+                source={{ uri }}
                 style={{ width: slideWidth, height: slideWidth * ARCHIVAL_PRODUCT_RATIO }}
               />
             </Box>

@@ -1,6 +1,5 @@
 import { Box, Flex, Sans, Button, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
 import { Schema, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { get, head } from "lodash"
@@ -23,7 +22,7 @@ export const BagItemFragment = gql`
         id
         name
       }
-      images {
+      images(size: Thumb) {
         id
         url
       }
@@ -68,7 +67,8 @@ export const BagItem: React.FC<BagItemProps> = ({
   }
 
   const isReserved = bagItem.status !== "Added"
-  const imageURL = imageResize(get(product, "images[0].url") || "", "thumb")
+  const imageURL = product?.images?.[0]?.url || ""
+
   const variantSize = get(variantToUse, "internalSize.display")
   const variantId = bagItem.variantID
 
@@ -171,12 +171,12 @@ export const BagItem: React.FC<BagItemProps> = ({
 
   const shadowStyles = isReserved
     ? {
-      shadowColor: "black",
-      shadowRadius: 10,
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.1,
-      elevation: 1,
-    }
+        shadowColor: "black",
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.1,
+        elevation: 1,
+      }
     : {}
 
   return (
@@ -215,7 +215,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   )
 }
 
-const BagItemContainer = styled(Box) <{ isReserved: boolean }>`
+const BagItemContainer = styled(Box)<{ isReserved: boolean }>`
   height: 216px;
   overflow: hidden;
   background-color: ${color("white100")};

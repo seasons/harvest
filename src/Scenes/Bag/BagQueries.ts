@@ -42,7 +42,7 @@ export const GET_BAG = gql`
               }
               product {
                 id
-                images {
+                images(size: Thumb) {
                   id
                   url
                 }

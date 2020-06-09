@@ -1,9 +1,7 @@
 import { Box, Flex, Sans } from "App/Components"
 import React from "react"
-import { get } from "lodash"
 import styled from "styled-components/native"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
 
 export const CurrentRotationItem = ({ physicalProduct }) => {
   const productVariant = physicalProduct.productVariant
@@ -13,7 +11,7 @@ export const CurrentRotationItem = ({ physicalProduct }) => {
     return null
   }
 
-  const imageURL = imageResize(get(product, "images[0].url"), "thumb")
+  const imageURL = product?.images?.[0]?.url || ""
 
   return (
     <Container key={product.id}>

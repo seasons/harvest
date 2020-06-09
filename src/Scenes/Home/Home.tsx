@@ -33,7 +33,7 @@ export const GET_HOMEPAGE = gql`
           ... on Product {
             id
             slug
-            images {
+            images(size: Thumb) {
               id
               url
             }
@@ -71,7 +71,7 @@ export const GET_HOMEPAGE = gql`
           id
           product {
             id
-            images {
+            images(size: Thumb) {
               id
               url
             }
@@ -89,8 +89,30 @@ export const GET_HOMEPAGE = gql`
       savedItems {
         id
         productVariant {
-          id
-          ...BagItemProductVariant
+          product {
+            id
+            name
+            modelSize {
+              id
+              display
+            }
+            brand {
+              id
+              name
+            }
+            images(size: Medium) {
+              id
+              url
+            }
+            variants {
+              id
+              reservable
+              internalSize {
+                id
+                display
+              }
+            }
+          }
         }
       }
     }
@@ -107,7 +129,7 @@ export const GET_HOMEPAGE = gql`
     ) {
       id
       slug
-      images {
+      images(size: Thumb) {
         id
         url
       }
@@ -120,7 +142,7 @@ export const GET_HOMEPAGE = gql`
     ) {
       id
       slug
-      images {
+      images(size: Thumb) {
         id
         url
       }
@@ -148,7 +170,7 @@ export const GET_HOMEPAGE = gql`
     ) {
       id
       slug
-      images {
+      images(size: Thumb) {
         url
         id
       }
@@ -247,28 +269,28 @@ export const Home = screenTrack()(({ navigation }) => {
   return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
-      <Container insetsTop={false} insetsBottom={false}>
-        <StatusBar barStyle="light-content" />
-        <HomeBlogContent items={data?.blogPosts} />
-        <HomeBottomSheet data={data} />
-        {reservationFeedback &&
-          shouldRequestFeedback &&
-          (reservationFeedback.rating ? (
-            <ReservationFeedbackReminderWrapper>
-              <ReservationFeedbackReminder
-                reservationFeedback={reservationFeedback}
-                onPress={onPressReservationFeedbackReminder}
-              />
-            </ReservationFeedbackReminderWrapper>
-          ) : (
-              <ReservationFeedbackPopUp
-                reservationFeedback={reservationFeedback}
-                show={showReservationFeedbackPopUp}
-                onSelectedRating={onSelectedReviewRating}
-              />
-            ))}
-      </Container>
-    )
+    <Container insetsTop={false} insetsBottom={false}>
+      <StatusBar barStyle="light-content" />
+      <HomeBlogContent items={data?.blogPosts} />
+      <HomeBottomSheet data={data} />
+      {reservationFeedback &&
+        shouldRequestFeedback &&
+        (reservationFeedback.rating ? (
+          <ReservationFeedbackReminderWrapper>
+            <ReservationFeedbackReminder
+              reservationFeedback={reservationFeedback}
+              onPress={onPressReservationFeedbackReminder}
+            />
+          </ReservationFeedbackReminderWrapper>
+        ) : (
+          <ReservationFeedbackPopUp
+            reservationFeedback={reservationFeedback}
+            show={showReservationFeedbackPopUp}
+            onSelectedRating={onSelectedReviewRating}
+          />
+        ))}
+    </Container>
+  )
 })
 
 const ReservationFeedbackReminderWrapper = styled(Box)`
