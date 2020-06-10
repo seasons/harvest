@@ -3,7 +3,7 @@ import React from "react"
 import { Dimensions } from "react-native"
 import { Box, Skeleton, Flex, Spacer } from "App/Components"
 
-export const ProductGridItemSkeleton: React.FC<{ addLeftSpacing: boolean }> = ({ addLeftSpacing }) => {
+export const ProductGridItemSkeleton: React.FC<{ addLeftSpacing?: boolean }> = ({ addLeftSpacing }) => {
   const imageWidth = Dimensions.get("window").width / 2 - 2
   const imageHeight = imageWidth * PRODUCT_ASPECT_RATIO
 
