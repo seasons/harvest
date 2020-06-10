@@ -65,8 +65,11 @@ export const HomeBlogContent = ({ items }) => {
         <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="space-between" alignContent="center">
           <LogoText>SEASONS</LogoText>
           <Box p={2} pr={6}>
-            <Sans size="3" color="white100">
+            <Sans size="2" color="white100">
               {items?.[currentPage - 1]?.name}
+            </Sans>
+            <Sans size="2" color="black25" style={{ textTransform: "capitalize" }}>
+              {items?.[currentPage - 1]?.category}
             </Sans>
           </Box>
         </Flex>

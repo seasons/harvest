@@ -118,6 +118,7 @@ export const GET_HOMEPAGE = gql`
       id
       url
       name
+      category
       imageURL
     }
     archivalProducts: products(
@@ -215,6 +216,8 @@ export const Home = screenTrack()(({ navigation }) => {
     })
     return unsubscribe
   }, [navigation])
+
+  console.log("data", data?.blogPosts)
 
   const NoInternetComponent = (
     <ErrorScreen
