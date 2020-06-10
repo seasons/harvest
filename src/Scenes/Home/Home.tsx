@@ -9,12 +9,10 @@ import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../Reserv
 import gql from "graphql-tag"
 import React, { useEffect, useState, useContext } from "react"
 import { useQuery } from "react-apollo"
-import { useSafeArea } from "react-native-safe-area-context"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
 import { Schema } from "App/Navigation"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { BagItemFragment } from "../Bag/Components/BagItem"
 import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { StatusBar } from "react-native"
 
@@ -33,7 +31,7 @@ export const GET_HOMEPAGE = gql`
           ... on Product {
             id
             slug
-            images {
+            images(size: Thumb) {
               id
               url
             }
@@ -71,7 +69,7 @@ export const GET_HOMEPAGE = gql`
           id
           product {
             id
-            images {
+            images(size: Thumb) {
               id
               url
             }
@@ -89,8 +87,30 @@ export const GET_HOMEPAGE = gql`
       savedItems {
         id
         productVariant {
-          id
-          ...BagItemProductVariant
+          product {
+            id
+            name
+            modelSize {
+              id
+              display
+            }
+            brand {
+              id
+              name
+            }
+            images(size: Medium) {
+              id
+              url
+            }
+            variants {
+              id
+              reservable
+              internalSize {
+                id
+                display
+              }
+            }
+          }
         }
       }
     }
@@ -107,7 +127,7 @@ export const GET_HOMEPAGE = gql`
     ) {
       id
       slug
-      images {
+      images(size: Thumb) {
         id
         url
       }
@@ -120,7 +140,7 @@ export const GET_HOMEPAGE = gql`
     ) {
       id
       slug
-      images {
+      images(size: Thumb) {
         id
         url
       }
@@ -148,7 +168,7 @@ export const GET_HOMEPAGE = gql`
     ) {
       id
       slug
-      images {
+      images(size: Thumb) {
         url
         id
       }
@@ -169,7 +189,6 @@ export const GET_HOMEPAGE = gql`
       }
     }
   }
-  ${BagItemFragment}
 `
 
 export const Home = screenTrack()(({ navigation }) => {
@@ -247,28 +266,28 @@ export const Home = screenTrack()(({ navigation }) => {
   return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
-      <Container insetsTop={false} insetsBottom={false}>
-        <StatusBar barStyle="light-content" />
-        <HomeBlogContent items={data?.blogPosts} />
-        <HomeBottomSheet data={data} />
-        {reservationFeedback &&
-          shouldRequestFeedback &&
-          (reservationFeedback.rating ? (
-            <ReservationFeedbackReminderWrapper>
-              <ReservationFeedbackReminder
-                reservationFeedback={reservationFeedback}
-                onPress={onPressReservationFeedbackReminder}
-              />
-            </ReservationFeedbackReminderWrapper>
-          ) : (
-              <ReservationFeedbackPopUp
-                reservationFeedback={reservationFeedback}
-                show={showReservationFeedbackPopUp}
-                onSelectedRating={onSelectedReviewRating}
-              />
-            ))}
-      </Container>
-    )
+    <Container insetsTop={false} insetsBottom={false}>
+      <StatusBar barStyle="light-content" />
+      <HomeBlogContent items={data?.blogPosts} />
+      <HomeBottomSheet data={data} />
+      {reservationFeedback &&
+        shouldRequestFeedback &&
+        (reservationFeedback.rating ? (
+          <ReservationFeedbackReminderWrapper>
+            <ReservationFeedbackReminder
+              reservationFeedback={reservationFeedback}
+              onPress={onPressReservationFeedbackReminder}
+            />
+          </ReservationFeedbackReminderWrapper>
+        ) : (
+          <ReservationFeedbackPopUp
+            reservationFeedback={reservationFeedback}
+            show={showReservationFeedbackPopUp}
+            onSelectedRating={onSelectedReviewRating}
+          />
+        ))}
+    </Container>
+  )
 })
 
 const ReservationFeedbackReminderWrapper = styled(Box)`

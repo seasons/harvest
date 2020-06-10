@@ -1,9 +1,7 @@
 import { useNavigation } from "@react-navigation/native"
 import { Box, FadeInImage, Flex, Sans, Spacer, VariantSizes } from "App/Components"
-import { imageResize } from "App/helpers/imageResize"
 import { SaveProductButton } from "App/Scenes/Product/Components"
 import { Schema, useTracking } from "App/utils/track"
-import { get } from "lodash"
 import React from "react"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
@@ -14,8 +12,7 @@ export const ProductGridItem = ({ product, addLeftSpacing, showBrandName }) => {
 
   const itemWidth = Dimensions.get("window").width / 2 - 2
   const imageHeight = itemWidth * PRODUCT_ASPECT_RATIO
-  const image = get(product, "images[0]", { url: "" })
-  const resizedImage = imageResize(image.url, "thumb")
+  const image = product?.images?.[0].url
   const productName = product?.name
   const brandName = product?.brand?.name
 
@@ -33,7 +30,7 @@ export const ProductGridItem = ({ product, addLeftSpacing, showBrandName }) => {
       }}
     >
       <Box mr={addLeftSpacing ? 0.5 : 0} mb={0.5} width={itemWidth}>
-        <FadeInImage source={{ uri: resizedImage }} style={{ width: itemWidth, height: imageHeight }} />
+        <FadeInImage source={{ uri: image }} style={{ width: itemWidth, height: imageHeight }} />
         <Flex flexDirection="row" justifyContent="space-between" alignItems="flex-start">
           <Box my={0.5} mx={1}>
             {(!!productName || !!brandName) && (

@@ -1,6 +1,5 @@
 import { Box, Flex } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
 import React, { useState } from "react"
 import { FlatList } from "react-native"
 import styled from "styled-components/native"
@@ -38,10 +37,9 @@ export const ImageRail: React.FC<{
       <FlatList
         data={images}
         renderItem={({ item }) => {
-          const imageURL = imageResize(item && item.url, "medium")
           return (
             <Box mr={images?.length > 1 ? 0.5 : 0}>
-              <ImageContainer height={imageHeight} imageWidth={imageWidth} source={{ uri: imageURL }} />
+              <ImageContainer height={imageHeight} imageWidth={imageWidth} source={{ uri: item?.url || "" }} />
             </Box>
           )
         }}

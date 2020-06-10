@@ -1,6 +1,5 @@
 import { Box, Flex, Sans, Button, Separator, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
 import { get, head } from "lodash"
 import React, { useState } from "react"
 import { TouchableWithoutFeedback } from "react-native"
@@ -46,7 +45,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
     return null
   }
 
-  const imageURL = imageResize(get(product, "images[0].url"), "thumb")
+  const imageURL = product?.images?.[0]?.url || ""
   const variantSize = variantToUse?.internalSize?.display
   const reservable = variantToUse?.reservable
 

@@ -5,7 +5,6 @@ import { useSafeArea } from "react-native-safe-area-context"
 import { space } from "App/utils"
 import styled from "styled-components/native"
 import { FlatList, TouchableWithoutFeedback, Dimensions } from "react-native"
-import { imageResize } from "App/helpers/imageResize"
 import { useNavigation } from "@react-navigation/native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
@@ -22,7 +21,7 @@ export const HomeBlogContent = ({ items }) => {
   const navigation = useNavigation()
 
   const renderItem = ({ item }) => {
-    const resizedImage = !!item.imageURL && imageResize(item.imageURL, "medium")
+    const imageURL = !!item.imageURL && item.imageURL
     return (
       <TouchableWithoutFeedback
         onPress={() => {
@@ -30,7 +29,7 @@ export const HomeBlogContent = ({ items }) => {
         }}
       >
         <Box>
-          <FadeInImage source={{ uri: resizedImage }} style={{ width: windowWidth, height: slideHeight }} />
+          <FadeInImage source={{ uri: imageURL }} style={{ width: windowWidth, height: slideHeight }} />
         </Box>
       </TouchableWithoutFeedback>
     )
