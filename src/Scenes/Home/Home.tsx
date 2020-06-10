@@ -217,8 +217,6 @@ export const Home = screenTrack()(({ navigation }) => {
     return unsubscribe
   }, [navigation])
 
-  console.log("data", data?.blogPosts)
-
   const NoInternetComponent = (
     <ErrorScreen
       variant="No Internet"
