@@ -20,7 +20,7 @@ const GET_BRAND = gql`
         slug
         name
         description
-        images {
+        images(size: Thumb) {
           id
           url
         }
@@ -33,10 +33,13 @@ const GET_BRAND = gql`
         variants {
           id
           internalSize {
+            id
             top {
+              id
               letter
             }
             bottom {
+              id
               type
               value
             }
@@ -58,8 +61,11 @@ export const Brand = screenTrack({
   entityType: Schema.EntityTypes.Brand,
 })((props: any) => {
   const [readMoreExpanded, setReadMoreExpanded] = useState(false)
-  const { navigation, route } = props
+  const { navigation, route, error } = props
   const brandID = route?.params?.id
+  if (error) {
+    console.log("error Brand.tsx: ", error)
+  }
 
   const { data, loading, fetchMore } = useQuery<GetBrand>(GET_BRAND, {
     variables: {
@@ -69,6 +75,7 @@ export const Brand = screenTrack({
       orderBy: "createdAt_DESC",
     },
   })
+  console.log("data", data)
 
   const products = data?.brand?.products
   const basedIn = data?.brand?.basedIn

@@ -46,7 +46,7 @@ export const ProductDetails: React.FC<{
           <TouchableOpacity
             onPress={() => {
               const brandID = product?.brand?.id
-              const brandSlug = ""
+              const brandSlug = product?.brand?.slug
               tracking.trackEvent({
                 actionName: Schema.ActionNames.BrandTapped,
                 actionType: Schema.ActionTypes.Tap,
