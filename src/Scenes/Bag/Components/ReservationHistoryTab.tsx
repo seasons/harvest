@@ -1,4 +1,4 @@
-import { Box, Separator } from "App/Components"
+import { Box, Separator, Flex } from "App/Components"
 import React from "react"
 import { ReservationHistoryItem } from "./ReservationHistoryItem"
 import { BagEmptyState } from "./BagEmptyState"
@@ -7,7 +7,7 @@ import { color } from "App/utils"
 
 export const ReservationHistoryTab: React.FC<{ items }> = ({ items }) => {
   return (
-    <Box>
+    <Flex style={{ flex: 1 }}>
       {items.length ? (
         items.map((bagItem, index) => {
           return (
@@ -20,6 +20,6 @@ export const ReservationHistoryTab: React.FC<{ items }> = ({ items }) => {
       ) : (
         <BagEmptyState currentView={BagView.History} />
       )}
-    </Box>
+    </Flex>
   )
 }
