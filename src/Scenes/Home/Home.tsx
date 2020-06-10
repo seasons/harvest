@@ -118,6 +118,7 @@ export const GET_HOMEPAGE = gql`
       id
       url
       name
+      category
       imageURL
     }
     archivalProducts: products(
