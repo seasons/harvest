@@ -115,7 +115,7 @@ export const GET_HOMEPAGE = gql`
         }
       }
     }
-    blogPosts(collection: "5e72a4bad1075fcf7313bf38", count: 5) {
+    blogPosts(count: 5) {
       id
       url
       name

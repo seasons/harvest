@@ -174,6 +174,7 @@ export const Reservation = screenTrack()((props) => {
         </Flex>
         <FixedButton
           positionBottom={space(2)}
+          loading={isMutating}
           onPress={async () => {
             if (isMutating) {
               return
@@ -211,7 +212,6 @@ export const Reservation = screenTrack()((props) => {
           Place order
         </FixedButton>
       </Container>
-      {isMutating && <Loader variant="blackOpaque85" />}
     </>
   )
 })

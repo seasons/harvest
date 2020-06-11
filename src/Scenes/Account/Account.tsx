@@ -1,16 +1,15 @@
 import { Box, Flex, GuestView, Sans, Separator, Spacer, Skeleton } from "App/Components"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { MembershipInfoIcon, PersonalPreferencesIcon, PaymentShippingIcon } from "Assets/icons"
-import { color } from "App/utils"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
-import { Linking, ScrollView, TouchableOpacity, StatusBar } from "react-native"
+import { ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { ProfileList } from "./ProfileList"
-import { screenTrack, useTracking, Schema } from "App/utils/track"
+import { screenTrack, Schema } from "App/utils/track"
 import { Submit, QuestionMark, PrivacyPolicy, TermsOfService, LogOutSVG } from "Assets/svgs"
 
 export const GET_USER = gql`
@@ -39,7 +38,6 @@ export const GET_USER = gql`
 
 export const Account = screenTrack()((props) => {
   const { authState, signOut } = useAuthContext()
-  const tracking = useTracking()
   const { error, data, refetch } = useQuery(GET_USER)
 
   const { navigation } = props
