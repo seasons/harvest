@@ -113,7 +113,7 @@ export const Account = screenTrack()((props) => {
       },
     },
     {
-      title: "Log out",
+      title: "Sign out",
       icon: <LogOutSVG />,
       tracking: Schema.ActionNames.LogOutTapped,
       onPress: () => {

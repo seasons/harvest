@@ -29,7 +29,9 @@ export const ProfileList = ({ list, userRole }) => {
               <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" justifyContent="space-between">
                 <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
                   <Box style={{ marginRight: 20 }}>{item.icon}</Box>
-                  <Sans size="2">{item.title}</Sans>
+                  <Sans size="2" color={item.title === "Sign out" ? "red" : "black100"}>
+                    {item.title}
+                  </Sans>
                 </Flex>
                 <ChevronIcon />
               </Flex>
