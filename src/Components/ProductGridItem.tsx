@@ -18,7 +18,7 @@ export const ProductGridItem: React.FC<{
 
   const itemWidth = Dimensions.get("window").width / 2 - 2
   const imageHeight = itemWidth * PRODUCT_ASPECT_RATIO
-  const image = product?.images?.[0].url
+  const image = product?.images?.[0]?.url
   const productName = product?.name
   const brandName = product?.brand?.name
 
