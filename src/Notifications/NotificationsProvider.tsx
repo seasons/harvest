@@ -29,7 +29,7 @@ export const GET_BEAMS_DATA = gql`
 export const UPDATE_USER_PUSH_NOTIFICATIONS = gql`
   mutation UpdateUserPushNotifications($pushNotificationsStatus: String!) {
     updateUserPushNotifications(pushNotificationsStatus: $pushNotificationsStatus) {
-      pushNotifications
+      pushNotificationStatus
     }
   }
 `

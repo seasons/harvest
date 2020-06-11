@@ -11,6 +11,7 @@ import { ProductOrderByInput, ProductStatus, ProductType, LetterSize } from "./g
 
 export interface GetBrowseProducts_categories_children {
   __typename: "Category";
+  id: string;
   slug: string;
 }
 
@@ -40,6 +41,7 @@ export interface GetBrowseProducts_products_images {
 
 export interface GetBrowseProducts_products_modelSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -56,11 +58,13 @@ export interface GetBrowseProducts_products_variants_internalSize_top {
 
 export interface GetBrowseProducts_products_variants_internalSize_bottom {
   __typename: "BottomSize";
+  id: string;
   value: string | null;
 }
 
 export interface GetBrowseProducts_products_variants_internalSize {
   __typename: "Size";
+  id: string;
   display: string;
   top: GetBrowseProducts_products_variants_internalSize_top | null;
   bottom: GetBrowseProducts_products_variants_internalSize_bottom | null;

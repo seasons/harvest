@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { UserRole } from "./globalTypes";
+
 // ====================================================
 // GraphQL mutation operation: LogIn
 // ====================================================
@@ -12,6 +14,7 @@ export interface LogIn_login_user {
   email: string;
   firstName: string;
   lastName: string;
+  roles: UserRole[];
 }
 
 export interface LogIn_login {

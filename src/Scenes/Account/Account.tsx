@@ -21,7 +21,7 @@ export const GET_USER = gql`
           firstName
           lastName
           email
-          pushNotifications
+          pushNotificationStatus
           role
         }
         detail {
@@ -112,7 +112,7 @@ export const Account = screenTrack()((props) => {
   ]
 
   const user = data?.me?.customer?.user
-  const pushNotifications = user?.pushNotifications
+  const pushNotificationStatus = user?.pushNotificationStatus
   const userID = user?.id
   const role = user?.role
   const email = user?.email
@@ -153,7 +153,7 @@ export const Account = screenTrack()((props) => {
               <ProfileList {...props} />
             </Box>
             <Separator />
-            <NotificationToggle userID={userID} userNotificationStatus={pushNotifications} />
+            <NotificationToggle userID={userID} userNotificationStatus={pushNotificationStatus} />
             <Separator />
             <Box px={2} pt={4}>
               {bottomList.map((listItem) => {

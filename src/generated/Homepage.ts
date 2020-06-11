@@ -34,6 +34,7 @@ export interface Homepage_homepage_sections_results_Product_brand {
 
 export interface Homepage_homepage_sections_results_Product_variants_internalSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -120,6 +121,7 @@ export interface Homepage_me_customer {
 
 export interface Homepage_me_savedItems_productVariant_product_modelSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -137,6 +139,7 @@ export interface Homepage_me_savedItems_productVariant_product_images {
 
 export interface Homepage_me_savedItems_productVariant_product_variants_internalSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -198,8 +201,8 @@ export interface Homepage_archivalProducts {
 
 export interface Homepage_justAddedTops_images {
   __typename: "Image";
-  url: string | null;
   id: string;
+  url: string | null;
 }
 
 export interface Homepage_justAddedTops_brand {
@@ -210,6 +213,7 @@ export interface Homepage_justAddedTops_brand {
 
 export interface Homepage_justAddedTops_variants_internalSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -246,6 +250,7 @@ export interface Homepage_justAddedBottoms_brand {
 
 export interface Homepage_justAddedBottoms_variants_internalSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 

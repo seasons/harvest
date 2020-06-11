@@ -11,7 +11,7 @@ import { PushNotificationStatus } from "./globalTypes";
 
 export interface UpdateUserPushNotifications_updateUserPushNotifications {
   __typename: "User";
-  pushNotifications: PushNotificationStatus;
+  pushNotificationStatus: PushNotificationStatus | null;
 }
 
 export interface UpdateUserPushNotifications {
