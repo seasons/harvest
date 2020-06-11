@@ -65,7 +65,7 @@ export const GET_PRODUCT = gql`
         since
         products(first: 5, orderBy: createdAt_DESC, where: { AND: [{ id_not: $productID }, { status: Available }] }) {
           id
-          images {
+          images(size: Thumb) {
             id
             url
           }
@@ -80,7 +80,7 @@ export const GET_PRODUCT = gql`
       }
       outerMaterials
       innerMaterials
-      images {
+      images(size: Thumb) {
         id
         url
       }

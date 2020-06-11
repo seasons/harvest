@@ -1,15 +1,16 @@
 import { Box, Flex, GuestView, Sans, Separator, Spacer, Skeleton } from "App/Components"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { color } from "App/utils"
+import { MembershipInfoIcon, PersonalPreferencesIcon, PaymentShippingIcon } from "Assets/icons"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
-import { Linking, ScrollView, TouchableOpacity, StatusBar } from "react-native"
+import { ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { ProfileList } from "./ProfileList"
-import { screenTrack, useTracking, Schema } from "App/utils/track"
+import { screenTrack, Schema } from "App/utils/track"
+import { Submit, QuestionMark, PrivacyPolicy, TermsOfService, LogOutSVG } from "Assets/svgs"
 
 export const GET_USER = gql`
   query GetUser {
@@ -37,7 +38,6 @@ export const GET_USER = gql`
 
 export const Account = screenTrack()((props) => {
   const { authState, signOut } = useAuthContext()
-  const tracking = useTracking()
   const { error, data, refetch } = useQuery(GET_USER)
 
   const { navigation } = props
@@ -60,49 +60,68 @@ export const Account = screenTrack()((props) => {
     console.log("Error Account.tsx", error)
   }
 
-  const bottomList = [
+  const topList = [
     {
-      text: "Support",
-      onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.SupportTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
-        Linking.openURL(`mailto:membership@seasons.nyc?subject=Help`)
-      },
+      title: "Membership info",
+      icon: <MembershipInfoIcon />,
+      onPress: () => navigation.navigate("MembershipInfo"),
+      tracking: Schema.ActionNames.MembershipInfoTapped,
     },
     {
-      text: "Privacy policy",
+      title: "Personal preferences",
+      icon: <PersonalPreferencesIcon />,
+      onPress: () => navigation.navigate("PersonalPreferences"),
+      tracking: Schema.ActionNames.PersonalPreferencesTapped,
+    },
+    {
+      title: "Payments & shipping",
+      icon: <PaymentShippingIcon />,
+      onPress: () => navigation.navigate("PaymentAndShipping"),
+      tracking: Schema.ActionNames.PaymentAndShippingTapped,
+    },
+    {
+      title: "Submit an item",
+      icon: <Submit />,
+      onPress: () => navigation.navigate("ProductRequest"),
+      tracking: Schema.ActionNames.SubmitAnItemTapped,
+    },
+  ]
+
+  const bottomList = [
+    {
+      title: "Help and support",
+      icon: <QuestionMark />,
+      onPress: () => navigation.navigate("Faq"),
+      tracking: Schema.ActionNames.SupportTapped,
+    },
+    {
+      title: "Privacy policy",
+      icon: <PrivacyPolicy />,
+      tracking: Schema.ActionNames.PrivacyPolicyTapped,
       onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.PrivacyPolicyTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
         navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })
       },
     },
     {
-      text: "Terms of Service",
+      title: "Terms of Service",
+      icon: <TermsOfService />,
+      tracking: Schema.ActionNames.TermsOfServiceTapped,
       onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.TermsOfServiceTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
         navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })
       },
     },
     {
-      text: "Log out",
+      title: "Sign out",
+      icon: <LogOutSVG />,
+      tracking: Schema.ActionNames.LogOutTapped,
       onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.LogOutTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
         signOut()
       },
     },
     {
-      text: "Debug menu",
+      title: "Debug menu",
+      icon: null,
+      tracking: null,
       onPress: () => {
         navigation.navigate("Modal", {
           screen: "DebugMenu",
@@ -112,12 +131,6 @@ export const Account = screenTrack()((props) => {
   ]
 
   const user = data?.me?.customer?.user
-  const pushNotifications = user?.pushNotifications
-  const userID = user?.id
-  const role = user?.role
-  const email = user?.email
-  const firstName = user?.firstName
-  const lastName = user?.lastName
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -127,18 +140,18 @@ export const Account = screenTrack()((props) => {
             <Spacer mb={6} />
             <Box px={2} style={{ height: 60 }}>
               <Flex>
-                {!!firstName && !!lastName ? (
+                {!!user?.firstName && !!user?.lastName ? (
                   <Sans size="3" color="black">
-                    {`${firstName} ${lastName}`}
+                    {`${user?.firstName} ${user?.lastName}`}
                   </Sans>
                 ) : (
                   <Box mt="3px">
                     <Skeleton width={180} height={20} />
                   </Box>
                 )}
-                {!!email ? (
+                {!!user?.email ? (
                   <Sans size="2" color="gray">
-                    {email}
+                    {user?.email}
                   </Sans>
                 ) : (
                   <Box mt="13px">
@@ -148,31 +161,24 @@ export const Account = screenTrack()((props) => {
               </Flex>
             </Box>
             <Spacer mb={2} />
-            <Separator />
-            <Box px={2} py={4}>
-              <ProfileList {...props} />
+            <Box px={2}>
+              <Separator />
             </Box>
-            <Separator />
-            <NotificationToggle userID={userID} userNotificationStatus={pushNotifications} />
-            <Separator />
+            <Box px={2} py={4}>
+              <ProfileList list={topList} userRole={user?.role} />
+            </Box>
+            <Box px={2}>
+              <Separator />
+            </Box>
+            <NotificationToggle userID={user?.id} userNotificationStatus={user?.pushNotifications} />
+            <Box px={2}>
+              <Separator />
+            </Box>
             <Box px={2} pt={4}>
-              {bottomList.map((listItem) => {
-                if (listItem.text === "Debug menu" && role !== "Admin") {
-                  return null
-                }
-                return (
-                  <Box key={listItem.text}>
-                    <TouchableOpacity onPress={listItem.onPress}>
-                      <Sans size="2" color={listItem.text === "Log out" ? "red" : color("black100")}>
-                        {listItem.text}
-                      </Sans>
-                    </TouchableOpacity>
-                    <Spacer m={2} />
-                  </Box>
-                )
-              })}
+              <ProfileList list={bottomList} userRole={user?.role} />
             </Box>
           </Box>
+          <Spacer mb={4} />
         </ScrollView>
       </Animatable.View>
     </Container>

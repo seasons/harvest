@@ -82,6 +82,7 @@ export const GET_BROWSE_PRODUCTS = gql`
           id
           display
           top {
+            id
             letter
           }
           bottom {
