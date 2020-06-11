@@ -11,6 +11,9 @@ import { checkNotifications } from "react-native-permissions"
 
 import AsyncStorage from "@react-native-community/async-storage"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { useNotificationsContext } from "App/Notifications/NotificationsContext"
+import RNPusherPushNotifications from "react-native-pusher-push-notifications"
+
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -41,6 +44,7 @@ export const LogIn: React.FC<LogInProps> = (props) => {
   const [emailComplete, setEmailComplete] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { signIn } = useAuthContext()
+  const { init } = useNotificationsContext()
 
   const [login] = useMutation(LOG_IN, {
     onCompleted: () => {
@@ -71,6 +75,9 @@ export const LogIn: React.FC<LogInProps> = (props) => {
           props.navigation.popToTop()
           props.navigation.navigate("Modal", { screen: "AllowNotificationsModal", params: { beamsToken, email } })
         } else {
+          if (status === "granted") {
+            init()
+          }
           props.navigation.navigate("Main")
         }
       })
