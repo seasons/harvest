@@ -7,6 +7,7 @@ import { ModalAndMainScreens } from "./Stacks"
 import { NotificationsProvider } from "App/Notifications"
 import { PopUp } from "App/Navigation/PopUp"
 import { PopUpProvider } from "App/Navigation/PopUp/PopUpProvider"
+import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -67,6 +68,7 @@ export const AuthProvider = ({ currentScreen, navigationRef, apolloClient }) => 
     signOut: async () => {
       await AsyncStorage.removeItem("userSession")
       await AsyncStorage.removeItem("beamsData")
+      RNPusherPushNotifications.clearAllState()
       dispatch({ type: "SIGN_OUT" })
       apolloClient.resetStore()
     },
