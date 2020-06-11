@@ -41,11 +41,11 @@ export const GET_HOMEPAGE = gql`
             }
             variants {
               id
+              reservable
               internalSize {
                 id
                 display
               }
-              reservable
             }
           }
         }
@@ -69,12 +69,12 @@ export const GET_HOMEPAGE = gql`
           id
           product {
             id
+            name
+            retailPrice
             images(size: Thumb) {
               id
               url
             }
-            name
-            retailPrice
           }
         }
       }
@@ -87,6 +87,7 @@ export const GET_HOMEPAGE = gql`
       savedItems {
         id
         productVariant {
+          id
           product {
             id
             name
@@ -170,8 +171,8 @@ export const GET_HOMEPAGE = gql`
       id
       slug
       images(size: Thumb) {
-        url
         id
+        url
       }
       brand {
         id
