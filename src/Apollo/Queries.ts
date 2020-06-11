@@ -145,7 +145,7 @@ export const ACTIVE_RESERVATION = gql`
               brand {
                 name
               }
-              images {
+              images(size: Thumb) {
                 id
                 url
               }

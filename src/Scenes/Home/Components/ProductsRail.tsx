@@ -4,7 +4,6 @@ import { FlatList, TouchableWithoutFeedback, Dimensions, TouchableOpacity } from
 import { space } from "App/utils"
 import * as Animatable from "react-native-animatable"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
 import { Homepage_homepage_sections_results_Product, Homepage_homepage_sections_results } from "App/generated/Homepage"
 import { useTracking, Schema } from "App/utils/track"
 import { useNavigation } from "@react-navigation/native"
@@ -58,8 +57,7 @@ export const ProductsRail: React.FC<{
       <FlatList
         data={items}
         renderItem={({ item }: { item: Homepage_homepage_sections_results_Product; index: number }) => {
-          const image = item?.images?.[0]
-          const resizedImage = image && imageResize(image?.url, large ? "small" : "thumb")
+          const image = item?.images?.[0]?.url
           const brandName = item.brand && item.brand.name
           return (
             <Animatable.View animation="fadeIn" duration={300}>
@@ -68,7 +66,7 @@ export const ProductsRail: React.FC<{
               >
                 <Box mr={0.5} style={{ width: slideWidth }}>
                   <FadeInImage
-                    source={{ uri: resizedImage }}
+                    source={{ uri: image }}
                     style={{ width: slideWidth, height: slideWidth * PRODUCT_ASPECT_RATIO }}
                   />
                   <Spacer mb={0.5} />

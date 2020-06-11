@@ -2,7 +2,6 @@ import { Box, Flex, Sans, Spacer, FadeInImage } from "App/Components"
 import React from "react"
 import { Dimensions } from "react-native"
 import { DateTime } from "luxon"
-import { imageResize } from "App/helpers/imageResize"
 import { space, color } from "App/utils"
 import styled from "styled-components/native"
 import { TouchableOpacity } from "react-native-gesture-handler"
@@ -33,7 +32,7 @@ export const ReservationHistoryItem = ({ item }) => {
           const product = variant?.product
           const brandName = product?.brand?.name
           const image = product?.images?.[0]
-          const imageURL = imageResize(image && image.url, "thumb")
+          const imageURL = image?.url || ""
           return (
             <TouchableOpacity
               onPress={() => product?.id && navigation.navigate("Product", { id: product?.id })}

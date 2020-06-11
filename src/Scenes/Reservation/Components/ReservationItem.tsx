@@ -1,6 +1,5 @@
 import { Box, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
 import { Schema, useTracking } from "App/utils/track"
 import { get, head } from "lodash"
 import React from "react"
@@ -24,7 +23,7 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
     return null
   }
 
-  const imageURL = imageResize(get(product, "images[0].url"), "thumb")
+  const imageURL = product?.images?.[0]?.url
   const variantSize = get(variantToUse, "internalSize.display")
 
   return (

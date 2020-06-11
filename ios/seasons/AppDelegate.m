@@ -15,6 +15,9 @@
 #import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
 #import <RNPusherPushNotifications.h>
 
+#import "SDImageCodersManager.h"
+#import <SDWebImageWebPCoder/SDImageWebPCoder.h>
+
 #import "RNSplashScreen.h"
 
 @implementation AppDelegate
@@ -31,6 +34,9 @@
       NSLog(@" %@", name);
     }
   }
+
+  // Register WebP format support
+  [SDImageCodersManager.sharedManager addCoder:SDImageWebPCoder.sharedCoder];
   
   self.moduleRegistryAdapter = [[UMModuleRegistryAdapter alloc] initWithModuleRegistryProvider:[[UMModuleRegistryProvider alloc] init]];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
