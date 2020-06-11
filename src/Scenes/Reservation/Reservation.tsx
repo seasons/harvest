@@ -2,7 +2,7 @@ import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spa
 import { Loader } from "App/Components/Loader"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { color, space } from "App/utils"
+import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useState } from "react"
