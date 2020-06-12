@@ -216,8 +216,8 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
         </Sans>
       </Sans>
     ) : (
-      <Sans size="1" color={color("black50")} style={{ textAlign: "center" }}>
-        If you’d like cancel your membership, contact us using the button above. We’re happy to help with this.
+      <Sans size="1" color={color("black50")}>
+        If you’d like to cancel your membership, contact us using the button above. We’re happy to help with this.
       </Sans>
     )
   }
