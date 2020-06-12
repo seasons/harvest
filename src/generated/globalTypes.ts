@@ -104,6 +104,45 @@ export enum LocationType {
   Warehouse = "Warehouse",
 }
 
+export enum PackageTransitEventStatus {
+  Delivered = "Delivered",
+  Failure = "Failure",
+  PreTransit = "PreTransit",
+  Returned = "Returned",
+  Transit = "Transit",
+  Unknown = "Unknown",
+}
+
+export enum PackageTransitEventSubStatus {
+  AddressIssue = "AddressIssue",
+  ContactCarrier = "ContactCarrier",
+  Delayed = "Delayed",
+  Delivered = "Delivered",
+  DeliveryAttempted = "DeliveryAttempted",
+  DeliveryRescheduled = "DeliveryRescheduled",
+  DeliveryScheduled = "DeliveryScheduled",
+  InformationReceived = "InformationReceived",
+  LocationInaccessible = "LocationInaccessible",
+  NoticeLeft = "NoticeLeft",
+  Other = "Other",
+  OutForDelivery = "OutForDelivery",
+  PackageAccepted = "PackageAccepted",
+  PackageArrived = "PackageArrived",
+  PackageDamaged = "PackageDamaged",
+  PackageDeparted = "PackageDeparted",
+  PackageDisposed = "PackageDisposed",
+  PackageForwarded = "PackageForwarded",
+  PackageHeld = "PackageHeld",
+  PackageLost = "PackageLost",
+  PackageProcessed = "PackageProcessed",
+  PackageProcessing = "PackageProcessing",
+  PackageUnclaimed = "PackageUnclaimed",
+  PackageUndeliverable = "PackageUndeliverable",
+  PickupAvailable = "PickupAvailable",
+  RescheduleDelivery = "RescheduleDelivery",
+  ReturnToSender = "ReturnToSender",
+}
+
 export enum PhotographyStatus {
   Done = "Done",
   InProgress = "InProgress",
@@ -206,15 +245,16 @@ export enum Rating {
 }
 
 export enum ReservationStatus {
+  Blocked = "Blocked",
   Cancelled = "Cancelled",
   Completed = "Completed",
-  InQueue = "InQueue",
+  Delivered = "Delivered",
   InTransit = "InTransit",
-  New = "New",
-  OnHold = "OnHold",
   Packed = "Packed",
+  Queued = "Queued",
   Received = "Received",
   Shipped = "Shipped",
+  Unknown = "Unknown",
 }
 
 export enum UserRole {
@@ -751,6 +791,7 @@ export interface CustomerCreateWithoutReservationsInput {
   user: UserCreateOneInput;
   detail?: CustomerDetailCreateOneInput | null;
   billingInfo?: BillingInfoCreateOneInput | null;
+  membership?: CustomerMembershipCreateOneWithoutCustomerInput | null;
   bagItems?: BagItemCreateManyWithoutCustomerInput | null;
 }
 
@@ -822,6 +863,40 @@ export interface CustomerDetailWhereUniqueInput {
   id?: string | null;
 }
 
+export interface CustomerMembershipCreateOneWithoutCustomerInput {
+  create?: CustomerMembershipCreateWithoutCustomerInput | null;
+  connect?: CustomerMembershipWhereUniqueInput | null;
+}
+
+export interface CustomerMembershipCreateWithoutCustomerInput {
+  id?: string | null;
+  subscriptionId: string;
+  pauseRequests?: PauseRequestCreateManyWithoutMembershipInput | null;
+}
+
+export interface CustomerMembershipUpdateOneWithoutCustomerInput {
+  create?: CustomerMembershipCreateWithoutCustomerInput | null;
+  connect?: CustomerMembershipWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: CustomerMembershipUpdateWithoutCustomerDataInput | null;
+  upsert?: CustomerMembershipUpsertWithoutCustomerInput | null;
+}
+
+export interface CustomerMembershipUpdateWithoutCustomerDataInput {
+  subscriptionId?: string | null;
+  pauseRequests?: PauseRequestUpdateManyWithoutMembershipInput | null;
+}
+
+export interface CustomerMembershipUpsertWithoutCustomerInput {
+  update: CustomerMembershipUpdateWithoutCustomerDataInput;
+  create: CustomerMembershipCreateWithoutCustomerInput;
+}
+
+export interface CustomerMembershipWhereUniqueInput {
+  id?: string | null;
+}
+
 export interface CustomerUpdateOneRequiredWithoutReservationsInput {
   create?: CustomerCreateWithoutReservationsInput | null;
   connect?: CustomerWhereUniqueInput | null;
@@ -835,6 +910,7 @@ export interface CustomerUpdateWithoutReservationsDataInput {
   user?: UserUpdateOneRequiredInput | null;
   detail?: CustomerDetailUpdateOneInput | null;
   billingInfo?: BillingInfoUpdateOneInput | null;
+  membership?: CustomerMembershipUpdateOneWithoutCustomerInput | null;
   bagItems?: BagItemUpdateManyWithoutCustomerInput | null;
 }
 
@@ -1165,11 +1241,109 @@ export interface PackageCreateInput {
   shippingLabel: LabelCreateOneInput;
   fromAddress: LocationCreateOneInput;
   toAddress: LocationCreateOneInput;
+  events?: PackageTransitEventCreateManyInput | null;
 }
 
 export interface PackageCreateOneInput {
   create?: PackageCreateInput | null;
   connect?: PackageWhereUniqueInput | null;
+}
+
+export interface PackageTransitEventCreateInput {
+  id?: string | null;
+  status: PackageTransitEventStatus;
+  subStatus: PackageTransitEventSubStatus;
+}
+
+export interface PackageTransitEventCreateManyInput {
+  create?: PackageTransitEventCreateInput[] | null;
+  connect?: PackageTransitEventWhereUniqueInput[] | null;
+}
+
+export interface PackageTransitEventScalarWhereInput {
+  AND?: PackageTransitEventScalarWhereInput[] | null;
+  OR?: PackageTransitEventScalarWhereInput[] | null;
+  NOT?: PackageTransitEventScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  status?: PackageTransitEventStatus | null;
+  status_not?: PackageTransitEventStatus | null;
+  status_in?: PackageTransitEventStatus[] | null;
+  status_not_in?: PackageTransitEventStatus[] | null;
+  subStatus?: PackageTransitEventSubStatus | null;
+  subStatus_not?: PackageTransitEventSubStatus | null;
+  subStatus_in?: PackageTransitEventSubStatus[] | null;
+  subStatus_not_in?: PackageTransitEventSubStatus[] | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+}
+
+export interface PackageTransitEventUpdateDataInput {
+  status?: PackageTransitEventStatus | null;
+  subStatus?: PackageTransitEventSubStatus | null;
+}
+
+export interface PackageTransitEventUpdateManyDataInput {
+  status?: PackageTransitEventStatus | null;
+  subStatus?: PackageTransitEventSubStatus | null;
+}
+
+export interface PackageTransitEventUpdateManyInput {
+  create?: PackageTransitEventCreateInput[] | null;
+  connect?: PackageTransitEventWhereUniqueInput[] | null;
+  set?: PackageTransitEventWhereUniqueInput[] | null;
+  disconnect?: PackageTransitEventWhereUniqueInput[] | null;
+  delete?: PackageTransitEventWhereUniqueInput[] | null;
+  update?: PackageTransitEventUpdateWithWhereUniqueNestedInput[] | null;
+  updateMany?: PackageTransitEventUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: PackageTransitEventScalarWhereInput[] | null;
+  upsert?: PackageTransitEventUpsertWithWhereUniqueNestedInput[] | null;
+}
+
+export interface PackageTransitEventUpdateManyWithWhereNestedInput {
+  where: PackageTransitEventScalarWhereInput;
+  data: PackageTransitEventUpdateManyDataInput;
+}
+
+export interface PackageTransitEventUpdateWithWhereUniqueNestedInput {
+  where: PackageTransitEventWhereUniqueInput;
+  data: PackageTransitEventUpdateDataInput;
+}
+
+export interface PackageTransitEventUpsertWithWhereUniqueNestedInput {
+  where: PackageTransitEventWhereUniqueInput;
+  update: PackageTransitEventUpdateDataInput;
+  create: PackageTransitEventCreateInput;
+}
+
+export interface PackageTransitEventWhereUniqueInput {
+  id?: string | null;
 }
 
 export interface PackageUpdateDataInput {
@@ -1178,6 +1352,7 @@ export interface PackageUpdateDataInput {
   shippingLabel?: LabelUpdateOneRequiredInput | null;
   fromAddress?: LocationUpdateOneRequiredInput | null;
   toAddress?: LocationUpdateOneRequiredInput | null;
+  events?: PackageTransitEventUpdateManyInput | null;
 }
 
 export interface PackageUpdateOneInput {
@@ -1195,6 +1370,116 @@ export interface PackageUpsertNestedInput {
 }
 
 export interface PackageWhereUniqueInput {
+  id?: string | null;
+}
+
+export interface PauseRequestCreateManyWithoutMembershipInput {
+  create?: PauseRequestCreateWithoutMembershipInput[] | null;
+  connect?: PauseRequestWhereUniqueInput[] | null;
+}
+
+export interface PauseRequestCreateWithoutMembershipInput {
+  id?: string | null;
+  pausePending: boolean;
+  pauseDate?: any | null;
+  resumeDate?: any | null;
+}
+
+export interface PauseRequestScalarWhereInput {
+  AND?: PauseRequestScalarWhereInput[] | null;
+  OR?: PauseRequestScalarWhereInput[] | null;
+  NOT?: PauseRequestScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+  pausePending?: boolean | null;
+  pausePending_not?: boolean | null;
+  pauseDate?: any | null;
+  pauseDate_not?: any | null;
+  pauseDate_in?: any[] | null;
+  pauseDate_not_in?: any[] | null;
+  pauseDate_lt?: any | null;
+  pauseDate_lte?: any | null;
+  pauseDate_gt?: any | null;
+  pauseDate_gte?: any | null;
+  resumeDate?: any | null;
+  resumeDate_not?: any | null;
+  resumeDate_in?: any[] | null;
+  resumeDate_not_in?: any[] | null;
+  resumeDate_lt?: any | null;
+  resumeDate_lte?: any | null;
+  resumeDate_gt?: any | null;
+  resumeDate_gte?: any | null;
+}
+
+export interface PauseRequestUpdateManyDataInput {
+  pausePending?: boolean | null;
+  pauseDate?: any | null;
+  resumeDate?: any | null;
+}
+
+export interface PauseRequestUpdateManyWithWhereNestedInput {
+  where: PauseRequestScalarWhereInput;
+  data: PauseRequestUpdateManyDataInput;
+}
+
+export interface PauseRequestUpdateManyWithoutMembershipInput {
+  create?: PauseRequestCreateWithoutMembershipInput[] | null;
+  connect?: PauseRequestWhereUniqueInput[] | null;
+  set?: PauseRequestWhereUniqueInput[] | null;
+  disconnect?: PauseRequestWhereUniqueInput[] | null;
+  delete?: PauseRequestWhereUniqueInput[] | null;
+  update?: PauseRequestUpdateWithWhereUniqueWithoutMembershipInput[] | null;
+  updateMany?: PauseRequestUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: PauseRequestScalarWhereInput[] | null;
+  upsert?: PauseRequestUpsertWithWhereUniqueWithoutMembershipInput[] | null;
+}
+
+export interface PauseRequestUpdateWithWhereUniqueWithoutMembershipInput {
+  where: PauseRequestWhereUniqueInput;
+  data: PauseRequestUpdateWithoutMembershipDataInput;
+}
+
+export interface PauseRequestUpdateWithoutMembershipDataInput {
+  pausePending?: boolean | null;
+  pauseDate?: any | null;
+  resumeDate?: any | null;
+}
+
+export interface PauseRequestUpsertWithWhereUniqueWithoutMembershipInput {
+  where: PauseRequestWhereUniqueInput;
+  update: PauseRequestUpdateWithoutMembershipDataInput;
+  create: PauseRequestCreateWithoutMembershipInput;
+}
+
+export interface PauseRequestWhereUniqueInput {
   id?: string | null;
 }
 
@@ -1552,6 +1837,7 @@ export interface ProductCreateWithoutCategoryInput {
   secondaryColor?: ColorCreateOneInput | null;
   tags?: TagCreateManyWithoutProductsInput | null;
   functions?: ProductFunctionCreateManyInput | null;
+  materialCategory?: ProductMaterialCategoryCreateOneWithoutProductsInput | null;
   variants?: ProductVariantCreateManyWithoutProductInput | null;
 }
 
@@ -1580,6 +1866,7 @@ export interface ProductCreateWithoutVariantsInput {
   secondaryColor?: ColorCreateOneInput | null;
   tags?: TagCreateManyWithoutProductsInput | null;
   functions?: ProductFunctionCreateManyInput | null;
+  materialCategory?: ProductMaterialCategoryCreateOneWithoutProductsInput | null;
 }
 
 export interface ProductCreateinnerMaterialsInput {
@@ -1673,6 +1960,42 @@ export interface ProductFunctionUpsertWithWhereUniqueNestedInput {
 export interface ProductFunctionWhereUniqueInput {
   id?: string | null;
   name?: string | null;
+}
+
+export interface ProductMaterialCategoryCreateOneWithoutProductsInput {
+  create?: ProductMaterialCategoryCreateWithoutProductsInput | null;
+  connect?: ProductMaterialCategoryWhereUniqueInput | null;
+}
+
+export interface ProductMaterialCategoryCreateWithoutProductsInput {
+  id?: string | null;
+  slug: string;
+  lifeExpectancy: number;
+  category: CategoryCreateOneInput;
+}
+
+export interface ProductMaterialCategoryUpdateOneWithoutProductsInput {
+  create?: ProductMaterialCategoryCreateWithoutProductsInput | null;
+  connect?: ProductMaterialCategoryWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: ProductMaterialCategoryUpdateWithoutProductsDataInput | null;
+  upsert?: ProductMaterialCategoryUpsertWithoutProductsInput | null;
+}
+
+export interface ProductMaterialCategoryUpdateWithoutProductsDataInput {
+  slug?: string | null;
+  lifeExpectancy?: number | null;
+  category?: CategoryUpdateOneRequiredInput | null;
+}
+
+export interface ProductMaterialCategoryUpsertWithoutProductsInput {
+  update: ProductMaterialCategoryUpdateWithoutProductsDataInput;
+  create: ProductMaterialCategoryCreateWithoutProductsInput;
+}
+
+export interface ProductMaterialCategoryWhereUniqueInput {
+  id?: string | null;
 }
 
 export interface ProductModelCreateOneWithoutProductsInput {
@@ -1925,6 +2248,7 @@ export interface ProductUpdateWithoutCategoryDataInput {
   secondaryColor?: ColorUpdateOneInput | null;
   tags?: TagUpdateManyWithoutProductsInput | null;
   functions?: ProductFunctionUpdateManyInput | null;
+  materialCategory?: ProductMaterialCategoryUpdateOneWithoutProductsInput | null;
   variants?: ProductVariantUpdateManyWithoutProductInput | null;
 }
 
@@ -1952,6 +2276,7 @@ export interface ProductUpdateWithoutVariantsDataInput {
   secondaryColor?: ColorUpdateOneInput | null;
   tags?: TagUpdateManyWithoutProductsInput | null;
   functions?: ProductFunctionUpdateManyInput | null;
+  materialCategory?: ProductMaterialCategoryUpdateOneWithoutProductsInput | null;
 }
 
 export interface ProductUpdateinnerMaterialsInput {
@@ -2562,7 +2887,237 @@ export interface ProductWhereUniqueInput {
   slug?: string | null;
 }
 
-export interface ReservationCreateInput {
+export interface PushNotificationReceiptCreateManyWithoutUsersInput {
+  create?: PushNotificationReceiptCreateWithoutUsersInput[] | null;
+  connect?: PushNotificationReceiptWhereUniqueInput[] | null;
+}
+
+export interface PushNotificationReceiptCreateWithoutUsersInput {
+  id?: string | null;
+  route?: string | null;
+  screen?: string | null;
+  uri?: string | null;
+  interest?: string | null;
+  body: string;
+  title?: string | null;
+  recordID?: string | null;
+  recordSlug?: string | null;
+  sentAt: any;
+}
+
+export interface PushNotificationReceiptScalarWhereInput {
+  AND?: PushNotificationReceiptScalarWhereInput[] | null;
+  OR?: PushNotificationReceiptScalarWhereInput[] | null;
+  NOT?: PushNotificationReceiptScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  route?: string | null;
+  route_not?: string | null;
+  route_in?: string[] | null;
+  route_not_in?: string[] | null;
+  route_lt?: string | null;
+  route_lte?: string | null;
+  route_gt?: string | null;
+  route_gte?: string | null;
+  route_contains?: string | null;
+  route_not_contains?: string | null;
+  route_starts_with?: string | null;
+  route_not_starts_with?: string | null;
+  route_ends_with?: string | null;
+  route_not_ends_with?: string | null;
+  screen?: string | null;
+  screen_not?: string | null;
+  screen_in?: string[] | null;
+  screen_not_in?: string[] | null;
+  screen_lt?: string | null;
+  screen_lte?: string | null;
+  screen_gt?: string | null;
+  screen_gte?: string | null;
+  screen_contains?: string | null;
+  screen_not_contains?: string | null;
+  screen_starts_with?: string | null;
+  screen_not_starts_with?: string | null;
+  screen_ends_with?: string | null;
+  screen_not_ends_with?: string | null;
+  uri?: string | null;
+  uri_not?: string | null;
+  uri_in?: string[] | null;
+  uri_not_in?: string[] | null;
+  uri_lt?: string | null;
+  uri_lte?: string | null;
+  uri_gt?: string | null;
+  uri_gte?: string | null;
+  uri_contains?: string | null;
+  uri_not_contains?: string | null;
+  uri_starts_with?: string | null;
+  uri_not_starts_with?: string | null;
+  uri_ends_with?: string | null;
+  uri_not_ends_with?: string | null;
+  interest?: string | null;
+  interest_not?: string | null;
+  interest_in?: string[] | null;
+  interest_not_in?: string[] | null;
+  interest_lt?: string | null;
+  interest_lte?: string | null;
+  interest_gt?: string | null;
+  interest_gte?: string | null;
+  interest_contains?: string | null;
+  interest_not_contains?: string | null;
+  interest_starts_with?: string | null;
+  interest_not_starts_with?: string | null;
+  interest_ends_with?: string | null;
+  interest_not_ends_with?: string | null;
+  body?: string | null;
+  body_not?: string | null;
+  body_in?: string[] | null;
+  body_not_in?: string[] | null;
+  body_lt?: string | null;
+  body_lte?: string | null;
+  body_gt?: string | null;
+  body_gte?: string | null;
+  body_contains?: string | null;
+  body_not_contains?: string | null;
+  body_starts_with?: string | null;
+  body_not_starts_with?: string | null;
+  body_ends_with?: string | null;
+  body_not_ends_with?: string | null;
+  title?: string | null;
+  title_not?: string | null;
+  title_in?: string[] | null;
+  title_not_in?: string[] | null;
+  title_lt?: string | null;
+  title_lte?: string | null;
+  title_gt?: string | null;
+  title_gte?: string | null;
+  title_contains?: string | null;
+  title_not_contains?: string | null;
+  title_starts_with?: string | null;
+  title_not_starts_with?: string | null;
+  title_ends_with?: string | null;
+  title_not_ends_with?: string | null;
+  recordID?: string | null;
+  recordID_not?: string | null;
+  recordID_in?: string[] | null;
+  recordID_not_in?: string[] | null;
+  recordID_lt?: string | null;
+  recordID_lte?: string | null;
+  recordID_gt?: string | null;
+  recordID_gte?: string | null;
+  recordID_contains?: string | null;
+  recordID_not_contains?: string | null;
+  recordID_starts_with?: string | null;
+  recordID_not_starts_with?: string | null;
+  recordID_ends_with?: string | null;
+  recordID_not_ends_with?: string | null;
+  recordSlug?: string | null;
+  recordSlug_not?: string | null;
+  recordSlug_in?: string[] | null;
+  recordSlug_not_in?: string[] | null;
+  recordSlug_lt?: string | null;
+  recordSlug_lte?: string | null;
+  recordSlug_gt?: string | null;
+  recordSlug_gte?: string | null;
+  recordSlug_contains?: string | null;
+  recordSlug_not_contains?: string | null;
+  recordSlug_starts_with?: string | null;
+  recordSlug_not_starts_with?: string | null;
+  recordSlug_ends_with?: string | null;
+  recordSlug_not_ends_with?: string | null;
+  sentAt?: any | null;
+  sentAt_not?: any | null;
+  sentAt_in?: any[] | null;
+  sentAt_not_in?: any[] | null;
+  sentAt_lt?: any | null;
+  sentAt_lte?: any | null;
+  sentAt_gt?: any | null;
+  sentAt_gte?: any | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+}
+
+export interface PushNotificationReceiptUpdateManyDataInput {
+  route?: string | null;
+  screen?: string | null;
+  uri?: string | null;
+  interest?: string | null;
+  body?: string | null;
+  title?: string | null;
+  recordID?: string | null;
+  recordSlug?: string | null;
+  sentAt?: any | null;
+}
+
+export interface PushNotificationReceiptUpdateManyWithWhereNestedInput {
+  where: PushNotificationReceiptScalarWhereInput;
+  data: PushNotificationReceiptUpdateManyDataInput;
+}
+
+export interface PushNotificationReceiptUpdateManyWithoutUsersInput {
+  create?: PushNotificationReceiptCreateWithoutUsersInput[] | null;
+  connect?: PushNotificationReceiptWhereUniqueInput[] | null;
+  set?: PushNotificationReceiptWhereUniqueInput[] | null;
+  disconnect?: PushNotificationReceiptWhereUniqueInput[] | null;
+  delete?: PushNotificationReceiptWhereUniqueInput[] | null;
+  update?: PushNotificationReceiptUpdateWithWhereUniqueWithoutUsersInput[] | null;
+  updateMany?: PushNotificationReceiptUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: PushNotificationReceiptScalarWhereInput[] | null;
+  upsert?: PushNotificationReceiptUpsertWithWhereUniqueWithoutUsersInput[] | null;
+}
+
+export interface PushNotificationReceiptUpdateWithWhereUniqueWithoutUsersInput {
+  where: PushNotificationReceiptWhereUniqueInput;
+  data: PushNotificationReceiptUpdateWithoutUsersDataInput;
+}
+
+export interface PushNotificationReceiptUpdateWithoutUsersDataInput {
+  route?: string | null;
+  screen?: string | null;
+  uri?: string | null;
+  interest?: string | null;
+  body?: string | null;
+  title?: string | null;
+  recordID?: string | null;
+  recordSlug?: string | null;
+  sentAt?: any | null;
+}
+
+export interface PushNotificationReceiptUpsertWithWhereUniqueWithoutUsersInput {
+  where: PushNotificationReceiptWhereUniqueInput;
+  update: PushNotificationReceiptUpdateWithoutUsersDataInput;
+  create: PushNotificationReceiptCreateWithoutUsersInput;
+}
+
+export interface PushNotificationReceiptWhereUniqueInput {
+  id?: string | null;
+}
+
+export interface ReservationCreateWithoutFeedbackInput {
   id?: string | null;
   reservationNumber: number;
   shipped: boolean;
@@ -2574,9 +3129,9 @@ export interface ReservationCreateInput {
   customer: CustomerCreateOneWithoutReservationsInput;
   sentPackage?: PackageCreateOneInput | null;
   returnedPackage?: PackageCreateOneInput | null;
-  location?: LocationCreateOneInput | null;
   products?: PhysicalProductCreateManyInput | null;
   receipt?: ReservationReceiptCreateOneWithoutReservationInput | null;
+  lastLocation?: LocationCreateOneInput | null;
 }
 
 export interface ReservationFeedbackUpdateInput {
@@ -2585,7 +3140,7 @@ export interface ReservationFeedbackUpdateInput {
   respondedAt?: any | null;
   feedbacks?: ProductVariantFeedbackUpdateManyWithoutReservationFeedbackInput | null;
   user?: UserUpdateOneRequiredInput | null;
-  reservation?: ReservationUpdateOneRequiredInput | null;
+  reservation?: ReservationUpdateOneRequiredWithoutFeedbackInput | null;
 }
 
 export interface ReservationReceiptCreateOneWithoutReservationInput {
@@ -2713,7 +3268,14 @@ export interface ReservationReceiptWhereUniqueInput {
   id?: string | null;
 }
 
-export interface ReservationUpdateDataInput {
+export interface ReservationUpdateOneRequiredWithoutFeedbackInput {
+  create?: ReservationCreateWithoutFeedbackInput | null;
+  connect?: ReservationWhereUniqueInput | null;
+  update?: ReservationUpdateWithoutFeedbackDataInput | null;
+  upsert?: ReservationUpsertWithoutFeedbackInput | null;
+}
+
+export interface ReservationUpdateWithoutFeedbackDataInput {
   reservationNumber?: number | null;
   shipped?: boolean | null;
   status?: ReservationStatus | null;
@@ -2724,21 +3286,14 @@ export interface ReservationUpdateDataInput {
   customer?: CustomerUpdateOneRequiredWithoutReservationsInput | null;
   sentPackage?: PackageUpdateOneInput | null;
   returnedPackage?: PackageUpdateOneInput | null;
-  location?: LocationUpdateOneInput | null;
   products?: PhysicalProductUpdateManyInput | null;
   receipt?: ReservationReceiptUpdateOneWithoutReservationInput | null;
+  lastLocation?: LocationUpdateOneInput | null;
 }
 
-export interface ReservationUpdateOneRequiredInput {
-  create?: ReservationCreateInput | null;
-  connect?: ReservationWhereUniqueInput | null;
-  update?: ReservationUpdateDataInput | null;
-  upsert?: ReservationUpsertNestedInput | null;
-}
-
-export interface ReservationUpsertNestedInput {
-  update: ReservationUpdateDataInput;
-  create: ReservationCreateInput;
+export interface ReservationUpsertWithoutFeedbackInput {
+  update: ReservationUpdateWithoutFeedbackDataInput;
+  create: ReservationCreateWithoutFeedbackInput;
 }
 
 export interface ReservationWhereUniqueInput {
@@ -3049,8 +3604,9 @@ export interface UserCreateInput {
   firstName: string;
   lastName: string;
   role?: UserRole | null;
-  pushNotifications?: PushNotificationStatus | null;
+  pushNotificationStatus?: PushNotificationStatus | null;
   roles?: UserCreaterolesInput | null;
+  pushNotifications?: PushNotificationReceiptCreateManyWithoutUsersInput | null;
 }
 
 export interface UserCreateOneInput {
@@ -3068,8 +3624,9 @@ export interface UserUpdateDataInput {
   firstName?: string | null;
   lastName?: string | null;
   role?: UserRole | null;
-  pushNotifications?: PushNotificationStatus | null;
+  pushNotificationStatus?: PushNotificationStatus | null;
   roles?: UserUpdaterolesInput | null;
+  pushNotifications?: PushNotificationReceiptUpdateManyWithoutUsersInput | null;
 }
 
 export interface UserUpdateOneInput {

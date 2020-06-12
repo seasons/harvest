@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { LetterSize, BottomSizeType, ProductType } from "./globalTypes";
+import { ProductType, LetterSize, BottomSizeType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetProduct
@@ -11,6 +11,7 @@ import { LetterSize, BottomSizeType, ProductType } from "./globalTypes";
 
 export interface GetProduct_product_modelSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -34,11 +35,13 @@ export interface GetProduct_product_brand_products_images {
 
 export interface GetProduct_product_brand_products_brand {
   __typename: "Brand";
+  id: string;
   name: string;
 }
 
 export interface GetProduct_product_brand_products_variants_manufacturerSizes {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -55,23 +58,23 @@ export interface GetProduct_product_brand_products_variants_internalSize_top {
 
 export interface GetProduct_product_brand_products_variants_internalSize_bottom {
   __typename: "BottomSize";
+  id: string;
   type: BottomSizeType | null;
   value: string | null;
 }
 
 export interface GetProduct_product_brand_products_variants_internalSize {
   __typename: "Size";
-  top: GetProduct_product_brand_products_variants_internalSize_top | null;
-  bottom: GetProduct_product_brand_products_variants_internalSize_bottom | null;
+  id: string;
   productType: ProductType | null;
   display: string;
+  top: GetProduct_product_brand_products_variants_internalSize_top | null;
+  bottom: GetProduct_product_brand_products_variants_internalSize_bottom | null;
 }
 
 export interface GetProduct_product_brand_products_variants {
   __typename: "ProductVariant";
   id: string;
-  manufacturerSizes: GetProduct_product_brand_products_variants_manufacturerSizes[] | null;
-  internalSize: GetProduct_product_brand_products_variants_internalSize | null;
   total: number;
   reservable: number;
   nonReservable: number;
@@ -79,6 +82,8 @@ export interface GetProduct_product_brand_products_variants {
   isInBag: boolean;
   isSaved: boolean;
   isWanted: boolean;
+  manufacturerSizes: GetProduct_product_brand_products_variants_manufacturerSizes[] | null;
+  internalSize: GetProduct_product_brand_products_variants_internalSize | null;
 }
 
 export interface GetProduct_product_brand_products {
@@ -107,6 +112,7 @@ export interface GetProduct_product_images {
 
 export interface GetProduct_product_variants_manufacturerSizes {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -123,23 +129,23 @@ export interface GetProduct_product_variants_internalSize_top {
 
 export interface GetProduct_product_variants_internalSize_bottom {
   __typename: "BottomSize";
+  id: string;
   type: BottomSizeType | null;
   value: string | null;
 }
 
 export interface GetProduct_product_variants_internalSize {
   __typename: "Size";
-  top: GetProduct_product_variants_internalSize_top | null;
-  bottom: GetProduct_product_variants_internalSize_bottom | null;
+  id: string;
   productType: ProductType | null;
   display: string;
+  top: GetProduct_product_variants_internalSize_top | null;
+  bottom: GetProduct_product_variants_internalSize_bottom | null;
 }
 
 export interface GetProduct_product_variants {
   __typename: "ProductVariant";
   id: string;
-  manufacturerSizes: GetProduct_product_variants_manufacturerSizes[] | null;
-  internalSize: GetProduct_product_variants_internalSize | null;
   total: number;
   reservable: number;
   nonReservable: number;
@@ -147,6 +153,8 @@ export interface GetProduct_product_variants {
   isInBag: boolean;
   isSaved: boolean;
   isWanted: boolean;
+  manufacturerSizes: GetProduct_product_variants_manufacturerSizes[] | null;
+  internalSize: GetProduct_product_variants_internalSize | null;
 }
 
 export interface GetProduct_product {

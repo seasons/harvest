@@ -9,6 +9,7 @@
 
 export interface BagItemProductVariant_product_modelSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -26,6 +27,7 @@ export interface BagItemProductVariant_product_images {
 
 export interface BagItemProductVariant_product_variants_internalSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 

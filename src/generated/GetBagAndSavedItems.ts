@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Plan, BagItemStatus } from "./globalTypes";
+import { Plan, CustomerStatus, BagItemStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBagAndSavedItems
@@ -18,6 +18,7 @@ export interface GetBagAndSavedItems_me_customer_invoices {
 export interface GetBagAndSavedItems_me_customer_membership_pauseRequests {
   __typename: "PauseRequest";
   id: string;
+  resumeDate: any | null;
   pauseDate: any | null;
   pausePending: boolean;
 }
@@ -30,6 +31,7 @@ export interface GetBagAndSavedItems_me_customer_membership {
 
 export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_internalSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -78,6 +80,7 @@ export interface GetBagAndSavedItems_me_customer {
   __typename: "Customer";
   id: string;
   plan: Plan | null;
+  status: CustomerStatus | null;
   invoices: (GetBagAndSavedItems_me_customer_invoices | null)[] | null;
   membership: GetBagAndSavedItems_me_customer_membership | null;
   reservations: GetBagAndSavedItems_me_customer_reservations[] | null;
@@ -93,6 +96,7 @@ export interface GetBagAndSavedItems_me_activeReservation {
 
 export interface GetBagAndSavedItems_me_bag_productVariant_product_modelSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -110,6 +114,7 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_images {
 
 export interface GetBagAndSavedItems_me_bag_productVariant_product_variants_internalSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -147,6 +152,7 @@ export interface GetBagAndSavedItems_me_bag {
 
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_modelSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -164,6 +170,7 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_images
 
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants_internalSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 

@@ -17,6 +17,7 @@ export interface GetCustomer_me_user {
 
 export interface GetCustomer_me_bag_productVariant_product_modelSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -34,6 +35,7 @@ export interface GetCustomer_me_bag_productVariant_product_images {
 
 export interface GetCustomer_me_bag_productVariant_product_variants_internalSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 

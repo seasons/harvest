@@ -15,7 +15,7 @@ export interface GetUser_me_customer_user {
   firstName: string;
   lastName: string;
   email: string;
-  pushNotifications: PushNotificationStatus;
+  pushNotificationStatus: PushNotificationStatus | null;
   role: UserRole;
 }
 
