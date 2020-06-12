@@ -26,7 +26,7 @@ export const GuestView = ({ navigation }) => {
         </Box>
         <Box px={2}></Box>
         <Box px={2}>
-          <ButtonWithArrow onPress={() => navigation.navigate("Webview", { uri: "http://signup.seasons.nyc/" })}>
+          <ButtonWithArrow onPress={() => navigation.navigate("Modal", { screen: "CreateAccountModal" })}>
             Join the waitlist
           </ButtonWithArrow>
           <Spacer mb={3} />
