@@ -32,6 +32,13 @@ export const BagTab: React.FC<{
     ],
     onCompleted: () => {
       setIsMutating(false)
+      const popUpData = {
+        title: "Got it!",
+        note: "Your membership is no longer scheduled to be paused.",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
+      }
+      showPopUp(popUpData)
     },
     onError: (err) => {
       const popUpData = {

@@ -1,9 +1,9 @@
 import React from "react"
-import { ContactUsButton, Container, Spacer, FixedBackArrow, FixedButton, Flex } from "App/Components"
+import { ContactUsButton, Container, Spacer, FixedBackArrow, Flex } from "App/Components"
 import gql from "graphql-tag"
 import { useQuery } from "react-apollo"
 import { Loader } from "App/Components/Loader"
-import { FlatList, Linking } from "react-native"
+import { FlatList } from "react-native"
 import { FaqSection } from "./Components/FaqSection"
 
 export const GET_FAQ = gql`
@@ -21,13 +21,13 @@ export const GET_FAQ = gql`
 `
 
 export const Faq = ({ navigation }) => {
-  const { loading, error, data } = useQuery(GET_FAQ, {})
+  const { loading, data } = useQuery(GET_FAQ, {})
 
   if (loading) {
     return <Loader />
   }
 
-  const renderItem = item => {
+  const renderItem = (item) => {
     return <FaqSection section={item} />
   }
 
@@ -38,7 +38,7 @@ export const Faq = ({ navigation }) => {
         <FlatList
           ListHeaderComponent={() => <Spacer mb={80} />}
           data={data?.faq?.sections}
-          keyExtractor={item => item.title}
+          keyExtractor={(item) => item.title}
           renderItem={({ item }) => renderItem(item)}
           ListFooterComponent={() => <Spacer mb={100} />}
         />
