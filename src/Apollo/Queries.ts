@@ -80,7 +80,7 @@ export const GET_PRODUCT = gql`
       }
       outerMaterials
       innerMaterials
-      images(size: Thumb) {
+      images(size: Medium) {
         id
         url
       }

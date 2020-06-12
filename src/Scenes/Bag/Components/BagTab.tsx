@@ -32,6 +32,13 @@ export const BagTab: React.FC<{
     ],
     onCompleted: () => {
       setIsMutating(false)
+      const popUpData = {
+        title: "Got it!",
+        note: "Your membership is no longer scheduled to be paused.",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
+      }
+      showPopUp(popUpData)
     },
     onError: (err) => {
       const popUpData = {
@@ -79,36 +86,38 @@ export const BagTab: React.FC<{
         </Sans>
         <Spacer mb={2} />
       </Box>
-      <Box px={2}>
-        <Separator color={color("black10")} />
-      </Box>
       {showPendingMessage && (
-        <Box px={2} py={2}>
-          <Sans size="1" color="black50">
-            {`Your membership is scheduled to be paused on ${DateTime.fromISO(pauseRequest.pauseDate).toFormat(
-              "EEEE LLLL dd"
-            )}. To continue it tap `}
-            <Sans
-              size="1"
-              style={{ textDecorationLine: "underline" }}
-              onPress={async () => {
-                if (isMutating) {
-                  return
-                }
-                setIsMutating(true)
-                const subscriptionId = me?.customer?.invoices?.[0]?.subscriptionId || ""
-                await removeScheduledPause({
-                  variables: {
-                    subscriptionID: subscriptionId,
-                  },
-                })
-              }}
-            >
-              here
+        <>
+          <Box px={2}>
+            <Separator color={color("black10")} />
+          </Box>
+          <Box px={2} py={2}>
+            <Sans size="1" color="black50">
+              {`Your membership is scheduled to be paused on ${DateTime.fromISO(pauseRequest.pauseDate).toFormat(
+                "EEEE LLLL dd"
+              )}. To continue it tap `}
+              <Sans
+                size="1"
+                style={{ textDecorationLine: "underline" }}
+                onPress={async () => {
+                  if (isMutating) {
+                    return
+                  }
+                  setIsMutating(true)
+                  const subscriptionId = me?.customer?.invoices?.[0]?.subscriptionId || ""
+                  await removeScheduledPause({
+                    variables: {
+                      subscriptionID: subscriptionId,
+                    },
+                  })
+                }}
+              >
+                here
+              </Sans>
+              .
             </Sans>
-            .
-          </Sans>
-        </Box>
+          </Box>
+        </>
       )}
       {items.map((bagItem, index) => {
         return bagItem.productID.length > 0 ? (

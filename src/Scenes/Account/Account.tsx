@@ -5,7 +5,7 @@ import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
-import { ScrollView, StatusBar } from "react-native"
+import { ScrollView, StatusBar, Linking } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { ProfileList } from "./ProfileList"
@@ -91,7 +91,7 @@ export const Account = screenTrack()((props) => {
     {
       title: "Help and support",
       icon: <QuestionMark />,
-      onPress: () => navigation.navigate("Faq"),
+      onPress: () => Linking.openURL(`mailto:membership@seasons.nyc?subject="Support"`),
       tracking: Schema.ActionNames.SupportTapped,
     },
     {

@@ -75,7 +75,6 @@ export const Brand = screenTrack({
       orderBy: "createdAt_DESC",
     },
   })
-  console.log("data", data)
 
   const products = data?.brand?.products
   const basedIn = data?.brand?.basedIn
