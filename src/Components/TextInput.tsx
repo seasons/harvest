@@ -23,6 +23,7 @@ export interface TextInputProps {
   autoFocus?: boolean
   blurOnSubmit?: boolean
   onChangeText?: (inputKey: string, text: string) => void
+  keyboardType?: string
 }
 
 enum DisplayState {
@@ -81,6 +82,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   autoCapitalize = "none",
   autoFocus,
   blurOnSubmit = true,
+  keyboardType,
 }) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
   const [current, setCurrent] = React.useState(currentValue ? DisplayState.Active : DisplayState.Inactive)
@@ -128,6 +130,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             placeholderTextColor={variant === "light" ? color("black50") : color("black25")}
             onChangeText={(text) => handleOnChangeText(text)}
             value={value}
+            keyboardType={keyboardType}
           />
         )}
       </Spring>
@@ -135,7 +138,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   )
 }
 
-const StyledTextInput = styled(RNTextInput)<TextInputProps>`
+const StyledTextInput = styled(RNTextInput) <TextInputProps>`
   border-width: 1;
   height: 56;
   border-radius: 8;
