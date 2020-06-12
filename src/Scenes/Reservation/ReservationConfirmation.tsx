@@ -7,6 +7,7 @@ import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
 import { ReservationItem } from "./Components/ReservationItem"
+import { Loader } from "App/Components/Loader"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -20,8 +21,10 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
       customer {
         id
         detail {
+          id
           phoneNumber
           shippingAddress {
+            id
             slug
             name
             address1
@@ -39,9 +42,10 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
             productVariant {
               id
               product {
-                name
                 id
+                name
                 modelSize {
+                  id
                   display
                 }
                 brand {
@@ -49,6 +53,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
                   name
                 }
                 images {
+                  id
                   url
                 }
                 variants {
@@ -76,11 +81,14 @@ export const ReservationConfirmation = screenTrack()((props) => {
     console.log("error reservationConfirmation:", error)
   }
 
+  if (!data) {
+    return <Loader />
+  }
+
   const customer = data?.me?.customer
   const address = customer?.detail?.shippingAddress
-  const reservation = customer?.reservations?.[0] || { reservationNumber: "", products: [] }
-
-  const items = reservation?.products ?? []
+  const reservation = customer?.reservations?.[0]
+  const items = reservation?.products
 
   const SectionHeader = ({ title, content = null, bottomSpacing = 1, hideSeparator = false }) => {
     return (
@@ -164,7 +172,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
           <Box mb={5}>
             <SectionHeader title="Items" />
             <Box mt={1} mb={4}>
-              {items.map((item, i) => {
+              {items?.map((item, i) => {
                 return (
                   <Box key={item.id}>
                     <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />

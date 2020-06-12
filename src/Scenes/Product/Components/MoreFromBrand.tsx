@@ -2,8 +2,13 @@ import { Box, ProductGridItem, Sans } from "App/Components"
 import React, { useState, useEffect } from "react"
 import { FlatList } from "react-native"
 import { ProductGridItemSkeleton } from "./ProductGridItemSkeleton"
+import { GetProduct_product_brand_products } from "App/generated/GetProduct"
 
-export const MoreFromBrand = ({ products, brandName }) => {
+export const MoreFromBrand: React.FC<{
+  products: GetProduct_product_brand_products[]
+  brandName: string
+  flatListRef: React.RefObject<any>
+}> = ({ products, brandName, flatListRef }) => {
   const [items, setItems] = useState(new Array(2).fill({ id: "" }))
 
   useEffect(() => {
@@ -28,7 +33,7 @@ export const MoreFromBrand = ({ products, brandName }) => {
             return (
               <Box mr={1}>
                 {item.id ? (
-                  <ProductGridItem product={item} addLeftSpacing={false} showBrandName />
+                  <ProductGridItem flatListRef={flatListRef} product={item} addLeftSpacing={false} showBrandName />
                 ) : (
                   <ProductGridItemSkeleton />
                 )}

@@ -57,37 +57,31 @@ export const BagTab: React.FC<{
 
   return (
     <Box>
-      {hasActiveReservation && (
-        <Box px={2} pt={3}>
-          <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
-            <Sans size="2">Current rotation</Sans>
-            <Sans
-              size="1"
-              style={{ textDecorationLine: "underline" }}
-              onPress={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.FAQButtonTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                })
-                navigation.navigate("Faq")
-              }}
-            >
-              View FAQ
-            </Sans>
-          </Flex>
-          {!!returnReminder && (
-            <Sans size="2" color="black50">
-              {returnReminder}
-            </Sans>
-          )}
-          <Spacer mb={2} />
-        </Box>
-      )}
-      {showPendingMessage && hasActiveReservation && (
-        <Box px={2}>
-          <Separator color={color("black10")} />
-        </Box>
-      )}
+      <Box px={2} pt={3}>
+        <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
+          <Sans size="2">{hasActiveReservation ? "Current rotation" : "My bag"}</Sans>
+          <Sans
+            size="1"
+            style={{ textDecorationLine: "underline" }}
+            onPress={() => {
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.FAQButtonTapped,
+                actionType: Schema.ActionTypes.Tap,
+              })
+              navigation.navigate("Faq")
+            }}
+          >
+            View FAQ
+          </Sans>
+        </Flex>
+        <Sans size="2" color="black50">
+          {hasActiveReservation && !!returnReminder ? returnReminder : "Reserve your order below"}
+        </Sans>
+        <Spacer mb={2} />
+      </Box>
+      <Box px={2}>
+        <Separator color={color("black10")} />
+      </Box>
       {showPendingMessage && (
         <Box px={2} py={2}>
           <Sans size="1" color="black50">

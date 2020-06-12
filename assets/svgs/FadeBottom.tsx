@@ -4,8 +4,8 @@ import { View } from "react-native"
 
 export const FadeBottom = (props) => {
   return (
-    <View style={{ aspectRatio: 375 / 280 }}>
-      <Svg width="100%" height="100%" viewBox="0 0 375 280" {...props}>
+    <View style={{ aspectRatio: 375 / 160 }}>
+      <Svg width="100%" height="100%" viewBox="0 0 375 160" {...props}>
         <Defs>
           <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="prefix__a">
             <Stop offset="0%" />
@@ -13,11 +13,11 @@ export const FadeBottom = (props) => {
           </LinearGradient>
         </Defs>
         <Path
-          transform="matrix(1 0 0 -1 0 560)"
-          d="M0 280h375v280H0z"
+          transform="matrix(1 0 0 -1 0 375)"
+          d="M0 215h375v160H0z"
           fill="url(#prefix__a)"
           fillRule="evenodd"
-          opacity={0.8}
+          opacity={0.65}
         />
       </Svg>
     </View>

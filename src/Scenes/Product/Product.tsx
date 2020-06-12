@@ -8,7 +8,7 @@ import { space } from "App/utils"
 import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
 import { find } from "lodash"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
@@ -40,6 +40,7 @@ export const Product = screenTrack({
 })((props: ProductProps) => {
   const { authState } = useAuthContext()
   const insets = useSafeArea()
+  const flatListRef = useRef(null)
   const [showWantedConfirmation, setShowWantedConfirmation] = useState(false)
   const userHasSession = !!authState?.userSession
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
@@ -134,7 +135,7 @@ export const Product = screenTrack({
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
       case "moreLikeThis":
-        return <MoreFromBrand products={brandProducts} brandName={product.brand.name} />
+        return <MoreFromBrand flatListRef={flatListRef} products={brandProducts} brandName={product.brand.name} />
       default:
         return null
     }
@@ -150,6 +151,7 @@ export const Product = screenTrack({
       <FlatList
         ListHeaderComponent={() => <Spacer mb={insets.top} />}
         data={sections}
+        ref={flatListRef}
         ListFooterComponent={() => <Spacer mb={listFooterSpacing} />}
         keyExtractor={(item) => item}
         renderItem={(item) => renderItem(item)}

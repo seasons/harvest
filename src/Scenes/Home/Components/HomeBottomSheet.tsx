@@ -4,12 +4,14 @@ import { color, space } from "App/utils"
 import { FlatList } from "react-native-gesture-handler"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import { HomeFooter, BrandsRail, ProductsRail, TagsRail } from "./"
-import { PRODUCT_ASPECT_RATIO, NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
+import { NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
 import BottomSheet from "reanimated-bottom-sheet"
 import { useSafeArea } from "react-native-safe-area-context"
+
+const dimensions = Dimensions.get("window")
 
 export const HomeBottomSheet = ({ data }) => {
   const [sections, setSections] = useState([])
@@ -50,8 +52,7 @@ export const HomeBottomSheet = ({ data }) => {
     setSections(sections)
   }, [data])
 
-  const dimensions = Dimensions.get("window")
-  const blogContentHeight = dimensions.width * PRODUCT_ASPECT_RATIO
+  const blogContentHeight = dimensions.width
   const snapPoint = dimensions.height - blogContentHeight - NAV_HEIGHT
 
   const renderItem = (item) => {

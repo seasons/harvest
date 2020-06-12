@@ -29,7 +29,7 @@ export const GET_BAG = gql`
         }
         reservations(orderBy: createdAt_DESC) {
           id
-          status(display: true)
+          status
           reservationNumber
           createdAt
           products {

@@ -6,13 +6,12 @@ import { space } from "App/utils"
 import styled from "styled-components/native"
 import { FlatList, TouchableWithoutFeedback, Dimensions } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { FadeTop, FadeBottom } from "Assets/svgs"
 
 const windowWidth = Dimensions.get("window").width
-const slideHeight = windowWidth * PRODUCT_ASPECT_RATIO
+const slideHeight = windowWidth
 
 export const HomeBlogContent = ({ items }) => {
   const [currentPage, setCurrentPage] = useState(1)
