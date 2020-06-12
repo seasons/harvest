@@ -201,7 +201,7 @@ export const BagItem: React.FC<BagItemProps> = ({
               )}
             </Flex>
           </BagItemContainer>
-          <Spacer mb={2} />
+          <Spacer mb={isReserved ? 1 : 2} />
         </Box>
       </TouchableWithoutFeedback>
       {isMutating && (
