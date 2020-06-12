@@ -2,7 +2,9 @@ import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } fr
 import { color } from "App/utils"
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Animated, Dimensions, Modal, SafeAreaView, StyleSheet, View } from "react-native"
-import DatePicker from "react-native-date-picker"
+// import DatePicker from "react-native-date-picker"
+// import DateTimePicker from '@react-native-community/datetimepicker'
+import DatePicker from 'react-native-date-picker'
 
 export interface DatePickerData {
     day: number
@@ -89,7 +91,8 @@ export const DatePickerPopUp: React.FC<DatePickerPopUpProps> = ({
                                 {title}
                             </Sans>
                             <Spacer mb={3} />
-                            <DatePicker onDateChange={setDate} />
+                            <DatePicker date={new Date()} onDateChange={setDate} />
+                            {/* <DateTimePicker mode="date" value={new Date()} onChange={(e, d) => setDate(d)} /> */}
                             <Spacer mb={3} />
                             <Button block variant="primaryBlack" onPress={() => onRequestClose(2)}>
                                 {buttonText}
