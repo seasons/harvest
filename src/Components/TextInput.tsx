@@ -23,6 +23,7 @@ export interface TextInputProps {
   autoFocus?: boolean
   blurOnSubmit?: boolean
   onChangeText?: (inputKey: string, text: string) => void
+  onFocus?: () => void
   keyboardType?: string
 }
 
@@ -83,6 +84,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   autoFocus,
   blurOnSubmit = true,
   keyboardType,
+  onFocus,
 }) => {
   const [previous, setPrevious] = React.useState(DisplayState.Inactive)
   const [current, setCurrent] = React.useState(currentValue ? DisplayState.Active : DisplayState.Inactive)
@@ -131,6 +133,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             onChangeText={(text) => handleOnChangeText(text)}
             value={value}
             keyboardType={keyboardType}
+            onFocus={() => { if (onFocus) { onFocus() } }}
           />
         )}
       </Spring>
