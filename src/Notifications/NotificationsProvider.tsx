@@ -26,9 +26,9 @@ export const GET_BEAMS_DATA = gql`
   }
 `
 
-export const UPDATE_USER_PUSH_NOTIFICATIONS = gql`
-  mutation UpdateUserPushNotifications($pushNotificationsStatus: String!) {
-    updateUserPushNotifications(pushNotificationsStatus: $pushNotificationsStatus) {
+export const UPDATE_USER_PUSH_NOTIFICATION_STATUS = gql`
+  mutation updateUserPushNotificationStatus($pushNotificationStatus: PushNotificationStatus!) {
+    updateUserPushNotificationStatus(pushNotificationStatus: $pushNotificationStatus) {
       pushNotificationStatus
     }
   }
@@ -52,7 +52,7 @@ const setUserId = (userId, token) => {
 
 export const NotificationsProvider = ({ children }) => {
   const navigation = useNavigation()
-  const [updateUserPushNotifications] = useMutation(UPDATE_USER_PUSH_NOTIFICATIONS, {
+  const [updateUserPushNotificationStatus] = useMutation(UPDATE_USER_PUSH_NOTIFICATION_STATUS, {
     refetchQueries: [
       {
         query: GET_USER,
@@ -219,9 +219,9 @@ export const NotificationsProvider = ({ children }) => {
       }
     },
     setDeviceNotifStatus: async (status) => {
-      await updateUserPushNotifications({
+      await updateUserPushNotificationStatus({
         variables: {
-          pushNotificationsStatus: status,
+          pushNotificationStatus: status,
         },
       })
     },
