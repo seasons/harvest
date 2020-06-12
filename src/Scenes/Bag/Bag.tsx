@@ -31,15 +31,18 @@ export const Bag = screenTrack()((props) => {
   const [refreshing, setRefreshing] = useState(false)
   const tracking = useTracking()
 
+  const { navigation, route } = props
+  const routeTab = route?.params?.tab
+  const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setBarStyle("dark-content")
+      if (!!routeTab && currentView !== routeTab) {
+        setCurrentView(routeTab)
+      }
     }, [])
   )
-
-  const { navigation, route } = props
-  const initialTab = route?.params?.tab
-  const [currentView, setCurrentView] = useState<BagView>(initialTab || BagView.Bag)
 
   const { data, refetch } = useQuery(GET_BAG)
   useEffect(() => {
