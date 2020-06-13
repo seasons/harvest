@@ -2,15 +2,7 @@ import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } fr
 import { color } from "App/utils"
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Animated, Dimensions, Modal, SafeAreaView, StyleSheet, View } from "react-native"
-// import DatePicker from "react-native-date-picker"
-// import DateTimePicker from '@react-native-community/datetimepicker'
-import DatePicker from 'react-native-date-picker'
-
-export interface DatePickerData {
-    day: number
-    month: number
-    year: number
-}
+import DateTimePicker from '@react-native-community/datetimepicker'
 
 export interface DatePickerPopUpProps {
     buttonText: string
@@ -25,7 +17,7 @@ export const DatePickerPopUp: React.FC<DatePickerPopUpProps> = ({
     visible,
     title,
 }) => {
-    // animation setup
+    // animation 
     const [lastVisibility, setLastVisibility] = useState(false)
 
     const screenHeight = Dimensions.get('screen').height
@@ -48,17 +40,7 @@ export const DatePickerPopUp: React.FC<DatePickerPopUpProps> = ({
     }
 
     if (visible !== lastVisibility) {
-        if (visible === true) {
-            // open
-            openAnimation.start(() => {
-
-            })
-        } else {
-            // close
-            closeAnimation.start(() => {
-
-            })
-        }
+        visible ? openAnimation.start() : closeAnimation.start()
         setLastVisibility(visible)
     }
 
@@ -67,11 +49,10 @@ export const DatePickerPopUp: React.FC<DatePickerPopUpProps> = ({
         outputRange: [0, 0, 1],
     })
 
-    // picker
-
-    const setDate = (date: Date) => {
-
-    }
+    // date
+    const [date, setDate] = useState(new Date())
+    const minDate = new Date(1900, 0, 1)
+    const maxDate = new Date()
 
     // render
 
@@ -90,11 +71,11 @@ export const DatePickerPopUp: React.FC<DatePickerPopUpProps> = ({
                             <Sans color={color("black100")} size="3">
                                 {title}
                             </Sans>
-                            <Spacer mb={3} />
-                            <DatePicker date={new Date()} onDateChange={setDate} />
-                            {/* <DateTimePicker mode="date" value={new Date()} onChange={(e, d) => setDate(d)} /> */}
-                            <Spacer mb={3} />
-                            <Button block variant="primaryBlack" onPress={() => onRequestClose(2)}>
+                            <Spacer mb={1} />
+                            {/* <DatePicker date={new Date()} onDateChange={setDate} /> */}
+                            <DateTimePicker mode="date" value={date} minimumDate={minDate} maximumDate={maxDate} onChange={(_, date) => setDate(date)} />
+                            <Spacer mb={1} />
+                            <Button block variant="primaryBlack" onPress={() => onRequestClose(date)}>
                                 {buttonText}
                             </Button>
                         </Box>

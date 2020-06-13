@@ -1,12 +1,14 @@
 import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { color } from "App/utils"
+import { DatePickerPopUp } from "./DatePickerPopUp"
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Text } from "Components/Typography"
-import { Keyboard, KeyboardEvent, ScrollView, TouchableWithoutFeedback } from "react-native"
-
-import { DatePickerPopUp, DatePickerPopUpProps, DatePickerData } from "./DatePickerPopUp"
-
+import { Keyboard, KeyboardEvent, ScrollView, TouchableWithoutFeedback, ViewStyle } from "react-native"
 // import { isValidEmail } from "App/helpers/regex"
+
+/////////////////////////////////////////////////////////////////////////////////
+// TODO: Create FakeTextInput for date thing. Using the real one is overkill.
+/////////////////////////////////////////////////////////////////////////////////
 
 interface CreateAccountProps {
     onAuth: (credentials, profile) => void
@@ -65,14 +67,18 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
     // Date picker popup
 
     const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
-    // const pickerRef: MutableRefObject<DatePickerPopUp> = useRef();
 
     const showDatePicker = () => {
         setIsDatePickerVisible(true)
     }
 
-    const closeDatePicker = (data) => {
+    const closeDatePicker = (date: Date) => {
+        const dateOfBirth = [date.getMonth() + 1, date.getDate(), date.getFullYear()]
+            .map(i => String(i).padStart(2, "0"))
+            .join("-")
+        setDateOfBirth(dateOfBirth)
         setIsDatePickerVisible(false)
+        validateForm()
     }
 
     // Form/field validation
@@ -86,32 +92,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
         const isDigit = (c: String) => c >= '0' && c <= '9'
         const reducer = (accumulator: boolean, currentValue: string) => accumulator && isDigit(currentValue)
         return Array.from(s).reduce(reducer, true)
-    }
-
-    const onDateOfBirthChange = (val) => {
-        // TODO: FIX
-        const noDashes = val.replace("-", "")
-        setZipCode(noDashes)
-        if (noDashes.length > 8 || !isWholeNumber(val)) {
-            // revert to previous valid value
-            setDateOfBirth(dateOfBirth)
-        } else {
-            const l: number = noDashes.length
-            let withDashes: string
-            if (l == 2) {
-                withDashes = noDashes + "-"
-            } else if (l == 3) {
-                withDashes = noDashes.substring(0, 2)
-                    + "-" + noDashes.substring(2)
-            } else if (l >= 4) {
-                withDashes = noDashes.substring(0, 2)
-                    + "-" + noDashes.substring(2, 4)
-                    + "-" + noDashes.substring(4)
-            } else {
-                withDashes = noDashes
-            }
-            setDateOfBirth(withDashes)
-        }
     }
 
     const onZipCodeChange = (val) => {
@@ -191,15 +171,11 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
                                 variant="light"
                                 inputKey="date-of-birth"
                                 keyboardType="number-pad"
-                                onChangeText={(_, val) => {
-                                    // onDateOfBirthChange(val)
-                                    validateForm()
-                                }}
+                                editable={false}
+                                selectTextOnFocus={false}
                                 onFocus={() => {
-                                    // Keyboard.dismiss()
-                                    // onFocusTextInput(3)
-                                    // showPopUp(popUpData)
-                                    // console.log("Show Popup")
+                                    Keyboard.dismiss()
+                                    showDatePicker()
                                 }}
                             />
                             <Spacer mb={2} />
@@ -225,7 +201,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
                                     <Sans size="2" color={color("black50")}>
                                         Already have an account?
                                         </Sans>{" "}
-                                    <TouchableWithoutFeedback onPress={() => showDatePicker()}>
+                                    <TouchableWithoutFeedback>
                                         <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("black100")}>
                                             Login
                                         </Sans>
