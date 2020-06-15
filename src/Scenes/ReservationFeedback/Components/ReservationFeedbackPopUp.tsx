@@ -7,11 +7,11 @@ import styled from "styled-components/native"
 
 import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { color } from "App/utils"
 import { useTracking, Schema } from "App/utils/track"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
-import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 export interface ReservationFeedbackPopUpProps {
   reservationFeedback: ReservationFeedback_reservationFeedback
@@ -79,9 +79,7 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
   const images = reservationFeedback.feedbacks.map((feedback) => feedback?.variant?.product?.images?.[0]?.url)
   const options = ["Loved it", "It was ok", "Didn't like it"]
   const contentWidth = windowWidth - 32
-  const imageHorizontalPadding = 4
-  const numFeedbacks = reservationFeedback.feedbacks.length
-  const imageWidth = Math.max((contentWidth - imageHorizontalPadding * (numFeedbacks - 1)) / numFeedbacks, 112)
+  const imageWidth = 140 / PRODUCT_ASPECT_RATIO
 
   const onRatingButtonPressed = async (ratingIndex) => {
     tracking.trackEvent({
@@ -124,7 +122,7 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
               Help us improve your experience by sharing what you thought of your last order
             </Sans>
             <Spacer mb={3} />
-            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" alignItems="center">
+            <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
               {images?.map((image, index) => (
                 <React.Fragment key={index}>
                   <FadeInImage source={{ uri: image }} style={{ width: imageWidth, height: 140 }} />
