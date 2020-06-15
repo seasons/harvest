@@ -8,6 +8,12 @@ import { Box } from "./"
 import { themeProps } from "./Theme"
 import { fontFamily } from "./Typography"
 
+
+/////////////////////////////////////////////////////////
+// Note: Any styling changes here should also appear in 
+// App/Scenes/CreateAccount/FakeTextInput
+/////////////////////////////////////////////////////////
+
 export interface TextInputProps {
   /** The theme of the input */
   style?: ViewStyle
@@ -27,7 +33,7 @@ export interface TextInputProps {
   keyboardType?: string
 }
 
-enum DisplayState {
+export enum DisplayState {
   Active = "active",
   Inactive = "inactive",
 }
