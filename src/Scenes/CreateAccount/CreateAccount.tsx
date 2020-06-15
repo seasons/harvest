@@ -3,12 +3,9 @@ import { color } from "App/utils"
 import { DatePickerPopUp } from "./DatePickerPopUp"
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Text } from "Components/Typography"
-import { Keyboard, KeyboardEvent, ScrollView, TouchableWithoutFeedback, ViewStyle } from "react-native"
+import { FakeTextInput } from "./FakeTextInput"
+import { Keyboard, KeyboardEvent, ScrollView, TouchableWithoutFeedback } from "react-native"
 // import { isValidEmail } from "App/helpers/regex"
-
-/////////////////////////////////////////////////////////////////////////////////
-// TODO: Create FakeTextInput for date thing. Using the real one is overkill.
-/////////////////////////////////////////////////////////////////////////////////
 
 interface CreateAccountProps {
     onAuth: (credentials, profile) => void
@@ -165,15 +162,11 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
                                 onFocus={() => onFocusTextInput(2)}
                             />
                             <Spacer mb={2} />
-                            <TextInput
+                            <FakeTextInput
                                 placeholder="Date of Birth"
                                 currentValue={dateOfBirth}
                                 variant="light"
-                                inputKey="date-of-birth"
-                                keyboardType="number-pad"
-                                editable={false}
-                                selectTextOnFocus={false}
-                                onFocus={() => {
+                                onPress={() => {
                                     Keyboard.dismiss()
                                     showDatePicker()
                                 }}
