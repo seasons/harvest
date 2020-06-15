@@ -12,7 +12,6 @@ import { color } from "App/utils"
 import { useTracking, Schema } from "App/utils/track"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
-import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 export interface ReservationFeedbackPopUpProps {
   reservationFeedback: ReservationFeedback_reservationFeedback
@@ -124,7 +123,7 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
             </Sans>
             <Spacer mb={3} />
             <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
-              {images.map((image, index) => (
+              {images?.map((image, index) => (
                 <React.Fragment key={index}>
                   <FadeInImage source={{ uri: image }} style={{ width: imageWidth, height: 140 }} />
                   <Spacer mr={0.5} />
