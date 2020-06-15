@@ -282,6 +282,8 @@ PODS:
     - React
   - RNCAsyncStorage (1.9.0):
     - React
+  - RNDateTimePicker (2.4.2):
+    - React
   - RNFastImage (7.0.2):
     - React
     - SDWebImage (~> 5.0)
@@ -378,6 +380,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNAnalytics (from `../node_modules/@segment/analytics-react-native`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler/RNGestureHandler.podspec`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -515,6 +518,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@segment/analytics-react-native"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
   RNGestureHandler:
@@ -622,6 +627,7 @@ SPEC CHECKSUMS:
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   RNAnalytics: 35a54cb740c472a0a6a3de765176b82cccc2d1ef
   RNCAsyncStorage: 453cd7c335ec9ba3b877e27d02238956b76f3268
+  RNDateTimePicker: bacbf754c3298b061c7eaa0a5352cbb2ede8d5a2
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNPermissions: 6772df08e03565f718f7e140d9fccae441b8ca8b
@@ -647,6 +653,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 1e70fe58b872355f0ecb44fb81bb1a16484047f0
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: d5a29b17538d34d92c25417e62f63184c261ad7b
+PODFILE CHECKSUM: e86f2b14ffcacd2f39ae8ba11b9971037392df36
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.9.3
