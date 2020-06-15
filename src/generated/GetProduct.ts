@@ -104,9 +104,9 @@ export interface GetProduct_product_brand {
   products: GetProduct_product_brand_products[] | null;
 }
 
-export interface GetProduct_product_images {
+export interface GetProduct_product_largeImages {
   __typename: "Image";
-  id: string;
+  imageId: string;
   url: string | null;
 }
 
@@ -171,7 +171,7 @@ export interface GetProduct_product {
   brand: GetProduct_product_brand;
   outerMaterials: string[];
   innerMaterials: string[];
-  images: GetProduct_product_images[];
+  largeImages: GetProduct_product_largeImages[];
   type: ProductType | null;
   variants: GetProduct_product_variants[] | null;
 }

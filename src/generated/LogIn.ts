@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UserRole } from "./globalTypes";
+import { UserRole, PushNotificationStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: LogIn
@@ -15,6 +15,7 @@ export interface LogIn_login_user {
   firstName: string;
   lastName: string;
   roles: UserRole[];
+  pushNotificationStatus: PushNotificationStatus | null;
 }
 
 export interface LogIn_login {

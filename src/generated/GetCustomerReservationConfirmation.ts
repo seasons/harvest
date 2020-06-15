@@ -17,6 +17,7 @@ export interface GetCustomerReservationConfirmation_me_user {
 
 export interface GetCustomerReservationConfirmation_me_customer_detail_shippingAddress {
   __typename: "Location";
+  id: string;
   slug: string;
   name: string;
   address1: string;
@@ -28,12 +29,14 @@ export interface GetCustomerReservationConfirmation_me_customer_detail_shippingA
 
 export interface GetCustomerReservationConfirmation_me_customer_detail {
   __typename: "CustomerDetail";
+  id: string;
   phoneNumber: string | null;
   shippingAddress: GetCustomerReservationConfirmation_me_customer_detail_shippingAddress | null;
 }
 
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_modelSize {
   __typename: "Size";
+  id: string;
   display: string;
 }
 
@@ -45,6 +48,7 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_pro
 
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_images {
   __typename: "Image";
+  id: string;
   url: string | null;
 }
 
@@ -56,8 +60,8 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_pro
 
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product {
   __typename: "Product";
-  name: string;
   id: string;
+  name: string;
   modelSize: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_modelSize | null;
   brand: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_brand;
   images: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_images[];

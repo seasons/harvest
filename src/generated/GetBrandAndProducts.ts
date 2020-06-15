@@ -17,17 +17,20 @@ export interface GetBrandAndProducts_brand_products_images {
 
 export interface GetBrandAndProducts_brand_products_variants_internalSize_top {
   __typename: "TopSize";
+  id: string;
   letter: LetterSize | null;
 }
 
 export interface GetBrandAndProducts_brand_products_variants_internalSize_bottom {
   __typename: "BottomSize";
+  id: string;
   type: BottomSizeType | null;
   value: string | null;
 }
 
 export interface GetBrandAndProducts_brand_products_variants_internalSize {
   __typename: "Size";
+  id: string;
   top: GetBrandAndProducts_brand_products_variants_internalSize_top | null;
   bottom: GetBrandAndProducts_brand_products_variants_internalSize_bottom | null;
   productType: ProductType | null;

@@ -41,8 +41,8 @@ export interface Homepage_homepage_sections_results_Product_variants_internalSiz
 export interface Homepage_homepage_sections_results_Product_variants {
   __typename: "ProductVariant";
   id: string;
-  internalSize: Homepage_homepage_sections_results_Product_variants_internalSize | null;
   reservable: number;
+  internalSize: Homepage_homepage_sections_results_Product_variants_internalSize | null;
 }
 
 export interface Homepage_homepage_sections_results_Product {
@@ -86,9 +86,9 @@ export interface Homepage_reservationFeedback_feedbacks_variant_product_images {
 export interface Homepage_reservationFeedback_feedbacks_variant_product {
   __typename: "Product";
   id: string;
-  images: Homepage_reservationFeedback_feedbacks_variant_product_images[];
   name: string;
   retailPrice: number | null;
+  images: Homepage_reservationFeedback_feedbacks_variant_product_images[];
 }
 
 export interface Homepage_reservationFeedback_feedbacks_variant {
@@ -183,6 +183,7 @@ export interface Homepage_blogPosts {
   id: string;
   url: string | null;
   name: string | null;
+  category: string | null;
   imageURL: string | null;
 }
 
@@ -238,8 +239,8 @@ export interface Homepage_justAddedTops {
 
 export interface Homepage_justAddedBottoms_images {
   __typename: "Image";
-  url: string | null;
   id: string;
+  url: string | null;
 }
 
 export interface Homepage_justAddedBottoms_brand {

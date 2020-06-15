@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Plan, CustomerStatus, BagItemStatus } from "./globalTypes";
+import { Plan, CustomerStatus, ReservationStatus, BagItemStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBagAndSavedItems
@@ -70,7 +70,7 @@ export interface GetBagAndSavedItems_me_customer_reservations_products {
 export interface GetBagAndSavedItems_me_customer_reservations {
   __typename: "Reservation";
   id: string;
-  status: string;
+  status: ReservationStatus;
   reservationNumber: number;
   createdAt: any;
   products: GetBagAndSavedItems_me_customer_reservations_products[];
