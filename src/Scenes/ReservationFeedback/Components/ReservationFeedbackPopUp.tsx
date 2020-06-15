@@ -79,7 +79,9 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
   const images = reservationFeedback.feedbacks.map((feedback) => feedback?.variant?.product?.images?.[0]?.url)
   const options = ["Loved it", "It was ok", "Didn't like it"]
   const contentWidth = windowWidth - 32
-  const imageWidth = Math.max(140 / PRODUCT_ASPECT_RATIO, 112)
+  const imageHorizontalPadding = 4
+  const numFeedbacks = reservationFeedback.feedbacks.length
+  const imageWidth = Math.max((contentWidth - imageHorizontalPadding * (numFeedbacks - 1)) / numFeedbacks, 112)
 
   const onRatingButtonPressed = async (ratingIndex) => {
     tracking.trackEvent({
