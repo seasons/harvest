@@ -1,7 +1,7 @@
 import { Box, Button, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
-import React, { useState, } from "react"
+import React, { useState, useEffect } from "react"
 import { Dimensions, Modal } from "react-native"
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useSafeArea } from "react-native-safe-area-context"
@@ -28,18 +28,18 @@ export const DatePickerPopUp: React.FC<DatePickerPopUpProps> = ({
     const [lastVisible, setLastVisible] = useState(false)
     const [showModal, setShowModal] = useState(false)
 
-    if (visible !== lastVisible) {
-        setLastVisible(visible)
-        if (!visible && showModal) {
-            setTimeout(() => {
-                console.log("Hide modal")
-                setShowModal(false)
-            }, 400);
-        } else {
-            console.log("Show modal")
-            setShowModal(true)
+    useEffect(() => {
+        if (visible !== lastVisible) {
+            setLastVisible(visible)
+            if (!visible && showModal) {
+                setTimeout(() => {
+                    setShowModal(false)
+                }, 400);
+            } else {
+                setShowModal(true)
+            }
         }
-    }
+    })
 
     const [size, onLayout] = useComponentSize()
     const height = size ? size.height : 300
@@ -61,7 +61,7 @@ export const DatePickerPopUp: React.FC<DatePickerPopUpProps> = ({
                 style={{ transform: [{ translateY: animation.translateY }] }}
                 color={color("white100")}
             >
-                <Box p={4} pb={useSafeArea().bottom + 24} onLayout={onLayout}>
+                <Box p={2} pt={4} pb={useSafeArea().bottom + 16} onLayout={onLayout}>
                     <Sans color={color("black100")} size="3">
                         {title}
                     </Sans>

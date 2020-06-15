@@ -123,7 +123,8 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
                 <Flex flexDirection="column" style={{ flex: 1, justifyContent: "space-between" }}>
                     <ScrollView showsVerticalScrollIndicator={false} keyboardDismissMode="interactive" onLayout={e => setScrollViewHeight(e.nativeEvent.layout.height)} ref={scrollViewRef}>
                         <Spacer mb={5} />
-                        <Box p={4} pb={5}>
+                        <Spacer mb={4} />
+                        <Box p={2} pb={5}>
                             <Sans color={color("black100")} size="3">
                                 Create an account
                             </Sans>
@@ -213,7 +214,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
                             onLayout={e => setKeyboardBoxMinY(e.nativeEvent.layout.y)}
                         />
                     </ScrollView>
-                    <Box p={4} pb={5} onLayout={e => setFooterBoxHeight(e.nativeEvent.layout.height)}>
+                    <Box p={2} pb={5} onLayout={e => setFooterBoxHeight(e.nativeEvent.layout.height)}>
                         <Text style={{ textAlign: "center" }}>
                             <Sans size="1" color="gray">
                                 By creating an account, you agree to our
@@ -240,6 +241,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
             </Flex>
 
             <DatePickerPopUp buttonText="Done" onRequestClose={closeDatePicker} title="Date of Birth" visible={isDatePickerVisible} />
-        </Container >
+        </Container>
     )
 }
