@@ -21,14 +21,17 @@ export const App = () => {
       const client = await setupApolloClient()
       setApolloClient(client)
 
-      Sentry.init({
-        dsn: config.get(Env.SENTRY_DSN),
-      })
+      if (!__DEV__) {
+        Sentry.init({
+          dsn: config.get(Env.SENTRY_DSN),
+        })
+      }
     }
     loadClient()
   }, [])
 
   const checkApolloBuildCache = async () => {
+    // This will check if the build has updated and resets the apollo cache if it has
     const buildNumber = DeviceInfo.getBuildNumber()
     const storedBuildNumber = await AsyncStorage.getItem("iosBuildNumber")
     if (!!buildNumber && Platform?.OS === "ios" && storedBuildNumber !== buildNumber) {
