@@ -88,7 +88,7 @@ export const Product = screenTrack({
   const brandProducts = product?.brand?.products
 
   const viewWidth = Dimensions.get("window").width
-  const images = product && product.images
+  const images = product && product.largeImages
   const imageWidth = images?.length > 1 ? viewWidth - space(3) : viewWidth
 
   let selectedVariantIsWanted = false
@@ -118,6 +118,8 @@ export const Product = screenTrack({
   if (error) {
     console.error("error: ", error)
   }
+
+  console.log("data", data)
 
   const renderItem = ({ item: section }) => {
     switch (section) {
