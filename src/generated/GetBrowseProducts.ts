@@ -53,6 +53,7 @@ export interface GetBrowseProducts_products_brand {
 
 export interface GetBrowseProducts_products_variants_internalSize_top {
   __typename: "TopSize";
+  id: string;
   letter: LetterSize | null;
 }
 
