@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
 import { GetMembershipInfo_me_customer } from "App/generated/GetMembershipInfo"
 import { color } from "App/utils"
+import * as Sentry from "@sentry/react-native"
 
 export type PauseStatus = "active" | "pending" | "paused"
 
@@ -60,7 +61,6 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
 
   const pauseDateCanExtend =
     resumeDate?.diffNow("months")?.values?.months && resumeDate.diffNow("months")?.values?.months < 1
-  console.log("pauseDateCanExtend", pauseDateCanExtend)
 
   const [updateResumeDate] = useMutation(UPDATE_RESUME_DATE, {
     refetchQueries: [
@@ -83,6 +83,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
         onClose: () => hidePopUp(),
       }
       console.log("err", err)
+      Sentry.captureException(err)
       showPopUp(popUpData)
       setIsMutating(false)
     },
@@ -112,6 +113,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
         onClose: () => hidePopUp(),
       }
       console.log("err", err)
+      Sentry.captureException(err)
       showPopUp(popUpData)
       setIsMutating(false)
     },
@@ -138,6 +140,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
         onClose: () => hidePopUp(),
       }
       console.log("err", err)
+      Sentry.captureException(err)
       showPopUp(popUpData)
       setIsMutating(false)
     },
@@ -161,6 +164,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
         onClose: () => hidePopUp(),
       }
       console.log("err", err)
+      Sentry.captureException(err)
       showPopUp(popUpData)
       setIsMutating(false)
     },
