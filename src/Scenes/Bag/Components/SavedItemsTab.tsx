@@ -16,7 +16,7 @@ export const SavedItemsTab: React.FC<{ items; deleteBagItem; hasActiveReservatio
   const navigation = useNavigation()
   return (
     <Box>
-      {items.length ? (
+      {items?.length ? (
         items.map((bagItem, index) => {
           return (
             <Box mt={index === 0 ? 1 : 0} key={bagItem.id}>
