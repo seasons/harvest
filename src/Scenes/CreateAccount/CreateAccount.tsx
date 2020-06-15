@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Text } from "Components/Typography"
 import { FakeTextInput } from "./FakeTextInput"
 import { Keyboard, KeyboardEvent, ScrollView, TouchableWithoutFeedback } from "react-native"
-// import { isValidEmail } from "App/helpers/regex"
+import { isValidEmail } from "App/helpers/regex"
 
 interface CreateAccountProps {
     onAuth: (credentials, profile) => void
@@ -101,7 +101,14 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
     }
 
     const validateForm = () => {
-
+        // TODO: More stringent name, password, dob, & zipcode checking
+        setFormValid(
+            name.length && name.trim().split(' ').length >= 2
+            && isValidEmail(email)
+            && password.length
+            && dateOfBirth.length
+            && zipCode.length == 5
+        )
     }
 
     const onPressSignUpButton = () => {
