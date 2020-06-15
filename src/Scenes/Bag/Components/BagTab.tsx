@@ -119,8 +119,8 @@ export const BagTab: React.FC<{
           </Box>
         </>
       )}
-      {items.map((bagItem, index) => {
-        return bagItem.productID.length > 0 ? (
+      {items?.map((bagItem, index) => {
+        return bagItem?.productID?.length > 0 ? (
           <Box key={bagItem.productID} px={2} pt={hasActiveReservation ? 0 : 2}>
             <BagItem
               removeItemFromBag={deleteBagItem}
