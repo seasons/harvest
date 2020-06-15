@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 import cl.json.RNSharePackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
@@ -57,6 +58,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new RNDeviceInfo(),
+            new RNDateTimePickerPackage(),
             new RNSharePackage(),
             new NetInfoPackage(),
             new AsyncStoragePackage(),
