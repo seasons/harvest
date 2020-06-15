@@ -13,7 +13,7 @@ import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 
 const RootStack = createStackNavigator()
 
-export const AuthProvider = ({ currentScreen, navigationRef, apolloClient }) => {
+export const AuthProvider = ({ currentScreen, apolloClient }) => {
   const [authState, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {

@@ -12,6 +12,7 @@ import { color } from "App/utils"
 import { useTracking, Schema } from "App/utils/track"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 export interface ReservationFeedbackPopUpProps {
   reservationFeedback: ReservationFeedback_reservationFeedback
@@ -39,7 +40,7 @@ export const UPDATE_RESERVATION_FEEDBACK = gql`
           id
           product {
             id
-            images {
+            images(size: Thumb) {
               id
               url
             }

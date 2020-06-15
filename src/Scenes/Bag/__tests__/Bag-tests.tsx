@@ -7,7 +7,7 @@ import { MockedProvider } from "@apollo/react-testing"
 import { Bag } from "../"
 import { GET_BAG } from "../BagQueries"
 import { BagItem } from "../Components/BagItem"
-import { BagFixture, BagFixtureWithReservation } from "./__fixtures__/BagFixture"
+import { BagFixture } from "./__fixtures__/BagFixture"
 
 const mocks = [
   {
@@ -17,19 +17,6 @@ const mocks = [
     result: {
       data: {
         ...BagFixture,
-      },
-    },
-  },
-]
-
-const mockWithReservation = [
-  {
-    request: {
-      query: GET_BAG,
-    },
-    result: {
-      data: {
-        ...BagFixtureWithReservation,
       },
     },
   },
@@ -57,7 +44,7 @@ describe("Bag", () => {
 
     expect(component).toMatchSnapshot()
     expect(component.find(BagItem).length).toEqual(3)
-    expect(component.text()).toContain("All Saints")
+    expect(component.text()).toContain("Stone Island")
   })
 
   it("renders the Reserve button if no reservation", async () => {

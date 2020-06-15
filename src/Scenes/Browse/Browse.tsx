@@ -216,7 +216,7 @@ export const Browse = screenTrack()((props: any) => {
             )}
             onEndReachedThreshold={0.7}
             onEndReached={() => {
-              if (!loading && !reachedEnd) {
+              if (!loading && !reachedEnd && products?.length) {
                 tracking.trackEvent({
                   actionName: Schema.ActionNames.BrowsePagePaginated,
                   actionType: Schema.ActionTypes.Tap,

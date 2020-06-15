@@ -8,6 +8,7 @@ import unfetch from "unfetch"
 import introspectionQueryResultData from "../fragmentTypes.json"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { config, Env } from "App/utils/config"
+import * as Sentry from "@sentry/react-native"
 
 export const setupApolloClient = async () => {
   const fragmentMatcher = new IntrospectionFragmentMatcher({
@@ -43,6 +44,7 @@ export const setupApolloClient = async () => {
   const errorLink = onError(({ graphQLErrors, networkError, operation, forward, response }) => {
     if (graphQLErrors) {
       console.log("graphQLErrors", graphQLErrors)
+      Sentry.captureException(graphQLErrors)
     }
     if (networkError) {
       console.log("networkError", networkError)

@@ -8,11 +8,9 @@ import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { checkNotifications } from "react-native-permissions"
-
 import AsyncStorage from "@react-native-community/async-storage"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { useNotificationsContext } from "App/Notifications/NotificationsContext"
-import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 import { upperFirst } from "lodash"
 
 const LOG_IN = gql`
