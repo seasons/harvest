@@ -1,6 +1,6 @@
 import { CreateAccountPane } from "./CreateAccountPane"
 import { SetMeasurementsPane } from "./SetMeasurementsPane"
-import { useState } from "react"
+import React, { useState } from "react"
 
 
 interface CreateAccountProps {
@@ -12,7 +12,7 @@ enum State {
 }
 
 export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
-    const [state, setState] = useState(State.CHOOSE_PLAN)
+    const [state, setState] = useState(State.SET_MEASUREMENTS)
 
     const onAuth = (credentials, profile) => {
         setState(State.SET_MEASUREMENTS)
