@@ -1,8 +1,15 @@
-import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
-import React, { useEffect, useRef, useState, MutableRefObject } from "react"
-import { Animated, Dimensions, Modal, SafeAreaView, StyleSheet, View } from "react-native"
+import { useComponentSize } from "App/utils/hooks/useComponentSize"
+import React, { useState, } from "react"
+import { Dimensions, Modal } from "react-native"
 import DateTimePicker from '@react-native-community/datetimepicker'
+import { useSafeArea } from "react-native-safe-area-context"
+import { animated, useSpring } from "react-spring/native.cjs"
+import styled from "styled-components/native"
+
+const windowDimensions = Dimensions.get("window")
+const windowHeight = windowDimensions.height
 
 export interface DatePickerPopUpProps {
     buttonText: string
@@ -18,35 +25,28 @@ export const DatePickerPopUp: React.FC<DatePickerPopUpProps> = ({
     title,
 }) => {
     // animation 
-    const [lastVisibility, setLastVisibility] = useState(false)
+    const [lastVisible, setLastVisible] = useState(false)
+    const [showModal, setShowModal] = useState(false)
 
-    const screenHeight = Dimensions.get('screen').height
-    const [animationValue, setAnimationValue] = useState(new Animated.Value(screenHeight))
-    const openAnimation = Animated.timing(animationValue, {
-        toValue: 0,
-        duration: 300,
-    })
-    const closeAnimation = Animated.timing(animationValue, {
-        toValue: screenHeight,
-        duration: 300,
-    })
-
-    const handleDismiss = () => {
-        onRequestClose({
-            day: 0,
-            month: 0,
-            year: 0,
-        })
+    if (visible !== lastVisible) {
+        setLastVisible(visible)
+        if (!visible && showModal) {
+            setTimeout(() => {
+                console.log("Hide modal")
+                setShowModal(false)
+            }, 400);
+        } else {
+            console.log("Show modal")
+            setShowModal(true)
+        }
     }
 
-    if (visible !== lastVisibility) {
-        visible ? openAnimation.start() : closeAnimation.start()
-        setLastVisibility(visible)
-    }
+    const [size, onLayout] = useComponentSize()
+    const height = size ? size.height : 300
 
-    const top = animationValue.interpolate({
-        inputRange: [-1, 0, 1],
-        outputRange: [0, 0, 1],
+    const animation = useSpring({
+        translateY: visible ? windowHeight - height : windowHeight,
+        backgroundColor: visible ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0)",
     })
 
     // date
@@ -55,50 +55,57 @@ export const DatePickerPopUp: React.FC<DatePickerPopUpProps> = ({
     const maxDate = new Date()
 
     // render
-
     return (
-        <Modal
-            animated
-            animationType="fade"
-            transparent
-            onRequestClose={() => handleDismiss()}
-            visible={visible}
-        >
-            <View style={styles.overlay}>
-                <Animated.View style={[styles.container, { top }]}>
-                    <SafeAreaView>
-                        <Box p={4} pb={4}>
-                            <Sans color={color("black100")} size="3">
-                                {title}
-                            </Sans>
-                            <Spacer mb={1} />
-                            {/* <DatePicker date={new Date()} onDateChange={setDate} /> */}
-                            <DateTimePicker mode="date" value={date} minimumDate={minDate} maximumDate={maxDate} onChange={(_, date) => setDate(date)} />
-                            <Spacer mb={1} />
-                            <Button block variant="primaryBlack" onPress={() => onRequestClose(date)}>
-                                {buttonText}
-                            </Button>
-                        </Box>
-                    </SafeAreaView>
-                </Animated.View>
-            </View>
+        <Modal transparent visible={showModal}>
+            <AnimatedPopUp
+                style={{ transform: [{ translateY: animation.translateY }] }}
+                color={color("white100")}
+            >
+                <Box p={4} pb={useSafeArea().bottom + 24} onLayout={onLayout}>
+                    <Sans color={color("black100")} size="3">
+                        {title}
+                    </Sans>
+                    <Spacer mb={1} />
+                    <DateTimePicker
+                        mode="date"
+                        value={date}
+                        minimumDate={minDate}
+                        maximumDate={maxDate}
+                        onChange={(_, date) => setDate(date)}
+                    />
+                    <Spacer mb={1} />
+                    <Button block variant="primaryBlack" onPress={() => onRequestClose(date)}>
+                        {buttonText}
+                    </Button>
+                </Box>
+            </AnimatedPopUp>
+            <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor }} />
         </Modal>
     )
 }
 
-const styles = StyleSheet.create({
-    overlay: {
-        backgroundColor: "rgba(0,0,0,0.7)",
-        flex: 1,
-        justifyContent: "flex-end",
-    },
-    container: {
-        backgroundColor: "white",
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-        paddingTop: 0,
-    },
-    box: {
-        backgroundColor: "white",
-    },
-})
+const Overlay = styled(Box)`
+  position: absolute;
+  flex: 1;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 99;
+`
+
+const Container = styled(Box)`
+  border-top-left-radius: 30;
+  border-top-right-radius: 30;
+  background-color: ${p => p.color};
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: 100;
+`
+
+const AnimatedPopUp = animated(Container)
+const AnimatedOverlay = animated(Overlay)
