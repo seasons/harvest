@@ -119,8 +119,6 @@ export const Product = screenTrack({
     console.error("error: ", error)
   }
 
-  console.log("data", data)
-
   const renderItem = ({ item: section }) => {
     switch (section) {
       case "imageRail":
