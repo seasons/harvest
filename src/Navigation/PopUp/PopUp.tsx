@@ -102,7 +102,7 @@ export const PopUp: React.FC = () => {
           </Flex>
         </Box>
       </AnimatedPopUp>
-      {show && <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor }} />}
+      <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor }} />
     </Theme>
   )
 }
