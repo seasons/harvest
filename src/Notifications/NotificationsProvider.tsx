@@ -142,7 +142,7 @@ export const NotificationsProvider = ({ children }) => {
           console.log("Success subscribe in attachListeners")
         }
       )
-      if (roles.includes("Admin")) {
+      if (roles?.includes("Admin")) {
         RNPusherPushNotifications.subscribe(
           `debug-${seasonsNotifInterest}`,
           (statusCode, response) => {

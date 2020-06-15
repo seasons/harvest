@@ -10,6 +10,7 @@ export enum Env {
   AUTH0_CLIENT_ID = "AUTH0_CLIENT_ID",
   AUTH0_DOMAIN = "AUTH0_DOMAIN",
   MONSOON_ENDPOINT = "MONSOON_ENDPOINT",
+  SENTRY_DSN = "SENTRY_DSN",
 }
 
 const downloadAndSetNewStoredEnv = async () => {

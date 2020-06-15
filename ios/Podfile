@@ -66,6 +66,8 @@ target 'seasons' do
   pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
   pod 'RNShare', :path => '../node_modules/react-native-share'
 
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+
   post_install do |installer|
     installer.pods_project.targets.each do |target|  
       target.build_configurations.each do |config|

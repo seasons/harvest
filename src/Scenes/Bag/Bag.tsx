@@ -1,4 +1,4 @@
-import { FixedButton, Spacer, Flex, Box } from "App/Components"
+import { FixedButton, Spacer, Box } from "App/Components"
 import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -143,7 +143,7 @@ export const Bag = screenTrack()((props) => {
       productID: item.productVariant.product.id,
     })) || []
 
-  const paddedItems = assign(fill(new Array(3), { variantID: "", productID: "" }), items)
+  const bagItems = assign(fill(new Array(3), { variantID: "", productID: "" }), items)
   const hasActiveReservation = !!me?.activeReservation
 
   const handleReserve = async (navigation) => {
@@ -256,7 +256,7 @@ export const Bag = screenTrack()((props) => {
 
   let sections
   if (isBagView) {
-    sections = [{ data: paddedItems }]
+    sections = [{ data: bagItems }]
   } else if (isSavedView) {
     sections = [{ data: savedItems }]
   } else {
