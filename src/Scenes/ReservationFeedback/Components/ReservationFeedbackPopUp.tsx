@@ -11,6 +11,7 @@ import { color } from "App/utils"
 import { useTracking, Schema } from "App/utils/track"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import { ReservationFeedback_reservationFeedback } from "src/generated/ReservationFeedback"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 export interface ReservationFeedbackPopUpProps {
   reservationFeedback: ReservationFeedback_reservationFeedback
@@ -38,7 +39,7 @@ export const UPDATE_RESERVATION_FEEDBACK = gql`
           id
           product {
             id
-            images {
+            images(size: Thumb) {
               id
               url
             }
@@ -78,9 +79,7 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
   const images = reservationFeedback.feedbacks.map((feedback) => feedback?.variant?.product?.images?.[0]?.url)
   const options = ["Loved it", "It was ok", "Didn't like it"]
   const contentWidth = windowWidth - 32
-  const imageHorizontalPadding = 4
-  const numFeedbacks = reservationFeedback.feedbacks.length
-  const imageWidth = Math.max((contentWidth - imageHorizontalPadding * (numFeedbacks - 1)) / numFeedbacks, 112)
+  const imageWidth = Math.max(140 / PRODUCT_ASPECT_RATIO, 112)
 
   const onRatingButtonPressed = async (ratingIndex) => {
     tracking.trackEvent({
@@ -124,7 +123,7 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
             </Sans>
             <Spacer mb={3} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" alignItems="center">
-              {images.map((image, index) => (
+              {images?.map((image, index) => (
                 <React.Fragment key={index}>
                   <FadeInImage source={{ uri: image }} style={{ width: imageWidth, height: 140 }} />
                   <Spacer mr={0.5} />

@@ -1,4 +1,4 @@
-import { FixedButton, Spacer, Flex, Box } from "App/Components"
+import { FixedButton, Spacer, Box } from "App/Components"
 import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { useAuthContext } from "App/Navigation/AuthContext"
