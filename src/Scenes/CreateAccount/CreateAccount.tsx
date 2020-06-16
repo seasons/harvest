@@ -1,7 +1,8 @@
 import { CreateAccountPane } from "./CreateAccountPane"
 import { GetMeasurementsPane } from "./GetMeasurementsPane"
+import { ChoosePlanPane } from "./ChoosePlanPane"
+import { WelcomePane } from "./WelcomePane"
 import React, { useState } from "react"
-
 
 interface CreateAccountProps {
     navigation: any
@@ -22,11 +23,23 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
         setState(State.CHOOSE_PLAN)
     }
 
+    const onChoosePlan = () => {
+        setState(State.WELCOME)
+    }
+
+    const onPressGetStarted = () => {
+
+    }
+
     switch (state) {
         case State.CREATE_ACCOUNT:
-            return CreateAccountPane({ onAuth })
+            return (<CreateAccountPane onAuth={onAuth} />)
         case State.GET_MEASUREMENTS:
-            return GetMeasurementsPane({ onGetMeasurements })
+            return (<GetMeasurementsPane onGetMeasurements={onGetMeasurements} />)
+        case State.CHOOSE_PLAN:
+            return (<ChoosePlanPane onChoosePlan={onChoosePlan} />)
+        case State.WELCOME:
+            return (<WelcomePane onPressGetStarted={onPressGetStarted} />)
         default:
             return (<></>)
     }
