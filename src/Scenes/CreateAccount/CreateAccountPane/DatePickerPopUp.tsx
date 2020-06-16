@@ -3,7 +3,7 @@ import { color } from "App/utils"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import React, { useState, useEffect } from "react"
 import { Dimensions, Modal } from "react-native"
-import DateTimePicker from '@react-native-community/datetimepicker'
+import DateTimePicker from "@react-native-community/datetimepicker"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
