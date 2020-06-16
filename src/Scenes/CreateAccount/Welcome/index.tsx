@@ -1,1 +1,0 @@
-export { WelcomePane } from "./WelcomePane"

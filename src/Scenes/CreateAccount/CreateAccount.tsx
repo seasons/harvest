@@ -8,14 +8,14 @@ interface CreateAccountProps {
 }
 
 enum State {
-    CREATE_ACCOUNT, SET_MEASUREMENTS, CHOOSE_PLAN
+    CREATE_ACCOUNT, GET_MEASUREMENTS, CHOOSE_PLAN, WELCOME
 }
 
 export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
-    const [state, setState] = useState(State.SET_MEASUREMENTS)
+    const [state, setState] = useState(State.CREATE_ACCOUNT)
 
     const onAuth = (credentials, profile) => {
-        setState(State.SET_MEASUREMENTS)
+        setState(State.GET_MEASUREMENTS)
     }
 
     const onGetMeasurements = () => {
@@ -25,7 +25,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
     switch (state) {
         case State.CREATE_ACCOUNT:
             return CreateAccountPane({ onAuth })
-        case State.SET_MEASUREMENTS:
+        case State.GET_MEASUREMENTS:
             return GetMeasurementsPane({ onGetMeasurements })
         default:
             return (<></>)
