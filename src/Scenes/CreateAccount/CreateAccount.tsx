@@ -1,5 +1,5 @@
 import { CreateAccountPane } from "./CreateAccountPane"
-import { SetMeasurementsPane } from "./SetMeasurementsPane"
+import { GetMeasurementsPane } from "./GetMeasurementsPane"
 import React, { useState } from "react"
 
 
@@ -18,7 +18,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
         setState(State.SET_MEASUREMENTS)
     }
 
-    const onSetMeasurements = () => {
+    const onGetMeasurements = () => {
         setState(State.CHOOSE_PLAN)
     }
 
@@ -26,7 +26,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
         case State.CREATE_ACCOUNT:
             return CreateAccountPane({ onAuth })
         case State.SET_MEASUREMENTS:
-            return SetMeasurementsPane({ onSetMeasurements })
+            return GetMeasurementsPane({ onGetMeasurements })
         default:
             return (<></>)
     }
