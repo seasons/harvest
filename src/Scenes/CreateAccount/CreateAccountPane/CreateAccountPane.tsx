@@ -1,5 +1,4 @@
 import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
-import { color } from "App/utils"
 import { DatePickerPopUp } from "./DatePickerPopUp"
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Text } from "Components/Typography"
@@ -11,7 +10,9 @@ interface CreateAccountPaneProps {
     onAuth: (credentials, profile) => void
 }
 
-export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
+export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
+    onAuth,
+}) => {
     // Fields
 
     const [name, setName] = useState("")
@@ -112,7 +113,8 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
     useEffect(validateForm, [name, email, password, dateOfBirth, zipCode])
 
     const onPressSignUpButton = () => {
-
+        // TODO: authorize
+        onAuth(null, null)
     }
 
     // Layout
@@ -229,7 +231,10 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
                 </Flex>
             </Flex>
 
-            <DatePickerPopUp buttonText="Done" onRequestClose={closeDatePicker} title="Date of Birth" visible={isDatePickerVisible} />
+            <DatePickerPopUp
+                onRequestClose={closeDatePicker}
+                visible={isDatePickerVisible}
+            />
         </Container>
     )
 }
