@@ -5,5 +5,5 @@
 ///////////////////
 
 // export { ChoosePlanPane as CreateAccount } from "./ChoosePlanPane"
-export { SetMeasurementsPane as CreateAccount } from "./SetMeasurementsPane"
+export { GetMeasurementsPane as CreateAccount } from "./GetMeasurementsPane"
 // export { CreateAccountPane as CreateAccount } from "./CreateAccountPane"

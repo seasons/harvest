@@ -4,11 +4,11 @@ import React, { useState } from "react"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 
-interface SetMeasurementsPaneProps {
-    onSetMeasurements: () => void
+interface GetMeasurementsPaneProps {
+    onGetMeasurements: () => void
 }
 
-export const SetMeasurementsPane: React.FC<SetMeasurementsPaneProps> = (props) => {
+export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = (props) => {
     const [footerBoxHeight, setFooterBoxHeight] = useState(0)
 
     /////////////////////////
