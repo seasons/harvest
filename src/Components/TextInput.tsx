@@ -139,7 +139,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             onChangeText={(text) => handleOnChangeText(text)}
             value={value}
             keyboardType={keyboardType}
-            onFocus={() => { if (onFocus) { onFocus() } }}
+            onFocus={() => onFocus?.()}
           />
         )}
       </Spring>

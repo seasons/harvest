@@ -1,5 +1,4 @@
 import { Box, Button, CloseButton, Container, Sans, Spacer } from "App/Components"
-import { color } from "App/utils"
 import React, { useState } from "react"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
@@ -19,12 +18,12 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = (props) => {
                     <Spacer mb={5} />
                     <Spacer mb={4} />
                     <Box p={2}>
-                        <Sans color={color("black100")} size="3">
+                        <Sans color="black100" size="3">
                             You're in.{"\n"}
                             Let's choose your plan
                         </Sans>
                         <Spacer mb={1} />
-                        <Sans color={color("black50")} size="2">
+                        <Sans color="black50" size="2">
                             Don't worry, you can change your plan from your profile settings at any time.
                         </Sans>
 

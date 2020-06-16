@@ -23,11 +23,11 @@ export const SetMeasurementsPane: React.FC<SetMeasurementsPaneProps> = (props) =
                     <Spacer mb={5} />
                     <Spacer mb={4} />
                     <Box p={2}>
-                        <Sans color={color("black100")} size="3">
+                        <Sans color="black100" size="3">
                             One last step
                         </Sans>
                         <Spacer mb={1} />
-                        <Sans color={color("black50")} size="2">
+                        <Sans color="black50" size="2">
                             Let’s get your measurements and sizing so that we can make sure we take care of you.
                         </Sans>
 
@@ -35,14 +35,14 @@ export const SetMeasurementsPane: React.FC<SetMeasurementsPaneProps> = (props) =
 
                         <Box style={{ flex: 1, flexDirection: "row" }}>
                             <Box style={{ flex: 0.5, marginRight: 6 }}>
-                                <Sans color={color("black100")} size="1">
+                                <Sans color="black100" size="1">
                                     Height
                                 </Sans>
                                 <Spacer mb={1} />
 
                             </Box>
                             <Box style={{ flex: 0.5, marginLeft: 6 }}>
-                                <Sans color={color("black100")} size="1">
+                                <Sans color="black100" size="1">
                                     Weight
                                 </Sans>
                             </Box>
@@ -50,21 +50,21 @@ export const SetMeasurementsPane: React.FC<SetMeasurementsPaneProps> = (props) =
 
                         <Separator mt={3} mb={3} />
 
-                        <Sans color={color("black100")} size="1">
+                        <Sans color="black100" size="1">
                             What's your average top size?
                         </Sans>
                         <Spacer mb={3} />
-                        <Sans color={color("black100")} size="1">
+                        <Sans color="black100" size="1">
                             How does this size usually run?
                         </Sans>
 
                         <Separator mt={3} mb={3} />
 
-                        <Sans color={color("black100")} size="1">
+                        <Sans color="black100" size="1">
                             Average waist size
                         </Sans>
                         <Spacer mb={3} />
-                        <Sans color={color("black100")} size="1">
+                        <Sans color="black100" size="1">
                             How does this size run?
                         </Sans>
                     </Box>

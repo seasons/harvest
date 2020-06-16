@@ -72,9 +72,8 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
         const dateOfBirth = [date.getMonth() + 1, date.getDate(), date.getFullYear()]
             .map(i => String(i).padStart(2, "0"))
             .join("-")
-        setDateOfBirth(dateOfBirth)
         setIsDatePickerVisible(false)
-        validateForm()
+        setDateOfBirth(dateOfBirth)
     }
 
     // Form/field validation
@@ -104,11 +103,13 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
         setFormValid(
             name.length && name.trim().split(' ').length >= 2
             && isValidEmail(email)
-            && password.length
+            && password.trim().length
             && dateOfBirth.length
             && zipCode.length == 5
         )
     }
+
+    useEffect(validateForm, [name, email, password, dateOfBirth, zipCode])
 
     const onPressSignUpButton = () => {
 
@@ -125,11 +126,11 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
                         <Spacer mb={5} />
                         <Spacer mb={4} />
                         <Box p={2} pb={5}>
-                            <Sans color={color("black100")} size="3">
+                            <Sans color="black100" size="3">
                                 Create an account
                             </Sans>
                             <Spacer mb={1} />
-                            <Sans color={color("black50")} size="2">
+                            <Sans color="black50" size="2">
                                 You'll use this to sign into the app, choose your plan, and manage your membership.
                             </Sans>
                             <Spacer mb={5} />
@@ -138,10 +139,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
                                 variant="light"
                                 inputKey="full-name"
                                 autoCapitalize="words"
-                                onChangeText={(_, val) => {
-                                    setName(val)
-                                    validateForm()
-                                }}
+                                onChangeText={(_, val) => setName(val)}
                                 onFocus={() => onFocusTextInput(0)}
                             />
                             <Spacer mb={2} />
@@ -150,10 +148,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
                                 variant="light"
                                 inputKey="email"
                                 keyboardType="email-address"
-                                onChangeText={(_, val) => {
-                                    setEmail(val)
-                                    validateForm()
-                                }}
+                                onChangeText={(_, val) => setEmail(val)}
                                 onFocus={() => onFocusTextInput(1)}
                             />
                             <Spacer mb={2} />
@@ -162,10 +157,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
                                 placeholder="Password"
                                 variant="light"
                                 inputKey="password"
-                                onChangeText={(_, val) => {
-                                    setPassword(val)
-                                    validateForm()
-                                }}
+                                onChangeText={(_, val) => setPassword(val)}
                                 onFocus={() => onFocusTextInput(2)}
                             />
                             <Spacer mb={2} />
@@ -185,10 +177,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
                                 variant="light"
                                 inputKey="zip-code"
                                 keyboardType="number-pad"
-                                onChangeText={(_, val) => {
-                                    onZipCodeChange(val)
-                                    validateForm()
-                                }}
+                                onChangeText={(_, val) => onZipCodeChange(val)}
                                 onFocus={() => onFocusTextInput(4)}
                             />
                             <Spacer mb={4} />
@@ -198,11 +187,11 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
                             <Spacer mb={3} />
                             <Flex flexDirection="row" justifyContent="center">
                                 <Text>
-                                    <Sans size="2" color={color("black50")}>
+                                    <Sans size="2" color="black50">
                                         Already have an account?
                                         </Sans>{" "}
                                     <TouchableWithoutFeedback>
-                                        <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("black100")}>
+                                        <Sans style={{ textDecorationLine: "underline" }} size="2" color="black100">
                                             Login
                                         </Sans>
                                     </TouchableWithoutFeedback>
@@ -222,7 +211,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
                         </Text>
                         <Text style={{ textAlign: "center" }}>
                             <TouchableWithoutFeedback>
-                                <Sans style={{ textDecorationLine: "underline" }} size="1" color={color("black50")}>
+                                <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
                                     Privacy Policy
                                 </Sans>
                             </TouchableWithoutFeedback>
@@ -230,7 +219,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = (props) => {
                                 {" & "}
                             </Sans>
                             <TouchableWithoutFeedback>
-                                <Sans style={{ textDecorationLine: "underline" }} size="1" color={color("black50")}>
+                                <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
                                     Terms of Service
                                 </Sans>
                             </TouchableWithoutFeedback>

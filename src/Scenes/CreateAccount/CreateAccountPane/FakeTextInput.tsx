@@ -1,7 +1,7 @@
 import { Box } from "App/Components"
 import { fontFamily } from "App/Components/Typography"
 import { color } from "App/utils"
-import React, { useEffect } from "react"
+import React, { useState } from "react"
 import { Text, TouchableWithoutFeedback, View, ViewStyle } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
@@ -30,26 +30,24 @@ export const FakeTextInput: React.FC<FakeTextInputProps> = ({
     style,
     variant = defaultVariant,
 }) => {
-    const [previous, setPrevious] = React.useState(DisplayState.Inactive)
-    const [current, setCurrent] = React.useState(currentValue.length ? DisplayState.Active : DisplayState.Inactive)
-    const [value, setValue] = React.useState(currentValue)
+    const [previous, setPrevious] = useState(DisplayState.Inactive)
+    const [current, setCurrent] = useState(currentValue.length ? DisplayState.Active : DisplayState.Inactive)
+    const [value, setValue] = useState(currentValue)
     const variantColors = getColorsForVariant(variant)
 
     const from = variantColors[previous]
     const to = variantColors[current]
 
-    useEffect(() => {
-        if (currentValue !== value) {
-            setValue(currentValue)
-            if (currentValue.length) {
-                setCurrent(DisplayState.Active)
-                setPrevious(DisplayState.Inactive)
-            } else {
-                setCurrent(DisplayState.Inactive)
-                setPrevious(DisplayState.Active)
-            }
+    if (currentValue !== value) {
+        setValue(currentValue)
+        if (currentValue.length) {
+            setCurrent(DisplayState.Active)
+            setPrevious(DisplayState.Inactive)
+        } else {
+            setCurrent(DisplayState.Inactive)
+            setPrevious(DisplayState.Active)
         }
-    })
+    }
 
     const height = style && style.height ? style.height : 56
     const flex = style && style.flex
