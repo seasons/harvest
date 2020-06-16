@@ -25,21 +25,17 @@ export const DatePickerPopUp: React.FC<DatePickerPopUpProps> = ({
     title,
 }) => {
     // animation 
-    const [lastVisible, setLastVisible] = useState(false)
     const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
-        if (visible !== lastVisible) {
-            setLastVisible(visible)
-            if (!visible && showModal) {
-                setTimeout(() => {
-                    setShowModal(false)
-                }, 400);
-            } else {
-                setShowModal(true)
-            }
+        if (!visible && showModal) {
+            setTimeout(() => {
+                setShowModal(false)
+            }, 400);
+        } else if (visible && !showModal) {
+            setShowModal(true)
         }
-    })
+    }, [visible])
 
     const [size, onLayout] = useComponentSize()
     const height = size ? size.height : 300

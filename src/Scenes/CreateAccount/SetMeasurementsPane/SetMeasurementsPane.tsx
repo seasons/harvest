@@ -1,5 +1,5 @@
 import { Box, Button, CloseButton, Container, Sans, Separator, Spacer } from "App/Components"
-import { color } from "App/utils"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import React, { useState } from "react"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
@@ -70,17 +70,15 @@ export const SetMeasurementsPane: React.FC<SetMeasurementsPaneProps> = (props) =
                     </Box>
                     <Box height={footerBoxHeight} />
                 </ScrollView>
-                <Box style={{ position: "absolute", bottom: 0 }}>
-                    {/* <LinearGradient colors={["rgba(255,255,255,0)", "rgba(255,255,255,1)"]} style={{ position: "absolute", bottom: 0 }}> */}
+                <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
                     <Box p={2} pb={2} onLayout={e => setFooterBoxHeight(e.nativeEvent.layout.height)}>
                         <Button block variant="primaryBlack">
                             Finish
                         </Button>
                         <Box style={{ height: useSafeArea().bottom }} />
                     </Box>
-                    {/* </LinearGradient> */}
-                </Box>
+                </FadeBottom2>
             </Box>
-        </Container >
+        </Container>
     )
 }
