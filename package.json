@@ -19,6 +19,7 @@
     "@react-native-community/datetimepicker": "^2.4.2",
     "@react-native-community/masked-view": "^0.1.6",
     "@react-native-community/netinfo": "^5.7.0",
+    "@react-native-community/picker": "^1.6.3",
     "@react-navigation/bottom-tabs": "^5.0.5",
     "@react-navigation/native": "^5.0.5",
     "@react-navigation/stack": "^5.0.8",

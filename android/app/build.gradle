@@ -142,6 +142,7 @@ android {
 
 dependencies {
     implementation project(':react-native-device-info')
+    implementation project(':@react-native-community_picker')
     implementation project(':@react-native-community_datetimepicker')
     implementation project(':react-native-share')
     implementation project(':@react-native-community_netinfo')
