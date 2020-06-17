@@ -94,19 +94,16 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
     return (
         <Container insetsBottom={false} insetsTop={false}>
             <CloseButton />
-            <Box p={2}>
-                <Spacer mb={5} />
-                <Spacer mb={4} />
-                <Sans color="black100" size="3">
-                    Create an account
-                </Sans>
-                <Spacer mb={1} />
-                <Sans color="black50" size="2">
-                    You'll use this to sign into the app, choose your plan, and manage your membership.
-                </Sans>
-            </Box>
             <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={52}>
-                <ScrollView style={{ paddingTop: 24, paddingHorizontal: 16 }} showsVerticalScrollIndicator={false} keyboardDismissMode="interactive" ref={scrollViewRef}>
+                <ScrollView style={{ paddingTop: 85, paddingHorizontal: 16, overflow: "visible" }} showsVerticalScrollIndicator={false} keyboardDismissMode="interactive" ref={scrollViewRef}>
+                    <Sans color="black100" size="3">
+                        Let's create your account
+                    </Sans>
+                    <Spacer mb={1} />
+                    <Sans color="black50" size="2">
+                        You'll use this to sign into the app, choose your plan, and manage your membership.
+                    </Sans>
+                    <Spacer mb={5} />
                     <TextInput
                         placeholder="Full Name"
                         variant="light"
@@ -153,7 +150,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
                         onChangeText={(_, val) => onZipCodeChange(val)}
                         onFocus={() => onFocusTextInput(4)}
                     />
-                    <Spacer height={32} />
+                    <Spacer height={100} />
                 </ScrollView>
                 <Box p={2} style={{ backgroundColor: "transparent" }}>
                     <Button block variant="primaryBlack" disabled={!formValid} onPress={() => onPressSignUpButton()}>
