@@ -1,10 +1,11 @@
 import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
-import { DatePickerPopUp } from "./DatePickerPopUp"
-import React, { useEffect, useRef, useState, MutableRefObject } from "react"
-import { Text } from "Components/Typography"
-import { FakeTextInput } from "./FakeTextInput"
-import { Keyboard, KeyboardEvent, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { isValidEmail } from "App/helpers/regex"
+import { DatePickerPopUp } from "./DatePickerPopUp"
+import { FakeTextInput } from "./FakeTextInput"
+import React, { useEffect, useRef, useState, MutableRefObject } from "react"
+import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback, View } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
+import { Text } from "Components/Typography"
 
 interface CreateAccountPaneProps {
     onAuth: (credentials, profile) => void
@@ -25,40 +26,11 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
 
     // Keyboard handling
 
-    const [keyboardHeight, setKeyboardHeight] = useState(0)
-    const [scrollViewHeight, setScrollViewHeight] = useState(0)
-    const [keyboardBoxMinY, setKeyboardBoxMinY] = useState(0)
-    const [footerBoxHeight, setFooterBoxHeight] = useState(0)
-    const scrollViewRef: MutableRefObject<ScrollView> = useRef();
-
-    useEffect(() => {
-        Keyboard.addListener("keyboardDidShow", onKeyboardDidShow)
-        Keyboard.addListener("keyboardDidHide", onKeyboardDidHide);
-
-        return () => {
-            Keyboard.removeListener("keyboardDidShow", onKeyboardDidShow)
-            Keyboard.removeListener("keyboardDidHide", onKeyboardDidHide)
-        }
-    }, [])
-
-    const onKeyboardDidShow = (e: KeyboardEvent) => {
-        setKeyboardHeight(e.endCoordinates.height)
-    }
-
-    const onKeyboardDidHide = () => {
-        if (scrollViewRef) {
-            scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true })
-            setTimeout(() => {
-                setKeyboardHeight(0)
-            }, 200);
-        } else {
-            setKeyboardHeight(0)
-        }
-    }
+    const scrollViewRef: MutableRefObject<ScrollView> = useRef()
 
     const onFocusTextInput = (index: number) => {
         if (!scrollViewRef.current) { return }
-        scrollViewRef.current.scrollTo({ x: 0, y: index * 56, animated: true })
+        scrollViewRef.current.scrollTo({ y: index * 50, animated: true })
     }
 
     // Date picker popup
@@ -122,91 +94,99 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
     return (
         <Container insetsBottom={false} insetsTop={false}>
             <CloseButton />
-            <Flex style={{ flex: 1 }}>
-                <Flex flexDirection="column" style={{ flex: 1, justifyContent: "space-between" }}>
-                    <ScrollView showsVerticalScrollIndicator={false} keyboardDismissMode="interactive" onLayout={e => setScrollViewHeight(e.nativeEvent.layout.height)} ref={scrollViewRef}>
-                        <Spacer mb={5} />
-                        <Spacer mb={4} />
-                        <Box p={2} pb={5}>
-                            <Sans color="black100" size="3">
-                                Create an account
-                            </Sans>
-                            <Spacer mb={1} />
-                            <Sans color="black50" size="2">
-                                You'll use this to sign into the app, choose your plan, and manage your membership.
-                            </Sans>
-                            <Spacer mb={5} />
-                            <TextInput
-                                placeholder="Full Name"
-                                variant="light"
-                                inputKey="full-name"
-                                autoCapitalize="words"
-                                onChangeText={(_, val) => setName(val)}
-                                onFocus={() => onFocusTextInput(0)}
-                            />
-                            <Spacer mb={2} />
-                            <TextInput
-                                placeholder="Email"
-                                variant="light"
-                                inputKey="email"
-                                keyboardType="email-address"
-                                onChangeText={(_, val) => setEmail(val)}
-                                onFocus={() => onFocusTextInput(1)}
-                            />
-                            <Spacer mb={2} />
-                            <TextInput
-                                secureTextEntry
-                                placeholder="Password"
-                                variant="light"
-                                inputKey="password"
-                                onChangeText={(_, val) => setPassword(val)}
-                                onFocus={() => onFocusTextInput(2)}
-                            />
-                            <Spacer mb={2} />
-                            <FakeTextInput
-                                placeholder="Date of Birth"
-                                currentValue={dateOfBirth}
-                                variant="light"
-                                onPress={() => {
-                                    Keyboard.dismiss()
-                                    showDatePicker()
-                                }}
-                            />
-                            <Spacer mb={2} />
-                            <TextInput
-                                placeholder="ZIP Code"
-                                currentValue={zipCode}
-                                variant="light"
-                                inputKey="zip-code"
-                                keyboardType="number-pad"
-                                onChangeText={(_, val) => onZipCodeChange(val)}
-                                onFocus={() => onFocusTextInput(4)}
-                            />
-                            <Spacer mb={4} />
-                            <Button block variant="primaryBlack" disabled={!formValid} onPress={() => onPressSignUpButton()}>
-                                Sign up
-                            </Button>
-                            <Spacer mb={3} />
-                            <Flex flexDirection="row" justifyContent="center">
-                                <Text>
-                                    <Sans size="2" color="black50">
-                                        Already have an account?
-                                        </Sans>{" "}
-                                    <TouchableWithoutFeedback>
-                                        <Sans style={{ textDecorationLine: "underline" }} size="2" color="black100">
-                                            Login
-                                        </Sans>
-                                    </TouchableWithoutFeedback>
-                                </Text>
-                            </Flex>
-                        </Box>
-                        <Box
-                            height={Math.max(0, keyboardHeight - Math.max(0, scrollViewHeight - keyboardBoxMinY) - footerBoxHeight)}
-                            onLayout={e => setKeyboardBoxMinY(e.nativeEvent.layout.y)}
-                        />
-                    </ScrollView>
-                    <Box p={2} pb={5} onLayout={e => setFooterBoxHeight(e.nativeEvent.layout.height)}>
-                        <Text style={{ textAlign: "center" }}>
+            <Box p={2}>
+                <Spacer mb={5} />
+                <Spacer mb={4} />
+                <Sans color="black100" size="3">
+                    Create an account
+                </Sans>
+                <Spacer mb={1} />
+                <Sans color="black50" size="2">
+                    You'll use this to sign into the app, choose your plan, and manage your membership.
+                </Sans>
+            </Box>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={52}>
+                <ScrollView style={{ paddingTop: 24, paddingHorizontal: 16 }} showsVerticalScrollIndicator={false} keyboardDismissMode="interactive" ref={scrollViewRef}>
+                    <TextInput
+                        placeholder="Full Name"
+                        variant="light"
+                        inputKey="full-name"
+                        autoCapitalize="words"
+                        onChangeText={(_, val) => setName(val)}
+                        onFocus={() => onFocusTextInput(0)}
+                    />
+                    <Spacer mb={2} />
+                    <TextInput
+                        placeholder="Email"
+                        variant="light"
+                        inputKey="email"
+                        keyboardType="email-address"
+                        onChangeText={(_, val) => setEmail(val)}
+                        onFocus={() => onFocusTextInput(1)}
+                    />
+                    <Spacer mb={2} />
+                    <TextInput
+                        secureTextEntry
+                        placeholder="Password"
+                        variant="light"
+                        inputKey="password"
+                        onChangeText={(_, val) => setPassword(val)}
+                        onFocus={() => onFocusTextInput(2)}
+                    />
+                    <Spacer mb={2} />
+                    <FakeTextInput
+                        placeholder="Date of Birth"
+                        currentValue={dateOfBirth}
+                        variant="light"
+                        onPress={() => {
+                            Keyboard.dismiss()
+                            showDatePicker()
+                        }}
+                    />
+                    <Spacer mb={2} />
+                    <TextInput
+                        placeholder="ZIP Code"
+                        currentValue={zipCode}
+                        variant="light"
+                        inputKey="zip-code"
+                        keyboardType="number-pad"
+                        onChangeText={(_, val) => onZipCodeChange(val)}
+                        onFocus={() => onFocusTextInput(4)}
+                    />
+                    <Spacer height={32} />
+                </ScrollView>
+                <Box p={2} style={{ backgroundColor: "transparent" }}>
+                    <Button block variant="primaryBlack" disabled={!formValid} onPress={() => onPressSignUpButton()}>
+                        Create my account
+                    </Button>
+                </Box>
+            </KeyboardAvoidingView>
+            <Box p={2} style={{ paddingBottom: useSafeArea().bottom + 16 }}>
+                <Flex flexDirection="row" justifyContent="center">
+                    <Text>
+                        <Sans size="2" color="black50">
+                            Already have an account?
+                                </Sans>{" "}
+                        <TouchableWithoutFeedback>
+                            <Sans style={{ textDecorationLine: "underline" }} size="2" color="black100">
+                                Login
+                                </Sans>
+                        </TouchableWithoutFeedback>
+                    </Text>
+                </Flex>
+            </Box>
+
+            <DatePickerPopUp
+                onRequestClose={closeDatePicker}
+                visible={isDatePickerVisible}
+            />
+        </Container>
+    )
+}
+
+
+/**
+<Text style={{ textAlign: "center" }}>
                             <Sans size="1" color="gray">
                                 By creating an account, you agree to our
                             </Sans>{" "}
@@ -226,15 +206,5 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
                                 </Sans>
                             </TouchableWithoutFeedback>
                         </Text>
-                        <Spacer mb={2} />
-                    </Box>
-                </Flex>
-            </Flex>
-
-            <DatePickerPopUp
-                onRequestClose={closeDatePicker}
-                visible={isDatePickerVisible}
-            />
-        </Container>
-    )
-}
+                        /* <Spacer mb={2} />
+ */
