@@ -158,16 +158,16 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
                     </Button>
                 </Box>
             </KeyboardAvoidingView>
-            <Box p={2} style={{ paddingBottom: useSafeArea().bottom + 16 }}>
+            <Box p={2} style={{ paddingBottom: useSafeArea().bottom + 16, backgroundColor: "white" }}>
                 <Flex flexDirection="row" justifyContent="center">
                     <Text>
                         <Sans size="2" color="black50">
                             Already have an account?
-                                </Sans>{" "}
+                        </Sans>{" "}
                         <TouchableWithoutFeedback>
                             <Sans style={{ textDecorationLine: "underline" }} size="2" color="black100">
                                 Login
-                                </Sans>
+                            </Sans>
                         </TouchableWithoutFeedback>
                     </Text>
                 </Flex>
