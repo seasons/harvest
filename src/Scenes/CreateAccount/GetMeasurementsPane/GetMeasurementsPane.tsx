@@ -1,15 +1,10 @@
 import { Box, Button, CloseButton, Container, Sans, Separator, Spacer } from "App/Components"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { BoxPicker } from "./BoxPicker"
+import Measurements from "./Measurements"
 import React, { useState } from "react"
-import { ScrollView } from "react-native"
+import { ScrollView, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-
-const sampleData = [
-    { display: "Hot", value: 0 },
-    { display: "Cold", value: 2 },
-    { display: "Just right", value: 1 },
-]
 
 interface GetMeasurementsPaneProps {
     onGetMeasurements: () => void
@@ -62,8 +57,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
                                 <BoxPicker
                                     onChange={(value,) => setHeight(value)}
                                     title="Height"
-                                    currentValue={height}
-                                    values={sampleData}
+                                    currentItem={height}
+                                    items={Measurements.heights}
                                 />
                             </Box>
                             <Box style={{ flex: 0.5, marginLeft: 6 }}>
@@ -74,8 +69,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
                                 <BoxPicker
                                     onChange={(value,) => setWeight(value)}
                                     title="Weight"
-                                    currentValue={weight}
-                                    values={sampleData}
+                                    currentItem={weight}
+                                    items={Measurements.weights}
                                 />
                             </Box>
                         </Box>
@@ -89,8 +84,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
                         <BoxPicker
                             onChange={(value,) => setTopSize(value)}
                             title="Top size"
-                            currentValue={topSize}
-                            values={sampleData}
+                            currentItem={topSize}
+                            items={Measurements.topSizes}
                         />
 
                         <Spacer mb={3} />
@@ -101,8 +96,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
                         <BoxPicker
                             onChange={(value,) => setTopSizeFit(value)}
                             title="How does this size run?"
-                            currentValue={topSizeFit}
-                            values={sampleData}
+                            currentItem={topSizeFit}
+                            items={Measurements.fits}
                         />
 
                         <Separator mt={3} mb={3} />
@@ -114,8 +109,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
                         <BoxPicker
                             onChange={(value,) => setWaistSize(value)}
                             title="Waist size"
-                            currentValue={waistSize}
-                            values={sampleData}
+                            currentItem={waistSize}
+                            items={Measurements.waistSizes}
                         />
                         <Spacer mb={3} />
                         <Sans color="black100" size="1">
@@ -125,15 +120,20 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
                         <BoxPicker
                             onChange={(value,) => setWaistSizeFit(value)}
                             title="How does this size run?"
-                            currentValue={waistSize}
-                            values={sampleData}
+                            currentItem={waistSizeFit}
+                            items={Measurements.fits}
                         />
                     </Box>
                     <Box height={footerBoxHeight} />
                 </ScrollView>
                 <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
                     <Box p={2} pb={2} onLayout={e => setFooterBoxHeight(e.nativeEvent.layout.height)}>
-                        <Button block variant="primaryBlack" onPress={submitMeasurements}>
+                        <Button
+                            block
+                            disabled={!(height && weight && topSize && topSizeFit && waistSize && waistSizeFit)}
+                            onPress={submitMeasurements}
+                            variant="primaryBlack"
+                        >
                             Finish
                         </Button>
                         <Box style={{ height: useSafeArea().bottom }} />
