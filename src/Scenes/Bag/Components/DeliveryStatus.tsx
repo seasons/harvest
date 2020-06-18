@@ -64,9 +64,6 @@ export const DeliveryStatus: React.FC<{ status: ReservationStatus; trackingURL: 
           )}
         </Box>
       </Flex>
-      <Spacer mb={3} />
-      <Separator />
-      <Spacer mb={3} />
     </Box>
   )
 }
