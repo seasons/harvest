@@ -92,6 +92,7 @@ export interface GetBagAndSavedItems_me_activeReservation {
   returnAt: any | null;
   shipped: boolean;
   createdAt: any;
+  status: ReservationStatus;
 }
 
 export interface GetBagAndSavedItems_me_bag_productVariant_product_modelSize {
