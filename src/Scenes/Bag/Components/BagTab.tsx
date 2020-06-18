@@ -27,8 +27,6 @@ export const BagTab: React.FC<{
 
   const hasActiveReservation = !!activeReservation
 
-  console.log("hasActiveReservation", activeReservation)
-
   const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
     refetchQueries: [
       {
