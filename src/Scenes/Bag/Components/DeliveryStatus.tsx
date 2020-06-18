@@ -51,7 +51,7 @@ export const DeliveryStatus: React.FC<{ status: ReservationStatus; trackingURL: 
           <Sans size="1">{statusText}</Sans>
         </Flex>
         <Box>
-          {trackingURL && (
+          {!!trackingURL && (
             <TouchableWithoutFeedback
               onPress={() => {
                 navigation.navigate(Schema.PageNames.Webview, { uri: trackingURL })
