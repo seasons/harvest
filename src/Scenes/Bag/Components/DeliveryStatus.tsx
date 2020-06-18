@@ -1,17 +1,26 @@
 import React from "react"
-import { Box, Sans, Flex, Spacer, Separator } from "App/Components"
+import { Box, Sans, Flex, Spacer } from "App/Components"
 import styled from "styled-components/native"
 import { color } from "App/utils"
-import { ReservationStatus } from "App/generated/globalTypes"
 import { TouchableWithoutFeedback } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
+import { DateTime } from "luxon"
+import { GetBagAndSavedItems_me_activeReservation } from "App/generated/GetBagAndSavedItems"
 
-export const DeliveryStatus: React.FC<{ status: ReservationStatus; trackingURL: string }> = ({
-  status,
-  trackingURL,
-}) => {
+export const DeliveryStatus: React.FC<{
+  activeReservation: GetBagAndSavedItems_me_activeReservation
+  trackingURL: string
+}> = ({ activeReservation, trackingURL }) => {
   const navigation = useNavigation()
+  const status = activeReservation?.status
+  const updatedMoreThan24HoursAgo = DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
+  const hideComponent = status === "Delivered" && updatedMoreThan24HoursAgo
+
+  if (hideComponent) {
+    return null
+  }
+
   let step
   let statusText = ""
 
@@ -64,6 +73,7 @@ export const DeliveryStatus: React.FC<{ status: ReservationStatus; trackingURL: 
           )}
         </Box>
       </Flex>
+      <Spacer mb={3} />
     </Box>
   )
 }

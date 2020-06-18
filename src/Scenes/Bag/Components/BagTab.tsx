@@ -89,7 +89,7 @@ export const BagTab: React.FC<{
         </Sans>
         <Spacer mb={3} />
       </Box>
-      {hasActiveReservation && <DeliveryStatus trackingURL={trackingURL} status={activeReservation?.status} />}
+      {hasActiveReservation && <DeliveryStatus trackingURL={trackingURL} activeReservation={activeReservation} />}
       {showPendingMessage && (
         <>
           <Box px={2}>
@@ -123,7 +123,6 @@ export const BagTab: React.FC<{
           </Box>
         </>
       )}
-      <Spacer mb={3} />
       <Separator />
       <Spacer mb={3} />
       {items?.map((bagItem, index) => {
