@@ -218,8 +218,8 @@ const ImageWrapper = styled(FadeInImage)`
 `
 
 const ColoredDot = styled(Box)`
-  height: 10;
-  width: 10;
+  height: 8;
+  width: 8;
   background-color: ${(p) => (!!p.reservable ? color("green100") : color("black50"))};
-  border-radius: 100;
+  border-radius: 4;
 `
