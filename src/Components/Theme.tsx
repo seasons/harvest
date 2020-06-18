@@ -34,7 +34,7 @@ export const themeProps = {
     white100: "#fff",
     green100: "#06BC6F",
     green: "#44524A",
-    lightGreen: "#989F9B",
+    lightGreen: "#01b06c",
     blue: "#2B50DF",
   },
 
@@ -45,6 +45,7 @@ export const themeProps = {
     0.5: 4,
     /** Equivalent to 8px  */
     1: 8,
+    1.5: 12,
     /** Equivalent to 16px  */
     2: 16,
     /** Equivalent to 24px  */

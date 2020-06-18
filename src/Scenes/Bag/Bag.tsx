@@ -232,10 +232,10 @@ export const Bag = screenTrack()((props) => {
         return (
           <BagTab
             me={data?.me}
+            activeReservation={data?.me?.activeReservation}
             pauseStatus={pauseStatus}
             items={item.data}
             removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-            hasActiveReservation={hasActiveReservation}
             deleteBagItem={deleteBagItem}
           />
         )

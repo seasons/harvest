@@ -60,6 +60,12 @@ export const GET_BAG = gql`
         returnAt
         shipped
         createdAt
+        status
+        sentPackage {
+          shippingLabel {
+            trackingURL
+          }
+        }
       }
       bag {
         id
