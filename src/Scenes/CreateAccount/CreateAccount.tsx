@@ -1,10 +1,14 @@
 import { Box, Container } from "App/Components"
 import { color } from "App/utils"
 import { CloseXSVG } from "Assets/svgs"
+
+import { SendCodePane } from "./SendCodePane"
+import { VerifyCodePane } from "./VerifyCodePane"
 import { CreateAccountPane } from "./CreateAccountPane"
 import { GetMeasurementsPane } from "./GetMeasurementsPane"
 import { ChoosePlanPane } from "./ChoosePlanPane"
 import { WelcomePane } from "./WelcomePane"
+
 import React, { useRef, useState, MutableRefObject, useEffect } from "react"
 import { TouchableOpacity, Modal } from "react-native"
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native"
@@ -16,7 +20,7 @@ interface CreateAccountProps {
 }
 
 enum State {
-    CREATE_ACCOUNT, GET_MEASUREMENTS, CHOOSE_PLAN, WELCOME
+    SEND_CODE, VERIFY_CODE, CREATE_ACCOUNT, GET_MEASUREMENTS, CHOOSE_PLAN, WELCOME
 }
 
 const Stack = createStackNavigator()
@@ -26,9 +30,17 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({
 }) => {
     // Navigation
     const internalNavigationRef: MutableRefObject<NavigationContainerRef> = useRef()
-    const [state, setState] = useState(State.CREATE_ACCOUNT)
+    const [state, setState] = useState(State.SEND_CODE)
 
     // Handlers
+
+    const onSendCode = () => {
+        setState(State.VERIFY_CODE)
+    }
+
+    const onVerifyPhone = () => {
+        setState(State.CREATE_ACCOUNT)
+    }
 
     const onAuth = (credentials, profile) => {
         setState(State.GET_MEASUREMENTS)
@@ -47,6 +59,8 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({
         navigation.goBack()
     }
 
+    // Rendering
+
     useEffect(() => {
         if (state == State.WELCOME) { return }
         internalNavigationRef.current?.navigate?.(String(state))
@@ -55,6 +69,12 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({
     const wrappedPaneForState = (state: State) => {
         let pane
         switch (state) {
+            case State.SEND_CODE:
+                pane = (<SendCodePane onSendCode={onSendCode} />)
+                break
+            case State.VERIFY_CODE:
+                pane = (<VerifyCodePane onVerifyPhone={onVerifyPhone} />)
+                break
             case State.CREATE_ACCOUNT:
                 pane = (<CreateAccountPane onAuth={onAuth} navigation={navigation} />)
                 break
@@ -78,7 +98,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({
             <NavigationContainer independent={true} ref={internalNavigationRef}>
                 <CloseButton onRequestClose={() => navigation.goBack()} />
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
-                    {Array(State.CREATE_ACCOUNT, State.GET_MEASUREMENTS, State.CHOOSE_PLAN).map(wrappedPaneForState)}
+                    {Array(State.SEND_CODE, State.VERIFY_CODE, State.CREATE_ACCOUNT, State.GET_MEASUREMENTS, State.CHOOSE_PLAN).map(wrappedPaneForState)}
                 </Stack.Navigator>
             </NavigationContainer>
 
