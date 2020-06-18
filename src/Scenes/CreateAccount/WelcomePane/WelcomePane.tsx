@@ -7,7 +7,9 @@ interface WelcomePaneProps {
     onPressGetStarted: () => void
 }
 
-export const WelcomePane: React.FC<WelcomePaneProps> = (props) => {
+export const WelcomePane: React.FC<WelcomePaneProps> = ({
+    onPressGetStarted
+}) => {
     return (
         <Container insetsBottom={false} insetsTop={false}>
             <Box p="2" pt={useSafeArea().top}>
@@ -28,7 +30,11 @@ export const WelcomePane: React.FC<WelcomePaneProps> = (props) => {
                     Your credit card has been succesfully billed and your membership will automatically renew on June 12.
                 </Sans>
                 <Spacer mb="3" />
-                <Button block variant="primaryBlack">
+                <Button
+                    block
+                    onPress={onPressGetStarted}
+                    variant="primaryBlack"
+                >
                     Get started
                 </Button>
                 <Spacer mb="3" />

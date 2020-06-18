@@ -1,17 +1,19 @@
-import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { DatePickerPopUp } from "./DatePickerPopUp"
 import { FakeTextInput } from "./FakeTextInput"
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
-import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback, View } from "react-native"
+import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Text } from "Components/Typography"
 
 interface CreateAccountPaneProps {
+    navigation: any
     onAuth: (credentials, profile) => void
 }
 
 export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
+    navigation,
     onAuth,
 }) => {
     // Fields
@@ -86,6 +88,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
 
     const onPressSignUpButton = () => {
         // TODO: authorize
+        Keyboard.dismiss()
         onAuth(null, null)
     }
 
@@ -93,7 +96,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
 
     return (
         <Container insetsBottom={false} insetsTop={false}>
-            <CloseButton />
             <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={52}>
                 <ScrollView style={{ paddingTop: 85, paddingHorizontal: 16, overflow: "visible" }} showsVerticalScrollIndicator={false} keyboardDismissMode="interactive" ref={scrollViewRef}>
                     <Sans color="black100" size="3">
@@ -153,7 +155,12 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
                     <Spacer height={100} />
                 </ScrollView>
                 <Box p={2} style={{ backgroundColor: "transparent" }}>
-                    <Button block variant="primaryBlack" disabled={!formValid} onPress={() => onPressSignUpButton()}>
+                    <Button
+                        block
+                        disabled={!formValid}
+                        onPress={() => onPressSignUpButton()}
+                        variant="primaryBlack"
+                    >
                         Create my account
                     </Button>
                 </Box>
@@ -164,7 +171,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
                         <Sans size="2" color="black50">
                             Already have an account?
                         </Sans>{" "}
-                        <TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={() => navigation.navigate("Modal", { screen: "SignInModal" })}>
                             <Sans style={{ textDecorationLine: "underline" }} size="2" color="black100">
                                 Login
                             </Sans>
