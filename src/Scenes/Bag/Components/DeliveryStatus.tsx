@@ -25,7 +25,7 @@ export const DeliveryStatus: React.FC<{ status: ReservationStatus; trackingURL: 
     statusText = "Order being prepared"
     step = 1
   } else if (status === "Queued") {
-    statusText = "Order recieved"
+    statusText = "Order received"
     step = 0
   } else {
     return null
