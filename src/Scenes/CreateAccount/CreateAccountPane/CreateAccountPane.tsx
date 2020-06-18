@@ -1,5 +1,6 @@
 import { Box, Button, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
+import { isWholeNumber } from "App/helpers/validation"
 import { DatePickerPopUp } from "./DatePickerPopUp"
 import { FakeTextInput } from "./FakeTextInput"
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
@@ -24,7 +25,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
     const [dateOfBirth, setDateOfBirth] = useState("")
     const [zipCode, setZipCode] = useState("")
 
-    const [formValid, setFormValid] = useState(false)
+    const [isFormValid, setIsFormValid] = useState(false)
 
     // Keyboard handling
 
@@ -53,17 +54,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
 
     // Form/field validation
 
-    // Returns whether every character in the string is a digit (i.e. empty string returns true, but any spaces returns false)
-    const isWholeNumber = (s: string) => {
-        if (s.length == 0) {
-            return true
-        }
-
-        const isDigit = (c: String) => c >= '0' && c <= '9'
-        const reducer = (accumulator: boolean, currentValue: string) => accumulator && isDigit(currentValue)
-        return Array.from(s).reduce(reducer, true)
-    }
-
     const onZipCodeChange = (val) => {
         if (val.length > 5 || !isWholeNumber(val)) {
             // revert to previous valid value
@@ -75,7 +65,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
 
     const validateForm = () => {
         // TODO: More stringent name, password, dob, & zipcode checking
-        setFormValid(
+        setIsFormValid(
             name.length && name.trim().split(' ').length >= 2
             && isValidEmail(email)
             && password.trim().length
@@ -157,7 +147,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
                 <Box p={2} style={{ backgroundColor: "transparent" }}>
                     <Button
                         block
-                        disabled={!formValid}
+                        disabled={!isFormValid}
                         onPress={() => onPressSignUpButton()}
                         variant="primaryBlack"
                     >
@@ -187,28 +177,3 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({
         </Container>
     )
 }
-
-
-/**
-<Text style={{ textAlign: "center" }}>
-                            <Sans size="1" color="gray">
-                                By creating an account, you agree to our
-                            </Sans>{" "}
-                        </Text>
-                        <Text style={{ textAlign: "center" }}>
-                            <TouchableWithoutFeedback>
-                                <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
-                                    Privacy Policy
-                                </Sans>
-                            </TouchableWithoutFeedback>
-                            <Sans size="1" color="gray">
-                                {" & "}
-                            </Sans>
-                            <TouchableWithoutFeedback>
-                                <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
-                                    Terms of Service
-                                </Sans>
-                            </TouchableWithoutFeedback>
-                        </Text>
-                        /* <Spacer mb={2} />
- */
