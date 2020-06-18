@@ -1,9 +1,9 @@
-import { Box, Button, CloseButton, Container, Sans, Separator, Spacer } from "App/Components"
+import { Box, Button, Container, Sans, Separator, Spacer } from "App/Components"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { BoxPicker } from "./BoxPicker"
 import Measurements from "./Measurements"
 import React, { useState } from "react"
-import { ScrollView, TouchableOpacity } from "react-native"
+import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 
 interface GetMeasurementsPaneProps {
@@ -32,7 +32,6 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
 
     return (
         <Container insetsBottom={false} insetsTop={false}>
-            <CloseButton />
             <Box style={{ flex: 1 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <Spacer mb={5} />

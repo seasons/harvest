@@ -1,5 +1,5 @@
 import { PlanTile } from "./PlanTile"
-import { Box, Button, CloseButton, Container, Sans, Spacer } from "App/Components"
+import { Box, Button, Container, Sans, Spacer } from "App/Components"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import React, { useState } from "react"
 import { ScrollView } from "react-native"
@@ -13,13 +13,14 @@ enum Plan {
     ESSENTIAL, ALL_ACCESS, NONE
 }
 
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = (props) => {
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
+    onChoosePlan,
+}) => {
     const [footerBoxHeight, setFooterBoxHeight] = useState(0)
     const [selectedPlan, setSelectedPlan] = useState(Plan.NONE)
 
     return (
         <Container insetsBottom={false} insetsTop={false}>
-            <CloseButton />
             <Box style={{ flex: 1 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <Spacer mb={5} />
@@ -60,7 +61,12 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = (props) => {
             </Box>
             <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
                 <Box p={2} onLayout={e => setFooterBoxHeight(e.nativeEvent.layout.height)}>
-                    <Button disabled={selectedPlan === Plan.NONE} block variant="primaryBlack">
+                    <Button
+                        block
+                        disabled={selectedPlan === Plan.NONE}
+                        onPress={onChoosePlan}
+                        variant="primaryBlack"
+                    >
                         Choose plan
                     </Button>
                     <Box style={{ height: useSafeArea().bottom }} />
