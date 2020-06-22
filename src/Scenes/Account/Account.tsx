@@ -10,13 +10,14 @@ import * as Animatable from "react-native-animatable"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { ProfileList } from "./ProfileList"
 import { screenTrack, Schema } from "App/utils/track"
-import { Submit, QuestionMark, PrivacyPolicy, TermsOfService, LogOutSVG } from "Assets/svgs"
+import { Submit, QuestionMark, PrivacyPolicy, TermsOfService, LogOutSVG, GreenCheck } from "Assets/svgs"
 
 export const GET_USER = gql`
   query GetUser {
     me {
       customer {
         id
+        status
         user {
           id
           firstName
@@ -130,6 +131,29 @@ export const Account = screenTrack()((props) => {
     },
   ]
 
+  const CustomerStatusContent = () => {
+    const status = data?.me?.customer?.status
+    if (status === "Waitlisted" || status === "Invited" || status === "Created") {
+      return <WaitListContent />
+    } else {
+      return <ProfileList list={topList} userRole={user?.role} />
+    }
+  }
+
+  const WaitListContent = () => {
+    return (
+      <Flex>
+        <GreenCheck backgroundColor="black100" />
+        <Spacer mb={3} />
+        <Sans size="3">You're on the waitlist</Sans>
+        <Spacer mb={2} />
+        <Sans size="1" color="black50">
+          We'll send you a nofication when your account is ready and you're able to choose your plan.
+        </Sans>
+      </Flex>
+    )
+  }
+
   const user = data?.me?.customer?.user
 
   return (
@@ -165,7 +189,7 @@ export const Account = screenTrack()((props) => {
               <Separator />
             </Box>
             <Box px={2} py={4}>
-              <ProfileList list={topList} userRole={user?.role} />
+              <CustomerStatusContent />
             </Box>
             <Box px={2}>
               <Separator />
