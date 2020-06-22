@@ -1,71 +1,133 @@
 import React, { useState, useEffect } from "react"
 import { Spacer, Flex, Box, Toggle, Sans } from "App/Components"
 import { color } from "App/utils"
+import gql from "graphql-tag"
 import { Text, Linking, AppState } from "react-native"
-import { PushNotificationStatus } from "App/generated/globalTypes"
 import { checkNotifications } from "react-native-permissions"
 import { useNotificationsContext } from "App/Notifications/NotificationsContext"
 import { useTracking, Schema } from "App/utils/track"
+import { useMutation } from "react-apollo"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import * as Sentry from "@sentry/react-native"
+import { GetUser_me_customer_user_pushNotification } from "App/generated/getUser"
 
-export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotificationStatus; userID: string }> = ({
-  userNotificationStatus,
+const UPDATE_USER_PUSH_NOTIFICATION_STATUS = gql`
+  mutation updateUserPushNotificationStatus($newStatus: Boolean!) {
+    updateUserPushNotificationStatus(newStatus: $newStatus) {
+      id
+      status
+    }
+  }
+`
+
+export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_customer_user_pushNotification }> = ({
+  pushNotification,
 }) => {
-  const { requestPermissions, unsubscribe, init, subscribedToNotifs } = useNotificationsContext()
+  const { requestPermissions } = useNotificationsContext()
   const [isMutating, setIsMutating] = useState(false)
+  const [deviceStatus, setDeviceStatus] = useState(null)
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
 
-  const disabled = userNotificationStatus === "Blocked"
+  const [updateStatus] = useMutation(UPDATE_USER_PUSH_NOTIFICATION_STATUS, {
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: (err) => {
+      const popUpData = {
+        title: "Oops!",
+        note: "There was an error updating your push notifications, please contact us.",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
+      }
+      console.log("err", err)
+      Sentry.captureException(err)
+      showPopUp(popUpData)
+      setIsMutating(false)
+    },
+  })
 
-  const getPermission = () => {
-    if (isMutating) {
-      return
-    }
-    setIsMutating(true)
-    requestPermissions(null)
-    setIsMutating(false)
-  }
-
-  const handleAppChange = (nextAppState) => {
-    if (nextAppState === "active") {
-      checkNotifications()
-        .then(async ({ status }) => {
-          if (userNotificationStatus === "Blocked" && status !== userNotificationStatus?.toLowerCase()) {
-            getPermission()
-          }
-        })
-        .catch((error) => {
-          console.log("error checking for permission", error)
-        })
-    }
+  const checkPermissions = () => {
+    checkNotifications()
+      .then(async ({ status }) => {
+        if (status === "denied") {
+          setDeviceStatus("denied")
+        } else if (status === "blocked") {
+          setDeviceStatus("blocked")
+        } else if (status === "granted") {
+          setDeviceStatus("granted")
+        }
+      })
+      .catch((error) => {
+        console.log("error checking for permission", error)
+      })
   }
 
   useEffect(() => {
+    checkPermissions()
     // If user leaves the app to turn on notifications in the settings recheck status
-    const unsubscribe = AppState.addEventListener("change", handleAppChange)
-    return unsubscribe
-  }, [userNotificationStatus])
+    const appChangeListener = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "active") {
+        checkPermissions()
+      }
+    })
+    return appChangeListener
+  }, [])
 
   const onChange = async (newValue) => {
     if (isMutating) {
       return
     }
     setIsMutating(true)
-    if (subscribedToNotifs) {
-      unsubscribe()
-    } else {
-      if (userNotificationStatus === "Denied") {
-        getPermission()
-      } else {
-        init()
-      }
-    }
     tracking.trackEvent({
       actionName: Schema.ActionNames.NotificationToggleTapped,
       actionType: Schema.ActionTypes.Tap,
       newValue,
     })
+    if (deviceStatus === "denied") {
+      requestPermissions(null)
+    } else {
+      updateStatus({
+        variables: { newStatus: newValue },
+        optimisticResponse: {
+          __typename: "Mutation",
+          updateUserPushNotificationStatus: {
+            __typename: "UserPushNotification",
+            id: pushNotification.id,
+            status: newValue,
+          },
+        },
+      })
+    }
+
     setIsMutating(false)
   }
+
+  const TextContent = () => {
+    if (deviceStatus === "blocked") {
+      return (
+        <Sans size="2" color={color("black50")}>
+          Enable push notifications in your{" "}
+          <Text
+            onPress={() => Linking.openSettings()}
+            style={{ color: color("black100"), textDecorationLine: "underline" }}
+          >
+            device settings
+          </Text>
+          .
+        </Sans>
+      )
+    } else {
+      return (
+        <Sans size="2" color={color("black50")}>
+          Turn on push notifications
+        </Sans>
+      )
+    }
+  }
+
+  const disabled = isMutating || deviceStatus === "denied" || deviceStatus === "blocked"
+  const selected = deviceStatus !== "blocked" && deviceStatus !== "denied" && pushNotification?.status
 
   return (
     <Box px={2}>
@@ -73,28 +135,9 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
       <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
         <Box style={{ maxWidth: 300 }}>
           <Sans size="2">Stay updated</Sans>
-          {disabled ? (
-            <Sans size="2" color={color("black50")}>
-              Enable push notifications in your{" "}
-              <Text
-                onPress={() => Linking.openSettings()}
-                style={{ color: color("black100"), textDecorationLine: "underline" }}
-              >
-                device settings
-              </Text>
-              .
-            </Sans>
-          ) : (
-            <Sans size="2" color={color("black50")}>
-              Turn on push notifications
-            </Sans>
-          )}
+          <TextContent />
         </Box>
-        <Toggle
-          disabled={disabled || isMutating}
-          onChange={(newValue) => onChange(newValue)}
-          selected={subscribedToNotifs}
-        />
+        <Toggle disabled={disabled} onChange={(newValue) => onChange(newValue)} selected={selected} />
       </Flex>
       <Spacer m={2} />
     </Box>
