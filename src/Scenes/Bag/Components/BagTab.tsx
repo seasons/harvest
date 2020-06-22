@@ -89,7 +89,6 @@ export const BagTab: React.FC<{
         </Sans>
         <Spacer mb={3} />
       </Box>
-      {hasActiveReservation && <DeliveryStatus trackingURL={trackingURL} activeReservation={activeReservation} />}
       {showPendingMessage && (
         <>
           <Box px={2}>
@@ -125,6 +124,7 @@ export const BagTab: React.FC<{
       )}
       <Separator />
       <Spacer mb={3} />
+      {hasActiveReservation && <DeliveryStatus trackingURL={trackingURL} activeReservation={activeReservation} />}
       {items?.map((bagItem, index) => {
         return bagItem?.productID?.length > 0 ? (
           <Box key={bagItem.productID} px={2} pt={hasActiveReservation ? 0 : 2}>
