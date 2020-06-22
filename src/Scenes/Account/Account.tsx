@@ -143,9 +143,8 @@ export const Account = screenTrack()((props) => {
   const WaitListContent = () => {
     return (
       <Flex>
-        <Sans size="3">You're on the waitlist</Sans>
-        <Spacer mb={2} />
-        <Sans size="1" color="black50">
+        <Sans size="2">You're on the waitlist</Sans>
+        <Sans size="2" color="black50">
           We'll send you a nofication when your account is ready and you're able to choose your plan.
         </Sans>
       </Flex>
@@ -182,7 +181,7 @@ export const Account = screenTrack()((props) => {
                 )}
               </Flex>
             </Box>
-            <Spacer mb={2} />
+            <Spacer mb={3} />
             <Box px={2}>
               <Separator />
             </Box>
