@@ -4,9 +4,9 @@ import { NotificationGraphic } from "Assets/svgs"
 import { color } from "App/utils"
 import { useNotificationsContext } from "App/Notifications/NotificationsContext"
 
-export const AllowNotifications = ({ navigation, route }) => {
+export const AllowNotifications = ({ navigation }) => {
   const [isMutating, setIsMutating] = useState(false)
-  const { requestPermissions, setDeviceNotifStatus } = useNotificationsContext()
+  const { requestPermissions } = useNotificationsContext()
 
   const callback = () => {
     setIsMutating(false)
@@ -44,7 +44,6 @@ export const AllowNotifications = ({ navigation, route }) => {
         <Button
           block
           onPress={() => {
-            setDeviceNotifStatus("Denied")
             navigation.navigate("Main")
           }}
           variant="primaryWhite"

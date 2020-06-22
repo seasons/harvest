@@ -6,7 +6,6 @@ const NotificationsContext = React.createContext({
   requestPermissions: (callback: () => void) => null,
   init: () => null,
   unsubscribe: () => null,
-  setDeviceNotifStatus: (status: string) => null,
   subscribedToNotifs: null,
 })
 

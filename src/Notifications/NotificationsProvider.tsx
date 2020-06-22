@@ -6,8 +6,7 @@ import { Platform } from "react-native"
 import gql from "graphql-tag"
 import NotificationsContext from "./NotificationsContext"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
-import { useMutation, useQuery } from "react-apollo"
-import { GET_USER } from "App/Scenes/Account/Account"
+import { useQuery } from "react-apollo"
 import { useNavigation } from "@react-navigation/native"
 import { getUserSession } from "App/utils/auth"
 
@@ -22,14 +21,6 @@ export const GET_BEAMS_DATA = gql`
         beamsToken
         roles
       }
-    }
-  }
-`
-
-export const UPDATE_USER_PUSH_NOTIFICATION_STATUS = gql`
-  mutation updateUserPushNotificationStatus($pushNotificationStatus: PushNotificationStatus!) {
-    updateUserPushNotificationStatus(pushNotificationStatus: $pushNotificationStatus) {
-      pushNotificationStatus
     }
   }
 `
@@ -52,13 +43,6 @@ const setUserId = (userId, token) => {
 
 export const NotificationsProvider = ({ children }) => {
   const navigation = useNavigation()
-  const [updateUserPushNotificationStatus] = useMutation(UPDATE_USER_PUSH_NOTIFICATION_STATUS, {
-    refetchQueries: [
-      {
-        query: GET_USER,
-      },
-    ],
-  })
   const [notificationState, dispatch] = useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -176,10 +160,7 @@ export const NotificationsProvider = ({ children }) => {
           if (beamsData) {
             const { beamsToken, email, roles } = JSON.parse(beamsData)
             attachListeners(email, roles, beamsToken)
-            notificationsContext.setDeviceNotifStatus("Granted")
           }
-        } else {
-          notificationsContext.setDeviceNotifStatus("Blocked")
         }
         callback?.()
       })
@@ -217,13 +198,6 @@ export const NotificationsProvider = ({ children }) => {
         const { beamsToken, roles, email } = JSON.parse(beamsData)
         attachListeners(email, roles, beamsToken)
       }
-    },
-    setDeviceNotifStatus: async (status) => {
-      await updateUserPushNotificationStatus({
-        variables: {
-          pushNotificationStatus: status,
-        },
-      })
     },
     unsubscribe: async () => {
       RNPusherPushNotifications.unsubscribe(

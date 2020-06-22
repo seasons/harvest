@@ -11,7 +11,6 @@ import { checkNotifications } from "react-native-permissions"
 import AsyncStorage from "@react-native-community/async-storage"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { useNotificationsContext } from "App/Notifications/NotificationsContext"
-import { upperFirst } from "lodash"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -21,7 +20,6 @@ const LOG_IN = gql`
         firstName
         lastName
         roles
-        pushNotificationStatus
       }
       token
       refreshToken
@@ -43,7 +41,7 @@ export const LogIn: React.FC<LogInProps> = (props) => {
   const [emailComplete, setEmailComplete] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { signIn } = useAuthContext()
-  const { init, setDeviceNotifStatus } = useNotificationsContext()
+  const { init } = useNotificationsContext()
 
   const [login] = useMutation(LOG_IN, {
     onCompleted: () => {
@@ -67,19 +65,13 @@ export const LogIn: React.FC<LogInProps> = (props) => {
     setEmailComplete(isValidEmail(val))
   }
 
-  const checkPermissions = (beamsToken, pushNotificationStatus) => {
+  const checkPermissions = () => {
     checkNotifications()
       .then(({ status }) => {
         if (status === "denied") {
           props.navigation.popToTop()
-          props.navigation.navigate("Modal", { screen: "AllowNotificationsModal", params: { beamsToken, email } })
+          props.navigation.navigate("Modal", { screen: "AllowNotificationsModal" })
         } else {
-          // if, e.g, another user signed in on this device first and this user is inherting their
-          // permissions, ensure their pushNotificationStatus on prisma reflects the device status
-          if (pushNotificationStatus.toLowerCase() !== status) {
-            setDeviceNotifStatus(upperFirst(status))
-          }
-
           // if, e.g, another used signed in on this device first and this user is inherting their "granted"
           // status, ensure we properly set up their push notifications infrastructure
           if (status === "granted") {
@@ -113,10 +105,9 @@ export const LogIn: React.FC<LogInProps> = (props) => {
         const beamsToken = result?.data?.login?.beamsToken
         const roles = result?.data?.login?.user?.roles
         const beamsData = { beamsToken, email, roles }
-        const pushNotificationStatus = result?.data?.login?.user?.pushNotificationStatus
         AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
-        checkPermissions(beamsToken, pushNotificationStatus)
+        checkPermissions()
       }
     }
   }
