@@ -50,12 +50,8 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
   const checkPermissions = () => {
     checkNotifications()
       .then(async ({ status }) => {
-        if (status === "denied") {
-          setDeviceStatus("denied")
-        } else if (status === "blocked") {
-          setDeviceStatus("blocked")
-        } else if (status === "granted") {
-          setDeviceStatus("granted")
+        if (!!status) {
+          setDeviceStatus(status)
         }
       })
       .catch((error) => {
