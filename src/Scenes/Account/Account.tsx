@@ -10,7 +10,7 @@ import * as Animatable from "react-native-animatable"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { ProfileList } from "./ProfileList"
 import { screenTrack, Schema } from "App/utils/track"
-import { Submit, QuestionMark, PrivacyPolicy, TermsOfService, LogOutSVG, GreenCheck } from "Assets/svgs"
+import { Submit, QuestionMark, PrivacyPolicy, TermsOfService, LogOutSVG } from "Assets/svgs"
 
 export const GET_USER = gql`
   query GetUser {
@@ -143,8 +143,6 @@ export const Account = screenTrack()((props) => {
   const WaitListContent = () => {
     return (
       <Flex>
-        <GreenCheck backgroundColor="black100" />
-        <Spacer mb={3} />
         <Sans size="3">You're on the waitlist</Sans>
         <Spacer mb={2} />
         <Sans size="1" color="black50">
