@@ -17,6 +17,7 @@ export const GET_USER = gql`
     me {
       customer {
         id
+        status
         user {
           id
           firstName
@@ -130,6 +131,26 @@ export const Account = screenTrack()((props) => {
     },
   ]
 
+  const CustomerStatusContent = () => {
+    const status = data?.me?.customer?.status
+    if (status === "Waitlisted" || status === "Invited" || status === "Created") {
+      return <WaitListContent />
+    } else {
+      return <ProfileList list={topList} userRole={user?.role} />
+    }
+  }
+
+  const WaitListContent = () => {
+    return (
+      <Flex>
+        <Sans size="2">You're on the waitlist</Sans>
+        <Sans size="2" color="black50">
+          We'll send you a nofication when your account is ready and you're able to choose your plan.
+        </Sans>
+      </Flex>
+    )
+  }
+
   const user = data?.me?.customer?.user
 
   return (
@@ -160,12 +181,12 @@ export const Account = screenTrack()((props) => {
                 )}
               </Flex>
             </Box>
-            <Spacer mb={2} />
+            <Spacer mb={3} />
             <Box px={2}>
               <Separator />
             </Box>
             <Box px={2} py={4}>
-              <ProfileList list={topList} userRole={user?.role} />
+              <CustomerStatusContent />
             </Box>
             <Box px={2}>
               <Separator />
