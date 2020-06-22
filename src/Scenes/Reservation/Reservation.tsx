@@ -163,7 +163,7 @@ export const Reservation = screenTrack()((props) => {
                       <Box key={item.id}>
                         <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
                         <Spacer mb={1} />
-                        <Separator />
+                        {i !== items.length - 1 && <Separator />}
                         <Spacer mb={1} />
                       </Box>
                     )

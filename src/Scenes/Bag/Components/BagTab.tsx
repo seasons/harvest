@@ -10,19 +10,22 @@ import { REMOVE_SCHEDULED_PAUSE, PauseStatus } from "App/Components/Pause/PauseB
 import { GET_BAG } from "../BagQueries"
 import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { DeliveryStatus } from "./DeliveryStatus"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
   me
   items
   deleteBagItem
-  hasActiveReservation
+  activeReservation
   removeFromBagAndSaveItem
-}> = ({ pauseStatus, items, deleteBagItem, hasActiveReservation, removeFromBagAndSaveItem, me }) => {
+}> = ({ activeReservation, pauseStatus, items, deleteBagItem, removeFromBagAndSaveItem, me }) => {
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
   const tracking = useTracking()
+
+  const hasActiveReservation = !!activeReservation
 
   const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
     refetchQueries: [
@@ -59,14 +62,14 @@ export const BagTab: React.FC<{
     returnReminder = `Return by ${luxonDate.weekdayLong}, ${luxonDate.monthLong} ${luxonDate.day}`
   }
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
-
   const showPendingMessage = pauseStatus === "pending" && !!pauseRequest?.pauseDate
+  const trackingURL = activeReservation?.sentPackage?.shippingLabel?.trackingURL
 
   return (
     <Box>
-      <Box px={2} pt={3}>
+      <Box px={2} pt={4}>
         <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
-          <Sans size="2">{hasActiveReservation ? "Current rotation" : "My bag"}</Sans>
+          <Sans size="1">{hasActiveReservation ? "Current rotation" : "My bag"}</Sans>
           <Sans
             size="1"
             style={{ textDecorationLine: "underline" }}
@@ -81,10 +84,10 @@ export const BagTab: React.FC<{
             View FAQ
           </Sans>
         </Flex>
-        <Sans size="2" color="black50">
+        <Sans size="1" color="black50">
           {hasActiveReservation && !!returnReminder ? returnReminder : "Reserve your order below"}
         </Sans>
-        <Spacer mb={2} />
+        <Spacer mb={3} />
       </Box>
       {showPendingMessage && (
         <>
@@ -119,6 +122,9 @@ export const BagTab: React.FC<{
           </Box>
         </>
       )}
+      <Separator />
+      <Spacer mb={3} />
+      {hasActiveReservation && <DeliveryStatus trackingURL={trackingURL} activeReservation={activeReservation} />}
       {items?.map((bagItem, index) => {
         return bagItem?.productID?.length > 0 ? (
           <Box key={bagItem.productID} px={2} pt={hasActiveReservation ? 0 : 2}>
