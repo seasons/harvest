@@ -11,63 +11,54 @@ const windowDimensions = Dimensions.get("window")
 const windowHeight = windowDimensions.height
 
 export interface CustomPopUpProps {
-    buttonText: string
-    children: any
-    onRequestClose: () => void
-    title: string
-    visible: boolean
+  buttonText: string
+  children: any
+  onRequestClose: () => void
+  title: string
+  visible: boolean
 }
 
-export const CustomPopUp: React.FC<CustomPopUpProps> = ({
-    buttonText,
-    children,
-    onRequestClose,
-    visible,
-    title,
-}) => {
-    // animation 
-    const [showModal, setShowModal] = useState(false)
+export const CustomPopUp: React.FC<CustomPopUpProps> = ({ buttonText, children, onRequestClose, visible, title }) => {
+  // animation
+  const [showModal, setShowModal] = useState(false)
 
-    useEffect(() => {
-        if (!visible && showModal) {
-            setTimeout(() => {
-                setShowModal(false)
-            }, 400);
-        } else if (visible && !showModal) {
-            setShowModal(true)
-        }
-    }, [visible])
+  useEffect(() => {
+    if (!visible && showModal) {
+      setTimeout(() => {
+        setShowModal(false)
+      }, 400)
+    } else if (visible && !showModal) {
+      setShowModal(true)
+    }
+  }, [visible])
 
-    const [size, onLayout] = useComponentSize()
-    const height = size ? size.height : 300
+  const [size, onLayout] = useComponentSize()
+  const height = size ? size.height : 300
 
-    const animation = useSpring({
-        translateY: visible ? windowHeight - height : windowHeight,
-        backgroundColor: visible ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0)",
-    })
+  const animation = useSpring({
+    translateY: visible ? windowHeight - height : windowHeight,
+    backgroundColor: visible ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0)",
+  })
 
-    // render
-    return (
-        <Modal transparent visible={showModal}>
-            <AnimatedPopUp
-                style={{ transform: [{ translateY: animation.translateY }] }}
-                color={color("white100")}
-            >
-                <Box p={2} pt={4} pb={useSafeArea().bottom + 16} onLayout={onLayout}>
-                    <Sans color={color("black100")} size="3">
-                        {title}
-                    </Sans>
-                    <Spacer mb={1} />
-                    {children}
-                    <Spacer mb={1} />
-                    <Button block variant="primaryBlack" onPress={onRequestClose}>
-                        {buttonText}
-                    </Button>
-                </Box>
-            </AnimatedPopUp>
-            <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor }} />
-        </Modal>
-    )
+  // render
+  return (
+    <Modal transparent visible={showModal}>
+      <AnimatedPopUp style={{ transform: [{ translateY: animation.translateY }] }} color={color("white100")}>
+        <Box p={2} pt={4} pb={useSafeArea().bottom + 16} onLayout={onLayout}>
+          <Sans color={color("black100")} size="3">
+            {title}
+          </Sans>
+          <Spacer mb={1} />
+          {children}
+          <Spacer mb={1} />
+          <Button block variant="primaryBlack" onPress={onRequestClose}>
+            {buttonText}
+          </Button>
+        </Box>
+      </AnimatedPopUp>
+      <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor }} />
+    </Modal>
+  )
 }
 
 const Overlay = styled(Box)`
@@ -83,7 +74,7 @@ const Overlay = styled(Box)`
 const Container = styled(Box)`
   border-top-left-radius: 30;
   border-top-right-radius: 30;
-  background-color: ${p => p.color};
+  background-color: ${(p) => p.color};
   position: absolute;
   width: 100%;
   height: 100%;

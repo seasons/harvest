@@ -1,6 +1,11 @@
 import { Box, Container } from "App/Components"
 import { color } from "App/utils"
 import { CloseXSVG } from "Assets/svgs"
+import React, { useRef, useState, MutableRefObject, useEffect } from "react"
+import { TouchableOpacity, Modal } from "react-native"
+import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native"
+import { createStackNavigator } from "@react-navigation/stack"
+import styled from "styled-components/native"
 
 import { SendCodePane } from "./SendCodePane"
 import { VerifyCodePane } from "./VerifyCodePane"
@@ -9,104 +14,105 @@ import { GetMeasurementsPane } from "./GetMeasurementsPane"
 import { ChoosePlanPane } from "./ChoosePlanPane"
 import { WelcomePane } from "./WelcomePane"
 
-import React, { useRef, useState, MutableRefObject, useEffect } from "react"
-import { TouchableOpacity, Modal } from "react-native"
-import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native"
-import { createStackNavigator } from "@react-navigation/stack"
-import styled from "styled-components/native"
-
 interface CreateAccountProps {
-    navigation: any
+  navigation: any
 }
 
 enum State {
-    SEND_CODE, VERIFY_CODE, CREATE_ACCOUNT, GET_MEASUREMENTS, CHOOSE_PLAN, WELCOME
+  CreateAccount,
+  SendCode,
+  VerifyCode,
+  GetMeasurements,
+  ChoosePlan,
+  Welcome,
 }
 
 const Stack = createStackNavigator()
 
-export const CreateAccount: React.FC<CreateAccountProps> = ({
-    navigation,
-}) => {
-    // Navigation
-    const internalNavigationRef: MutableRefObject<NavigationContainerRef> = useRef()
-    const [state, setState] = useState(State.SEND_CODE)
+export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
+  // Navigation
+  const internalNavigationRef: MutableRefObject<NavigationContainerRef> = useRef()
+  const [state, setState] = useState(State.CreateAccount)
 
-    // Handlers
+  // Handlers
 
-    const onSendCode = () => {
-        setState(State.VERIFY_CODE)
+  const onSendCode = () => {
+    setState(State.VerifyCode)
+  }
+
+  const onVerifyPhone = () => {
+    setState(State.CreateAccount)
+  }
+
+  const onAuth = (credentials, profile) => {
+    setState(State.GetMeasurements)
+  }
+
+  const onGetMeasurements = () => {
+    setState(State.ChoosePlan)
+  }
+
+  const onChoosePlan = () => {
+    setState(State.Welcome)
+  }
+
+  const onPressGetStarted = () => {
+    setState(null)
+    navigation.goBack()
+  }
+
+  // Rendering
+
+  useEffect(() => {
+    if (state == State.Welcome) {
+      return
     }
+    internalNavigationRef.current?.navigate?.(String(state))
+  }, [state])
 
-    const onVerifyPhone = () => {
-        setState(State.CREATE_ACCOUNT)
+  const wrappedPaneForState = (state: State) => {
+    let pane
+    switch (state) {
+      case State.CreateAccount:
+        pane = <CreateAccountPane onAuth={onAuth} navigation={navigation} />
+        break
+      case State.SendCode:
+        pane = <SendCodePane onSendCode={onSendCode} />
+        break
+      case State.VerifyCode:
+        pane = <VerifyCodePane onVerifyPhone={onVerifyPhone} />
+        break
+      case State.GetMeasurements:
+        pane = <GetMeasurementsPane onGetMeasurements={onGetMeasurements} />
+        break
+      case State.ChoosePlan:
+        pane = <ChoosePlanPane onChoosePlan={onChoosePlan} />
+        break
     }
-
-    const onAuth = (credentials, profile) => {
-        setState(State.GET_MEASUREMENTS)
-    }
-
-    const onGetMeasurements = () => {
-        setState(State.CHOOSE_PLAN)
-    }
-
-    const onChoosePlan = () => {
-        setState(State.WELCOME)
-    }
-
-    const onPressGetStarted = () => {
-        setState(null)
-        navigation.goBack()
-    }
-
-    // Rendering
-
-    useEffect(() => {
-        if (state == State.WELCOME) { return }
-        internalNavigationRef.current?.navigate?.(String(state))
-    }, [state])
-
-    const wrappedPaneForState = (state: State) => {
-        let pane
-        switch (state) {
-            case State.SEND_CODE:
-                pane = (<SendCodePane onSendCode={onSendCode} />)
-                break
-            case State.VERIFY_CODE:
-                pane = (<VerifyCodePane onVerifyPhone={onVerifyPhone} />)
-                break
-            case State.CREATE_ACCOUNT:
-                pane = (<CreateAccountPane onAuth={onAuth} navigation={navigation} />)
-                break
-            case State.GET_MEASUREMENTS:
-                pane = (<GetMeasurementsPane onGetMeasurements={onGetMeasurements} />)
-                break
-            case State.CHOOSE_PLAN:
-                pane = (<ChoosePlanPane onChoosePlan={onChoosePlan} />)
-                break
-        }
-        const Screen = (navigation) => (
-            <Container insetsBottom={false} insetsTop={false}>
-                {pane}
-            </Container>
-        )
-        return <Stack.Screen key={String(state)} name={String(state)} component={Screen} />
-    }
-
-    return (
-        <>
-            <NavigationContainer independent={true} ref={internalNavigationRef}>
-                <CloseButton onRequestClose={() => navigation.goBack()} />
-                <Stack.Navigator screenOptions={{ headerShown: false }}>
-                    {Array(State.SEND_CODE, State.VERIFY_CODE, State.CREATE_ACCOUNT, State.GET_MEASUREMENTS, State.CHOOSE_PLAN).map(wrappedPaneForState)}
-                </Stack.Navigator>
-            </NavigationContainer>
-
-            <Modal visible={state === State.WELCOME} animated>
-                <WelcomePane onPressGetStarted={onPressGetStarted} />
-            </Modal>
-        </>
+    const Screen = (_) => (
+      <Container insetsBottom={false} insetsTop={false}>
+        {pane}
+      </Container>
     )
+    return <Stack.Screen key={String(state)} name={String(state)} component={Screen} />
+  }
+
+  return (
+    <>
+      <NavigationContainer independent={true} ref={internalNavigationRef}>
+        <CloseButton onRequestClose={() => navigation.goBack()} />
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {Array(State.CreateAccount, State.SendCode, State.VerifyCode, State.GetMeasurements, State.ChoosePlan).map(
+            wrappedPaneForState
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+
+      <Modal visible={state === State.Welcome} animated>
+        <WelcomePane onPressGetStarted={onPressGetStarted} />
+      </Modal>
+    </>
+  )
 }
 
 // Custom action CloseButton
@@ -114,18 +120,18 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({
 type CloseButtonVariant = "light" | "dark"
 
 export const CloseButton: React.FC<{
-    variant?: CloseButtonVariant,
-    onRequestClose?: () => void,
+  variant?: CloseButtonVariant
+  onRequestClose?: () => void
 }> = ({ variant, onRequestClose }) => {
-    return (
-        <Wrapper>
-            <TouchableOpacity onPress={onRequestClose}>
-                <Circle variant={variant}>
-                    <CloseXSVG variant={variant} />
-                </Circle>
-            </TouchableOpacity>
-        </Wrapper>
-    )
+  return (
+    <Wrapper>
+      <TouchableOpacity onPress={onRequestClose}>
+        <Circle variant={variant}>
+          <CloseXSVG variant={variant} />
+        </Circle>
+      </TouchableOpacity>
+    </Wrapper>
+  )
 }
 
 const Wrapper = styled(Box)`
