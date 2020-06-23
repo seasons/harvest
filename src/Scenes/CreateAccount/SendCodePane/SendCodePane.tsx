@@ -1,12 +1,21 @@
 import { Box, Button, Container, Sans, Spacer, TextInput } from "App/Components"
-import { isWholeNumber } from "App/helpers/validation"
 import { Text } from "Components/Typography"
 import React, { useState } from "react"
-import { KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
+import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 
+import gql from "graphql-tag"
+import { useMutation } from "react-apollo"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+
+const START_VERIFICATION = gql`
+  mutation startSMSVerification($phoneNumber: String!) {
+    startSMSVerification(phoneNumber: $phoneNumber)
+  }
+`
+
 interface SendCodePaneProps {
-  onSendCode: () => void
+  onSendCode: (phoneNumber: string) => void
 }
 
 export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
@@ -14,9 +23,35 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
   const [isFormValid, setIsFormValid] = useState(false)
   const insets = useSafeArea()
 
+  const [isMutating, setIsMutating] = useState(false)
+  const errorPopUpContext = usePopUpContext()
+  const showErrorPopUp = errorPopUpContext.showPopUp
+  const hideErrorPopUp = errorPopUpContext.hidePopUp
+
+  const [startVerification] = useMutation(START_VERIFICATION, {
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: (err) => {
+      console.log("****\n\n", err, "\n\n****")
+      const popUpData = {
+        title: "Oops! Try again!",
+        note: "There was an issue sending the verification code. Double check your phone number and retry.",
+        buttonText: "Close",
+        onClose: () => hideErrorPopUp(),
+      }
+      showErrorPopUp(popUpData)
+      setIsMutating(false)
+    },
+  })
+
   const onPhoneNumberChange = (val: string) => {
+    if (isMutating) {
+      setPhoneNumber(phoneNumber)
+    }
+
     const onlyNums = val.replace(/\D/g, "")
-    if (onlyNums.length == 10 && isWholeNumber(onlyNums)) {
+    if (onlyNums.length == 10) {
       setPhoneNumber(`(${onlyNums.substring(0, 3)}) ${onlyNums.substring(3, 6)}-${onlyNums.substring(6)}`)
       setIsFormValid(true)
     } else {
@@ -25,9 +60,22 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
     }
   }
 
-  const sendCode = () => {
-    // on success
-    onSendCode()
+  const sendCode = async () => {
+    Keyboard.dismiss()
+
+    if (isMutating) {
+      return
+    }
+
+    setIsMutating(true)
+    const result = await startVerification({
+      variables: {
+        phoneNumber,
+      },
+    })
+    if (result?.data) {
+      onSendCode(phoneNumber)
+    }
   }
 
   return (

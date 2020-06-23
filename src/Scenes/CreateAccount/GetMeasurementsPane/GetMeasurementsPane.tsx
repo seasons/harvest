@@ -6,6 +6,36 @@ import React, { useState } from "react"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 
+import gql from "graphql-tag"
+import { useMutation } from "react-apollo"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+
+const ADD_MEASUREMENTS = gql`
+  mutation addMeasurements(
+    $height: Int!
+    $weight: String!
+    $topSize: String!
+    $waistSize: String!
+    $topSizeFit: String!
+    $waistSizeFit: String!
+  ) {
+    addCustomerDetails(
+      details: {
+        height: $height
+        weight: $weight
+        averageTopSize: $topSize
+        averageTopSizeFit: $topSizeFit
+        averageWaistSize: $waistSize
+        averageWaistSizeFit: $waistSizeFit
+      }
+      status: Authorized
+      event: CompletedWaitlistForm
+    ) {
+      id
+    }
+  }
+`
+
 interface GetMeasurementsPaneProps {
   onGetMeasurements: () => void
 }
@@ -21,8 +51,47 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
   const [footerBoxHeight, setFooterBoxHeight] = useState(0)
   const insets = useSafeArea()
 
-  const submitMeasurements = () => {
-    onGetMeasurements()
+  const [isMutating, setIsMutating] = useState(false)
+  const errorPopUpContext = usePopUpContext()
+  const showErrorPopUp = errorPopUpContext.showPopUp
+  const hideErrorPopUp = errorPopUpContext.hidePopUp
+
+  const [addMeasurements] = useMutation(ADD_MEASUREMENTS, {
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: (err) => {
+      console.log("****\n\n", err, "\n\n****")
+      const popUpData = {
+        title: "Oops! Try again!",
+        note: "There was an issue sending your measurements and sizing. Please retry.",
+        buttonText: "Close",
+        onClose: () => hideErrorPopUp(),
+      }
+      showErrorPopUp(popUpData)
+      setIsMutating(false)
+    },
+  })
+
+  const submitMeasurements = async () => {
+    if (isMutating) {
+      return
+    }
+
+    setIsMutating(true)
+    const result = await addMeasurements({
+      variables: {
+        height: height.value,
+        weight: weight.toString(),
+        topSize: topSize.value,
+        topSizeFit: topSizeFit.value,
+        waistSize: waistSize.value.toString(),
+        waistSizeFit: waistSizeFit.value,
+      },
+    })
+    if (result?.data) {
+      onGetMeasurements()
+    }
   }
 
   /////////////////////////

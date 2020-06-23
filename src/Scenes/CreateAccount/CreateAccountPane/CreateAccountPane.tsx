@@ -9,7 +9,10 @@ import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { useMutation } from "react-apollo"
+
 import { useAuthContext } from "App/Navigation/AuthContext"
+import AsyncStorage from "@react-native-community/async-storage"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const SIGN_UP = gql`
   mutation SignUp(
@@ -19,23 +22,24 @@ const SIGN_UP = gql`
     $lastName: String!
     $zipCode: String!
     $isoDateOfBirth: DateTime!
+    $slug: String!
   ) {
     signup(
       email: $email
       password: $password
       firstName: $firstName
       lastName: $lastName
-      birthday: $isoDateOfBirth
-      shippingAddress: { create: { zipCode: $zipCode } }
+      details: {
+        birthday: $isoDateOfBirth
+        shippingAddress: { create: { slug: $slug, name: "", address1: "", city: "", state: "", zipCode: $zipCode } }
+      }
     ) {
       user {
+        id
         email
         firstName
         lastName
         roles
-      }
-      customer {
-        id
       }
       token
       refreshToken
@@ -44,12 +48,19 @@ const SIGN_UP = gql`
   }
 `
 
-interface CreateAccountPaneProps {
-  navigation: any
-  onAuth: (credentials, profile) => void
+const makeLocationSlug = (firstName: string, lastName: string): string => {
+  const now = new Date()
+  const seasonsWaitlistLaunchDate = new Date("10/25/2019")
+  const secSinceLaunch = Math.round(now.getTime() - seasonsWaitlistLaunchDate.getTime() / 1000)
+  return `${firstName}-${lastName}-${secSinceLaunch}`
 }
 
-export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation, onAuth }) => {
+interface CreateAccountPaneProps {
+  navigation: any
+  onSignUp: () => void
+}
+
+export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation, onSignUp }) => {
   // Hooks
 
   const [name, setName] = useState("")
@@ -78,6 +89,11 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
   const scrollViewRef: MutableRefObject<ScrollView> = useRef()
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
   const insets = useSafeArea()
+
+  const errorPopUpContext = usePopUpContext()
+  const showErrorPopUp = errorPopUpContext.showPopUp
+  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const { signIn } = useAuthContext()
 
   // Keyboard handling
 
@@ -124,20 +140,21 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
 
   // networking
 
-  const { signIn } = useAuthContext()
-
   const [signup] = useMutation(SIGN_UP, {
     onCompleted: () => {
       setIsMutating(false)
     },
     onError: (err) => {
-      console.log("****\n", err, "\n****")
-      // const popUpData = {
-      //   title: "Oops! Try again!",
-      //   note: "",
-      //   buttonText: "Close",
-      //   // onClose: () => hidePopUp()
-      // }
+      console.log("****\n\n", err, "\n\n****")
+      const popUpData = {
+        title: "Oops! Try again!",
+        note:
+          "There was an issue creating your account. Double check your details and retry. Note: You cannot use an email that is already linked to an account.",
+        buttonText: "Close",
+        onClose: () => hideErrorPopUp(),
+      }
+      showErrorPopUp(popUpData)
+      setIsMutating(false)
     },
   })
 
@@ -150,8 +167,9 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
 
     setIsMutating(true)
 
-    console.log("Make request")
     const [firstName, lastName] = name.split(" ")
+    const slug = makeLocationSlug(firstName, lastName)
+
     const result = await signup({
       variables: {
         email,
@@ -160,22 +178,17 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
         lastName,
         zipCode,
         isoDateOfBirth,
+        slug,
       },
     })
-    console.log("Got result")
     if (result?.data) {
       const {
         data: { signup: userSession },
       } = result
-      // signIn(userSession)
-      console.log("**\n", userSession, "\n**")
-    } else {
-      console.log("Sad time :(")
+      signIn(userSession)
+      AsyncStorage.setItem("userSession", JSON.stringify(userSession))
+      onSignUp()
     }
-
-    console.log("Here")
-
-    // onAuth(null, null)
   }
 
   // Render
