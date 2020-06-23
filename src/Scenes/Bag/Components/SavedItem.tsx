@@ -12,6 +12,7 @@ import { ADD_TO_BAG, GET_BAG } from "../BagQueries"
 import { GreenCheck } from "Assets/svgs"
 import { Spinner } from "App/Components/Spinner"
 import { Variant } from "App/Scenes/Product/Components/VariantList"
+import * as Sentry from "@sentry/react-native"
 
 interface BagItemProps {
   bagIsFull: boolean
@@ -74,6 +75,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
     onError: (err) => {
       setIsMutating(false)
       setAddingToBag(false)
+      Sentry.captureException(err)
       if (err && err.graphQLErrors) {
         showPopUp({
           title: "Your bag is full",
