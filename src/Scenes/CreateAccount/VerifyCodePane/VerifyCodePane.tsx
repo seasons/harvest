@@ -2,17 +2,73 @@ import { Box, Button, Container, Sans, Spacer, TextInput } from "App/Components"
 import { isWholeNumber } from "App/helpers/validation"
 import { Text } from "Components/Typography"
 import React, { useState } from "react"
-import { KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
+import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 
+import gql from "graphql-tag"
+import { useMutation } from "react-apollo"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+
+const START_VERIFICATION = gql`
+  mutation startSMSVerification($phoneNumber: String!) {
+    startSMSVerification(phoneNumber: $phoneNumber)
+  }
+`
+
+const CHECK_VERIFICATION = gql`
+  mutation checkSMSVerification($code: String!) {
+    checkSMSVerification(code: $code)
+  }
+`
+
 interface VerifyCodePaneProps {
+  phoneNumber: string
   onVerifyPhone: () => void
 }
 
-export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ onVerifyPhone }) => {
+export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onVerifyPhone }) => {
   const [code, setCode] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
   const insets = useSafeArea()
+
+  const [isMutating, setIsMutating] = useState(false)
+  const errorPopUpContext = usePopUpContext()
+  const showErrorPopUp = errorPopUpContext.showPopUp
+  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const errorPopUpData = {
+    title: "Oops! Try again!",
+    note: "Double check the code and retry. We can resend you the code if you need.",
+    buttonText: "Close",
+    onClose: () => hideErrorPopUp(),
+  }
+
+  const [startVerification] = useMutation(START_VERIFICATION, {
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: (err) => {
+      console.log("****\n\n", err, "\n\n****")
+      const popUpData = {
+        title: "Oops! Try again!",
+        note: "There was an issue sending the verification code. Double check your phone number and retry.",
+        buttonText: "Close",
+        onClose: () => hideErrorPopUp(),
+      }
+      showErrorPopUp(popUpData)
+      setIsMutating(false)
+    },
+  })
+
+  const [checkVerification] = useMutation(CHECK_VERIFICATION, {
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: (err) => {
+      console.log("****\n\n", err, "\n\n****")
+      showErrorPopUp(errorPopUpData)
+      setIsMutating(false)
+    },
+  })
 
   const onCodeChange = (val: string) => {
     const noDashes = val.replace("-", "")
@@ -25,11 +81,53 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ onVerifyPhone })
     }
   }
 
-  const resendCode = () => {}
+  const resendCode = async () => {
+    Keyboard.dismiss()
 
-  const verifyCode = () => {
-    // on success
-    onVerifyPhone()
+    if (isMutating) {
+      return
+    }
+
+    setIsMutating(true)
+    const result = await startVerification({
+      variables: {
+        phoneNumber,
+      },
+    })
+    if (result?.data) {
+      const popUpData = {
+        title: "We sent you a code",
+        note: "Check your messages for the code and enter it here.",
+        buttonText: "Close",
+        onClose: () => hideErrorPopUp(),
+      }
+      showErrorPopUp(popUpData)
+    }
+  }
+
+  const verifyCode = async () => {
+    Keyboard.dismiss()
+
+    if (isMutating) {
+      return
+    }
+
+    setIsMutating(true)
+    const result = await checkVerification({
+      variables: {
+        code: code.replace("-", ""),
+      },
+    })
+    if (result?.data) {
+      const {
+        data: { checkSMSVerification: status },
+      } = result
+      if (status === "Approved") {
+        onVerifyPhone()
+      } else {
+        showErrorPopUp(errorPopUpData)
+      }
+    }
   }
 
   return (

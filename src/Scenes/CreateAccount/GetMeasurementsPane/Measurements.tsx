@@ -1,12 +1,12 @@
 import { Item as BoxPickerItem } from "./BoxPicker"
 
 const heights: BoxPickerItem[] = (() => {
-  const heightPair = (feet: number, inches: number) => ({ feet, inches })
-  let items: BoxPickerItem[] = [{ label: "4'11\"", value: heightPair(4, 11) }]
+  const totalInches = (feet: number, inches: number) => 12 * feet + inches
+  let items: BoxPickerItem[] = [{ label: "4'11\"", value: totalInches(4, 11) }]
   new Array(5, 6).forEach((feet) => {
-    items.push({ label: `${feet}\'`, value: heightPair(feet, 0) })
+    items.push({ label: `${feet}\'`, value: totalInches(feet, 0) })
     for (let inches = 1; inches < 12; inches++) {
-      items.push({ label: `${feet}\'${inches}\"`, value: heightPair(feet, inches) })
+      items.push({ label: `${feet}\'${inches}\"`, value: totalInches(feet, inches) })
     }
   })
   return items
@@ -40,9 +40,9 @@ const waistSizes: BoxPickerItem[] = (() => {
 })()
 
 const fits: BoxPickerItem[] = [
-  { label: "Sometimes too small", value: -1 },
-  { label: "It fits me every time", value: 0 },
-  { label: "Sometimes too big", value: 1 },
+  { label: "Sometimes too small", value: "Small" },
+  { label: "It fits me every time", value: "Perfect" },
+  { label: "Sometimes too big", value: "Big" },
 ]
 
 const Measurements = {

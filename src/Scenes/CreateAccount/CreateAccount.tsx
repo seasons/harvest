@@ -33,14 +33,16 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
   // Navigation
   const internalNavigationRef: MutableRefObject<NavigationContainerRef> = useRef()
   const [state, setState] = useState(State.CreateAccount)
+  const [phoneNumber, setPhoneNumber] = useState("")
 
   // Handlers
 
-  const onAuth = (credentials, profile) => {
+  const onSignUp = () => {
     setState(State.SendCode)
   }
 
-  const onSendCode = () => {
+  const onSendCode = (phoneNumber: string) => {
+    setPhoneNumber(phoneNumber)
     setState(State.VerifyCode)
   }
 
@@ -74,13 +76,13 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
     let pane
     switch (state) {
       case State.CreateAccount:
-        pane = <CreateAccountPane onAuth={onAuth} navigation={navigation} />
+        pane = <CreateAccountPane onSignUp={onSignUp} navigation={navigation} />
         break
       case State.SendCode:
         pane = <SendCodePane onSendCode={onSendCode} />
         break
       case State.VerifyCode:
-        pane = <VerifyCodePane onVerifyPhone={onVerifyPhone} />
+        pane = <VerifyCodePane phoneNumber={phoneNumber} onVerifyPhone={onVerifyPhone} />
         break
       case State.GetMeasurements:
         pane = <GetMeasurementsPane onGetMeasurements={onGetMeasurements} />
