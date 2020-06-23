@@ -11,6 +11,7 @@ import { GET_BAG } from "../BagQueries"
 import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { DeliveryStatus } from "./DeliveryStatus"
+import * as Sentry from "@sentry/react-native"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
@@ -50,6 +51,7 @@ export const BagTab: React.FC<{
         buttonText: "Close",
         onClose: () => hidePopUp(),
       }
+      Sentry.captureException(err)
       console.log("err", err)
       showPopUp(popUpData)
       setIsMutating(false)

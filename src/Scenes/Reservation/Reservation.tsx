@@ -7,6 +7,7 @@ import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
+import * as Sentry from "@sentry/react-native"
 import { ScrollView } from "react-native"
 import { BagItemFragment } from "../Bag/Components/BagItem"
 import { ReservationItem } from "./Components/ReservationItem"
@@ -87,6 +88,7 @@ export const Reservation = screenTrack()((props) => {
     },
     onError: (err) => {
       setIsMutating(false)
+      Sentry.captureException(err)
       console.warn("Error reservation.tsx: ", err)
     },
   })

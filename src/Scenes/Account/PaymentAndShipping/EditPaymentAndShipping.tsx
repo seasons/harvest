@@ -15,6 +15,7 @@ import {
 } from "src/generated/getUserPaymentData"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { space } from "App/utils"
+import * as Sentry from "@sentry/react-native"
 
 export const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
   query chargebeeUpdatePaymentPage {
@@ -94,6 +95,7 @@ export const EditPaymentAndShipping: React.FC<{
           title: "Uh oh. That’s not NYC",
         }
       }
+      Sentry.captureException(error)
       showPopUp(popUpData)
       console.log("error EditView.tsx: ", error)
     },
