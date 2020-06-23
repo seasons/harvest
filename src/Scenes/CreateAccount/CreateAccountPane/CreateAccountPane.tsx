@@ -50,7 +50,7 @@ interface CreateAccountPaneProps {
 }
 
 export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation, onAuth }) => {
-  // Fields & state
+  // Hooks
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -61,10 +61,11 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
 
   const [isMutating, setIsMutating] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
+  const scrollViewRef: MutableRefObject<ScrollView> = useRef()
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
+  const insets = useSafeArea()
 
   // Keyboard handling
-
-  const scrollViewRef: MutableRefObject<ScrollView> = useRef()
 
   const onFocusTextInput = (index: number) => {
     if (!scrollViewRef.current) {
@@ -74,8 +75,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
   }
 
   // Date picker popup
-
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
 
   const showDatePicker = () => {
     setIsDatePickerVisible(true)
@@ -179,9 +178,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
     // onAuth(null, null)
   }
 
-  // Layout
-
-  const insets = useSafeArea()
+  // Render
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
