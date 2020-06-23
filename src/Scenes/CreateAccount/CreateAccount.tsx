@@ -32,7 +32,7 @@ const Stack = createStackNavigator()
 export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
   // Navigation
   const internalNavigationRef: MutableRefObject<NavigationContainerRef> = useRef()
-  const [state, setState] = useState(State.VerifyCode)
+  const [state, setState] = useState(State.CreateAccount)
 
   // Handlers
 
