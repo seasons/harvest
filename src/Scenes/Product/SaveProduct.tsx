@@ -63,8 +63,6 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
 
   const images = product.largeImages || product.images
 
-  console.log("product", product)
-
   const {
     brand: { name: brandName },
     description,
