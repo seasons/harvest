@@ -1,12 +1,48 @@
 import { Box, Button, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { isWholeNumber } from "App/helpers/validation"
+import { Text } from "Components/Typography"
 import { DatePickerPopUp } from "./DatePickerPopUp"
 import { FakeTextInput } from "./FakeTextInput"
+import gql from "graphql-tag"
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { Text } from "Components/Typography"
+import { useMutation } from "react-apollo"
+import { useAuthContext } from "App/Navigation/AuthContext"
+
+const SIGN_UP = gql`
+  mutation SignUp(
+    $email: String!
+    $password: String!
+    $firstName: String!
+    $lastName: String!
+    $zipCode: String!
+    $isoDateOfBirth: DateTime!
+  ) {
+    signup(
+      email: $email
+      password: $password
+      firstName: $firstName
+      lastName: $lastName
+      birthday: $isoDateOfBirth
+      shippingAddress: { create: { zipCode: $zipCode } }
+    ) {
+      user {
+        email
+        firstName
+        lastName
+        roles
+      }
+      customer {
+        id
+      }
+      token
+      refreshToken
+      expiresIn
+    }
+  }
+`
 
 interface CreateAccountPaneProps {
   navigation: any
@@ -14,14 +50,16 @@ interface CreateAccountPaneProps {
 }
 
 export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation, onAuth }) => {
-  // Fields
+  // Fields & state
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [isoDateOfBirth, setISODateOfBirth] = useState("")
   const [dateOfBirth, setDateOfBirth] = useState("")
   const [zipCode, setZipCode] = useState("")
 
+  const [isMutating, setIsMutating] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
 
   // Keyboard handling
@@ -44,6 +82,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
   }
 
   const closeDatePicker = (date: Date) => {
+    setISODateOfBirth(date.toISOString())
     const dateOfBirth = [date.getMonth() + 1, date.getDate(), date.getFullYear()]
       .map((i) => String(i).padStart(2, "0"))
       .join("-")
@@ -53,7 +92,15 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
 
   // Form/field validation
 
-  const onZipCodeChange = (val) => {
+  const onNameChange = (val: string) => {
+    if (val.split(" ").length > 2) {
+      setName(name)
+    } else {
+      setName(val)
+    }
+  }
+
+  const onZipCodeChange = (val: string) => {
     if (val.length > 5 || !isWholeNumber(val)) {
       // revert to previous valid value
       setZipCode(zipCode)
@@ -66,7 +113,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
     // TODO: More stringent name, password, dob, & zipcode checking
     setIsFormValid(
       name.length &&
-        name.trim().split(" ").length >= 2 &&
+        name.trim().split(" ").length == 2 &&
         isValidEmail(email) &&
         password.trim().length &&
         dateOfBirth.length &&
@@ -76,13 +123,65 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
 
   useEffect(validateForm, [name, email, password, dateOfBirth, zipCode])
 
-  const onPressSignUpButton = () => {
-    // TODO: authorize
+  // networking
+
+  const { signIn } = useAuthContext()
+
+  const [signup] = useMutation(SIGN_UP, {
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: (err) => {
+      console.log("****\n", err, "\n****")
+      // const popUpData = {
+      //   title: "Oops! Try again!",
+      //   note: "",
+      //   buttonText: "Close",
+      //   // onClose: () => hidePopUp()
+      // }
+    },
+  })
+
+  const handleSignup = async () => {
     Keyboard.dismiss()
-    onAuth(null, null)
+
+    if (isMutating) {
+      return
+    }
+
+    setIsMutating(true)
+
+    console.log("Make request")
+    const [firstName, lastName] = name.split(" ")
+    const result = await signup({
+      variables: {
+        email,
+        password,
+        firstName,
+        lastName,
+        zipCode,
+        isoDateOfBirth,
+      },
+    })
+    console.log("Got result")
+    if (result?.data) {
+      const {
+        data: { signup: userSession },
+      } = result
+      // signIn(userSession)
+      console.log("**\n", userSession, "\n**")
+    } else {
+      console.log("Sad time :(")
+    }
+
+    console.log("Here")
+
+    // onAuth(null, null)
   }
 
   // Layout
+
+  const insets = useSafeArea()
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -103,10 +202,11 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
           <Spacer mb={5} />
           <TextInput
             placeholder="Full Name"
+            currentValue={name}
             variant="light"
             inputKey="full-name"
             autoCapitalize="words"
-            onChangeText={(_, val) => setName(val)}
+            onChangeText={(_, val) => onNameChange(val)}
             onFocus={() => onFocusTextInput(0)}
           />
           <Spacer mb={2} />
@@ -150,12 +250,12 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
           <Spacer height={100} />
         </ScrollView>
         <Box p={2} style={{ backgroundColor: "transparent" }}>
-          <Button block disabled={!isFormValid} onPress={() => onPressSignUpButton()} variant="primaryBlack">
+          <Button block disabled={!isFormValid} onPress={() => handleSignup()} variant="primaryBlack">
             Create my account
           </Button>
         </Box>
       </KeyboardAvoidingView>
-      <Box p={2} style={{ paddingBottom: useSafeArea().bottom + 16, backgroundColor: "white" }}>
+      <Box p={2} style={{ paddingBottom: insets.bottom + 16, backgroundColor: "white" }}>
         <Flex flexDirection="row" justifyContent="center">
           <Text>
             <Sans size="2" color="black50">
