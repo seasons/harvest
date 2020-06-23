@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react"
+import React from "react"
 import { config, Env } from "App/utils/config"
 import AsyncStorage from "@react-native-community/async-storage"
 import { checkNotifications, requestNotifications } from "react-native-permissions"
@@ -53,10 +53,8 @@ export const NotificationsProvider = ({ children }) => {
         const roles = data?.me?.user?.roles
         const beamsData = { beamsToken, email, roles }
         AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
-        return beamsToken
       }
-
-      return null
+      notificationsContext.checkStatus()
     },
   })
 
@@ -125,10 +123,6 @@ export const NotificationsProvider = ({ children }) => {
       handleNotification(notification)
     })
   }
-
-  useEffect(() => {
-    notificationsContext.checkStatus()
-  }, [])
 
   const notificationsContext = {
     requestPermissions: async (callback) => {
