@@ -32,19 +32,19 @@ const Stack = createStackNavigator()
 export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
   // Navigation
   const internalNavigationRef: MutableRefObject<NavigationContainerRef> = useRef()
-  const [state, setState] = useState(State.CreateAccount)
+  const [state, setState] = useState(State.VerifyCode)
 
   // Handlers
+
+  const onAuth = (credentials, profile) => {
+    setState(State.SendCode)
+  }
 
   const onSendCode = () => {
     setState(State.VerifyCode)
   }
 
   const onVerifyPhone = () => {
-    setState(State.CreateAccount)
-  }
-
-  const onAuth = (credentials, profile) => {
     setState(State.GetMeasurements)
   }
 
@@ -119,7 +119,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
 
 type CloseButtonVariant = "light" | "dark"
 
-export const CloseButton: React.FC<{
+const CloseButton: React.FC<{
   variant?: CloseButtonVariant
   onRequestClose?: () => void
 }> = ({ variant, onRequestClose }) => {

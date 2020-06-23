@@ -19,6 +19,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
   const [waistSizeFit, setWaistSizeFit] = useState(null)
 
   const [footerBoxHeight, setFooterBoxHeight] = useState(0)
+  const insets = useSafeArea()
 
   const submitMeasurements = () => {
     onGetMeasurements()
@@ -133,7 +134,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
             >
               Finish
             </Button>
-            <Box style={{ height: useSafeArea().bottom }} />
+            <Box style={{ height: insets.bottom }} />
           </Box>
         </FadeBottom2>
       </Box>

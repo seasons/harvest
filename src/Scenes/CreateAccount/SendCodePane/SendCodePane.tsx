@@ -12,6 +12,7 @@ interface SendCodePaneProps {
 export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
   const [phoneNumber, setPhoneNumber] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
+  const insets = useSafeArea()
 
   const onPhoneNumberChange = (val: string) => {
     const onlyNums = val.replace(/\D/g, "")
@@ -50,7 +51,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
         />
         <Spacer mb={3} />
         <Text>
-          <Sans size="1" color="gray">
+          <Sans size="1" color="black50">
             By creating an account, you agree to our
           </Sans>{" "}
         </Text>
@@ -60,7 +61,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
               Privacy Policy
             </Sans>
           </TouchableWithoutFeedback>
-          <Sans size="1" color="gray">
+          <Sans size="1" color="black50">
             {" & "}
           </Sans>
           <TouchableWithoutFeedback>
@@ -70,8 +71,8 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
           </TouchableWithoutFeedback>
         </Text>
       </Box>
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(useSafeArea().bottom, 16)}>
-        <Box style={{ padding: 16, paddingBottom: useSafeArea().bottom + 16 }}>
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom, 16)}>
+        <Box style={{ padding: 16, paddingBottom: insets.bottom + 16 }}>
           <Button block disabled={!isFormValid} onPress={sendCode} variant="primaryBlack">
             Next
           </Button>

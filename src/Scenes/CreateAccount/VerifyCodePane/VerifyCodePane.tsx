@@ -12,6 +12,7 @@ interface VerifyCodePaneProps {
 export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ onVerifyPhone }) => {
   const [code, setCode] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
+  const insets = useSafeArea()
 
   const onCodeChange = (val: string) => {
     const noDashes = val.replace("-", "")
@@ -33,7 +34,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ onVerifyPhone })
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      <Box style={{ paddingTop: 85, paddingHorizontal: 16, flex: 1 }}>
+      <Box pt={85} px={2} style={{ flex: 1 }}>
         <Sans color="black100" size="3">
           Enter the code we sent you
         </Sans>
@@ -58,8 +59,8 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ onVerifyPhone })
           variant="light"
         />
       </Box>
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(useSafeArea().bottom, 16)}>
-        <Box style={{ padding: 16, paddingBottom: useSafeArea().bottom + 16 }}>
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom, 16)}>
+        <Box pb={insets.bottom + 16} px={2}>
           <Button block disabled={!isFormValid} onPress={verifyCode} variant="primaryBlack">
             Next
           </Button>

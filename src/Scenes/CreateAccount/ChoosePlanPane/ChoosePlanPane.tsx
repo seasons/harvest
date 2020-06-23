@@ -10,14 +10,15 @@ interface ChoosePlanPaneProps {
 }
 
 enum Plan {
-  ESSENTIAL,
-  ALL_ACCESS,
-  NONE,
+  Essential,
+  AllAccess,
+  None,
 }
 
 export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) => {
   const [footerBoxHeight, setFooterBoxHeight] = useState(0)
-  const [selectedPlan, setSelectedPlan] = useState(Plan.NONE)
+  const [selectedPlan, setSelectedPlan] = useState(Plan.None)
+  const insets = useSafeArea()
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -39,19 +40,19 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
           </Box>
           <PlanTile
             description="A monthly wardrobe refresh to make getting dressed more exciting. The must have."
-            inputKey={Plan.ESSENTIAL}
+            inputKey={Plan.Essential}
             price={155}
             shouldSelect={setSelectedPlan}
-            selected={selectedPlan == Plan.ESSENTIAL}
+            selected={selectedPlan == Plan.Essential}
             subtitle="1 swap, 3 items per month"
             title="Essential"
           />
           <PlanTile
             description="Experience that new-clothes feeling every week."
-            inputKey={Plan.ALL_ACCESS}
+            inputKey={Plan.AllAccess}
             price={195}
             shouldSelect={setSelectedPlan}
-            selected={selectedPlan == Plan.ALL_ACCESS}
+            selected={selectedPlan == Plan.AllAccess}
             subtitle="Unlimited swaps, 3 items at a time"
             title="All Access"
           />
@@ -61,10 +62,10 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
       </Box>
       <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
         <Box p={2} onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height)}>
-          <Button block disabled={selectedPlan === Plan.NONE} onPress={onChoosePlan} variant="primaryBlack">
+          <Button block disabled={selectedPlan === Plan.None} onPress={onChoosePlan} variant="primaryBlack">
             Choose plan
           </Button>
-          <Box style={{ height: useSafeArea().bottom }} />
+          <Box style={{ height: insets.bottom }} />
         </Box>
       </FadeBottom2>
     </Container>
