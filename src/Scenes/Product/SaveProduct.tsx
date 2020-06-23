@@ -4,7 +4,19 @@ import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Box, Button, Container, FadeInImage, Flex, Handle, Radio, Sans, Separator, Spacer } from "App/Components"
+import {
+  Box,
+  Button,
+  Container,
+  FadeInImage,
+  Flex,
+  Handle,
+  Radio,
+  Sans,
+  Separator,
+  Spacer,
+  FixedBackArrow,
+} from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { GetProduct_product } from "App/generated/GetProduct"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
@@ -12,16 +24,17 @@ import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { sizeToName } from "./Components/VariantList"
 import { SAVE_ITEM } from "./Components/SaveProductButton"
+import { useNavigation } from "@react-navigation/native"
 
 interface SaveProductProps {
   route: any
-  navigation: any
 }
 
-export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, navigation }) => {
+export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route }) => {
   const insets = useSafeArea()
   const tracking = useTracking()
   const [selectedVariantID, setSelectedVariantID] = useState(null)
+  const navigation = useNavigation()
   const product: GetProduct_product = route?.params?.product
   const showPopUp = route?.params?.showPopUp
   const hidePopUp = route?.params?.hidePopUp
@@ -40,20 +53,33 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
   })
 
   if (!product || !showPopUp || !hidePopUp) {
-    return <Loader />
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} />
+        <Loader />
+      </>
+    )
   }
+
+  const images = product.largeImages || product.images
+
+  console.log("product", product)
 
   const {
     brand: { name: brandName },
     description,
-    images,
     name,
     type,
     variants,
   } = product
 
-  if (!type || !images || images.length === 0) {
-    return <Loader />
+  if (!type) {
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
   }
 
   const onSelectSize = (variantID) => {

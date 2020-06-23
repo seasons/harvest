@@ -65,6 +65,7 @@ export const GET_PRODUCT = gql`
         since
         products(first: 5, orderBy: createdAt_DESC, where: { AND: [{ id_not: $productID }, { status: Available }] }) {
           id
+          type
           images(size: Thumb) {
             id
             url
