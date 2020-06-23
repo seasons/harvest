@@ -11,6 +11,7 @@ import { useTracking, Schema } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useNavigation } from "@react-navigation/native"
+import * as Sentry from "@sentry/react-native"
 
 const ADD_PRODUCT_VARIANT_WANT = gql`
   mutation AddProductVariantWant($variantID: ID!) {
@@ -41,7 +42,8 @@ export const VariantWant = (props: VariantWantProps) => {
     onClose: () => hidePopUp(),
   }
   const [addProductVariantWant] = useMutation(ADD_PRODUCT_VARIANT_WANT, {
-    onError: error => {
+    onError: (error) => {
+      Sentry.captureException(error)
       console.error("error VariantWant.tsx: ", error)
       showPopUp(popUpData)
     },

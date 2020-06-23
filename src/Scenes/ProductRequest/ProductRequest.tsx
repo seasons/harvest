@@ -2,8 +2,9 @@ import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
-import { Box, PopUp, FixedButton, Flex, Sans, Spacer, TextInput, FixedBackArrow, Container } from "App/Components"
+import { Box, FixedButton, Flex, Sans, Spacer, TextInput, FixedBackArrow, Container } from "App/Components"
 import { color, space } from "App/utils"
+import * as Sentry from "@sentry/react-native"
 import { screenTrack, useTracking, Schema } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
@@ -42,6 +43,7 @@ export const ProductRequest = screenTrack()((props: any) => {
     onError: (error) => {
       console.error(error)
       Keyboard.dismiss()
+      Sentry.captureException(error)
       showPopUp(pupUpData)
     },
   })

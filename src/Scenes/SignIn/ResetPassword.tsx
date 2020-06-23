@@ -5,6 +5,7 @@ import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { Box, Button, Flex, CloseButton, Sans, Spacer, TextInput, Container } from "../../Components"
 import { isValidEmail } from "../../helpers/regex"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import * as Sentry from "@sentry/react-native"
 
 const RESET_PASSWORD = gql`
   mutation ResetPassword($email: String!) {
@@ -28,7 +29,8 @@ export const ResetPassword = (props: any) => {
 
   const [resetPassword] = useMutation(RESET_PASSWORD, {
     onError: (error) => {
-      console.warn("SignIn/ResetPassword.tsx: ", error)
+      console.log("SignIn/ResetPassword.tsx: ", error)
+      Sentry.captureException(error)
       Keyboard.dismiss()
       showPopUp(popUpData)
     },
