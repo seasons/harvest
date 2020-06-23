@@ -70,6 +70,10 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
     return appChangeListener
   }, [])
 
+  const callback = (status) => {
+    setDeviceStatus(status)
+  }
+
   const onChange = async (newValue) => {
     if (isMutating) {
       return
@@ -81,7 +85,7 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
       newValue,
     })
     if (deviceStatus === "denied") {
-      requestPermissions(null)
+      requestPermissions(callback)
     } else {
       updateStatus({
         variables: { newStatus: newValue },
@@ -122,7 +126,7 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
     }
   }
 
-  const disabled = isMutating || deviceStatus === "denied" || deviceStatus === "blocked"
+  const disabled = isMutating || deviceStatus === "blocked"
   const selected = deviceStatus !== "blocked" && deviceStatus !== "denied" && pushNotification?.status
 
   return (

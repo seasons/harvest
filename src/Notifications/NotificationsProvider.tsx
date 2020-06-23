@@ -43,25 +43,6 @@ const setUserId = (userId, token) => {
 
 export const NotificationsProvider = ({ children }) => {
   const navigation = useNavigation()
-  const [notificationState, dispatch] = useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case "SUBSCRIBE":
-          return {
-            ...prevState,
-            subscribedToNotifs: true,
-          }
-        case "UNSUBSCRIBE":
-          return {
-            ...prevState,
-            subscribedToNotifs: false,
-          }
-      }
-    },
-    {
-      subscribedToNotifs: null,
-    }
-  )
   useQuery(GET_BEAMS_DATA, {
     onCompleted: async (data) => {
       const beamsData = await AsyncStorage.getItem("beamsData")
@@ -139,9 +120,6 @@ export const NotificationsProvider = ({ children }) => {
       }
     })
 
-    AsyncStorage.setItem("subscribedToNotifs", "true")
-    dispatch({ type: "SUBSCRIBE" })
-
     // Setup notification listeners
     RNPusherPushNotifications.on("notification", (notification) => {
       handleNotification(notification)
@@ -162,35 +140,24 @@ export const NotificationsProvider = ({ children }) => {
             attachListeners(email, roles, beamsToken)
           }
         }
-        callback?.()
+        callback?.(status)
       })
       // Set your app key and register for push
     },
     checkStatus: async () => {
-      const subscription = await AsyncStorage.getItem("subscribedToNotifs")
-      if (subscription && subscription === "true") {
-        const beamsData = await AsyncStorage.getItem("beamsData")
-        if (beamsData) {
-          const { beamsToken, roles, email } = JSON.parse(beamsData)
-          attachListeners(email, roles, beamsToken)
-        }
-      } else if (subscription && subscription === "false") {
-        return
-      } else {
-        checkNotifications()
-          .then(async ({ status }) => {
-            if (status === "granted") {
-              const beamsData = await AsyncStorage.getItem("beamsData")
-              if (beamsData) {
-                const { beamsToken, roles, email } = JSON.parse(beamsData)
-                attachListeners(email, roles, beamsToken)
-              }
+      checkNotifications()
+        .then(async ({ status }) => {
+          if (status === "granted") {
+            const beamsData = await AsyncStorage.getItem("beamsData")
+            if (beamsData) {
+              const { beamsToken, roles, email } = JSON.parse(beamsData)
+              attachListeners(email, roles, beamsToken)
             }
-          })
-          .catch((error) => {
-            console.log("error checking for permission", error)
-          })
-      }
+          }
+        })
+        .catch((error) => {
+          console.log("error checking for permission", error)
+        })
     },
     init: async () => {
       const beamsData = await AsyncStorage.getItem("beamsData")
@@ -209,11 +176,8 @@ export const NotificationsProvider = ({ children }) => {
           console.log("unsubscribe Success")
         }
       )
-      AsyncStorage.setItem("subscribedToNotifs", "false")
       RNPusherPushNotifications.clearAllState()
-      dispatch({ type: "UNSUBSCRIBE" })
     },
-    subscribedToNotifs: notificationState.subscribedToNotifs,
   }
 
   return <NotificationsContext.Provider value={notificationsContext}>{children}</NotificationsContext.Provider>

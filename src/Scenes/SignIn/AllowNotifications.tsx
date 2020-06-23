@@ -8,7 +8,7 @@ export const AllowNotifications = ({ navigation }) => {
   const [isMutating, setIsMutating] = useState(false)
   const { requestPermissions } = useNotificationsContext()
 
-  const callback = () => {
+  const callback = (_status) => {
     setIsMutating(false)
     navigation.navigate("Main")
   }

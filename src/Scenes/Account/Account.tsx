@@ -23,11 +23,11 @@ export const GET_USER = gql`
           firstName
           lastName
           email
+          role
           pushNotification {
             id
             status
           }
-          role
         }
         detail {
           shippingAddress {
