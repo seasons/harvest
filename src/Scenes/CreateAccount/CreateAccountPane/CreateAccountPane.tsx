@@ -59,6 +59,20 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
   const [dateOfBirth, setDateOfBirth] = useState("")
   const [zipCode, setZipCode] = useState("")
 
+  const validateForm = () => {
+    // TODO: More stringent name, password, dob, & zipcode checking
+    setIsFormValid(
+      name.length &&
+        name.trim().split(" ").length == 2 &&
+        isValidEmail(email) &&
+        password.trim().length &&
+        dateOfBirth.length &&
+        zipCode.length == 5
+    )
+  }
+
+  useEffect(validateForm, [name, email, password, dateOfBirth, zipCode])
+
   const [isMutating, setIsMutating] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
   const scrollViewRef: MutableRefObject<ScrollView> = useRef()
@@ -107,20 +121,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
       setZipCode(val)
     }
   }
-
-  const validateForm = () => {
-    // TODO: More stringent name, password, dob, & zipcode checking
-    setIsFormValid(
-      name.length &&
-        name.trim().split(" ").length == 2 &&
-        isValidEmail(email) &&
-        password.trim().length &&
-        dateOfBirth.length &&
-        zipCode.length == 5
-    )
-  }
-
-  useEffect(validateForm, [name, email, password, dateOfBirth, zipCode])
 
   // networking
 
