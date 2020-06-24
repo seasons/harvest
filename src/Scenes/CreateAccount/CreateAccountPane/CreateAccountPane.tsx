@@ -195,7 +195,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={52}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={32 + insets.bottom}>
         <ScrollView
           style={{ paddingTop: 85, paddingHorizontal: 16, overflow: "visible" }}
           showsVerticalScrollIndicator={false}
@@ -266,14 +266,24 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
         </Box>
       </KeyboardAvoidingView>
       <Box p={2} style={{ paddingBottom: insets.bottom + 16, backgroundColor: "white" }}>
-        <Flex flexDirection="row" justifyContent="center">
+        <Flex flexDirection="column" alignItems="center">
           <Text>
-            <Sans size="2" color="black50">
-              Already have an account?
+            <Sans size="1" color="black50">
+              By creating an account, you agree to our
             </Sans>{" "}
-            <TouchableWithoutFeedback onPress={() => navigation.navigate("Modal", { screen: "SignInModal" })}>
-              <Sans style={{ textDecorationLine: "underline" }} size="2" color="black100">
-                Login
+          </Text>
+          <Text>
+            <TouchableWithoutFeedback>
+              <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
+                Privacy Policy
+              </Sans>
+            </TouchableWithoutFeedback>
+            <Sans size="1" color="black50">
+              {" & "}
+            </Sans>
+            <TouchableWithoutFeedback>
+              <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
+                Terms of Service
               </Sans>
             </TouchableWithoutFeedback>
           </Text>

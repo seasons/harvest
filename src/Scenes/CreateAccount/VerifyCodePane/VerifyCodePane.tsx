@@ -1,9 +1,10 @@
-import { Box, Button, Container, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, Container, Sans, Spacer, TextInput, Flex } from "App/Components"
 import { isWholeNumber } from "App/helpers/validation"
 import { Text } from "Components/Typography"
 import React, { useState } from "react"
-import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from "react-native"
+import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
+import { animated, useSpring } from "react-spring"
 
 import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
@@ -21,15 +22,27 @@ const CHECK_VERIFICATION = gql`
   }
 `
 
+const windowDimensions = Dimensions.get("window")
+const windowWidth = windowDimensions.width
+
 interface VerifyCodePaneProps {
   phoneNumber: string
   onVerifyPhone: () => void
+  onRequestBack: () => void
 }
 
-export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onVerifyPhone }) => {
+export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onVerifyPhone, onRequestBack }) => {
   const [code, setCode] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
   const insets = useSafeArea()
+
+  const [showBackButton, setShowBackButton] = useState(true)
+  const backButtonAnimation = useSpring({
+    translateX: isFormValid ? -windowWidth / 2 - 9 / 2 : 0,
+    flex: isFormValid ? 0 : 1,
+    onStart: () => setShowBackButton(!isFormValid),
+    onRest: () => setShowBackButton(!isFormValid),
+  })
 
   const [isMutating, setIsMutating] = useState(false)
   const errorPopUpContext = usePopUpContext()
@@ -158,12 +171,28 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
         />
       </Box>
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom, 16)}>
-        <Box pb={insets.bottom + 16} px={2}>
-          <Button block disabled={!isFormValid} onPress={verifyCode} variant="primaryBlack">
-            Next
-          </Button>
-        </Box>
+        <Flex pb={insets.bottom + 16} px={2} flexDirection="row">
+          {showBackButton ? (
+            <AnimatedBox
+              flex={backButtonAnimation.flex}
+              style={{ transform: [{ translateX: backButtonAnimation.translateX }] }}
+            >
+              <Button block onPress={onRequestBack} variant="primaryBlack">
+                Back
+              </Button>
+            </AnimatedBox>
+          ) : null}
+          <Spacer width={9} />
+          <Box flex={1}>
+            <Button block disabled={!isFormValid} onPress={verifyCode} variant="primaryBlack">
+              Next
+            </Button>
+          </Box>
+        </Flex>
       </KeyboardAvoidingView>
     </Container>
   )
 }
+
+// const AnimatedSpacer = animated(Spacer)
+const AnimatedBox = animated(Box)
