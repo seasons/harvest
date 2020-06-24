@@ -4,12 +4,13 @@ import { color } from "App/utils/color"
 import React from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
+import { Plan } from "./ChoosePlanPane"
 
 interface PlanTileProps {
   description: string
-  inputKey: number
+  inputKey: Plan
   price: number
-  shouldSelect: (key: number) => void
+  shouldSelect: (key: Plan) => void
   selected: boolean
   subtitle: string
   title: string

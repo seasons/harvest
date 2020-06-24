@@ -82,7 +82,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
     const result = await addMeasurements({
       variables: {
         height: height.value,
-        weight: weight.toString(),
+        weight: weight.value.toString(),
         topSize: topSize.value,
         topSizeFit: topSizeFit.value,
         waistSize: waistSize.value.toString(),

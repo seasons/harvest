@@ -5,20 +5,75 @@ import React, { useState } from "react"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 
+import gql from "graphql-tag"
+import { useLazyQuery } from "react-apollo"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+
+const CHARGEBEE_CHECKOUT = gql`
+  query chargebeeCheckout($planID: PlanID!) {
+    hostedChargebeeCheckout(planID: $planID) {
+      id
+      type
+      url
+      state
+      embed
+      created_at
+      expires_at
+    }
+  }
+`
+
 interface ChoosePlanPaneProps {
-  onChoosePlan: () => void
+  onChoosePlan: (checkoutUrl: string) => void
 }
 
-enum Plan {
-  Essential,
-  AllAccess,
-  None,
+export enum Plan {
+  Essential = "Essential",
+  AllAccess = "AllAccess",
+  None = "None",
 }
 
 export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) => {
   const [footerBoxHeight, setFooterBoxHeight] = useState(0)
   const [selectedPlan, setSelectedPlan] = useState(Plan.None)
   const insets = useSafeArea()
+
+  const [isMutating, setIsMutating] = useState(false)
+  const errorPopUpContext = usePopUpContext()
+  const showErrorPopUp = errorPopUpContext.showPopUp
+  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const [runQuery, { called, loading, data }] = useLazyQuery(CHARGEBEE_CHECKOUT, {
+    onCompleted: () => {
+      setIsMutating(false)
+      if (data) {
+        onChoosePlan(data.hostedChargebeeCheckout.url)
+      }
+    },
+    onError: (err) => {
+      console.log("****\n\n", err, "\n\n****")
+      const popUpData = {
+        title: "Oops! Try again!",
+        note: "There was an issue choosing your plan. Please retry.",
+        buttonText: "Close",
+        onClose: () => hideErrorPopUp(),
+      }
+      showErrorPopUp(popUpData)
+      setIsMutating(false)
+    },
+  })
+
+  const _onChoosePlan = async () => {
+    if (isMutating) {
+      return
+    }
+
+    setIsMutating(true)
+    runQuery({
+      variables: {
+        planID: selectedPlan,
+      },
+    })
+  }
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -62,7 +117,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
       </Box>
       <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
         <Box p={2} onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height)}>
-          <Button block disabled={selectedPlan === Plan.None} onPress={onChoosePlan} variant="primaryBlack">
+          <Button block disabled={selectedPlan === Plan.None} onPress={_onChoosePlan} variant="primaryBlack">
             Choose plan
           </Button>
           <Box style={{ height: insets.bottom }} />
