@@ -161,13 +161,14 @@ export const NotificationsProvider = ({ children }) => {
       }
     },
     unsubscribe: async () => {
+      console.log("seasonsNotifInterest", seasonsNotifInterest)
       RNPusherPushNotifications.unsubscribe(
         seasonsNotifInterest,
         (statusCode, response) => {
-          console.log(statusCode, response)
+          console.log("statusCode: ", statusCode, " response: ", response)
         },
         () => {
-          console.log("unsubscribe Success")
+          console.log("unsubscribe success")
         }
       )
       RNPusherPushNotifications.clearAllState()
