@@ -1,11 +1,9 @@
-import { Box, Container } from "App/Components"
-import { color } from "App/utils"
-import { CloseXSVG } from "Assets/svgs"
+import { Container } from "App/Components"
+import CloseButton from "./CloseButton"
 import React, { useRef, useState, MutableRefObject, useEffect } from "react"
-import { TouchableOpacity, Modal } from "react-native"
+import { Modal } from "react-native"
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
-import styled from "styled-components/native"
 
 import { SendCodePane } from "./SendCodePane"
 import { VerifyCodePane } from "./VerifyCodePane"
@@ -46,6 +44,11 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
     setState(State.VerifyCode)
   }
 
+  const onRequestBack = () => {
+    internalNavigationRef.current?.goBack()
+    setState(State.SendCode)
+  }
+
   const onVerifyPhone = () => {
     setState(State.GetMeasurements)
   }
@@ -82,7 +85,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
         pane = <SendCodePane onSendCode={onSendCode} />
         break
       case State.VerifyCode:
-        pane = <VerifyCodePane phoneNumber={phoneNumber} onVerifyPhone={onVerifyPhone} />
+        pane = <VerifyCodePane phoneNumber={phoneNumber} onRequestBack={onRequestBack} onVerifyPhone={onVerifyPhone} />
         break
       case State.GetMeasurements:
         pane = <GetMeasurementsPane onGetMeasurements={onGetMeasurements} />
@@ -119,36 +122,3 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
 
 // Custom action CloseButton
 
-type CloseButtonVariant = "light" | "dark"
-
-const CloseButton: React.FC<{
-  variant?: CloseButtonVariant
-  onRequestClose?: () => void
-}> = ({ variant, onRequestClose }) => {
-  return (
-    <Wrapper>
-      <TouchableOpacity onPress={onRequestClose}>
-        <Circle variant={variant}>
-          <CloseXSVG variant={variant} />
-        </Circle>
-      </TouchableOpacity>
-    </Wrapper>
-  )
-}
-
-const Wrapper = styled(Box)`
-  position: absolute;
-  top: 40;
-  right: 20;
-  z-index: 100;
-`
-
-const Circle = styled(Box)`
-  background-color: ${(p) => (p?.variant === "light" ? color("black10") : color("black85"))};
-  border-radius: 100;
-  height: 40;
-  width: 40;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`

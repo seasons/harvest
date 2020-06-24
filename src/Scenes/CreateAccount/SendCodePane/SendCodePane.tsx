@@ -1,7 +1,6 @@
 import { Box, Button, Container, Sans, Spacer, TextInput } from "App/Components"
-import { Text } from "Components/Typography"
 import React, { useState } from "react"
-import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from "react-native"
+import { KeyboardAvoidingView, Keyboard } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 
 import gql from "graphql-tag"
