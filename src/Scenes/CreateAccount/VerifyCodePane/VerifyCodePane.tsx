@@ -26,7 +26,7 @@ const windowDimensions = Dimensions.get("window")
 const windowWidth = windowDimensions.width
 
 interface VerifyCodePaneProps {
-  phoneNumber: string
+  phoneNumber?: string
   onVerifyPhone: () => void
   onRequestBack: () => void
 }
@@ -178,7 +178,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
                 flex={backButtonAnimation.flex}
                 style={{ transform: [{ translateX: backButtonAnimation.translateX }] }}
               >
-                <Button block onPress={onRequestBack} variant="primaryBlack">
+                <Button block onPress={onRequestBack} variant="primaryWhite">
                   Back
                 </Button>
               </AnimatedBox>
