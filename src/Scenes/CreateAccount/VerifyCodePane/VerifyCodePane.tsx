@@ -173,16 +173,18 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom, 16)}>
         <Flex pb={insets.bottom + 16} px={2} flexDirection="row">
           {showBackButton ? (
-            <AnimatedBox
-              flex={backButtonAnimation.flex}
-              style={{ transform: [{ translateX: backButtonAnimation.translateX }] }}
-            >
-              <Button block onPress={onRequestBack} variant="primaryBlack">
-                Back
-              </Button>
-            </AnimatedBox>
+            <>
+              <AnimatedBox
+                flex={backButtonAnimation.flex}
+                style={{ transform: [{ translateX: backButtonAnimation.translateX }] }}
+              >
+                <Button block onPress={onRequestBack} variant="primaryBlack">
+                  Back
+                </Button>
+              </AnimatedBox>
+              <Spacer width={9} />
+            </>
           ) : null}
-          <Spacer width={9} />
           <Box flex={1}>
             <Button block disabled={!isFormValid} onPress={verifyCode} variant="primaryBlack">
               Next
