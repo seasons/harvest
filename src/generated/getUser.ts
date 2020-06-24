@@ -21,8 +21,8 @@ export interface GetUser_me_customer_user {
   firstName: string;
   lastName: string;
   email: string;
-  pushNotification: GetUser_me_customer_user_pushNotification | null;
   role: UserRole;
+  pushNotification: GetUser_me_customer_user_pushNotification | null;
 }
 
 export interface GetUser_me_customer_detail_shippingAddress {
