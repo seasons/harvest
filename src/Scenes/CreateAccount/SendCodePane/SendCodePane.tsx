@@ -98,26 +98,9 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
           variant="light"
         />
         <Spacer mb={3} />
-        <Text>
-          <Sans size="1" color="black50">
-            By creating an account, you agree to our
-          </Sans>{" "}
-        </Text>
-        <Text>
-          <TouchableWithoutFeedback>
-            <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
-              Privacy Policy
-            </Sans>
-          </TouchableWithoutFeedback>
-          <Sans size="1" color="black50">
-            {" & "}
-          </Sans>
-          <TouchableWithoutFeedback>
-            <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
-              Terms of Service
-            </Sans>
-          </TouchableWithoutFeedback>
-        </Text>
+        <Sans size="1" color="black50">
+          This should be a 10 digit number.
+        </Sans>
       </Box>
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom, 16)}>
         <Box style={{ padding: 16, paddingBottom: insets.bottom + 16 }}>
