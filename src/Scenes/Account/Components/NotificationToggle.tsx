@@ -23,14 +23,20 @@ const UPDATE_USER_PUSH_NOTIFICATION_STATUS = gql`
 export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_customer_user_pushNotification }> = ({
   pushNotification,
 }) => {
-  const { requestPermissions } = useNotificationsContext()
+  const { requestPermissions, unsubscribe, init } = useNotificationsContext()
   const [isMutating, setIsMutating] = useState(false)
   const [deviceStatus, setDeviceStatus] = useState(null)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
 
   const [updateStatus] = useMutation(UPDATE_USER_PUSH_NOTIFICATION_STATUS, {
-    onCompleted: () => {
+    onCompleted: (data) => {
+      const status = data?.updateUserPushNotificationStatus?.status
+      if (status) {
+        init()
+      } else {
+        unsubscribe()
+      }
       setIsMutating(false)
     },
     onError: (err) => {
