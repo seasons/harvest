@@ -101,18 +101,12 @@ export const ProductRequest = screenTrack()((props: any) => {
               Recommend something for us to carry by pasting the link to the item below.
             </Sans>
             <Spacer mb={4} />
-            <TextInput
-              placeholder="Your link goes here"
-              variant="dark"
-              textContentType="link"
-              onChangeText={(_, val) => onURLChange(val)}
-            />
+            <TextInput placeholder="Your link goes here" variant="dark" onChangeText={(_, val) => onURLChange(val)} />
             <Spacer mb={1} />
             <TextInput
               style={{ height: 240, paddingTop: space(2) }}
               placeholder="Tell us why you like this"
               variant="dark"
-              textContentType="whyLike"
               multiline={true}
               onChangeText={(_, val) => onLikeReasonChange(val)}
             />

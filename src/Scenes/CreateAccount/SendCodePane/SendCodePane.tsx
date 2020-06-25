@@ -87,12 +87,13 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
         <Sans color="black50" size="2">
           We'll send you a code to verify your account
         </Sans>
-        <Spacer mb={5} />
+        <Spacer mb={4} />
         <TextInput
           currentValue={phoneNumber}
           inputKey="code"
           keyboardType="number-pad"
           onChangeText={(_, val) => onPhoneNumberChange(val)}
+          headerText="Phone number"
           placeholder="(000) 000-0000"
           variant="light"
         />

@@ -167,6 +167,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
           keyboardType="number-pad"
           onChangeText={(_, val) => onCodeChange(val)}
           placeholder="000-000"
+          headerText="Code"
           variant="light"
         />
       </Box>
@@ -196,5 +197,4 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
   )
 }
 
-// const AnimatedSpacer = animated(Spacer)
 const AnimatedBox = animated(Box)

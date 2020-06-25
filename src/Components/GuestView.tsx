@@ -1,10 +1,8 @@
-import React from "react"
-import { Flex, Container, Sans, Box, Spacer } from "App/Components"
-import { SeasonsLogoSVG } from "Assets/svgs"
+import { Box, Button, Container, Flex, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
-import { TouchableOpacity, Linking, Text } from "react-native"
-import { Separator } from "./Separator"
-import { ButtonWithArrow } from "./ButtonWithArrow"
+import { SeasonsLogoSVG } from "Assets/svgs"
+import React from "react"
+import { TouchableOpacity, Linking } from "react-native"
 
 export const GuestView = ({ navigation }) => {
   return (
@@ -26,40 +24,38 @@ export const GuestView = ({ navigation }) => {
         </Box>
         <Box px={2}></Box>
         <Box px={2}>
-          <ButtonWithArrow onPress={() => navigation.navigate("Modal", { screen: "CreateAccountModal" })}>
-            Join the waitlist
-          </ButtonWithArrow>
+          <Button
+            block
+            onPress={() => navigation.navigate("Modal", { screen: "CreateAccountModal" })}
+            variant="primaryBlack"
+          >
+            Create an account
+          </Button>
+          <Spacer mb={1} />
+          <Button
+            block
+            onPress={() => navigation.navigate("Modal", { screen: "SignInModal" })}
+            variant="secondaryWhite"
+          >
+            Sign in
+          </Button>
           <Spacer mb={3} />
-          <Flex flexDirection="row">
+          <Flex flexDirection="row" justifyContent="center">
             <TouchableOpacity onPress={() => Linking.openURL(`mailto:membership@seasons.nyc`)}>
               <Sans size="2" color={color("black50")} style={{ textDecorationLine: "underline" }}>
-                Contact
+                Contact us
               </Sans>
             </TouchableOpacity>
-            <Spacer mr={3} />
+            <Spacer mr={4} />
+            <Box backgroundColor="black10" style={{ width: 1 }} />
+            <Spacer mr={4} />
             <TouchableOpacity onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc" })}>
               <Sans size="2" color={color("black50")} style={{ textDecorationLine: "underline" }}>
                 Learn more
               </Sans>
             </TouchableOpacity>
           </Flex>
-          <Spacer mb={5} />
-          <Separator />
           <Spacer mb={2} />
-          <Text>
-            <Sans size="2" color={color("black50")}>
-              Already a member?
-            </Sans>{" "}
-            <Sans
-              size="2"
-              color={color("black50")}
-              style={{ textDecorationLine: "underline" }}
-              onPress={() => navigation.navigate("Modal", { screen: "SignInModal" })}
-            >
-              Login
-            </Sans>
-            <Spacer mb={2} />
-          </Text>
         </Box>
       </Flex>
     </Container>

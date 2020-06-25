@@ -63,9 +63,11 @@ interface CreateAccountPaneProps {
 export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation, onSignUp }) => {
   // Hooks
 
-  const [name, setName] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [passwordConfirmation, setPasswordConfirmation] = useState("")
   const [isoDateOfBirth, setISODateOfBirth] = useState("")
   const [dateOfBirth, setDateOfBirth] = useState("")
   const [zipCode, setZipCode] = useState("")
@@ -73,16 +75,19 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
   const validateForm = () => {
     // TODO: More stringent name, password, dob, & zipcode checking
     setIsFormValid(
-      name.length &&
-        name.trim().split(" ").length == 2 &&
+      firstName.length &&
+        !firstName.includes(" ") &&
+        lastName.length &&
+        !lastName.includes(" ") &&
         isValidEmail(email) &&
         password.trim().length &&
+        passwordConfirmation === password &&
         dateOfBirth.length &&
-        zipCode.length == 5
+        zipCode.length === 5
     )
   }
 
-  useEffect(validateForm, [name, email, password, dateOfBirth, zipCode])
+  useEffect(validateForm, [firstName, lastName, email, password, passwordConfirmation, dateOfBirth, zipCode])
 
   const [isMutating, setIsMutating] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
@@ -101,7 +106,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
     if (!scrollViewRef.current) {
       return
     }
-    scrollViewRef.current.scrollTo({ y: index * 50, animated: true })
+    scrollViewRef.current.scrollTo({ y: index * 60, animated: true })
   }
 
   // Date picker popup
@@ -114,20 +119,12 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
     setISODateOfBirth(date.toISOString())
     const dateOfBirth = [date.getMonth() + 1, date.getDate(), date.getFullYear()]
       .map((i) => String(i).padStart(2, "0"))
-      .join("-")
+      .join("/")
     setIsDatePickerVisible(false)
     setDateOfBirth(dateOfBirth)
   }
 
   // Form/field validation
-
-  const onNameChange = (val: string) => {
-    if (val.split(" ").length > 2) {
-      setName(name)
-    } else {
-      setName(val)
-    }
-  }
 
   const onZipCodeChange = (val: string) => {
     if (val.length > 5 || !isWholeNumber(val)) {
@@ -167,7 +164,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
 
     setIsMutating(true)
 
-    const [firstName, lastName] = name.split(" ")
     const slug = makeLocationSlug(firstName, lastName)
 
     const result = await signup({
@@ -197,9 +193,10 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
     <Container insetsBottom={false} insetsTop={false}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={32 + insets.bottom}>
         <ScrollView
-          style={{ paddingTop: 85, paddingHorizontal: 16, overflow: "visible" }}
-          showsVerticalScrollIndicator={false}
           keyboardDismissMode="interactive"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          style={{ paddingTop: 85, paddingHorizontal: 16, overflow: "visible" }}
           ref={scrollViewRef}
         >
           <Sans color="black100" size="3">
@@ -210,53 +207,85 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation
             You'll use this to sign into the app, choose your plan, and manage your membership.
           </Sans>
           <Spacer mb={5} />
+          <Flex flexDirection="row">
+            <TextInput
+              headerText="First name"
+              currentValue={firstName}
+              variant="light"
+              inputKey="first-name"
+              autoCapitalize="words"
+              onChangeText={(_, val) => setFirstName(val)}
+              onFocus={() => onFocusTextInput(0)}
+              style={{ flex: 1 }}
+            />
+            <Spacer mr={9} />
+            <TextInput
+              headerText="Last name"
+              currentValue={lastName}
+              variant="light"
+              inputKey="last-name"
+              autoCapitalize="words"
+              onChangeText={(_, val) => setLastName(val)}
+              onFocus={() => onFocusTextInput(0)}
+              style={{ flex: 1 }}
+            />
+          </Flex>
+          <Spacer mb={4} />
           <TextInput
-            placeholder="Full Name"
-            currentValue={name}
-            variant="light"
-            inputKey="full-name"
-            autoCapitalize="words"
-            onChangeText={(_, val) => onNameChange(val)}
-            onFocus={() => onFocusTextInput(0)}
-          />
-          <Spacer mb={2} />
-          <TextInput
-            placeholder="Email"
+            headerText="Email"
             variant="light"
             inputKey="email"
             keyboardType="email-address"
             onChangeText={(_, val) => setEmail(val)}
             onFocus={() => onFocusTextInput(1)}
           />
-          <Spacer mb={2} />
-          <TextInput
-            secureTextEntry
-            placeholder="Password"
-            variant="light"
-            inputKey="password"
-            onChangeText={(_, val) => setPassword(val)}
-            onFocus={() => onFocusTextInput(2)}
-          />
-          <Spacer mb={2} />
-          <FakeTextInput
-            placeholder="Date of Birth"
-            currentValue={dateOfBirth}
-            variant="light"
-            onPress={() => {
-              Keyboard.dismiss()
-              showDatePicker()
-            }}
-          />
-          <Spacer mb={2} />
-          <TextInput
-            placeholder="ZIP Code"
-            currentValue={zipCode}
-            variant="light"
-            inputKey="zip-code"
-            keyboardType="number-pad"
-            onChangeText={(_, val) => onZipCodeChange(val)}
-            onFocus={() => onFocusTextInput(4)}
-          />
+          <Spacer mb={4} />
+          <Flex flexDirection="row">
+            <TextInput
+              secureTextEntry
+              headerText="Password"
+              variant="light"
+              inputKey="password"
+              onChangeText={(_, val) => setPassword(val)}
+              onFocus={() => onFocusTextInput(2)}
+              style={{ flex: 1 }}
+            />
+            <Spacer mr={9} />
+            <TextInput
+              secureTextEntry
+              headerText="Confirm Password"
+              variant="light"
+              inputKey="password-confirmation"
+              onChangeText={(_, val) => setPasswordConfirmation(val)}
+              onFocus={() => onFocusTextInput(2)}
+              style={{ flex: 1 }}
+            />
+          </Flex>
+          <Spacer mb={4} />
+          <Flex flexDirection="row">
+            <FakeTextInput
+              headerText="Date of Birth"
+              placeholder="mm/dd/yyyy"
+              currentValue={dateOfBirth}
+              variant="light"
+              onPress={() => {
+                Keyboard.dismiss()
+                showDatePicker()
+              }}
+              style={{ flex: 1 }}
+            />
+            <Spacer mr={9} />
+            <TextInput
+              headerText="ZIP Code"
+              currentValue={zipCode}
+              variant="light"
+              inputKey="zip-code"
+              keyboardType="number-pad"
+              onChangeText={(_, val) => onZipCodeChange(val)}
+              onFocus={() => onFocusTextInput(4)}
+              style={{ flex: 1 }}
+            />
+          </Flex>
           <Spacer height={100} />
         </ScrollView>
         <Box p={2} style={{ backgroundColor: "transparent" }}>
