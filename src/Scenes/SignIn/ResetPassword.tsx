@@ -75,7 +75,6 @@ export const ResetPassword = (props: any) => {
             <TextInput
               placeholder="Your email"
               variant="dark"
-              textContentType="Email"
               inputKey="email"
               onChangeText={(_, val) => onEmailChange(val)}
             />

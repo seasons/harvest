@@ -104,10 +104,10 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
       {state !== State.Checkout ? <CloseButton onRequestClose={() => navigation.goBack()} /> : null}
 
       <FlatList
-        keyboardShouldPersistTaps="handled"
         data={states}
         horizontal={true}
         initialScrollIndex={state}
+        keyboardShouldPersistTaps="handled"
         keyExtractor={(item) => item.toString()}
         onScrollToIndexFailed={(info) => {
           // When first rendering this component, the layout may not yet be complete

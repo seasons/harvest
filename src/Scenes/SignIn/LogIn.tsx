@@ -141,7 +141,6 @@ export const LogIn: React.FC<LogInProps> = (props) => {
             <TextInput
               placeholder="Email"
               variant="light"
-              textContentType="Email"
               inputKey="email"
               onChangeText={(_, val) => onEmailChange(val)}
             />
@@ -151,7 +150,6 @@ export const LogIn: React.FC<LogInProps> = (props) => {
               placeholder="Password"
               variant="light"
               inputKey="password"
-              textContentType="Password"
               onChangeText={(_, val) => setPassword(val)}
             />
             <Spacer mb={4} />

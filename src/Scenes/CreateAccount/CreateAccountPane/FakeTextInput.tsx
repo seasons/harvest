@@ -1,15 +1,15 @@
-import { Box } from "App/Components"
-import { fontFamily } from "App/Components/Typography"
+import { Box, Spacer } from "App/Components"
+import { fontFamily, Sans } from "App/Components/Typography"
 import { color } from "App/utils"
-import React, { useState } from "react"
-import { Text, TouchableWithoutFeedback, View, ViewStyle } from "react-native"
-import { animated, Spring } from "react-spring/renderprops-native.cjs"
-import styled from "styled-components/native"
+import React from "react"
+import { Text, TouchableWithoutFeedback, ViewStyle } from "react-native"
+import { animated, useSpring } from "react-spring"
 
 import { defaultVariant, DisplayState, getColorsForVariant, TextInputVariant } from "App/Components/TextInput"
 
 export interface FakeTextInputProps {
   currentValue: string
+  headerText?: string
   inputKey?: string
   onPress?: (inputKey?: string) => void
   placeholder?: string
@@ -19,71 +19,56 @@ export interface FakeTextInputProps {
 
 export const FakeTextInput: React.FC<FakeTextInputProps> = ({
   currentValue,
+  headerText,
   inputKey,
   onPress,
   placeholder,
   style,
   variant = defaultVariant,
 }) => {
-  const [previous, setPrevious] = useState(DisplayState.Inactive)
-  const [current, setCurrent] = useState(currentValue.length ? DisplayState.Active : DisplayState.Inactive)
-  const [value, setValue] = useState(currentValue)
+  const state = currentValue ? DisplayState.Active : DisplayState.Inactive
+
   const variantColors = getColorsForVariant(variant)
+  const animation = useSpring(state == DisplayState.Active ? variantColors.active : variantColors.inactive)
 
-  const from = variantColors[previous]
-  const to = variantColors[current]
-
-  if (currentValue !== value) {
-    setValue(currentValue)
-    if (currentValue.length) {
-      setCurrent(DisplayState.Active)
-      setPrevious(DisplayState.Inactive)
-    } else {
-      setCurrent(DisplayState.Inactive)
-      setPrevious(DisplayState.Active)
-    }
-  }
-
-  const height = style && style.height ? style.height : 56
-  const flex = style && style.flex
-
-  const placeholderTextColor = () => (variant === "light" ? color("black50") : color("black25"))
+  const height = style?.height || (headerText ? 65 : 40)
+  const placeholderColor = variant === "light" ? color("black50") : color("black25")
 
   return (
     <TouchableWithoutFeedback onPress={() => onPress(inputKey)}>
-      <Box style={{ height, flex }}>
-        <Spring native from={from} to={to}>
-          {(props) => (
-            <AnimatedView style={{ ...style, ...props }}>
-              <Text
-                style={{
-                  ...style,
-                  color: currentValue.length ? color("black100") : placeholderTextColor(),
-                  fontFamily: fontFamily.sans.medium,
-                  fontSize: 18,
-                }}
-              >
-                {currentValue.length ? currentValue : placeholder}
-              </Text>
-            </AnimatedView>
-          )}
-        </Spring>
-      </Box>
+      <AnimatedBox
+        style={{
+          flex: style?.flex,
+          height,
+          borderBottomWidth: 1,
+          borderTopWidth: 0,
+          borderLeftWidth: 0,
+          borderRightWidth: 0,
+          borderColor: animation.borderColor,
+          backgroundColor: animation.backgroundColor,
+        }}
+      >
+        {headerText ? (
+          <Sans size="1" color={placeholderColor}>
+            {headerText}
+          </Sans>
+        ) : null}
+        <Spacer height={10} />
+        <Text
+          style={{
+            color: currentValue.length ? variantColors.active.color : placeholderColor,
+            fontFamily: fontFamily.sans.medium.toString(),
+            fontSize: 18,
+            ...style,
+            textAlignVertical: "center",
+          }}
+        >
+          {currentValue.length ? currentValue : placeholder}
+        </Text>
+        <Spacer height={12} />
+      </AnimatedBox>
     </TouchableWithoutFeedback>
   )
 }
 
-const StyledAnimatedView = styled(View)<FakeTextInputProps>`
-  border-width: 1;
-  height: 56;
-  border-radius: 8;
-  font-size: 18;
-  line-height: 20;
-  padding-left: 15;
-  flex: 2;
-  padding-right: 15;
-  justify-content: center;
-  align-items: flex-start;
-`
-
-const AnimatedView = animated(StyledAnimatedView)
+const AnimatedBox = animated(Box)
