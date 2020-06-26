@@ -14,15 +14,13 @@ import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const ADD_MEASUREMENTS = gql`
   mutation addMeasurements(
-    $height: Int!
-    $weight: String!
-    $topSize: String!
-    $waistSize: String!
-    $topSizeFit: String!
-    $waistSizeFit: String!
+    $height: Int
+    $weight: CustomerDetailCreateweightInput
+    $topSizes: CustomerDetailCreatetopSizesInput
+    $waistSizes: CustomerDetailCreatewaistSizesInput
   ) {
     addCustomerDetails(
-      details: { height: $height, weight: $weight, averageTopSize: $topSize, averageWaistSize: $waistSize }
+      details: { height: $height, weight: $weight, topSizes: $topSizes, waistSizes: $waistSizes }
       status: Authorized
       event: CompletedWaitlistForm
     ) {
@@ -75,9 +73,9 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
     const result = await addMeasurements({
       variables: {
         height: height.value,
-        weight: weight.value.toString(),
-        topSize: topSizeIndices.map((i) => Measurements.topSizes[i]),
-        waistSize: waistSizeIndices.map((i) => Measurements.topSizes[i]),
+        weight: { set: weight.value },
+        topSizes: { set: topSizeIndices.map((i) => Measurements.topSizes[i].value) },
+        waistSizes: { set: waistSizeIndices.map((i) => Measurements.waistSizes[i].value) },
       },
     })
     if (result?.data) {
