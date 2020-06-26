@@ -89,27 +89,29 @@ export const TextInput: React.FC<TextInputProps> = ({
           </Sans>
         ) : null}
         <Spacer height={10} />
-        <RNTextInput
-          autoCapitalize={autoCapitalize}
-          autoFocus={autoFocus}
-          blurOnSubmit={blurOnSubmit}
-          keyboardType={keyboardType}
-          multiline={multiline}
-          onChangeText={handleOnChangeText}
-          onFocus={onFocus}
-          placeholder={placeholder}
-          placeholderTextColor={placeholderColor}
-          ref={textInputRef}
-          secureTextEntry={secureTextEntry}
-          style={{
-            color: variantColors.active.color,
-            fontFamily: fontFamily.sans.medium.toString(),
-            fontSize: 18,
-            ...style,
-            textAlignVertical: "center",
-          }}
-          value={value}
-        />
+      </TouchableWithoutFeedback>
+      <RNTextInput
+        autoCapitalize={autoCapitalize}
+        autoFocus={autoFocus}
+        blurOnSubmit={blurOnSubmit}
+        keyboardType={keyboardType}
+        multiline={multiline}
+        onChangeText={handleOnChangeText}
+        onFocus={onFocus}
+        placeholder={placeholder}
+        placeholderTextColor={placeholderColor}
+        ref={textInputRef}
+        secureTextEntry={secureTextEntry}
+        style={{
+          color: variantColors.active.color,
+          fontFamily: fontFamily.sans.medium.toString(),
+          fontSize: 18,
+          ...style,
+          textAlignVertical: "center",
+        }}
+        value={value}
+      />
+      <TouchableWithoutFeedback onPress={() => textInputRef.current?.focus()}>
         <Spacer height={12} />
       </TouchableWithoutFeedback>
     </AnimatedBox>

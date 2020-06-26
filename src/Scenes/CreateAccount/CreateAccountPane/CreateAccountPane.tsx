@@ -56,11 +56,10 @@ const makeLocationSlug = (firstName: string, lastName: string): string => {
 }
 
 interface CreateAccountPaneProps {
-  navigation: any
   onSignUp: () => void
 }
 
-export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ navigation, onSignUp }) => {
+export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }) => {
   // Hooks
 
   const [firstName, setFirstName] = useState("")
