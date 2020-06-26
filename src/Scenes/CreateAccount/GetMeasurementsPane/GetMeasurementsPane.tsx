@@ -1,7 +1,9 @@
-import { Box, Button, Container, Sans, Separator, Spacer } from "App/Components"
+import { Box, Button, Container, Sans, Spacer } from "App/Components"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { BoxPicker } from "./BoxPicker"
+import Item from "./Item"
 import Measurements from "./Measurements"
+import { MultiSelectionTable } from "./MultiSelectionTable"
 import React, { useState } from "react"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
@@ -20,14 +22,7 @@ const ADD_MEASUREMENTS = gql`
     $waistSizeFit: String!
   ) {
     addCustomerDetails(
-      details: {
-        height: $height
-        weight: $weight
-        averageTopSize: $topSize
-        averageTopSizeFit: $topSizeFit
-        averageWaistSize: $waistSize
-        averageWaistSizeFit: $waistSizeFit
-      }
+      details: { height: $height, weight: $weight, averageTopSize: $topSize, averageWaistSize: $waistSize }
       status: Authorized
       event: CompletedWaitlistForm
     ) {
@@ -41,12 +36,10 @@ interface GetMeasurementsPaneProps {
 }
 
 export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetMeasurements }) => {
-  const [height, setHeight] = useState(null)
-  const [weight, setWeight] = useState(null)
-  const [topSize, setTopSize] = useState(null)
-  const [topSizeFit, setTopSizeFit] = useState(null)
-  const [waistSize, setWaistSize] = useState(null)
-  const [waistSizeFit, setWaistSizeFit] = useState(null)
+  const [height, setHeight] = useState(null as Item)
+  const [weight, setWeight] = useState(null as Item)
+  const [topSizeIndices, setTopSizeIndices] = useState(Array<number>())
+  const [waistSizeIndices, setWaistSizeIndices] = useState(Array<number>())
 
   const [footerBoxHeight, setFooterBoxHeight] = useState(0)
   const insets = useSafeArea()
@@ -83,10 +76,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
       variables: {
         height: height.value,
         weight: weight.value.toString(),
-        topSize: topSize.value,
-        topSizeFit: topSizeFit.value,
-        waistSize: waistSize.value.toString(),
-        waistSizeFit: waistSizeFit.value,
+        topSize: topSizeIndices.map((i) => Measurements.topSizes[i]),
+        waistSize: waistSizeIndices.map((i) => Measurements.topSizes[i]),
       },
     })
     if (result?.data) {
@@ -110,7 +101,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
             </Sans>
             <Spacer mb={1} />
             <Sans color="black50" size="2">
-              Let’s get your measurements and sizing so that we can make sure we take care of you.
+              Let’s get your measurements and sizing info so we can make sure we have enough inventory for you.
             </Sans>
 
             <Spacer mb={5} />
@@ -142,53 +133,42 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
               </Box>
             </Box>
 
-            <Separator mt={3} mb={3} />
+            <Spacer mb={5} />
 
             <Sans color="black100" size="1">
-              What's your preferred top size?
+              What are your preferred top sizes?
             </Sans>
             <Spacer mb={1} />
-            <BoxPicker
-              onChange={(value) => setTopSize(value)}
-              title="Top size"
-              currentItem={topSize}
+            <MultiSelectionTable
               items={Measurements.topSizes}
+              onTap={(_, index) =>
+                // Recreate a new array reference so that the component reloads
+                setTopSizeIndices([
+                  ...(topSizeIndices.includes(index)
+                    ? topSizeIndices.filter((i) => i !== index)
+                    : topSizeIndices.concat([index])),
+                ])
+              }
+              selectedItemIndices={topSizeIndices}
             />
 
-            <Spacer mb={3} />
-            <Sans color="black100" size="1">
-              How does this size usually run?
-            </Sans>
-            <Spacer mb={1} />
-            <BoxPicker
-              onChange={(value) => setTopSizeFit(value)}
-              title="How does this size run?"
-              currentItem={topSizeFit}
-              items={Measurements.fits}
-            />
-
-            <Separator mt={3} mb={3} />
+            <Spacer mb={4} />
 
             <Sans color="black100" size="1">
               Your preferred waist size?
             </Sans>
             <Spacer mb={1} />
-            <BoxPicker
-              onChange={(value) => setWaistSize(value)}
-              title="Waist size"
-              currentItem={waistSize}
+            <MultiSelectionTable
               items={Measurements.waistSizes}
-            />
-            <Spacer mb={3} />
-            <Sans color="black100" size="1">
-              How does this size run?
-            </Sans>
-            <Spacer mb={1} />
-            <BoxPicker
-              onChange={(value) => setWaistSizeFit(value)}
-              title="How does this size run?"
-              currentItem={waistSizeFit}
-              items={Measurements.fits}
+              onTap={(_, index) =>
+                // Recreate a new array reference so that the component reloads
+                setWaistSizeIndices([
+                  ...(waistSizeIndices.includes(index)
+                    ? waistSizeIndices.filter((i) => i !== index)
+                    : waistSizeIndices.concat([index])),
+                ])
+              }
+              selectedItemIndices={waistSizeIndices}
             />
           </Box>
           <Box height={footerBoxHeight} />
@@ -197,7 +177,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
           <Box p={2} pb={2} onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height)}>
             <Button
               block
-              disabled={!(height && weight && topSize && topSizeFit && waistSize && waistSizeFit)}
+              disabled={!(height && weight && topSizeIndices.length && waistSizeIndices.length)}
               onPress={submitMeasurements}
               variant="primaryBlack"
             >

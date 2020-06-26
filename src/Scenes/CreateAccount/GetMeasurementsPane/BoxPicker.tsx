@@ -5,11 +5,8 @@ import { DownChevronIcon } from "Assets/icons/DownChevronIcon"
 import React, { useState } from "react"
 import { TouchableOpacity } from "react-native"
 import { Picker } from "@react-native-community/picker"
-
-export interface Item {
-  label: string
-  value: any
-}
+import Item from "./Item"
+import { borderWidth } from "styled-system"
 
 export interface BoxPickerProps {
   currentItem?: Item
@@ -40,7 +37,7 @@ export const BoxPicker: React.FC<BoxPickerProps> = ({
         <Box
           height={height}
           width={width}
-          style={{ backgroundColor: color("black04"), flex: width ? 0 : 1, padding: 12, borderRadius: 4 }}
+          style={{ borderColor: color("black10"), borderWidth: 1, flex: width ? 0 : 1, padding: 12, borderRadius: 4 }}
         >
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center" style={{ flex: 1 }}>
             <Sans size="2">{currentItem?.label || "Select"}</Sans>

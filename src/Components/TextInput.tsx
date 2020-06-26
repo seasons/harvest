@@ -67,7 +67,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   }
 
   const height = style?.height || (headerText ? 65 : 40)
-  const placeholderColor = variant === "light" ? color("black50") : color("black25")
+  const placeholderColor = variant === "light" ? color("black50") : color("black10")
 
   return (
     <AnimatedBox

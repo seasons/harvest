@@ -37,7 +37,7 @@ export const defaultVariant: TextInputVariant = "light"
 
 export function getColorsForVariant(variant: TextInputVariant) {
   const {
-    colors: { black100, white100, black50, black25 },
+    colors: { black100, white100, black50, black10 },
   } = themeProps
 
   switch (variant) {
@@ -50,7 +50,7 @@ export function getColorsForVariant(variant: TextInputVariant) {
         },
         inactive: {
           backgroundColor: white100,
-          borderColor: black25,
+          borderColor: black10,
           color: black50,
         },
       }
@@ -63,7 +63,7 @@ export function getColorsForVariant(variant: TextInputVariant) {
         },
         inactive: {
           backgroundColor: black100,
-          borderColor: black25,
+          borderColor: black10,
           color: white100,
         },
       }
