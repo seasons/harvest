@@ -105,7 +105,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
 
       <FlatList
         data={states}
-        horizontal={true}
+        horizontal
         initialScrollIndex={state}
         keyboardShouldPersistTaps="handled"
         keyExtractor={(item) => item.toString()}

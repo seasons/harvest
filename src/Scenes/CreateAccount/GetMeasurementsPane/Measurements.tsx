@@ -1,8 +1,8 @@
-import { Item as BoxPickerItem } from "./BoxPicker"
+import Item from "./Item"
 
-const heights: BoxPickerItem[] = (() => {
+const heights: Item[] = (() => {
   const totalInches = (feet: number, inches: number) => 12 * feet + inches
-  let items: BoxPickerItem[] = [{ label: "4'11\"", value: totalInches(4, 11) }]
+  let items: Item[] = [{ label: "4'11\"", value: totalInches(4, 11) }]
   new Array(5, 6).forEach((feet) => {
     items.push({ label: `${feet}\'`, value: totalInches(feet, 0) })
     for (let inches = 1; inches < 12; inches++) {
@@ -12,16 +12,15 @@ const heights: BoxPickerItem[] = (() => {
   return items
 })()
 
-const weights: BoxPickerItem[] = (() => {
-  const items: BoxPickerItem[] = []
-  for (let weight = 90; weight <= 250; weight += 10) {
-    items.push({ label: String(weight), value: weight })
+const weights: Item[] = (() => {
+  const items: Item[] = []
+  for (let weight = 90; weight <= 240; weight += 10) {
+    items.push({ label: `${weight} - ${weight + 10}lbs`, value: [weight, weight + 10] })
   }
   return items
 })()
 
-const topSizes: BoxPickerItem[] = [
-  { label: "XXS", value: "XXS" },
+const topSizes: Item[] = [
   { label: "XS", value: "XS" },
   { label: "S", value: "S" },
   { label: "M", value: "M" },
@@ -31,15 +30,15 @@ const topSizes: BoxPickerItem[] = [
   { label: "XXXL", value: "XXXL" },
 ]
 
-const waistSizes: BoxPickerItem[] = (() => {
-  const items: BoxPickerItem[] = []
-  for (let waistSize = 26; waistSize <= 40; waistSize++) {
+const waistSizes: Item[] = (() => {
+  const items: Item[] = []
+  for (let waistSize = 28; waistSize <= 40; waistSize++) {
     items.push({ label: String(waistSize), value: waistSize })
   }
   return items
 })()
 
-const fits: BoxPickerItem[] = [
+const fits: Item[] = [
   { label: "Sometimes too small", value: "Small" },
   { label: "It fits me every time", value: "Perfect" },
   { label: "Sometimes too big", value: "Big" },
