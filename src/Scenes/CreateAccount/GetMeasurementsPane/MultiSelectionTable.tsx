@@ -48,7 +48,7 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({ items,
       : {}
 
     return (
-      <TouchableOpacity onPress={() => onTap(item, index)}>
+      <TouchableOpacity onPress={() => onTap(item, index)} key={index}>
         <Flex height={itemHeight + interItemSpacing} width={itemHeight} justifyContent="center" verticalAlign="center">
           <Flex
             justifyContent="center"
@@ -91,9 +91,10 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({ items,
       ) => (
         <Flex flexDirection="row" key={row.toString()}>
           {data.slice(row * itemsPerRow, (row + 1) * itemsPerRow).flatMap((datum, index, array) => {
-            const view = renderItem(datum, index + itemsPerRow * row) // render each item
+            const dataIndex = index + itemsPerRow * row
+            const view = renderItem(datum, dataIndex) // render each item
             return array.length - 1 !== index // check for the last item
-              ? [view, <Spacer width={interItemSpacing} />] // insert a spacer
+              ? [view, <Spacer key={"s" + dataIndex} width={interItemSpacing} />] // insert a spacer
               : view
           })}
         </Flex>
