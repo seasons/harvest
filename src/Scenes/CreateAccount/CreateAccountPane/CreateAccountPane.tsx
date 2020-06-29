@@ -75,9 +75,9 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
     // TODO: More stringent name, password, dob, & zipcode checking
     setIsFormValid(
       firstName.length &&
-        !firstName.includes(" ") &&
+        !firstName.trim().includes(" ") &&
         lastName.length &&
-        !lastName.includes(" ") &&
+        !lastName.trim().includes(" ") &&
         isValidEmail(email) &&
         password.trim().length &&
         passwordConfirmation === password &&
@@ -169,8 +169,8 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
       variables: {
         email,
         password,
-        firstName,
-        lastName,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
         zipCode,
         isoDateOfBirth,
         slug,

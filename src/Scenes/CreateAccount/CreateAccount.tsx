@@ -34,7 +34,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
   const [checkoutUrl, setCheckoutUrl] = useState(null)
   const flatListRef: MutableRefObject<FlatList<State>> = useRef()
   useEffect(() => {
-    flatListRef.current?.scrollToIndex({ index: state })
+    flatListRef.current?.scrollToIndex({ index: Math.min(state, states.length - 1) })
   }, [state])
 
   const states: State[] = [
@@ -50,7 +50,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
 
   const setNextState = () => {
     if (state == states.length - 1) {
-      // show Welcome
+      setState(state + 1)
     } else {
       setState(state + 1)
     }
@@ -76,7 +76,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
         pane = <VerifyCodePane phoneNumber={phoneNumber} onRequestBack={setPrevState} onVerifyPhone={setNextState} />
         break
       case State.GetMeasurements:
-        pane = <GetMeasurementsPane onGetMeasurements={() => setState(State.ChoosePlan)} />
+        pane = <GetMeasurementsPane onGetMeasurements={setNextState} />
         break
       case State.ChoosePlan:
         pane = (
@@ -89,7 +89,9 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
         )
         break
       case State.Checkout:
-        pane = <ChargebeeCheckoutPane url={checkoutUrl} onRequestBack={setPrevState} />
+        pane = (
+          <ChargebeeCheckoutPane url={checkoutUrl} onFinishedCheckout={setNextState} onRequestBack={setPrevState} />
+        )
         break
     }
     return (
@@ -106,7 +108,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
       <FlatList
         data={states}
         horizontal
-        initialScrollIndex={state}
+        initialScrollIndex={Math.min(state, states.length - 1)}
         keyboardShouldPersistTaps="handled"
         keyExtractor={(item) => item.toString()}
         onScrollToIndexFailed={(info) => {
