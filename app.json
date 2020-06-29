@@ -10,7 +10,7 @@
     "entryPoint": "node_modules/expo/AppEntry.js",
     "platforms": ["ios", "android", "web"],
     "ios": {
-      "associatedDomains": ["applinks:https://8c93463eca2d.ngrok.io"],
+      "associatedDomains": ["applinks:www.seasons.nyc"],
       "bundleIdentifier": "com.seasons.Seasons"
     },
     "android": {

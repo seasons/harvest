@@ -8,10 +8,15 @@ import { WebViewProgressEvent } from "react-native-webview/lib/WebViewTypes"
 
 interface ChargebeeCheckoutPaneProps {
   url?: string
+  onFinishedCheckout: () => void
   onRequestBack: () => void
 }
 
-export const ChargebeeCheckoutPane: React.FC<ChargebeeCheckoutPaneProps> = ({ url, onRequestBack }) => {
+export const ChargebeeCheckoutPane: React.FC<ChargebeeCheckoutPaneProps> = ({
+  url,
+  onFinishedCheckout,
+  onRequestBack,
+}) => {
   const [loadProgress, setLoadProgress] = useState(5)
   const [showProgressBar, setShowProgressBar] = useState(true)
   const progressBarAnimation = useSpring({
@@ -35,14 +40,7 @@ export const ChargebeeCheckoutPane: React.FC<ChargebeeCheckoutPaneProps> = ({ ur
 
   return (
     <Container insetsTop={false} insetsBottom={false} backgroundColor="white100">
-      <Flex
-        mt={3}
-        // p={2}
-        height={50}
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Flex mt={3} height={50} flexDirection="row" alignItems="center" justifyContent="space-between">
         <TouchableOpacity onPress={onRequestBack}>
           <BackArrowIcon style={{ marginLeft: 16 }} color="black100" />
         </TouchableOpacity>
@@ -58,7 +56,19 @@ export const ChargebeeCheckoutPane: React.FC<ChargebeeCheckoutPaneProps> = ({ ur
         width={progressBarAnimation.width}
         backgroundColor="black100"
       />
-      <WebView source={{ uri: url }} onLoadProgress={onLoadProgress} onLoad={onFinishedLoading} />
+      <WebView
+        source={{ uri: url }}
+        onLoadProgress={onLoadProgress}
+        onLoad={onFinishedLoading}
+        onShouldStartLoadWithRequest={(e) => {
+          if (e.url.includes("chargebee-mobile-checkout-success")) {
+            onFinishedCheckout()
+            return true
+          } else {
+            return true
+          }
+        }}
+      />
     </Container>
   )
 }
