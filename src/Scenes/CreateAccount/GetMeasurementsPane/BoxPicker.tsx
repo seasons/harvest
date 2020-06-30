@@ -6,7 +6,6 @@ import React, { useState } from "react"
 import { TouchableOpacity } from "react-native"
 import { Picker } from "@react-native-community/picker"
 import Item from "./Item"
-import { borderWidth } from "styled-system"
 
 export interface BoxPickerProps {
   currentItem?: Item

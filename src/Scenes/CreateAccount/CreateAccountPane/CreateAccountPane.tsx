@@ -14,8 +14,6 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
-import { TextInput as RNTextInput } from "react-native"
-
 const SIGN_UP = gql`
   mutation SignUp(
     $email: String!
@@ -116,13 +114,16 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
     setIsDatePickerVisible(true)
   }
 
-  const closeDatePicker = (date: Date) => {
+  const onPickDate = (date: Date) => {
     setISODateOfBirth(date.toISOString())
     const dateOfBirth = [date.getMonth() + 1, date.getDate(), date.getFullYear()]
       .map((i) => String(i).padStart(2, "0"))
       .join("/")
-    setIsDatePickerVisible(false)
     setDateOfBirth(dateOfBirth)
+  }
+
+  const closeDatePicker = () => {
+    setIsDatePickerVisible(false)
   }
 
   // Form/field validation
@@ -320,7 +321,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
         </Flex>
       </Box>
 
-      <DatePickerPopUp onRequestClose={closeDatePicker} visible={isDatePickerVisible} />
+      <DatePickerPopUp onDateChange={onPickDate} onRequestClose={closeDatePicker} visible={isDatePickerVisible} />
     </Container>
   )
 }

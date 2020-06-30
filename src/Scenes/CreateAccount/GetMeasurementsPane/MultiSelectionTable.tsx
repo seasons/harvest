@@ -18,7 +18,7 @@ interface MultiSelectionTableProps {
 export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({ items, onTap, selectedItemIndices }) => {
   const [width, setWidth] = useState(0)
 
-  const itemHeight = 64
+  const itemHeight = 60
   const itemCornerRadius = itemHeight / 2
   const minimumInterItemSpacing = 8
 
