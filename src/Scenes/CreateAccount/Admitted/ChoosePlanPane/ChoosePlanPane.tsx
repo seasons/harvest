@@ -42,7 +42,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
   const errorPopUpContext = usePopUpContext()
   const showErrorPopUp = errorPopUpContext.showPopUp
   const hideErrorPopUp = errorPopUpContext.hidePopUp
-  const [runQuery, { called, loading, data }] = useLazyQuery(CHARGEBEE_CHECKOUT, {
+  const [runQuery, { data }] = useLazyQuery(CHARGEBEE_CHECKOUT, {
     onCompleted: () => {
       setIsMutating(false)
       if (data) {
@@ -117,7 +117,13 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
       </Box>
       <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
         <Box p={2} onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height)}>
-          <Button block disabled={selectedPlan === Plan.None} onPress={_onChoosePlan} variant="primaryBlack">
+          <Button
+            block
+            disabled={selectedPlan === Plan.None}
+            loading={isMutating}
+            onPress={_onChoosePlan}
+            variant="primaryBlack"
+          >
             Choose plan
           </Button>
           <Box style={{ height: insets.bottom }} />

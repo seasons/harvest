@@ -1,5 +1,5 @@
 import { Container, Sans, Flex, Separator, Spacer, Box } from "App/Components"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import WebView from "react-native-webview"
 import { BackArrowIcon } from "Assets/icons"
 import { TouchableOpacity } from "react-native"
@@ -17,10 +17,12 @@ export const ChargebeeCheckoutPane: React.FC<ChargebeeCheckoutPaneProps> = ({
   onFinishedCheckout,
   onRequestBack,
 }) => {
+  const [didFinishedCheckout, setDidFinishCheckout] = useState(false)
   const [loadProgress, setLoadProgress] = useState(5)
   const [showProgressBar, setShowProgressBar] = useState(true)
   const progressBarAnimation = useSpring({
     width: loadProgress + "%",
+    height: showProgressBar ? 4 : 0,
     opacity: showProgressBar ? 1 : 0,
   })
 
@@ -53,12 +55,8 @@ export const ChargebeeCheckoutPane: React.FC<ChargebeeCheckoutPaneProps> = ({
       <AnimatedBox
         opacity={progressBarAnimation.opacity}
         width={progressBarAnimation.width}
-        height={4}
+        height={progressBarAnimation.height}
         backgroundColor="black100"
-        position="absolute"
-        zIndex={100}
-        bottom={0}
-        left={0}
       />
       <WebView
         source={{ uri: url }}
@@ -66,7 +64,10 @@ export const ChargebeeCheckoutPane: React.FC<ChargebeeCheckoutPaneProps> = ({
         onLoad={onFinishedLoading}
         onShouldStartLoadWithRequest={(e) => {
           if (e.url.includes("chargebee-mobile-checkout-success")) {
-            onFinishedCheckout()
+            if (!didFinishedCheckout) {
+              setDidFinishCheckout(true)
+              onFinishedCheckout()
+            }
             return true
           } else {
             return true

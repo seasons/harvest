@@ -11,7 +11,7 @@ import { color } from "App/utils"
 import { WebViewProgressEvent } from "react-native-webview/lib/WebViewTypes"
 
 export const WebviewComponent = screenTrack()(({ navigation, route }) => {
-  const [loadProgress, setLoadProgress] = useState(0)
+  const [loadProgress, setLoadProgress] = useState(5)
   const [showLoadBar, setShowLoadBar] = useState(true)
   const loadProgressAnimation = useSpring({
     width: loadProgress + "%",

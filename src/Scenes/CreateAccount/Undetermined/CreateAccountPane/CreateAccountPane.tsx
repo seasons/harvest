@@ -23,17 +23,14 @@ const SIGN_UP = gql`
     $lastName: String!
     $zipCode: String!
     $isoDateOfBirth: DateTime!
-    $slug: String!
   ) {
     signup(
       email: $email
       password: $password
       firstName: $firstName
       lastName: $lastName
-      details: {
-        birthday: $isoDateOfBirth
-        shippingAddress: { create: { slug: $slug, name: "", address1: "", city: "", state: "", zipCode: $zipCode } }
-      }
+      zipCode: $zipCode
+      details: { birthday: $isoDateOfBirth }
     ) {
       user {
         id
@@ -48,13 +45,6 @@ const SIGN_UP = gql`
     }
   }
 `
-
-const makeLocationSlug = (firstName: string, lastName: string): string => {
-  const now = new Date()
-  const seasonsWaitlistLaunchDate = new Date("10/25/2019")
-  const secSinceLaunch = Math.round(now.getTime() - seasonsWaitlistLaunchDate.getTime() / 1000)
-  return `${firstName}-${lastName}-${secSinceLaunch}`
-}
 
 interface CreateAccountPaneProps {
   onSignUp: () => void
@@ -170,8 +160,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
 
     setIsMutating(true)
 
-    const slug = makeLocationSlug(firstName, lastName)
-
     const result = await signup({
       variables: {
         email,
@@ -180,7 +168,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
         lastName: lastName.trim(),
         zipCode,
         isoDateOfBirth,
-        slug,
       },
     })
     if (result?.data) {
@@ -302,7 +289,13 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
           <Spacer height={100} />
         </ScrollView>
         <Box p={2} style={{ backgroundColor: "transparent" }}>
-          <Button block disabled={!isFormValid} onPress={() => handleSignup()} variant="primaryBlack">
+          <Button
+            block
+            disabled={!isFormValid}
+            loading={isMutating}
+            onPress={() => handleSignup()}
+            variant="primaryBlack"
+          >
             Create my account
           </Button>
         </Box>

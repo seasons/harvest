@@ -3,16 +3,18 @@ import CloseButton from "./CloseButton"
 import React, { useRef, useState, MutableRefObject, useEffect } from "react"
 import { Modal, FlatList, Dimensions } from "react-native"
 
-import { CreateAccountPane } from "./CreateAccountPane"
-import { SendCodePane } from "./SendCodePane"
-import { VerifyCodePane } from "./VerifyCodePane"
-import { GetMeasurementsPane } from "./GetMeasurementsPane"
-import { ChoosePlanPane } from "./ChoosePlanPane"
-import { ChargebeeCheckoutPane } from "./ChargebeeCheckoutPane"
-import { WelcomePane } from "./WelcomePane"
+import { CreateAccountPane, SendCodePane, VerifyCodePane, GetMeasurementsPane, TriagePane } from "./Undetermined"
+import { ChoosePlanPane, ChargebeeCheckoutPane, WelcomePane } from "./Admitted"
+import { WaitlistedPane } from "./Waitlisted"
 
 interface CreateAccountProps {
   navigation: any
+}
+
+enum UserState {
+  Undetermined,
+  Admitted,
+  Waitlisted,
 }
 
 enum State {
@@ -20,41 +22,50 @@ enum State {
   SendCode,
   VerifyCode,
   GetMeasurements,
+  Triage,
+
   ChoosePlan,
   Checkout,
   Welcome,
+
+  Waitlisted,
 }
 
 const { width: windowWidth } = Dimensions.get("window")
 
-export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
-  // Navigation
-  const [state, setState] = useState(State.CreateAccount)
-  const [phoneNumber, setPhoneNumber] = useState(null)
-  const [checkoutUrl, setCheckoutUrl] = useState(null)
-  const flatListRef: MutableRefObject<FlatList<State>> = useRef()
-  useEffect(() => {
-    flatListRef.current?.scrollToIndex({ index: Math.min(state, states.length - 1) })
-  }, [state])
-
-  const states: State[] = [
-    State.CreateAccount,
-    State.SendCode,
-    State.VerifyCode,
-    State.GetMeasurements,
-    State.ChoosePlan,
-    State.Checkout,
-  ]
-
-  const setPrevState = () => setState(Math.max(0, state - 1))
-
-  const setNextState = () => {
-    if (state == states.length - 1) {
-      setState(state + 1)
-    } else {
-      setState(state + 1)
-    }
+const states = (forUserState: UserState): State[] => {
+  const commonStates = [State.CreateAccount, State.SendCode, State.VerifyCode, State.GetMeasurements, State.Triage]
+  switch (forUserState) {
+    case UserState.Undetermined:
+      return commonStates
+    case UserState.Admitted:
+      return commonStates.concat([State.ChoosePlan, State.Checkout, State.Welcome])
+    case UserState.Waitlisted:
+      return commonStates.concat([State.Waitlisted])
   }
+}
+
+const statesWithoutCloseButton = [State.Triage, State.Checkout, State.Welcome, State.Waitlisted]
+
+export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
+  // The general user's state
+  const [userState, setUserState] = useState(UserState.Undetermined)
+  // The current index into the `states(userState)` array
+  const [index, setIndex] = useState(0)
+  // The current state
+  const currentState = states(userState)[index]
+
+  const flatListRef: MutableRefObject<FlatList<State>> = useRef()
+  // The maximum index shown in the FlatList
+  const maxScrollableIndex = states(userState).length - (userState === UserState.Undetermined ? 1 : 2)
+  // Scroll to the new index when the state updates
+  useEffect(() => flatListRef.current?.scrollToIndex({ index: Math.min(index, maxScrollableIndex) }), [index])
+
+  const [phoneNumber, setPhoneNumber] = useState(null as string)
+  const [checkoutUrl, setCheckoutUrl] = useState(null as string)
+
+  const setPrevState = () => setIndex(Math.max(0, index - 1))
+  const setNextState = () => setIndex(index + 1)
 
   const paneForState = (state: State) => {
     let pane
@@ -77,6 +88,17 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
         break
       case State.GetMeasurements:
         pane = <GetMeasurementsPane onGetMeasurements={setNextState} />
+        break
+      case State.Triage:
+        pane = (
+          <TriagePane
+            check={currentState === State.Triage}
+            onTriageComplete={(userAdmitted) => {
+              setUserState(userAdmitted ? UserState.Admitted : UserState.Waitlisted)
+              setNextState()
+            }}
+          />
+        )
         break
       case State.ChoosePlan:
         pane = (
@@ -101,14 +123,16 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
     )
   }
 
+  console.log(states(userState), index)
+
   return (
     <>
-      {state !== State.Checkout ? <CloseButton onRequestClose={() => navigation.goBack()} /> : null}
+      {!statesWithoutCloseButton.includes(currentState) && <CloseButton onRequestClose={() => navigation.goBack()} />}
 
       <FlatList
-        data={states}
+        data={states(userState)}
         horizontal
-        initialScrollIndex={Math.min(state, states.length - 1)}
+        initialScrollIndex={Math.min(index, maxScrollableIndex)}
         keyboardShouldPersistTaps="handled"
         keyExtractor={(item) => item.toString()}
         onScrollToIndexFailed={(info) => {
@@ -128,8 +152,12 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
       />
 
-      <Modal visible={state === State.Welcome} animated>
+      <Modal visible={currentState === State.Welcome} animated>
         <WelcomePane onPressGetStarted={() => navigation.goBack()} />
+      </Modal>
+
+      <Modal visible={currentState === State.Waitlisted} animated>
+        <WaitlistedPane onPressGetStarted={() => navigation.goBack()} />
       </Modal>
     </>
   )
