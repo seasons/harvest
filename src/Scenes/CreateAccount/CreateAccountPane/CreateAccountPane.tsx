@@ -14,6 +14,8 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
+import { TextInput as RNTextInput } from "react-native"
+
 const SIGN_UP = gql`
   mutation SignUp(
     $email: String!
@@ -193,7 +195,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={32 + insets.bottom}>
         <ScrollView
           keyboardDismissMode="interactive"
-          keyboardShouldPersistTaps="handled"
+          keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
           style={{ paddingTop: 85, paddingHorizontal: 16, overflow: "visible" }}
           ref={scrollViewRef}
