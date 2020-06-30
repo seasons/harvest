@@ -123,6 +123,8 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
         ref={flatListRef}
         renderItem={({ item }) => paneForState(item)}
         scrollEnabled={false}
+        // not documented but works and is required
+        keyboardShouldPersistTaps="always"
         showsHorizontalScrollIndicator={false}
       />
 
