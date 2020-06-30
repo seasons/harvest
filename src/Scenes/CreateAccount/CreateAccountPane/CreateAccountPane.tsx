@@ -9,6 +9,7 @@ import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { useMutation } from "react-apollo"
+import { WebviewModal } from "./WebviewModal"
 
 import { useAuthContext } from "App/Navigation/AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
@@ -87,6 +88,9 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   }
 
   useEffect(validateForm, [firstName, lastName, email, password, passwordConfirmation, dateOfBirth, zipCode])
+
+  const [isWebviewModalVisible, setIsWebviewModalVisible] = useState(false)
+  const [webViewUrl, setWebViewUrl] = useState(null as string)
 
   const [isMutating, setIsMutating] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
@@ -187,6 +191,13 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
       AsyncStorage.setItem("userSession", JSON.stringify(userSession))
       onSignUp()
     }
+  }
+
+  // webview
+
+  const showWebview = (url: string) => {
+    setWebViewUrl(url)
+    setIsWebviewModalVisible(true)
   }
 
   // Render
@@ -304,7 +315,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             </Sans>{" "}
           </Text>
           <Text>
-            <TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => showWebview("https://www.seasons.nyc/privacy-policy")}>
               <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
                 Privacy Policy
               </Sans>
@@ -312,7 +323,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             <Sans size="1" color="black50">
               {" & "}
             </Sans>
-            <TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => showWebview("https://www.seasons.nyc/terms-of-service")}>
               <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
                 Terms of Service
               </Sans>
@@ -322,6 +333,15 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
       </Box>
 
       <DatePickerPopUp onDateChange={onPickDate} onRequestClose={closeDatePicker} visible={isDatePickerVisible} />
+
+      <WebviewModal
+        visible={isWebviewModalVisible}
+        onRequestBack={() => {
+          setIsWebviewModalVisible(false)
+          return true
+        }}
+        url={webViewUrl}
+      />
     </Container>
   )
 }

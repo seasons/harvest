@@ -52,9 +52,13 @@ export const ChargebeeCheckoutPane: React.FC<ChargebeeCheckoutPaneProps> = ({
       <Separator mt={1} />
       <AnimatedBox
         opacity={progressBarAnimation.opacity}
-        height={4}
         width={progressBarAnimation.width}
+        height={4}
         backgroundColor="black100"
+        position="absolute"
+        zIndex={100}
+        bottom={0}
+        left={0}
       />
       <WebView
         source={{ uri: url }}
