@@ -21,6 +21,7 @@ export const WebviewModal: React.FC<WebviewModalProps> = ({ onRequestBack, url, 
 
   const progressBarAnimation = useSpring({
     width: loadProgress + "%",
+    height: showProgressBar ? 4 : 0,
     opacity: showProgressBar ? 1 : 0,
   })
 
@@ -73,12 +74,8 @@ export const WebviewModal: React.FC<WebviewModalProps> = ({ onRequestBack, url, 
       <AnimatedBox
         opacity={progressBarAnimation.opacity}
         width={progressBarAnimation.width}
-        height={4}
+        height={progressBarAnimation.height}
         backgroundColor="black100"
-        position="absolute"
-        zIndex={100}
-        bottom={0}
-        left={0}
       />
       <WebView source={{ uri: url }} onLoadStart={onLoadStart} onLoadProgress={onLoadProgress} onLoad={onLoad} />
     </Modal>

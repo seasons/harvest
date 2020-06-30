@@ -19,11 +19,7 @@ const ADD_MEASUREMENTS = gql`
     $topSizes: CustomerDetailCreatetopSizesInput
     $waistSizes: CustomerDetailCreatewaistSizesInput
   ) {
-    addCustomerDetails(
-      details: { height: $height, weight: $weight, topSizes: $topSizes, waistSizes: $waistSizes }
-      status: Authorized
-      event: CompletedWaitlistForm
-    ) {
+    addCustomerDetails(details: { height: $height, weight: $weight, topSizes: $topSizes, waistSizes: $waistSizes }) {
       id
     }
   }
@@ -176,6 +172,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
             <Button
               block
               disabled={!(height && weight && topSizeIndices.length && waistSizeIndices.length)}
+              loading={isMutating}
               onPress={submitMeasurements}
               variant="primaryBlack"
             >

@@ -1,7 +1,7 @@
 import { Box, Button, Container, Sans, Spacer, TextInput, Flex } from "App/Components"
 import { isWholeNumber } from "App/helpers/validation"
 import { Text } from "Components/Typography"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
@@ -179,7 +179,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
                 flex={backButtonAnimation.flex}
                 style={{ transform: [{ translateX: backButtonAnimation.translateX }] }}
               >
-                <Button block onPress={onRequestBack} variant="primaryWhite">
+                <Button block disabled={isMutating} onPress={onRequestBack} variant="primaryWhite">
                   Back
                 </Button>
               </AnimatedBox>
@@ -187,7 +187,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
             </>
           ) : null}
           <Box flex={1}>
-            <Button block disabled={!isFormValid} onPress={verifyCode} variant="primaryBlack">
+            <Button block disabled={!isFormValid} loading={isMutating} onPress={verifyCode} variant="primaryBlack">
               Next
             </Button>
           </Box>

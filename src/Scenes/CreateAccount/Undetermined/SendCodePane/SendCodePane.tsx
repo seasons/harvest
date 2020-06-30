@@ -1,5 +1,5 @@
 import { Box, Button, Container, Sans, Spacer, TextInput } from "App/Components"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { KeyboardAvoidingView, Keyboard } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 
@@ -104,7 +104,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
       </Box>
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom, 16)}>
         <Box style={{ padding: 16, paddingBottom: insets.bottom + 16 }}>
-          <Button block disabled={!isFormValid} onPress={sendCode} variant="primaryBlack">
+          <Button block disabled={!isFormValid} loading={isMutating} onPress={sendCode} variant="primaryBlack">
             Next
           </Button>
         </Box>
