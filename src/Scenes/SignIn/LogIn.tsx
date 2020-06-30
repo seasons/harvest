@@ -123,7 +123,7 @@ export const LogIn: React.FC<LogInProps> = (props) => {
             </Sans>
             <Spacer mb={3} />
             <TextInput
-              placeholder="Email"
+              headerText="Email"
               variant="light"
               inputKey="email"
               onChangeText={(_, val) => onEmailChange(val)}
@@ -131,7 +131,7 @@ export const LogIn: React.FC<LogInProps> = (props) => {
             <Spacer mb={2} />
             <TextInput
               secureTextEntry
-              placeholder="Password"
+              headerText="Password"
               variant="light"
               inputKey="password"
               onChangeText={(_, val) => setPassword(val)}
