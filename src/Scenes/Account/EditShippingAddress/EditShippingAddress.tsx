@@ -198,7 +198,6 @@ export const EditShippingAddress: React.FC<{
           <Spacer mr={1} />
           <Box flex={1}>
             <Button
-              loading={isMutating}
               block
               disabled={
                 !name.trim() ||
@@ -208,6 +207,7 @@ export const EditShippingAddress: React.FC<{
                 !city.trim() ||
                 !state
               }
+              loading={isMutating}
               onPress={handleUpdateAddress}
               size="large"
               variant="primaryBlack"

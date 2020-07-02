@@ -31,6 +31,7 @@ interface OnboardingChecklistProps {
   navigation
   onboardingSteps: OnboardingStep[]
   shippingAddress: any
+  stylePreferences: any
   userState: UserState.Undetermined | UserState.Waitlisted
 }
 
@@ -38,6 +39,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
   navigation,
   onboardingSteps,
   shippingAddress,
+  stylePreferences,
   userState,
 }) => {
   let header = userState == UserState.Undetermined ? "Finish creating your account" : "You're on the waitlist"
@@ -97,6 +99,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
         // shouldn't happen?
         break
       case OnboardingStep.SetStylePreferences:
+        navigation.navigate("EditStylePreferences", { stylePreferences })
         break
       case OnboardingStep.SetShippingAddress:
         navigation.navigate("EditShippingAddress", { shippingAddress })
