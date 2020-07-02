@@ -168,7 +168,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
           <Box height={footerBoxHeight} />
         </ScrollView>
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-          <Box p={2} pb={2} onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height)}>
+          <Box p={2} pb={2} onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height - 8 * 2)}>
+            <Spacer mb={2} />
             <Button
               block
               disabled={!(height && weight && topSizeIndices.length && waistSizeIndices.length)}

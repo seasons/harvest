@@ -35,6 +35,10 @@ export const GET_USER = gql`
             city
             state
           }
+          stylePreferences {
+            styles
+            patterns
+          }
         }
       }
     }
@@ -67,6 +71,7 @@ export const Account = screenTrack()(({ navigation }) => {
   const onboardingSteps = customer?.onboardingSteps
   const status = customer?.status
   const shippingAddress = customer?.detail?.shippingAddress
+  const stylePreferences = customer?.detail?.stylePreferences
   const user = customer?.user
   const email = user?.email
   const firstName = user?.firstName
@@ -86,6 +91,7 @@ export const Account = screenTrack()(({ navigation }) => {
           navigation={navigation}
           onboardingSteps={onboardingSteps}
           shippingAddress={shippingAddress}
+          stylePreferences={stylePreferences}
           userState={UserState.Undetermined}
         />
       )
@@ -96,6 +102,7 @@ export const Account = screenTrack()(({ navigation }) => {
           navigation={navigation}
           onboardingSteps={onboardingSteps}
           shippingAddress={shippingAddress}
+          stylePreferences={stylePreferences}
           userState={UserState.Waitlisted}
         />
       )
