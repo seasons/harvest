@@ -1,5 +1,6 @@
 import { Box } from "App/Components"
 import CloseButton from "./CloseButton"
+import { get } from "lodash"
 import React, { useRef, useState, MutableRefObject, useEffect } from "react"
 import { Modal, FlatList, Dimensions } from "react-native"
 
@@ -9,15 +10,19 @@ import { WaitlistedPane } from "./Waitlisted"
 
 interface CreateAccountProps {
   navigation: any
+  initialState?: State
+  initialUserState?: UserState
+  params?: any
+  route?: any
 }
 
-enum UserState {
+export enum UserState {
   Undetermined,
   Admitted,
   Waitlisted,
 }
 
-enum State {
+export enum State {
   CreateAccount,
   SendCode,
   VerifyCode,
@@ -33,9 +38,9 @@ enum State {
 
 const { width: windowWidth } = Dimensions.get("window")
 
-const states = (forUserState: UserState): State[] => {
+const statesFor = (userState: UserState): State[] => {
   const commonStates = [State.CreateAccount, State.SendCode, State.VerifyCode, State.GetMeasurements, State.Triage]
-  switch (forUserState) {
+  switch (userState) {
     case UserState.Undetermined:
       return commonStates
     case UserState.Admitted:
@@ -45,20 +50,33 @@ const states = (forUserState: UserState): State[] => {
   }
 }
 
-const statesWithoutCloseButton = [State.Triage, State.Checkout, State.Welcome, State.Waitlisted]
+// Returns the slice of `array` after and including `afterValue`, or the entire array if the value is not present.
+const sliceArray: <T>(array: T[], afterValue: T) => T[] = (array, afterValue) => {
+  const index = array.indexOf(afterValue)
+  if (index <= 0) {
+    return array
+  }
+  return array.slice(index)
+}
 
-export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
+// States in which to hide the close button
+const statesWithoutCloseButton = [State.Triage, State.Checkout, State.Welcome, State.Waitlisted]
+export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route }) => {
+  const initialState: State = get(route?.params, "initialState", State.CreateAccount)
+  const initialUserState: UserState = get(route?.params, "initialUserState", UserState.Undetermined)
+
   // The general user's state
-  const [userState, setUserState] = useState(UserState.Undetermined)
+  const [userState, setUserState] = useState(initialUserState)
   // The current index into the `states(userState)` array
   const [index, setIndex] = useState(0)
+  // All the states (after the initial state)
+  const states = sliceArray(statesFor(userState), initialState)
   // The current state
-  const currentState = states(userState)[index]
+  const currentState = states[index]
 
   const flatListRef: MutableRefObject<FlatList<State>> = useRef()
   // The maximum index shown in the FlatList
-  const maxScrollableIndex = states(userState).length - (userState === UserState.Undetermined ? 1 : 2)
-  // Scroll to the new index when the state updates
+  const maxScrollableIndex = states.length - (userState === UserState.Undetermined ? 1 : 2)
   useEffect(() => flatListRef.current?.scrollToIndex({ index: Math.min(index, maxScrollableIndex) }), [index])
 
   const [phoneNumber, setPhoneNumber] = useState(null as string)
@@ -123,23 +141,20 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
     )
   }
 
-  console.log(states(userState), index)
-
   return (
     <>
       {!statesWithoutCloseButton.includes(currentState) && <CloseButton onRequestClose={() => navigation.goBack()} />}
 
       <FlatList
-        data={states(userState)}
+        data={states}
         horizontal
         initialScrollIndex={Math.min(index, maxScrollableIndex)}
-        keyboardShouldPersistTaps="handled"
         keyExtractor={(item) => item.toString()}
         onScrollToIndexFailed={(info) => {
           // When first rendering this component, the layout may not yet be complete
           // depending on the initial index, so we have to wait for the layout to
           // finish and then retry.
-          const wait = new Promise((resolve) => setTimeout(resolve, 500))
+          const wait = new Promise((resolve) => setTimeout(resolve, 100))
           wait.then(() => {
             flatListRef.current?.scrollToIndex({ index: info.index })
           })
@@ -147,7 +162,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
         ref={flatListRef}
         renderItem={({ item }) => paneForState(item)}
         scrollEnabled={false}
-        // not documented but works and is required
         keyboardShouldPersistTaps="always"
         showsHorizontalScrollIndicator={false}
       />
@@ -157,7 +171,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation }) => {
       </Modal>
 
       <Modal visible={currentState === State.Waitlisted} animated>
-        <WaitlistedPane onPressGetStarted={() => navigation.goBack()} />
+        <WaitlistedPane onPressFinish={() => navigation.goBack()} />
       </Modal>
     </>
   )

@@ -2,13 +2,13 @@ import { Sans, Flex, Separator, Spacer, Box } from "App/Components"
 import React, { useState } from "react"
 import WebView from "react-native-webview"
 import { CloseXIcon } from "Assets/icons"
-import { Modal, StatusBar, TouchableOpacity } from "react-native"
+import { Modal, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring"
 import { WebViewProgressEvent, WebViewNavigationEvent } from "react-native-webview/lib/WebViewTypes"
 import { useSafeArea } from "react-native-safe-area-context"
 
 interface WebviewModalProps {
-  onRequestBack: () => boolean
+  onRequestBack: () => void
   url?: string
   visible: boolean
 }
@@ -44,17 +44,9 @@ export const WebviewModal: React.FC<WebviewModalProps> = ({ onRequestBack, url, 
     }, 100)
   }
 
-  const _onRequestBack = () => {
-    if (onRequestBack()) {
-      StatusBar.setBarStyle("light-content")
-    }
-  }
-
   if (!url) {
     return null
   }
-
-  StatusBar.setBarStyle("default")
 
   return (
     <Modal animated presentationStyle="fullScreen" visible={visible}>
@@ -66,7 +58,7 @@ export const WebviewModal: React.FC<WebviewModalProps> = ({ onRequestBack, url, 
             {title}
           </Sans>
         </AnimatedBox>
-        <TouchableOpacity onPress={_onRequestBack}>
+        <TouchableOpacity onPress={onRequestBack}>
           <CloseXIcon style={{ margin: 16 }} color="black100" />
         </TouchableOpacity>
       </Flex>

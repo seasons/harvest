@@ -26,7 +26,6 @@ const LOG_IN = gql`
       token
       refreshToken
       expiresIn
-      beamsToken
     }
   }
 `
@@ -67,34 +66,6 @@ export const LogIn: React.FC<LogInProps> = (props) => {
     setEmailComplete(isValidEmail(val))
   }
 
-  const checkPermissions = (beamsToken, pushNotificationStatus) => {
-    checkNotifications()
-      .then(({ status }) => {
-        if (status === "denied") {
-          props.navigation.popToTop()
-          props.navigation.navigate("Modal", { screen: "AllowNotificationsModal", params: { beamsToken, email } })
-        } else {
-          // if, e.g, another user signed in on this device first and this user is inherting their
-          // permissions, ensure their pushNotificationStatus on prisma reflects the device status
-          if (pushNotificationStatus.toLowerCase() !== status) {
-            setDeviceNotifStatus(upperFirst(status))
-          }
-
-          // if, e.g, another used signed in on this device first and this user is inherting their "granted"
-          // status, ensure we properly set up their push notifications infrastructure
-          if (status === "granted") {
-            init()
-          }
-
-          props.navigation.navigate("Main")
-        }
-      })
-      .catch((error) => {
-        console.log("error checking for permission", error)
-        props.navigation.navigate("Main")
-      })
-  }
-
   const handleLogin = async () => {
     if (!isMutating) {
       Keyboard.dismiss()
@@ -110,13 +81,8 @@ export const LogIn: React.FC<LogInProps> = (props) => {
           data: { login: userSession },
         } = result
         signIn(userSession)
-        const beamsToken = result?.data?.login?.beamsToken
-        const roles = result?.data?.login?.user?.roles
-        const beamsData = { beamsToken, email, roles }
-        const pushNotificationStatus = result?.data?.login?.user?.pushNotificationStatus
-        AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
-        checkPermissions(beamsToken, pushNotificationStatus)
+        props.navigation.navigate("Main")
       }
     }
   }

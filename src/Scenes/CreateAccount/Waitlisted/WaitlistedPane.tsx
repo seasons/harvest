@@ -4,10 +4,10 @@ import React from "react"
 import { useSafeArea } from "react-native-safe-area-context"
 
 interface WaitlistedPaneProps {
-  onPressGetStarted: () => void
+  onPressFinish: () => void
 }
 
-export const WaitlistedPane: React.FC<WaitlistedPaneProps> = ({ onPressGetStarted }) => {
+export const WaitlistedPane: React.FC<WaitlistedPaneProps> = ({ onPressFinish }) => {
   const insets = useSafeArea()
 
   // fix bottom, button text; check color to black100
@@ -16,7 +16,7 @@ export const WaitlistedPane: React.FC<WaitlistedPaneProps> = ({ onPressGetStarte
     <Container insetsBottom={false} insetsTop={false}>
       <Box p="2" pt={insets.top}>
         <Spacer height="90" />
-        <GreenCheck width={42} height={42} />
+        <GreenCheck backgroundColor="black100" width={42} height={42} />
         <Spacer mb="3" />
         <Sans color="black100" size="3">
           You're on the waitlist
@@ -28,11 +28,11 @@ export const WaitlistedPane: React.FC<WaitlistedPaneProps> = ({ onPressGetStarte
       </Box>
       <Box p="2" pb={insets.bottom} style={{ position: "absolute", bottom: 0 }}>
         <Sans color="black50" size="1">
-          Bottom text :)
+          In the meantime, you can finish completing your profile to help us prioritize your membership.
         </Sans>
         <Spacer mb="3" />
-        <Button block onPress={onPressGetStarted} variant="primaryBlack">
-          Get started
+        <Button block onPress={onPressFinish} variant="primaryBlack">
+          Finish
         </Button>
         <Spacer mb="3" />
       </Box>

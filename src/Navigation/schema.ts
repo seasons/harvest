@@ -36,6 +36,7 @@ export enum PageNames {
   MembershipInfo = "MembershipInfo",
   PaymentAndShipping = "PaymentAndShipping",
   EditPaymentAndShipping = "EditPaymentAndShipping",
+  EditShippingAddress = "EditShippingAddress",
   PersonalPreferences = "PersonalPreferences",
   ProductRequest = "ProductRequest",
   FinishProductRequest = "FinishProductRequest",
