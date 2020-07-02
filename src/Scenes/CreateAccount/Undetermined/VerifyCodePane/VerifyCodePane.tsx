@@ -1,7 +1,7 @@
 import { Box, Button, Container, Sans, Spacer, TextInput, Flex } from "App/Components"
 import { isWholeNumber } from "App/helpers/validation"
 import { Text } from "Components/Typography"
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
@@ -145,7 +145,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      <Box pt={85} px={2} style={{ flex: 1 }}>
+      <Box pt={85} px={2} flex={1}>
         <Sans color="black100" size="3">
           Enter the code we sent you
         </Sans>

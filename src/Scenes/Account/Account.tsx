@@ -1,31 +1,37 @@
-import { Box, Flex, GuestView, Sans, Separator, Spacer, Skeleton } from "App/Components"
+import { Box, Container, GuestView, Sans, Separator, Skeleton, Spacer } from "App/Components"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { color } from "App/utils"
-import { Container } from "Components/Container"
+import { screenTrack } from "App/utils/track"
+import { NotificationToggle } from "./Components/NotificationToggle"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
-import { Linking, ScrollView, TouchableOpacity, StatusBar } from "react-native"
+import { ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
-import { NotificationToggle } from "./Components/NotificationToggle"
-import { ProfileList } from "./ProfileList"
-import { screenTrack, useTracking, Schema } from "App/utils/track"
+
+import { BottomList, CustomerStatus, OnboardingChecklist, ProfileList } from "./Lists"
+import { UserState } from "../CreateAccount/CreateAccount"
 
 export const GET_USER = gql`
   query GetUser {
     me {
       customer {
         id
+        status
+        onboardingSteps
         user {
           id
           firstName
           lastName
           email
-          pushNotifications
+          pushNotificationStatus
           role
         }
         detail {
           shippingAddress {
+            name
+            address1
+            address2
+            zipCode
             city
             state
           }
@@ -35,12 +41,9 @@ export const GET_USER = gql`
   }
 `
 
-export const Account = screenTrack()((props) => {
+export const Account = screenTrack()(({ navigation }) => {
   const { authState, signOut } = useAuthContext()
-  const tracking = useTracking()
   const { error, data, refetch } = useQuery(GET_USER)
-
-  const { navigation } = props
 
   useEffect(() => {
     const unsubscribe = navigation?.addListener("focus", () => {
@@ -60,118 +63,94 @@ export const Account = screenTrack()((props) => {
     console.log("Error Account.tsx", error)
   }
 
-  const bottomList = [
-    {
-      text: "Support",
-      onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.SupportTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
-        Linking.openURL(`mailto:membership@seasons.nyc?subject=Help`)
-      },
-    },
-    {
-      text: "Privacy policy",
-      onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.PrivacyPolicyTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
-        navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })
-      },
-    },
-    {
-      text: "Terms of Service",
-      onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.TermsOfServiceTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
-        navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })
-      },
-    },
-    {
-      text: "Log out",
-      onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.LogOutTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
-        signOut()
-      },
-    },
-    {
-      text: "Debug menu",
-      onPress: () => {
-        navigation.navigate("Modal", {
-          screen: "DebugMenu",
-        })
-      },
-    },
-  ]
-
-  const user = data?.me?.customer?.user
-  const pushNotifications = user?.pushNotifications
-  const userID = user?.id
-  const role = user?.role
+  const customer = data?.me?.customer
+  const onboardingSteps = customer?.onboardingSteps
+  const status = customer?.status
+  const shippingAddress = customer?.detail?.shippingAddress
+  const user = customer?.user
   const email = user?.email
   const firstName = user?.firstName
   const lastName = user?.lastName
+  const pushNotificationStatus = user?.pushNotificationStatus
+  const role = user?.role
+  const userID = user?.id
+
+  let body: JSX.Element
+  switch (status) {
+    case CustomerStatus.Invited:
+      // what is this?
+      break
+    case CustomerStatus.Created:
+      body = (
+        <OnboardingChecklist
+          navigation={navigation}
+          onboardingSteps={onboardingSteps}
+          shippingAddress={shippingAddress}
+          userState={UserState.Undetermined}
+        />
+      )
+      break
+    case CustomerStatus.Waitlisted:
+      body = (
+        <OnboardingChecklist
+          navigation={navigation}
+          onboardingSteps={onboardingSteps}
+          shippingAddress={shippingAddress}
+          userState={UserState.Waitlisted}
+        />
+      )
+      break
+    case CustomerStatus.Authorized:
+      // show special message to add payment info
+      body = (
+        <Sans size="2" color="black100">
+          Add your payment information!
+        </Sans>
+      )
+      break
+    case CustomerStatus.Active:
+    case CustomerStatus.Suspended:
+    case CustomerStatus.Paused:
+    case CustomerStatus.Deactivated:
+      body = <ProfileList navigation={navigation} />
+      break
+  }
 
   return (
-    <Container insetsBottom={false} insetsTop={false}>
+    <Container insetsTop={false} insetsBottom={false}>
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
           <Box pt={2}>
             <Spacer mb={6} />
             <Box px={2} style={{ height: 60 }}>
-              <Flex>
-                {!!firstName && !!lastName ? (
-                  <Sans size="3" color="black">
-                    {`${firstName} ${lastName}`}
-                  </Sans>
-                ) : (
-                  <Box mt="3px">
-                    <Skeleton width={180} height={20} />
-                  </Box>
-                )}
-                {!!email ? (
-                  <Sans size="2" color="gray">
-                    {email}
-                  </Sans>
-                ) : (
-                  <Box mt="13px">
-                    <Skeleton width={160} height={16} />
-                  </Box>
-                )}
-              </Flex>
+              {firstName && lastName ? (
+                <Sans size="3" color="black">
+                  {`${firstName} ${lastName}`}
+                </Sans>
+              ) : (
+                <Box mt="3px">
+                  <Skeleton width={180} height={20} />
+                </Box>
+              )}
+              {email ? (
+                <Sans size="2" color="gray">
+                  {email}
+                </Sans>
+              ) : (
+                <Box mt="13px">
+                  <Skeleton width={160} height={16} />
+                </Box>
+              )}
             </Box>
             <Spacer mb={2} />
             <Separator />
             <Box px={2} py={4}>
-              <ProfileList {...props} />
+              {body}
             </Box>
             <Separator />
-            <NotificationToggle userID={userID} userNotificationStatus={pushNotifications} />
+            <NotificationToggle userID={userID} userNotificationStatus={pushNotificationStatus} />
             <Separator />
-            <Box px={2} pt={4}>
-              {bottomList.map((listItem) => {
-                if (listItem.text === "Debug menu" && role !== "Admin") {
-                  return null
-                }
-                return (
-                  <Box key={listItem.text}>
-                    <TouchableOpacity onPress={listItem.onPress}>
-                      <Sans size="2" color={listItem.text === "Log out" ? "red" : color("black100")}>
-                        {listItem.text}
-                      </Sans>
-                    </TouchableOpacity>
-                    <Spacer m={2} />
-                  </Box>
-                )
-              })}
-            </Box>
+            <BottomList navigation={navigation} role={role} signOut={signOut} />
           </Box>
         </ScrollView>
       </Animatable.View>

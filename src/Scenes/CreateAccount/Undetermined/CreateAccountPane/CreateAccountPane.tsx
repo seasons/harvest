@@ -1,9 +1,8 @@
-import { Box, Button, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, Container, FakeTextInput, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { isWholeNumber } from "App/helpers/validation"
 import { Text } from "Components/Typography"
 import { DatePickerPopUp } from "./DatePickerPopUp"
-import { FakeTextInput } from "./FakeTextInput"
 import gql from "graphql-tag"
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
@@ -329,10 +328,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
 
       <WebviewModal
         visible={isWebviewModalVisible}
-        onRequestBack={() => {
-          setIsWebviewModalVisible(false)
-          return true
-        }}
+        onRequestBack={() => setIsWebviewModalVisible(false)}
         url={webViewUrl}
       />
     </Container>

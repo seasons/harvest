@@ -25,7 +25,7 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
     setIsMutating(false)
   }
 
-  const handleAppChange = nextAppState => {
+  const handleAppChange = (nextAppState) => {
     if (nextAppState === "active") {
       checkNotifications()
         .then(async ({ status }) => {
@@ -33,7 +33,7 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
             getPermission()
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("error checking for permission", error)
         })
     }
@@ -45,7 +45,7 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
     return unsubscribe
   }, [userNotificationStatus])
 
-  const onChange = async newValue => {
+  const onChange = async (newValue) => {
     if (isMutating) {
       return
     }
@@ -72,7 +72,7 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
       <Spacer m={2} />
       <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
         <Box style={{ maxWidth: 300 }}>
-          <Sans size="2">Order updates</Sans>
+          <Sans size="2">Stay updated</Sans>
           {disabled ? (
             <Sans size="2" color={color("black50")}>
               Enable push notifications in your{" "}
@@ -92,7 +92,7 @@ export const NotificationToggle: React.FC<{ userNotificationStatus: PushNotifica
         </Box>
         <Toggle
           disabled={disabled || isMutating}
-          onChange={newValue => onChange(newValue)}
+          onChange={(newValue) => onChange(newValue)}
           selected={subscribedToNotifs}
         />
       </Flex>

@@ -28,11 +28,14 @@ const lists = [
   { title: "FAQ", icon: <QuestionMark />, link: "Faq", tracking: Schema.ActionNames.FAQTapped },
 ]
 
-export const ProfileList = props => {
-  const tracking = useTracking()
-  const { navigation } = props
+interface ProfileListProps {
+  navigation
+}
 
-  const openURL = item => {
+export const ProfileList: React.FC<ProfileListProps> = ({ navigation }) => {
+  const tracking = useTracking()
+
+  const openURL = (item) => {
     if (item.link) {
       tracking.trackEvent({
         actionName: item.tracking,
