@@ -1,6 +1,5 @@
-import { Container, FixedBackArrow, Spacer } from "App/Components"
+import { CloseButton, Container } from "App/Components"
 import React from "react"
-import { useSafeArea } from "react-native-safe-area-context"
 import { GetMeasurementsPane, Measurements } from "App/Scenes/CreateAccount/Undetermined"
 
 export interface InitialMeasurements {
@@ -14,8 +13,6 @@ export const EditMeasurements: React.FC<{
   navigation: any
   route: any
 }> = ({ navigation, route }) => {
-  const layout = useSafeArea()
-
   const rawMeasurements = route?.params?.measurements
   const height = rawMeasurements?.height
   const weightRange = rawMeasurements?.weight
@@ -49,12 +46,11 @@ export const EditMeasurements: React.FC<{
   }
 
   return (
-    <Container insetsBottom={false}>
-      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      <Spacer mb={layout.top} />
+    <Container insetsTop={false} insetsBottom={false}>
+      <CloseButton variant="light" />
       <GetMeasurementsPane
         initialMeasurements={measurements}
-        onGetMeasurements={() => {}}
+        onGetMeasurements={navigation.goBack}
         onRequestBack={navigation.goBack}
         useEditingLayout
       />

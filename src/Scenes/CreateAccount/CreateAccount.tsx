@@ -1,5 +1,4 @@
-import { Box } from "App/Components"
-import CloseButton from "./CloseButton"
+import { Box, CloseButton } from "App/Components"
 import { get } from "lodash"
 import React, { useRef, useState, MutableRefObject, useEffect } from "react"
 import { Modal, FlatList, Dimensions } from "react-native"
@@ -143,7 +142,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route 
 
   return (
     <>
-      {!statesWithoutCloseButton.includes(currentState) && <CloseButton onRequestClose={() => navigation.goBack()} />}
+      {!statesWithoutCloseButton.includes(currentState) && <CloseButton variant="light" />}
 
       <FlatList
         data={states}

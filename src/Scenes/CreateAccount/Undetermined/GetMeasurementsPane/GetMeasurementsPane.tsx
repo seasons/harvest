@@ -60,6 +60,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
   const [addMeasurements] = useMutation(ADD_MEASUREMENTS, {
     onCompleted: () => {
       setIsMutating(false)
+      onGetMeasurements()
     },
     onError: (err) => {
       console.log("****\n\n", err, "\n\n****")
@@ -80,7 +81,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
     }
 
     setIsMutating(true)
-    const result = await addMeasurements({
+    await addMeasurements({
       variables: {
         height: height.value,
         weight: { set: weight.value },
@@ -88,9 +89,6 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
         waistSizes: { set: waistSizeIndices.map((i) => Measurements.waistSizes[i].value) },
       },
     })
-    if (result?.data) {
-      onGetMeasurements()
-    }
   }
 
   /////////////////////////
@@ -98,125 +96,121 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
   /////////////////////////
 
   return (
-    <Container insetsBottom={false} insetsTop={false}>
-      <Box style={{ flex: 1 }}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+    <Container insetsTop={false} insetsBottom={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Box p={2} pt={useEditingLayout ? "80px" : "85px"}>
+          <Sans color="black100" size="3">
+            {useEditingLayout ? "Measurements" : "One last step"}
+          </Sans>
           {!useEditingLayout && (
             <>
-              <Spacer mb={5} />
-              <Spacer mb={4} />
+              <Spacer mb={1} />
+              <Sans color="black50" size="2">
+                Let’s get your measurements and sizing info so we can make sure we have enough inventory for you.
+              </Sans>
             </>
           )}
-          <Box p={2}>
-            <Sans color="black100" size="3">
-              {useEditingLayout ? "Measurements" : "One last step"}
-            </Sans>
-            {!useEditingLayout && (
-              <>
-                <Spacer mb={1} />
-                <Sans color="black50" size="2">
-                  Let’s get your measurements and sizing info so we can make sure we have enough inventory for you.
-                </Sans>
-              </>
-            )}
 
-            <Spacer mb={5} />
+          <Spacer mb={5} />
 
-            <Box style={{ flex: 1, flexDirection: "row" }}>
-              <Box style={{ flex: 0.5, marginRight: 6 }}>
-                <Sans color="black100" size="1">
-                  Height
-                </Sans>
-                <Spacer mb={1} />
-                <BoxPicker
-                  onChange={(value) => setHeight(value)}
-                  title="Height"
-                  currentItem={height}
-                  items={Measurements.heights}
-                />
-              </Box>
-              <Box style={{ flex: 0.5, marginLeft: 6 }}>
-                <Sans color="black100" size="1">
-                  Weight
-                </Sans>
-                <Spacer mb={1} />
-                <BoxPicker
-                  onChange={(value) => setWeight(value)}
-                  title="Weight"
-                  currentItem={weight}
-                  items={Measurements.weights}
-                />
-              </Box>
+          <Box style={{ flex: 1, flexDirection: "row" }}>
+            <Box style={{ flex: 0.5, marginRight: 6 }}>
+              <Sans color="black100" size="1">
+                Height
+              </Sans>
+              <Spacer mb={1} />
+              <BoxPicker
+                onChange={(value) => setHeight(value)}
+                title="Height"
+                currentItem={height}
+                items={Measurements.heights}
+              />
             </Box>
-
-            <Spacer mb={5} />
-
-            <Sans color="black100" size="1">
-              What are your preferred top sizes?
-            </Sans>
-            <Spacer mb={1} />
-            <MultiSelectionTable
-              items={Measurements.topSizes}
-              onTap={(_, index) =>
-                // Recreate a new array reference so that the component reloads
-                setTopSizeIndices([
-                  ...(topSizeIndices.includes(index)
-                    ? topSizeIndices.filter((i) => i !== index)
-                    : topSizeIndices.concat([index])),
-                ])
-              }
-              selectedItemIndices={topSizeIndices}
-            />
-
-            <Spacer mb={4} />
-
-            <Sans color="black100" size="1">
-              Your preferred waist size?
-            </Sans>
-            <Spacer mb={1} />
-            <MultiSelectionTable
-              items={Measurements.waistSizes}
-              onTap={(_, index) =>
-                // Recreate a new array reference so that the component reloads
-                setWaistSizeIndices([
-                  ...(waistSizeIndices.includes(index)
-                    ? waistSizeIndices.filter((i) => i !== index)
-                    : waistSizeIndices.concat([index])),
-                ])
-              }
-              selectedItemIndices={waistSizeIndices}
-            />
+            <Box style={{ flex: 0.5, marginLeft: 6 }}>
+              <Sans color="black100" size="1">
+                Weight
+              </Sans>
+              <Spacer mb={1} />
+              <BoxPicker
+                onChange={(value) => setWeight(value)}
+                title="Weight"
+                currentItem={weight}
+                items={Measurements.weights}
+              />
+            </Box>
           </Box>
-          <Box height={footerBoxHeight} />
-        </ScrollView>
-        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-          <Spacer mb={2} />
-          <Flex p={2} flexDirection="row" onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height - 8 * 2)}>
-            {useEditingLayout && (
-              <>
-                <Box flex={1}>
-                  <Button block onPress={onRequestBack} variant="primaryWhite">
-                    Cancel
-                  </Button>
-                </Box>
-                <Spacer mr={1} />
-              </>
-            )}
-            <Box flex={1}>
-              <Button
-                block
-                disabled={!(height && weight && topSizeIndices.length && waistSizeIndices.length)}
-                loading={isMutating}
-                onPress={submitMeasurements}
-                variant="primaryBlack"
-              >
-                {useEditingLayout ? "Save" : "Finish"}
-              </Button>
-            </Box>
-          </Flex>
-          <Box style={{ height: useEditingLayout ? 0 : insets.bottom }} />
-        </FadeBottom2>
-      </Box>
+
+          <Spacer mb={5} />
+
+          <Sans color="black100" size="1">
+            What are your preferred top sizes?
+          </Sans>
+          <Spacer mb={1} />
+          <MultiSelectionTable
+            items={Measurements.topSizes}
+            onTap={(_, index) =>
+              // Recreate a new array reference so that the component reloads
+              setTopSizeIndices([
+                ...(topSizeIndices.includes(index)
+                  ? topSizeIndices.filter((i) => i !== index)
+                  : topSizeIndices.concat([index])),
+              ])
+            }
+            selectedItemIndices={topSizeIndices}
+          />
+
+          <Spacer mb={4} />
+
+          <Sans color="black100" size="1">
+            Your preferred waist size?
+          </Sans>
+          <Spacer mb={1} />
+          <MultiSelectionTable
+            items={Measurements.waistSizes}
+            onTap={(_, index) =>
+              // Recreate a new array reference so that the component reloads
+              setWaistSizeIndices([
+                ...(waistSizeIndices.includes(index)
+                  ? waistSizeIndices.filter((i) => i !== index)
+                  : waistSizeIndices.concat([index])),
+              ])
+            }
+            selectedItemIndices={waistSizeIndices}
+          />
+        </Box>
+        <Box height={footerBoxHeight} />
+      </ScrollView>
+      <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
+        <Spacer mb={2} />
+        <Flex
+          p={2}
+          flexDirection="row"
+          onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height + insets.bottom)}
+        >
+          {useEditingLayout && (
+            <>
+              <Box flex={1}>
+                <Button block onPress={onRequestBack} variant="primaryWhite">
+                  Cancel
+                </Button>
+              </Box>
+              <Spacer mr={1} />
+            </>
+          )}
+          <Box flex={1}>
+            <Button
+              block
+              disabled={!(height && weight && topSizeIndices.length && waistSizeIndices.length)}
+              loading={isMutating}
+              onPress={submitMeasurements}
+              variant="primaryBlack"
+            >
+              {useEditingLayout ? "Save" : "Finish"}
+            </Button>
+          </Box>
+        </Flex>
+        <Spacer height={insets.bottom} />
+      </FadeBottom2>
     </Container>
   )
 }

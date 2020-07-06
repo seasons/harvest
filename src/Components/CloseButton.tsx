@@ -31,7 +31,9 @@ const Wrapper = styled(Box)`
 `
 
 const Circle = styled(Box)`
-  background-color: ${(p) => (p?.variant === "light" ? color("black10") : color("black85"))};
+  background-color: ${(p) => (p?.variant === "light" ? color("white100") : color("black85"))};
+  border-width: ${(p) => (p?.variant === "light" ? 1 : 0)}
+  border-color: ${(p) => (p?.variant === "light" ? color("black10") : color("black100"))};
   border-radius: 100;
   height: 40;
   width: 40;
