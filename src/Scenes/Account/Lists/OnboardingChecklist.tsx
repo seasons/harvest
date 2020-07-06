@@ -1,17 +1,16 @@
 import { Box, Flex, Sans, Spacer, Separator } from "App/Components"
 import { color } from "App/utils"
-// import { useTracking, Schema } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
 import { GreenCheck } from "Assets/svgs"
 import { State, UserState } from "../../CreateAccount/CreateAccount"
 import React from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
+import { InitialMeasurements } from "../EditMeasurements"
 
 export enum OnboardingStep {
   VerifiedPhone = "VerifiedPhone",
   SetMeasurements = "SetMeasurements",
-  SetPaymentDetails = "SetPaymentDetails",
   SetStylePreferences = "SetStylePreferences",
   SetShippingAddress = "SetShippingAddress",
 }
@@ -28,7 +27,8 @@ export enum CustomerStatus {
 }
 
 interface OnboardingChecklistProps {
-  navigation
+  measurements: InitialMeasurements
+  navigation: any
   onboardingSteps: OnboardingStep[]
   shippingAddress: any
   stylePreferences: any
@@ -36,6 +36,7 @@ interface OnboardingChecklistProps {
 }
 
 export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
+  measurements,
   navigation,
   onboardingSteps,
   shippingAddress,
@@ -78,7 +79,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
             })
             break
           case UserState.Waitlisted:
-            // User must have _already_ set their details so this is an _udpate_. Show only that one pane.
+            navigation.navigate("EditPhoneNumber", {})
             break
         }
         break
@@ -91,12 +92,9 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
             })
             break
           case UserState.Waitlisted:
-            // User must have _already_ set their details so this is an _udpate_. Show only that one pane.
+            navigation.navigate("EditMeasurements", { measurements })
             break
         }
-        break
-      case OnboardingStep.SetPaymentDetails:
-        // shouldn't happen?
         break
       case OnboardingStep.SetStylePreferences:
         navigation.navigate("EditStylePreferences", { stylePreferences })

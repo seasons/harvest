@@ -7,6 +7,8 @@ import {
   PaymentAndShipping,
   EditShippingAddress,
   EditStylePreferences,
+  EditMeasurements,
+  EditPhoneNumber,
 } from "App/Scenes/Account"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
@@ -170,6 +172,8 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name={Schema.PageNames.EditPaymentAndShipping} component={EditPaymentAndShipping} />
       <AccountStack.Screen name={Schema.PageNames.EditShippingAddress} component={EditShippingAddress} />
       <AccountStack.Screen name={Schema.PageNames.EditStylePreferences} component={EditStylePreferences} />
+      <AccountStack.Screen name={Schema.PageNames.EditMeasurements} component={EditMeasurements} />
+      <AccountStack.Screen name={Schema.PageNames.EditPhoneNumber} component={EditPhoneNumber} />
       <AccountStack.Screen name={Schema.PageNames.PersonalPreferences} component={PersonalPreferences} />
       <AccountStack.Screen name={Schema.PageNames.Webview} component={Webview} />
       <AccountStack.Screen name={Schema.PageNames.ProductRequest} component={ProductRequest} />

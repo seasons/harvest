@@ -1,4 +1,4 @@
-import { Box, Button, Container, Sans, Spacer } from "App/Components"
+import { Box, Button, Container, Sans, Spacer, Flex } from "App/Components"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { BoxPicker } from "./BoxPicker"
 import Item from "./Item"
@@ -26,14 +26,28 @@ const ADD_MEASUREMENTS = gql`
 `
 
 interface GetMeasurementsPaneProps {
+  initialMeasurements?: {
+    height?: Item
+    weight?: Item
+    topSizeIndices?: number[]
+    waistSizeIndices?: number[]
+  }
+  // Whether this pane is embeded
   onGetMeasurements: () => void
+  onRequestBack?: () => void
+  useEditingLayout?: boolean
 }
 
-export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetMeasurements }) => {
-  const [height, setHeight] = useState(null as Item)
-  const [weight, setWeight] = useState(null as Item)
-  const [topSizeIndices, setTopSizeIndices] = useState(Array<number>())
-  const [waistSizeIndices, setWaistSizeIndices] = useState(Array<number>())
+export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
+  initialMeasurements,
+  onGetMeasurements,
+  onRequestBack,
+  useEditingLayout = false,
+}) => {
+  const [height, setHeight] = useState(initialMeasurements?.height)
+  const [weight, setWeight] = useState(initialMeasurements?.weight)
+  const [topSizeIndices, setTopSizeIndices] = useState(initialMeasurements?.topSizeIndices || Array<number>())
+  const [waistSizeIndices, setWaistSizeIndices] = useState(initialMeasurements?.waistSizeIndices || Array<number>())
 
   const [footerBoxHeight, setFooterBoxHeight] = useState(0)
   const insets = useSafeArea()
@@ -87,16 +101,24 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
     <Container insetsBottom={false} insetsTop={false}>
       <Box style={{ flex: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Spacer mb={5} />
-          <Spacer mb={4} />
+          {!useEditingLayout && (
+            <>
+              <Spacer mb={5} />
+              <Spacer mb={4} />
+            </>
+          )}
           <Box p={2}>
             <Sans color="black100" size="3">
-              One last step
+              {useEditingLayout ? "Measurements" : "One last step"}
             </Sans>
-            <Spacer mb={1} />
-            <Sans color="black50" size="2">
-              Let’s get your measurements and sizing info so we can make sure we have enough inventory for you.
-            </Sans>
+            {!useEditingLayout && (
+              <>
+                <Spacer mb={1} />
+                <Sans color="black50" size="2">
+                  Let’s get your measurements and sizing info so we can make sure we have enough inventory for you.
+                </Sans>
+              </>
+            )}
 
             <Spacer mb={5} />
 
@@ -168,19 +190,31 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({ onGetM
           <Box height={footerBoxHeight} />
         </ScrollView>
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-          <Box p={2} pb={2} onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height - 8 * 2)}>
-            <Spacer mb={2} />
-            <Button
-              block
-              disabled={!(height && weight && topSizeIndices.length && waistSizeIndices.length)}
-              loading={isMutating}
-              onPress={submitMeasurements}
-              variant="primaryBlack"
-            >
-              Finish
-            </Button>
-            <Box style={{ height: insets.bottom }} />
-          </Box>
+          <Spacer mb={2} />
+          <Flex p={2} flexDirection="row" onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height - 8 * 2)}>
+            {useEditingLayout && (
+              <>
+                <Box flex={1}>
+                  <Button block onPress={onRequestBack} variant="primaryWhite">
+                    Cancel
+                  </Button>
+                </Box>
+                <Spacer mr={1} />
+              </>
+            )}
+            <Box flex={1}>
+              <Button
+                block
+                disabled={!(height && weight && topSizeIndices.length && waistSizeIndices.length)}
+                loading={isMutating}
+                onPress={submitMeasurements}
+                variant="primaryBlack"
+              >
+                {useEditingLayout ? "Save" : "Finish"}
+              </Button>
+            </Box>
+          </Flex>
+          <Box style={{ height: useEditingLayout ? 0 : insets.bottom }} />
         </FadeBottom2>
       </Box>
     </Container>

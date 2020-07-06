@@ -1,4 +1,6 @@
 export { Account } from "./Account"
-export { EditPaymentAndShipping, PaymentAndShipping } from "./PaymentAndShipping"
+export { EditMeasurements, InitialMeasurements } from "./EditMeasurements"
+export { EditPhoneNumber } from "./EditPhoneNumber"
 export { EditShippingAddress } from "./EditShippingAddress"
 export { EditStylePreferences } from "./EditStylePreferences"
+export { EditPaymentAndShipping, PaymentAndShipping } from "./PaymentAndShipping"

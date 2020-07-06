@@ -48,6 +48,7 @@ export type ButtonVariant =
   | "secondaryWhite"
   | "primaryWhite"
   | "secondaryBlack"
+  | "tertiaryBlack"
   | "tertiaryWhite"
   | "primaryGray"
 export type ButtonSize = "small" | "large"
@@ -172,6 +173,24 @@ export function getColorsForVariant(variant: ButtonVariant) {
           backgroundColor: black100,
           borderColor: black85,
           color: white100,
+        },
+      }
+    case "tertiaryBlack":
+      return {
+        default: {
+          backgroundColor: black85,
+          borderColor: black85,
+          color: white100,
+        },
+        pressed: {
+          backgroundColor: black100,
+          borderColor: black100,
+          color: white100,
+        },
+        disabled: {
+          backgroundColor: black10,
+          borderColor: black10,
+          color: black50,
         },
       }
     default:
