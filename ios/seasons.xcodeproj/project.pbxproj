@@ -18,7 +18,7 @@
 		787223015CE542C59F68F85C /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5321E38396C047298EF03D57 /* libz.tbd */; };
 		7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0E1F500ACFA44888E6CB0C1 /* ProximaNova-Regular.ttf */; };
 		7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5AF8182310CACF00A9E513 /* ProximaNova-Semibold.ttf */; };
-		816425C023453D8800D069F3 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		816425C023453D8800D069F3 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		8189590723F2650000CD52B5 /* seasons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8189590623F2650000CD52B5 /* seasons.swift */; };
 		819937AD2350CA0900D4B049 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 819937AC2350CA0900D4B049 /* AppCenter-Config.plist */; };
 		E48E9866ED8A424C835E1727 /* apercu-mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */; };
@@ -192,7 +192,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = QY3QKXPU37;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -312,7 +312,7 @@
 			files = (
 				8189590723F2650000CD52B5 /* seasons.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				816425C023453D8800D069F3 /* (null) in Sources */,
+				816425C023453D8800D069F3 /* BuildFile in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -350,14 +350,14 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
 				CODE_SIGN_ENTITLEMENTS = seasons/seasons.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 83;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 90;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = QY3QKXPU37;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNDECLARED_SELECTOR = NO;
@@ -372,7 +372,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seasons.Seasons;
 				PRODUCT_NAME = seasons;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.seasons.Seasons";
 				SWIFT_OBJC_BRIDGING_HEADER = "seasons-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -401,7 +401,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 83;
+				CURRENT_PROJECT_VERSION = 90;
 				DEVELOPMENT_TEAM = QY3QKXPU37;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
