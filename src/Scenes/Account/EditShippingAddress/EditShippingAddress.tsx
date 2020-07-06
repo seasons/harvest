@@ -9,6 +9,7 @@ import { StatePickerPopUp } from "./StatePickerPopup"
 import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 
 const UPDATE_ADDRESS = gql`
   mutation updateShippingAddress(
@@ -189,33 +190,36 @@ export const EditShippingAddress: React.FC<{
         style={{ paddingHorizontal: 16, overflow: "visible", flex: 1 }}
       />
       <KeyboardAvoidingView behavior="padding">
-        <Flex p={2} flexDirection="row">
-          <Box flex={1}>
-            <Button block variant="primaryWhite" size="large" onPress={navigation.goBack}>
-              Cancel
-            </Button>
-          </Box>
-          <Spacer mr={1} />
-          <Box flex={1}>
-            <Button
-              block
-              disabled={
-                !name.trim() ||
-                !address1.trim() ||
-                !isWholeNumber(zipCode) ||
-                zipCode.length !== 5 ||
-                !city.trim() ||
-                !state
-              }
-              loading={isMutating}
-              onPress={handleUpdateAddress}
-              size="large"
-              variant="primaryBlack"
-            >
-              Save
-            </Button>
-          </Box>
-        </Flex>
+        <FadeBottom2 width="100%">
+          <Spacer mb={2} />
+          <Flex p={2} flexDirection="row">
+            <Box flex={1}>
+              <Button block variant="primaryWhite" size="large" onPress={navigation.goBack}>
+                Cancel
+              </Button>
+            </Box>
+            <Spacer mr={1} />
+            <Box flex={1}>
+              <Button
+                block
+                disabled={
+                  !name.trim() ||
+                  !address1.trim() ||
+                  !isWholeNumber(zipCode) ||
+                  zipCode.length !== 5 ||
+                  !city.trim() ||
+                  !state
+                }
+                loading={isMutating}
+                onPress={handleUpdateAddress}
+                size="large"
+                variant="primaryBlack"
+              >
+                Save
+              </Button>
+            </Box>
+          </Flex>
+        </FadeBottom2>
       </KeyboardAvoidingView>
 
       <StatePickerPopUp
