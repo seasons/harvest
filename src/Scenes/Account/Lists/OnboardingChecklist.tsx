@@ -51,18 +51,22 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
 
   const items = [
     {
+      isTappable: userState == UserState.Undetermined,
       key: OnboardingStep.VerifiedPhone,
       title: "Verify Phone Number",
     },
     {
+      isTappable: true,
       key: OnboardingStep.SetMeasurements,
       title: "Sizing & Measurements",
     },
     {
+      isTappable: true,
       key: OnboardingStep.SetStylePreferences,
       title: "Style Preferences",
     },
     {
+      isTappable: true,
       key: OnboardingStep.SetShippingAddress,
       title: "Shipping Address",
     },
@@ -79,7 +83,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
             })
             break
           case UserState.Waitlisted:
-            navigation.navigate("EditPhoneNumber", {})
+            // don't allow changing the phone number at this stage
             break
         }
         break
@@ -92,34 +96,46 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
             })
             break
           case UserState.Waitlisted:
-            navigation.navigate("EditMeasurements", { measurements })
+            navigation.navigate("Modal", {
+              screen: "EditMeasurements",
+              params: { measurements },
+            })
+            // navigation.navigate("EditMeasurements", { measurements })
             break
         }
         break
       case OnboardingStep.SetStylePreferences:
-        navigation.navigate("EditStylePreferences", { stylePreferences })
+        navigation.navigate("Modal", {
+          screen: "EditStylePreferences",
+          params: { stylePreferences },
+        })
+        // navigation.navigate("EditStylePreferences", { stylePreferences })
         break
       case OnboardingStep.SetShippingAddress:
-        navigation.navigate("EditShippingAddress", { shippingAddress })
+        navigation.navigate("Modal", {
+          screen: "EditShippingAddress",
+          params: { shippingAddress },
+        })
+        // navigation.navigate("EditShippingAddress", { shippingAddress })
         break
     }
   }
 
   const renderItem = (index: number) => {
-    const { title, key } = items[index]
+    const { isTappable, key, title } = items[index]
     const isComplete = onboardingSteps.includes(key)
     const isLastItem = index == items.length - 1
     return (
       <Box key={key}>
         <Separator />
-        <TouchableOpacity onPress={() => onPressItem(key)}>
+        <TouchableOpacity disabled={!isTappable} onPress={() => onPressItem(key)}>
           <Flex flexDirection="row" alignItems="center" justifyContent="space-between" pt={2} pb={isLastItem ? 0 : 2}>
             <Flex flexDirection="row" alignItems="center">
               {isComplete ? <GreenCheck width={24} height={24} /> : <EmptyCircle />}
               <Spacer mr={2} />
               <Sans size="1">{title}</Sans>
             </Flex>
-            <ChevronIcon color={color("black10")} />
+            {isTappable && <ChevronIcon color={color("black10")} />}
           </Flex>
         </TouchableOpacity>
       </Box>

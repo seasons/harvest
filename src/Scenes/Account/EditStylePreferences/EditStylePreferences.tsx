@@ -1,4 +1,4 @@
-import { Box, Button, Container, FixedBackArrow, Sans, Spacer, Flex } from "App/Components"
+import { Box, Button, Container, Sans, Spacer, Flex, CloseButton } from "App/Components"
 import { color } from "App/utils"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import React, { useState } from "react"
@@ -62,6 +62,7 @@ export const EditStylePreferences: React.FC<{
   const [updateStylePreferences] = useMutation(UPDATE_STYLE_PREFERENCES, {
     onCompleted: () => {
       setIsMutating(false)
+      navigation.goBack()
     },
     onError: (err) => {
       console.log("****\n\n", err, "\n\n****")
@@ -168,8 +169,8 @@ export const EditStylePreferences: React.FC<{
   }
 
   return (
-    <Container insetsBottom={false}>
-      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+    <Container insetsTop={false} insetsBottom={false}>
+      <CloseButton variant="light" />
       <FlatList
         data={sections}
         extraData={selectedItemIndices}
@@ -177,12 +178,12 @@ export const EditStylePreferences: React.FC<{
         keyboardShouldPersistTaps="handled"
         keyExtractor={(item, index) => item.title + index}
         ListHeaderComponent={() => (
-          <Box mt={insets.top}>
-            <Spacer mb={3} />
+          <Box mt={5}>
+            <Spacer mb={5} />
             <Sans size="3">Style preferences</Sans>
           </Box>
         )}
-        ListFooterComponent={() => <Spacer height={100} />}
+        ListFooterComponent={() => <Spacer height={100 + insets.bottom} />}
         renderItem={({ item, index }) => renderSection(item, index)}
         showsVerticalScrollIndicator={false}
         style={{ paddingHorizontal: 16, flex: 1 }}
@@ -209,6 +210,7 @@ export const EditStylePreferences: React.FC<{
             </Button>
           </Box>
         </Flex>
+        <Spacer height={insets.bottom} />
       </FadeBottom2>
     </Container>
   )

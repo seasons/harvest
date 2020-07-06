@@ -1,4 +1,4 @@
-import { Box, Button, Container, Flex, FixedBackArrow, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isWholeNumber } from "App/helpers/validation"
 import { FakeTextInput } from "App/Components"
 import React, { useState } from "react"
@@ -69,6 +69,7 @@ export const EditShippingAddress: React.FC<{
   const [updateAddress] = useMutation(UPDATE_ADDRESS, {
     onCompleted: () => {
       setIsMutating(false)
+      navigation.goBack()
     },
     onError: (err) => {
       console.log("****\n\n", err, "\n\n****")
@@ -170,8 +171,8 @@ export const EditShippingAddress: React.FC<{
   }
 
   return (
-    <Container insetsBottom={false}>
-      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+    <Container insetsTop={false} insetsBottom={false}>
+      <CloseButton variant="light" />
       <FlatList
         data={[Row.Name, Row.Address1, Row.Address2_ZipCode, Row.City_State]}
         ItemSeparatorComponent={() => <Spacer mb={6} />}
@@ -179,8 +180,8 @@ export const EditShippingAddress: React.FC<{
         keyboardShouldPersistTaps="handled"
         keyExtractor={(item, index) => item + String(index)}
         ListHeaderComponent={() => (
-          <Box mt={insets.top}>
-            <Spacer mb={3} />
+          <Box mt={5}>
+            <Spacer mb={5} />
             <Sans size="3">Shipping address</Sans>
             <Spacer mb={4} />
           </Box>
@@ -189,7 +190,7 @@ export const EditShippingAddress: React.FC<{
         showsVerticalScrollIndicator={false}
         style={{ paddingHorizontal: 16, overflow: "visible", flex: 1 }}
       />
-      <KeyboardAvoidingView behavior="padding">
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={insets.bottom - 16}>
         <FadeBottom2 width="100%">
           <Spacer mb={2} />
           <Flex p={2} flexDirection="row">
@@ -219,6 +220,7 @@ export const EditShippingAddress: React.FC<{
               </Button>
             </Box>
           </Flex>
+          <Spacer height={insets.bottom} />
         </FadeBottom2>
       </KeyboardAvoidingView>
 
