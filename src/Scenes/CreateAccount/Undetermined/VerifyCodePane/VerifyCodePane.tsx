@@ -48,12 +48,6 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
   const errorPopUpContext = usePopUpContext()
   const showErrorPopUp = errorPopUpContext.showPopUp
   const hideErrorPopUp = errorPopUpContext.hidePopUp
-  const errorPopUpData = {
-    title: "Oops! Try again!",
-    note: "Double check the code and retry. We can resend you the code if you need.",
-    buttonText: "Close",
-    onClose: () => hideErrorPopUp(),
-  }
 
   const [startVerification] = useMutation(START_VERIFICATION, {
     onCompleted: () => {
@@ -78,7 +72,13 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
     },
     onError: (err) => {
       console.log("****\n\n", err, "\n\n****")
-      showErrorPopUp(errorPopUpData)
+      const popUpData = {
+        title: "Oops! Try again!",
+        note: "Double check the code and retry. We can resend you the code if you need.",
+        buttonText: "Close",
+        onClose: () => hideErrorPopUp(),
+      }
+      showErrorPopUp(popUpData)
       setIsMutating(false)
     },
   })
