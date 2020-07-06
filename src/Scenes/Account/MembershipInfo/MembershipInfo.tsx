@@ -52,7 +52,6 @@ export const GET_MEMBERSHIP_INFO = gql`
 export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeArea()
   const { data } = useQuery(GET_MEMBERSHIP_INFO)
-
   const customer = data?.me?.customer
   const customerPlan = customer?.plan
   const firstName = data?.me?.user?.firstName
@@ -72,7 +71,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
     )
   }
 
-  const whatsIncluded = plan.description.split("\n")
+  const whatsIncluded = plan?.description?.split("\n")
 
   return (
     <Container insetsBottom={false}>
