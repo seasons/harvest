@@ -60,7 +60,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const paymentPlans = data?.paymentPlans
 
   const plan = paymentPlans?.find((plan) => {
-    plan.name === customerPlan
+    return plan.name === customerPlan
   })
 
   if (!plan) {
