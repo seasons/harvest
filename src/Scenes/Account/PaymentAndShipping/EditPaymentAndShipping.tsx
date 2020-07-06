@@ -101,15 +101,25 @@ export const EditPaymentAndShipping: React.FC<{
     },
   })
 
-  const { data, loading, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE)
+  const { data, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE)
 
-  if (loading) {
-    return <Loader />
+  if (!data) {
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
   }
 
   if (error) {
     console.error("error EditPaymentAndShipping.tsx: ", error)
-    return <Loader />
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
   }
 
   const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage =

@@ -3,7 +3,7 @@ import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { Box, Container, FixedBackArrow, Sans, Separator, Spacer, Button } from "App/Components"
+import { Box, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
@@ -12,6 +12,14 @@ import { PauseButtons } from "App/Components/Pause"
 
 export const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
+    paymentPlans(where: { status: "active" }) {
+      id
+      description
+      planID
+      status
+      name
+      price
+    }
     me {
       customer {
         id
@@ -43,41 +51,28 @@ export const GET_MEMBERSHIP_INFO = gql`
 
 export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeArea()
-  const { loading, data } = useQuery(GET_MEMBERSHIP_INFO)
+  const { data } = useQuery(GET_MEMBERSHIP_INFO)
 
   const customer = data?.me?.customer
-  const plan = customer?.plan
+  const customerPlan = customer?.plan
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
-  let planInfo = null
+  const paymentPlans = data?.paymentPlans
 
-  if (plan === "Essential") {
-    planInfo = {
-      planName: plan,
-      price: "155",
-      whatsIncluded: [
-        "3 pieces per month",
-        "Swap out 1, 2 or all 3 pieces per month",
-        "Free shipping, returns & dry cleaning",
-        "Insurance included",
-      ],
-    }
-  } else {
-    planInfo = {
-      planName: "All Access",
-      price: "195",
-      whatsIncluded: [
-        "3 pieces at a time",
-        "Unlimited swaps. 1, 2 or all 3 pieces at a time",
-        "Free shipping, returns & dry cleaning",
-        "Insurance included",
-      ],
-    }
+  const plan = paymentPlans?.find((plan) => {
+    plan.name === customerPlan
+  })
+
+  if (!plan) {
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
   }
 
-  if (loading || !planInfo) {
-    return <Loader />
-  }
+  const whatsIncluded = plan.description.split("\n")
 
   return (
     <Container insetsBottom={false}>
@@ -87,30 +82,30 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={80} />
           <Sans size="3">Membership info</Sans>
           <Spacer mb={3} />
-          <MembershipCard memberName={`${firstName} ${lastName}`} planName={planInfo?.planName} />
+          <MembershipCard memberName={`${firstName} ${lastName}`} planName={plan?.name} />
           <Spacer mb={4} />
-          {!!planInfo?.price && (
+          {!!plan?.price && (
             <>
               <Sans size="1">What you pay</Sans>
               <Spacer mb={12} />
               <Separator />
               <Spacer mb={1} />
               <Sans size="1" color={color("black50")}>
-                {`$${planInfo.price}`} / per month
+                {`$${plan.price / 100}`} / per month
               </Sans>
             </>
           )}
-          {!!planInfo?.whatsIncluded && (
+          {!!whatsIncluded && (
             <>
               <Spacer mb={4} />
               <Sans size="1">Whats included</Sans>
               <Spacer mb={12} />
               <Separator />
-              {planInfo.whatsIncluded.map((text) => (
+              {whatsIncluded.map((text) => (
                 <Box key={text}>
                   <Spacer mb={1} />
                   <Sans size="1" color={color("black50")}>
-                    {text}
+                    {text.trim()}
                   </Sans>
                 </Box>
               ))}
