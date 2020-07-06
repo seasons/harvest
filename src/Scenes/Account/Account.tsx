@@ -38,6 +38,8 @@ export const GET_USER = gql`
           stylePreferences {
             styles
             patterns
+            colors
+            brands
           }
         }
       }
