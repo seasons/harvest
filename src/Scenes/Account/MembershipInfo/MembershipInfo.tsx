@@ -12,23 +12,22 @@ import { PauseButtons } from "App/Components/Pause"
 
 export const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
-    paymentPlans(where: { status: "active" }) {
-      id
-      description
-      planID
-      status
-      name
-      price
-    }
     me {
       customer {
         id
-        plan
         status
         invoices {
           id
           subscriptionId
           dueDate
+        }
+        paymentPlan {
+          id
+          description
+          planID
+          status
+          name
+          price
         }
         membership {
           id
@@ -53,14 +52,9 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeArea()
   const { data } = useQuery(GET_MEMBERSHIP_INFO)
   const customer = data?.me?.customer
-  const customerPlan = customer?.plan
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
-  const paymentPlans = data?.paymentPlans
-
-  const plan = paymentPlans?.find((plan) => {
-    return plan.name === customerPlan
-  })
+  const plan = customer?.paymentPlan
 
   if (!plan) {
     return (
