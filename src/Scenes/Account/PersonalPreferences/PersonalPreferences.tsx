@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import { screenTrack } from "App/utils/track"
+import { Measurements } from "App/Scenes/CreateAccount/Undetermined"
 
 const GET_PREFERENCES = gql`
   query GetUserPreferences {
@@ -37,8 +38,7 @@ const GET_PREFERENCES = gql`
   }
 `
 
-export const AccountSection: React.FC<{ title: string; value: string | [string | number] }> = ({ title, value }) => {
-  console.log(title, value)
+export const AccountSection: React.FC<{ title: string; value: string | [string] }> = ({ title, value }) => {
   return (
     <Box key={title} px={2}>
       <Sans size="2">{title}</Sans>
@@ -85,8 +85,8 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
         sectionsArray.push({ title: "Height", value: `${feet} ft ${inches} in` })
       }
 
-      if (details.weight) {
-        sectionsArray.push({ title: "Weight", value: details.weight })
+      if (details.weight && details.weight?.length == 2) {
+        sectionsArray.push({ title: "Weight", value: `${details.weight[0]}-${details.weight[1]} lbs` })
       }
 
       if (details.bodyType) {
@@ -94,11 +94,19 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
       }
 
       if (details.topSizes) {
-        sectionsArray.push({ title: "Preferred top sizes", value: details.topSizes })
+        sectionsArray.push({
+          title: "Preferred top sizes",
+          value: details.topSizes
+            .sort((a, b) => Measurements.topSizes.indexOf(a) < Measurements.topSizes.indexOf(b))
+            .join(", "),
+        })
       }
 
       if (details.waistSizes) {
-        sectionsArray.push({ title: "Preferred waist sizes", value: `${details.waistSizes} in` })
+        sectionsArray.push({
+          title: "Preferred waist sizes",
+          value: `${details.waistSizes.sort((a, b) => a > b).join(", ")} in`,
+        })
       }
 
       if (details.averagePantLength) {

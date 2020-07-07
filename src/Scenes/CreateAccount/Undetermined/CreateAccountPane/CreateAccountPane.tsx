@@ -36,6 +36,8 @@ const SIGN_UP = gql`
         email
         firstName
         lastName
+        pushNotificationStatus
+        beamsToken
         roles
       }
       token
@@ -174,6 +176,10 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
         data: { signup: userSession },
       } = result
       signIn(userSession)
+      const beamsToken = userSession.user?.beamsToken
+      const roles = userSession?.user?.roles
+      const beamsData = { beamsToken, email, roles }
+      AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
       AsyncStorage.setItem("userSession", JSON.stringify(userSession))
       onSignUp()
     }

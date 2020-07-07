@@ -2,7 +2,7 @@ import React from "react"
 import { Box, Flex, Sans } from "App/Components"
 import { MembershipInfoIcon, PersonalPreferencesIcon, PaymentShippingIcon, ChevronIcon } from "Assets/icons"
 import { TouchableOpacity } from "react-native"
-import { Shirt, QuestionMark } from "Assets/svgs"
+import { QuestionMark } from "Assets/svgs"
 import { useTracking, Schema } from "App/utils/track"
 
 const lists = [
@@ -24,12 +24,11 @@ const lists = [
     link: "PaymentAndShipping",
     tracking: Schema.ActionNames.PaymentAndShippingTapped,
   },
-  { title: "Submit an item", icon: <Shirt />, link: "ProductRequest", tracking: Schema.ActionNames.SubmitAnItemTapped },
   { title: "FAQ", icon: <QuestionMark />, link: "Faq", tracking: Schema.ActionNames.FAQTapped },
 ]
 
 interface ProfileListProps {
-  navigation
+  navigation: any
 }
 
 export const ProfileList: React.FC<ProfileListProps> = ({ navigation }) => {

@@ -58,6 +58,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const lastName = data?.me?.user?.lastName
   const paymentPlans = data?.paymentPlans
 
+  console.log(data)
   const plan = paymentPlans?.find((plan) => {
     return plan.name === customerPlan
   })

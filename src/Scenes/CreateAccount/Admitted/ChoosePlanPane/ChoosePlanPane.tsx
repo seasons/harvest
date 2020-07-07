@@ -96,7 +96,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
           <PlanTile
             description="A monthly wardrobe refresh to make getting dressed more exciting. The must have."
             inputKey={Plan.Essential}
-            price={155}
+            price={125}
             shouldSelect={setSelectedPlan}
             selected={selectedPlan == Plan.Essential}
             subtitle="1 swap, 3 items per month"
@@ -105,7 +105,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
           <PlanTile
             description="Experience that new-clothes feeling every week."
             inputKey={Plan.AllAccess}
-            price={195}
+            price={175}
             shouldSelect={setSelectedPlan}
             selected={selectedPlan == Plan.AllAccess}
             subtitle="Unlimited swaps, 3 items at a time"
