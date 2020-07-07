@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PushNotificationStatus, UserRole } from "./globalTypes";
+import { CustomerStatus, OnboardingStep, PushNotificationStatus, UserRole } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetUser
@@ -21,18 +21,37 @@ export interface GetUser_me_customer_user {
 
 export interface GetUser_me_customer_detail_shippingAddress {
   __typename: "Location";
-  city: string;
-  state: string;
+  name: string | null;
+  address1: string | null;
+  address2: string | null;
+  zipCode: string;
+  city: string | null;
+  state: string | null;
+}
+
+export interface GetUser_me_customer_detail_stylePreferences {
+  __typename: "StylePreferences";
+  styles: string[];
+  patterns: string[];
+  colors: string[];
+  brands: string[];
 }
 
 export interface GetUser_me_customer_detail {
   __typename: "CustomerDetail";
+  height: number | null;
+  weight: number[];
+  topSizes: string[];
+  waistSizes: number[];
   shippingAddress: GetUser_me_customer_detail_shippingAddress | null;
+  stylePreferences: GetUser_me_customer_detail_stylePreferences | null;
 }
 
 export interface GetUser_me_customer {
   __typename: "Customer";
   id: string;
+  status: CustomerStatus | null;
+  onboardingSteps: OnboardingStep[];
   user: GetUser_me_customer_user;
   detail: GetUser_me_customer_detail | null;
 }

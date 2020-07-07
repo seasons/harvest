@@ -20,8 +20,8 @@ const GET_PREFERENCES = gql`
           weight
           bodyType
           averageSpend
-          averageTopSize
-          averageWaistSize
+          topSizes
+          waistSizes
           profession
           partyFrequency
           travelFrequency
@@ -37,7 +37,8 @@ const GET_PREFERENCES = gql`
   }
 `
 
-export const AccountSection: React.FC<{ title: string; value: string | [string] }> = ({ title, value }) => {
+export const AccountSection: React.FC<{ title: string; value: string | [string | number] }> = ({ title, value }) => {
+  console.log(title, value)
   return (
     <Box key={title} px={2}>
       <Sans size="2">{title}</Sans>
@@ -92,12 +93,12 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
         sectionsArray.push({ title: "Body type", value: details.bodyType })
       }
 
-      if (details.averageTopSize) {
-        sectionsArray.push({ title: "Average top size", value: details.averageTopSize })
+      if (details.topSizes) {
+        sectionsArray.push({ title: "Preferred top sizes", value: details.topSizes })
       }
 
-      if (details.averageWaistSize) {
-        sectionsArray.push({ title: "Average waist size", value: `${details.averageWaistSize} in` })
+      if (details.waistSizes) {
+        sectionsArray.push({ title: "Preferred waist sizes", value: `${details.waistSizes} in` })
       }
 
       if (details.averagePantLength) {

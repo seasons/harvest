@@ -1,5 +1,5 @@
 import { Box, Button, Container, Sans, Spacer, TextInput } from "App/Components"
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { KeyboardAvoidingView, Keyboard } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 
@@ -7,7 +7,7 @@ import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
-const START_VERIFICATION = gql`
+export const START_VERIFICATION = gql`
   mutation startSMSVerification($phoneNumber: String!) {
     startSMSVerification(phoneNumber: $phoneNumber)
   }

@@ -12,11 +12,11 @@ export interface GetUserPreferences_me_customer_detail {
   phoneNumber: string | null;
   birthday: any | null;
   height: number | null;
-  weight: string | null;
+  weight: number[];
   bodyType: string | null;
   averageSpend: string | null;
-  averageTopSize: string | null;
-  averageWaistSize: string | null;
+  topSizes: string[];
+  waistSizes: number[];
   profession: string | null;
   partyFrequency: string | null;
   travelFrequency: string | null;

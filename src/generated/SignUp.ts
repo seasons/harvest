@@ -3,34 +3,38 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UserRole, PushNotificationStatus } from "./globalTypes";
+import { UserRole } from "./globalTypes";
 
 // ====================================================
-// GraphQL mutation operation: LogIn
+// GraphQL mutation operation: SignUp
 // ====================================================
 
-export interface LogIn_login_user {
+export interface SignUp_signup_user {
   __typename: "User";
+  id: string;
   email: string;
   firstName: string;
   lastName: string;
   roles: UserRole[];
-  pushNotificationStatus: PushNotificationStatus | null;
 }
 
-export interface LogIn_login {
+export interface SignUp_signup {
   __typename: "AuthPayload";
-  user: LogIn_login_user;
+  user: SignUp_signup_user;
   token: string;
   refreshToken: string;
   expiresIn: number;
 }
 
-export interface LogIn {
-  login: LogIn_login;
+export interface SignUp {
+  signup: SignUp_signup;
 }
 
-export interface LogInVariables {
+export interface SignUpVariables {
   email: string;
   password: string;
+  firstName: string;
+  lastName: string;
+  zipCode: string;
+  isoDateOfBirth: any;
 }

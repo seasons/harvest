@@ -9,12 +9,7 @@ import { animated, useSpring } from "react-spring"
 import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-
-const START_VERIFICATION = gql`
-  mutation startSMSVerification($phoneNumber: String!) {
-    startSMSVerification(phoneNumber: $phoneNumber)
-  }
-`
+import { START_VERIFICATION } from "../SendCodePane/"
 
 const CHECK_VERIFICATION = gql`
   mutation checkSMSVerification($code: String!) {
@@ -48,6 +43,12 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
   const errorPopUpContext = usePopUpContext()
   const showErrorPopUp = errorPopUpContext.showPopUp
   const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const verifyCodeErrorPopUpData = {
+    title: "Oops! Try again!",
+    note: "There was an issue sending the verification code. Double check your phone number and retry.",
+    buttonText: "Close",
+    onClose: () => hideErrorPopUp(),
+  }
 
   const [startVerification] = useMutation(START_VERIFICATION, {
     onCompleted: () => {
@@ -55,13 +56,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
     },
     onError: (err) => {
       console.log("****\n\n", err, "\n\n****")
-      const popUpData = {
-        title: "Oops! Try again!",
-        note: "There was an issue sending the verification code. Double check your phone number and retry.",
-        buttonText: "Close",
-        onClose: () => hideErrorPopUp(),
-      }
-      showErrorPopUp(popUpData)
+      showErrorPopUp(verifyCodeErrorPopUpData)
       setIsMutating(false)
     },
   })
@@ -138,7 +133,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
       if (status === "Approved") {
         onVerifyPhone()
       } else {
-        showErrorPopUp(errorPopUpData)
+        showErrorPopUp(verifyCodeErrorPopUpData)
       }
     }
   }
