@@ -19,6 +19,7 @@ interface TriagePaneProps {
 
 enum CheckStatus {
   Waiting,
+  AwaitingRetry,
   Checking,
   Checked,
 }
@@ -35,7 +36,7 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
     buttonText: "Retry",
     onClose: () => {
       hideErrorPopUp()
-      setCheckStatus(CheckStatus.Waiting)
+      setCheckStatus(CheckStatus.AwaitingRetry)
       triageCustomer()
     },
   }
@@ -60,7 +61,7 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
   }, [check, checkStatus])
 
   const triageCustomer = async () => {
-    if (checkStatus == CheckStatus.Checking) {
+    if (checkStatus == CheckStatus.Checking || checkStatus === CheckStatus.Checked) {
       return
     }
 

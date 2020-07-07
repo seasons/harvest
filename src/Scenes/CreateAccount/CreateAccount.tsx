@@ -6,6 +6,7 @@ import { Modal, FlatList, Dimensions } from "react-native"
 import { CreateAccountPane, SendCodePane, VerifyCodePane, GetMeasurementsPane, TriagePane } from "./Undetermined"
 import { ChoosePlanPane, ChargebeeCheckoutPane, WelcomePane } from "./Admitted"
 import { WaitlistedPane } from "./Waitlisted"
+import { ProcessingPaymentPane } from "./Admitted/ProcessingPaymentPane/ProcessingPaymentPane"
 
 interface CreateAccountProps {
   navigation: any
@@ -30,6 +31,7 @@ export enum State {
 
   ChoosePlan,
   Checkout,
+  ProcessingPayment,
   Welcome,
 
   Waitlisted,
@@ -43,7 +45,7 @@ const statesFor = (userState: UserState): State[] => {
     case UserState.Undetermined:
       return commonStates
     case UserState.Admitted:
-      return commonStates.concat([State.ChoosePlan, State.Checkout, State.Welcome])
+      return commonStates.concat([State.ChoosePlan, State.Checkout, State.ProcessingPayment, State.Welcome])
     case UserState.Waitlisted:
       return commonStates.concat([State.Waitlisted])
   }
@@ -59,7 +61,13 @@ const sliceArray: <T>(array: T[], afterValue: T) => T[] = (array, afterValue) =>
 }
 
 // States in which to hide the close button
-const statesWithoutCloseButton = [State.Triage, State.Checkout, State.Welcome, State.Waitlisted]
+const statesWithoutCloseButton = [
+  State.Triage,
+  State.Checkout,
+  State.ProcessingPayment,
+  State.Welcome,
+  State.Waitlisted,
+]
 export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route }) => {
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
   const initialUserState: UserState = get(route?.params, "initialUserState", UserState.Undetermined)
@@ -124,6 +132,14 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route 
               setCheckoutUrl(checkoutUrl)
               setNextState()
             }}
+          />
+        )
+        break
+      case State.ProcessingPayment:
+        pane = (
+          <ProcessingPaymentPane
+            onProcessingComplete={setNextState}
+            process={currentState === State.ProcessingPayment}
           />
         )
         break
