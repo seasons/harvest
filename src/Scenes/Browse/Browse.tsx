@@ -219,7 +219,7 @@ export const Browse = screenTrack()((props: any) => {
               if (!loading && !reachedEnd && products?.length) {
                 tracking.trackEvent({
                   actionName: Schema.ActionNames.BrowsePagePaginated,
-                  actionType: Schema.ActionTypes.Tap,
+                  actionType: Schema.ActionTypes.Swipe,
                   pageNumber: Math.ceil(products.length / PAGE_LENGTH) + 1,
                 })
                 fetchMore({
