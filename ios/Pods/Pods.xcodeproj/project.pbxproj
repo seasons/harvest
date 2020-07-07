@@ -2322,12 +2322,12 @@
 			remoteGlobalIDString = 7ACAA9BE580DD31A5CB9D97C45D9492D;
 			remoteInfo = "React-Core";
 		};
-		36B6EDEF35DD554A13F8274C3FDAD6B9 /* PBXContainerItemProxy */ = {
+		37DCC97D4E7F14B92267CE288E4235A1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1BEE828C124E6416179B904A9F66D794;
-			remoteInfo = React;
+			remoteGlobalIDString = 61EDDAFB8F06CB21BD34A8D4F22B7756;
+			remoteInfo = A0Auth0;
 		};
 		37DCC97D4E7F14B92267CE288E4235A1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2602,6 +2602,27 @@
 			remoteGlobalIDString = 897EF6A99176326E24F51E2F2103828C;
 			remoteInfo = UMReactNativeAdapter;
 		};
+		6AE64C51782213C7B921256B0BB82DC8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 89F573A6B1292B3B2296B2206BFDC3D7;
+			remoteInfo = RNCAsyncStorage;
+		};
+		6DA7DB98E2926A01212E8268D8370413 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 11989A5E568B3B69655EE0C13DCDA3F9;
+			remoteInfo = "React-RCTActionSheet";
+		};
+		6E50E65D44FCD39DBFC23BF963BA65FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 897EF6A99176326E24F51E2F2103828C;
+			remoteInfo = UMReactNativeAdapter;
+		};
 		6ED1BE32087F87E4A5FCD423C3A8CF4A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
@@ -2669,8 +2690,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = FA877ADC442CB19CF61793D234C8B131;
-			remoteInfo = "React-jsi";
+			remoteGlobalIDString = 2AB2EF542954AB1C999E03BFEF8DE806;
+			remoteInfo = DoubleConversion;
 		};
 		79D220B8F7B05AEB506311A060B00FAD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -3187,8 +3208,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1953860EA9853AA2BC8022B242F08512;
-			remoteInfo = SDWebImageWebPCoder;
+			remoteGlobalIDString = B6422EB0A585557ED42A07B5D023BD98;
+			remoteInfo = "react-native-config";
 		};
 		D4CBAA8645242B0E55B5FA3BF124CB2A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -7364,7 +7385,8 @@
 			children = (
 				5C0FEE1ACBBCEFBC54C088A4423F24E3 /* FBLazyVector.podspec */,
 			);
-			name = Pod;
+			name = RCTTypeSafety;
+			path = "../../node_modules/react-native/Libraries/TypeSafety";
 			sourceTree = "<group>";
 		};
 		3E1699BCA11587854884E8DA705D77D4 /* react-native-pusher-push-notifications */ = {
@@ -7514,7 +7536,8 @@
 			children = (
 				DC97AE65321EA4C1DBD4BF90B979CB2A /* React-jsinspector.podspec */,
 			);
-			name = Pod;
+			name = "Support Files";
+			path = "../../../ios/Pods/Target Support Files/RNDateTimePicker";
 			sourceTree = "<group>";
 		};
 		4531783BC87FC84F1A3C417D6EE1C386 /* Compatibility */ = {
@@ -7597,7 +7620,8 @@
 			children = (
 				F9863C1A6E1395975D457DB64EB00A60 /* EXFileSystem.podspec */,
 			);
-			name = Pod;
+			name = "React-CoreModules";
+			path = "../../node_modules/react-native/React/CoreModules";
 			sourceTree = "<group>";
 		};
 		4871D929B9651C5E6F044B36CE0255F5 /* RNSVG */ = {
@@ -10769,7 +10793,8 @@
 			children = (
 				C7A0335A38CCF84502EF7F09760E007E /* React-jsi.podspec */,
 			);
-			name = Pod;
+			name = "Support Files";
+			path = "../../../ios/Pods/Target Support Files/UMSensorsInterface";
 			sourceTree = "<group>";
 		};
 		E39AA0552AC2D0F10C4192E58DF09D1E /* CxxBridge */ = {
@@ -10892,7 +10917,7 @@
 				D65383836B0383FAFFACF147BCEA33E3 /* README.md */,
 				7366009219192BCC8F78929122C6CC24 /* RNPermissions.podspec */,
 			);
-			name = Pod;
+			name = DevSupport;
 			sourceTree = "<group>";
 		};
 		EAE68BB4A295E7B3C584920627A7693D /* DevSupport */ = {
