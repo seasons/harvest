@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Plan, CustomerStatus } from "./globalTypes";
+import { CustomerStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetMembershipInfo
@@ -14,6 +14,16 @@ export interface GetMembershipInfo_me_customer_invoices {
   id: string;
   subscriptionId: string | null;
   dueDate: any | null;
+}
+
+export interface GetMembershipInfo_me_customer_paymentPlan {
+  __typename: "PaymentPlan";
+  id: string;
+  description: string | null;
+  planID: string;
+  status: string | null;
+  name: string | null;
+  price: number | null;
 }
 
 export interface GetMembershipInfo_me_customer_membership_pauseRequests {
@@ -33,9 +43,9 @@ export interface GetMembershipInfo_me_customer_membership {
 export interface GetMembershipInfo_me_customer {
   __typename: "Customer";
   id: string;
-  plan: Plan | null;
   status: CustomerStatus | null;
   invoices: (GetMembershipInfo_me_customer_invoices | null)[] | null;
+  paymentPlan: GetMembershipInfo_me_customer_paymentPlan | null;
   membership: GetMembershipInfo_me_customer_membership | null;
 }
 

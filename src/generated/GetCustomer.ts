@@ -70,12 +70,12 @@ export interface GetCustomer_me_bag {
 
 export interface GetCustomer_me_customer_detail_shippingAddress {
   __typename: "Location";
-  slug: string;
-  name: string;
-  address1: string;
+  slug: string | null;
+  name: string | null;
+  address1: string | null;
   address2: string | null;
-  city: string;
-  state: string;
+  city: string | null;
+  state: string | null;
   zipCode: string;
 }
 
