@@ -89,6 +89,7 @@ export interface GetProduct_product_brand_products_variants {
 export interface GetProduct_product_brand_products {
   __typename: "Product";
   id: string;
+  type: ProductType | null;
   images: GetProduct_product_brand_products_images[];
   brand: GetProduct_product_brand_products_brand;
   variants: GetProduct_product_brand_products_variants[] | null;
