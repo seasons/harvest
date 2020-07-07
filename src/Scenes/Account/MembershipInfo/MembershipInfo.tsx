@@ -56,8 +56,6 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const lastName = data?.me?.user?.lastName
   const plan = customer?.paymentPlan
 
-  console.log("data", data)
-
   if (!plan) {
     return (
       <>
