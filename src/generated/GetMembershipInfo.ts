@@ -9,6 +9,16 @@ import { Plan, CustomerStatus } from "./globalTypes";
 // GraphQL query operation: GetMembershipInfo
 // ====================================================
 
+export interface GetMembershipInfo_paymentPlans {
+  __typename: "PaymentPlan";
+  id: string;
+  description: string | null;
+  planID: string;
+  status: string | null;
+  name: string | null;
+  price: number | null;
+}
+
 export interface GetMembershipInfo_me_customer_invoices {
   __typename: "Invoice";
   id: string;
@@ -53,5 +63,6 @@ export interface GetMembershipInfo_me {
 }
 
 export interface GetMembershipInfo {
+  paymentPlans: (GetMembershipInfo_paymentPlans | null)[] | null;
   me: GetMembershipInfo_me | null;
 }

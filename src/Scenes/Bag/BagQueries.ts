@@ -61,6 +61,7 @@ export const GET_BAG = gql`
         shipped
         createdAt
         status
+        phase
         updatedAt
         sentPackage {
           shippingLabel {

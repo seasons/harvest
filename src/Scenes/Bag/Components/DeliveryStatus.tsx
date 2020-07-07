@@ -23,21 +23,38 @@ export const DeliveryStatus: React.FC<{
 
   let step
   let statusText = ""
+  let statusColor = color("lightGreen")
 
-  if (status === "Delivered") {
-    statusText = "Delivered"
-    step = 3
-  } else if (status === "Shipped") {
-    statusText = "Shipped"
-    step = 2
-  } else if (status === "Packed") {
-    statusText = "Order being prepared"
-    step = 1
-  } else if (status === "Queued") {
-    statusText = "Order received"
-    step = 0
+  if (activeReservation.phase === "CustomerToBusiness") {
+    statusColor = color("blue100")
+    if (status === "Delivered") {
+      statusText = "Returned"
+      step = 3
+    } else if (status === "Shipped") {
+      statusText = "In-transit"
+      step = 2
+    } else if (status === "Packed") {
+      statusText = "Received by UPS"
+      step = 1
+    } else {
+      return null
+    }
   } else {
-    return null
+    if (status === "Delivered") {
+      statusText = "Delivered"
+      step = 3
+    } else if (status === "Shipped") {
+      statusText = "Shipped"
+      step = 2
+    } else if (status === "Packed") {
+      statusText = "Order being prepared"
+      step = 1
+    } else if (status === "Queued") {
+      statusText = "Order received"
+      step = 0
+    } else {
+      return null
+    }
   }
 
   return (
@@ -48,14 +65,14 @@ export const DeliveryStatus: React.FC<{
       <Spacer mb={1} />
       <Flex flexDirection="row" flexWrap="nowrap" px={1.5} width="100%">
         {[...Array(3)].map((_pip, index) => {
-          const backgroundColor = index < step ? color("lightGreen") : color("black10")
+          const backgroundColor = index < step ? statusColor : color("black10")
           return <Pip backgroundColor={backgroundColor} mx={0.5} key={index} />
         })}
       </Flex>
       <Spacer mb={1} />
       <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" px={2}>
         <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
-          <GreenDot />
+          <GreenDot statusColor={statusColor} />
           <Spacer mr={1} />
           <Sans size="1">{statusText}</Sans>
         </Flex>
@@ -78,11 +95,11 @@ export const DeliveryStatus: React.FC<{
   )
 }
 
-const GreenDot = styled(Box)`
+const GreenDot = styled(Box)<{ statusColor: string }>`
   height: 8;
   width: 8;
   border-radius: 4;
-  background-color: ${color("lightGreen")};
+  background-color: ${(p) => p.statusColor};
 `
 
 const Pip = styled(Box)<{ backgroundColor: string }>`
