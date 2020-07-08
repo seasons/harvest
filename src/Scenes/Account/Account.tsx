@@ -7,6 +7,7 @@ import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
 import { Image, ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
+import * as Sentry from "@sentry/react-native"
 
 import { BottomList, CustomerStatus, OnboardingChecklist, ProfileList } from "./Lists"
 import { State, UserState } from "../CreateAccount/CreateAccount"
@@ -71,6 +72,7 @@ export const Account = screenTrack()(({ navigation }) => {
 
   if (error) {
     console.log("Error Account.tsx", error)
+    Sentry.captureException(error)
   }
 
   const customer = data?.me?.customer
@@ -150,7 +152,7 @@ export const Account = screenTrack()(({ navigation }) => {
       <Animatable.View animation="fadeIn" duration={300}>
         <ScrollView>
           <Box px={2} py={4}>
-            {firstName && lastName ? (
+            {!!firstName && !!lastName ? (
               <Sans size="3" color="black100">
                 {`${firstName} ${lastName}`}
               </Sans>
@@ -159,7 +161,7 @@ export const Account = screenTrack()(({ navigation }) => {
                 <Skeleton width={180} height={20} />
               </Box>
             )}
-            {email ? (
+            {!!email ? (
               <Sans size="2" color="black50">
                 {email}
               </Sans>

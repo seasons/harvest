@@ -69,7 +69,7 @@ export const EditShippingAddress: React.FC<{
       navigation.goBack()
     },
     onError: (err) => {
-      console.log("****\n\n", err, "\n\n****")
+      console.log("Error EditShippingAddress.tsx", err)
       const popUpData = {
         title: "Oops! Try again!",
         note: "Double check that your address is valid and try again.",

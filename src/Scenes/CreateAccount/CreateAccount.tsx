@@ -4,9 +4,8 @@ import React, { useRef, useState, MutableRefObject, useEffect } from "react"
 import { Modal, FlatList, Dimensions } from "react-native"
 
 import { CreateAccountPane, SendCodePane, VerifyCodePane, GetMeasurementsPane, TriagePane } from "./Undetermined"
-import { ChoosePlanPane, ChargebeeCheckoutPane, WelcomePane } from "./Admitted"
+import { ChoosePlanPane, ChargebeeCheckoutPane, ProcessingPaymentPane, WelcomePane } from "./Admitted"
 import { WaitlistedPane } from "./Waitlisted"
-import { ProcessingPaymentPane } from "./Admitted/ProcessingPaymentPane/ProcessingPaymentPane"
 
 interface CreateAccountProps {
   navigation: any

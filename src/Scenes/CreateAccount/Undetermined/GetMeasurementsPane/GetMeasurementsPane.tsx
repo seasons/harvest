@@ -61,7 +61,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
       onGetMeasurements()
     },
     onError: (err) => {
-      console.log("****\n\n", err, "\n\n****")
+      console.log("Error GetMeasurementsPane.tsx", err)
       const popUpData = {
         title: "Oops! Try again!",
         note: "There was an issue sending your measurements and sizing. Please retry.",

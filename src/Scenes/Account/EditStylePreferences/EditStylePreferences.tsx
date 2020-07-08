@@ -67,7 +67,7 @@ export const EditStylePreferences: React.FC<{
       navigation.goBack()
     },
     onError: (err) => {
-      console.log("****\n\n", err, "\n\n****")
+      console.log("Error EditStylePreferences.tsx", err)
       const popUpData = {
         title: "Oops! Try again!",
         note: "There seems to have been an issue saving your preferences. Please try again.",
@@ -157,7 +157,7 @@ export const EditStylePreferences: React.FC<{
             ]}
             width={(windowWidth - 16 * 2 - 8) / 2}
           >
-            {item.decoration && (
+            {!!item.decoration?.color && (
               <>
                 <Box backgroundColor={item.decoration?.color} width={10} height={10} borderRadius={2} />
                 <Spacer mr={1} />

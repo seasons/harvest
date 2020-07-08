@@ -41,20 +41,20 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
 
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
-  const verifyCodeErrorPopUpData = {
-    title: "Oops! Try again!",
-    note: "There was an issue sending the verification code. Double check your phone number and retry.",
-    buttonText: "Close",
-    onClose: hidePopUp,
-  }
 
   const [startVerification] = useMutation(START_VERIFICATION, {
     onCompleted: () => {
       setIsMutating(false)
     },
     onError: (err) => {
-      console.log("****\n\n", err, "\n\n****")
-      showPopUp(verifyCodeErrorPopUpData)
+      console.log("Error VerifyCodePane.tsx in startVerification", err)
+      const popUpData = {
+        title: "Oops! Try again!",
+        note: "There was an issue sending the verification code. Double check your phone number and retry.",
+        buttonText: "Close",
+        onClose: hidePopUp,
+      }
+      showPopUp(popUpData)
       setIsMutating(false)
     },
   })
@@ -64,10 +64,10 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
       setIsMutating(false)
     },
     onError: (err) => {
-      console.log("****\n\n", err, "\n\n****")
+      console.log("Error VerifyCodePane.tsx in checkVerification", err)
       const popUpData = {
         title: "Oops! Try again!",
-        note: "Double check the code and retry. We can resend you the code if you need.",
+        note: "There was an issue checking the verification code. Please retry.",
         buttonText: "Close",
         onClose: hidePopUp,
       }
@@ -131,7 +131,13 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
       if (status === "Approved") {
         onVerifyPhone()
       } else {
-        showPopUp(verifyCodeErrorPopUpData)
+        const popUpData = {
+          title: "Oops! Try again!",
+          note: "Double check the verification code and retry. We can resend you the code if you need.",
+          buttonText: "Close",
+          onClose: hidePopUp,
+        }
+        showPopUp(popUpData)
       }
     }
   }

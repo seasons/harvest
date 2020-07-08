@@ -1,6 +1,7 @@
-import { Container, Box, Sans, Spacer, Flex } from "App/Components"
+import { Container, Sans, Spacer, Flex } from "App/Components"
 import LottieView from "lottie-react-native"
 import React, { useEffect, useState } from "react"
+import * as Sentry from "@sentry/react-native"
 
 import gql from "graphql-tag"
 import { useLazyQuery } from "react-apollo"
@@ -63,7 +64,8 @@ export const ProcessingPaymentPane: React.FC<ProcessingPaymentPaneProps> = ({ pr
       }
     },
     onError: (err) => {
-      console.log("****\n\n", err, "\n\n****")
+      console.log("Error ProcessingPaymentPane.tsx", err)
+      Sentry.captureException(err)
       showPopUp(errorPopUpData)
     },
   })

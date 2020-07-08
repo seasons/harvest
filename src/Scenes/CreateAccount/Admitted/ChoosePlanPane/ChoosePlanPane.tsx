@@ -4,6 +4,7 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import React, { useState } from "react"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
+import * as Sentry from "@sentry/react-native"
 
 import gql from "graphql-tag"
 import { useLazyQuery } from "react-apollo"
@@ -48,7 +49,8 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
       }
     },
     onError: (err) => {
-      console.log("****\n\n", err, "\n\n****")
+      console.log("Error ChoosePlanPane.tsx", err)
+      Sentry.captureException(err)
       const popUpData = {
         title: "Oops! Try again!",
         note: "There was an issue choosing your plan. Please retry.",

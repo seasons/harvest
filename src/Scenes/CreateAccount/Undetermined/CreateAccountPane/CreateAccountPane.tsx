@@ -132,7 +132,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
       setIsMutating(false)
     },
     onError: (err) => {
-      console.log("****\n\n", err, "\n\n****")
+      console.log("Error CreateAccountPane.tsx", err)
       const popUpData = {
         title: "Oops! Try again!",
         note:

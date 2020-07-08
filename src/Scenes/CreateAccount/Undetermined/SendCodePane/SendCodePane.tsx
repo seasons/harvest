@@ -30,7 +30,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
       setIsMutating(false)
     },
     onError: (err) => {
-      console.log("****\n\n", err, "\n\n****")
+      console.log("Error SendCodePane.tsx", err)
       const popUpData = {
         title: "Oops! Try again!",
         note: "There was an issue sending the verification code. Double check your phone number and retry.",
