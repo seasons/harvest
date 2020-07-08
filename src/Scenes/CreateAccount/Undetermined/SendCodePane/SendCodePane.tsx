@@ -23,9 +23,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
   const insets = useSafeArea()
 
   const [isMutating, setIsMutating] = useState(false)
-  const errorPopUpContext = usePopUpContext()
-  const showErrorPopUp = errorPopUpContext.showPopUp
-  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const { showPopUp, hidePopUp } = usePopUpContext()
 
   const [startVerification] = useMutation(START_VERIFICATION, {
     onCompleted: () => {
@@ -37,9 +35,9 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
         title: "Oops! Try again!",
         note: "There was an issue sending the verification code. Double check your phone number and retry.",
         buttonText: "Close",
-        onClose: () => hideErrorPopUp(),
+        onClose: hidePopUp,
       }
-      showErrorPopUp(popUpData)
+      showPopUp(popUpData)
       setIsMutating(false)
     },
   })

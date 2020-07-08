@@ -30,6 +30,8 @@ const UPDATE_STYLE_PREFERENCES = gql`
   }
 `
 
+const windowWidth = Dimensions.get("window").width
+
 export const EditStylePreferences: React.FC<{
   navigation: any
   route: any
@@ -40,6 +42,8 @@ export const EditStylePreferences: React.FC<{
   const initialColors = stylePreferences?.colors || []
   const initialBrands = stylePreferences?.brands || []
 
+  // The values selected by the user are stored in the server. In this block, get the index of each `value` in
+  // the `sections` array. Assumes that the order of the `sections` is: styles, patterns, colors, brands.
   const initialSelectedItemIndices = [initialStyles, initialPatterns, initialColors, initialBrands].flatMap(
     (items: any[], index: number) => {
       const titles = sections[index].items.map((item) => item.title)
@@ -56,9 +60,7 @@ export const EditStylePreferences: React.FC<{
   const insets = useSafeArea()
 
   const [isMutating, setIsMutating] = useState(false)
-  const errorPopUpContext = usePopUpContext()
-  const showErrorPopUp = errorPopUpContext.showPopUp
-  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const [updateStylePreferences] = useMutation(UPDATE_STYLE_PREFERENCES, {
     onCompleted: () => {
       setIsMutating(false)
@@ -70,9 +72,9 @@ export const EditStylePreferences: React.FC<{
         title: "Oops! Try again!",
         note: "There seems to have been an issue saving your preferences. Please try again.",
         buttonText: "Close",
-        onClose: () => hideErrorPopUp(),
+        onClose: () => hidePopUp(),
       }
-      showErrorPopUp(popUpData)
+      showPopUp(popUpData)
       setIsMutating(false)
     },
   })
@@ -107,14 +109,14 @@ export const EditStylePreferences: React.FC<{
         <Spacer mb={2} />
         <Spacer mb={0.5} />
         <Flex flexWrap="wrap" flexDirection="row" width="100%" justifyContent="space-between">
-          {items.map((item, itemIndex) => renderItem(item, { sectionIndex, itemIndex }))}
+          {items?.map((item, itemIndex) => renderItem(item, { sectionIndex, itemIndex }))}
         </Flex>
       </Flex>
     )
   }
 
   const renderItem = (item: Item, index: Index) => {
-    const isSelected = selectedItemIndices.some((i) => areIndicesEqual(i, index))
+    const isSelected = selectedItemIndices?.some((i) => areIndicesEqual(i, index))
     const shadowStyle = isSelected
       ? {
           shadowColor: color("black100"),
@@ -153,7 +155,7 @@ export const EditStylePreferences: React.FC<{
               },
               shadowStyle,
             ]}
-            width={(Dimensions.get("window").width - 16 * 2 - 8) / 2}
+            width={(windowWidth - 16 * 2 - 8) / 2}
           >
             {item.decoration && (
               <>

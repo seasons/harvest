@@ -27,17 +27,14 @@ enum CheckStatus {
 export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete }) => {
   const [checkStatus, setCheckStatus] = useState(CheckStatus.Waiting)
 
-  const errorPopUpContext = usePopUpContext()
-  const showErrorPopUp = errorPopUpContext.showPopUp
-  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const errorPopUpData = {
     title: "Oops! Try again!",
     note: "There was an error communicating with our server. Please try again.",
     buttonText: "Retry",
     onClose: () => {
-      hideErrorPopUp()
+      hidePopUp()
       setCheckStatus(CheckStatus.AwaitingRetry)
-      triageCustomer()
     },
   }
 
@@ -50,12 +47,12 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
     },
     onError: (err) => {
       console.log("****\n\n", err, "\n\n****")
-      showErrorPopUp(errorPopUpData)
+      showPopUp(errorPopUpData)
     },
   })
 
   useEffect(() => {
-    if (checkStatus === CheckStatus.Waiting && check) {
+    if ((checkStatus === CheckStatus.Waiting || checkStatus === CheckStatus.AwaitingRetry) && check) {
       triageCustomer()
     }
   }, [check, checkStatus])

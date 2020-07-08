@@ -1,14 +1,56 @@
 import { color } from "App/utils"
 import React, { useState, useEffect, MutableRefObject, useRef } from "react"
-import { TextInput as RNTextInput, ViewStyle, KeyboardType } from "react-native"
+import { KeyboardType, TextInput as RNTextInput, TouchableWithoutFeedback, ViewStyle } from "react-native"
 import { animated, useSpring } from "react-spring"
 
 import { Box, Spacer } from "./"
-import { DisplayState, TextInputVariant, defaultVariant, getColorsForVariant } from "./BorderedTextInput"
+import { themeProps } from "./Theme"
 import { fontFamily, Sans } from "./Typography"
-import { TouchableWithoutFeedback } from "react-native-gesture-handler"
+// import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 
-export { DisplayState, TextInputVariant, defaultVariant, getColorsForVariant }
+export enum DisplayState {
+  Active = "active",
+  Inactive = "inactive",
+}
+
+export type TextInputVariant = "light" | "dark"
+export const defaultVariant: TextInputVariant = "light"
+
+export function getColorsForVariant(variant: TextInputVariant) {
+  const {
+    colors: { black100, white100, black50, black10 },
+  } = themeProps
+
+  switch (variant) {
+    case "light":
+      return {
+        active: {
+          backgroundColor: white100,
+          borderColor: black100,
+          color: black100,
+        },
+        inactive: {
+          backgroundColor: white100,
+          borderColor: black10,
+          color: black50,
+        },
+      }
+    case "dark":
+      return {
+        active: {
+          backgroundColor: black100,
+          borderColor: white100,
+          color: white100,
+        },
+        inactive: {
+          backgroundColor: black100,
+          borderColor: black10,
+          color: white100,
+        },
+      }
+    default:
+  }
+}
 
 /////////////////////////////////////////////////////////
 // Note: Any styling changes here should also appear in
@@ -83,12 +125,14 @@ export const TextInput: React.FC<TextInputProps> = ({
       }}
     >
       <TouchableWithoutFeedback onPress={() => textInputRef.current?.focus()}>
-        {headerText ? (
-          <Sans size="1" color={placeholderColor}>
-            {headerText}
-          </Sans>
-        ) : null}
-        <Spacer height={10} />
+        <Box>
+          {headerText ? (
+            <Sans size="1" color={placeholderColor}>
+              {headerText}
+            </Sans>
+          ) : null}
+          <Spacer height={10} />
+        </Box>
       </TouchableWithoutFeedback>
       <RNTextInput
         autoCapitalize={autoCapitalize}

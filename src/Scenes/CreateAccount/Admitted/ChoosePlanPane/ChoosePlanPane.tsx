@@ -39,9 +39,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
   const insets = useSafeArea()
 
   const [isMutating, setIsMutating] = useState(false)
-  const errorPopUpContext = usePopUpContext()
-  const showErrorPopUp = errorPopUpContext.showPopUp
-  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const [runQuery, { data }] = useLazyQuery(CHARGEBEE_CHECKOUT, {
     onCompleted: () => {
       setIsMutating(false)
@@ -55,9 +53,9 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
         title: "Oops! Try again!",
         note: "There was an issue choosing your plan. Please retry.",
         buttonText: "Close",
-        onClose: () => hideErrorPopUp(),
+        onClose: hidePopUp,
       }
-      showErrorPopUp(popUpData)
+      showPopUp(popUpData)
       setIsMutating(false)
     },
   })

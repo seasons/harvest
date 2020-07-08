@@ -89,9 +89,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
   const insets = useSafeArea()
 
-  const errorPopUpContext = usePopUpContext()
-  const showErrorPopUp = errorPopUpContext.showPopUp
-  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const { signIn } = useAuthContext()
 
   // Keyboard handling
@@ -145,9 +143,9 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
         note:
           "There was an issue creating your account. Double check your details and retry. Note: You cannot use an email that is already linked to an account.",
         buttonText: "Close",
-        onClose: () => hideErrorPopUp(),
+        onClose: hidePopUp,
       }
-      showErrorPopUp(popUpData)
+      showPopUp(popUpData)
       setIsMutating(false)
     },
   })

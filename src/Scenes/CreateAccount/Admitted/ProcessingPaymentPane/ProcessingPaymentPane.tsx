@@ -33,15 +33,13 @@ enum CheckStatus {
 export const ProcessingPaymentPane: React.FC<ProcessingPaymentPaneProps> = ({ process, onProcessingComplete }) => {
   const [checkStatus, setCheckStatus] = useState(CheckStatus.Waiting)
 
-  const errorPopUpContext = usePopUpContext()
-  const showErrorPopUp = errorPopUpContext.showPopUp
-  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const errorPopUpData = {
     title: "Oops! Try again!",
     note: "There was an error communicating with our server. Please try again.",
     buttonText: "Retry",
     onClose: () => {
-      hideErrorPopUp()
+      hidePopUp()
       runQuery()
     },
   }
@@ -66,7 +64,7 @@ export const ProcessingPaymentPane: React.FC<ProcessingPaymentPaneProps> = ({ pr
     },
     onError: (err) => {
       console.log("****\n\n", err, "\n\n****")
-      showErrorPopUp(errorPopUpData)
+      showPopUp(errorPopUpData)
     },
   })
 

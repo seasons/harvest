@@ -40,14 +40,12 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
   })
 
   const [isMutating, setIsMutating] = useState(false)
-  const errorPopUpContext = usePopUpContext()
-  const showErrorPopUp = errorPopUpContext.showPopUp
-  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const verifyCodeErrorPopUpData = {
     title: "Oops! Try again!",
     note: "There was an issue sending the verification code. Double check your phone number and retry.",
     buttonText: "Close",
-    onClose: () => hideErrorPopUp(),
+    onClose: hidePopUp,
   }
 
   const [startVerification] = useMutation(START_VERIFICATION, {
@@ -56,7 +54,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
     },
     onError: (err) => {
       console.log("****\n\n", err, "\n\n****")
-      showErrorPopUp(verifyCodeErrorPopUpData)
+      showPopUp(verifyCodeErrorPopUpData)
       setIsMutating(false)
     },
   })
@@ -71,9 +69,9 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
         title: "Oops! Try again!",
         note: "Double check the code and retry. We can resend you the code if you need.",
         buttonText: "Close",
-        onClose: () => hideErrorPopUp(),
+        onClose: hidePopUp,
       }
-      showErrorPopUp(popUpData)
+      showPopUp(popUpData)
       setIsMutating(false)
     },
   })
@@ -107,9 +105,9 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
         title: "We sent you a code",
         note: "Check your messages for the code and enter it here.",
         buttonText: "Close",
-        onClose: () => hideErrorPopUp(),
+        onClose: hidePopUp,
       }
-      showErrorPopUp(popUpData)
+      showPopUp(popUpData)
     }
   }
 
@@ -133,7 +131,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
       if (status === "Approved") {
         onVerifyPhone()
       } else {
-        showErrorPopUp(verifyCodeErrorPopUpData)
+        showPopUp(verifyCodeErrorPopUpData)
       }
     }
   }
@@ -168,7 +166,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
       </Box>
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom, 16)}>
         <Flex pb={insets.bottom + 16} px={2} flexDirection="row">
-          {showBackButton ? (
+          {showBackButton && (
             <>
               <AnimatedBox
                 flex={backButtonAnimation.flex}
@@ -180,7 +178,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
               </AnimatedBox>
               <Spacer width={9} />
             </>
-          ) : null}
+          )}
           <Box flex={1}>
             <Button block disabled={!isFormValid} loading={isMutating} onPress={verifyCode} variant="primaryBlack">
               Next

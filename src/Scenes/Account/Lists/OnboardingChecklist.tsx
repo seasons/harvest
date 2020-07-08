@@ -46,17 +46,19 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
   let header = userState == UserState.Undetermined ? "Finish creating your account" : "You're on the waitlist"
   let detail =
     userState == UserState.Undetermined
-      ? "Be sure to verify your phone number and set your sizing & measurements."
+      ? "To set your sizing & measurements, you must first verify your phone number. Complete those two steps to finish creating your account."
       : "We’ll send you a notification when your account is ready and you’re able to choose your plan. In the meantime, complete your profile below."
 
   const items = [
     {
+      // Cannot edit phone number once you are waitlisted
       isTappable: userState == UserState.Undetermined,
       key: OnboardingStep.VerifiedPhone,
       title: "Verify Phone Number",
     },
     {
-      isTappable: true,
+      // Cannot set measurements before verifying your phone number because you are triaged immediately after
+      isTappable: onboardingSteps.includes(OnboardingStep.VerifiedPhone),
       key: OnboardingStep.SetMeasurements,
       title: "Sizing & Measurements",
     },

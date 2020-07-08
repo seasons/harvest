@@ -63,9 +63,7 @@ export const EditShippingAddress: React.FC<{
   const insets = useSafeArea()
 
   const [isMutating, setIsMutating] = useState(false)
-  const errorPopUpContext = usePopUpContext()
-  const showErrorPopUp = errorPopUpContext.showPopUp
-  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const [updateAddress] = useMutation(UPDATE_ADDRESS, {
     onCompleted: () => {
       setIsMutating(false)
@@ -77,9 +75,9 @@ export const EditShippingAddress: React.FC<{
         title: "Oops! Try again!",
         note: "Double check that your address is valid and try again.",
         buttonText: "Close",
-        onClose: () => hideErrorPopUp(),
+        onClose: hidePopUp,
       }
-      showErrorPopUp(popUpData)
+      showPopUp(popUpData)
       setIsMutating(false)
     },
   })

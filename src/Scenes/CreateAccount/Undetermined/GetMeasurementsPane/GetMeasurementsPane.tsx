@@ -32,9 +32,9 @@ interface GetMeasurementsPaneProps {
     topSizeIndices?: number[]
     waistSizeIndices?: number[]
   }
-  // Whether this pane is embeded
   onGetMeasurements: () => void
   onRequestBack?: () => void
+  // Whether this pane should use the layout for editing (like in the Account onboarding checklist)
   useEditingLayout?: boolean
 }
 
@@ -53,9 +53,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
   const insets = useSafeArea()
 
   const [isMutating, setIsMutating] = useState(false)
-  const errorPopUpContext = usePopUpContext()
-  const showErrorPopUp = errorPopUpContext.showPopUp
-  const hideErrorPopUp = errorPopUpContext.hidePopUp
+  const { showPopUp, hidePopUp } = usePopUpContext()
 
   const [addMeasurements] = useMutation(ADD_MEASUREMENTS, {
     onCompleted: () => {
@@ -68,9 +66,9 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
         title: "Oops! Try again!",
         note: "There was an issue sending your measurements and sizing. Please retry.",
         buttonText: "Close",
-        onClose: () => hideErrorPopUp(),
+        onClose: hidePopUp,
       }
-      showErrorPopUp(popUpData)
+      showPopUp(popUpData)
       setIsMutating(false)
     },
   })
@@ -91,10 +89,6 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
     })
   }
 
-  /////////////////////////
-  // TODO: Fix text color
-  /////////////////////////
-
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -113,7 +107,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
 
           <Spacer mb={5} />
 
-          <Box style={{ flex: 1, flexDirection: "row" }}>
+          <Flex flexDirection="row">
             <Box style={{ flex: 0.5, marginRight: 6 }}>
               <Sans color="black100" size="1">
                 Height
@@ -138,7 +132,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
                 items={Measurements.weights}
               />
             </Box>
-          </Box>
+          </Flex>
 
           <Spacer mb={5} />
 
