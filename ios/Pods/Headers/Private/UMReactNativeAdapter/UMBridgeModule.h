@@ -1,1 +1,1 @@
-../../../../../node_modules/@unimodules/react-native-adapter/ios/UMReactNativeAdapter/UMBridgeModule.h
+../../../../../node_modules/expo/node_modules/@unimodules/react-native-adapter/ios/UMReactNativeAdapter/UMBridgeModule.h
