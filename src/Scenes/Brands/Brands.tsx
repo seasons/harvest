@@ -67,8 +67,13 @@ export const Brands = screenTrack()((props: any) => {
     }
   }, [data])
 
-  if (groupedBrands.length === 0 && alphabet.length === 0) {
-    return <Loader />
+  if (!data || (groupedBrands.length === 0 && alphabet.length === 0)) {
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
   }
 
   const getTouchedLetter = (y) => {
