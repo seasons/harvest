@@ -14,6 +14,9 @@ const auth0 = new Auth0({
 export interface UserSession {
   token: string
   refreshToken: string
+  user?: {
+    email: string
+  }
 }
 
 export const getUserSession: () => Promise<UserSession | null> = async () => {
