@@ -1,13 +1,17 @@
-import React, { useState } from "react"
-import { Box, Sans, Spacer, VariantSizes, Flex } from "App/Components"
-import { FlatList, TouchableWithoutFeedback, Dimensions, TouchableOpacity } from "react-native"
-import { space } from "App/utils"
-import * as Animatable from "react-native-animatable"
+import { Box, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { Homepage_homepage_sections_results_Product, Homepage_homepage_sections_results } from "App/generated/Homepage"
-import { useTracking, Schema } from "App/utils/track"
-import { useNavigation } from "@react-navigation/native"
+import {
+  Homepage_homepage_sections_results, Homepage_homepage_sections_results_Product
+} from "App/generated/Homepage"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+import { space } from "App/utils"
+import { Schema, useTracking } from "App/utils/track"
+import React, { useState } from "react"
+import { Dimensions, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
+import * as Animatable from "react-native-animatable"
+import { FlatList } from "react-native-gesture-handler"
+
+import { useNavigation } from "@react-navigation/native"
 
 export const ProductsRail: React.FC<{
   items: Homepage_homepage_sections_results[]

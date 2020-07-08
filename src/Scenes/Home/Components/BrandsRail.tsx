@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react"
-import { Box, Sans, Flex, Spacer } from "App/Components"
-import { TouchableOpacity, ScrollView } from "react-native"
-import { chunk } from "lodash"
-import { useTracking } from "react-tracking"
+import { Box, Flex, Sans, Spacer } from "App/Components"
 import { Schema } from "App/utils/track"
+import { chunk } from "lodash"
+import React, { useEffect, useState } from "react"
+import { TouchableOpacity } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
+import { useTracking } from "react-tracking"
+
 import { useNavigation } from "@react-navigation/native"
 
 interface BrandsRailProps {
