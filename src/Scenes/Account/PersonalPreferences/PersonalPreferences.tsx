@@ -47,12 +47,12 @@ export const AccountSection: React.FC<{ title: string; value: string | [string] 
       <Box mb={1} />
       {Array.isArray(value) ? (
         value.map((text) => (
-          <Sans key={text} size="2" color="gray">
+          <Sans key={text} size="2" color="black50">
             {text}
           </Sans>
         ))
       ) : (
-        <Sans size="2" color="gray">
+        <Sans size="2" color="black50">
           {value}
         </Sans>
       )}

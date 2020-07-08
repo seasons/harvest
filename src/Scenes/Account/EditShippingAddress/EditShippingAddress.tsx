@@ -22,7 +22,6 @@ const UPDATE_ADDRESS = gql`
   ) {
     addCustomerDetails(
       details: {
-        phoneNumber: "+19231231232"
         shippingAddress: {
           create: {
             name: $name

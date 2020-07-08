@@ -85,7 +85,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
 
   const [isMutating, setIsMutating] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
-  const scrollViewRef: MutableRefObject<ScrollView> = useRef()
+  const scrollViewRef: MutableRefObject<ScrollView> = useRef(null)
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
   const insets = useSafeArea()
 
@@ -94,12 +94,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
 
   // Keyboard handling
 
-  const onFocusTextInput = (index: number) => {
-    if (!scrollViewRef.current) {
-      return
-    }
-    scrollViewRef.current.scrollTo({ y: index * 60, animated: true })
-  }
+  const onFocusTextInput = (index: number) => scrollViewRef?.current?.scrollTo({ y: index * 60, animated: true })
 
   // Date picker popup
 

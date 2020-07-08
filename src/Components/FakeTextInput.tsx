@@ -48,11 +48,11 @@ export const FakeTextInput: React.FC<FakeTextInputProps> = ({
           backgroundColor: animation.backgroundColor,
         }}
       >
-        {headerText ? (
+        {!!headerText && (
           <Sans size="1" color={placeholderColor}>
             {headerText}
           </Sans>
-        ) : null}
+        )}
         <Spacer height={10} />
         <Text
           style={{

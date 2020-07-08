@@ -81,10 +81,10 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route 
   // The current state
   const currentState = states[index]
 
-  const flatListRef: MutableRefObject<FlatList<State>> = useRef()
+  const flatListRef: MutableRefObject<FlatList<State>> = useRef(null)
   // The maximum index shown in the FlatList
   const maxScrollableIndex = states.length - (userState === UserState.Undetermined ? 1 : 2)
-  useEffect(() => flatListRef.current?.scrollToIndex({ index: Math.min(index, maxScrollableIndex) }), [index])
+  useEffect(() => flatListRef?.current?.scrollToIndex({ index: Math.min(index, maxScrollableIndex) }), [index])
 
   const [phoneNumber, setPhoneNumber] = useState(null as string)
   const [checkoutUrl, setCheckoutUrl] = useState(null as string)
@@ -169,10 +169,9 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route 
           // When first rendering this component, the layout may not yet be complete
           // depending on the initial index, so we have to wait for the layout to
           // finish and then retry.
-          const wait = new Promise((resolve) => setTimeout(resolve, 100))
-          wait.then(() => {
-            flatListRef.current?.scrollToIndex({ index: info.index })
-          })
+          setTimeout(() => {
+            flatListRef?.current?.scrollToIndex({ index: info.index })
+          }, 100)
         }}
         ref={flatListRef}
         renderItem={({ item }) => paneForState(item)}

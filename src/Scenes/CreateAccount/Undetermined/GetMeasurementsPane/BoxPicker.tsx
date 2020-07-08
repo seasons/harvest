@@ -40,7 +40,7 @@ export const BoxPicker: React.FC<BoxPickerProps> = ({
         >
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center" style={{ flex: 1 }}>
             <Sans size="2">{currentItem?.label || "Select"}</Sans>
-            <DownChevronIcon scale={1.5} color="gray" />
+            <DownChevronIcon scale={1.5} color="black50" />
           </Flex>
         </Box>
       </TouchableOpacity>

@@ -92,61 +92,57 @@ export const Account = screenTrack()(({ navigation }) => {
   const role = user?.role
   const userID = user?.id
 
-  let body: JSX.Element
-  switch (status) {
-    case CustomerStatus.Invited:
-      // what is this?
-      break
-    case CustomerStatus.Created:
-    case CustomerStatus.Waitlisted:
-      const userState = status == CustomerStatus.Created ? UserState.Undetermined : UserState.Waitlisted
-      body = (
-        <OnboardingChecklist
-          measurements={measurements}
-          navigation={navigation}
-          onboardingSteps={onboardingSteps}
-          shippingAddress={shippingAddress}
-          stylePreferences={stylePreferences}
-          userState={userState}
-        />
-      )
-      break
-    case CustomerStatus.Authorized:
-      body = (
-        <Box pb={1}>
-          <Flex alignItems="center" pb={3}>
-            <Image style={{ width: 136, height: 80 }} source={require("Assets/images/Sunset.png")} />
-          </Flex>
-          <Sans size="2" color="black100" textAlign="center">
-            You're in. Let's choose your plan
-          </Sans>
-          <Spacer mb={1} />
-          <Sans size="1" color="black50" textAlign="center">
-            You have 48 hours to choose your plan. If we don’t hear from you, your invite will go to the next person in
-            line.
-          </Sans>
-          <Spacer mb={3} />
-          <Button
-            block
-            variant="primaryWhite"
-            onPress={() =>
-              navigation.navigate("Modal", {
-                screen: "CreateAccountModal",
-                params: { initialState: State.ChoosePlan, initialUserState: UserState.Admitted },
-              })
-            }
-          >
-            Choose plan
-          </Button>
-        </Box>
-      )
-      break
-    case CustomerStatus.Active:
-    case CustomerStatus.Suspended:
-    case CustomerStatus.Paused:
-    case CustomerStatus.Deactivated:
-      body = <ProfileList navigation={navigation} />
-      break
+  const renderBody = () => {
+    switch (status) {
+      case CustomerStatus.Created:
+      case CustomerStatus.Waitlisted:
+        const userState = status == CustomerStatus.Created ? UserState.Undetermined : UserState.Waitlisted
+        return (
+          <OnboardingChecklist
+            measurements={measurements}
+            navigation={navigation}
+            onboardingSteps={onboardingSteps}
+            shippingAddress={shippingAddress}
+            stylePreferences={stylePreferences}
+            userState={userState}
+          />
+        )
+      case CustomerStatus.Authorized:
+        return (
+          <Box pb={1}>
+            <Flex alignItems="center" pb={3}>
+              <Image style={{ width: 136, height: 80 }} source={require("Assets/images/Sunset.png")} />
+            </Flex>
+            <Sans size="2" color="black100" textAlign="center">
+              You're in. Let's choose your plan
+            </Sans>
+            <Spacer mb={1} />
+            <Sans size="1" color="black50" textAlign="center">
+              You have 48 hours to choose your plan. If we don’t hear from you, your invite will go to the next person
+              in line.
+            </Sans>
+            <Spacer mb={3} />
+            <Button
+              block
+              variant="primaryWhite"
+              onPress={() =>
+                navigation.navigate("Modal", {
+                  screen: "CreateAccountModal",
+                  params: { initialState: State.ChoosePlan, initialUserState: UserState.Admitted },
+                })
+              }
+            >
+              Choose plan
+            </Button>
+          </Box>
+        )
+      case CustomerStatus.Invited:
+      case CustomerStatus.Active:
+      case CustomerStatus.Suspended:
+      case CustomerStatus.Paused:
+      case CustomerStatus.Deactivated:
+        return <ProfileList navigation={navigation} />
+    }
   }
 
   return (
@@ -164,7 +160,7 @@ export const Account = screenTrack()(({ navigation }) => {
               </Box>
             )}
             {email ? (
-              <Sans size="2" color="gray">
+              <Sans size="2" color="black50">
                 {email}
               </Sans>
             ) : (
@@ -175,7 +171,7 @@ export const Account = screenTrack()(({ navigation }) => {
           </Box>
           <Separator mx={2} />
           <Box px={2} py={4}>
-            {body}
+            {renderBody()}
           </Box>
           <Separator mx={2} />
           <NotificationToggle userID={userID} userNotificationStatus={pushNotificationStatus} />

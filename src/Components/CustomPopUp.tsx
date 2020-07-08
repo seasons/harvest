@@ -19,15 +19,20 @@ export interface CustomPopUpProps {
 }
 
 export const CustomPopUp: React.FC<CustomPopUpProps> = ({ buttonText, children, onRequestClose, visible, title }) => {
+  // layout
+  const insets = useSafeArea()
+
   // animation
   const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
+    let timeout: NodeJS.Timeout
     if (!visible && showModal) {
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         setShowModal(false)
       }, 400)
     } else if (visible && !showModal) {
+      clearTimeout(timeout)
       setShowModal(true)
     }
   }, [visible])
@@ -44,7 +49,7 @@ export const CustomPopUp: React.FC<CustomPopUpProps> = ({ buttonText, children, 
   return (
     <Modal transparent visible={showModal}>
       <AnimatedPopUp style={{ transform: [{ translateY: animation.translateY }] }} color={color("white100")}>
-        <Box p={2} pt={4} pb={useSafeArea().bottom + 16} onLayout={onLayout}>
+        <Box p={2} pt={4} pb={insets.bottom + 16} onLayout={onLayout}>
           <Sans color={color("black100")} size="3">
             {title}
           </Sans>

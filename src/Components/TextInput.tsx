@@ -49,6 +49,7 @@ export function getColorsForVariant(variant: TextInputVariant) {
         },
       }
     default:
+      return getColorsForVariant("light")
   }
 }
 
@@ -92,7 +93,7 @@ export const TextInput: React.FC<TextInputProps> = ({
 }) => {
   const [state, setState] = useState(currentValue ? DisplayState.Active : DisplayState.Inactive)
   const [value, setValue] = useState(currentValue)
-  const textInputRef: MutableRefObject<RNTextInput> = useRef()
+  const textInputRef: MutableRefObject<RNTextInput> = useRef(null)
   useEffect(() => {
     if (currentValue !== undefined && currentValue !== value) {
       handleOnChangeText(currentValue)
@@ -124,13 +125,13 @@ export const TextInput: React.FC<TextInputProps> = ({
         backgroundColor: animation.backgroundColor,
       }}
     >
-      <TouchableWithoutFeedback onPress={() => textInputRef.current?.focus()}>
+      <TouchableWithoutFeedback onPress={() => textInputRef?.current?.focus()}>
         <Box>
-          {headerText ? (
+          {!!headerText && (
             <Sans size="1" color={placeholderColor}>
               {headerText}
             </Sans>
-          ) : null}
+          )}
           <Spacer height={10} />
         </Box>
       </TouchableWithoutFeedback>
@@ -155,7 +156,7 @@ export const TextInput: React.FC<TextInputProps> = ({
         }}
         value={value}
       />
-      <TouchableWithoutFeedback onPress={() => textInputRef.current?.focus()}>
+      <TouchableWithoutFeedback onPress={() => textInputRef?.current?.focus()}>
         <Spacer height={12} />
       </TouchableWithoutFeedback>
     </AnimatedBox>

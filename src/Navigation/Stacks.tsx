@@ -108,9 +108,9 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />
       <ModalStack.Screen name={Schema.PageNames.CreateAccountModal} component={CreateAccount} />
-      <AccountStack.Screen name={Schema.PageNames.EditShippingAddress} component={EditShippingAddress} />
-      <AccountStack.Screen name={Schema.PageNames.EditStylePreferences} component={EditStylePreferences} />
-      <AccountStack.Screen name={Schema.PageNames.EditMeasurements} component={EditMeasurements} />
+      <ModalStack.Screen name={Schema.PageNames.EditShippingAddress} component={EditShippingAddress} />
+      <ModalStack.Screen name={Schema.PageNames.EditStylePreferences} component={EditStylePreferences} />
+      <ModalStack.Screen name={Schema.PageNames.EditMeasurements} component={EditMeasurements} />
       <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackModal} component={ReservationFeedback} />
       <ModalStack.Screen
         name={Schema.PageNames.ReservationFeedbackConfirmationModal}

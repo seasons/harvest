@@ -1,6 +1,7 @@
 import { Container } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import React, { useEffect, useState } from "react"
+import * as Sentry from "@sentry/react-native"
 
 import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
@@ -46,7 +47,8 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
       }, 3000)
     },
     onError: (err) => {
-      console.log("****\n\n", err, "\n\n****")
+      Sentry.captureException(err)
+      console.log("Error TriagePane.tsx:", err)
       showPopUp(errorPopUpData)
     },
   })
