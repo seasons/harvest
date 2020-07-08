@@ -1,1 +1,1 @@
-../../../../../node_modules/@unimodules/react-native-adapter/ios/UMReactNativeAdapter/Services/UMReactLogHandler.h
+../../../../../node_modules/expo/node_modules/@unimodules/react-native-adapter/ios/UMReactNativeAdapter/Services/UMReactLogHandler.h

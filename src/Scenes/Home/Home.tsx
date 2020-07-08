@@ -1,20 +1,23 @@
 import { Box } from "App/Components"
-import { Loader } from "App/Components/Loader"
-import { color } from "App/utils"
-import { NetworkContext } from "App/NetworkProvider"
-import { screenTrack } from "App/utils/track"
 import { ErrorScreen } from "App/Components/ErrorScreen"
+import { Loader } from "App/Components/Loader"
+import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
+import { Schema } from "App/Navigation"
+import { NetworkContext } from "App/NetworkProvider"
+import { color } from "App/utils"
+import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
-import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import gql from "graphql-tag"
-import React, { useEffect, useState, useContext } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
+import { StatusBar } from "react-native"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
-import { Schema } from "App/Navigation"
+
+import {
+  ReservationFeedbackPopUp, ReservationFeedbackReminder
+} from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
-import { StatusBar } from "react-native"
 
 export const GET_HOMEPAGE = gql`
   query Homepage {
@@ -213,6 +216,14 @@ export const Home = screenTrack()(({ navigation }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       StatusBar.setBarStyle("light-content")
+      refetch()
+    })
+    return unsubscribe
+  }, [navigation])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      StatusBar.setBarStyle("dark-content")
       refetch()
     })
     return unsubscribe

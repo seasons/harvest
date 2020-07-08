@@ -52,7 +52,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
                 <DownChevronIcon color={color("black")} rotate={showVariantPicker} />
               </Flex>
               {!inStock && (
-                <Sans size="1" color="gray">
+                <Sans size="1" color="black50">
                   Unavailable
                 </Sans>
               )}

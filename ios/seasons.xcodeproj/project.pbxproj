@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0D270BFDBD0324A40AEA2A9E /* libPods-seasons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86CE5701D26A0A53ACC8FD4A /* libPods-seasons.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
+		13B07FBD1A68108700A75B9A /* SplashScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* SplashScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		353337DDECE045818531A967 /* ProximaNova-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9E145E4B175D4330AEEBA8A4 /* ProximaNova-Bold.otf */; };
@@ -18,7 +18,7 @@
 		787223015CE542C59F68F85C /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5321E38396C047298EF03D57 /* libz.tbd */; };
 		7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0E1F500ACFA44888E6CB0C1 /* ProximaNova-Regular.ttf */; };
 		7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5AF8182310CACF00A9E513 /* ProximaNova-Semibold.ttf */; };
-		816425C023453D8800D069F3 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		816425C023453D8800D069F3 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		8189590723F2650000CD52B5 /* seasons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8189590623F2650000CD52B5 /* seasons.swift */; };
 		819937AD2350CA0900D4B049 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 819937AC2350CA0900D4B049 /* AppCenter-Config.plist */; };
 		E48E9866ED8A424C835E1727 /* apercu-mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 519C1ED3FA0D49A6A7C72E37 /* apercu-mono.ttf */; };
@@ -29,7 +29,7 @@
 		13B07F961A680F5B00A75B9A /* seasons.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = seasons.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = seasons/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = seasons/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SplashScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = seasons/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = seasons/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = seasons/main.m; sourceTree = "<group>"; };
@@ -76,7 +76,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
+				13B07FB11A68108700A75B9A /* SplashScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				8189590623F2650000CD52B5 /* seasons.swift */,
 			);
@@ -222,7 +222,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				819937AD2350CA0900D4B049 /* AppCenter-Config.plist in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				13B07FBD1A68108700A75B9A /* SplashScreen.xib in Resources */,
 				7F5AF8192310CACF00A9E513 /* ProximaNova-Semibold.ttf in Resources */,
 				7DFA2411EBFA494CB61907D0 /* ProximaNova-Regular.ttf in Resources */,
 				E48E9866ED8A424C835E1727 /* apercu-mono.ttf in Resources */,
@@ -312,7 +312,7 @@
 			files = (
 				8189590723F2650000CD52B5 /* seasons.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				816425C023453D8800D069F3 /* BuildFile in Sources */,
+				816425C023453D8800D069F3 /* (null) in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -320,12 +320,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
+		13B07FB11A68108700A75B9A /* SplashScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				13B07FB21A68108700A75B9A /* Base */,
 			);
-			name = LaunchScreen.xib;
+			name = SplashScreen.xib;
 			path = seasons;
 			sourceTree = "<group>";
 		};

@@ -2,8 +2,8 @@ platform :ios, '10.0'
 
 require_relative '../node_modules/react-native-unimodules/cocoapods'
 
- # ignore all warnings from all pods
- inhibit_all_warnings!
+# ignore all warnings from all pods
+inhibit_all_warnings!
 
 target 'seasons' do
   # Pods for seasons
@@ -33,7 +33,7 @@ target 'seasons' do
   pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi'
   pod 'React-jsiexecutor', :path => '../node_modules/react-native/ReactCommon/jsiexecutor'
   pod 'React-jsinspector', :path => '../node_modules/react-native/ReactCommon/jsinspector'
-  pod 'ReactCommon/jscallinvoker', :path => "../node_modules/react-native/ReactCommon"
+  pod 'ReactCommon/callinvoker', :path => "../node_modules/react-native/ReactCommon"
   pod 'ReactCommon/turbomodule/core', :path => "../node_modules/react-native/ReactCommon"
   pod 'Yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
 
@@ -66,7 +66,10 @@ target 'seasons' do
   pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
   pod 'RNShare', :path => '../node_modules/react-native-share'
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+  pod 'RNCPicker', :path => '../node_modules/@react-native-community/picker'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|  

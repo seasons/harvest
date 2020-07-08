@@ -3,34 +3,34 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UserRole } from "./globalTypes";
+import { UserRole } from "./globalTypes"
 
 // ====================================================
 // GraphQL mutation operation: LogIn
 // ====================================================
 
 export interface LogIn_login_user {
-  __typename: "User";
-  email: string;
-  firstName: string;
-  lastName: string;
-  roles: UserRole[];
+  __typename: "User"
+  id: string
+  email: string
+  firstName: string
+  lastName: string
+  roles: UserRole[]
 }
 
 export interface LogIn_login {
-  __typename: "AuthPayload";
-  user: LogIn_login_user;
-  token: string;
-  refreshToken: string;
-  expiresIn: number;
-  beamsToken: string;
+  __typename: "AuthPayload"
+  user: LogIn_login_user
+  token: string
+  refreshToken: string
+  expiresIn: number
 }
 
 export interface LogIn {
-  login: LogIn_login;
+  login: LogIn_login
 }
 
 export interface LogInVariables {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }

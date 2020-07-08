@@ -26,6 +26,8 @@ import { sizeToName } from "./Components/VariantList"
 import { SAVE_ITEM } from "./Components/SaveProductButton"
 import { useNavigation } from "@react-navigation/native"
 
+const screenWidth = Dimensions.get("window").width
+
 interface SaveProductProps {
   route: any
 }
@@ -95,7 +97,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
           <>
             <Spacer mt={68} />
             <Flex flexDirection="row" justifyContent="space-between">
-              <Flex flexDirection="column" justifyContent="flex-end">
+              <Flex flexDirection="column" justifyContent="flex-end" width={screenWidth - (90 + space(6))}>
                 <Sans size="1">{name}</Sans>
                 <Sans size="1" color={color("black50")}>
                   {brandName}
@@ -184,7 +186,6 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
     navigation.goBack()
   }
 
-  const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 39) / 2
   const buttonHeight = 48
   const sections = [{ type: "Header" }, { type: "Sizes", variants }]

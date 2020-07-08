@@ -16,15 +16,16 @@ const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       user {
+        id
         email
         firstName
         lastName
+        beamsToken
         roles
       }
       token
       refreshToken
       expiresIn
-      beamsToken
     }
   }
 `
@@ -102,8 +103,8 @@ export const LogIn: React.FC<LogInProps> = (props) => {
           data: { login: userSession },
         } = result
         signIn(userSession)
-        const beamsToken = result?.data?.login?.beamsToken
-        const roles = result?.data?.login?.user?.roles
+        const beamsToken = userSession?.user?.beamsToken
+        const roles = userSession?.user?.roles
         const beamsData = { beamsToken, email, roles }
         AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
@@ -130,19 +131,17 @@ export const LogIn: React.FC<LogInProps> = (props) => {
             </Sans>
             <Spacer mb={3} />
             <TextInput
-              placeholder="Email"
+              headerText="Email"
               variant="light"
-              textContentType="Email"
               inputKey="email"
               onChangeText={(_, val) => onEmailChange(val)}
             />
             <Spacer mb={2} />
             <TextInput
               secureTextEntry
-              placeholder="Password"
+              headerText="Password"
               variant="light"
               inputKey="password"
-              textContentType="Password"
               onChangeText={(_, val) => setPassword(val)}
             />
             <Spacer mb={4} />
@@ -152,7 +151,7 @@ export const LogIn: React.FC<LogInProps> = (props) => {
             <Spacer mb={3} />
             <Flex flexDirection="row" justifyContent="center">
               <Text>
-                <Sans size="2" color="gray">
+                <Sans size="2" color="black50">
                   Forget password?
                 </Sans>{" "}
                 <TouchableWithoutFeedback onPress={handleResetPassword}>
@@ -165,7 +164,7 @@ export const LogIn: React.FC<LogInProps> = (props) => {
           </Box>
           <Box p={4} pb={5}>
             <Text style={{ textAlign: "center" }}>
-              <Sans size="2" color="gray">
+              <Sans size="2" color="black50">
                 Sign in using the same email and password you used for the waitlist.
               </Sans>
             </Text>

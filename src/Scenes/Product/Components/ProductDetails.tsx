@@ -3,11 +3,13 @@ import { GetProduct_product } from "App/generated/GetProduct"
 import { color, space } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import React from "react"
-import { TouchableOpacity } from "react-native"
+import { TouchableOpacity, Dimensions } from "react-native"
 import styled from "styled-components/native"
 import { useNavigation } from "@react-navigation/native"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { SaveProductButton } from "./SaveProductButton"
+
+const screenWidth = Dimensions.get("window").width
 
 export const ProductDetails: React.FC<{
   selectedVariant: any
@@ -38,8 +40,8 @@ export const ProductDetails: React.FC<{
 
   return (
     <Box pt={2} px={2} mb={3}>
-      <Flex flexDirection="row" justifyContent="space-between">
-        <Box>
+      <Flex flexDirection="row" justifyContent="space-between" alignItems="flex-start">
+        <Box width={screenWidth - space(6) - 30}>
           <Sans size="1" color={color("black100")}>
             {name}
           </Sans>
@@ -63,7 +65,6 @@ export const ProductDetails: React.FC<{
         </Box>
         {!!(selectedVariant && selectedVariant.id) && (
           <SaveButtonWrapper>
-            <Spacer mb={0.5} />
             <SaveProductButton
               height={21}
               width={16}
@@ -106,4 +107,5 @@ export const ProductDetails: React.FC<{
 const SaveButtonWrapper = styled(Box)`
   top: -${space(2)};
   right: -${space(2)};
+  padding-top: ${space(2)};
 `

@@ -7,6 +7,7 @@ import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { FlatList } from "react-native"
+import { Loader } from "App/Components/Loader"
 
 const GET_BRAND = gql`
   query GetBrandAndProducts($brandID: ID!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!) {
@@ -75,6 +76,15 @@ export const Brand = screenTrack({
       orderBy: "createdAt_DESC",
     },
   })
+
+  if (!data) {
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
+  }
 
   const products = data?.brand?.products
   const basedIn = data?.brand?.basedIn

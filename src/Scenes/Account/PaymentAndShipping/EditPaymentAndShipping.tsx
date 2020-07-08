@@ -88,28 +88,31 @@ export const EditPaymentAndShipping: React.FC<{
         title: "Something went wrong!",
         onClose: () => hidePopUp(),
       }
-      if (error.message.includes("SHIPPING_ADDRESS_NOT_NYC")) {
-        popUpData = {
-          ...popUpData,
-          note: "Unfortunately we only ship to Manhattan, Queens, The Bronx, and Brooklyn right now.",
-          title: "Uh oh. That’s not NYC",
-        }
-      }
       Sentry.captureException(error)
       showPopUp(popUpData)
-      console.log("error EditView.tsx: ", error)
+      console.log("Error EditView.tsx: ", error)
     },
   })
 
-  const { data, loading, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE)
+  const { data, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE)
 
-  if (loading) {
-    return <Loader />
+  if (!data) {
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
   }
 
   if (error) {
     console.error("error EditPaymentAndShipping.tsx: ", error)
-    return <Loader />
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
   }
 
   const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage =

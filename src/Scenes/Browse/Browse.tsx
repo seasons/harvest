@@ -23,7 +23,7 @@ export const GET_BROWSE_PRODUCTS = gql`
     $orderBy: ProductOrderByInput!
     $sizes: [String!]
   ) {
-    categories(where: { visible: true }) {
+    categories(where: { visible: true }, orderBy: updatedAt_ASC) {
       id
       slug
       name
@@ -219,7 +219,7 @@ export const Browse = screenTrack()((props: any) => {
               if (!loading && !reachedEnd && products?.length) {
                 tracking.trackEvent({
                   actionName: Schema.ActionNames.BrowsePagePaginated,
-                  actionType: Schema.ActionTypes.Tap,
+                  actionType: Schema.ActionTypes.Swipe,
                   pageNumber: Math.ceil(products.length / PAGE_LENGTH) + 1,
                 })
                 fetchMore({

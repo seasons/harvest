@@ -35,6 +35,7 @@ export const themeProps = {
     green100: "#06BC6F",
     green: "#44524A",
     lightGreen: "#01b06c",
+    blue100: "#2442EC",
     blue: "#2B50DF",
   },
 
