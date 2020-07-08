@@ -32,6 +32,9 @@ PODS:
   - EXSQLite (8.2.1):
     - UMCore
     - UMFileSystemInterface
+  - EXUpdates (0.2.11):
+    - React
+    - UMCore
   - FBLazyVector (0.62.2)
   - FBReactNativeSpec (0.62.2):
     - Folly (= 2018.10.22.00)
@@ -371,6 +374,7 @@ DEPENDENCIES:
   - EXPermissions (from `../node_modules/expo/node_modules/expo-permissions/ios`)
   - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
+  - EXUpdates (from `../node_modules/expo-updates/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
@@ -481,6 +485,9 @@ EXTERNAL SOURCES:
   EXSQLite:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-sqlite/ios"
+  EXUpdates:
+    :path: !ruby/object:Pathname
+    path: "../node_modules/expo-updates/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -627,6 +634,7 @@ SPEC CHECKSUMS:
   EXPermissions: 80ac3acbdb145930079810fe5b08c022b3428aa8
   EXSplashScreen: c4ed5d39cd5dbc1329f8dec720e280276bafa28b
   EXSQLite: 64611c1b369c0f1e9cae4e551d0aa4478a58cadf
+  EXUpdates: 5c9ccb55ea060e24e281d19248a50b7faba5fc59
   FBLazyVector: 4aab18c93cd9546e4bfed752b4084585eca8b245
   FBReactNativeSpec: 5465d51ccfeecb7faa12f9ae0024f2044ce4044e
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
@@ -691,6 +699,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 80653f25c55d9e6d79d6a0a65589fa213feaee11
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
 
-PODFILE CHECKSUM: 163c035ac86478187485123d74cdf0f004f8fa4c
+PODFILE CHECKSUM: 30a243761e356af4f1ec86d5145a71312a612418
 
 COCOAPODS: 1.9.3

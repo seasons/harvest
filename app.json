@@ -3,14 +3,14 @@
   "displayName": "Seasons",
   "expo": {
     "name": "seasons",
-    "slug": "expo-template-bare",
+    "slug": "seasons-harvest",
     "privacy": "unlisted",
     "version": "1.0.0",
-    "entryPoint": "node_modules/expo/AppEntry.js",
+    "sdkVersion": "38.0.0",
+    "entryPoint": "index.js",
     "platforms": [
       "ios",
       "android",
-      "web"
     ],
     "ios": {
       "bundleIdentifier": "com.seasons.seasons"
