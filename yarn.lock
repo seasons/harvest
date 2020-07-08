@@ -1543,15 +1543,6 @@
     xcode "^3.0.0"
     xml-js "^1.6.11"
 
-"@expo/react-native-fade-in-image@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@expo/react-native-fade-in-image/-/react-native-fade-in-image-1.1.1.tgz#f3126988c791324adbba807399899243c1a3a731"
-  integrity sha1-8xJpiMeRMkrbuoBzmYmSQ8GjpzE=
-  dependencies:
-    react-clone-referenced-element "^1.0.1"
-    react-mixin "^3.0.5"
-    react-timer-mixin "^0.13.3"
-
 "@expo/vector-icons@^10.0.2":
   version "10.0.6"
   resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.0.6.tgz#5718953ff0b97827d11dae5787976fa8ce5caaed"
@@ -7893,6 +7884,15 @@ react-native-dotenv@^0.2.0:
   integrity sha1-MRVRy2o1o9z+3mSL3tVcDj7OV50=
   dependencies:
     babel-plugin-dotenv "0.1.1"
+
+react-native-fade-in-image@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-fade-in-image/-/react-native-fade-in-image-1.5.0.tgz#efface43f9846b1d1ffd6c6894576cede710617d"
+  integrity sha512-I03XZzr9flUnGO9XqMsv1rWAcpvHR6bhPamKsM6S8kjgYeYFUAVT7qNmyB3bN+qfRFPMFEkSlXE1TqUG2pZ8vw==
+  dependencies:
+    react-clone-referenced-element "^1.0.1"
+    react-mixin "^3.0.5"
+    react-timer-mixin "^0.13.3"
 
 react-native-fast-image@^7.0.2:
   version "7.0.2"
