@@ -1,5 +1,5 @@
 import gql from "graphql-tag"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
 import { Box, FixedButton, Flex, Sans, Spacer, TextInput, FixedBackArrow, Container } from "App/Components"
@@ -27,6 +27,7 @@ const ADD_PRODUCT_REQUEST = gql`
 
 export const ProductRequest = screenTrack()((props: any) => {
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true)
+  const [isMutating, setIsMutating] = useState(false)
   const [likeReason, setLikeReason] = useState("")
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [url, setURL] = useState("")
@@ -48,6 +49,10 @@ export const ProductRequest = screenTrack()((props: any) => {
     },
   })
 
+  useEffect(() => {
+    return setIsMutating(false)
+  }, [])
+
   const onURLChange = (val) => {
     setURL(val)
     setIsNextButtonDisabled(val === "" || likeReason === "")
@@ -59,6 +64,7 @@ export const ProductRequest = screenTrack()((props: any) => {
   }
 
   const handleNextBtnPressed = async () => {
+    setIsMutating(true)
     tracking.trackEvent({
       actionName: Schema.ActionNames.NextButtonTapped,
       actionType: Schema.ActionTypes.Tap,
@@ -77,10 +83,12 @@ export const ProductRequest = screenTrack()((props: any) => {
         props.navigation.navigate("ProductRequestConfirmation", {
           productRequest,
         })
+        setIsMutating(false)
       } else {
         // Means that we failed to scrape the product information from the URL
         // and just stored the URL for now
         props.navigation.navigate("FinishProductRequest")
+        setIsMutating(false)
       }
     } else {
       Keyboard.dismiss()
@@ -122,8 +130,14 @@ export const ProductRequest = screenTrack()((props: any) => {
         </Flex>
       </TouchableWithoutFeedback>
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0}>
-        <FixedButton block disabled={isNextButtonDisabled} variant="primaryWhite" onPress={handleNextBtnPressed}>
-          Next
+        <FixedButton
+          block
+          disabled={isNextButtonDisabled || isMutating}
+          loading={isMutating}
+          variant="primaryWhite"
+          onPress={handleNextBtnPressed}
+        >
+          Submit
         </FixedButton>
       </KeyboardAvoidingView>
     </Container>
