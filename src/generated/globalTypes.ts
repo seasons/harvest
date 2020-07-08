@@ -615,6 +615,14 @@ export interface CategoryScalarWhereInput {
   description_not_ends_with?: string | null;
   visible?: boolean | null;
   visible_not?: boolean | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
 }
 
 export interface CategoryUpdateDataInput {

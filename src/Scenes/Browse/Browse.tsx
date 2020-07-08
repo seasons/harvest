@@ -23,7 +23,7 @@ export const GET_BROWSE_PRODUCTS = gql`
     $orderBy: ProductOrderByInput!
     $sizes: [String!]
   ) {
-    categories(where: { visible: true }) {
+    categories(where: { visible: true }, orderBy: updatedAt_ASC) {
       id
       slug
       name
