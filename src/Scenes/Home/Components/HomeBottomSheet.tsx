@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useRef } from "react"
 import { Box, Handle, Spacer } from "App/Components"
-import { color, space } from "App/utils"
-import { FlatList } from "react-native-gesture-handler"
-import { Dimensions, TouchableWithoutFeedback } from "react-native"
-import { HomeFooter, BrandsRail, ProductsRail, TagsRail } from "./"
 import { NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
-import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
-import BottomSheet from "reanimated-bottom-sheet"
+import { color, space } from "App/utils"
+import React, { useEffect, useRef, useState } from "react"
+import { Dimensions, TouchableWithoutFeedback, View } from "react-native"
+import { FlatList } from "react-native-gesture-handler"
 import { useSafeArea } from "react-native-safe-area-context"
+import BottomSheet from "reanimated-bottom-sheet"
+
+import { useNavigation } from "@react-navigation/native"
+
+import { BrandsRail, HomeFooter, ProductsRail, TagsRail } from "./"
 
 const dimensions = Dimensions.get("window")
 
@@ -18,20 +20,38 @@ export const HomeBottomSheet = ({ data }) => {
   const bottomSheet = useRef(null)
   const insets = useSafeArea()
   const navigation = useNavigation()
+
   useEffect(() => {
     const sections = []
     if (data?.blogPosts) {
-      sections.push({ type: "BlogPosts", results: data?.blogPosts })
+      sections.push({ type: "BlogPosts", results: data?.blogPosts, height: 50 })
     }
     if (data?.justAddedTops?.length) {
-      sections.push({ type: "Products", results: data?.justAddedTops, title: "Just added tops" })
+      sections.push({ type: "Products", results: data?.justAddedTops, title: "Just added tops", height: 280 })
     }
     if (data?.homepage?.sections?.length) {
-      sections.push(...data?.homepage?.sections)
+      sections.push(
+        ...data?.homepage?.sections.map((section) => {
+          switch (section.type) {
+            case "Brands":
+              return {
+                ...section,
+                height: 218,
+              }
+            case "Products":
+              return {
+                ...section,
+                height: 280,
+              }
+            default:
+              return { ...section, height: 0 }
+          }
+        })
+      )
     }
     if (data?.me?.savedItems?.length) {
       const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
-      sections.push({ type: "SavedProducts", title: "Saved for later", results })
+      sections.push({ type: "SavedProducts", title: "Saved for later", results, height: 456 })
     }
     if (data?.archivalProducts?.length) {
       sections.push({
@@ -44,10 +64,11 @@ export const HomeBottomSheet = ({ data }) => {
         },
         title: "Just added archival",
         results: data?.archivalProducts,
+        height: 324,
       })
     }
     if (data?.justAddedBottoms?.length) {
-      sections.push({ type: "Products", results: data?.justAddedBottoms, title: "Just added bottoms" })
+      sections.push({ type: "Products", results: data?.justAddedBottoms, title: "Just added bottoms", height: 280 })
     }
     setSections(sections)
   }, [data])
@@ -80,44 +101,32 @@ export const HomeBottomSheet = ({ data }) => {
     }
   }
 
+  const Content = () => {
+    return (
+      <Box my={2}>
+        {sections.map((item, i) => {
+          const sectionKey = item.type + i
+          return <Box key={sectionKey}>{renderItem(item)}</Box>
+        })}
+      </Box>
+    )
+  }
+
   const bottomSheetContent = () => {
     const reservationFeedback = data?.reservationFeedback
-
+    // Height of each sections combined + HomeFooter height
+    const contentHeight = sections.map((a) => a.height).reduce((a, b) => a + b, 0) + 310
     return (
-      <Box style={{ backgroundColor: color("white100") }}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            // FIXME: Add snapTo to different position
-            return null
-          }}
-        >
-          <Handle style={{ marginTop: space(2) }} backgroundColor="black10" />
-        </TouchableWithoutFeedback>
+      <Box style={{ backgroundColor: color("white100"), height: contentHeight }}>
+        <Handle style={{ marginTop: space(2) }} backgroundColor="black10" />
         <Spacer mb={2} />
-        <FlatList
-          data={sections}
-          onScroll={(event) => {
-            const y = event.nativeEvent.contentOffset.y
-            const thresholdTop = -10
-            const thresholdBottom = 0
-
-            if (y < thresholdTop) {
-              bottomSheet.current.snapTo(1)
-            } else if (y > thresholdBottom) {
-              bottomSheet.current.snapTo(0)
-            }
-          }}
-          keyExtractor={(item, index) => {
-            return item.type + index
-          }}
-          renderItem={({ item }) => <Box>{renderItem(item)}</Box>}
-          ListFooterComponent={() => (
-            <HomeFooter
-              navigation={navigation}
-              bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
-            />
-          )}
-        />
+        <Content />
+        <Box>
+          <HomeFooter
+            navigation={navigation}
+            bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
+          />
+        </Box>
       </Box>
     )
   }

@@ -1543,15 +1543,6 @@
     xcode "^3.0.0"
     xml-js "^1.6.11"
 
-"@expo/react-native-fade-in-image@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@expo/react-native-fade-in-image/-/react-native-fade-in-image-1.1.1.tgz#f3126988c791324adbba807399899243c1a3a731"
-  integrity sha1-8xJpiMeRMkrbuoBzmYmSQ8GjpzE=
-  dependencies:
-    react-clone-referenced-element "^1.0.1"
-    react-mixin "^3.0.5"
-    react-timer-mixin "^0.13.3"
-
 "@expo/vector-icons@^10.0.2":
   version "10.0.6"
   resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.0.6.tgz#5718953ff0b97827d11dae5787976fa8ce5caaed"
@@ -7918,6 +7909,15 @@ react-native-dotenv@^0.2.0:
   dependencies:
     babel-plugin-dotenv "0.1.1"
 
+react-native-fade-in-image@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-fade-in-image/-/react-native-fade-in-image-1.5.0.tgz#efface43f9846b1d1ffd6c6894576cede710617d"
+  integrity sha512-I03XZzr9flUnGO9XqMsv1rWAcpvHR6bhPamKsM6S8kjgYeYFUAVT7qNmyB3bN+qfRFPMFEkSlXE1TqUG2pZ8vw==
+  dependencies:
+    react-clone-referenced-element "^1.0.1"
+    react-mixin "^3.0.5"
+    react-timer-mixin "^0.13.3"
+
 react-native-fast-image@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-7.0.2.tgz#e06b21f42f4a9786eaa86f3db35d919070fb8403"
@@ -9836,7 +9836,12 @@ whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.5:
   dependencies:
     iconv-lite "0.4.24"
 
-whatwg-fetch@>=0.10.0, whatwg-fetch@^3.0.0:
+whatwg-fetch@>=0.10.0:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.1.1.tgz#03f6b16271619003a5d42c1f14026523787a931e"
+  integrity sha512-UlBvc5VApYAwNutfXFeuC9Jp3QCMazcqobfNqSK/RghRr3F8b0+i/QELUlEPsHjDHfijio6H5KPJcZwYXhuZsA==
+
+whatwg-fetch@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.0.0.tgz#fc804e458cc460009b1a2b966bc8817d2578aefb"
   integrity sha512-9GSJUgz1D4MfyKU7KRqwOjXCXTqWdFNvEr7eUBYchQiVc744mqK/MzXPNR2WsPkmkOa4ywfg8C2n8h+13Bey1Q==
