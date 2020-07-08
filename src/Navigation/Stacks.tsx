@@ -1,7 +1,14 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
 import { Schema } from "App/Navigation"
-import { Account, EditPaymentAndShipping, PaymentAndShipping } from "App/Scenes/Account"
+import {
+  Account,
+  EditPaymentAndShipping,
+  PaymentAndShipping,
+  EditShippingAddress,
+  EditStylePreferences,
+  EditMeasurements,
+} from "App/Scenes/Account"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
 import { Brand } from "App/Scenes/Brand"
@@ -27,6 +34,7 @@ import React from "react"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { NavBar } from "./NavBar"
 import { ResumeConfirmation, PauseConfirmation, ExtendPauseConfirmation } from "App/Components/Pause"
+import { CreateAccount } from "App/Scenes/CreateAccount"
 
 const HomeStack = createStackNavigator()
 const BagStack = createStackNavigator()
@@ -99,6 +107,10 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordModal} component={ResetPassword} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />
+      <ModalStack.Screen name={Schema.PageNames.CreateAccountModal} component={CreateAccount} />
+      <ModalStack.Screen name={Schema.PageNames.EditShippingAddress} component={EditShippingAddress} />
+      <ModalStack.Screen name={Schema.PageNames.EditStylePreferences} component={EditStylePreferences} />
+      <ModalStack.Screen name={Schema.PageNames.EditMeasurements} component={EditMeasurements} />
       <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackModal} component={ReservationFeedback} />
       <ModalStack.Screen
         name={Schema.PageNames.ReservationFeedbackConfirmationModal}

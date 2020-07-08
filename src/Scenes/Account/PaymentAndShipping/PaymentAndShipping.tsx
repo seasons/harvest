@@ -1,4 +1,4 @@
-import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Spacer } from "App/Components"
+import { Box, Container, FixedBackArrow, FixedButton, Sans, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
@@ -13,8 +13,10 @@ export const GET_PAYMENT_DATA = gql`
       customer {
         id
         detail {
+          id
           phoneNumber
           shippingAddress {
+            id
             name
             company
             address1
@@ -25,6 +27,7 @@ export const GET_PAYMENT_DATA = gql`
           }
         }
         billingInfo {
+          id
           brand
           city
           expiration_month
@@ -42,6 +45,7 @@ export const GET_PAYMENT_DATA = gql`
         customer {
           id
           billingInfo {
+            id
             last_digits
             street1
             street2
@@ -103,7 +107,7 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
   }
 
   if (error) {
-    console.error("error PaymentAndShipping.tsx: ", error)
+    console.error("Error PaymentAndShipping.tsx: ", error)
     return <Loader />
   }
 

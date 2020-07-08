@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UserRole, PushNotificationStatus } from "./globalTypes";
+import { PushNotificationStatus, UserRole } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: LogIn
@@ -11,11 +11,13 @@ import { UserRole, PushNotificationStatus } from "./globalTypes";
 
 export interface LogIn_login_user {
   __typename: "User";
+  id: string;
   email: string;
   firstName: string;
   lastName: string;
-  roles: UserRole[];
   pushNotificationStatus: PushNotificationStatus | null;
+  beamsToken: string;
+  roles: UserRole[];
 }
 
 export interface LogIn_login {
@@ -24,7 +26,6 @@ export interface LogIn_login {
   token: string;
   refreshToken: string;
   expiresIn: number;
-  beamsToken: string;
 }
 
 export interface LogIn {

@@ -87,7 +87,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
                 </Sans>
               )}
             </Flex>
-            <Sans color="gray" size="1">
+            <Sans color="black50" size="1">
               {size?.reservable > 0 ? manufacturerSize : "Unavailable"}
             </Sans>
           </Flex>

@@ -46,7 +46,7 @@ export const ProductRequestConfirmation = screenTrack()(({ navigation, route }) 
               <Sans size="1" color="black">
                 {section[0]}
               </Sans>
-              <Sans size="1" color="gray">
+              <Sans size="1" color="black50">
                 {section[1]}
               </Sans>
               <Spacer mb={2} />
@@ -61,7 +61,7 @@ export const ProductRequestConfirmation = screenTrack()(({ navigation, route }) 
                 <Sans size="1" color="black">
                   {section[0]}
                 </Sans>
-                <Sans size="1" color="gray">
+                <Sans size="1" color="black50">
                   {section[1]}
                 </Sans>
               </Box>

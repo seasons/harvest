@@ -52,7 +52,7 @@ export const CurrentRotation = (props) => {
                 <Sans size="3" color="black">
                   Current Rotation
                 </Sans>
-                <Sans size="2" color="gray">
+                <Sans size="2" color="black50">
                   Return By {returnDate}
                 </Sans>
               </Box>

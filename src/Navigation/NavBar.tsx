@@ -31,7 +31,7 @@ export const NavBar = ({ state, descriptors, navigation, currentScreen }) => {
     } else if (routeName === "BagStack") {
       URL = require(`../../assets/images/Bag.png`)
     } else if (routeName === "AccountStack") {
-      URL = require(`../../assets/images/Account.png`)
+      URL = require(`../../assets/images/Profile.png`)
     }
 
     return (

@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import { screenTrack } from "App/utils/track"
+import { Measurements } from "App/Scenes/CreateAccount/Undetermined"
 
 const GET_PREFERENCES = gql`
   query GetUserPreferences {
@@ -20,8 +21,8 @@ const GET_PREFERENCES = gql`
           weight
           bodyType
           averageSpend
-          averageTopSize
-          averageWaistSize
+          topSizes
+          waistSizes
           profession
           partyFrequency
           travelFrequency
@@ -46,12 +47,12 @@ export const AccountSection: React.FC<{ title: string; value: string | [string] 
       <Box mb={1} />
       {Array.isArray(value) ? (
         value.map((text) => (
-          <Sans key={text} size="2" color="gray">
+          <Sans key={text} size="2" color="black50">
             {text}
           </Sans>
         ))
       ) : (
-        <Sans size="2" color="gray">
+        <Sans size="2" color="black50">
           {value}
         </Sans>
       )}
@@ -84,20 +85,28 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
         sectionsArray.push({ title: "Height", value: `${feet} ft ${inches} in` })
       }
 
-      if (details.weight) {
-        sectionsArray.push({ title: "Weight", value: details.weight })
+      if (details.weight && details.weight?.length == 2) {
+        sectionsArray.push({ title: "Weight", value: `${details.weight[0]}-${details.weight[1]} lbs` })
       }
 
       if (details.bodyType) {
         sectionsArray.push({ title: "Body type", value: details.bodyType })
       }
 
-      if (details.averageTopSize) {
-        sectionsArray.push({ title: "Average top size", value: details.averageTopSize })
+      if (details.topSizes) {
+        sectionsArray.push({
+          title: "Preferred top sizes",
+          value: details.topSizes
+            .sort((a, b) => Measurements.topSizes.indexOf(a) < Measurements.topSizes.indexOf(b))
+            .join(", "),
+        })
       }
 
-      if (details.averageWaistSize) {
-        sectionsArray.push({ title: "Average waist size", value: `${details.averageWaistSize} in` })
+      if (details.waistSizes) {
+        sectionsArray.push({
+          title: "Preferred waist sizes",
+          value: `${details.waistSizes.sort((a, b) => a > b).join(", ")} in`,
+        })
       }
 
       if (details.averagePantLength) {
