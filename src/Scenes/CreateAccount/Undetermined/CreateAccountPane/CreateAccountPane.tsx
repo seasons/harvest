@@ -285,7 +285,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
           </Flex>
           <Spacer height={100} />
         </ScrollView>
-        <Box p={2} style={{ backgroundColor: "transparent" }}>
+        <Box px={2} style={{ backgroundColor: "transparent" }}>
           <Button
             block
             disabled={!isFormValid}
@@ -300,21 +300,21 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
       <Box p={2} style={{ paddingBottom: insets.bottom + 16, backgroundColor: "white" }}>
         <Flex flexDirection="column" alignItems="center">
           <Text>
-            <Sans size="1" color="black50">
+            <Sans size="0" color="black50">
               By creating an account, you agree to our
             </Sans>{" "}
           </Text>
           <Text>
             <TouchableWithoutFeedback onPress={() => showWebview("https://www.seasons.nyc/privacy-policy")}>
-              <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
+              <Sans style={{ textDecorationLine: "underline" }} size="0" color="black50">
                 Privacy Policy
               </Sans>
             </TouchableWithoutFeedback>
-            <Sans size="1" color="black50">
+            <Sans size="0" color="black50">
               {" & "}
             </Sans>
             <TouchableWithoutFeedback onPress={() => showWebview("https://www.seasons.nyc/terms-of-service")}>
-              <Sans style={{ textDecorationLine: "underline" }} size="1" color="black50">
+              <Sans style={{ textDecorationLine: "underline" }} size="0" color="black50">
                 Terms of Service
               </Sans>
             </TouchableWithoutFeedback>
