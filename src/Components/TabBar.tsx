@@ -90,7 +90,7 @@ export class TabBar extends React.Component<TabBarProps, null> {
         <Tabs>
           {this.props.tabs.map((name, index) => {
             const isTabActive = this.props.activeTab === index
-            const isTabDisabled = this.props.disabledTabs.includes(name)
+            const isTabDisabled = this.props.disabledTabs?.includes(name)
             return this.renderTab(name, index, isTabActive, isTabDisabled, this.props.goToPage)
           })}
         </Tabs>
