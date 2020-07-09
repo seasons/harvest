@@ -3,11 +3,17 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CustomerStatus, OnboardingStep, PushNotificationStatus, UserRole } from "./globalTypes"
+import { CustomerStatus, UserRole } from "./globalTypes"
 
 // ====================================================
 // GraphQL query operation: GetUser
 // ====================================================
+
+export interface GetUser_me_customer_user_pushNotification {
+  __typename: "UserPushNotification"
+  id: string
+  status: boolean
+}
 
 export interface GetUser_me_customer_user {
   __typename: "User"
@@ -15,8 +21,8 @@ export interface GetUser_me_customer_user {
   firstName: string
   lastName: string
   email: string
-  pushNotificationStatus: PushNotificationStatus | null
   role: UserRole
+  pushNotification: GetUser_me_customer_user_pushNotification | null
 }
 
 export interface GetUser_me_customer_detail_shippingAddress {
@@ -51,7 +57,6 @@ export interface GetUser_me_customer {
   __typename: "Customer"
   id: string
   status: CustomerStatus | null
-  onboardingSteps: OnboardingStep[]
   user: GetUser_me_customer_user
   detail: GetUser_me_customer_detail | null
 }

@@ -24,8 +24,11 @@ export const GET_USER = gql`
           firstName
           lastName
           email
-          pushNotificationStatus
           role
+          pushNotification {
+            id
+            status
+          }
         }
         detail {
           height
