@@ -57,14 +57,14 @@ export const BottomList: React.FC<BottomListProps> = ({ navigation, role, signOu
     },
   ]
 
-  const openURL = (item) => {
-    if (item.link) {
+  const handleOnPress = (item) => {
+    if (item.tracking) {
       tracking.trackEvent({
         actionName: item.tracking,
         actionType: Schema.ActionTypes.Tap,
       })
-      navigation.navigate(item.link)
     }
+    item.onPress?.()
   }
 
   return (
@@ -74,7 +74,7 @@ export const BottomList: React.FC<BottomListProps> = ({ navigation, role, signOu
           return null
         }
         return (
-          <TouchableOpacity key={item.title} onPress={() => openURL(item)}>
+          <TouchableOpacity key={item.title} onPress={() => handleOnPress(item)}>
             <Box style={index !== bottomList.length - 1 ? { marginBottom: 40 } : null}>
               <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" justifyContent="space-between">
                 <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
