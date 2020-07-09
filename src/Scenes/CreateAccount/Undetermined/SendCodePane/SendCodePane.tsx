@@ -1,5 +1,5 @@
 import { Box, Button, Container, Sans, Spacer, TextInput } from "App/Components"
-import React, { useState } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { KeyboardAvoidingView, Keyboard } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 
@@ -14,13 +14,21 @@ export const START_VERIFICATION = gql`
 `
 
 interface SendCodePaneProps {
+  focus: boolean
   onSendCode: (phoneNumber: string) => void
 }
 
-export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
+export const SendCodePane: React.FC<SendCodePaneProps> = ({ focus, onSendCode }) => {
   const [phoneNumber, setPhoneNumber] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
   const insets = useSafeArea()
+
+  const textInputRef = useRef(null)
+  useEffect(() => {
+    if (focus) {
+      textInputRef?.current?.focus?.()
+    }
+  }, [focus])
 
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -59,7 +67,6 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
 
   const sendCode = async () => {
     Keyboard.dismiss()
-
     if (isMutating) {
       return
     }
@@ -93,6 +100,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ onSendCode }) => {
           onChangeText={(_, val) => onPhoneNumberChange(val)}
           headerText="Phone number"
           placeholder="(000) 000-0000"
+          ref={textInputRef}
           variant="light"
         />
         <Spacer mb={3} />

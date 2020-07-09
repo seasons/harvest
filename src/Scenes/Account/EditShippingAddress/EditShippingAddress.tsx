@@ -172,7 +172,7 @@ export const EditShippingAddress: React.FC<{
       <CloseButton variant="light" />
       <FlatList
         data={[Row.Name, Row.Address1, Row.Address2_ZipCode, Row.City_State]}
-        ItemSeparatorComponent={() => <Spacer mb={6} />}
+        ItemSeparatorComponent={() => <Spacer mb={4} />}
         keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="handled"
         keyExtractor={(item, index) => item + String(index)}
