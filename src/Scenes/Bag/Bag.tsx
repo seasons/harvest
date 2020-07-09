@@ -27,6 +27,7 @@ export const Bag = screenTrack()((props) => {
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
+  const [disabledTabs, setDisabledTabs] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const tracking = useTracking()
@@ -48,6 +49,11 @@ export const Bag = screenTrack()((props) => {
   useEffect(() => {
     if (data) {
       setIsLoading(false)
+    }
+    const status = data?.me?.customer?.status
+    if (status !== "Active" && status !== "Paused") {
+      setDisabledTabs(["Bag", "History"])
+      setCurrentView(BagView.Saved)
     }
   }, [data])
 
@@ -269,6 +275,7 @@ export const Bag = screenTrack()((props) => {
       <TabBar
         spaceEvenly
         tabs={["Bag", "Saved", "History"]}
+        disabledTabs={disabledTabs}
         activeTab={currentView}
         goToPage={(page: BagView) => {
           tracking.trackEvent({
