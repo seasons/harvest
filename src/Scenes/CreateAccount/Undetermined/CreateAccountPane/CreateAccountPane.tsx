@@ -285,7 +285,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
           </Flex>
           <Spacer height={100} />
         </ScrollView>
-        <Box px={2} style={{ backgroundColor: "transparent" }}>
+        <Box px={2}>
           <Button
             block
             disabled={!isFormValid}
