@@ -1,9 +1,11 @@
 import { Box } from "App/Components"
 import React from "react"
+
 import { useNavigation } from "@react-navigation/native"
-import { SavedItem } from "./SavedItem"
-import { BagEmptyState } from "./BagEmptyState"
+
 import { BagView } from "../Bag"
+import { BagEmptyState } from "./BagEmptyState"
+import { SavedItem } from "./SavedItem"
 
 const SECTION_HEIGHT = 300
 

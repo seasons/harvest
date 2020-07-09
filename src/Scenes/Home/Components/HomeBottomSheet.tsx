@@ -5,7 +5,6 @@ import { BagView } from "App/Scenes/Bag/Bag"
 import { space } from "App/utils"
 import React, { useEffect, useState } from "react"
 import { Dimensions } from "react-native"
-import { Easing } from "react-native-reanimated"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 
 import { useNavigation } from "@react-navigation/native"
@@ -17,6 +16,7 @@ const dimensions = Dimensions.get("window")
 export const HomeBottomSheet = ({ data }) => {
   const [sections, setSections] = useState([])
   const navigation = useNavigation()
+  const reservationFeedback = data?.reservationFeedback
 
   useEffect(() => {
     const sections = []
@@ -98,7 +98,9 @@ export const HomeBottomSheet = ({ data }) => {
     }
   }
 
-  const reservationFeedback = data?.reservationFeedback
+  if (sections.length === 0) {
+    return null
+  }
 
   return (
     <ScrollBottomSheet<string>
@@ -111,6 +113,7 @@ export const HomeBottomSheet = ({ data }) => {
       snapPoints={[snapPoint, dimensions.height - blogContentHeight - NAV_HEIGHT]}
       initialSnapIndex={1}
       renderHandle={() => <Handle style={{ marginTop: space(2), marginBottom: space(1) }} backgroundColor="black10" />}
+      keyExtractor={(item: any, i) => item.type + i}
       data={sections}
       renderItem={({ item }) => renderItem(item)}
       ListFooterComponent={() => (
