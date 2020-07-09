@@ -179,7 +179,7 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ focus, onVerifyP
           variant="light"
         />
       </Box>
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom, 16)}>
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom - 8, 8)}>
         <Flex pb={insets.bottom + 16} px={2} flexDirection="row">
           {showBackButton && (
             <>

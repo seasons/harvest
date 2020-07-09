@@ -195,7 +195,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   // Render
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={32 + insets.bottom}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={32 + 8 + insets.bottom}>
         <ScrollView
           keyboardDismissMode="interactive"
           keyboardShouldPersistTaps="always"
@@ -296,7 +296,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               variant="light"
             />
           </Flex>
-          <Spacer height={100} />
+          <Spacer height={108} />
         </ScrollView>
         <Box px={2}>
           <Button
