@@ -11,6 +11,7 @@ import { Box, Sans } from "./"
 interface TabBarProps {
   /** Auto: A list of strings for the buttons */
   tabs: string[]
+  disabledTabs: string[]
   /** Auto:  A callback for usage in the tab buttons */
   goToPage?: (page: Number) => null | void
   /** Auto: The index of the currently active tab */
@@ -40,8 +41,8 @@ const TabButton = styled.View<{ spaceEvenly?: boolean; active?: boolean }>`
   flex-grow: 1;
   border-color: transparent;
   border-bottom-width: 3px;
-  ${p => p.spaceEvenly && `flex: 1;`};
-  ${p =>
+  ${(p) => p.spaceEvenly && `flex: 1;`};
+  ${(p) =>
     p.active &&
     `
     border-color: #000000;
@@ -57,17 +58,25 @@ export const Tab: React.SFC<TabProps> = ({ children }) => (
 )
 
 export class TabBar extends React.Component<TabBarProps, null> {
-  renderTab(name, page, isTabActive, onPressHandler) {
+  renderTab(name, page, isTabActive, isTabDisabled, onPressHandler) {
+    let tabColor
+    if (isTabDisabled) {
+      tabColor = color("black25")
+    } else if (isTabActive) {
+      tabColor = color("black100")
+    } else {
+      tabColor = color("black50")
+    }
     return (
       <Button
         key={name}
         accessible={true}
         accessibilityLabel={name}
         accessibilityTraits="button"
-        onPress={() => onPressHandler(page)}
+        onPress={() => (isTabDisabled ? null : onPressHandler(page))}
       >
         <TabButton spaceEvenly={this.props.spaceEvenly} active={isTabActive}>
-          <Sans numberOfLines={1} weight="medium" size="2" color={isTabActive ? "black" : color("black50")}>
+          <Sans numberOfLines={1} weight="medium" size="2" color={tabColor}>
             {name}
           </Sans>
         </TabButton>
@@ -81,7 +90,8 @@ export class TabBar extends React.Component<TabBarProps, null> {
         <Tabs>
           {this.props.tabs.map((name, index) => {
             const isTabActive = this.props.activeTab === index
-            return this.renderTab(name, index, isTabActive, this.props.goToPage)
+            const isTabDisabled = this.props.disabledTabs.includes(name)
+            return this.renderTab(name, index, isTabActive, isTabDisabled, this.props.goToPage)
           })}
         </Tabs>
       </Wrapper>
