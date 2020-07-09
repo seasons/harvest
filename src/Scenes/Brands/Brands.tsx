@@ -102,11 +102,11 @@ export const Brands = screenTrack()((props: any) => {
     let index
     if (touchedLetter === "#") {
       index = 0
-      listRef?.current?.scrollToOffset({ animated: false, offset: index })
+      listRef?.current?.scrollToOffset?.({ animated: false, offset: index })
     } else {
       index = data?.brands.findIndex((item) => item["name"].charAt(0).toUpperCase().localeCompare(touchedLetter) === 0)
       if (index > -1) {
-        listRef?.current?.scrollToOffset({ animated: false, offset: index * ITEM_HEIGHT })
+        listRef?.current?.scrollToOffset?.({ animated: false, offset: index * ITEM_HEIGHT })
       }
     }
   }

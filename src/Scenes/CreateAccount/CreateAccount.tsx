@@ -83,7 +83,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route 
   const flatListRef: MutableRefObject<FlatList<State>> = useRef(null)
   // The maximum index shown in the FlatList
   const maxScrollableIndex = states.length - (userState === UserState.Undetermined ? 1 : 2)
-  useEffect(() => flatListRef?.current?.scrollToIndex({ index: Math.min(index, maxScrollableIndex) }), [index])
+  useEffect(() => flatListRef?.current?.scrollToIndex?.({ index: Math.min(index, maxScrollableIndex) }), [index])
 
   const [phoneNumber, setPhoneNumber] = useState(null as string)
   const [checkoutUrl, setCheckoutUrl] = useState(null as string)
@@ -100,6 +100,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route 
       case State.SendCode:
         pane = (
           <SendCodePane
+            focus={currentState === State.SendCode}
             onSendCode={(phoneNumber) => {
               setPhoneNumber(phoneNumber)
               setNextState()
@@ -108,7 +109,14 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route 
         )
         break
       case State.VerifyCode:
-        pane = <VerifyCodePane phoneNumber={phoneNumber} onRequestBack={setPrevState} onVerifyPhone={setNextState} />
+        pane = (
+          <VerifyCodePane
+            focus={currentState === State.VerifyCode}
+            onRequestBack={setPrevState}
+            onVerifyPhone={setNextState}
+            phoneNumber={phoneNumber}
+          />
+        )
         break
       case State.GetMeasurements:
         pane = <GetMeasurementsPane onGetMeasurements={setNextState} />
@@ -169,7 +177,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route 
           // depending on the initial index, so we have to wait for the layout to
           // finish and then retry.
           setTimeout(() => {
-            flatListRef?.current?.scrollToIndex({ index: info.index })
+            flatListRef?.current?.scrollToIndex?.({ index: info.index })
           }, 100)
         }}
         ref={flatListRef}

@@ -28,8 +28,7 @@ const SIGN_UP = gql`
       password: $password
       firstName: $firstName
       lastName: $lastName
-      zipCode: $zipCode
-      details: { birthday: $isoDateOfBirth }
+      details: { birthday: $isoDateOfBirth, shippingAddress: { create: { zipCode: $zipCode } } }
     ) {
       user {
         id
@@ -93,7 +92,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
 
   // Keyboard handling
 
-  const onFocusTextInput = (index: number) => scrollViewRef?.current?.scrollTo({ y: index * 60, animated: true })
+  const onFocusTextInput = (index: number) => scrollViewRef?.current?.scrollTo?.({ y: index * 60, animated: true })
 
   // Date picker popup
 

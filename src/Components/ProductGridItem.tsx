@@ -36,7 +36,7 @@ export const ProductGridItem: React.FC<{
         if (!!flatListRef?.current) {
           // If the flatList is passed down we scroll to the top when the page is reloaded
           // this is used for when the product view is being reloaded with a new product
-          flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 })
+          flatListRef?.current?.scrollToOffset?.({ animated: true, offset: 0 })
         }
       }}
     >

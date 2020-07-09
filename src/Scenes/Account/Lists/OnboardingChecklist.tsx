@@ -54,23 +54,23 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
       // Cannot edit phone number once you are waitlisted
       isTappable: userState == UserState.Undetermined,
       key: OnboardingStep.VerifiedPhone,
-      title: "Verify Phone Number",
+      title: "Verify phone number",
     },
     {
       // Cannot set measurements before verifying your phone number because you are triaged immediately after
       isTappable: onboardingSteps.includes(OnboardingStep.VerifiedPhone),
       key: OnboardingStep.SetMeasurements,
-      title: "Sizing & Measurements",
+      title: "Sizing & measurements",
     },
     {
       isTappable: true,
       key: OnboardingStep.SetStylePreferences,
-      title: "Style Preferences",
+      title: "Style preferences",
     },
     {
       isTappable: true,
       key: OnboardingStep.SetShippingAddress,
-      title: "Shipping Address",
+      title: "Shipping address",
     },
   ]
 
@@ -102,7 +102,6 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
               screen: "EditMeasurements",
               params: { measurements },
             })
-            // navigation.navigate("EditMeasurements", { measurements })
             break
         }
         break
@@ -111,14 +110,12 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
           screen: "EditStylePreferences",
           params: { stylePreferences },
         })
-        // navigation.navigate("EditStylePreferences", { stylePreferences })
         break
       case OnboardingStep.SetShippingAddress:
         navigation.navigate("Modal", {
           screen: "EditShippingAddress",
           params: { shippingAddress },
         })
-        // navigation.navigate("EditShippingAddress", { shippingAddress })
         break
     }
   }
