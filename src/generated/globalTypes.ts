@@ -104,6 +104,13 @@ export enum LocationType {
   Warehouse = "Warehouse",
 }
 
+export enum OnboardingStep {
+  SetMeasurements = "SetMeasurements",
+  SetShippingAddress = "SetShippingAddress",
+  SetStylePreferences = "SetStylePreferences",
+  VerifiedPhone = "VerifiedPhone",
+}
+
 export enum PackageTransitEventStatus {
   Delivered = "Delivered",
   Failure = "Failure",
@@ -170,6 +177,11 @@ export enum PhysicalProductStatus {
 }
 
 export enum Plan {
+  AllAccess = "AllAccess",
+  Essential = "Essential",
+}
+
+export enum PlanID {
   AllAccess = "AllAccess",
   Essential = "Essential",
 }
@@ -261,10 +273,27 @@ export enum ReservationStatus {
   Unknown = "Unknown",
 }
 
+export enum TriageCustomerStatus {
+  Authorized = "Authorized",
+  Waitlisted = "Waitlisted",
+}
+
 export enum UserRole {
   Admin = "Admin",
   Customer = "Customer",
   Partner = "Partner",
+}
+
+export enum UserVerificationMethod {
+  Email = "Email",
+  None = "None",
+  SMS = "SMS",
+}
+
+export enum UserVerificationStatus {
+  Approved = "Approved",
+  Denied = "Denied",
+  Pending = "Pending",
 }
 
 export enum WarehouseLocationType {
@@ -615,6 +644,14 @@ export interface CategoryScalarWhereInput {
   description_not_ends_with?: string | null;
   visible?: boolean | null;
   visible_not?: boolean | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
 }
 
 export interface CategoryUpdateDataInput {
@@ -804,10 +841,7 @@ export interface CustomerDetailCreateInput {
   phoneNumber?: string | null;
   birthday?: any | null;
   height?: number | null;
-  weight?: string | null;
   bodyType?: string | null;
-  averageTopSize?: string | null;
-  averageWaistSize?: string | null;
   averagePantLength?: string | null;
   preferredPronouns?: string | null;
   profession?: string | null;
@@ -819,6 +853,10 @@ export interface CustomerDetailCreateInput {
   commuteStyle?: string | null;
   phoneOS?: string | null;
   insureShipment?: boolean | null;
+  weight?: CustomerDetailCreateweightInput | null;
+  topSizes?: CustomerDetailCreatetopSizesInput | null;
+  waistSizes?: CustomerDetailCreatewaistSizesInput | null;
+  stylePreferences?: StylePreferencesCreateOneInput | null;
   shippingAddress?: LocationCreateOneInput | null;
 }
 
@@ -827,14 +865,23 @@ export interface CustomerDetailCreateOneInput {
   connect?: CustomerDetailWhereUniqueInput | null;
 }
 
+export interface CustomerDetailCreatetopSizesInput {
+  set?: string[] | null;
+}
+
+export interface CustomerDetailCreatewaistSizesInput {
+  set?: number[] | null;
+}
+
+export interface CustomerDetailCreateweightInput {
+  set?: number[] | null;
+}
+
 export interface CustomerDetailUpdateDataInput {
   phoneNumber?: string | null;
   birthday?: any | null;
   height?: number | null;
-  weight?: string | null;
   bodyType?: string | null;
-  averageTopSize?: string | null;
-  averageWaistSize?: string | null;
   averagePantLength?: string | null;
   preferredPronouns?: string | null;
   profession?: string | null;
@@ -846,6 +893,10 @@ export interface CustomerDetailUpdateDataInput {
   commuteStyle?: string | null;
   phoneOS?: string | null;
   insureShipment?: boolean | null;
+  weight?: CustomerDetailUpdateweightInput | null;
+  topSizes?: CustomerDetailUpdatetopSizesInput | null;
+  waistSizes?: CustomerDetailUpdatewaistSizesInput | null;
+  stylePreferences?: StylePreferencesUpdateOneInput | null;
   shippingAddress?: LocationUpdateOneInput | null;
 }
 
@@ -856,6 +907,18 @@ export interface CustomerDetailUpdateOneInput {
   delete?: boolean | null;
   update?: CustomerDetailUpdateDataInput | null;
   upsert?: CustomerDetailUpsertNestedInput | null;
+}
+
+export interface CustomerDetailUpdatetopSizesInput {
+  set?: string[] | null;
+}
+
+export interface CustomerDetailUpdatewaistSizesInput {
+  set?: number[] | null;
+}
+
+export interface CustomerDetailUpdateweightInput {
+  set?: number[] | null;
 }
 
 export interface CustomerDetailUpsertNestedInput {
@@ -3662,6 +3725,76 @@ export interface SizeWhereUniqueInput {
   slug?: string | null;
 }
 
+export interface StylePreferencesCreateInput {
+  id?: string | null;
+  styles?: StylePreferencesCreatestylesInput | null;
+  patterns?: StylePreferencesCreatepatternsInput | null;
+  colors?: StylePreferencesCreatecolorsInput | null;
+  brands?: StylePreferencesCreatebrandsInput | null;
+}
+
+export interface StylePreferencesCreateOneInput {
+  create?: StylePreferencesCreateInput | null;
+  connect?: StylePreferencesWhereUniqueInput | null;
+}
+
+export interface StylePreferencesCreatebrandsInput {
+  set?: string[] | null;
+}
+
+export interface StylePreferencesCreatecolorsInput {
+  set?: string[] | null;
+}
+
+export interface StylePreferencesCreatepatternsInput {
+  set?: string[] | null;
+}
+
+export interface StylePreferencesCreatestylesInput {
+  set?: string[] | null;
+}
+
+export interface StylePreferencesUpdateDataInput {
+  styles?: StylePreferencesUpdatestylesInput | null;
+  patterns?: StylePreferencesUpdatepatternsInput | null;
+  colors?: StylePreferencesUpdatecolorsInput | null;
+  brands?: StylePreferencesUpdatebrandsInput | null;
+}
+
+export interface StylePreferencesUpdateOneInput {
+  create?: StylePreferencesCreateInput | null;
+  connect?: StylePreferencesWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: StylePreferencesUpdateDataInput | null;
+  upsert?: StylePreferencesUpsertNestedInput | null;
+}
+
+export interface StylePreferencesUpdatebrandsInput {
+  set?: string[] | null;
+}
+
+export interface StylePreferencesUpdatecolorsInput {
+  set?: string[] | null;
+}
+
+export interface StylePreferencesUpdatepatternsInput {
+  set?: string[] | null;
+}
+
+export interface StylePreferencesUpdatestylesInput {
+  set?: string[] | null;
+}
+
+export interface StylePreferencesUpsertNestedInput {
+  update: StylePreferencesUpdateDataInput;
+  create: StylePreferencesCreateInput;
+}
+
+export interface StylePreferencesWhereUniqueInput {
+  id?: string | null;
+}
+
 export interface TagCreateManyWithoutProductsInput {
   create?: TagCreateWithoutProductsInput[] | null;
   connect?: TagWhereUniqueInput[] | null;
@@ -3830,6 +3963,8 @@ export interface UserCreateInput {
   lastName: string;
   role?: UserRole | null;
   pushNotificationStatus?: PushNotificationStatus | null;
+  verificationStatus?: UserVerificationStatus | null;
+  verificationMethod?: UserVerificationMethod | null;
   roles?: UserCreaterolesInput | null;
   pushNotifications?: PushNotificationReceiptCreateManyWithoutUsersInput | null;
 }
@@ -3850,6 +3985,8 @@ export interface UserUpdateDataInput {
   lastName?: string | null;
   role?: UserRole | null;
   pushNotificationStatus?: PushNotificationStatus | null;
+  verificationStatus?: UserVerificationStatus | null;
+  verificationMethod?: UserVerificationMethod | null;
   roles?: UserUpdaterolesInput | null;
   pushNotifications?: PushNotificationReceiptUpdateManyWithoutUsersInput | null;
 }

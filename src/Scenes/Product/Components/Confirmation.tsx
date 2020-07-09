@@ -33,7 +33,7 @@ export const Confirmation = ({ type }) => {
             {text}
           </Sans>
           <Spacer mb={1} />
-          <Sans size="2" color="gray" textAlign="center">
+          <Sans size="2" color="black50" textAlign="center">
             {subtext}
           </Sans>
         </Flex>

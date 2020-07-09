@@ -17,14 +17,14 @@ export const CurrentRotationItem = ({ physicalProduct }) => {
     <Container key={product.id}>
       <Box p={2}>
         <Sans size="2">{product.brand.name}</Sans>
-        <Sans size="2" color="gray">
+        <Sans size="2" color="black50">
           {product.name}
         </Sans>
         <Flex flexDirection="row">
-          <Sans size="2" color="gray">
+          <Sans size="2" color="black50">
             Size {productVariant.size}
           </Sans>
-          <Sans size="2" color="gray" style={{ marginLeft: "auto" }}>
+          <Sans size="2" color="black50" style={{ marginLeft: "auto" }}>
             Retail ${product.retailPrice}
           </Sans>
         </Flex>

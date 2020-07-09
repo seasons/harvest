@@ -9,25 +9,21 @@ import { PlanID } from "./globalTypes";
 // GraphQL query operation: chargebeeCheckout
 // ====================================================
 
-export interface chargebeeCheckout_chargebeeCheckout {
-  __typename: "ChargebeeCheckout";
-  created_at: any;
-  embed: boolean;
-  expires_at: number;
+export interface chargebeeCheckout_hostedChargebeeCheckout {
+  __typename: "ChargebeeHostedPagePayload";
   id: string;
-  object: string;
-  resource_version: any;
-  state: string;
   type: string;
-  updated_at: any;
   url: string;
+  state: string;
+  embed: boolean;
+  created_at: any;
+  expires_at: number;
 }
 
 export interface chargebeeCheckout {
-  chargebeeCheckout: chargebeeCheckout_chargebeeCheckout | null;
+  hostedChargebeeCheckout: chargebeeCheckout_hostedChargebeeCheckout | null;
 }
 
 export interface chargebeeCheckoutVariables {
   planID: PlanID;
-  userIDHash: string;
 }

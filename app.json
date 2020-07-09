@@ -7,13 +7,10 @@
     "privacy": "unlisted",
     "version": "1.0.0",
     "entryPoint": "node_modules/expo/AppEntry.js",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "ios": {
-      "bundleIdentifier": "com.seasons.seasons"
+      "associatedDomains": ["applinks:www.seasons.nyc"],
+      "bundleIdentifier": "com.seasons.Seasons"
     },
     "android": {
       "package": "com.seasons.seasons"

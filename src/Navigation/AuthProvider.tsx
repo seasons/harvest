@@ -54,7 +54,9 @@ export const AuthProvider = ({ currentScreen, apolloClient }) => {
         const userSession = await getUserSession()
         if (userSession && userSession.token) {
           const user = userSession?.user
-          analytics.identify(user?.email, user)
+          if (user) {
+            analytics.identify(user.email, user)
+          }
           dispatch({ type: "RESTORE_TOKEN", token: userSession.token })
         }
       } catch (e) {
