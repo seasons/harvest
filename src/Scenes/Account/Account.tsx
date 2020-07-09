@@ -8,10 +8,8 @@ import { useQuery } from "react-apollo"
 import { Image, ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
 import * as Sentry from "@sentry/react-native"
-
 import { BottomList, CustomerStatus, OnboardingChecklist, ProfileList } from "./Lists"
 import { State, UserState } from "../CreateAccount/CreateAccount"
-import { Loader } from "App/Components/Loader"
 import { Spinner } from "App/Components/Spinner"
 
 export const GET_USER = gql`
@@ -95,7 +93,7 @@ export const Account = screenTrack()(({ navigation }) => {
   const email = user?.email
   const firstName = user?.firstName
   const lastName = user?.lastName
-  const pushNotificationStatus = user?.pushNotificationStatus
+  const pushNotification = user?.pushNotification
   const role = user?.role
   const userID = user?.id
 
@@ -187,7 +185,7 @@ export const Account = screenTrack()(({ navigation }) => {
             )}
           </Box>
           <Separator mx={2} />
-          <NotificationToggle userID={userID} userNotificationStatus={pushNotificationStatus} />
+          <NotificationToggle pushNotification={pushNotification} />
           <Separator mx={2} />
           <Spacer mb={4} />
           <BottomList navigation={navigation} role={role} signOut={signOut} />

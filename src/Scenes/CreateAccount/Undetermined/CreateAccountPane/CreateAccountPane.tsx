@@ -36,7 +36,6 @@ const SIGN_UP = gql`
         email
         firstName
         lastName
-        pushNotificationStatus
         beamsToken
         roles
       }
