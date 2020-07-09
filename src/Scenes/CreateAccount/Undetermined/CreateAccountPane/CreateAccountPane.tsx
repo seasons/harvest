@@ -51,7 +51,6 @@ interface CreateAccountPaneProps {
 
 export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }) => {
   // Hooks
-
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
@@ -62,7 +61,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const [zipCode, setZipCode] = useState("")
 
   const validateForm = () => {
-    // TODO: More stringent name, password, dob, & zipcode checking
     setIsFormValid(
       firstName.length &&
         !firstName.trim().includes(" ") &&
@@ -91,11 +89,9 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const { signIn } = useAuthContext()
 
   // Keyboard handling
-
   const onFocusTextInput = (index: number) => scrollViewRef?.current?.scrollTo?.({ y: index * 60, animated: true })
 
   // Date picker popup
-
   const showDatePicker = () => {
     setIsDatePickerVisible(true)
   }
@@ -113,7 +109,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   }
 
   // Form/field validation
-
   const onZipCodeChange = (val: string) => {
     if (val.length > 5 || !isWholeNumber(val)) {
       // revert to previous valid value
@@ -124,19 +119,34 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   }
 
   // networking
-
   const [signup] = useMutation(SIGN_UP, {
     onCompleted: () => {
       setIsMutating(false)
     },
     onError: (err) => {
-      console.log("Error CreateAccountPane.tsx", err)
-      const popUpData = {
-        title: "Oops! Try again!",
+      console.log("Error CreateAccountPane.tsx")
+      let popUpData = {
+        title: "Uh Oh. Something went wrong",
         note:
-          "There was an issue creating your account. Double check your details and retry. Note: You cannot use an email that is already linked to an account.",
+          "It looks like we're having trouble processing your request. Please contact us at membership@seasons.ny if this persists.",
         buttonText: "Close",
         onClose: hidePopUp,
+      }
+      if (err.message.includes("invalid_signup")) {
+        popUpData.title = "Oops. That email is already taken"
+        popUpData.note =
+          "It looks like that email is already associated with another account. If that's you, try logging in."
+      } else if (err.message.includes("password_strength_error") || err.message.includes("invalid_password")) {
+        popUpData.title = "Choose a stronger password"
+        popUpData.note =
+          "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one number."
+      } else if (err.message.includes("password_dictionary_error")) {
+        popUpData.title = "Choose a stronger password"
+        popUpData.note = "Your password is too common. Please pick something harder to guess!"
+      } else if (err.message.includes("password_no_user_info_error")) {
+        popUpData.title = "Choose a stronger password"
+        popUpData.note =
+          "Your password includes your personal information. Please choose a stronger password and try again."
       }
       showPopUp(popUpData)
       setIsMutating(false)
@@ -177,14 +187,12 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   }
 
   // webview
-
   const showWebview = (url: string) => {
     setWebViewUrl(url)
     setIsWebviewModalVisible(true)
   }
 
   // Render
-
   return (
     <Container insetsBottom={false} insetsTop={false}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={32 + insets.bottom}>

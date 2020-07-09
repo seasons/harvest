@@ -1,5 +1,4 @@
-import { Box, Sans, Spacer, Flex } from "App/Components"
-import { color } from "App/utils"
+import { Box, Sans, Flex } from "App/Components"
 import { useTracking, Schema } from "App/utils/track"
 import React from "react"
 import { TouchableOpacity, Linking } from "react-native"
@@ -18,7 +17,7 @@ export const BottomList: React.FC<BottomListProps> = ({ navigation, role, signOu
     {
       title: "Help and support",
       icon: <QuestionMark />,
-      onPress: () => Linking.openURL(`mailto:membership@seasons.nyc?subject="Support"`),
+      onPress: () => Linking.openURL(`mailto:membership@seasons.nyc?subject=Support`),
       tracking: Schema.ActionNames.SupportTapped,
     },
     {
