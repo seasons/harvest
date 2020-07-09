@@ -1,8 +1,10 @@
-import { Box, Sans, Spacer } from "App/Components"
+import { Box, Sans, Spacer, Flex } from "App/Components"
 import { color } from "App/utils"
 import { useTracking, Schema } from "App/utils/track"
 import React from "react"
 import { TouchableOpacity, Linking } from "react-native"
+import { QuestionMark, PrivacyPolicy, TermsOfService, LogOutSVG } from "Assets/svgs"
+import { ChevronIcon } from "Assets/icons"
 
 interface BottomListProps {
   navigation
@@ -14,47 +16,39 @@ export const BottomList: React.FC<BottomListProps> = ({ navigation, role, signOu
   const tracking = useTracking()
   const bottomList = [
     {
-      text: "Support",
-      onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.SupportTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
-        Linking.openURL(`mailto:membership@seasons.nyc?subject=Help`)
-      },
+      title: "Help and support",
+      icon: <QuestionMark />,
+      onPress: () => Linking.openURL(`mailto:membership@seasons.nyc?subject="Support"`),
+      tracking: Schema.ActionNames.SupportTapped,
     },
     {
-      text: "Privacy policy",
+      title: "Privacy policy",
+      icon: <PrivacyPolicy />,
+      tracking: Schema.ActionNames.PrivacyPolicyTapped,
       onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.PrivacyPolicyTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
         navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })
       },
     },
     {
-      text: "Terms of Service",
+      title: "Terms of Service",
+      icon: <TermsOfService />,
+      tracking: Schema.ActionNames.TermsOfServiceTapped,
       onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.TermsOfServiceTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
         navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })
       },
     },
     {
-      text: "Log out",
+      title: "Sign out",
+      icon: <LogOutSVG />,
+      tracking: Schema.ActionNames.LogOutTapped,
       onPress: () => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.LogOutTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
         signOut()
       },
     },
     {
-      text: "Debug menu",
+      title: "Debug menu",
+      icon: null,
+      tracking: null,
       onPress: () => {
         navigation.navigate("Modal", {
           screen: "DebugMenu",
@@ -63,21 +57,34 @@ export const BottomList: React.FC<BottomListProps> = ({ navigation, role, signOu
     },
   ]
 
+  const openURL = (item) => {
+    if (item.link) {
+      tracking.trackEvent({
+        actionName: item.tracking,
+        actionType: Schema.ActionTypes.Tap,
+      })
+      navigation.navigate(item.link)
+    }
+  }
+
   return (
-    <Box px={2} pt={4}>
-      {bottomList.map((listItem) => {
-        if (listItem.text === "Debug menu" && role !== "Admin") {
+    <Box px={2}>
+      {bottomList.map((item, index) => {
+        if (item.title === "Debug menu" && role !== "Admin") {
           return null
         }
         return (
-          <Box key={listItem.text}>
-            <TouchableOpacity onPress={listItem.onPress}>
-              <Sans size="2" color={listItem.text === "Log out" ? "red" : color("black100")}>
-                {listItem.text}
-              </Sans>
-            </TouchableOpacity>
-            <Spacer m={2} />
-          </Box>
+          <TouchableOpacity key={item.title} onPress={() => openURL(item)}>
+            <Box style={index !== bottomList.length - 1 ? { marginBottom: 40 } : null}>
+              <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" justifyContent="space-between">
+                <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
+                  <Box style={{ marginRight: 20 }}>{item.icon}</Box>
+                  <Sans size="2">{item.title}</Sans>
+                </Flex>
+                <ChevronIcon />
+              </Flex>
+            </Box>
+          </TouchableOpacity>
         )
       })}
     </Box>

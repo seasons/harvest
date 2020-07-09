@@ -11,6 +11,8 @@ import * as Sentry from "@sentry/react-native"
 
 import { BottomList, CustomerStatus, OnboardingChecklist, ProfileList } from "./Lists"
 import { State, UserState } from "../CreateAccount/CreateAccount"
+import { Loader } from "App/Components/Loader"
+import { Spinner } from "App/Components/Spinner"
 
 export const GET_USER = gql`
   query GetUser {
@@ -176,11 +178,18 @@ export const Account = screenTrack()(({ navigation }) => {
           </Box>
           <Separator mx={2} />
           <Box px={2} py={4}>
-            {renderBody()}
+            {data ? (
+              renderBody()
+            ) : (
+              <Flex pt={5} width="100%" alignItems="center" flexDirection="row" justifyContent="center">
+                <Spinner />
+              </Flex>
+            )}
           </Box>
           <Separator mx={2} />
           <NotificationToggle userID={userID} userNotificationStatus={pushNotificationStatus} />
           <Separator mx={2} />
+          <Spacer mb={4} />
           <BottomList navigation={navigation} role={role} signOut={signOut} />
         </ScrollView>
       </Animatable.View>
