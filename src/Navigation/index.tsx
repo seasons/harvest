@@ -15,15 +15,15 @@ const getActiveRouteName = (state) => {
 }
 
 export const AppContainer = ({ apolloClient }) => {
-  const routeNameRef = React.useRef()
-  const navigationRef = React.useRef()
+  const routeNameRef = React.useRef(null)
+  const navigationRef = React.useRef(null)
   const [currentScreen, setCurrentScreen] = useState("HomeStack")
 
   return (
     <NavigationContainer
       ref={navigationRef}
       onStateChange={(state) => {
-        const previousRouteName = routeNameRef.current
+        const previousRouteName = routeNameRef?.current
         const currentRouteName = getActiveRouteName(state)
 
         if (previousRouteName !== currentRouteName) {
@@ -33,7 +33,7 @@ export const AppContainer = ({ apolloClient }) => {
         routeNameRef.current = currentRouteName
       }}
     >
-      <AuthProvider apolloClient={apolloClient} currentScreen={currentScreen} navigationRef={navigationRef} />
+      <AuthProvider apolloClient={apolloClient} currentScreen={currentScreen} />
     </NavigationContainer>
   )
 }

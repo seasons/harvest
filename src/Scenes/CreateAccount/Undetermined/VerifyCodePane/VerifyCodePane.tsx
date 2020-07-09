@@ -1,7 +1,7 @@
 import { Box, Button, Container, Sans, Spacer, TextInput, Flex } from "App/Components"
 import { isWholeNumber } from "App/helpers/validation"
 import { Text } from "Components/Typography"
-import React, { useState } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
@@ -21,15 +21,23 @@ const windowDimensions = Dimensions.get("window")
 const windowWidth = windowDimensions.width
 
 interface VerifyCodePaneProps {
-  phoneNumber?: string
+  focus: boolean
   onVerifyPhone: () => void
   onRequestBack: () => void
+  phoneNumber?: string
 }
 
-export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onVerifyPhone, onRequestBack }) => {
+export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ focus, onVerifyPhone, onRequestBack, phoneNumber }) => {
   const [code, setCode] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
   const insets = useSafeArea()
+
+  const textInputRef = useRef(null)
+  useEffect(() => {
+    if (focus) {
+      textInputRef?.current?.focus?.()
+    }
+  }, [focus])
 
   const [showBackButton, setShowBackButton] = useState(true)
   const backButtonAnimation = useSpring({
@@ -162,11 +170,12 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ phoneNumber, onV
         <Spacer mb={5} />
         <TextInput
           currentValue={code}
+          headerText="Code"
           inputKey="code"
           keyboardType="number-pad"
           onChangeText={(_, val) => onCodeChange(val)}
           placeholder="000-000"
-          headerText="Code"
+          ref={textInputRef}
           variant="light"
         />
       </Box>
