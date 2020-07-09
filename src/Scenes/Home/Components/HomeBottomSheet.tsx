@@ -6,6 +6,7 @@ import { color, space } from "App/utils"
 import React, { useEffect, useRef, useState } from "react"
 import { Dimensions } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
+import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 import BottomSheet from "reanimated-bottom-sheet"
 
 import { useNavigation } from "@react-navigation/native"
@@ -73,7 +74,8 @@ export const HomeBottomSheet = ({ data }) => {
   }, [data])
 
   const blogContentHeight = dimensions.width
-  const snapPoint = dimensions.height - blogContentHeight - NAV_HEIGHT
+  // const snapPoint = dimensions.height - blogContentHeight - NAV_HEIGHT
+  const snapPoint = 20
 
   const renderItem = (item) => {
     switch (item.type) {
@@ -111,32 +113,27 @@ export const HomeBottomSheet = ({ data }) => {
     )
   }
 
-  const bottomSheetContent = () => {
-    const reservationFeedback = data?.reservationFeedback
-    // Height of each sections combined + HomeFooter height
-    const contentHeight = sections.map((a) => a.height).reduce((a, b) => a + b, 0) + 310
-    return (
-      <Box style={{ backgroundColor: color("white100"), height: contentHeight }}>
-        <Handle style={{ marginTop: space(2) }} backgroundColor="black10" />
-        <Spacer mb={2} />
-        <Content />
-        <Box>
-          <HomeFooter
-            navigation={navigation}
-            bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
-          />
-        </Box>
-      </Box>
-    )
-  }
+  const reservationFeedback = data?.reservationFeedback
 
   return (
-    <BottomSheet
-      ref={bottomSheet}
-      borderRadius={28}
-      snapPoints={[dimensions.height - NAV_HEIGHT - insets.top, snapPoint]}
-      initialSnap={1}
-      renderContent={bottomSheetContent}
+    <ScrollBottomSheet<string>
+      componentType="FlatList"
+      containerStyle={{
+        backgroundColor: "white",
+        borderRadius: 20,
+        marginTop: 25,
+      }}
+      snapPoints={[snapPoint, dimensions.height - blogContentHeight - NAV_HEIGHT]}
+      initialSnapIndex={1}
+      renderHandle={() => <Handle style={{ marginTop: space(2), marginBottom: space(1) }} backgroundColor="black10" />}
+      data={sections}
+      renderItem={({ item }) => renderItem(item)}
+      ListFooterComponent={() => (
+        <HomeFooter
+          navigation={navigation}
+          bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
+        />
+      )}
     />
   )
 }
