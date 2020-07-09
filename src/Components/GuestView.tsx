@@ -18,7 +18,7 @@ export const GuestView = ({ navigation }) => {
           <Spacer mb={0.5} />
           <Box pr={3}>
             <Sans size="2" color={color("black50")}>
-              Sign in to start reserving or join the waitlist to secure your spot and get an invite.
+              Sign in to start reserving or create an account to get access. Currently available in select cities.
             </Sans>
           </Box>
         </Box>
