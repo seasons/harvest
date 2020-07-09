@@ -1,13 +1,12 @@
-import { Box, Handle, Spacer } from "App/Components"
+import { Handle } from "App/Components"
 import { NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
-import { color, space } from "App/utils"
-import React, { useEffect, useRef, useState } from "react"
+import { space } from "App/utils"
+import React, { useEffect, useState } from "react"
 import { Dimensions } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { Easing } from "react-native-reanimated"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
-import BottomSheet from "reanimated-bottom-sheet"
 
 import { useNavigation } from "@react-navigation/native"
 
@@ -17,8 +16,6 @@ const dimensions = Dimensions.get("window")
 
 export const HomeBottomSheet = ({ data }) => {
   const [sections, setSections] = useState([])
-  const bottomSheet = useRef(null)
-  const insets = useSafeArea()
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -74,7 +71,6 @@ export const HomeBottomSheet = ({ data }) => {
   }, [data])
 
   const blogContentHeight = dimensions.width
-  // const snapPoint = dimensions.height - blogContentHeight - NAV_HEIGHT
   const snapPoint = 20
 
   const renderItem = (item) => {
@@ -102,17 +98,6 @@ export const HomeBottomSheet = ({ data }) => {
     }
   }
 
-  const Content = () => {
-    return (
-      <Box my={2}>
-        {sections.map((item, i) => {
-          const sectionKey = item.type + i
-          return <Box key={sectionKey}>{renderItem(item)}</Box>
-        })}
-      </Box>
-    )
-  }
-
   const reservationFeedback = data?.reservationFeedback
 
   return (
@@ -134,6 +119,9 @@ export const HomeBottomSheet = ({ data }) => {
           bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
         />
       )}
+      animationConfig={{
+        duration: 200,
+      }}
     />
   )
 }
