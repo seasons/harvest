@@ -108,7 +108,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ focus, onSendCode })
           This should be a 10 digit number.
         </Sans>
       </Box>
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom, 16)}>
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom - 8, 8)}>
         <Box style={{ padding: 16, paddingBottom: insets.bottom + 16 }}>
           <Button block disabled={!isFormValid} loading={isMutating} onPress={sendCode} variant="primaryBlack">
             Next
