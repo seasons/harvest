@@ -206,81 +206,87 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
           <Spacer mb={5} />
           <Flex flexDirection="row">
             <TextInput
-              headerText="First name"
-              currentValue={firstName}
-              variant="light"
-              inputKey="first-name"
               autoCapitalize="words"
+              autoCompleteType="name"
+              currentValue={firstName}
+              headerText="First name"
               onChangeText={(_, val) => setFirstName(val)}
               onFocus={() => onFocusTextInput(0)}
               style={{ flex: 1 }}
+              textContentType="givenName"
+              variant="light"
             />
             <Spacer mr={9} />
             <TextInput
-              headerText="Last name"
-              currentValue={lastName}
-              variant="light"
-              inputKey="last-name"
               autoCapitalize="words"
+              autoCompleteType="name"
+              currentValue={lastName}
+              headerText="Last name"
               onChangeText={(_, val) => setLastName(val)}
               onFocus={() => onFocusTextInput(0)}
               style={{ flex: 1 }}
+              textContentType="familyName"
+              variant="light"
             />
           </Flex>
           <Spacer mb={4} />
           <TextInput
+            autoCompleteType="email"
             headerText="Email"
-            variant="light"
-            inputKey="email"
             keyboardType="email-address"
             onChangeText={(_, val) => setEmail(val)}
             onFocus={() => onFocusTextInput(1)}
+            textContentType="emailAddress"
+            variant="light"
           />
           <Spacer mb={4} />
           <Flex flexDirection="row">
             <TextInput
-              secureTextEntry
+              autoCompleteType="password"
               headerText="Password"
-              variant="light"
-              inputKey="password"
               onChangeText={(_, val) => setPassword(val)}
               onFocus={() => onFocusTextInput(2)}
+              secureTextEntry
               style={{ flex: 1 }}
+              textContentType="password"
+              variant="light"
             />
             <Spacer mr={9} />
             <TextInput
-              secureTextEntry
+              autoCompleteType="password"
               headerText="Confirm Password"
-              variant="light"
-              inputKey="password-confirmation"
               onChangeText={(_, val) => setPasswordConfirmation(val)}
               onFocus={() => onFocusTextInput(2)}
+              secureTextEntry
               style={{ flex: 1 }}
+              textContentType="password"
+              variant="light"
             />
           </Flex>
           <Spacer mb={4} />
           <Flex flexDirection="row">
             <FakeTextInput
-              headerText="Date of Birth"
-              placeholder="mm/dd/yyyy"
               currentValue={dateOfBirth}
-              variant="light"
+              headerText="Date of Birth"
               onPress={() => {
                 Keyboard.dismiss()
                 showDatePicker()
               }}
+              placeholder="mm/dd/yyyy"
               style={{ flex: 1 }}
+              variant="light"
             />
             <Spacer mr={9} />
             <TextInput
-              headerText="ZIP Code"
+              autoCompleteType="postal-code"
               currentValue={zipCode}
-              variant="light"
-              inputKey="zip-code"
+              headerText="ZIP Code"
               keyboardType="number-pad"
               onChangeText={(_, val) => onZipCodeChange(val)}
               onFocus={() => onFocusTextInput(4)}
               style={{ flex: 1 }}
+              textContentType="postalCode"
+              variant="light"
             />
           </Flex>
           <Spacer height={100} />

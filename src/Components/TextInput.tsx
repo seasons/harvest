@@ -6,7 +6,6 @@ import { animated, useSpring } from "react-spring"
 import { Box, Spacer } from "./"
 import { themeProps } from "./Theme"
 import { fontFamily, Sans } from "./Typography"
-// import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 
 export enum DisplayState {
   Active = "active",
@@ -60,6 +59,20 @@ export function getColorsForVariant(variant: TextInputVariant) {
 
 export interface TextInputProps {
   autoCapitalize?: "none" | "sentences" | "words" | "characters"
+  autoCompleteType?:
+    | "username"
+    | "password"
+    | "email"
+    | "name"
+    | "tel"
+    | "street-address"
+    | "postal-code"
+    | "cc-number"
+    | "cc-csc"
+    | "cc-exp"
+    | "cc-exp-month"
+    | "cc-exp-year"
+    | "off"
   autoFocus?: boolean
   blurOnSubmit?: boolean
   currentValue?: string
@@ -72,11 +85,39 @@ export interface TextInputProps {
   placeholder?: string
   secureTextEntry?: boolean
   style?: ViewStyle
+  textContentType?:
+    | "none"
+    | "URL"
+    | "addressCity"
+    | "addressCityAndState"
+    | "addressState"
+    | "countryName"
+    | "creditCardNumber"
+    | "emailAddress"
+    | "familyName"
+    | "fullStreetAddress"
+    | "givenName"
+    | "jobTitle"
+    | "location"
+    | "middleName"
+    | "name"
+    | "namePrefix"
+    | "nameSuffix"
+    | "nickname"
+    | "organizationName"
+    | "postalCode"
+    | "streetAddressLine1"
+    | "streetAddressLine2"
+    | "sublocality"
+    | "telephoneNumber"
+    | "username"
+    | "password"
   variant?: TextInputVariant
 }
 
 export const TextInput: React.FC<TextInputProps> = ({
   autoCapitalize = "none",
+  autoCompleteType,
   autoFocus,
   blurOnSubmit = true,
   currentValue,
@@ -89,6 +130,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   placeholder,
   secureTextEntry,
   style,
+  textContentType,
   variant = defaultVariant,
 }) => {
   const [state, setState] = useState(currentValue ? DisplayState.Active : DisplayState.Inactive)
@@ -137,6 +179,7 @@ export const TextInput: React.FC<TextInputProps> = ({
       </TouchableWithoutFeedback>
       <RNTextInput
         autoCapitalize={autoCapitalize}
+        autoCompleteType={autoCompleteType}
         autoFocus={autoFocus}
         blurOnSubmit={blurOnSubmit}
         keyboardType={keyboardType}
@@ -154,6 +197,7 @@ export const TextInput: React.FC<TextInputProps> = ({
           ...style,
           textAlignVertical: "center",
         }}
+        textContentType={textContentType}
         value={value}
       />
       <TouchableWithoutFeedback onPress={() => textInputRef?.current?.focus()}>

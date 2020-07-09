@@ -147,7 +147,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
   const stepsCompleted = items.filter((item) => onboardingSteps.includes(item.key)).length
 
   return (
-    <Box>
+    <Box pb={2}>
       <Sans size="2">{header}</Sans>
       <Spacer height={4} />
       <Sans size="1" color="black50">
