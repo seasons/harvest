@@ -1,13 +1,12 @@
-import { Box, Handle, Spacer } from "App/Components"
+import { Handle } from "App/Components"
 import { NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
-import { color, space } from "App/utils"
-import React, { useEffect, useRef, useState } from "react"
-import { Dimensions, TouchableWithoutFeedback, View } from "react-native"
-import { FlatList } from "react-native-gesture-handler"
-import { useSafeArea } from "react-native-safe-area-context"
-import BottomSheet from "reanimated-bottom-sheet"
+import { space } from "App/utils"
+import React, { useEffect, useState } from "react"
+import { Dimensions } from "react-native"
+import { Easing } from "react-native-reanimated"
+import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 
 import { useNavigation } from "@react-navigation/native"
 
@@ -17,8 +16,6 @@ const dimensions = Dimensions.get("window")
 
 export const HomeBottomSheet = ({ data }) => {
   const [sections, setSections] = useState([])
-  const bottomSheet = useRef(null)
-  const insets = useSafeArea()
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -74,7 +71,7 @@ export const HomeBottomSheet = ({ data }) => {
   }, [data])
 
   const blogContentHeight = dimensions.width
-  const snapPoint = dimensions.height - blogContentHeight - NAV_HEIGHT
+  const snapPoint = 20
 
   const renderItem = (item) => {
     switch (item.type) {
@@ -101,43 +98,30 @@ export const HomeBottomSheet = ({ data }) => {
     }
   }
 
-  const Content = () => {
-    return (
-      <Box my={2}>
-        {sections.map((item, i) => {
-          const sectionKey = item.type + i
-          return <Box key={sectionKey}>{renderItem(item)}</Box>
-        })}
-      </Box>
-    )
-  }
-
-  const bottomSheetContent = () => {
-    const reservationFeedback = data?.reservationFeedback
-    // Height of each sections combined + HomeFooter height
-    const contentHeight = sections.map((a) => a.height).reduce((a, b) => a + b, 0) + 310
-    return (
-      <Box style={{ backgroundColor: color("white100"), height: contentHeight }}>
-        <Handle style={{ marginTop: space(2) }} backgroundColor="black10" />
-        <Spacer mb={2} />
-        <Content />
-        <Box>
-          <HomeFooter
-            navigation={navigation}
-            bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
-          />
-        </Box>
-      </Box>
-    )
-  }
+  const reservationFeedback = data?.reservationFeedback
 
   return (
-    <BottomSheet
-      ref={bottomSheet}
-      borderRadius={28}
-      snapPoints={[dimensions.height - NAV_HEIGHT - insets.top, snapPoint]}
-      initialSnap={1}
-      renderContent={bottomSheetContent}
+    <ScrollBottomSheet<string>
+      componentType="FlatList"
+      containerStyle={{
+        backgroundColor: "white",
+        borderRadius: 20,
+        marginTop: 25,
+      }}
+      snapPoints={[snapPoint, dimensions.height - blogContentHeight - NAV_HEIGHT]}
+      initialSnapIndex={1}
+      renderHandle={() => <Handle style={{ marginTop: space(2), marginBottom: space(1) }} backgroundColor="black10" />}
+      data={sections}
+      renderItem={({ item }) => renderItem(item)}
+      ListFooterComponent={() => (
+        <HomeFooter
+          navigation={navigation}
+          bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
+        />
+      )}
+      animationConfig={{
+        duration: 200,
+      }}
     />
   )
 }

@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react"
-import { Box, Sans, Flex, Spacer, FadeInImage } from "App/Components"
-import { TouchableOpacity, ScrollView, TouchableWithoutFeedback } from "react-native"
-import { chunk } from "lodash"
-import { useTracking } from "react-tracking"
+import { Box, FadeInImage, Flex, Sans, Spacer } from "App/Components"
 import { Schema } from "App/utils/track"
-import { useNavigation } from "@react-navigation/native"
+import { chunk } from "lodash"
+import React, { useEffect, useState } from "react"
+import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import * as Animatable from "react-native-animatable"
+import { ScrollView } from "react-native-gesture-handler"
+import { useTracking } from "react-tracking"
+
+import { useNavigation } from "@react-navigation/native"
 
 interface TagData {
   title: string
