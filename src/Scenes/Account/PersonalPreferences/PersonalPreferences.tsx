@@ -15,6 +15,7 @@ const GET_PREFERENCES = gql`
       customer {
         id
         detail {
+          id
           phoneNumber
           birthday
           height
