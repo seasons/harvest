@@ -101,7 +101,7 @@ export const Account = screenTrack()(({ navigation }) => {
     return (
       <Box pt="5px">
         {[...Array(4)].map((_arr, index) => (
-          <Box mb={index !== 3 ? "43px" : 0}>
+          <Box mb={index !== 3 ? "43px" : 0} key={index}>
             <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" justifyContent="space-between">
               <Flex flexDirection="row" alignItems="center">
                 <Skeleton width={22} height={27} />
@@ -265,7 +265,7 @@ export const Account = screenTrack()(({ navigation }) => {
           </Box>
           <InsetSeparator />
           <Box px={2} py={4}>
-            {false ? renderBody() : <ListSkeleton />}
+            {!!data ? renderBody() : <ListSkeleton />}
           </Box>
           <InsetSeparator />
           <NotificationToggle pushNotification={pushNotification} />
