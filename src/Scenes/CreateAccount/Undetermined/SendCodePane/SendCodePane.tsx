@@ -89,7 +89,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ focus, onSendCode })
           Enter your phone number
         </Sans>
         <Spacer mb={1} />
-        <Sans color="black50" size="2">
+        <Sans color="black50" size="1">
           We'll send you a code to verify your account
         </Sans>
         <Spacer mb={4} />
@@ -104,7 +104,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ focus, onSendCode })
           variant="light"
         />
         <Spacer mb={3} />
-        <Sans size="1" color="black50">
+        <Sans size="0" color="black50">
           This should be a 10 digit number.
         </Sans>
       </Box>

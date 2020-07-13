@@ -158,11 +158,11 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ focus, onVerifyP
         </Sans>
         <Spacer mb={1} />
         <Text>
-          <Sans color="black50" size="2">
+          <Sans color="black50" size="1">
             Need us to send it again?
           </Sans>{" "}
           <TouchableWithoutFeedback>
-            <Sans color="black100" onPress={resendCode} size="2" style={{ textDecorationLine: "underline" }}>
+            <Sans color="black100" onPress={resendCode} size="1" style={{ textDecorationLine: "underline" }}>
               Resend
             </Sans>
           </TouchableWithoutFeedback>

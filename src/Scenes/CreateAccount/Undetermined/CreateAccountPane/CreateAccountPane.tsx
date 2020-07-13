@@ -69,7 +69,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
         isValidEmail(email) &&
         password.trim().length &&
         passwordConfirmation === password &&
-        dateOfBirth.length &&
         zipCode.length === 5
     )
   }
@@ -207,7 +206,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             Let's create your account
           </Sans>
           <Spacer mb={1} />
-          <Sans color="black50" size="2">
+          <Sans color="black50" size="1">
             You'll use this to sign into the app, choose your plan, and manage your membership.
           </Sans>
           <Spacer mb={5} />
@@ -219,6 +218,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               headerText="First name"
               onChangeText={(_, val) => setFirstName(val)}
               onFocus={() => onFocusTextInput(0)}
+              placeholder="Will"
               style={{ flex: 1 }}
               textContentType="givenName"
               variant="light"
@@ -231,6 +231,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               headerText="Last name"
               onChangeText={(_, val) => setLastName(val)}
               onFocus={() => onFocusTextInput(0)}
+              placeholder="Smith"
               style={{ flex: 1 }}
               textContentType="familyName"
               variant="light"
@@ -243,6 +244,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             keyboardType="email-address"
             onChangeText={(_, val) => setEmail(val)}
             onFocus={() => onFocusTextInput(1)}
+            placeholder="Will.Smith@gmail.com"
             textContentType="emailAddress"
             variant="light"
           />
@@ -274,7 +276,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
           <Flex flexDirection="row">
             <FakeTextInput
               currentValue={dateOfBirth}
-              headerText="Date of Birth"
+              headerText="Birthday (optional)"
               onPress={() => {
                 Keyboard.dismiss()
                 showDatePicker()
@@ -291,6 +293,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               keyboardType="number-pad"
               onChangeText={(_, val) => onZipCodeChange(val)}
               onFocus={() => onFocusTextInput(4)}
+              placeholder="5-digits"
               style={{ flex: 1 }}
               textContentType="postalCode"
               variant="light"

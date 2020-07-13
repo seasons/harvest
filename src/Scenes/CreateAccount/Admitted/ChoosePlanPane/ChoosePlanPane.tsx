@@ -87,7 +87,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
               Let's choose your plan
             </Sans>
             <Spacer mb={1} />
-            <Sans color="black50" size="2">
+            <Sans color="black50" size="1">
               Don't worry, you can change your plan from your profile settings at any time.
             </Sans>
 

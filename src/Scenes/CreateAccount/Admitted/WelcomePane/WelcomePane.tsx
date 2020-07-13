@@ -20,12 +20,12 @@ export const WelcomePane: React.FC<WelcomePaneProps> = ({ onPressGetStarted }) =
           Welcome to Seasons
         </Sans>
         <Spacer height="12" />
-        <Sans color="black50" size="2">
+        <Sans color="black50" size="1">
           Your membership is active and you're ready to start reserving. Tap below to get started
         </Sans>
       </Box>
       <Box p="2" pb={insets.bottom} style={{ position: "absolute", bottom: 0 }}>
-        <Sans color="black50" size="1">
+        <Sans color="black50" size="0">
           Your credit card has been succesfully billed and your membership will automatically renew on June 12.
         </Sans>
         <Spacer mb="3" />

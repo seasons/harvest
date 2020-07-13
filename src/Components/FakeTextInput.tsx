@@ -6,6 +6,7 @@ import { Text, TouchableWithoutFeedback, ViewStyle } from "react-native"
 import { animated, useSpring } from "react-spring"
 
 import { defaultVariant, DisplayState, getColorsForVariant, TextInputVariant } from "App/Components/TextInput"
+import { themeProps } from "./Theme"
 
 export interface FakeTextInputProps {
   currentValue: string
@@ -31,7 +32,7 @@ export const FakeTextInput: React.FC<FakeTextInputProps> = ({
   const variantColors = getColorsForVariant(variant)
   const animation = useSpring(state == DisplayState.Active ? variantColors.active : variantColors.inactive)
 
-  const height = style?.height || (headerText ? 65 : 40)
+  const height = style?.height || (headerText ? 56 : 40)
   const placeholderColor = variant === "light" ? color("black50") : color("black25")
 
   return (
@@ -49,7 +50,7 @@ export const FakeTextInput: React.FC<FakeTextInputProps> = ({
         }}
       >
         {!!headerText && (
-          <Sans size="1" color={placeholderColor}>
+          <Sans size="0" color={placeholderColor}>
             {headerText}
           </Sans>
         )}
@@ -58,7 +59,7 @@ export const FakeTextInput: React.FC<FakeTextInputProps> = ({
           style={{
             color: currentValue.length ? variantColors.active.color : placeholderColor,
             fontFamily: fontFamily.sans.medium.toString(),
-            fontSize: 18,
+            fontSize: themeProps.typeSizes[1].fontSize,
             ...style,
             textAlignVertical: "center",
           }}

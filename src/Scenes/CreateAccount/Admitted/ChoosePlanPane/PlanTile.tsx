@@ -31,7 +31,7 @@ export const PlanTile: React.FC<PlanTileProps> = ({
     <TouchableOpacity onPress={() => shouldSelect(inputKey)}>
       <StyledBox style={{ borderColor: strokeColor }}>
         <Flex p={2} flexDirection="row" justifyContent="space-between">
-          <Sans color="black100" size="2">
+          <Sans color="black100" size="1">
             {title}
           </Sans>
           <Radio width={24} height={24} selected={selected} onSelect={() => shouldSelect(inputKey)}>
@@ -43,14 +43,14 @@ export const PlanTile: React.FC<PlanTileProps> = ({
           <Sans color="black100" size="3">
             ${price}
           </Sans>
-          <Sans color="black50" size="1">
+          <Sans color="black50" size="0">
             per \ month
           </Sans>
           <Spacer mb={3} />
-          <Sans color="black100" size="2">
+          <Sans color="black100" size="1">
             {subtitle}
           </Sans>
-          <Sans color="black50" size="1">
+          <Sans color="black50" size="0">
             {description}
           </Sans>
         </Box>

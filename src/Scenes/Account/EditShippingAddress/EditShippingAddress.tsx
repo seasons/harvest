@@ -217,7 +217,7 @@ export const EditShippingAddress: React.FC<{
               </Button>
             </Box>
           </Flex>
-          <Spacer height={insets.bottom} />
+          <Spacer height={insets.bottom + 8} />
         </FadeBottom2>
       </KeyboardAvoidingView>
 
