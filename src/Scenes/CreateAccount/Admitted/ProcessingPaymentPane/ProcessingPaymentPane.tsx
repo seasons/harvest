@@ -94,7 +94,7 @@ export const ProcessingPaymentPane: React.FC<ProcessingPaymentPaneProps> = ({ pr
         <Spacer mb={2} />
         <Sans size="1">Processing payment...</Sans>
         <Spacer mb={1} />
-        <Sans size="1" color="black50">
+        <Sans size="1" color="black50" textAlign="center">
           Give us a few seconds to process your payment and finish creating your account
         </Sans>
         <Spacer mb={2} />

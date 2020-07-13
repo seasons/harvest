@@ -7,8 +7,6 @@ import { color } from "App/utils"
 type Item = { label: string; value: string }
 
 interface MultiSelectionTableProps {
-  // Items must have unique values
-  itemCornerRadius?: number
   items: Item[]
   onTap: (item: Item, index: number) => void
   selectedItemIndices: number[]
@@ -19,7 +17,7 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({ items,
   const [width, setWidth] = useState(0)
 
   const itemHeight = 60
-  const itemCornerRadius = itemHeight / 2
+  const itemCornerRadius = 4
   const minimumInterItemSpacing = 8
 
   // Use to measure the width. Has potential to break depending on parent rendering order.
@@ -57,7 +55,7 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({ items,
             width={itemHeight}
             style={[
               {
-                backgroundColor: color("white100"),
+                backgroundColor: color(isSelected ? "black04" : "white100"),
                 borderColor: color(isSelected ? "black100" : "black10"),
                 borderRadius: itemCornerRadius,
                 borderWidth: 1,
@@ -66,7 +64,7 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({ items,
             ]}
           >
             <Sans
-              size="2"
+              size="1"
               color="black100"
               style={{
                 textAlign: "center",

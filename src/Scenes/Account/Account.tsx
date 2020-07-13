@@ -95,7 +95,6 @@ export const Account = screenTrack()(({ navigation }) => {
   const lastName = user?.lastName
   const pushNotification = user?.pushNotification
   const role = user?.role
-  const userID = user?.id
 
   const renderBody = () => {
     switch (status) {
@@ -174,7 +173,7 @@ export const Account = screenTrack()(({ navigation }) => {
               </Box>
             )}
           </Box>
-          <Separator mx={2} />
+          <InsetSeparator />
           <Box px={2} py={4}>
             {data ? (
               renderBody()
@@ -184,9 +183,9 @@ export const Account = screenTrack()(({ navigation }) => {
               </Flex>
             )}
           </Box>
-          <Separator mx={2} />
+          <InsetSeparator />
           <NotificationToggle pushNotification={pushNotification} />
-          <Separator mx={2} />
+          <InsetSeparator />
           <Spacer mb={4} />
           <BottomList navigation={navigation} role={role} signOut={signOut} />
         </ScrollView>
@@ -194,3 +193,9 @@ export const Account = screenTrack()(({ navigation }) => {
     </Container>
   )
 })
+
+const InsetSeparator = () => (
+  <Box mx={2}>
+    <Separator />
+  </Box>
+)

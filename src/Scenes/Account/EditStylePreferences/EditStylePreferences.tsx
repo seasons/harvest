@@ -105,7 +105,7 @@ export const EditStylePreferences: React.FC<{
     return (
       <Flex width="100%" key={sectionIndex.toString()}>
         <Spacer mb={4} />
-        <Sans size="1">{title}</Sans>
+        <Sans size="0.5">{title}</Sans>
         <Spacer mb={2} />
         <Spacer mb={0.5} />
         <Flex flexWrap="wrap" flexDirection="row" width="100%" justifyContent="space-between">
@@ -147,10 +147,10 @@ export const EditStylePreferences: React.FC<{
             py={2}
             style={[
               {
-                backgroundColor: color("white100"),
-                borderColor: isSelected ? color("black100") : color("black10"),
+                backgroundColor: color(isSelected ? "black04" : "white100"),
+                borderColor: color(isSelected ? "black100" : "black10"),
                 borderWidth: 1,
-                borderRadius: 5,
+                borderRadius: 4,
                 flex: 1,
               },
               shadowStyle,
@@ -163,7 +163,7 @@ export const EditStylePreferences: React.FC<{
                 <Spacer mr={1} />
               </>
             )}
-            <Sans size="1">{item.title}</Sans>
+            <Sans size="0.5">{item.title}</Sans>
           </Flex>
         </Flex>
       </TouchableOpacity>
@@ -185,7 +185,7 @@ export const EditStylePreferences: React.FC<{
             <Sans size="3">Style preferences</Sans>
           </Box>
         )}
-        ListFooterComponent={() => <Spacer height={100 + insets.bottom} />}
+        ListFooterComponent={() => <Spacer height={100 + insets.bottom - 8} />}
         renderItem={({ item, index }) => renderSection(item, index)}
         showsVerticalScrollIndicator={false}
         style={{ paddingHorizontal: 16, flex: 1 }}

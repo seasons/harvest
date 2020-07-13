@@ -169,7 +169,7 @@ export const TextInput = React.forwardRef<TextInputRefAttributes, TextInputProps
       onChangeText?.(inputKey, text)
     }
 
-    const height = style?.height || (headerText ? 65 : 40)
+    const height = style?.height || (headerText ? 56 : 40)
     const placeholderColor = variant === "light" ? color("black50") : color("black10")
 
     return (
@@ -188,11 +188,11 @@ export const TextInput = React.forwardRef<TextInputRefAttributes, TextInputProps
         <TouchableWithoutFeedback onPress={() => textInputRef?.current?.focus?.()}>
           <Box>
             {!!headerText && (
-              <Sans size="1" color={placeholderColor}>
+              <Sans size="0.5" color={placeholderColor}>
                 {headerText}
               </Sans>
             )}
-            <Spacer height={10} />
+            <Spacer mb={1} />
           </Box>
         </TouchableWithoutFeedback>
         <RNTextInput
@@ -211,7 +211,7 @@ export const TextInput = React.forwardRef<TextInputRefAttributes, TextInputProps
           style={{
             color: variantColors.active.color,
             fontFamily: fontFamily.sans.medium.toString(),
-            fontSize: 18,
+            fontSize: themeProps.typeSizes[1].fontSize,
             ...style,
             textAlignVertical: "center",
           }}
@@ -219,7 +219,7 @@ export const TextInput = React.forwardRef<TextInputRefAttributes, TextInputProps
           value={value}
         />
         <TouchableWithoutFeedback onPress={() => textInputRef?.current?.focus?.()}>
-          <Spacer height={12} />
+          <Spacer mb={1} />
         </TouchableWithoutFeedback>
       </AnimatedBox>
     )

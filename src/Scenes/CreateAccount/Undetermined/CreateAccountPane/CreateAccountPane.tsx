@@ -1,8 +1,7 @@
-import { Box, Button, Container, FakeTextInput, Flex, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { isWholeNumber } from "App/helpers/validation"
 import { Text } from "Components/Typography"
-import { DatePickerPopUp } from "./DatePickerPopUp"
 import gql from "graphql-tag"
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
@@ -13,22 +12,16 @@ import { WebviewModal } from "./WebviewModal"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 
 const SIGN_UP = gql`
-  mutation SignUp(
-    $email: String!
-    $password: String!
-    $firstName: String!
-    $lastName: String!
-    $zipCode: String!
-    $isoDateOfBirth: DateTime!
-  ) {
+  mutation SignUp($email: String!, $password: String!, $firstName: String!, $lastName: String!, $zipCode: String!) {
     signup(
       email: $email
       password: $password
       firstName: $firstName
       lastName: $lastName
-      details: { birthday: $isoDateOfBirth, shippingAddress: { create: { zipCode: $zipCode } } }
+      details: { shippingAddress: { create: { zipCode: $zipCode } } }
     ) {
       user {
         id
@@ -56,8 +49,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordConfirmation, setPasswordConfirmation] = useState("")
-  const [isoDateOfBirth, setISODateOfBirth] = useState("")
-  const [dateOfBirth, setDateOfBirth] = useState("")
   const [zipCode, setZipCode] = useState("")
 
   const validateForm = () => {
@@ -69,12 +60,11 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
         isValidEmail(email) &&
         password.trim().length &&
         passwordConfirmation === password &&
-        dateOfBirth.length &&
         zipCode.length === 5
     )
   }
 
-  useEffect(validateForm, [firstName, lastName, email, password, passwordConfirmation, dateOfBirth, zipCode])
+  useEffect(validateForm, [firstName, lastName, email, password, passwordConfirmation, zipCode])
 
   const [isWebviewModalVisible, setIsWebviewModalVisible] = useState(false)
   const [webViewUrl, setWebViewUrl] = useState(null as string)
@@ -82,31 +72,13 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const [isMutating, setIsMutating] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
   const scrollViewRef: MutableRefObject<ScrollView> = useRef(null)
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
   const insets = useSafeArea()
 
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { signIn } = useAuthContext()
 
   // Keyboard handling
-  const onFocusTextInput = (index: number) => scrollViewRef?.current?.scrollTo?.({ y: index * 60, animated: true })
-
-  // Date picker popup
-  const showDatePicker = () => {
-    setIsDatePickerVisible(true)
-  }
-
-  const onPickDate = (date: Date) => {
-    setISODateOfBirth(date.toISOString())
-    const dateOfBirth = [date.getMonth() + 1, date.getDate(), date.getFullYear()]
-      .map((i) => String(i).padStart(2, "0"))
-      .join("/")
-    setDateOfBirth(dateOfBirth)
-  }
-
-  const closeDatePicker = () => {
-    setIsDatePickerVisible(false)
-  }
+  const onFocusTextInput = (index: number) => scrollViewRef?.current?.scrollTo?.({ y: index * 90 + 10, animated: true })
 
   // Form/field validation
   const onZipCodeChange = (val: string) => {
@@ -169,7 +141,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         zipCode,
-        isoDateOfBirth,
       },
     })
     if (result?.data) {
@@ -195,7 +166,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   // Render
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={32 + 8 + insets.bottom}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={82 - 28}>
         <ScrollView
           keyboardDismissMode="interactive"
           keyboardShouldPersistTaps="always"
@@ -207,7 +178,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             Let's create your account
           </Sans>
           <Spacer mb={1} />
-          <Sans color="black50" size="2">
+          <Sans color="black50" size="1">
             You'll use this to sign into the app, choose your plan, and manage your membership.
           </Sans>
           <Spacer mb={5} />
@@ -247,70 +218,58 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             variant="light"
           />
           <Spacer mb={4} />
-          <Flex flexDirection="row">
-            <TextInput
-              autoCompleteType="password"
-              headerText="Password"
-              onChangeText={(_, val) => setPassword(val)}
-              onFocus={() => onFocusTextInput(2)}
-              secureTextEntry
-              style={{ flex: 1 }}
-              textContentType="password"
-              variant="light"
-            />
-            <Spacer mr={9} />
-            <TextInput
-              autoCompleteType="password"
-              headerText="Confirm Password"
-              onChangeText={(_, val) => setPasswordConfirmation(val)}
-              onFocus={() => onFocusTextInput(2)}
-              secureTextEntry
-              style={{ flex: 1 }}
-              textContentType="password"
-              variant="light"
-            />
-          </Flex>
+          <TextInput
+            autoCompleteType="password"
+            headerText="Password"
+            onChangeText={(_, val) => setPassword(val)}
+            onFocus={() => onFocusTextInput(3)}
+            secureTextEntry
+            textContentType="password"
+            variant="light"
+          />
+          <Spacer mb={1} />
+          <Sans size="0" color="black50">
+            Your password must be at least 8 characters long, include at least one uppercase letter, one lowercase
+            letter, & one number.
+          </Sans>
           <Spacer mb={4} />
-          <Flex flexDirection="row">
-            <FakeTextInput
-              currentValue={dateOfBirth}
-              headerText="Date of Birth"
-              onPress={() => {
-                Keyboard.dismiss()
-                showDatePicker()
-              }}
-              placeholder="mm/dd/yyyy"
-              style={{ flex: 1 }}
-              variant="light"
-            />
-            <Spacer mr={9} />
-            <TextInput
-              autoCompleteType="postal-code"
-              currentValue={zipCode}
-              headerText="ZIP Code"
-              keyboardType="number-pad"
-              onChangeText={(_, val) => onZipCodeChange(val)}
-              onFocus={() => onFocusTextInput(4)}
-              style={{ flex: 1 }}
-              textContentType="postalCode"
-              variant="light"
-            />
-          </Flex>
-          <Spacer height={108} />
+          <TextInput
+            autoCompleteType="password"
+            headerText="Confirm Password"
+            onChangeText={(_, val) => setPasswordConfirmation(val)}
+            onFocus={() => onFocusTextInput(4)}
+            secureTextEntry
+            textContentType="password"
+            variant="light"
+          />
+          <Spacer mb={4} />
+          <TextInput
+            autoCompleteType="postal-code"
+            currentValue={zipCode}
+            headerText="ZIP Code"
+            keyboardType="number-pad"
+            onChangeText={(_, val) => onZipCodeChange(val)}
+            onFocus={() => onFocusTextInput(5)}
+            textContentType="postalCode"
+            variant="light"
+          />
+          <Spacer height={92} />
         </ScrollView>
-        <Box px={2}>
-          <Button
-            block
-            disabled={!isFormValid}
-            loading={isMutating}
-            onPress={() => handleSignup()}
-            variant="primaryBlack"
-          >
-            Create my account
-          </Button>
-        </Box>
+        <FadeBottom2>
+          <Box p={2}>
+            <Button
+              block
+              disabled={!isFormValid}
+              loading={isMutating}
+              onPress={() => handleSignup()}
+              variant="primaryBlack"
+            >
+              Create my account
+            </Button>
+          </Box>
+        </FadeBottom2>
       </KeyboardAvoidingView>
-      <Box p={2} style={{ paddingBottom: insets.bottom + 16, backgroundColor: "white" }}>
+      <Box px={2} style={{ paddingBottom: insets.bottom + 16, backgroundColor: "white" }}>
         <Flex flexDirection="column" alignItems="center">
           <Text>
             <Sans size="0" color="black50">
@@ -334,8 +293,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
           </Text>
         </Flex>
       </Box>
-
-      <DatePickerPopUp onDateChange={onPickDate} onRequestClose={closeDatePicker} visible={isDatePickerVisible} />
 
       <WebviewModal
         visible={isWebviewModalVisible}

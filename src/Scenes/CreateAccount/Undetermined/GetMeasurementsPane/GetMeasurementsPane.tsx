@@ -99,8 +99,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
           {!useEditingLayout && (
             <>
               <Spacer mb={1} />
-              <Sans color="black50" size="2">
-                Let’s get your measurements and sizing info so we can make sure we have enough inventory for you.
+              <Sans color="black50" size="1">
+                Let's get your measurements and sizing info so we can make sure we have enough inventory for you.
               </Sans>
             </>
           )}

@@ -60,10 +60,15 @@ export const themeProps = {
   },
 
   typeSizes: {
-    /** Equivalent to 14px size / 20px line-height  */
+    /** Equivalent to 12px size / 16px line-height  */
     "0": {
       fontSize: 12,
       lineHeight: 16,
+    },
+    /** Equivalent to 14px size / 20px line-height  */
+    "0.5": {
+      fontSize: 14,
+      lineHeight: 20,
     },
     /** Equivalent to 16px size / 24px line-height  */
     "1": {
