@@ -43,14 +43,14 @@ export const PlanTile: React.FC<PlanTileProps> = ({
           <Sans color="black100" size="3">
             ${price}
           </Sans>
-          <Sans color="black50" size="0">
+          <Sans color="black50" size="1">
             per \ month
           </Sans>
           <Spacer mb={3} />
           <Sans color="black100" size="1">
             {subtitle}
           </Sans>
-          <Sans color="black50" size="0">
+          <Sans color="black50" size="1">
             {description}
           </Sans>
         </Box>

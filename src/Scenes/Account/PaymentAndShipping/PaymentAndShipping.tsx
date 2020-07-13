@@ -4,7 +4,7 @@ import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
-import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
+import { AccountSection } from "../PersonalPreferences/PP"
 import { screenTrack } from "App/utils/track"
 
 export const GET_PAYMENT_DATA = gql`

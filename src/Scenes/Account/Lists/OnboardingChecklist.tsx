@@ -27,7 +27,7 @@ export enum CustomerStatus {
 }
 
 interface OnboardingChecklistProps {
-  measurements: InitialMeasurements
+  rawMeasurements: InitialMeasurements
   navigation: any
   onboardingSteps: OnboardingStep[]
   shippingAddress: any
@@ -36,7 +36,7 @@ interface OnboardingChecklistProps {
 }
 
 export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
-  measurements,
+  rawMeasurements,
   navigation,
   onboardingSteps,
   shippingAddress,
@@ -100,7 +100,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
           case UserState.Waitlisted:
             navigation.navigate("Modal", {
               screen: "EditMeasurements",
-              params: { measurements },
+              params: { rawMeasurements },
             })
             break
         }

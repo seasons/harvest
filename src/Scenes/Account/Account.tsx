@@ -32,11 +32,13 @@ export const GET_USER = gql`
           }
         }
         detail {
+          id
           height
           weight
           topSizes
           waistSizes
           shippingAddress {
+            id
             name
             address1
             address2
@@ -45,6 +47,7 @@ export const GET_USER = gql`
             state
           }
           stylePreferences {
+            id
             styles
             patterns
             colors
@@ -84,7 +87,7 @@ export const Account = screenTrack()(({ navigation }) => {
   const status = customer?.status
   const shippingAddress = customer?.detail?.shippingAddress
   const stylePreferences = customer?.detail?.stylePreferences
-  const measurements = {
+  const rawMeasurements = {
     height: customer?.detail?.height,
     weight: customer?.detail?.weight,
     topSizes: customer?.detail?.topSizes,
@@ -193,7 +196,7 @@ export const Account = screenTrack()(({ navigation }) => {
         const userState = status == CustomerStatus.Created ? UserState.Undetermined : UserState.Waitlisted
         return (
           <OnboardingChecklist
-            measurements={measurements}
+            rawMeasurements={rawMeasurements}
             navigation={navigation}
             onboardingSteps={onboardingSteps}
             shippingAddress={shippingAddress}
