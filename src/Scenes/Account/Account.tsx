@@ -24,7 +24,7 @@ export const GET_USER = gql`
           firstName
           lastName
           email
-          role
+          roles
           pushNotification {
             id
             status
@@ -85,7 +85,7 @@ export const Account = screenTrack()(({ navigation }) => {
   const firstName = user?.firstName
   const lastName = user?.lastName
   const pushNotification = user?.pushNotification
-  const role = user?.role
+  const roles = user?.roles
 
   const detail = customer?.detail
   const shippingAddress = detail?.shippingAddress
@@ -235,7 +235,7 @@ export const Account = screenTrack()(({ navigation }) => {
       case CustomerStatus.Suspended:
       case CustomerStatus.Paused:
       case CustomerStatus.Deactivated:
-        return <AccountList list={topList} role={role} />
+        return <AccountList list={topList} roles={roles} />
     }
   }
 
@@ -272,7 +272,7 @@ export const Account = screenTrack()(({ navigation }) => {
           <InsetSeparator />
           <Spacer mb={4} />
           <Box px={2}>
-            <AccountList list={bottomList} role={role} />
+            <AccountList list={bottomList} roles={roles} />
           </Box>
           <Spacer mb={2} />
         </ScrollView>
