@@ -32,7 +32,7 @@ export const AccountList: React.FC<Props> = ({ list, role }) => {
 
   return (
     <Box>
-      {list.map((item, index) => {
+      {list?.map((item, index) => {
         if (item.title === "Debug menu" && role !== "Admin") {
           return null
         }
