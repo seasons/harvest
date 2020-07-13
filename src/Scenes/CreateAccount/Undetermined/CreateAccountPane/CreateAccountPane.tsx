@@ -12,6 +12,7 @@ import { WebviewModal } from "./WebviewModal"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 
 const SIGN_UP = gql`
   mutation SignUp($email: String!, $password: String!, $firstName: String!, $lastName: String!, $zipCode: String!) {
@@ -77,7 +78,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const { signIn } = useAuthContext()
 
   // Keyboard handling
-  const onFocusTextInput = (index: number) => scrollViewRef?.current?.scrollTo?.({ y: index * 60, animated: true })
+  const onFocusTextInput = (index: number) => scrollViewRef?.current?.scrollTo?.({ y: index * 90 + 10, animated: true })
 
   // Form/field validation
   const onZipCodeChange = (val: string) => {
@@ -165,7 +166,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   // Render
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={32 + 8 + insets.bottom}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={82 - 28}>
         <ScrollView
           keyboardDismissMode="interactive"
           keyboardShouldPersistTaps="always"
@@ -189,7 +190,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               headerText="First name"
               onChangeText={(_, val) => setFirstName(val)}
               onFocus={() => onFocusTextInput(0)}
-              placeholder="Will"
               style={{ flex: 1 }}
               textContentType="givenName"
               variant="light"
@@ -202,7 +202,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               headerText="Last name"
               onChangeText={(_, val) => setLastName(val)}
               onFocus={() => onFocusTextInput(0)}
-              placeholder="Smith"
               style={{ flex: 1 }}
               textContentType="familyName"
               variant="light"
@@ -215,34 +214,9 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             keyboardType="email-address"
             onChangeText={(_, val) => setEmail(val)}
             onFocus={() => onFocusTextInput(1)}
-            placeholder="Will.Smith@gmail.com"
             textContentType="emailAddress"
             variant="light"
           />
-          <Spacer mb={4} />
-          <Flex flexDirection="row">
-            <TextInput
-              autoCompleteType="password"
-              headerText="Password"
-              onChangeText={(_, val) => setPassword(val)}
-              onFocus={() => onFocusTextInput(2)}
-              secureTextEntry
-              style={{ flex: 1 }}
-              textContentType="password"
-              variant="light"
-            />
-            <Spacer mr={9} />
-            <TextInput
-              autoCompleteType="password"
-              headerText="Confirm Password"
-              onChangeText={(_, val) => setPasswordConfirmation(val)}
-              onFocus={() => onFocusTextInput(2)}
-              secureTextEntry
-              style={{ flex: 1 }}
-              textContentType="password"
-              variant="light"
-            />
-          </Flex>
           <Spacer mb={4} />
           <TextInput
             autoCompleteType="postal-code"
@@ -250,27 +224,52 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             headerText="ZIP Code"
             keyboardType="number-pad"
             onChangeText={(_, val) => onZipCodeChange(val)}
-            onFocus={() => onFocusTextInput(4)}
-            placeholder="5-digits"
-            style={{ flex: 1 }}
+            onFocus={() => onFocusTextInput(2)}
             textContentType="postalCode"
             variant="light"
           />
-          <Spacer height={108} />
+          <Spacer mb={4} />
+          <TextInput
+            autoCompleteType="password"
+            headerText="Password"
+            onChangeText={(_, val) => setPassword(val)}
+            onFocus={() => onFocusTextInput(3)}
+            secureTextEntry
+            textContentType="password"
+            variant="light"
+          />
+          <Spacer mb={4} />
+          <TextInput
+            autoCompleteType="password"
+            headerText="Confirm Password"
+            onChangeText={(_, val) => setPasswordConfirmation(val)}
+            onFocus={() => onFocusTextInput(4)}
+            secureTextEntry
+            textContentType="password"
+            variant="light"
+          />
+          <Spacer mb={2} />
+          <Sans size="0" color="black50">
+            Your password must be at least 8 characters long, include at least one uppercase letter, one lowercase
+            letter, & one number.
+          </Sans>
+          <Spacer height={92} />
         </ScrollView>
-        <Box px={2}>
-          <Button
-            block
-            disabled={!isFormValid}
-            loading={isMutating}
-            onPress={() => handleSignup()}
-            variant="primaryBlack"
-          >
-            Create my account
-          </Button>
-        </Box>
+        <FadeBottom2>
+          <Box p={2}>
+            <Button
+              block
+              disabled={!isFormValid}
+              loading={isMutating}
+              onPress={() => handleSignup()}
+              variant="primaryBlack"
+            >
+              Create my account
+            </Button>
+          </Box>
+        </FadeBottom2>
       </KeyboardAvoidingView>
-      <Box p={2} style={{ paddingBottom: insets.bottom + 16, backgroundColor: "white" }}>
+      <Box px={2} style={{ paddingBottom: insets.bottom + 16, backgroundColor: "white" }}>
         <Flex flexDirection="column" alignItems="center">
           <Text>
             <Sans size="0" color="black50">

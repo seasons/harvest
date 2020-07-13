@@ -104,7 +104,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ focus, onSendCode })
           variant="light"
         />
         <Spacer mb={3} />
-        <Sans size="0" color="black50">
+        <Sans size="0.5" color="black50">
           This should be a 10 digit number.
         </Sans>
       </Box>

@@ -27,7 +27,7 @@ export const WaitlistedPane: React.FC<WaitlistedPaneProps> = ({ onPressFinish })
         </Sans>
       </Box>
       <Box p="2" pb={insets.bottom} style={{ position: "absolute", bottom: 0 }}>
-        <Sans color="black50" size="0">
+        <Sans color="black50" size="0.5">
           In the meantime, you can finish completing your profile to help us prioritize your membership.
         </Sans>
         <Spacer mb="3" />
