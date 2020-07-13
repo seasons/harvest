@@ -100,7 +100,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
       let popUpData = {
         title: "Uh Oh. Something went wrong",
         note:
-          "It looks like we're having trouble processing your request. Please contact us at membership@seasons.ny if this persists.",
+          "It looks like we're having trouble processing your request. Please contact us at membership@seasons.nyc if this persists.",
         buttonText: "Close",
         onClose: hidePopUp,
       }
