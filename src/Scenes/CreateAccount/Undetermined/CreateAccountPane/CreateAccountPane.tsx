@@ -219,17 +219,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
           />
           <Spacer mb={4} />
           <TextInput
-            autoCompleteType="postal-code"
-            currentValue={zipCode}
-            headerText="ZIP Code"
-            keyboardType="number-pad"
-            onChangeText={(_, val) => onZipCodeChange(val)}
-            onFocus={() => onFocusTextInput(2)}
-            textContentType="postalCode"
-            variant="light"
-          />
-          <Spacer mb={4} />
-          <TextInput
             autoCompleteType="password"
             headerText="Password"
             onChangeText={(_, val) => setPassword(val)}
@@ -238,6 +227,11 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             textContentType="password"
             variant="light"
           />
+          <Spacer mb={1} />
+          <Sans size="0" color="black50">
+            Your password must be at least 8 characters long, include at least one uppercase letter, one lowercase
+            letter, & one number.
+          </Sans>
           <Spacer mb={4} />
           <TextInput
             autoCompleteType="password"
@@ -248,11 +242,17 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             textContentType="password"
             variant="light"
           />
-          <Spacer mb={2} />
-          <Sans size="0" color="black50">
-            Your password must be at least 8 characters long, include at least one uppercase letter, one lowercase
-            letter, & one number.
-          </Sans>
+          <Spacer mb={4} />
+          <TextInput
+            autoCompleteType="postal-code"
+            currentValue={zipCode}
+            headerText="ZIP Code"
+            keyboardType="number-pad"
+            onChangeText={(_, val) => onZipCodeChange(val)}
+            onFocus={() => onFocusTextInput(5)}
+            textContentType="postalCode"
+            variant="light"
+          />
           <Spacer height={92} />
         </ScrollView>
         <FadeBottom2>
