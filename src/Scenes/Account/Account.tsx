@@ -1,16 +1,17 @@
 import { Box, Button, Container, GuestView, Sans, Separator, Skeleton, Spacer, Flex } from "App/Components"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { screenTrack } from "App/utils/track"
+import { screenTrack, Schema } from "App/utils/track"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
-import { Image, ScrollView, StatusBar } from "react-native"
+import { Image, ScrollView, StatusBar, Linking } from "react-native"
 import * as Animatable from "react-native-animatable"
 import * as Sentry from "@sentry/react-native"
-import { BottomList, CustomerStatus, OnboardingChecklist, ProfileList } from "./Lists"
+import { CustomerStatus, OnboardingChecklist, AccountList } from "./Lists"
 import { State, UserState } from "../CreateAccount/CreateAccount"
-import { Spinner } from "App/Components/Spinner"
+import { MembershipInfoIcon, PersonalPreferencesIcon, PaymentShippingIcon, ChevronIcon } from "Assets/icons"
+import { QuestionMark, PrivacyPolicy, TermsOfService, LogOutSVG } from "Assets/svgs"
 
 export const GET_USER = gql`
   query GetUser {
@@ -96,6 +97,95 @@ export const Account = screenTrack()(({ navigation }) => {
   const pushNotification = user?.pushNotification
   const role = user?.role
 
+  const ListSkeleton = () => {
+    return (
+      <Box pt="5px">
+        {[...Array(4)].map((_arr, index) => (
+          <Box mb={index !== 3 ? "43px" : 0} key={index}>
+            <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" justifyContent="space-between">
+              <Flex flexDirection="row" alignItems="center">
+                <Skeleton width={22} height={27} />
+                <Spacer mr={2} />
+                <Skeleton width={150} height={20} />
+              </Flex>
+              <ChevronIcon />
+            </Flex>
+          </Box>
+        ))}
+      </Box>
+    )
+  }
+
+  const topList = [
+    {
+      title: "Membership info",
+      icon: <MembershipInfoIcon />,
+      onPress: () => navigation.navigate("MembershipInfo"),
+      tracking: Schema.ActionNames.MembershipInfoTapped,
+    },
+    {
+      title: "Personal preferences",
+      icon: <PersonalPreferencesIcon />,
+      onPress: () => navigation.navigate("PersonalPreferences"),
+      tracking: Schema.ActionNames.PersonalPreferencesTapped,
+    },
+    {
+      title: "Payments & shipping",
+      icon: <PaymentShippingIcon />,
+      onPress: () => navigation.navigate("PaymentAndShipping"),
+      tracking: Schema.ActionNames.PaymentAndShippingTapped,
+    },
+    {
+      title: "FAQ",
+      icon: <QuestionMark />,
+      onPress: () => navigation.navigate("Faq"),
+      tracking: Schema.ActionNames.FAQTapped,
+    },
+  ]
+
+  const bottomList = [
+    {
+      title: "Help and support",
+      icon: <QuestionMark />,
+      onPress: () => Linking.openURL(`mailto:membership@seasons.nyc?subject=Support`),
+      tracking: Schema.ActionNames.SupportTapped,
+    },
+    {
+      title: "Privacy policy",
+      icon: <PrivacyPolicy />,
+      tracking: Schema.ActionNames.PrivacyPolicyTapped,
+      onPress: () => {
+        navigation.navigate("Webview", { uri: "https://www.seasons.nyc/privacy-policy" })
+      },
+    },
+    {
+      title: "Terms of Service",
+      icon: <TermsOfService />,
+      tracking: Schema.ActionNames.TermsOfServiceTapped,
+      onPress: () => {
+        navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })
+      },
+    },
+    {
+      title: "Sign out",
+      icon: <LogOutSVG />,
+      tracking: Schema.ActionNames.LogOutTapped,
+      onPress: () => {
+        signOut()
+      },
+    },
+    {
+      title: "Debug menu",
+      icon: null,
+      tracking: null,
+      onPress: () => {
+        navigation.navigate("Modal", {
+          screen: "DebugMenu",
+        })
+      },
+    },
+  ]
+
   const renderBody = () => {
     switch (status) {
       case CustomerStatus.Created:
@@ -145,7 +235,7 @@ export const Account = screenTrack()(({ navigation }) => {
       case CustomerStatus.Suspended:
       case CustomerStatus.Paused:
       case CustomerStatus.Deactivated:
-        return <ProfileList navigation={navigation} />
+        return <AccountList list={topList} role={role} />
     }
   }
 
@@ -175,19 +265,16 @@ export const Account = screenTrack()(({ navigation }) => {
           </Box>
           <InsetSeparator />
           <Box px={2} py={4}>
-            {data ? (
-              renderBody()
-            ) : (
-              <Flex pt={5} width="100%" alignItems="center" flexDirection="row" justifyContent="center">
-                <Spinner />
-              </Flex>
-            )}
+            {!!data ? renderBody() : <ListSkeleton />}
           </Box>
           <InsetSeparator />
           <NotificationToggle pushNotification={pushNotification} />
           <InsetSeparator />
           <Spacer mb={4} />
-          <BottomList navigation={navigation} role={role} signOut={signOut} />
+          <Box px={2}>
+            <AccountList list={bottomList} role={role} />
+          </Box>
+          <Spacer mb={2} />
         </ScrollView>
       </Animatable.View>
     </Container>
