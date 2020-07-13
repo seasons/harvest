@@ -1,8 +1,7 @@
-import { Box, Button, Container, FakeTextInput, Flex, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { isWholeNumber } from "App/helpers/validation"
 import { Text } from "Components/Typography"
-import { DatePickerPopUp } from "./DatePickerPopUp"
 import gql from "graphql-tag"
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
@@ -15,20 +14,13 @@ import AsyncStorage from "@react-native-community/async-storage"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const SIGN_UP = gql`
-  mutation SignUp(
-    $email: String!
-    $password: String!
-    $firstName: String!
-    $lastName: String!
-    $zipCode: String!
-    $isoDateOfBirth: DateTime!
-  ) {
+  mutation SignUp($email: String!, $password: String!, $firstName: String!, $lastName: String!, $zipCode: String!) {
     signup(
       email: $email
       password: $password
       firstName: $firstName
       lastName: $lastName
-      details: { birthday: $isoDateOfBirth, shippingAddress: { create: { zipCode: $zipCode } } }
+      details: { shippingAddress: { create: { zipCode: $zipCode } } }
     ) {
       user {
         id
@@ -56,8 +48,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordConfirmation, setPasswordConfirmation] = useState("")
-  const [isoDateOfBirth, setISODateOfBirth] = useState("")
-  const [dateOfBirth, setDateOfBirth] = useState("")
   const [zipCode, setZipCode] = useState("")
 
   const validateForm = () => {
@@ -73,7 +63,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
     )
   }
 
-  useEffect(validateForm, [firstName, lastName, email, password, passwordConfirmation, dateOfBirth, zipCode])
+  useEffect(validateForm, [firstName, lastName, email, password, passwordConfirmation, zipCode])
 
   const [isWebviewModalVisible, setIsWebviewModalVisible] = useState(false)
   const [webViewUrl, setWebViewUrl] = useState(null as string)
@@ -81,7 +71,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const [isMutating, setIsMutating] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
   const scrollViewRef: MutableRefObject<ScrollView> = useRef(null)
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
   const insets = useSafeArea()
 
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -89,23 +78,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
 
   // Keyboard handling
   const onFocusTextInput = (index: number) => scrollViewRef?.current?.scrollTo?.({ y: index * 60, animated: true })
-
-  // Date picker popup
-  const showDatePicker = () => {
-    setIsDatePickerVisible(true)
-  }
-
-  const onPickDate = (date: Date) => {
-    setISODateOfBirth(date.toISOString())
-    const dateOfBirth = [date.getMonth() + 1, date.getDate(), date.getFullYear()]
-      .map((i) => String(i).padStart(2, "0"))
-      .join("/")
-    setDateOfBirth(dateOfBirth)
-  }
-
-  const closeDatePicker = () => {
-    setIsDatePickerVisible(false)
-  }
 
   // Form/field validation
   const onZipCodeChange = (val: string) => {
@@ -168,7 +140,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         zipCode,
-        isoDateOfBirth,
       },
     })
     if (result?.data) {
@@ -273,32 +244,18 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             />
           </Flex>
           <Spacer mb={4} />
-          <Flex flexDirection="row">
-            <FakeTextInput
-              currentValue={dateOfBirth}
-              headerText="Birthday (optional)"
-              onPress={() => {
-                Keyboard.dismiss()
-                showDatePicker()
-              }}
-              placeholder="mm/dd/yyyy"
-              style={{ flex: 1 }}
-              variant="light"
-            />
-            <Spacer mr={9} />
-            <TextInput
-              autoCompleteType="postal-code"
-              currentValue={zipCode}
-              headerText="ZIP Code"
-              keyboardType="number-pad"
-              onChangeText={(_, val) => onZipCodeChange(val)}
-              onFocus={() => onFocusTextInput(4)}
-              placeholder="5-digits"
-              style={{ flex: 1 }}
-              textContentType="postalCode"
-              variant="light"
-            />
-          </Flex>
+          <TextInput
+            autoCompleteType="postal-code"
+            currentValue={zipCode}
+            headerText="ZIP Code"
+            keyboardType="number-pad"
+            onChangeText={(_, val) => onZipCodeChange(val)}
+            onFocus={() => onFocusTextInput(4)}
+            placeholder="5-digits"
+            style={{ flex: 1 }}
+            textContentType="postalCode"
+            variant="light"
+          />
           <Spacer height={108} />
         </ScrollView>
         <Box px={2}>
@@ -337,8 +294,6 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
           </Text>
         </Flex>
       </Box>
-
-      <DatePickerPopUp onDateChange={onPickDate} onRequestClose={closeDatePicker} visible={isDatePickerVisible} />
 
       <WebviewModal
         visible={isWebviewModalVisible}
