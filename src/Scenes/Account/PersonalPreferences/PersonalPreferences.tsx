@@ -1,4 +1,4 @@
-import { Box, Container, FixedBackArrow, Sans } from "App/Components"
+import { Box, Container, FixedBackArrow, Sans, Flex } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
@@ -74,7 +74,12 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
   useEffect(() => {}, [data])
 
   if (loading && !data) {
-    return <Loader />
+    return (
+      <Flex>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </Flex>
+    )
   }
 
   if (error) {

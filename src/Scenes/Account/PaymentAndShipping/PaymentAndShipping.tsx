@@ -1,11 +1,11 @@
-import { Box, Container, FixedBackArrow, FixedButton, Sans, Spacer } from "App/Components"
+import { Box, Container, FixedBackArrow, FixedButton, Sans, Spacer, Separator } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
-import { AccountSection } from "../PersonalPreferences/PP"
 import { screenTrack } from "App/utils/track"
+import { color } from "App/utils"
 
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
@@ -85,6 +85,29 @@ export const createBillingAddress = (billingInfo) => {
     addressArray.push(`${billingInfo.city}, ${billingInfo.state}, ${billingInfo.postal_code}`)
   }
   return addressArray
+}
+
+const AccountSection: React.FC<{ title: string; value: string | [string] }> = ({ title, value }) => {
+  return (
+    <Box key={title} px={2}>
+      <Sans size="2">{title}</Sans>
+      <Box mb={1} />
+      <Separator color={color("black10")} />
+      <Box mb={1} />
+      {Array.isArray(value) ? (
+        value.map((text) => (
+          <Sans key={text} size="2" color="black50">
+            {text}
+          </Sans>
+        ))
+      ) : (
+        <Sans size="2" color="black50">
+          {value}
+        </Sans>
+      )}
+      <Spacer mb={4} />
+    </Box>
+  )
 }
 
 export const PaymentAndShipping = screenTrack()(({ navigation }) => {
