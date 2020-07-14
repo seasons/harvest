@@ -1,29 +1,32 @@
 import { Sans, Spacer, Flex, Box } from "App/Components"
 import React, { useState } from "react"
-import { ViewStyle } from "react-native"
+import { ViewStyle, Dimensions } from "react-native"
 import { TouchableOpacity } from "react-native"
 import { color } from "App/utils"
 
 type Item = { label: string; value: string }
 
 interface MultiSelectionTableProps {
+  disabled?: boolean
   items: Item[]
-  onTap: (item: Item, index: number) => void
+  onTap?: (item: Item, index: number) => void
   selectedItemIndices: number[]
   style?: ViewStyle
 }
 
-export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({ items, onTap, selectedItemIndices }) => {
-  const [width, setWidth] = useState(0)
+const windowWidth = Dimensions.get("window").width - 32
+
+export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({
+  disabled = false,
+  items,
+  onTap,
+  selectedItemIndices,
+}) => {
+  const [width, setWidth] = useState(windowWidth)
 
   const itemHeight = 60
   const itemCornerRadius = 4
   const minimumInterItemSpacing = 8
-
-  // Use to measure the width. Has potential to break depending on parent rendering order.
-  if (width === 0) {
-    return <Box height={1} flex={1} onLayout={(e) => setWidth(e.nativeEvent.layout.width)} />
-  }
 
   const data = items.map((item, index) => ({
     isSelected: selectedItemIndices.includes(index),
@@ -46,7 +49,7 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({ items,
       : {}
 
     return (
-      <TouchableOpacity onPress={() => onTap(item, index)} key={index}>
+      <TouchableOpacity disabled={disabled} onPress={() => onTap?.(item, index)} key={index}>
         <Flex height={itemHeight + interItemSpacing} width={itemHeight} justifyContent="center" verticalAlign="center">
           <Flex
             justifyContent="center"
@@ -82,8 +85,10 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({ items,
   const interItemSpacing = (width - itemsPerRow * itemHeight) / (itemsPerRow - 1)
   const numRows = Math.ceil(items.length / itemsPerRow)
 
+  console.log("Layout")
+
   return (
-    <Box>
+    <Box onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
       {[...Array(numRows).keys()].map((
         row // map each row index to a Flex box
       ) => (

@@ -10,6 +10,7 @@ import { themeProps } from "./Theme"
 
 export interface FakeTextInputProps {
   currentValue: string
+  disabled?: boolean
   headerText?: string
   inputKey?: string
   onPress?: (inputKey?: string) => void
@@ -20,6 +21,7 @@ export interface FakeTextInputProps {
 
 export const FakeTextInput: React.FC<FakeTextInputProps> = ({
   currentValue,
+  disabled = false,
   headerText,
   inputKey,
   onPress,
@@ -27,7 +29,7 @@ export const FakeTextInput: React.FC<FakeTextInputProps> = ({
   style,
   variant = defaultVariant,
 }) => {
-  const state = currentValue ? DisplayState.Active : DisplayState.Inactive
+  const state = currentValue && !disabled ? DisplayState.Active : DisplayState.Inactive
 
   const variantColors = getColorsForVariant(variant)
   const animation = useSpring(state == DisplayState.Active ? variantColors.active : variantColors.inactive)
@@ -36,7 +38,7 @@ export const FakeTextInput: React.FC<FakeTextInputProps> = ({
   const placeholderColor = variant === "light" ? color("black50") : color("black25")
 
   return (
-    <TouchableWithoutFeedback onPress={() => onPress(inputKey)}>
+    <TouchableWithoutFeedback disabled={disabled} onPress={() => onPress?.(inputKey)}>
       <AnimatedBox
         style={{
           flex: style?.flex,

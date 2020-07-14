@@ -32,20 +32,19 @@ const UPDATE_STYLE_PREFERENCES = gql`
 
 const windowWidth = Dimensions.get("window").width
 
-export const EditStylePreferences: React.FC<{
-  navigation: any
-  route: any
-}> = ({ navigation, route }) => {
-  const stylePreferences = route?.params?.stylePreferences
-  const initialStyles = stylePreferences?.styles || []
-  const initialPatterns = stylePreferences?.patterns || []
-  const initialColors = stylePreferences?.colors || []
-  const initialBrands = stylePreferences?.brands || []
+export const initialSelectedItemIndicesFrom = (params: any) => {
+  if (params?.initialSelectedItemIndices) {
+    return params?.initialSelectedItemIndices
+  } else {
+    const stylePreferences = params?.stylePreferences
+    const initialStyles = stylePreferences?.styles || []
+    const initialPatterns = stylePreferences?.patterns || []
+    const initialColors = stylePreferences?.colors || []
+    const initialBrands = stylePreferences?.brands || []
 
-  // The values selected by the user are stored in the server. In this block, get the index of each `value` in
-  // the `sections` array. Assumes that the order of the `sections` is: styles, patterns, colors, brands.
-  const initialSelectedItemIndices = [initialStyles, initialPatterns, initialColors, initialBrands].flatMap(
-    (items: any[], index: number) => {
+    // The values selected by the user are stored in the server. In this block, get the index of each `value` in
+    // the `sections` array. Assumes that the order of the `sections` is: styles, patterns, colors, brands.
+    return [initialStyles, initialPatterns, initialColors, initialBrands].flatMap((items: any[], index: number) => {
       const titles = sections[index].items.map((item) => item.title)
       return items
         .map((item) => ({
@@ -53,10 +52,15 @@ export const EditStylePreferences: React.FC<{
           itemIndex: titles.indexOf(item),
         }))
         .filter((item) => item.itemIndex != -1)
-    }
-  )
+    })
+  }
+}
 
-  const [selectedItemIndices, setSelectedItemIndices] = useState(initialSelectedItemIndices)
+export const EditStylePreferences: React.FC<{
+  navigation: any
+  route: any
+}> = ({ navigation, route }) => {
+  const [selectedItemIndices, setSelectedItemIndices] = useState(initialSelectedItemIndicesFrom(route?.params))
   const insets = useSafeArea()
 
   const [isMutating, setIsMutating] = useState(false)

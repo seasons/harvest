@@ -153,7 +153,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
             selectedItemIndices={topSizeIndices}
           />
 
-          <Spacer mb={4} />
+          <Spacer mb={5} />
 
           <Sans color="black100" size="1">
             Your preferred waist size?
