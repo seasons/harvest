@@ -73,7 +73,7 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
 
   useEffect(() => {}, [data])
 
-  if (loading && !data) {
+  if (!data) {
     return (
       <Flex>
         <FixedBackArrow navigation={navigation} variant="whiteBackground" />
