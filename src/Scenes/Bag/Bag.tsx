@@ -86,7 +86,7 @@ export const Bag = screenTrack()((props) => {
           name: "all",
           first: 10,
           skip: 0,
-          orderBy: "createdAt_DESC",
+          orderBy: "publishedAt_DESC",
           sizes: [],
         },
       },

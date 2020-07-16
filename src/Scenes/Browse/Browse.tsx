@@ -127,7 +127,7 @@ export const Browse = screenTrack()((props: any) => {
       name: currentCategory,
       first: PAGE_LENGTH,
       skip: 0,
-      orderBy: "createdAt_DESC",
+      orderBy: "publishedAt_DESC",
       sizes,
     },
   })
