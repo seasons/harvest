@@ -14,9 +14,7 @@ import { StatusBar } from "react-native"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
 
-import {
-  ReservationFeedbackPopUp, ReservationFeedbackReminder
-} from "../ReservationFeedback/Components"
+import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
 
 export const GET_HOMEPAGE = gql`
@@ -128,7 +126,7 @@ export const GET_HOMEPAGE = gql`
     archivalProducts: products(
       where: { AND: [{ tags_some: { name: "Vintage" } }, { status: Available }] }
       first: 12
-      orderBy: createdAt_DESC
+      orderBy: publishedAt_DESC
     ) {
       id
       slug
@@ -140,7 +138,7 @@ export const GET_HOMEPAGE = gql`
     justAddedTops: products(
       first: 8
       category: "tops"
-      orderBy: createdAt_DESC
+      orderBy: publishedAt_DESC
       where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
     ) {
       id
@@ -168,7 +166,7 @@ export const GET_HOMEPAGE = gql`
     justAddedBottoms: products(
       first: 8
       category: "bottoms"
-      orderBy: createdAt_DESC
+      orderBy: publishedAt_DESC
       where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
     ) {
       id
