@@ -38,6 +38,15 @@ const commonProductVariantFragment = gql`
 
 export const GET_PRODUCT = gql`
   query GetProduct($productID: ID!) {
+    me {
+      customer {
+        id
+        status
+      }
+      bag {
+        id
+      }
+    }
     product(where: { id: $productID }) {
       id
       slug
