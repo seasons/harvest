@@ -28,8 +28,6 @@ export const AddToBagButton: React.FC<Props> = (props) => {
   const { authState } = useAuthContext()
   const userHasSession = authState?.userSession
 
-  console.log("data AddToBagButton", data)
-
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
       id: selectedVariant.id,
