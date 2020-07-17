@@ -7,30 +7,51 @@
 // GraphQL query operation: GetUserPreferences
 // ====================================================
 
+export interface GetUserPreferences_me_customer_user {
+  __typename: "User";
+  id: string;
+  createdAt: any;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface GetUserPreferences_me_customer_detail_shippingAddress {
+  __typename: "Location";
+  id: string;
+  name: string | null;
+  address1: string | null;
+  address2: string | null;
+  zipCode: string;
+  city: string | null;
+  state: string | null;
+}
+
+export interface GetUserPreferences_me_customer_detail_stylePreferences {
+  __typename: "StylePreferences";
+  id: string;
+  styles: string[];
+  patterns: string[];
+  colors: string[];
+  brands: string[];
+}
+
 export interface GetUserPreferences_me_customer_detail {
   __typename: "CustomerDetail";
-  phoneNumber: string | null;
-  birthday: any | null;
+  id: string;
   height: number | null;
   weight: number[];
-  bodyType: string | null;
-  averageSpend: string | null;
   topSizes: string[];
   waistSizes: number[];
-  profession: string | null;
-  partyFrequency: string | null;
-  travelFrequency: string | null;
-  shoppingFrequency: string | null;
-  style: string | null;
-  phoneOS: string | null;
-  commuteStyle: string | null;
-  preferredPronouns: string | null;
-  averagePantLength: string | null;
+  phoneNumber: string | null;
+  shippingAddress: GetUserPreferences_me_customer_detail_shippingAddress | null;
+  stylePreferences: GetUserPreferences_me_customer_detail_stylePreferences | null;
 }
 
 export interface GetUserPreferences_me_customer {
   __typename: "Customer";
   id: string;
+  user: GetUserPreferences_me_customer_user;
   detail: GetUserPreferences_me_customer_detail | null;
 }
 

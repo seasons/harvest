@@ -6,19 +6,21 @@ import React from "react"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { Schema, useTracking } from "App/utils/track"
+import { GetProduct } from "App/generated/GetProduct"
 
 interface Props {
   toggleShowVariantPicker: (show: boolean) => void
   showVariantPicker: boolean
   selectedVariant: any
   bottom?: number
+  data: GetProduct
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
 
 export const SelectionButtons: React.FC<Props> = (props) => {
   const tracking = useTracking()
-  const { bottom = 0, selectedVariant, showVariantPicker, toggleShowVariantPicker } = props
+  const { bottom = 0, selectedVariant, showVariantPicker, toggleShowVariantPicker, data } = props
   const inStock = selectedVariant && selectedVariant.reservable > 0
 
   if (!selectedVariant) {
@@ -60,7 +62,12 @@ export const SelectionButtons: React.FC<Props> = (props) => {
           </VariantSelectionButton>
         </TouchableWithoutFeedback>
         {inStock && (
-          <AddToBagButton variantInStock={inStock} width={twoButtonWidth} selectedVariant={selectedVariant} />
+          <AddToBagButton
+            variantInStock={inStock}
+            width={twoButtonWidth}
+            selectedVariant={selectedVariant}
+            data={data}
+          />
         )}
       </Flex>
     </Wrapper>

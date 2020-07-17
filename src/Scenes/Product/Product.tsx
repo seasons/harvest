@@ -161,6 +161,7 @@ export const Product = screenTrack({
         toggleShowVariantPicker={toggleShowVariantPicker}
         showVariantPicker={showVariantPicker}
         selectedVariant={selectedVariant}
+        data={data}
       />
       <AnimatedVariantWantWrapper style={{ transform: [{ translateY: variantWantTransition.translateY }] }}>
         {shouldShowVariantWant && (

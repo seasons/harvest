@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PushNotificationStatus, UserRole } from "./globalTypes";
+import { UserRole } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: SignUp
@@ -15,7 +15,6 @@ export interface SignUp_signup_user {
   email: string;
   firstName: string;
   lastName: string;
-  pushNotificationStatus: PushNotificationStatus | null;
   beamsToken: string;
   roles: UserRole[];
 }
@@ -38,5 +37,4 @@ export interface SignUpVariables {
   firstName: string;
   lastName: string;
   zipCode: string;
-  isoDateOfBirth: any;
 }

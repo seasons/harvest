@@ -3,11 +3,28 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ProductType, LetterSize, BottomSizeType } from "./globalTypes";
+import { CustomerStatus, ProductType, LetterSize, BottomSizeType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetProduct
 // ====================================================
+
+export interface GetProduct_me_customer {
+  __typename: "Customer";
+  id: string;
+  status: CustomerStatus | null;
+}
+
+export interface GetProduct_me_bag {
+  __typename: "BagItem";
+  id: string;
+}
+
+export interface GetProduct_me {
+  __typename: "Me";
+  customer: GetProduct_me_customer | null;
+  bag: GetProduct_me_bag[] | null;
+}
 
 export interface GetProduct_product_modelSize {
   __typename: "Size";
@@ -178,6 +195,7 @@ export interface GetProduct_product {
 }
 
 export interface GetProduct {
+  me: GetProduct_me | null;
   product: GetProduct_product | null;
 }
 

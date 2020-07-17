@@ -2,30 +2,31 @@ import { Button } from "App/Components"
 import { ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { GreenCheck } from "Assets/svgs"
 import React, { useState } from "react"
-import { useMutation, useQuery } from "@apollo/react-hooks"
+import { useMutation } from "@apollo/react-hooks"
 import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useTracking, Schema } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { GetProduct } from "App/generated/GetProduct"
+import { GET_PRODUCT } from "App/Apollo/Queries"
 
 interface Props {
   disabled?: Boolean
   variantInStock: Boolean
   width: number
   selectedVariant: any
+  data: GetProduct
 }
 
 export const AddToBagButton: React.FC<Props> = (props) => {
   const [isMutating, setIsMutating] = useState(false)
   const [added, setAdded] = useState(false)
-  const { variantInStock, width, selectedVariant } = props
+  const { variantInStock, width, selectedVariant, data } = props
   const tracking = useTracking()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
   const { authState } = useAuthContext()
   const userHasSession = authState?.userSession
-
-  const { data } = useQuery(GET_BAG)
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
@@ -34,6 +35,10 @@ export const AddToBagButton: React.FC<Props> = (props) => {
     refetchQueries: [
       {
         query: GET_BAG,
+      },
+      {
+        query: GET_PRODUCT,
+        variables: { productID: data?.product?.id },
       },
     ],
     onCompleted: () => {
@@ -79,10 +84,12 @@ export const AddToBagButton: React.FC<Props> = (props) => {
     }
   }
 
-  const isInBag = selectedVariant?.isInBag || added
-  const disabled = !!props.disabled || isInBag || !variantInStock || isMutating
+  const noActiveUser = data?.me?.customer?.status !== "Active"
 
-  let text = "Add to Bag"
+  const isInBag = selectedVariant?.isInBag || added
+  const disabled = !!props.disabled || isInBag || !variantInStock || isMutating || noActiveUser
+
+  let text = "Add to bag"
   if (isInBag) {
     text = "Added"
   }
