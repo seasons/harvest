@@ -75,14 +75,24 @@ export const SavedItem: React.FC<BagItemProps> = ({
     onError: (err) => {
       setIsMutating(false)
       setAddingToBag(false)
-      Sentry.captureException(err)
       if (err && err.graphQLErrors) {
-        showPopUp({
-          title: "Your bag is full",
-          note: "Remove one or more items from your bag to continue adding this item.",
-          buttonText: "Got It",
-          onClose: () => hidePopUp(),
-        })
+        if (err.graphQLErrors?.[0]?.message === "Bag is full") {
+          showPopUp({
+            title: "Your bag is full",
+            note: "Remove one or more items from your bag to continue adding this item.",
+            buttonText: "Got It",
+            onClose: () => hidePopUp(),
+          })
+        } else {
+          Sentry.captureException(err)
+          console.log("err SavedItem.tsx", err)
+          showPopUp({
+            title: "Oops!",
+            note: "There was a problem adding your item to your bag.",
+            buttonText: "Got It",
+            onClose: () => hidePopUp(),
+          })
+        }
       }
     },
   })
