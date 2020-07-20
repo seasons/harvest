@@ -3,7 +3,6 @@ import { Box, Flex, Sans } from "App/Components"
 import { TouchableOpacity } from "react-native"
 import { useTracking, Schema } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
-import { UserRole } from "App/generated/globalTypes"
 
 interface ListItem {
   title: string
@@ -14,10 +13,10 @@ interface ListItem {
 
 interface Props {
   list: ListItem[]
-  role: UserRole
+  roles: string[]
 }
 
-export const AccountList: React.FC<Props> = ({ list, role }) => {
+export const AccountList: React.FC<Props> = ({ list, roles }) => {
   const tracking = useTracking()
 
   const handleOnPress = (item) => {
@@ -30,10 +29,12 @@ export const AccountList: React.FC<Props> = ({ list, role }) => {
     item.onPress?.()
   }
 
+  const isAdmin = !!roles && roles.includes("Admin")
+
   return (
     <Box>
       {list?.map((item, index) => {
-        if (item.title === "Debug menu" && role !== "Admin") {
+        if (item.title === "Debug menu" && !isAdmin) {
           return null
         }
         return (
