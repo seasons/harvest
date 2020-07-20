@@ -34,7 +34,7 @@ export const App = () => {
     // This will check if the build has updated and resets the apollo cache if it has
     const buildNumber = DeviceInfo.getBuildNumber()
     const storedBuildNumber = await AsyncStorage.getItem("iosBuildNumber")
-    if (!!buildNumber && Platform?.OS === "ios" && storedBuildNumber !== buildNumber) {
+    if (!!storedBuildNumber && !!buildNumber && Platform?.OS === "ios" && storedBuildNumber !== buildNumber) {
       await AsyncStorage.setItem("iosBuildNumber", buildNumber)
       apolloClient.resetStore()
     }

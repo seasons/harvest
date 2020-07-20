@@ -7,7 +7,6 @@ import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
 import { Image, ScrollView, StatusBar, Linking } from "react-native"
 import * as Animatable from "react-native-animatable"
-import * as Sentry from "@sentry/react-native"
 import { CustomerStatus, OnboardingChecklist, AccountList } from "./Lists"
 import { State, UserState } from "../CreateAccount/CreateAccount"
 import { MembershipInfoIcon, PersonalPreferencesIcon, PaymentShippingIcon, ChevronIcon } from "Assets/icons"
@@ -61,7 +60,7 @@ export const GET_USER = gql`
 
 export const Account = screenTrack()(({ navigation }) => {
   const { authState, signOut } = useAuthContext()
-  const { error, data, refetch } = useQuery(GET_USER)
+  const { data, refetch } = useQuery(GET_USER)
 
   useEffect(() => {
     const unsubscribe = navigation?.addListener("focus", () => {
@@ -77,28 +76,26 @@ export const Account = screenTrack()(({ navigation }) => {
     return <GuestView navigation={navigation} />
   }
 
-  if (error) {
-    console.log("Error Account.tsx", error)
-    Sentry.captureException(error)
-  }
-
   const customer = data?.me?.customer
   const onboardingSteps = customer?.onboardingSteps
   const status = customer?.status
-  const shippingAddress = customer?.detail?.shippingAddress
-  const stylePreferences = customer?.detail?.stylePreferences
-  const rawMeasurements = {
-    height: customer?.detail?.height,
-    weight: customer?.detail?.weight,
-    topSizes: customer?.detail?.topSizes,
-    waistSizes: customer?.detail?.waistSizes,
-  }
+
   const user = customer?.user
   const email = user?.email
   const firstName = user?.firstName
   const lastName = user?.lastName
   const pushNotification = user?.pushNotification
   const role = user?.role
+
+  const detail = customer?.detail
+  const shippingAddress = detail?.shippingAddress
+  const stylePreferences = detail?.stylePreferences
+  const rawMeasurements = {
+    height: detail?.height,
+    weight: detail?.weight,
+    topSizes: detail?.topSizes,
+    waistSizes: detail?.waistSizes,
+  }
 
   const ListSkeleton = () => {
     return (

@@ -63,15 +63,11 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
     )
   }
 
-  const images = product.largeImages || product.images
+  const images = product?.largeImages || product?.images
 
-  const {
-    brand: { name: brandName },
-    description,
-    name,
-    type,
-    variants,
-  } = product
+  const { description, name, type, variants } = product
+
+  const brandName = product?.brand?.name
 
   if (!type) {
     return (
@@ -99,9 +95,11 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
             <Flex flexDirection="row" justifyContent="space-between">
               <Flex flexDirection="column" justifyContent="flex-end" width={screenWidth - (90 + space(6))}>
                 <Sans size="1">{name}</Sans>
-                <Sans size="1" color={color("black50")}>
-                  {brandName}
-                </Sans>
+                {!!brandName && (
+                  <Sans size="1" color={color("black50")}>
+                    {brandName}
+                  </Sans>
+                )}
               </Flex>
               <ImageContainer height={112} imageWidth={90} source={{ uri: images?.[0]?.url || "" }} />
             </Flex>

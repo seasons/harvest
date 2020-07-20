@@ -77,6 +77,7 @@ export const Reservation = screenTrack()((props) => {
   const [isMutating, setIsMutating] = useState(false)
   const tracking = useTracking()
   const { data, loading } = useQuery(GET_CUSTOMER)
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
       {
@@ -87,12 +88,28 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
     onError: (err) => {
+      if (err.graphQLErrors?.[0]?.message.includes("Address Validation Error")) {
+        showPopUp({
+          title: "Sorry!",
+          note:
+            "UPS could not validate your shipping address, please double check your shipping address is valid in your account details.",
+          buttonText: "Close",
+          onClose: () => hidePopUp(),
+        })
+      } else {
+        Sentry.captureException(err)
+        showPopUp({
+          title: "Sorry!",
+          note: "We couldn't process your order because of an unexpected error, please try again later",
+          buttonText: "Close",
+          onClose: () => hidePopUp(),
+        })
+      }
+      console.log("Error reservation.tsx: ", err)
+
       setIsMutating(false)
-      Sentry.captureException(err)
-      console.warn("Error reservation.tsx: ", err)
     },
   })
-  const { showPopUp, hidePopUp } = usePopUpContext()
 
   if (loading) {
     return <Loader />
@@ -187,26 +204,16 @@ export const Reservation = screenTrack()((props) => {
             })
             setIsMutating(true)
             const itemIDs = items?.map((item) => item?.productVariant?.id)
-            try {
-              const { data } = await reserveItems({
-                variables: {
-                  items: itemIDs,
-                },
+            const { data } = await reserveItems({
+              variables: {
+                items: itemIDs,
+              },
+            })
+            if (data?.reserveItems) {
+              props.navigation.navigate("BagStack", {
+                screen: "ReservationConfirmation",
+                params: { reservationID: data.reserveItems.id },
               })
-              if (data.reserveItems) {
-                props.navigation.navigate("BagStack", {
-                  screen: "ReservationConfirmation",
-                  params: { reservationID: data.reserveItems.id },
-                })
-              }
-            } catch (e) {
-              showPopUp({
-                title: "Sorry!",
-                note: "We couldn't process your order because of an unexpected error, please try again later",
-                buttonText: "Close",
-                onClose: () => hidePopUp(),
-              })
-              setIsMutating(false)
             }
           }}
           block
