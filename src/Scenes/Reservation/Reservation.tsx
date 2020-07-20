@@ -88,10 +88,6 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
     onError: (err) => {
-      setIsMutating(false)
-      Sentry.captureException(err)
-      console.warn("Error reservation.tsx: ", err)
-
       if (err.graphQLErrors?.[0]?.message.includes("Address Validation Error")) {
         showPopUp({
           title: "Sorry!",
@@ -101,6 +97,7 @@ export const Reservation = screenTrack()((props) => {
           onClose: () => hidePopUp(),
         })
       } else {
+        Sentry.captureException(err)
         showPopUp({
           title: "Sorry!",
           note: "We couldn't process your order because of an unexpected error, please try again later",
@@ -108,6 +105,7 @@ export const Reservation = screenTrack()((props) => {
           onClose: () => hidePopUp(),
         })
       }
+      console.log("Error reservation.tsx: ", err)
 
       setIsMutating(false)
     },
