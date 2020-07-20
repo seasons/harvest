@@ -50,6 +50,8 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - GoogleAnalytics (3.17.0)
+  - GoogleIDFASupport (3.14.0)
   - libwebp (1.1.0):
     - libwebp/demux (= 1.1.0)
     - libwebp/mux (= 1.1.0)
@@ -63,6 +65,7 @@ PODS:
   - lottie-react-native (3.1.1):
     - lottie-ios (~> 3.0.3)
     - React
+  - Mixpanel (3.6.1)
   - Permission-Notifications (2.1.3):
     - RNPermissions
   - PushNotifications (3.0.4)
@@ -306,6 +309,14 @@ PODS:
   - RNAnalytics (1.1.0):
     - Analytics
     - React
+  - RNAnalyticsIntegration-Google-Analytics (1.1.0):
+    - Analytics
+    - React
+    - Segment-GoogleAnalytics
+  - RNAnalyticsIntegration-Mixpanel (1.1.0):
+    - Analytics
+    - React
+    - Segment-Mixpanel
   - RNCAsyncStorage (1.11.0):
     - React
   - RNCPicker (1.6.3):
@@ -337,6 +348,19 @@ PODS:
   - SDWebImageWebPCoder (0.2.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.0)
+  - Segment-GoogleAnalytics (1.3.0):
+    - Analytics (~> 3.0)
+    - Segment-GoogleAnalytics/GoogleIDFASupport (= 1.3.0)
+  - Segment-GoogleAnalytics/Core (1.3.0):
+    - Analytics (~> 3.0)
+    - GoogleAnalytics (~> 3.14)
+  - Segment-GoogleAnalytics/GoogleIDFASupport (1.3.0):
+    - Analytics (~> 3.0)
+    - GoogleIDFASupport (~> 3.14)
+    - Segment-GoogleAnalytics/Core
+  - Segment-Mixpanel (1.6.0):
+    - Analytics (~> 3.0)
+    - Mixpanel (~> 3.5)
   - Sentry (4.4.3):
     - Sentry/Core (= 4.4.3)
   - Sentry/Core (4.4.3)
@@ -410,6 +434,8 @@ DEPENDENCIES:
   - ReactCommon/callinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNAnalytics (from `../node_modules/@segment/analytics-react-native`)"
+  - "RNAnalyticsIntegration-Google-Analytics (from `../node_modules/@segment/analytics-react-native-google-analytics`)"
+  - "RNAnalyticsIntegration-Mixpanel (from `../node_modules/@segment/analytics-react-native-mixpanel`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCPicker (from `../node_modules/@react-native-community/picker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
@@ -440,10 +466,15 @@ SPEC REPOS:
   trunk:
     - Analytics
     - boost-for-react-native
+    - GoogleAnalytics
+    - GoogleIDFASupport
     - libwebp
+    - Mixpanel
     - PushNotifications
     - SDWebImage
     - SDWebImageWebPCoder
+    - Segment-GoogleAnalytics
+    - Segment-Mixpanel
     - Sentry
 
 EXTERNAL SOURCES:
@@ -552,6 +583,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNAnalytics:
     :path: "../node_modules/@segment/analytics-react-native"
+  RNAnalyticsIntegration-Google-Analytics:
+    :path: "../node_modules/@segment/analytics-react-native-google-analytics"
+  RNAnalyticsIntegration-Mixpanel:
+    :path: "../node_modules/@segment/analytics-react-native-mixpanel"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCPicker:
@@ -636,9 +671,12 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 5465d51ccfeecb7faa12f9ae0024f2044ce4044e
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  GoogleAnalytics: f42cc53a87a51fe94334821868d9c8481ff47a7b
+  GoogleIDFASupport: aaf8c10bd429abb1c15349d5252244f5eda8ead1
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   lottie-ios: 6037add6441183d4ffd100d2ac78724aa8d919d4
   lottie-react-native: d8caf2aa9ab8bb76312e44997c1c91804a23d44d
+  Mixpanel: 61e6d8c0717c8e94ccc6d3a1ae8677b9a78f64c5
   Permission-Notifications: 5d8c88b22dbbf1f0fe278b223caae0d0675c11bc
   PushNotifications: 6e3d148e5e129af9d4a9279b288c934f9a7f9066
   RCTRequired: cec6a34b3ac8a9915c37e7e4ad3aa74726ce4035
@@ -668,6 +706,8 @@ SPEC CHECKSUMS:
   React-RCTVibration: 4356114dbcba4ce66991096e51a66e61eda51256
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
   RNAnalytics: 35a54cb740c472a0a6a3de765176b82cccc2d1ef
+  RNAnalyticsIntegration-Google-Analytics: b9ee84deb74d6ca72260c4f4544f74e0f936f1d8
+  RNAnalyticsIntegration-Mixpanel: b6189df6949ec6cab33cdb7b737f36ceb95f4de6
   RNCAsyncStorage: d059c3ee71738c39834a627476322a5a8cd5bf36
   RNCPicker: 1c63b084bcbcd33d159a83144543f3bda4cd1793
   RNDeviceInfo: b6e650fbd234732c759544218657d549b4339038
@@ -681,6 +721,8 @@ SPEC CHECKSUMS:
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   SDWebImage: 84000f962cbfa70c07f19d2234cbfcf5d779b5dc
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
+  Segment-GoogleAnalytics: 227a9a25c62f11853bd4e4b5f31c3cf28ed06f95
+  Segment-Mixpanel: b5d949a7eda1018a8d5afbb2cfcb59c870ecce34
   Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390
   UMAppLoader: 61049c8d55590b74e9ae1d5429bf68d96b4a2528
   UMBarCodeScannerInterface: e5e4c87797d3d01214e25cd1618866caf5d4f17f
@@ -697,6 +739,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 80653f25c55d9e6d79d6a0a65589fa213feaee11
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
 
-PODFILE CHECKSUM: 3748da0af85abe3cb5f6435d0c2beece077950e8
+PODFILE CHECKSUM: 32e88f281ebedf2e84ad2306d8db4b6d759cd146
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.9.1
