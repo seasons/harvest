@@ -76,7 +76,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
       setIsMutating(false)
       setAddingToBag(false)
       if (err && err.graphQLErrors) {
-        if (err.graphQLErrors?.[0]?.message === "Bag is full") {
+        if (err.graphQLErrors?.[0]?.message?.includes("Bag is full")) {
           showPopUp({
             title: "Your bag is full",
             note: "Remove one or more items from your bag to continue adding this item.",
