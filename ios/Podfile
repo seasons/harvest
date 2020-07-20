@@ -55,8 +55,8 @@ target 'seasons' do
   pod 'react-native-config', :path => '../node_modules/react-native-config'
   pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
   pod 'RNAnalytics', :path => '../node_modules/@segment/analytics-react-native'
-  # pod 'RNAnalyticsIntegration-Google-Analytics', :path => '../node_modules/@segment/analytics-react-native-google-analytics'
-  # pod 'RNAnalyticsIntegration-Mixpanel', :path => '../node_modules/@segment/analytics-react-native-mixpanel' 
+  pod 'RNAnalyticsIntegration-Google-Analytics', :path => '../node_modules/@segment/analytics-react-native-google-analytics'
+  pod 'RNAnalyticsIntegration-Mixpanel', :path => '../node_modules/@segment/analytics-react-native-mixpanel' 
   pod 'react-native-pusher-push-notifications', :path => '../node_modules/react-native-pusher-push-notifications'
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
