@@ -21,11 +21,9 @@ export const ProductDetails: React.FC<{
     return null
   }
 
-  const {
-    name,
-    description,
-    brand: { name: brandName },
-  } = product
+  const { name, description } = product
+
+  const brandName = product?.brand?.name
 
   const modelHeightDisplay = (modelHeight) => {
     const height = parseInt(modelHeight)
@@ -45,23 +43,25 @@ export const ProductDetails: React.FC<{
           <Sans size="1" color={color("black100")}>
             {name}
           </Sans>
-          <TouchableOpacity
-            onPress={() => {
-              const brandID = product?.brand?.id
-              const brandSlug = product?.brand?.slug
-              tracking.trackEvent({
-                actionName: Schema.ActionNames.BrandTapped,
-                actionType: Schema.ActionTypes.Tap,
-                brandSlug,
-                brandID,
-              })
-              navigation.navigate("Brand", { id: brandID, slug: brandSlug })
-            }}
-          >
-            <Sans size="1" color={color("black50")} style={{ textDecorationLine: "underline" }}>
-              {brandName}
-            </Sans>
-          </TouchableOpacity>
+          {!!brandName && (
+            <TouchableOpacity
+              onPress={() => {
+                const brandID = product?.brand?.id
+                const brandSlug = product?.brand?.slug
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.BrandTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                  brandSlug,
+                  brandID,
+                })
+                navigation.navigate("Brand", { id: brandID, slug: brandSlug })
+              }}
+            >
+              <Sans size="1" color={color("black50")} style={{ textDecorationLine: "underline" }}>
+                {brandName}
+              </Sans>
+            </TouchableOpacity>
+          )}
         </Box>
         {!!(selectedVariant && selectedVariant.id) && (
           <SaveButtonWrapper>
