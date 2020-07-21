@@ -11,6 +11,7 @@ import * as Sentry from "@sentry/react-native"
 import { ScrollView } from "react-native"
 import { BagItemFragment } from "../Bag/Components/BagItem"
 import { ReservationItem } from "./Components/ReservationItem"
+import { useNavigation } from "@react-navigation/native"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
@@ -39,8 +40,10 @@ const GET_CUSTOMER = gql`
       customer {
         id
         detail {
+          id
           phoneNumber
           shippingAddress {
+            id
             slug
             name
             address1
@@ -51,6 +54,7 @@ const GET_CUSTOMER = gql`
           }
         }
         billingInfo {
+          id
           last_digits
         }
       }
@@ -76,7 +80,8 @@ const SectionHeader = ({ title }) => {
 export const Reservation = screenTrack()((props) => {
   const [isMutating, setIsMutating] = useState(false)
   const tracking = useTracking()
-  const { data, loading } = useQuery(GET_CUSTOMER)
+  const navigation = useNavigation()
+  const { data } = useQuery(GET_CUSTOMER)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
@@ -111,21 +116,20 @@ export const Reservation = screenTrack()((props) => {
     },
   })
 
-  if (loading) {
-    return <Loader />
-  }
-
   const customer = data?.me?.customer
-  const address = data?.me?.customer?.detail?.shippingAddress || {
-    address1: "",
-    address2: "",
-    city: "",
-    state: "",
-    zipCode: "",
-  }
+  const address = data?.me?.customer?.detail?.shippingAddress
 
   const phoneNumber = customer?.detail?.phoneNumber
-  const items = data?.me?.bag ?? []
+  const items = data?.me?.bag
+
+  if (!customer || !items || !address) {
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
+  }
 
   return (
     <>
