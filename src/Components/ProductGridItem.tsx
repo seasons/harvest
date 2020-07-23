@@ -5,11 +5,11 @@ import { Schema, useTracking } from "App/utils/track"
 import React, { RefObject } from "react"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
-import { GetProduct_product } from "App/generated/GetProduct"
+import { GetProduct_products } from "App/generated/GetProduct"
 
 export const ProductGridItem: React.FC<{
   flatListRef?: RefObject<any>
-  product: GetProduct_product
+  product: GetProduct_products
   addLeftSpacing?: boolean
   showBrandName?: boolean
 }> = ({ flatListRef, product, addLeftSpacing, showBrandName }) => {

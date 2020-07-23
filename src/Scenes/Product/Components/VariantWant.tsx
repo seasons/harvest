@@ -4,7 +4,7 @@ import React from "react"
 import { Dimensions, Text, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { GreenCheck, LeftTabCorner, RightTabCorner } from "Assets/svgs"
-import { GET_PRODUCT } from "App/Apollo/Queries"
+import { GET_PRODUCT } from "../Queries"
 import { Flex, Sans } from "App/Components"
 import { color } from "App/utils"
 import { useTracking, Schema } from "App/utils/track"
@@ -51,7 +51,7 @@ export const VariantWant = (props: VariantWantProps) => {
       {
         query: GET_PRODUCT,
         variables: {
-          productID,
+          where: { id: productID, slug: productSlug },
         },
       },
     ],

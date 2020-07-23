@@ -1,6 +1,6 @@
-import { GET_PRODUCT } from "App/Apollo/Queries"
+import { GET_PRODUCT } from "../Queries"
 import { Box } from "App/Components"
-import { GetProduct_product } from "App/generated/GetProduct"
+import { GetProduct_products } from "App/generated/GetProduct"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { SaveIcon } from "Assets/icons"
@@ -26,7 +26,7 @@ export const SAVE_ITEM = gql`
 `
 
 export interface SaveProductButtonProps {
-  product: GetProduct_product
+  product: GetProduct_products
   selectedVariant?: any
   onPressSaveButton: () => void
   grayStroke?: boolean
@@ -50,7 +50,7 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
       {
         query: GET_PRODUCT,
         variables: {
-          productID: product.id,
+          where: { id: product.id },
         },
       },
       {
@@ -61,7 +61,7 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
   const { authState } = useAuthContext()
   const userHasSession = !!authState?.userSession
 
-  if (!product.variants || product?.variants?.length === 0) {
+  if (product?.variants?.length !== 0) {
     return null
   }
 

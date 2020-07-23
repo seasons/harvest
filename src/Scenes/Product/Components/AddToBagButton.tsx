@@ -8,7 +8,8 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { useTracking, Schema } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { GetProduct } from "App/generated/GetProduct"
-import { GET_PRODUCT } from "App/Apollo/Queries"
+import { GET_PRODUCT } from "../Queries"
+import { head } from "lodash"
 
 interface Props {
   disabled?: Boolean
@@ -38,7 +39,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
       },
       {
         query: GET_PRODUCT,
-        variables: { productID: data?.product?.id },
+        variables: { where: { id: head(data?.products)?.id } },
       },
     ],
     onCompleted: () => {

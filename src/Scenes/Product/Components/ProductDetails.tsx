@@ -1,5 +1,5 @@
 import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
-import { GetProduct_product } from "App/generated/GetProduct"
+import { GetProduct_products } from "App/generated/GetProduct"
 import { color, space } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import React from "react"
@@ -13,11 +13,11 @@ const screenWidth = Dimensions.get("window").width
 
 export const ProductDetails: React.FC<{
   selectedVariant: any
-  product: GetProduct_product
+  product: GetProduct_products
 }> = ({ selectedVariant, product }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
-  if (!product || !product.variants) {
+  if (!product?.variants) {
     return null
   }
 

@@ -21,7 +21,7 @@ export interface GetUser_me_customer_user {
   firstName: string;
   lastName: string;
   email: string;
-  role: UserRole;
+  roles: UserRole[];
   pushNotification: GetUser_me_customer_user_pushNotification | null;
 }
 

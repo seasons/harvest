@@ -3,7 +3,7 @@ import React, { useState } from "react"
 import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
-import { GET_PRODUCT } from "App/Apollo/Queries"
+import { GET_PRODUCT } from "./Queries"
 import {
   Box,
   Button,
@@ -18,7 +18,7 @@ import {
   FixedBackArrow,
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { GetProduct_product } from "App/generated/GetProduct"
+import { GetProduct_products } from "App/generated/GetProduct"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
@@ -37,7 +37,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
   const tracking = useTracking()
   const [selectedVariantID, setSelectedVariantID] = useState(null)
   const navigation = useNavigation()
-  const product: GetProduct_product = route?.params?.product
+  const product: GetProduct_products = route?.params?.product
   const showPopUp = route?.params?.showPopUp
   const hidePopUp = route?.params?.hidePopUp
   const [saveItem] = useMutation(SAVE_ITEM, {
@@ -45,7 +45,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
       {
         query: GET_PRODUCT,
         variables: {
-          productID: product?.id,
+          where: { id: product?.id },
         },
       },
       {
@@ -63,7 +63,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
     )
   }
 
-  const images = product?.largeImages || product?.images
+  const images = product?.largeImages
 
   const { description, name, type, variants } = product
 
