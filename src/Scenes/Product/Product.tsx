@@ -82,6 +82,9 @@ export const Product = screenTrack({
         },
       })
     }
+  }, [product])
+
+  useEffect(() => {
     if (data && !product) {
       showPopUp({
         title: "Oops!",
@@ -95,7 +98,7 @@ export const Product = screenTrack({
         },
       })
     }
-  }, [product])
+  }, [data, product])
 
   const [selectedVariant, setSelectedVariant] = useState(
     product?.variants?.[0] || {
@@ -137,7 +140,7 @@ export const Product = screenTrack({
     return <EmptyView navigation={navigation} />
   }
 
-  // Happens if the product could not be found
+  // Happens if the product could not be found. The useEffect above will show a popup.
   if (!product) {
     return <EmptyView navigation={navigation} />
   }

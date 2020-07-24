@@ -52,6 +52,11 @@ export function getColorsForVariant(variant: TextInputVariant) {
   }
 }
 
+export interface TextInputRef {
+  blur: () => void
+  focus: () => void
+}
+
 /////////////////////////////////////////////////////////
 // Note: Any styling changes here should also appear in
 // App/Scenes/CreateAccount/FakeTextInput
@@ -116,12 +121,7 @@ export interface TextInputProps {
   variant?: TextInputVariant
 }
 
-interface TextInputRefAttributes {
-  blur: () => void
-  focus: () => void
-}
-
-export const TextInput = React.forwardRef<TextInputRefAttributes, TextInputProps>(
+export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
   (
     {
       autoCapitalize = "none",

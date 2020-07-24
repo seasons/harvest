@@ -10,6 +10,7 @@ import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { START_VERIFICATION } from "../SendCodePane/"
+import { TextInputRef } from "App/Components/TextInput"
 
 const CHECK_VERIFICATION = gql`
   mutation checkSMSVerification($code: String!) {
@@ -32,10 +33,10 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ focus, onVerifyP
   const [isFormValid, setIsFormValid] = useState(false)
   const insets = useSafeArea()
 
-  const textInputRef = useRef(null)
+  const textInputRef: React.MutableRefObject<TextInputRef> = useRef(null)
   useEffect(() => {
     if (focus) {
-      textInputRef?.current?.focus?.()
+      textInputRef?.current?.focus()
     }
   }, [focus])
 
