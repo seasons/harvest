@@ -18,6 +18,16 @@ export const GET_BAG = gql`
           id
           subscriptionId
         }
+        detail {
+          id
+          shippingAddress {
+            id
+            city
+            state
+            address1
+            zipCode
+          }
+        }
         membership {
           id
           pauseRequests(orderBy: createdAt_DESC) {

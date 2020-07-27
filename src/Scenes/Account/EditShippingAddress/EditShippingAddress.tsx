@@ -55,8 +55,8 @@ export const EditShippingAddress: React.FC<{
   const [address1, setAddress1] = useState((shippingAddress?.address1 as string) || "")
   const [address2, setAddress2] = useState((shippingAddress?.address2 as string) || "")
   const [zipCode, setZipCode] = useState((shippingAddress?.zipCode as string) || "")
-  const [city, setCity] = useState((shippingAddress?.state as string) || "")
-  const [state, setState] = useState((shippingAddress?.city as string) || "")
+  const [city, setCity] = useState((shippingAddress?.city as string) || "")
+  const [state, setState] = useState((shippingAddress?.state as string) || "")
 
   const [isStatePickerVisible, setIsStatePickerVisible] = useState(false)
   const insets = useSafeArea()

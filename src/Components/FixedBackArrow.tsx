@@ -11,7 +11,8 @@ type FixedBackArrowVariant = "blackBackground" | "whiteBackground" | "black04Bac
 export const FixedBackArrow: React.FC<{
   navigation: any
   variant?: FixedBackArrowVariant
-}> = ({ navigation, variant }) => {
+  onPress?: () => void
+}> = ({ navigation, variant, onPress }) => {
   const getColorsForVariant = (variant: FixedBackArrowVariant) => {
     const {
       colors: { black100, white100, black10, black04 },
@@ -45,7 +46,7 @@ export const FixedBackArrow: React.FC<{
 
   return (
     <Wrapper>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity onPress={!!onPress ? onPress : () => navigation.goBack()}>
         <ArrowWrapper backgroundColor={variantColors.backgroundColor}>
           <Arrow color={variantColors.arrowColor} />
         </ArrowWrapper>
