@@ -6,6 +6,7 @@ import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { FlatList } from "react-native"
+import { Loader } from "App/Components/Loader"
 
 const GET_TAG = gql`
   query GetProductsByTag($tag: String!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!) {
@@ -66,6 +67,15 @@ export const Tag = screenTrack({
 
   const products = data?.products
   const numColumns = 2
+
+  if (!data) {
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
+  }
 
   return (
     <Container insetsBottom={false}>
