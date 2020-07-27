@@ -128,8 +128,6 @@ export const Reservation = screenTrack()((props) => {
     )
   }
 
-  console.log("data", data)
-
   return (
     <>
       <Container insetsTop insetsBottom={false} backgroundColor="white100">
