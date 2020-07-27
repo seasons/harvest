@@ -7943,6 +7943,11 @@ react-native-pusher-push-notifications@^2.4.0:
   resolved "https://registry.yarnpkg.com/react-native-pusher-push-notifications/-/react-native-pusher-push-notifications-2.4.0.tgz#2b5dabea8f70d518091c0faa6936382cd03deb6a"
   integrity sha512-y+Q1C+QP0qjCesJLGAwEmjtbedF+XlW+5qUMcA10xWzL/I26ZwL1aueq9z8UYhqyzErPmd0vm+a8ezYBPVSafg==
 
+react-native-rate@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-rate/-/react-native-rate-1.2.1.tgz#c7a58b13dc68c49372d706d55a644b3700474597"
+  integrity sha512-Hm1cmSaFVkJZHlSC2ebrhW7Y2PCQozjGr9pvAhkU2vQ/G3fS01OplGqADb0MhW+Md5t1rWUtwZnTS/W3/osXvA==
+
 react-native-reanimated@~1.9.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.9.0.tgz#38676c99dd585504fdc7331efb45e5f48ec7339a"
