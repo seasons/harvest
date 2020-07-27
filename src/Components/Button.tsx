@@ -161,7 +161,7 @@ export function getColorsForVariant(variant: ButtonVariant) {
       return {
         default: {
           backgroundColor: black100,
-          borderColor: black50,
+          borderColor: black100,
           color: white100,
         },
         pressed: {
@@ -170,7 +170,7 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: white100,
         },
         disabled: {
-          backgroundColor: black100,
+          backgroundColor: black85,
           borderColor: black85,
           color: white100,
         },

@@ -85,8 +85,6 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({
   const interItemSpacing = (width - itemsPerRow * itemHeight) / (itemsPerRow - 1)
   const numRows = Math.ceil(items.length / itemsPerRow)
 
-  console.log("Layout")
-
   return (
     <Box onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
       {[...Array(numRows).keys()].map((

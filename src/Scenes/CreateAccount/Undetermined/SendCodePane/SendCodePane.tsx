@@ -6,6 +6,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { TextInputRef } from "App/Components/TextInput"
 
 export const START_VERIFICATION = gql`
   mutation startSMSVerification($phoneNumber: String!) {
@@ -23,10 +24,10 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ focus, onSendCode })
   const [isFormValid, setIsFormValid] = useState(false)
   const insets = useSafeArea()
 
-  const textInputRef = useRef(null)
+  const textInputRef: React.MutableRefObject<TextInputRef> = useRef(null)
   useEffect(() => {
     if (focus) {
-      textInputRef?.current?.focus?.()
+      textInputRef?.current?.focus()
     }
   }, [focus])
 

@@ -156,7 +156,7 @@ const BagStackScreen = () => {
       <BagStack.Screen name={Schema.PageNames.Bag} component={Bag} />
       <BagStack.Screen name={Schema.PageNames.Webview} component={Webview} />
       <BagStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
-      <BrowseStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
+      <BagStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
       <BagStack.Screen name={Schema.PageNames.CurrentRotation} component={CurrentRotation} />
       <BagStack.Screen name={Schema.PageNames.Faq} component={Faq} />
       <BagStack.Screen name={Schema.PageNames.Reservation} component={Reservation} />

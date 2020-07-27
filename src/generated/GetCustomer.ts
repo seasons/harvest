@@ -70,6 +70,7 @@ export interface GetCustomer_me_bag {
 
 export interface GetCustomer_me_customer_detail_shippingAddress {
   __typename: "Location";
+  id: string;
   slug: string | null;
   name: string | null;
   address1: string | null;
@@ -81,12 +82,14 @@ export interface GetCustomer_me_customer_detail_shippingAddress {
 
 export interface GetCustomer_me_customer_detail {
   __typename: "CustomerDetail";
+  id: string;
   phoneNumber: string | null;
   shippingAddress: GetCustomer_me_customer_detail_shippingAddress | null;
 }
 
 export interface GetCustomer_me_customer_billingInfo {
   __typename: "BillingInfo";
+  id: string;
   last_digits: string;
 }
 

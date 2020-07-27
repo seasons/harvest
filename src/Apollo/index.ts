@@ -47,7 +47,7 @@ export const setupApolloClient = async () => {
       Sentry.captureException(graphQLErrors)
     }
     if (networkError) {
-      console.log("networkError", networkError)
+      console.log("networkError", JSON.stringify(networkError))
       // User access token has expired
       if (networkError.statusCode === 401) {
         // We assume we have both tokens needed to run the async request

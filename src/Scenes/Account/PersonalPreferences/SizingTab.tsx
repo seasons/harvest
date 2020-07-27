@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { InitialMeasurements } from "../EditMeasurements"
 import { Box, Container, Sans, Flex, Spacer, Button } from "App/Components"
-import { ScrollView, FlatList } from "react-native"
+import { FlatList } from "react-native"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { color } from "App/utils/color"
 import { MultiSelectionTable } from "App/Scenes/CreateAccount/Undetermined/GetMeasurementsPane/MultiSelectionTable"

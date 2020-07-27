@@ -3,13 +3,13 @@ import { FadeInImage } from "App/Components/FadeInImage"
 import React, { useState } from "react"
 import { FlatList } from "react-native"
 import styled from "styled-components/native"
-import { GetProduct_product } from "App/generated/GetProduct"
+import { GetProduct_products } from "App/generated/GetProduct"
 import { Schema, useTracking } from "App/utils/track"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 export const ImageRail: React.FC<{
   height?: number
-  images: GetProduct_product["images"]
+  images: GetProduct_products["largeImages"]
   imageWidth?: number
   showPageDots: Boolean
   TextComponent?: React.ComponentType

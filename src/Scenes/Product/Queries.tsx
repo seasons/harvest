@@ -37,7 +37,7 @@ const commonProductVariantFragment = gql`
 `
 
 export const GET_PRODUCT = gql`
-  query GetProduct($productID: ID!) {
+  query GetProduct($where: ProductWhereInput!) {
     me {
       customer {
         id
@@ -47,7 +47,7 @@ export const GET_PRODUCT = gql`
         id
       }
     }
-    product(where: { id: $productID }) {
+    products(first: 1, where: $where) {
       id
       slug
       name
@@ -72,7 +72,7 @@ export const GET_PRODUCT = gql`
         name
         logo
         since
-        products(first: 5, orderBy: createdAt_DESC, where: { AND: [{ id_not: $productID }, { status: Available }] }) {
+        products(first: 5, orderBy: createdAt_DESC, where: { AND: [{ NOT: [$where] }, { status: Available }] }) {
           id
           type
           images(size: Thumb) {
@@ -129,38 +129,6 @@ export const GET_COLLECTION = gql`
         images {
           id
           url
-        }
-      }
-    }
-  }
-`
-
-export const ACTIVE_RESERVATION = gql`
-  query ActiveReservation {
-    me {
-      activeReservation {
-        id
-        shipped
-        createdAt
-        products {
-          id
-          seasonsUID
-          inventoryStatus
-          productStatus
-          productVariant {
-            size
-            product {
-              name
-              retailPrice
-              brand {
-                name
-              }
-              images(size: Thumb) {
-                id
-                url
-              }
-            }
-          }
         }
       }
     }

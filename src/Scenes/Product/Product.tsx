@@ -1,13 +1,12 @@
 import { useMutation, useQuery } from "@apollo/react-hooks"
-import { GET_PRODUCT } from "App/Apollo/Queries"
 import { Box, Container, FixedBackArrow, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { GetProduct, GetProduct_product } from "App/generated/GetProduct"
+import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { space } from "App/utils"
 import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
-import { find } from "lodash"
+import { head, find } from "lodash"
 import React, { useEffect, useState, useRef } from "react"
 import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
@@ -17,6 +16,8 @@ import { GET_HOMEPAGE } from "../Home/Home"
 import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
+import { GET_PRODUCT } from "./Queries"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -45,16 +46,26 @@ export const Product = screenTrack({
   const userHasSession = !!authState?.userSession
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const { navigation, route } = props
-  const productID = route?.params?.id
-  const productSlug = route?.params?.slug
+  const { showPopUp, hidePopUp } = usePopUpContext()
+
+  // If the slug is present, ignore the id. This would happen if a product is passed through a deep link.
+  const slug: string = route?.params?.slug || undefined
+  const id: string = slug ? undefined : route?.params?.id
   const { data, error } = useQuery<GetProduct>(GET_PRODUCT, {
     variables: {
-      productID,
+      where: {
+        id,
+        slug,
+      },
     },
   })
+  const product: GetProduct_products = head(data?.products)
+
   const pickerTransition = useSpring({
     translateY: showVariantPicker ? 0 : variantPickerHeight,
+    overlayOpacity: showVariantPicker ? 1 : 0,
   })
+
   const [addRecentlyViewedItem] = useMutation(ADD_VIEWED_PRODUCT, {
     refetchQueries: [
       {
@@ -64,16 +75,31 @@ export const Product = screenTrack({
   })
 
   useEffect(() => {
-    if (userHasSession) {
+    if (userHasSession && product) {
       addRecentlyViewedItem({
         variables: {
-          item: productID,
+          item: product.id,
         },
       })
     }
-  }, [])
+  }, [product])
 
-  const product: GetProduct_product = data && data.product
+  useEffect(() => {
+    if (data && !product) {
+      showPopUp({
+        title: "Oops!",
+        note:
+          "We couldn't find that product at the moment. Please go back and try again, " +
+          "or contact us at membership@seasons.nyc if this persists.",
+        buttonText: "Go Back",
+        onClose: () => {
+          hidePopUp()
+          navigation.goBack()
+        },
+      })
+    }
+  }, [data, product])
+
   const [selectedVariant, setSelectedVariant] = useState(
     product?.variants?.[0] || {
       id: "",
@@ -88,7 +114,7 @@ export const Product = screenTrack({
   const brandProducts = product?.brand?.products
 
   const viewWidth = Dimensions.get("window").width
-  const images = product && product.largeImages
+  const images = product?.largeImages
   const imageWidth = images?.length > 1 ? viewWidth - space(3) : viewWidth
 
   let selectedVariantIsWanted = false
@@ -106,17 +132,17 @@ export const Product = screenTrack({
     translateY: shouldShowVariantWant ? 0 : VARIANT_WANT_HEIGHT,
   })
 
-  if (!data) {
-    return (
-      <>
-        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-        <Loader />
-      </>
-    )
+  if (error) {
+    console.error("Error:", error)
   }
 
-  if (error) {
-    console.error("error: ", error)
+  if (!data) {
+    return <EmptyView navigation={navigation} />
+  }
+
+  // Happens if the product could not be found. The useEffect above will show a popup.
+  if (!product) {
+    return <EmptyView navigation={navigation} />
   }
 
   const renderItem = ({ item: section }) => {
@@ -127,7 +153,7 @@ export const Product = screenTrack({
             images={images}
             showPageDots
             imageWidth={imageWidth}
-            TextComponent={() => <VariantSizes size="1" variants={product.variants} />}
+            TextComponent={() => <VariantSizes size="1" variants={product?.variants ?? []} />}
           />
         )
       case "productMeasurements":
@@ -167,14 +193,14 @@ export const Product = screenTrack({
         {shouldShowVariantWant && (
           <VariantWant
             setShowWantedConfirmation={setShowWantedConfirmation}
-            productSlug={productSlug}
+            productSlug={product.slug}
             isWanted={selectedVariantIsWanted}
-            productID={productID}
+            productID={product.id}
             variantID={selectedVariant.id}
           />
         )}
       </AnimatedVariantWantWrapper>
-      {showVariantPicker && <Overlay />}
+      <AnimatedOverlay pointerEvents={showVariantPicker ? "auto" : "none"} opacity={pickerTransition.overlayOpacity} />
       <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
         <VariantPicker
           variantPickerHeight={variantPickerHeight}
@@ -199,7 +225,7 @@ const VariantPickerWrapper = styled(Box)`
   z-index: 4;
 `
 
-const Overlay = styled.View`
+const Overlay = styled(Box)`
   position: absolute;
   background-color: rgba(0, 0, 0, 0.6);
   top: 0;
@@ -218,3 +244,11 @@ const VariantWantWrapper = styled(Box)`
 
 const AnimatedVariantWantWrapper = animated(VariantWantWrapper)
 const AnimatedVariantPicker = animated(VariantPickerWrapper)
+const AnimatedOverlay = animated(Overlay)
+
+const EmptyView = (navigation: any) => (
+  <>
+    <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+    <Loader />
+  </>
+)

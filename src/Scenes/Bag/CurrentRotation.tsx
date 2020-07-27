@@ -1,4 +1,3 @@
-import { ACTIVE_RESERVATION } from "App/Apollo/Queries"
 import { Box, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { Container } from "Components/Container"
@@ -10,7 +9,43 @@ import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { Bag } from "./Bag"
+import gql from "graphql-tag"
 import { CurrentRotationItem } from "./Components/CurrentRotationItem"
+
+const ACTIVE_RESERVATION = gql`
+  query ActiveReservation {
+    me {
+      activeReservation {
+        id
+        shipped
+        createdAt
+        products {
+          id
+          seasonsUID
+          inventoryStatus
+          productStatus
+          productVariant {
+            id
+            size
+            product {
+              id
+              name
+              retailPrice
+              brand {
+                id
+                name
+              }
+              images(size: Thumb) {
+                id
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export const CurrentRotation = (props) => {
   const { data, loading, refetch } = useQuery(ACTIVE_RESERVATION)
