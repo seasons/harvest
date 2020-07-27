@@ -25,11 +25,14 @@ const ACTIVE_RESERVATION = gql`
           inventoryStatus
           productStatus
           productVariant {
+            id
             size
             product {
+              id
               name
               retailPrice
               brand {
+                id
                 name
               }
               images(size: Thumb) {
