@@ -5,7 +5,7 @@ import { PauseButtons, PauseStatus } from "App/Components/Pause/PauseButtons"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { Schema, screenTrack, useTracking } from "App/utils/track"
+import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
@@ -18,6 +18,7 @@ import { useFocusEffect } from "@react-navigation/native"
 import { GET_BROWSE_PRODUCTS } from "../Browse/Browse"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
+import { Schema as NavigationSchema } from "App/Navigation"
 
 export enum BagView {
   Bag = 0,
@@ -155,9 +156,37 @@ export const Bag = screenTrack()((props) => {
   const bagItems = assign(fill(new Array(3), { variantID: "", productID: "" }), items)
   const hasActiveReservation = !!me?.activeReservation
 
+  const verifyShippingAddress = () => {
+    const shippingAddress = data?.me?.customer?.detail?.shippingAddress
+    if (!shippingAddress.address1 || !shippingAddress.city || !shippingAddress.state || !shippingAddress.zipCode) {
+      return false
+    } else {
+      return true
+    }
+  }
+
   const handleReserve = async (navigation) => {
     setMutating(true)
     try {
+      const hasShippingAddress = verifyShippingAddress()
+      if (!hasShippingAddress) {
+        showPopUp({
+          title: "Your shipping address is incomplete",
+          note:
+            "Please update your shipping address under Payment & Shipping in your account settings to complete your reservation.",
+          buttonText: "Got it",
+          onClose: () => hidePopUp(),
+          secondaryButtonText: "Go to settings",
+          secondaryButtonOnPress: () => {
+            navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+              screen: NavigationSchema.PageNames.PaymentAndShipping,
+            })
+            hidePopUp()
+          },
+        })
+        setMutating(false)
+        return
+      }
       const { data } = await checkItemsAvailability({
         variables: {
           items: items.map((item) => item.variantID),
@@ -172,7 +201,7 @@ export const Bag = screenTrack()((props) => {
         },
       })
       if (data.checkItemsAvailability) {
-        navigation.navigate("BagStack", { screen: Schema.PageNames.ReservationPage })
+        navigation.navigate(NavigationSchema.StackNames.BagStack, { screen: NavigationSchema.PageNames.Reservation })
       }
       setMutating(false)
     } catch (e) {
@@ -284,14 +313,14 @@ export const Bag = screenTrack()((props) => {
           tracking.trackEvent({
             actionName: () => {
               if (page === 0) {
-                return Schema.ActionNames.BagTabTapped
+                return TrackSchema.ActionNames.BagTabTapped
               } else if (page === 1) {
-                return Schema.ActionNames.SavedTabTapped
+                return TrackSchema.ActionNames.SavedTabTapped
               } else {
-                return Schema.ActionNames.ReservationHistoryTabTapped
+                return TrackSchema.ActionNames.ReservationHistoryTabTapped
               }
             },
-            actionType: Schema.ActionTypes.Tap,
+            actionType: TrackSchema.ActionTypes.Tap,
           })
           setCurrentView(page)
         }}
@@ -311,8 +340,8 @@ export const Bag = screenTrack()((props) => {
           block
           onPress={() => {
             tracking.trackEvent({
-              actionName: Schema.ActionNames.ReserveButtonTapped,
-              actionType: Schema.ActionTypes.Tap,
+              actionName: TrackSchema.ActionNames.ReserveButtonTapped,
+              actionType: TrackSchema.ActionTypes.Tap,
               bagIsFull,
             })
             handleReserve(navigation)

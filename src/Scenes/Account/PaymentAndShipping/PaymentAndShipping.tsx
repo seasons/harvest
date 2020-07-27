@@ -6,6 +6,7 @@ import { useQuery } from "react-apollo"
 import { FlatList } from "react-native"
 import { screenTrack } from "App/utils/track"
 import { color } from "App/utils"
+import { Schema as NavigationSchema } from "App/Navigation"
 
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
@@ -125,13 +126,18 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
     return unsubscribe
   }, [navigation])
 
-  if (!data) {
-    return <Loader />
-  }
-
-  if (error) {
-    console.error("Error PaymentAndShipping.tsx: ", error)
-    return <Loader />
+  if (!data || error) {
+    if (error) console.error("error PaymentAndShipping.tsx: ", error)
+    return (
+      <>
+        <FixedBackArrow
+          navigation={navigation}
+          variant="whiteBackground"
+          onPress={() => navigation.navigate(NavigationSchema.PageNames.Account)}
+        />
+        <Loader />
+      </>
+    )
   }
 
   const sections = []
@@ -179,7 +185,11 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
 
   return (
     <Container insetsBottom={false}>
-      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+      <FixedBackArrow
+        navigation={navigation}
+        variant="whiteBackground"
+        onPress={() => navigation.navigate(NavigationSchema.PageNames.Account)}
+      />
       <FlatList
         data={sections}
         ListHeaderComponent={() => (

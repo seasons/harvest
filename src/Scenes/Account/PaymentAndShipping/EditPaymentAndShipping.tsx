@@ -96,17 +96,8 @@ export const EditPaymentAndShipping: React.FC<{
 
   const { data, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE)
 
-  if (!data) {
-    return (
-      <>
-        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-        <Loader />
-      </>
-    )
-  }
-
-  if (error) {
-    console.error("error EditPaymentAndShipping.tsx: ", error)
+  if (!data || error) {
+    if (error) console.error("error EditPaymentAndShipping.tsx: ", error)
     return (
       <>
         <FixedBackArrow navigation={navigation} variant="whiteBackground" />
