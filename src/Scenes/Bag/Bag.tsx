@@ -156,19 +156,12 @@ export const Bag = screenTrack()((props) => {
   const bagItems = assign(fill(new Array(3), { variantID: "", productID: "" }), items)
   const hasActiveReservation = !!me?.activeReservation
 
-  const verifyShippingAddress = () => {
-    const shippingAddress = data?.me?.customer?.detail?.shippingAddress
-    if (!shippingAddress.address1 || !shippingAddress.city || !shippingAddress.state || !shippingAddress.zipCode) {
-      return false
-    } else {
-      return true
-    }
-  }
-
+  const shippingAddress = data?.me?.customer?.detail?.shippingAddress
   const handleReserve = async (navigation) => {
     setMutating(true)
     try {
-      const hasShippingAddress = verifyShippingAddress()
+      const hasShippingAddress =
+        !!shippingAddress.address1 && !!shippingAddress.city && !!shippingAddress.state && !!shippingAddress.zipCode
       if (!hasShippingAddress) {
         showPopUp({
           title: "Your shipping address is incomplete",
