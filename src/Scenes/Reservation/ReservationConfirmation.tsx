@@ -8,6 +8,7 @@ import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
 import { ReservationItem } from "./Components/ReservationItem"
 import { Loader } from "App/Components/Loader"
+import Rate, { AndroidMarket } from "react-native-rate"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -194,6 +195,17 @@ export const ReservationConfirmation = screenTrack()((props) => {
             actionType: Schema.ActionTypes.Tap,
           })
           props.navigation.navigate("Bag", { reservationID: reservationID })
+          const options = {
+            AppleAppID: "1483089476",
+            preferredAndroidMarket: AndroidMarket.Google,
+            preferInApp: true,
+            openAppStoreIfInAppFails: false,
+          }
+          Rate.rate(options, (success) => {
+            if (success) {
+              // this technically only tells us if the user successfully went to the Review Page. Whether they actually did anything, we do not know.
+            }
+          })
         }}
         block
       >

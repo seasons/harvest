@@ -44,8 +44,6 @@ const GET_CUSTOMER = gql`
           phoneNumber
           shippingAddress {
             id
-            slug
-            name
             address1
             address2
             city
@@ -111,7 +109,6 @@ export const Reservation = screenTrack()((props) => {
         })
       }
       console.log("Error reservation.tsx: ", err)
-
       setIsMutating(false)
     },
   })
@@ -198,6 +195,7 @@ export const Reservation = screenTrack()((props) => {
         <FixedButton
           positionBottom={space(2)}
           loading={isMutating}
+          disabled={isMutating}
           onPress={async () => {
             if (isMutating) {
               return

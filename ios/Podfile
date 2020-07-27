@@ -69,6 +69,8 @@ target 'seasons' do
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
   pod 'RNCPicker', :path => '../node_modules/@react-native-community/picker'
 
+  pod 'RNRate', :path => '../node_modules/react-native-rate'
+
   post_install do |installer|
     installer.pods_project.targets.each do |target|  
       target.build_configurations.each do |config|

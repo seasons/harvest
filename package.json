@@ -62,6 +62,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
     "react-native-permissions": "^2.0.9",
     "react-native-pusher-push-notifications": "^2.4.0",
+    "react-native-rate": "^1.2.1",
     "react-native-reanimated": "~1.9.0",
     "react-native-restart": "^0.0.14",
     "react-native-safe-area-context": "~3.0.7",
