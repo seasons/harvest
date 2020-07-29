@@ -3,8 +3,8 @@ import { NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/co
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
 import { space } from "App/utils"
-import React, { useEffect, useState, useRef, useMemo, useLayoutEffect } from "react"
-import { Dimensions, StatusBar } from "react-native"
+import React, { useEffect, useState, useRef, useMemo } from "react"
+import { Dimensions } from "react-native"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 import { useSpring, animated } from "react-spring"
 import styled from "styled-components/native"
@@ -20,7 +20,7 @@ export const HomeBottomSheet = ({ data }) => {
   const [flatListHeight, setFlatListHeight] = useState(0)
   const communityStylesRef: React.MutableRefObject<CommunityStyleCollectionRef> = useRef(null)
   let [addPhotoButtonVisible, setAddPhotoButtonVisible] = useState(false)
-
+  const bottomSheetRef: React.MutableRefObject<ScrollBottomSheet<string>> = useRef(null)
   const navigation = useNavigation()
   const reservationFeedback = data?.reservationFeedback
 
@@ -97,7 +97,7 @@ export const HomeBottomSheet = ({ data }) => {
           />
         )
       case "CommunityStyle":
-        return <CommunityStyleCollection items={[]} ref={communityStylesRef} />
+        return <CommunityStyleCollection items={[]} ref={communityStylesRef} parentRef={bottomSheetRef} />
     }
   }
 
@@ -117,8 +117,7 @@ export const HomeBottomSheet = ({ data }) => {
         )}
         keyExtractor={(item: any, i) => item.type + i}
         data={sections}
-        // Use this instead of renderItem so that onLayout gives a frame relative to this ScrollBottomSheet
-        CellRendererComponent={({ item }) => renderItem(item) ?? null}
+        renderItem={({ item }) => renderItem(item)}
         ListFooterComponent={() => (
           <HomeFooter
             navigation={navigation}
@@ -143,6 +142,7 @@ export const HomeBottomSheet = ({ data }) => {
             setFlatListHeight(e.nativeEvent.layout.height)
           }
         }}
+        ref={bottomSheetRef}
         animationConfig={{
           duration: 200,
         }}
