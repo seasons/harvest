@@ -3,15 +3,17 @@ import { NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/co
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
 import { space } from "App/utils"
-import React, { useEffect, useState, useRef, useMemo } from "react"
+import React, { useState, useEffect, useRef, useMemo } from "react"
 import { Dimensions } from "react-native"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 import { useSpring, animated } from "react-spring"
 import styled from "styled-components/native"
 import { useNavigation } from "@react-navigation/native"
-
+import { check, PERMISSIONS, RESULTS } from "react-native-permissions"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { BrandsRail, CommunityStyleCollection, HomeFooter, ProductsRail, TagsRail } from "./"
 import { CommunityStyleCollectionRef } from "./CommunityStyleCollection"
+import ImagePicker from "react-native-image-picker"
 
 const dimensions = Dimensions.get("window")
 
@@ -23,6 +25,19 @@ export const HomeBottomSheet = ({ data }) => {
   const bottomSheetRef: React.MutableRefObject<ScrollBottomSheet<string>> = useRef(null)
   const navigation = useNavigation()
   const reservationFeedback = data?.reservationFeedback
+  // const { showPopUp, hidePopUp } = usePopUpContext()
+
+  const onPressAddPhoto = async () => {
+    ImagePicker.showImagePicker(
+      {
+        takePhotoButtonTitle: "Take Photo",
+        chooseFromLibraryButtonTitle: "Choose from Library",
+      },
+      (response) => {
+        console.log(response)
+      }
+    )
+  }
 
   useEffect(() => {
     const sections = []
@@ -160,7 +175,7 @@ export const HomeBottomSheet = ({ data }) => {
   return (
     <>
       {content}
-      <AddPhotoButton onPress={() => {}} visible={addPhotoButtonVisible} />
+      <AddPhotoButton onPress={onPressAddPhoto} visible={addPhotoButtonVisible} />
     </>
   )
 }
