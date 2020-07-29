@@ -1,5 +1,6 @@
 import { PopUp } from "App/Navigation/PopUp"
 import { PopUpProvider } from "App/Navigation/PopUp/PopUpProvider"
+import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { NotificationsProvider } from "App/Notifications"
 import { getUserSession } from "App/utils/auth"
 import React, { useEffect, useImperativeHandle } from "react"
@@ -110,16 +111,18 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
     return (
       <AuthContext.Provider value={authContext}>
         <PopUpProvider>
-          <RootStack.Navigator>
-            <RootStack.Screen name="Root" options={{ headerShown: false }}>
-              {() => (
-                <NotificationsProvider>
-                  <ModalAndMainScreens currentScreen={currentScreen} />
-                </NotificationsProvider>
-              )}
-            </RootStack.Screen>
-          </RootStack.Navigator>
-          <PopUp />
+          <ActionSheetProvider>
+            <RootStack.Navigator>
+              <RootStack.Screen name="Root" options={{ headerShown: false }}>
+                {() => (
+                  <NotificationsProvider>
+                    <ModalAndMainScreens currentScreen={currentScreen} />
+                  </NotificationsProvider>
+                )}
+              </RootStack.Screen>
+            </RootStack.Navigator>
+            <PopUp />
+          </ActionSheetProvider>
         </PopUpProvider>
       </AuthContext.Provider>
     )

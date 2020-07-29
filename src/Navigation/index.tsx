@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { NavigationContainer, NavigationContainerRef, getStateFromPath } from "@react-navigation/native"
-import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { AuthProvider, AuthProviderRef } from "./AuthProvider"
 import * as Schema from "./schema"
 export { Schema }
@@ -86,9 +85,7 @@ export const AppContainer = ({ apolloClient }) => {
         routeNameRef.current = currentRouteName
       }}
     >
-      <ActionSheetProvider>
-        <AuthProvider apolloClient={apolloClient} currentScreen={currentScreen} ref={authProviderRef} />
-      </ActionSheetProvider>
+      <AuthProvider apolloClient={apolloClient} currentScreen={currentScreen} ref={authProviderRef} />
     </NavigationContainer>
   )
 }
