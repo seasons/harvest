@@ -97,7 +97,14 @@ export const HomeBottomSheet = ({ data }) => {
           />
         )
       case "CommunityStyle":
-        return <CommunityStyleCollection items={[]} ref={communityStylesRef} parentRef={bottomSheetRef} />
+        return (
+          <CommunityStyleCollection
+            items={[]}
+            navigation={navigation}
+            parentRef={bottomSheetRef}
+            ref={communityStylesRef}
+          />
+        )
     }
   }
 
