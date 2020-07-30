@@ -9,8 +9,8 @@ import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 import { useSpring, animated } from "react-spring"
 import styled from "styled-components/native"
 import { useNavigation } from "@react-navigation/native"
-import { check, PERMISSIONS, RESULTS } from "react-native-permissions"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import * as Sentry from "@sentry/react-native"
 import { BrandsRail, CommunityStyleCollection, HomeFooter, ProductsRail, TagsRail } from "./"
 import { CommunityStyleCollectionRef } from "./CommunityStyleCollection"
 import ImagePicker from "react-native-image-picker"
@@ -25,7 +25,7 @@ export const HomeBottomSheet = ({ data }) => {
   const bottomSheetRef: React.MutableRefObject<ScrollBottomSheet<string>> = useRef(null)
   const navigation = useNavigation()
   const reservationFeedback = data?.reservationFeedback
-  // const { showPopUp, hidePopUp } = usePopUpContext()
+  const { showPopUp, hidePopUp } = usePopUpContext()
 
   const onPressAddPhoto = async () => {
     ImagePicker.showImagePicker(
@@ -34,7 +34,21 @@ export const HomeBottomSheet = ({ data }) => {
         chooseFromLibraryButtonTitle: "Choose from Library",
       },
       (response) => {
-        console.log(response)
+        if (response.uri) {
+          // or take response.data
+        } else {
+          if (response.error) {
+            Sentry.captureException(response.error)
+          }
+          showPopUp({
+            title: "Oops!",
+            note:
+              "We could not access your camera or photo library. Please go to Settings and check " +
+              "your permissions. If this issue persists, please contact us at membership@seasons.nyc.",
+            buttonText: "Got it",
+            onClose: hidePopUp,
+          })
+        }
       }
     )
   }

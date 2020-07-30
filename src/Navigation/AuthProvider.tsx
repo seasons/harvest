@@ -110,8 +110,8 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
 
     return (
       <AuthContext.Provider value={authContext}>
-        <PopUpProvider>
-          <ActionSheetProvider>
+        <ActionSheetProvider>
+          <PopUpProvider>
             <RootStack.Navigator>
               <RootStack.Screen name="Root" options={{ headerShown: false }}>
                 {() => (
@@ -122,8 +122,8 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
               </RootStack.Screen>
             </RootStack.Navigator>
             <PopUp />
-          </ActionSheetProvider>
-        </PopUpProvider>
+          </PopUpProvider>
+        </ActionSheetProvider>
       </AuthContext.Provider>
     )
   }

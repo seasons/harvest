@@ -51,6 +51,7 @@ target 'seasons' do
   pod 'lottie-ios', :path => '../node_modules/lottie-ios'
   pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
   pod 'RNSentry', :path => '../node_modules/@sentry/react-native'
   pod 'react-native-config', :path => '../node_modules/react-native-config'
   pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
