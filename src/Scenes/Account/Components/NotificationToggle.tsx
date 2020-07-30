@@ -42,7 +42,7 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
     onError: (err) => {
       const popUpData = {
         title: "Oops!",
-        note: "There was an error updating your push notifications, please contact us.",
+        note: "There was an error updating your push notifications. Please contact us.",
         buttonText: "Close",
         onClose: () => hidePopUp(),
       }

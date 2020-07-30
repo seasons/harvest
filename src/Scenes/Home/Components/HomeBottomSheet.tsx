@@ -1,54 +1,69 @@
-import { Handle } from "App/Components"
+import { Handle, Box, Button } from "App/Components"
 import { NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
 import { space } from "App/utils"
-import React, { useEffect, useState } from "react"
+import React, { useState, useEffect, useRef, useMemo } from "react"
 import { Dimensions } from "react-native"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
-
+import { useSpring, animated } from "react-spring"
+import styled from "styled-components/native"
 import { useNavigation } from "@react-navigation/native"
-
-import { BrandsRail, HomeFooter, ProductsRail, TagsRail } from "./"
+import { check, PERMISSIONS, RESULTS } from "react-native-permissions"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { BrandsRail, CommunityStyleCollection, HomeFooter, ProductsRail, TagsRail } from "./"
+import { CommunityStyleCollectionRef } from "./CommunityStyleCollection"
+import ImagePicker from "react-native-image-picker"
 
 const dimensions = Dimensions.get("window")
 
 export const HomeBottomSheet = ({ data }) => {
   const [sections, setSections] = useState([])
+  const [flatListHeight, setFlatListHeight] = useState(0)
+  const communityStylesRef: React.MutableRefObject<CommunityStyleCollectionRef> = useRef(null)
+  let [addPhotoButtonVisible, setAddPhotoButtonVisible] = useState(false)
+  const bottomSheetRef: React.MutableRefObject<ScrollBottomSheet<string>> = useRef(null)
   const navigation = useNavigation()
   const reservationFeedback = data?.reservationFeedback
+  // const { showPopUp, hidePopUp } = usePopUpContext()
+
+  const onPressAddPhoto = async () => {
+    ImagePicker.showImagePicker(
+      {
+        takePhotoButtonTitle: "Take Photo",
+        chooseFromLibraryButtonTitle: "Choose from Library",
+      },
+      (response) => {
+        console.log(response)
+      }
+    )
+  }
 
   useEffect(() => {
     const sections = []
     if (data?.blogPosts) {
-      sections.push({ type: "BlogPosts", results: data?.blogPosts, height: 50 })
+      sections.push({ type: "BlogPosts", results: data?.blogPosts })
     }
     if (data?.justAddedTops?.length) {
-      sections.push({ type: "Products", results: data?.justAddedTops, title: "Just added tops", height: 280 })
+      sections.push({ type: "Products", results: data?.justAddedTops, title: "Just added tops" })
     }
     if (data?.homepage?.sections?.length) {
       sections.push(
-        ...data?.homepage?.sections.map((section) => {
-          switch (section.type) {
-            case "Brands":
-              return {
-                ...section,
-                height: 218,
-              }
-            case "Products":
-              return {
-                ...section,
-                height: 280,
-              }
-            default:
-              return { ...section, height: 0 }
-          }
-        })
+        ...data?.homepage?.sections
+          .map((section) => {
+            switch (section.type) {
+              case "Brands":
+                return section
+              case "Products":
+                return section
+            }
+          })
+          .filter((s) => s)
       )
     }
     if (data?.me?.savedItems?.length) {
       const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
-      sections.push({ type: "SavedProducts", title: "Saved for later", results, height: 456 })
+      sections.push({ type: "SavedProducts", title: "Saved for later", results })
     }
     if (data?.archivalProducts?.length) {
       sections.push({
@@ -61,12 +76,13 @@ export const HomeBottomSheet = ({ data }) => {
         },
         title: "Just added archival",
         results: data?.archivalProducts,
-        height: 324,
       })
     }
     if (data?.justAddedBottoms?.length) {
-      sections.push({ type: "Products", results: data?.justAddedBottoms, title: "Just added bottoms", height: 280 })
+      sections.push({ type: "Products", results: data?.justAddedBottoms, title: "Just added bottoms" })
     }
+
+    sections.push({ type: "CommunityStyle", results: [] })
     setSections(sections)
   }, [data])
 
@@ -95,36 +111,91 @@ export const HomeBottomSheet = ({ data }) => {
             }}
           />
         )
+      case "CommunityStyle":
+        return (
+          <CommunityStyleCollection
+            items={[]}
+            navigation={navigation}
+            parentRef={bottomSheetRef}
+            ref={communityStylesRef}
+          />
+        )
     }
   }
 
-  if (sections.length === 0) {
-    return null
-  }
+  const content = useMemo(() => {
+    return (
+      <ScrollBottomSheet<string>
+        componentType="FlatList"
+        containerStyle={{
+          backgroundColor: "white",
+          borderRadius: 20,
+          marginTop: 25,
+        }}
+        snapPoints={[snapPoint, dimensions.height - blogContentHeight - NAV_HEIGHT]}
+        initialSnapIndex={1}
+        renderHandle={() => (
+          <Handle style={{ marginTop: space(2), marginBottom: space(1) }} backgroundColor="black10" />
+        )}
+        keyExtractor={(item: any, i) => item.type + i}
+        data={sections}
+        renderItem={({ item }) => renderItem(item)}
+        ListFooterComponent={() => (
+          <HomeFooter
+            navigation={navigation}
+            bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
+          />
+        )}
+        onScroll={(event) => {
+          const offset = event.nativeEvent.contentOffset.y
+          if (communityStylesRef?.current?.getLayout()) {
+            const { y, height } = communityStylesRef?.current?.getLayout()
+            const minOffset = y - flatListHeight + 150
+            const maxOffset = y - flatListHeight + height + 50
+            const show = minOffset < offset && offset < maxOffset
+            if (addPhotoButtonVisible !== show) {
+              addPhotoButtonVisible = show
+              setAddPhotoButtonVisible(show)
+            }
+          }
+        }}
+        onLayout={(e) => {
+          if (!flatListHeight) {
+            setFlatListHeight(e.nativeEvent.layout.height)
+          }
+        }}
+        ref={bottomSheetRef}
+        animationConfig={{
+          duration: 200,
+        }}
+      />
+    )
+  }, [sections, flatListHeight])
 
   return (
-    <ScrollBottomSheet<string>
-      componentType="FlatList"
-      containerStyle={{
-        backgroundColor: "white",
-        borderRadius: 20,
-        marginTop: 25,
-      }}
-      snapPoints={[snapPoint, dimensions.height - blogContentHeight - NAV_HEIGHT]}
-      initialSnapIndex={1}
-      renderHandle={() => <Handle style={{ marginTop: space(2), marginBottom: space(1) }} backgroundColor="black10" />}
-      keyExtractor={(item: any, i) => item.type + i}
-      data={sections}
-      renderItem={({ item }) => renderItem(item)}
-      ListFooterComponent={() => (
-        <HomeFooter
-          navigation={navigation}
-          bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
-        />
-      )}
-      animationConfig={{
-        duration: 200,
-      }}
-    />
+    <>
+      {content}
+      <AddPhotoButton onPress={onPressAddPhoto} visible={addPhotoButtonVisible} />
+    </>
+  )
+}
+
+const FixedButtonContainer = styled(animated(Box))`
+  position: absolute;
+  align-self: center;
+  bottom: 16;
+`
+
+const AddPhotoButton = (props: { onPress: () => void; visible: boolean }) => {
+  const animation = useSpring({
+    opacity: props.visible ? 1 : 0,
+    translateY: props.visible ? -10 : 0,
+  })
+  return (
+    <FixedButtonContainer opacity={animation.opacity} style={{ transform: [{ translateY: animation.translateY }] }}>
+      <Button color="white100" onPress={props.onPress} size="small" variant="primaryWhite">
+        Add photo
+      </Button>
+    </FixedButtonContainer>
   )
 }

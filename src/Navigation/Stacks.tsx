@@ -35,6 +35,7 @@ import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { NavBar } from "./NavBar"
 import { ResumeConfirmation, PauseConfirmation, ExtendPauseConfirmation } from "App/Components/Pause"
 import { CreateAccount } from "App/Scenes/CreateAccount"
+import { CommunityStyleDetail } from "App/Scenes/Home/Components/CommunityStyleDetail"
 
 const HomeStack = createStackNavigator()
 const BagStack = createStackNavigator()
@@ -123,6 +124,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ResumeConfirmation} component={ResumeConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.PauseConfirmation} component={PauseConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ExtendPauseConfirmation} component={ExtendPauseConfirmation} />
+      <ModalStack.Screen name={Schema.PageNames.CommunityStyleDetail} component={CommunityStyleDetail} />
     </ModalStack.Navigator>
   )
 }
