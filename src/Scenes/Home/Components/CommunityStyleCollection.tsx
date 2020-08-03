@@ -1,7 +1,7 @@
 import React, { useImperativeHandle, useState, useRef, useEffect } from "react"
 import { Sans, Box, Spacer, Flex, FadeInImage } from "App/Components"
 import { Dimensions, findNodeHandle, TouchableWithoutFeedback, View } from "react-native"
-import { CommunityStyle } from "./CommunityStyleDetail"
+import { Homepage_communityStyle as CommunityStyle } from "src/generated/Homepage"
 
 export interface CommunityStyleCollectionProps {
   items: CommunityStyle[]
@@ -18,13 +18,6 @@ const width = Dimensions.get("window").width
 
 export const CommunityStyleCollection = React.forwardRef<CommunityStyleCollectionRef, CommunityStyleCollectionProps>(
   ({ items, navigation, parentRef }, ref) => {
-    items = [...Array(15).keys()].map(() => ({
-      author: "Goerge Samuel",
-      location: "Brooklyn, NY",
-      id: "Some id",
-      url: "https://c.stocksy.com/a/5yw900/z9/2371629.jpg",
-    }))
-
     const [layout, setLayout] = useState(null as { y: number; height: number })
     const boxRef: React.MutableRefObject<View> = useRef(null)
     useImperativeHandle(ref, () => ({
@@ -55,7 +48,7 @@ export const CommunityStyleCollection = React.forwardRef<CommunityStyleCollectio
           <Box mb="3px">
             <FadeInImage
               source={{
-                uri: item.url,
+                uri: item.image.url,
               }}
               style={{ width: (width - 35) / 2, height: 240 }}
             />

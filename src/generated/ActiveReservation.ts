@@ -11,6 +11,7 @@ import { InventoryStatus, PhysicalProductStatus } from "./globalTypes";
 
 export interface ActiveReservation_me_activeReservation_products_productVariant_product_brand {
   __typename: "Brand";
+  id: string;
   name: string;
 }
 
@@ -22,6 +23,7 @@ export interface ActiveReservation_me_activeReservation_products_productVariant_
 
 export interface ActiveReservation_me_activeReservation_products_productVariant_product {
   __typename: "Product";
+  id: string;
   name: string;
   retailPrice: number | null;
   brand: ActiveReservation_me_activeReservation_products_productVariant_product_brand;
@@ -30,6 +32,7 @@ export interface ActiveReservation_me_activeReservation_products_productVariant_
 
 export interface ActiveReservation_me_activeReservation_products_productVariant {
   __typename: "ProductVariant";
+  id: string;
   size: string | null;
   product: ActiveReservation_me_activeReservation_products_productVariant_product;
 }

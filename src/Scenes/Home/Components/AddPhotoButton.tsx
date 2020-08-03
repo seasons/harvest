@@ -11,14 +11,8 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { ReactNativeFile } from "apollo-upload-client"
 
 const SUBMIT_STYLE = gql`
-  mutation submitStyle($image: Upload!) {
-    submitStyle(image: $image) {
-      id
-      image {
-        id
-        url
-      }
-    }
+  mutation submitCommunityStyle($image: Upload!) {
+    submitStyle(image: $image)
   }
 `
 
@@ -70,14 +64,11 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ navigation, visi
     setIsMutating(true)
 
     const file = new ReactNativeFile({ uri, type, name: "" })
-    const result = await submitStyle({
+    await submitStyle({
       variables: {
         image: file,
       },
     })
-    if (result?.data) {
-      // const styles: [] = result.data.submitStyle
-    }
   }
 
   const onPress = async () => {

@@ -41,7 +41,7 @@ export const HomeBottomSheet = ({ data }) => {
                 return section
             }
           })
-          .filter((s) => s)
+          .filter(Boolean)
       )
     }
     if (data?.me?.savedItems?.length) {
@@ -64,8 +64,9 @@ export const HomeBottomSheet = ({ data }) => {
     if (data?.justAddedBottoms?.length) {
       sections.push({ type: "Products", results: data?.justAddedBottoms, title: "Just added bottoms" })
     }
-
-    sections.push({ type: "CommunityStyle", results: [] })
+    if (data?.communityStyle?.length) {
+      sections.push({ type: "CommunityStyle", results: data?.communityStyle })
+    }
     setSections(sections)
   }, [data])
 
@@ -97,7 +98,7 @@ export const HomeBottomSheet = ({ data }) => {
       case "CommunityStyle":
         return (
           <CommunityStyleCollection
-            items={[]}
+            items={item.results}
             navigation={navigation}
             parentRef={bottomSheetRef}
             ref={communityStylesRef}
@@ -158,7 +159,7 @@ export const HomeBottomSheet = ({ data }) => {
   return (
     <>
       {content}
-      <AddPhotoButton visible={addPhotoButtonVisible} />
+      <AddPhotoButton navigation={navigation} visible={addPhotoButtonVisible} />
     </>
   )
 }
