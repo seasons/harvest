@@ -243,13 +243,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   get spinnerColor() {
-    // const { inline, variant } = this.props
-
-    // if (inline) {
-    //   return variant === "primaryWhite" ? "white100" : "black100"
-    // }
-
-    return "white100"
+    return this.props.variant === "primaryWhite" ? "black100" : "white100"
   }
 
   getSize(): { height: number | string; size: "0" | "1" | "2"; px: number } {

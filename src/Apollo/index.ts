@@ -3,12 +3,12 @@ import { ApolloClient } from "apollo-client"
 import { ApolloLink, Observable } from "apollo-link"
 import { setContext } from "apollo-link-context"
 import { onError } from "apollo-link-error"
-import { HttpLink } from "apollo-link-http"
 import unfetch from "unfetch"
 import introspectionQueryResultData from "../fragmentTypes.json"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { config, Env } from "App/utils/config"
 import * as Sentry from "@sentry/react-native"
+import { createUploadLink } from "apollo-upload-client"
 
 export const setupApolloClient = async () => {
   const fragmentMatcher = new IntrospectionFragmentMatcher({
@@ -17,7 +17,7 @@ export const setupApolloClient = async () => {
 
   const cache = new InMemoryCache({ fragmentMatcher })
 
-  const link = new HttpLink({
+  const link = createUploadLink({
     uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/",
     // FIXME: unfetch here is being used for this fix https://github.com/jhen0409/react-native-debugger/issues/432
     fetch: unfetch,
@@ -38,7 +38,7 @@ export const setupApolloClient = async () => {
         headers,
       }
     }
-    // return the headers to the context so httpLink can read them
+    // return the headers to the context so createUploadLink can read them
   })
 
   const errorLink = onError(({ graphQLErrors, networkError, operation, forward, response }) => {

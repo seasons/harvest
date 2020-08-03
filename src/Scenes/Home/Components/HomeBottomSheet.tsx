@@ -1,4 +1,4 @@
-import { Handle, Box, Button } from "App/Components"
+import { Handle } from "App/Components"
 import { NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
@@ -6,14 +6,10 @@ import { space } from "App/utils"
 import React, { useState, useEffect, useRef, useMemo } from "react"
 import { Dimensions } from "react-native"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
-import { useSpring, animated } from "react-spring"
-import styled from "styled-components/native"
 import { useNavigation } from "@react-navigation/native"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import * as Sentry from "@sentry/react-native"
 import { BrandsRail, CommunityStyleCollection, HomeFooter, ProductsRail, TagsRail } from "./"
 import { CommunityStyleCollectionRef } from "./CommunityStyleCollection"
-import ImagePicker from "react-native-image-picker"
+import { AddPhotoButton } from "./AddPhotoButton"
 
 const dimensions = Dimensions.get("window")
 
@@ -25,33 +21,6 @@ export const HomeBottomSheet = ({ data }) => {
   const bottomSheetRef: React.MutableRefObject<ScrollBottomSheet<string>> = useRef(null)
   const navigation = useNavigation()
   const reservationFeedback = data?.reservationFeedback
-  const { showPopUp, hidePopUp } = usePopUpContext()
-
-  const onPressAddPhoto = async () => {
-    ImagePicker.showImagePicker(
-      {
-        takePhotoButtonTitle: "Take Photo",
-        chooseFromLibraryButtonTitle: "Choose from Library",
-      },
-      (response) => {
-        if (response.uri) {
-          // or take response.data
-        } else {
-          if (response.error) {
-            Sentry.captureException(response.error)
-          }
-          showPopUp({
-            title: "Oops!",
-            note:
-              "We could not access your camera or photo library. Please go to Settings and check " +
-              "your permissions. If this issue persists, please contact us at membership@seasons.nyc.",
-            buttonText: "Got it",
-            onClose: hidePopUp,
-          })
-        }
-      }
-    )
-  }
 
   useEffect(() => {
     const sections = []
@@ -189,27 +158,7 @@ export const HomeBottomSheet = ({ data }) => {
   return (
     <>
       {content}
-      <AddPhotoButton onPress={onPressAddPhoto} visible={addPhotoButtonVisible} />
+      <AddPhotoButton visible={addPhotoButtonVisible} />
     </>
-  )
-}
-
-const FixedButtonContainer = styled(animated(Box))`
-  position: absolute;
-  align-self: center;
-  bottom: 16;
-`
-
-const AddPhotoButton = (props: { onPress: () => void; visible: boolean }) => {
-  const animation = useSpring({
-    opacity: props.visible ? 1 : 0,
-    translateY: props.visible ? -10 : 0,
-  })
-  return (
-    <FixedButtonContainer opacity={animation.opacity} style={{ transform: [{ translateY: animation.translateY }] }}>
-      <Button color="white100" onPress={props.onPress} size="small" variant="primaryWhite">
-        Add photo
-      </Button>
-    </FixedButtonContainer>
   )
 }
