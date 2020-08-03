@@ -31,7 +31,7 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ navigation, visi
     onCompleted: () => {
       showPopUp({
         title: "Thanks for your submission",
-        note: "We’ll let you know if you’re photo gets chosen to be featured on our community board.",
+        note: "We’ll let you know if your photo gets chosen to be featured on our community board.",
         buttonText: "Done",
         onClose: hidePopUp,
       })
