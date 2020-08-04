@@ -104,7 +104,7 @@ export const CommunityStyleDetail: React.FC<CommunityStyleDetailProps> = ({ navi
           <Spacer mr={2} />
         </Flex>
 
-        <Spacer mb={36} />
+        <Spacer mb={20} />
 
         <SharedElement id={`communitystyle.photo.${item.id}`}>
           <Box>
@@ -117,7 +117,7 @@ export const CommunityStyleDetail: React.FC<CommunityStyleDetailProps> = ({ navi
           </Box>
         </SharedElement>
 
-        <Spacer mb={5} />
+        <Spacer mb={3} />
 
         <SharedElement id="communitystyle.detail.text">
           <Box pl={2} pr={2}>

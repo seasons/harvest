@@ -146,11 +146,6 @@ const HomeStackScreen = () => {
           if (otherRoute.name === Schema.PageNames.Home) {
             const { item } = route.params as { item: CommunityStyle }
             return [`communitystyle.photo.${item.id}`]
-            // return [
-            //   { id: `communitystyle.${item.id}.photo` },
-            // , "communitystyle.background"
-            //   { id: "communitystyle.detail.text", align: "center-bottom" },
-            // ]
           }
         }}
       />
