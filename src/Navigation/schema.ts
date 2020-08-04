@@ -14,12 +14,12 @@ export enum PageNames {
   ResumeConfirmation = "ResumeConfirmation",
   PauseConfirmation = "PauseConfirmation",
   ExtendPauseConfirmation = "ExtendPauseConfirmation",
-  CommunityStyleDetail = "CommunityStyleDetail",
 
   // Home
   Home = "Home",
   Brand = "Brand",
   Brands = "Brands",
+  CommunityStyleDetail = "CommunityStyleDetail",
 
   // Browse
   Browse = "Browse",

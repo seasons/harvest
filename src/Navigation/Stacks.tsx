@@ -36,8 +36,10 @@ import { NavBar } from "./NavBar"
 import { ResumeConfirmation, PauseConfirmation, ExtendPauseConfirmation } from "App/Components/Pause"
 import { CreateAccount } from "App/Scenes/CreateAccount"
 import { CommunityStyleDetail } from "App/Scenes/Home/Components/CommunityStyleDetail"
+import { createSharedElementStackNavigator } from "react-navigation-shared-element"
+import { Homepage_communityStyle as CommunityStyle } from "src/generated/Homepage"
 
-const HomeStack = createStackNavigator()
+const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
 const AccountStack = createStackNavigator()
 const BrowseStack = createStackNavigator()
@@ -124,7 +126,6 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ResumeConfirmation} component={ResumeConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.PauseConfirmation} component={PauseConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ExtendPauseConfirmation} component={ExtendPauseConfirmation} />
-      <ModalStack.Screen name={Schema.PageNames.CommunityStyleDetail} component={CommunityStyleDetail} />
     </ModalStack.Navigator>
   )
 }
@@ -138,6 +139,21 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name={Schema.PageNames.Tag} component={Tag} />
       <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
       <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />
+      <HomeStack.Screen
+        name={Schema.PageNames.CommunityStyleDetail}
+        component={CommunityStyleDetail}
+        sharedElements={(route, otherRoute, showing) => {
+          if (otherRoute.name === Schema.PageNames.Home) {
+            const { item } = route.params as { item: CommunityStyle }
+            return [`communitystyle.photo.${item.id}`]
+            // return [
+            //   { id: `communitystyle.${item.id}.photo` },
+            // , "communitystyle.background"
+            //   { id: "communitystyle.detail.text", align: "center-bottom" },
+            // ]
+          }
+        }}
+      />
     </HomeStack.Navigator>
   )
 }

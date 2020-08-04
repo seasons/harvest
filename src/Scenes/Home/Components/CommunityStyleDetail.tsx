@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import { Box, Container, Flex, Spacer, FadeInImage, Sans } from "App/Components"
-import { TouchableOpacity } from "react-native"
+import { Box, Container, Flex, Spacer, Sans } from "App/Components"
+import { TouchableOpacity, Dimensions, YellowBox } from "react-native"
 import { color } from "App/utils"
 import { CloseXSVG, More } from "Assets/svgs"
 import { useActionSheet } from "@expo/react-native-action-sheet"
@@ -9,6 +9,8 @@ import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { useMutation } from "react-apollo"
 import gql from "graphql-tag"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { SharedElement } from "react-navigation-shared-element"
+import FastImage from "react-native-fast-image"
 
 interface CommunityStyleDetailProps {
   navigation: any
@@ -20,6 +22,8 @@ const REPORT_STYLE = gql`
     reportStyle(id: $id)
   }
 `
+
+const screenWidth = Dimensions.get("screen").width
 
 export const CommunityStyleDetail: React.FC<CommunityStyleDetailProps> = ({ navigation, route }) => {
   const {
@@ -93,7 +97,7 @@ export const CommunityStyleDetail: React.FC<CommunityStyleDetailProps> = ({ navi
     )
   }
   return (
-    <Container insetsTop={false}>
+    <Container>
       <Flex flexGrow={1} justifyContent="center">
         <Flex flexDirection="row" justifyContent="flex-end">
           <CloseButton onRequestClose={navigation?.goBack} />
@@ -102,28 +106,34 @@ export const CommunityStyleDetail: React.FC<CommunityStyleDetailProps> = ({ navi
 
         <Spacer mb={36} />
 
-        <FadeInImage
-          source={{
-            uri: item.image.url,
-          }}
-          style={{ height: 484 }}
-        />
+        <SharedElement id={`communitystyle.photo.${item.id}`}>
+          <Box>
+            <FastImage
+              source={{
+                uri: item.image.url,
+              }}
+              style={{ height: screenWidth * (4 / 3) }}
+            />
+          </Box>
+        </SharedElement>
 
         <Spacer mb={5} />
 
-        <Box pl={2} pr={2}>
-          <Sans size="0.5">{`${item.user.firstName} ${item.user.lastName}`}</Sans>
-          <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-            <Sans size="0.5" color="black50">
-              {item.location
-                ? `${item.location.city}, ${item.location.state}`
-                : `${new Date(item.createdAt).toLocaleString("en-US", { month: "long", day: "numeric" })}`}
-            </Sans>
-            <TouchableOpacity onPress={showActionSheet} hitSlop={{ top: 30, bottom: 30, left: 10, right: 10 }}>
-              <More />
-            </TouchableOpacity>
-          </Flex>
-        </Box>
+        <SharedElement id="communitystyle.detail.text">
+          <Box pl={2} pr={2}>
+            <Sans size="0.5">{`${item.user.firstName} ${item.user.lastName}`}</Sans>
+            <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+              <Sans size="0.5" color="black50">
+                {item.location
+                  ? `${item.location.city}, ${item.location.state}`
+                  : `${new Date(item.createdAt).toLocaleString("en-US", { month: "long", day: "numeric" })}`}
+              </Sans>
+              <TouchableOpacity onPress={showActionSheet} hitSlop={{ top: 30, bottom: 30, left: 10, right: 10 }}>
+                <More />
+              </TouchableOpacity>
+            </Flex>
+          </Box>
+        </SharedElement>
       </Flex>
     </Container>
   )

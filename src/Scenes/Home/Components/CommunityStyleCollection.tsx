@@ -1,7 +1,8 @@
 import React, { useImperativeHandle, useState, useRef, useEffect } from "react"
-import { Sans, Box, Spacer, Flex, FadeInImage } from "App/Components"
+import { Sans, Box, Spacer, Flex, FadeInImage, Container } from "App/Components"
 import { Dimensions, findNodeHandle, TouchableWithoutFeedback, View } from "react-native"
 import { Homepage_communityStyle as CommunityStyle } from "src/generated/Homepage"
+import { SharedElement } from "react-navigation-shared-element"
 
 export interface CommunityStyleCollectionProps {
   items: CommunityStyle[]
@@ -14,7 +15,7 @@ export interface CommunityStyleCollectionRef {
   getLayout: () => { y: number; height: number }
 }
 
-const width = Dimensions.get("window").width
+const screenWidth = Dimensions.get("screen").width
 
 export const CommunityStyleCollection = React.forwardRef<CommunityStyleCollectionRef, CommunityStyleCollectionProps>(
   ({ items, navigation, parentRef }, ref) => {
@@ -38,20 +39,24 @@ export const CommunityStyleCollection = React.forwardRef<CommunityStyleCollectio
 
     useEffect(measureLayout, [boxRef, parentRef])
 
-    const onPress = (index: number) => {
-      navigation.navigate("Modal", { screen: "CommunityStyleDetail", params: { item: items[index] } })
-    }
+    const onPress = (index: number) => navigation.navigate("CommunityStyleDetail", { item: items[index] })
 
     const renderItem = (item: CommunityStyle, index: number) => {
+      const imageWidth = (screenWidth - 35) / 2
+      const imageHeight = imageWidth * (4 / 3)
       return (
         <TouchableWithoutFeedback onPress={() => onPress(index)} key={index}>
           <Box mb="3px">
-            <FadeInImage
-              source={{
-                uri: item.image.url,
-              }}
-              style={{ width: (width - 35) / 2, height: 240 }}
-            />
+            <SharedElement id={`communitystyle.photo.${item.id}`}>
+              <Box>
+                <FadeInImage
+                  source={{
+                    uri: item.image.url,
+                  }}
+                  style={{ width: imageWidth, height: imageHeight }}
+                />
+              </Box>
+            </SharedElement>
           </Box>
         </TouchableWithoutFeedback>
       )
