@@ -7,7 +7,7 @@ import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { GetProduct_products } from "App/generated/GetProduct"
 
-export const ProductGridItem: React.FC<{
+const ProductGridItemComponent: React.FC<{
   flatListRef?: RefObject<any>
   product: GetProduct_products
   addLeftSpacing?: boolean
@@ -71,3 +71,5 @@ export const ProductGridItem: React.FC<{
     </TouchableWithoutFeedback>
   )
 }
+
+export const ProductGridItem = React.memo(ProductGridItemComponent)
