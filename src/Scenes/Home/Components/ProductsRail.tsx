@@ -1,8 +1,6 @@
 import { Box, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import {
-  Homepage_homepage_sections_results, Homepage_homepage_sections_results_Product
-} from "App/generated/Homepage"
+import { Homepage_homepage_sections_results, Homepage_homepage_sections_results_Product } from "App/generated/Homepage"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { space } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"

@@ -92,11 +92,9 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
 
   // networking
   const [signup] = useMutation(SIGN_UP, {
-    onCompleted: () => {
-      setIsMutating(false)
-    },
+    onCompleted: () => setIsMutating(false),
     onError: (err) => {
-      console.log("Error CreateAccountPane.tsx")
+      console.log("[Error CreateAccountPane.tsx]", err)
       let popUpData = {
         title: "Uh Oh. Something went wrong",
         note:

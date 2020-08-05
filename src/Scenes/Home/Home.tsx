@@ -191,6 +191,22 @@ export const GET_HOMEPAGE = gql`
         }
       }
     }
+    communityStyle {
+      id
+      user {
+        firstName
+        lastName
+      }
+      location {
+        city
+        state
+      }
+      image {
+        id
+        url
+      }
+      createdAt
+    }
   }
 `
 

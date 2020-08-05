@@ -1395,6 +1395,11 @@ export interface ImageCreateManyInput {
   connect?: ImageWhereUniqueInput[] | null;
 }
 
+export interface ImageCreateOneInput {
+  create?: ImageCreateInput | null;
+  connect?: ImageWhereUniqueInput | null;
+}
+
 export interface ImageScalarWhereInput {
   AND?: ImageScalarWhereInput[] | null;
   OR?: ImageScalarWhereInput[] | null;
@@ -1522,9 +1527,21 @@ export interface ImageUpdateManyWithWhereNestedInput {
   data: ImageUpdateManyDataInput;
 }
 
+export interface ImageUpdateOneRequiredInput {
+  create?: ImageCreateInput | null;
+  connect?: ImageWhereUniqueInput | null;
+  update?: ImageUpdateDataInput | null;
+  upsert?: ImageUpsertNestedInput | null;
+}
+
 export interface ImageUpdateWithWhereUniqueNestedInput {
   where: ImageWhereUniqueInput;
   data: ImageUpdateDataInput;
+}
+
+export interface ImageUpsertNestedInput {
+  update: ImageUpdateDataInput;
+  create: ImageCreateInput;
 }
 
 export interface ImageUpsertWithWhereUniqueNestedInput {
@@ -2819,6 +2836,41 @@ export interface PhysicalProductWhereUniqueInput {
   seasonsUID?: string | null;
 }
 
+export interface ProductCreateInput {
+  id?: string | null;
+  slug: string;
+  name: string;
+  type?: ProductType | null;
+  description?: string | null;
+  externalURL?: string | null;
+  modelHeight?: number | null;
+  retailPrice?: number | null;
+  status?: ProductStatus | null;
+  season?: string | null;
+  architecture?: ProductArchitecture | null;
+  photographyStatus?: PhotographyStatus | null;
+  publishedAt?: any | null;
+  innerMaterials?: ProductCreateinnerMaterialsInput | null;
+  outerMaterials?: ProductCreateouterMaterialsInput | null;
+  brand: BrandCreateOneWithoutProductsInput;
+  category: CategoryCreateOneWithoutProductsInput;
+  images?: ImageCreateManyInput | null;
+  model?: ProductModelCreateOneWithoutProductsInput | null;
+  modelSize?: SizeCreateOneInput | null;
+  color: ColorCreateOneInput;
+  secondaryColor?: ColorCreateOneInput | null;
+  tags?: TagCreateManyWithoutProductsInput | null;
+  functions?: ProductFunctionCreateManyInput | null;
+  materialCategory?: ProductMaterialCategoryCreateOneWithoutProductsInput | null;
+  variants?: ProductVariantCreateManyWithoutProductInput | null;
+  statusChanges?: ProductStatusChangeCreateManyWithoutProductInput | null;
+}
+
+export interface ProductCreateManyInput {
+  create?: ProductCreateInput[] | null;
+  connect?: ProductWhereUniqueInput[] | null;
+}
+
 export interface ProductCreateManyWithoutCategoryInput {
   create?: ProductCreateWithoutCategoryInput[] | null;
   connect?: ProductWhereUniqueInput[] | null;
@@ -3465,6 +3517,35 @@ export interface ProductStatusChangeWhereUniqueInput {
   id?: string | null;
 }
 
+export interface ProductUpdateDataInput {
+  slug?: string | null;
+  name?: string | null;
+  type?: ProductType | null;
+  description?: string | null;
+  externalURL?: string | null;
+  modelHeight?: number | null;
+  retailPrice?: number | null;
+  status?: ProductStatus | null;
+  season?: string | null;
+  architecture?: ProductArchitecture | null;
+  photographyStatus?: PhotographyStatus | null;
+  publishedAt?: any | null;
+  innerMaterials?: ProductUpdateinnerMaterialsInput | null;
+  outerMaterials?: ProductUpdateouterMaterialsInput | null;
+  brand?: BrandUpdateOneRequiredWithoutProductsInput | null;
+  category?: CategoryUpdateOneRequiredWithoutProductsInput | null;
+  images?: ImageUpdateManyInput | null;
+  model?: ProductModelUpdateOneWithoutProductsInput | null;
+  modelSize?: SizeUpdateOneInput | null;
+  color?: ColorUpdateOneRequiredInput | null;
+  secondaryColor?: ColorUpdateOneInput | null;
+  tags?: TagUpdateManyWithoutProductsInput | null;
+  functions?: ProductFunctionUpdateManyInput | null;
+  materialCategory?: ProductMaterialCategoryUpdateOneWithoutProductsInput | null;
+  variants?: ProductVariantUpdateManyWithoutProductInput | null;
+  statusChanges?: ProductStatusChangeUpdateManyWithoutProductInput | null;
+}
+
 export interface ProductUpdateManyDataInput {
   slug?: string | null;
   name?: string | null;
@@ -3480,6 +3561,18 @@ export interface ProductUpdateManyDataInput {
   publishedAt?: any | null;
   innerMaterials?: ProductUpdateinnerMaterialsInput | null;
   outerMaterials?: ProductUpdateouterMaterialsInput | null;
+}
+
+export interface ProductUpdateManyInput {
+  create?: ProductCreateInput[] | null;
+  connect?: ProductWhereUniqueInput[] | null;
+  set?: ProductWhereUniqueInput[] | null;
+  disconnect?: ProductWhereUniqueInput[] | null;
+  delete?: ProductWhereUniqueInput[] | null;
+  update?: ProductUpdateWithWhereUniqueNestedInput[] | null;
+  updateMany?: ProductUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: ProductScalarWhereInput[] | null;
+  upsert?: ProductUpsertWithWhereUniqueNestedInput[] | null;
 }
 
 export interface ProductUpdateManyWithWhereNestedInput {
@@ -3504,6 +3597,11 @@ export interface ProductUpdateOneRequiredWithoutVariantsInput {
   connect?: ProductWhereUniqueInput | null;
   update?: ProductUpdateWithoutVariantsDataInput | null;
   upsert?: ProductUpsertWithoutVariantsInput | null;
+}
+
+export interface ProductUpdateWithWhereUniqueNestedInput {
+  where: ProductWhereUniqueInput;
+  data: ProductUpdateDataInput;
 }
 
 export interface ProductUpdateWithWhereUniqueWithoutCategoryInput {
@@ -3573,6 +3671,12 @@ export interface ProductUpdateinnerMaterialsInput {
 
 export interface ProductUpdateouterMaterialsInput {
   set?: string[] | null;
+}
+
+export interface ProductUpsertWithWhereUniqueNestedInput {
+  where: ProductWhereUniqueInput;
+  update: ProductUpdateDataInput;
+  create: ProductCreateInput;
 }
 
 export interface ProductUpsertWithWhereUniqueWithoutCategoryInput {
@@ -5581,6 +5685,144 @@ export interface StylePreferencesWhereUniqueInput {
   id?: string | null;
 }
 
+export interface StyleSubmissionCreateManyWithoutUserInput {
+  create?: StyleSubmissionCreateWithoutUserInput[] | null;
+  connect?: StyleSubmissionWhereUniqueInput[] | null;
+}
+
+export interface StyleSubmissionCreateWithoutUserInput {
+  id?: string | null;
+  approved?: boolean | null;
+  image: ImageCreateOneInput;
+  location?: LocationCreateOneInput | null;
+  products?: ProductCreateManyInput | null;
+}
+
+export interface StyleSubmissionScalarWhereInput {
+  AND?: StyleSubmissionScalarWhereInput[] | null;
+  OR?: StyleSubmissionScalarWhereInput[] | null;
+  NOT?: StyleSubmissionScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  approved?: boolean | null;
+  approved_not?: boolean | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+}
+
+export interface StyleSubmissionUpdateManyDataInput {
+  approved?: boolean | null;
+}
+
+export interface StyleSubmissionUpdateManyWithWhereNestedInput {
+  where: StyleSubmissionScalarWhereInput;
+  data: StyleSubmissionUpdateManyDataInput;
+}
+
+export interface StyleSubmissionUpdateManyWithoutUserInput {
+  create?: StyleSubmissionCreateWithoutUserInput[] | null;
+  connect?: StyleSubmissionWhereUniqueInput[] | null;
+  set?: StyleSubmissionWhereUniqueInput[] | null;
+  disconnect?: StyleSubmissionWhereUniqueInput[] | null;
+  delete?: StyleSubmissionWhereUniqueInput[] | null;
+  update?: StyleSubmissionUpdateWithWhereUniqueWithoutUserInput[] | null;
+  updateMany?: StyleSubmissionUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: StyleSubmissionScalarWhereInput[] | null;
+  upsert?: StyleSubmissionUpsertWithWhereUniqueWithoutUserInput[] | null;
+}
+
+export interface StyleSubmissionUpdateWithWhereUniqueWithoutUserInput {
+  where: StyleSubmissionWhereUniqueInput;
+  data: StyleSubmissionUpdateWithoutUserDataInput;
+}
+
+export interface StyleSubmissionUpdateWithoutUserDataInput {
+  approved?: boolean | null;
+  image?: ImageUpdateOneRequiredInput | null;
+  location?: LocationUpdateOneInput | null;
+  products?: ProductUpdateManyInput | null;
+}
+
+export interface StyleSubmissionUpsertWithWhereUniqueWithoutUserInput {
+  where: StyleSubmissionWhereUniqueInput;
+  update: StyleSubmissionUpdateWithoutUserDataInput;
+  create: StyleSubmissionCreateWithoutUserInput;
+}
+
+export interface StyleSubmissionWhereInput {
+  AND?: StyleSubmissionWhereInput[] | null;
+  OR?: StyleSubmissionWhereInput[] | null;
+  NOT?: StyleSubmissionWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  approved?: boolean | null;
+  approved_not?: boolean | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+  user?: UserWhereInput | null;
+  image?: ImageWhereInput | null;
+  location?: LocationWhereInput | null;
+  products_every?: ProductWhereInput | null;
+  products_some?: ProductWhereInput | null;
+  products_none?: ProductWhereInput | null;
+}
+
+export interface StyleSubmissionWhereUniqueInput {
+  id?: string | null;
+}
+
 export interface TagCreateManyWithoutProductsInput {
   create?: TagCreateWithoutProductsInput[] | null;
   connect?: TagWhereUniqueInput[] | null;
@@ -5886,6 +6128,7 @@ export interface UserCreateInput {
   pushNotifications?: PushNotificationReceiptCreateManyWithoutUsersInput | null;
   pushNotification?: UserPushNotificationCreateOneInput | null;
   smsReceipts?: SmsReceiptCreateManyInput | null;
+  styleSubmissions?: StyleSubmissionCreateManyWithoutUserInput | null;
 }
 
 export interface UserCreateManyWithoutPushNotificationsInput {
@@ -5911,6 +6154,7 @@ export interface UserCreateWithoutPushNotificationsInput {
   roles?: UserCreaterolesInput | null;
   pushNotification?: UserPushNotificationCreateOneInput | null;
   smsReceipts?: SmsReceiptCreateManyInput | null;
+  styleSubmissions?: StyleSubmissionCreateManyWithoutUserInput | null;
 }
 
 export interface UserCreaterolesInput {
@@ -6241,6 +6485,7 @@ export interface UserUpdateDataInput {
   pushNotifications?: PushNotificationReceiptUpdateManyWithoutUsersInput | null;
   pushNotification?: UserPushNotificationUpdateOneInput | null;
   smsReceipts?: SmsReceiptUpdateManyInput | null;
+  styleSubmissions?: StyleSubmissionUpdateManyWithoutUserInput | null;
 }
 
 export interface UserUpdateManyDataInput {
@@ -6305,6 +6550,7 @@ export interface UserUpdateWithoutPushNotificationsDataInput {
   roles?: UserUpdaterolesInput | null;
   pushNotification?: UserPushNotificationUpdateOneInput | null;
   smsReceipts?: SmsReceiptUpdateManyInput | null;
+  styleSubmissions?: StyleSubmissionUpdateManyWithoutUserInput | null;
 }
 
 export interface UserUpdaterolesInput {
@@ -6435,6 +6681,9 @@ export interface UserWhereInput {
   smsReceipts_every?: SmsReceiptWhereInput | null;
   smsReceipts_some?: SmsReceiptWhereInput | null;
   smsReceipts_none?: SmsReceiptWhereInput | null;
+  styleSubmissions_every?: StyleSubmissionWhereInput | null;
+  styleSubmissions_some?: StyleSubmissionWhereInput | null;
+  styleSubmissions_none?: StyleSubmissionWhereInput | null;
 }
 
 export interface UserWhereUniqueInput {

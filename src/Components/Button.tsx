@@ -161,7 +161,7 @@ export function getColorsForVariant(variant: ButtonVariant) {
       return {
         default: {
           backgroundColor: black100,
-          borderColor: black100,
+          borderColor: black85,
           color: white100,
         },
         pressed: {
@@ -243,13 +243,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   get spinnerColor() {
-    // const { inline, variant } = this.props
-
-    // if (inline) {
-    //   return variant === "primaryWhite" ? "white100" : "black100"
-    // }
-
-    return "white100"
+    return this.props.variant === "primaryWhite" ? "black100" : "white100"
   }
 
   getSize(): { height: number | string; size: "0" | "1" | "2"; px: number } {

@@ -5,6 +5,7 @@ import { CloseXSVG } from "../../assets/svgs"
 import { TouchableOpacity } from "react-native"
 import { color } from "App/utils"
 import { useNavigation } from "@react-navigation/native"
+
 export type CloseButtonVariant = "light" | "dark"
 
 export const CloseButton: React.FC<{

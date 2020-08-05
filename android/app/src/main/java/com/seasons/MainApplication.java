@@ -3,6 +3,7 @@ package com.seasons;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.ijzerenhein.sharedelement.RNSharedElementPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.reactnativecommunity.picker.RNCPickerPackage;
 import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
@@ -58,6 +59,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSharedElementPackage(),
             new RNDeviceInfo(),
             new RNCPickerPackage(),
             new RNDateTimePickerPackage(),

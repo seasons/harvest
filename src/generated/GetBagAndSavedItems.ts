@@ -15,6 +15,21 @@ export interface GetBagAndSavedItems_me_customer_invoices {
   subscriptionId: string | null;
 }
 
+export interface GetBagAndSavedItems_me_customer_detail_shippingAddress {
+  __typename: "Location";
+  id: string;
+  city: string | null;
+  state: string | null;
+  address1: string | null;
+  zipCode: string;
+}
+
+export interface GetBagAndSavedItems_me_customer_detail {
+  __typename: "CustomerDetail";
+  id: string;
+  shippingAddress: GetBagAndSavedItems_me_customer_detail_shippingAddress | null;
+}
+
 export interface GetBagAndSavedItems_me_customer_membership_pauseRequests {
   __typename: "PauseRequest";
   id: string;
@@ -82,6 +97,7 @@ export interface GetBagAndSavedItems_me_customer {
   plan: Plan | null;
   status: CustomerStatus | null;
   invoices: (GetBagAndSavedItems_me_customer_invoices | null)[] | null;
+  detail: GetBagAndSavedItems_me_customer_detail | null;
   membership: GetBagAndSavedItems_me_customer_membership | null;
   reservations: GetBagAndSavedItems_me_customer_reservations[] | null;
 }

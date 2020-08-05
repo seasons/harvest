@@ -274,6 +274,33 @@ export interface Homepage_justAddedBottoms {
   variants: Homepage_justAddedBottoms_variants[] | null;
 }
 
+export interface Homepage_communityStyle_user {
+  __typename: "User";
+  firstName: string;
+  lastName: string;
+}
+
+export interface Homepage_communityStyle_location {
+  __typename: "Location";
+  city: string | null;
+  state: string | null;
+}
+
+export interface Homepage_communityStyle_image {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
+export interface Homepage_communityStyle {
+  __typename: "StyleSubmission";
+  id: string;
+  user: Homepage_communityStyle_user;
+  location: Homepage_communityStyle_location | null;
+  image: Homepage_communityStyle_image;
+  createdAt: any;
+}
+
 export interface Homepage {
   homepage: Homepage_homepage | null;
   reservationFeedback: Homepage_reservationFeedback | null;
@@ -282,4 +309,5 @@ export interface Homepage {
   archivalProducts: (Homepage_archivalProducts | null)[];
   justAddedTops: (Homepage_justAddedTops | null)[];
   justAddedBottoms: (Homepage_justAddedBottoms | null)[];
+  communityStyle: Homepage_communityStyle[];
 }
