@@ -114,11 +114,6 @@ export const Bag = screenTrack()((props) => {
         },
       })
     },
-    refetchQueries: [
-      {
-        query: GET_BAG,
-      },
-    ],
   })
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
