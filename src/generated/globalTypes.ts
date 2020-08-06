@@ -1381,6 +1381,144 @@ export interface CustomerWhereUniqueInput {
   id?: string | null;
 }
 
+export interface FitPicCreateManyWithoutUserInput {
+  create?: FitPicCreateWithoutUserInput[] | null;
+  connect?: FitPicWhereUniqueInput[] | null;
+}
+
+export interface FitPicCreateWithoutUserInput {
+  id?: string | null;
+  approved?: boolean | null;
+  image: ImageCreateOneInput;
+  location?: LocationCreateOneInput | null;
+  products?: ProductCreateManyInput | null;
+}
+
+export interface FitPicScalarWhereInput {
+  AND?: FitPicScalarWhereInput[] | null;
+  OR?: FitPicScalarWhereInput[] | null;
+  NOT?: FitPicScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  approved?: boolean | null;
+  approved_not?: boolean | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+}
+
+export interface FitPicUpdateManyDataInput {
+  approved?: boolean | null;
+}
+
+export interface FitPicUpdateManyWithWhereNestedInput {
+  where: FitPicScalarWhereInput;
+  data: FitPicUpdateManyDataInput;
+}
+
+export interface FitPicUpdateManyWithoutUserInput {
+  create?: FitPicCreateWithoutUserInput[] | null;
+  connect?: FitPicWhereUniqueInput[] | null;
+  set?: FitPicWhereUniqueInput[] | null;
+  disconnect?: FitPicWhereUniqueInput[] | null;
+  delete?: FitPicWhereUniqueInput[] | null;
+  update?: FitPicUpdateWithWhereUniqueWithoutUserInput[] | null;
+  updateMany?: FitPicUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: FitPicScalarWhereInput[] | null;
+  upsert?: FitPicUpsertWithWhereUniqueWithoutUserInput[] | null;
+}
+
+export interface FitPicUpdateWithWhereUniqueWithoutUserInput {
+  where: FitPicWhereUniqueInput;
+  data: FitPicUpdateWithoutUserDataInput;
+}
+
+export interface FitPicUpdateWithoutUserDataInput {
+  approved?: boolean | null;
+  image?: ImageUpdateOneRequiredInput | null;
+  location?: LocationUpdateOneInput | null;
+  products?: ProductUpdateManyInput | null;
+}
+
+export interface FitPicUpsertWithWhereUniqueWithoutUserInput {
+  where: FitPicWhereUniqueInput;
+  update: FitPicUpdateWithoutUserDataInput;
+  create: FitPicCreateWithoutUserInput;
+}
+
+export interface FitPicWhereInput {
+  AND?: FitPicWhereInput[] | null;
+  OR?: FitPicWhereInput[] | null;
+  NOT?: FitPicWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  approved?: boolean | null;
+  approved_not?: boolean | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+  user?: UserWhereInput | null;
+  image?: ImageWhereInput | null;
+  location?: LocationWhereInput | null;
+  products_every?: ProductWhereInput | null;
+  products_some?: ProductWhereInput | null;
+  products_none?: ProductWhereInput | null;
+}
+
+export interface FitPicWhereUniqueInput {
+  id?: string | null;
+}
+
 export interface ImageCreateInput {
   id?: string | null;
   caption?: string | null;
@@ -5685,144 +5823,6 @@ export interface StylePreferencesWhereUniqueInput {
   id?: string | null;
 }
 
-export interface StyleSubmissionCreateManyWithoutUserInput {
-  create?: StyleSubmissionCreateWithoutUserInput[] | null;
-  connect?: StyleSubmissionWhereUniqueInput[] | null;
-}
-
-export interface StyleSubmissionCreateWithoutUserInput {
-  id?: string | null;
-  approved?: boolean | null;
-  image: ImageCreateOneInput;
-  location?: LocationCreateOneInput | null;
-  products?: ProductCreateManyInput | null;
-}
-
-export interface StyleSubmissionScalarWhereInput {
-  AND?: StyleSubmissionScalarWhereInput[] | null;
-  OR?: StyleSubmissionScalarWhereInput[] | null;
-  NOT?: StyleSubmissionScalarWhereInput[] | null;
-  id?: string | null;
-  id_not?: string | null;
-  id_in?: string[] | null;
-  id_not_in?: string[] | null;
-  id_lt?: string | null;
-  id_lte?: string | null;
-  id_gt?: string | null;
-  id_gte?: string | null;
-  id_contains?: string | null;
-  id_not_contains?: string | null;
-  id_starts_with?: string | null;
-  id_not_starts_with?: string | null;
-  id_ends_with?: string | null;
-  id_not_ends_with?: string | null;
-  approved?: boolean | null;
-  approved_not?: boolean | null;
-  createdAt?: any | null;
-  createdAt_not?: any | null;
-  createdAt_in?: any[] | null;
-  createdAt_not_in?: any[] | null;
-  createdAt_lt?: any | null;
-  createdAt_lte?: any | null;
-  createdAt_gt?: any | null;
-  createdAt_gte?: any | null;
-  updatedAt?: any | null;
-  updatedAt_not?: any | null;
-  updatedAt_in?: any[] | null;
-  updatedAt_not_in?: any[] | null;
-  updatedAt_lt?: any | null;
-  updatedAt_lte?: any | null;
-  updatedAt_gt?: any | null;
-  updatedAt_gte?: any | null;
-}
-
-export interface StyleSubmissionUpdateManyDataInput {
-  approved?: boolean | null;
-}
-
-export interface StyleSubmissionUpdateManyWithWhereNestedInput {
-  where: StyleSubmissionScalarWhereInput;
-  data: StyleSubmissionUpdateManyDataInput;
-}
-
-export interface StyleSubmissionUpdateManyWithoutUserInput {
-  create?: StyleSubmissionCreateWithoutUserInput[] | null;
-  connect?: StyleSubmissionWhereUniqueInput[] | null;
-  set?: StyleSubmissionWhereUniqueInput[] | null;
-  disconnect?: StyleSubmissionWhereUniqueInput[] | null;
-  delete?: StyleSubmissionWhereUniqueInput[] | null;
-  update?: StyleSubmissionUpdateWithWhereUniqueWithoutUserInput[] | null;
-  updateMany?: StyleSubmissionUpdateManyWithWhereNestedInput[] | null;
-  deleteMany?: StyleSubmissionScalarWhereInput[] | null;
-  upsert?: StyleSubmissionUpsertWithWhereUniqueWithoutUserInput[] | null;
-}
-
-export interface StyleSubmissionUpdateWithWhereUniqueWithoutUserInput {
-  where: StyleSubmissionWhereUniqueInput;
-  data: StyleSubmissionUpdateWithoutUserDataInput;
-}
-
-export interface StyleSubmissionUpdateWithoutUserDataInput {
-  approved?: boolean | null;
-  image?: ImageUpdateOneRequiredInput | null;
-  location?: LocationUpdateOneInput | null;
-  products?: ProductUpdateManyInput | null;
-}
-
-export interface StyleSubmissionUpsertWithWhereUniqueWithoutUserInput {
-  where: StyleSubmissionWhereUniqueInput;
-  update: StyleSubmissionUpdateWithoutUserDataInput;
-  create: StyleSubmissionCreateWithoutUserInput;
-}
-
-export interface StyleSubmissionWhereInput {
-  AND?: StyleSubmissionWhereInput[] | null;
-  OR?: StyleSubmissionWhereInput[] | null;
-  NOT?: StyleSubmissionWhereInput[] | null;
-  id?: string | null;
-  id_not?: string | null;
-  id_in?: string[] | null;
-  id_not_in?: string[] | null;
-  id_lt?: string | null;
-  id_lte?: string | null;
-  id_gt?: string | null;
-  id_gte?: string | null;
-  id_contains?: string | null;
-  id_not_contains?: string | null;
-  id_starts_with?: string | null;
-  id_not_starts_with?: string | null;
-  id_ends_with?: string | null;
-  id_not_ends_with?: string | null;
-  approved?: boolean | null;
-  approved_not?: boolean | null;
-  createdAt?: any | null;
-  createdAt_not?: any | null;
-  createdAt_in?: any[] | null;
-  createdAt_not_in?: any[] | null;
-  createdAt_lt?: any | null;
-  createdAt_lte?: any | null;
-  createdAt_gt?: any | null;
-  createdAt_gte?: any | null;
-  updatedAt?: any | null;
-  updatedAt_not?: any | null;
-  updatedAt_in?: any[] | null;
-  updatedAt_not_in?: any[] | null;
-  updatedAt_lt?: any | null;
-  updatedAt_lte?: any | null;
-  updatedAt_gt?: any | null;
-  updatedAt_gte?: any | null;
-  user?: UserWhereInput | null;
-  image?: ImageWhereInput | null;
-  location?: LocationWhereInput | null;
-  products_every?: ProductWhereInput | null;
-  products_some?: ProductWhereInput | null;
-  products_none?: ProductWhereInput | null;
-}
-
-export interface StyleSubmissionWhereUniqueInput {
-  id?: string | null;
-}
-
 export interface TagCreateManyWithoutProductsInput {
   create?: TagCreateWithoutProductsInput[] | null;
   connect?: TagWhereUniqueInput[] | null;
@@ -6128,7 +6128,7 @@ export interface UserCreateInput {
   pushNotifications?: PushNotificationReceiptCreateManyWithoutUsersInput | null;
   pushNotification?: UserPushNotificationCreateOneInput | null;
   smsReceipts?: SmsReceiptCreateManyInput | null;
-  styleSubmissions?: StyleSubmissionCreateManyWithoutUserInput | null;
+  fitPics?: FitPicCreateManyWithoutUserInput | null;
 }
 
 export interface UserCreateManyWithoutPushNotificationsInput {
@@ -6154,7 +6154,7 @@ export interface UserCreateWithoutPushNotificationsInput {
   roles?: UserCreaterolesInput | null;
   pushNotification?: UserPushNotificationCreateOneInput | null;
   smsReceipts?: SmsReceiptCreateManyInput | null;
-  styleSubmissions?: StyleSubmissionCreateManyWithoutUserInput | null;
+  fitPics?: FitPicCreateManyWithoutUserInput | null;
 }
 
 export interface UserCreaterolesInput {
@@ -6485,7 +6485,7 @@ export interface UserUpdateDataInput {
   pushNotifications?: PushNotificationReceiptUpdateManyWithoutUsersInput | null;
   pushNotification?: UserPushNotificationUpdateOneInput | null;
   smsReceipts?: SmsReceiptUpdateManyInput | null;
-  styleSubmissions?: StyleSubmissionUpdateManyWithoutUserInput | null;
+  fitPics?: FitPicUpdateManyWithoutUserInput | null;
 }
 
 export interface UserUpdateManyDataInput {
@@ -6550,7 +6550,7 @@ export interface UserUpdateWithoutPushNotificationsDataInput {
   roles?: UserUpdaterolesInput | null;
   pushNotification?: UserPushNotificationUpdateOneInput | null;
   smsReceipts?: SmsReceiptUpdateManyInput | null;
-  styleSubmissions?: StyleSubmissionUpdateManyWithoutUserInput | null;
+  fitPics?: FitPicUpdateManyWithoutUserInput | null;
 }
 
 export interface UserUpdaterolesInput {
@@ -6681,9 +6681,9 @@ export interface UserWhereInput {
   smsReceipts_every?: SmsReceiptWhereInput | null;
   smsReceipts_some?: SmsReceiptWhereInput | null;
   smsReceipts_none?: SmsReceiptWhereInput | null;
-  styleSubmissions_every?: StyleSubmissionWhereInput | null;
-  styleSubmissions_some?: StyleSubmissionWhereInput | null;
-  styleSubmissions_none?: StyleSubmissionWhereInput | null;
+  fitPics_every?: FitPicWhereInput | null;
+  fitPics_some?: FitPicWhereInput | null;
+  fitPics_none?: FitPicWhereInput | null;
 }
 
 export interface UserWhereUniqueInput {

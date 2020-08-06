@@ -35,9 +35,9 @@ import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { NavBar } from "./NavBar"
 import { ResumeConfirmation, PauseConfirmation, ExtendPauseConfirmation } from "App/Components/Pause"
 import { CreateAccount } from "App/Scenes/CreateAccount"
-import { CommunityStyleDetail } from "App/Scenes/Home/Components/CommunityStyleDetail"
+import { FitPicDetail } from "App/Scenes/Home/Components/FitPicDetail"
 import { createSharedElementStackNavigator } from "react-navigation-shared-element"
-import { Homepage_communityStyle as CommunityStyle } from "src/generated/Homepage"
+import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 
 const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
@@ -140,12 +140,12 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
       <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />
       <HomeStack.Screen
-        name={Schema.PageNames.CommunityStyleDetail}
-        component={CommunityStyleDetail}
-        sharedElements={(route, otherRoute, showing) => {
+        name={Schema.PageNames.FitPicDetail}
+        component={FitPicDetail}
+        sharedElements={(route, otherRoute) => {
           if (otherRoute.name === Schema.PageNames.Home) {
-            const { item } = route.params as { item: CommunityStyle }
-            return [`communitystyle.photo.${item.id}`]
+            const { item } = route.params as { item: FitPic }
+            return item ? [`fitpic.photo.${item.id}`] : []
           }
         }}
       />

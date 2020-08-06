@@ -191,13 +191,15 @@ export const GET_HOMEPAGE = gql`
         }
       }
     }
-    communityStyle {
+    fitPics {
       id
       user {
+        id
         firstName
         lastName
       }
       location {
+        id
         city
         state
       }
@@ -230,7 +232,7 @@ export const Home = screenTrack()(({ navigation }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       StatusBar.setBarStyle("light-content")
-      refetch()
+      // refetch()
     })
     return unsubscribe
   }, [navigation])
