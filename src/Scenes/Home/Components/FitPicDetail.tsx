@@ -1,6 +1,6 @@
-import React, { useState, useEffect, MutableRefObject } from "react"
+import React, { useState } from "react"
 import { Box, Container, Flex, Spacer, Sans } from "App/Components"
-import { TouchableOpacity, Dimensions, Image } from "react-native"
+import { TouchableOpacity, Dimensions } from "react-native"
 import { color } from "App/utils"
 import { CloseXSVG, More } from "Assets/svgs"
 import { useActionSheet } from "@expo/react-native-action-sheet"
@@ -36,7 +36,7 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = ({ navigation, route })
   const actionSheet = useActionSheet()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
-  const topInset = useSafeArea().top + 16
+  const topInset = useSafeArea().top + 2 * 8
   const [reportFitPic] = useMutation(REPORT_FIT_PIC, {
     onCompleted: () => {
       showPopUp({
