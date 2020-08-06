@@ -81,25 +81,25 @@ export const ProductDetails: React.FC<{
         )}
       </Flex>
       <Spacer mb={1} />
-      {description && (
+      {!!description && (
         <Sans size="1" color={color("black50")} lineHeight={26}>
           {description.trim()}
         </Sans>
       )}
       <Spacer mb={3} />
       <Separator color={color("black10")} />
-      {product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
+      {!!product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
       {!!product.modelSize && !!product.modelHeight && (
         <ProductInfoItem
           detailType="Fit"
           detailValue={`Model is ${modelHeightDisplay(product.modelHeight)} in a ${product.modelSize.display}`}
         />
       )}
-      {product.outerMaterials && (
+      {!!product.outerMaterials && (
         <ProductInfoItem detailType="Materials" detailValue={product.outerMaterials.join(", ")} />
       )}
-      {product.brand && <ProductInfoItem detailType="Brand" detailValue={product.brand.name} />}
-      {product.retailPrice && <ProductInfoItem detailType="Retail price" detailValue={"$" + product.retailPrice} />}
+      {!!product.brand && <ProductInfoItem detailType="Brand" detailValue={product.brand.name} />}
+      {!!product.retailPrice && <ProductInfoItem detailType="Retail price" detailValue={"$" + product.retailPrice} />}
     </Box>
   )
 }
