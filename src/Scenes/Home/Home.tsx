@@ -191,13 +191,9 @@ export const GET_HOMEPAGE = gql`
         }
       }
     }
-    fitPics {
+    fitPics: publicFitPics {
       id
-      user {
-        id
-        firstName
-        lastName
-      }
+      author
       location {
         id
         city

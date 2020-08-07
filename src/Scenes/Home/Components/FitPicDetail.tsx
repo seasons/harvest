@@ -120,7 +120,7 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = ({ navigation, route })
         <Spacer height={spacing + imageHeight + spacing} />
 
         <Box pl={2} pr={2}>
-          <Sans size="0.5">{`${item.user.firstName} ${item.user.lastName}`}</Sans>
+          <Sans size="0.5">{item.author}</Sans>
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
             <Sans size="0.5" color="black50">
               {item.location

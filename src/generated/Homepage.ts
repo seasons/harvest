@@ -274,13 +274,6 @@ export interface Homepage_justAddedBottoms {
   variants: Homepage_justAddedBottoms_variants[] | null;
 }
 
-export interface Homepage_fitPics_user {
-  __typename: "User";
-  id: string;
-  firstName: string;
-  lastName: string;
-}
-
 export interface Homepage_fitPics_location {
   __typename: "Location";
   id: string;
@@ -295,9 +288,9 @@ export interface Homepage_fitPics_image {
 }
 
 export interface Homepage_fitPics {
-  __typename: "FitPic";
+  __typename: "PublicFitPic";
   id: string;
-  user: Homepage_fitPics_user;
+  author: string;
   location: Homepage_fitPics_location | null;
   image: Homepage_fitPics_image;
   createdAt: any;

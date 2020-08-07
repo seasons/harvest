@@ -73,6 +73,11 @@ export enum CustomerStatus {
   Waitlisted = "Waitlisted",
 }
 
+export enum FitPicReportStatus {
+  Pending = "Pending",
+  Reviewed = "Reviewed",
+}
+
 export enum HomePageSectionType {
   Brands = "Brands",
   CollectionGroups = "CollectionGroups",
@@ -1392,6 +1397,141 @@ export interface FitPicCreateWithoutUserInput {
   image: ImageCreateOneInput;
   location?: LocationCreateOneInput | null;
   products?: ProductCreateManyInput | null;
+  reports?: FitPicReportCreateManyWithoutReportedInput | null;
+}
+
+export interface FitPicReportCreateManyWithoutReportedInput {
+  create?: FitPicReportCreateWithoutReportedInput[] | null;
+  connect?: FitPicReportWhereUniqueInput[] | null;
+}
+
+export interface FitPicReportCreateWithoutReportedInput {
+  id?: string | null;
+  status?: FitPicReportStatus | null;
+  reporter: UserCreateOneInput;
+}
+
+export interface FitPicReportScalarWhereInput {
+  AND?: FitPicReportScalarWhereInput[] | null;
+  OR?: FitPicReportScalarWhereInput[] | null;
+  NOT?: FitPicReportScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  status?: FitPicReportStatus | null;
+  status_not?: FitPicReportStatus | null;
+  status_in?: FitPicReportStatus[] | null;
+  status_not_in?: FitPicReportStatus[] | null;
+  reportedAt?: any | null;
+  reportedAt_not?: any | null;
+  reportedAt_in?: any[] | null;
+  reportedAt_not_in?: any[] | null;
+  reportedAt_lt?: any | null;
+  reportedAt_lte?: any | null;
+  reportedAt_gt?: any | null;
+  reportedAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+}
+
+export interface FitPicReportUpdateManyDataInput {
+  status?: FitPicReportStatus | null;
+}
+
+export interface FitPicReportUpdateManyWithWhereNestedInput {
+  where: FitPicReportScalarWhereInput;
+  data: FitPicReportUpdateManyDataInput;
+}
+
+export interface FitPicReportUpdateManyWithoutReportedInput {
+  create?: FitPicReportCreateWithoutReportedInput[] | null;
+  connect?: FitPicReportWhereUniqueInput[] | null;
+  set?: FitPicReportWhereUniqueInput[] | null;
+  disconnect?: FitPicReportWhereUniqueInput[] | null;
+  delete?: FitPicReportWhereUniqueInput[] | null;
+  update?: FitPicReportUpdateWithWhereUniqueWithoutReportedInput[] | null;
+  updateMany?: FitPicReportUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: FitPicReportScalarWhereInput[] | null;
+  upsert?: FitPicReportUpsertWithWhereUniqueWithoutReportedInput[] | null;
+}
+
+export interface FitPicReportUpdateWithWhereUniqueWithoutReportedInput {
+  where: FitPicReportWhereUniqueInput;
+  data: FitPicReportUpdateWithoutReportedDataInput;
+}
+
+export interface FitPicReportUpdateWithoutReportedDataInput {
+  status?: FitPicReportStatus | null;
+  reporter?: UserUpdateOneRequiredInput | null;
+}
+
+export interface FitPicReportUpsertWithWhereUniqueWithoutReportedInput {
+  where: FitPicReportWhereUniqueInput;
+  update: FitPicReportUpdateWithoutReportedDataInput;
+  create: FitPicReportCreateWithoutReportedInput;
+}
+
+export interface FitPicReportWhereInput {
+  AND?: FitPicReportWhereInput[] | null;
+  OR?: FitPicReportWhereInput[] | null;
+  NOT?: FitPicReportWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  status?: FitPicReportStatus | null;
+  status_not?: FitPicReportStatus | null;
+  status_in?: FitPicReportStatus[] | null;
+  status_not_in?: FitPicReportStatus[] | null;
+  reportedAt?: any | null;
+  reportedAt_not?: any | null;
+  reportedAt_in?: any[] | null;
+  reportedAt_not_in?: any[] | null;
+  reportedAt_lt?: any | null;
+  reportedAt_lte?: any | null;
+  reportedAt_gt?: any | null;
+  reportedAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+  reporter?: UserWhereInput | null;
+  reported?: FitPicWhereInput | null;
+}
+
+export interface FitPicReportWhereUniqueInput {
+  id?: string | null;
 }
 
 export interface FitPicScalarWhereInput {
@@ -1463,6 +1603,7 @@ export interface FitPicUpdateWithoutUserDataInput {
   image?: ImageUpdateOneRequiredInput | null;
   location?: LocationUpdateOneInput | null;
   products?: ProductUpdateManyInput | null;
+  reports?: FitPicReportUpdateManyWithoutReportedInput | null;
 }
 
 export interface FitPicUpsertWithWhereUniqueWithoutUserInput {
@@ -1513,6 +1654,9 @@ export interface FitPicWhereInput {
   products_every?: ProductWhereInput | null;
   products_some?: ProductWhereInput | null;
   products_none?: ProductWhereInput | null;
+  reports_every?: FitPicReportWhereInput | null;
+  reports_some?: FitPicReportWhereInput | null;
+  reports_none?: FitPicReportWhereInput | null;
 }
 
 export interface FitPicWhereUniqueInput {
