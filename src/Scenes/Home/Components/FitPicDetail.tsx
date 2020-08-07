@@ -12,6 +12,7 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { SharedElement } from "react-navigation-shared-element"
 import FastImage from "react-native-fast-image"
 import { useSafeArea } from "react-native-safe-area-context"
+import { DateTime } from "luxon"
 
 interface FitPicDetailProps {
   navigation: any
@@ -102,12 +103,13 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = ({ navigation, route })
     )
   }
 
+  // console.log("~~", JSON.stringify(DateTime.fromISO(item.createdAt).DATE_MED))
   // Position the shared image target absolutely so that the transitioner knows the final layout after the tab bar disappears.
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <SharedImageTarget
         id={`fitpic.photo.${item.id}`}
-        uri={item.image.url}
+        uri={item.image?.url}
         y={topInset + closeButtonHeight + spacing}
         height={imageHeight}
       />
@@ -125,7 +127,7 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = ({ navigation, route })
             <Sans size="0.5" color="black50">
               {item.location
                 ? `${item.location.city}, ${item.location.state}`
-                : `${new Date(item.createdAt).toLocaleString("en-US", { month: "long", day: "numeric" })}`}
+                : ((date: DateTime) => `${date.monthLong} ${date.day}, ${date.year}`)(DateTime.fromISO(item.createdAt))}
             </Sans>
             <TouchableOpacity onPress={showActionSheet} hitSlop={{ top: 30, bottom: 30, left: 10, right: 10 }}>
               <More />

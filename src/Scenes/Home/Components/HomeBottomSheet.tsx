@@ -22,8 +22,56 @@ enum SectionType {
   FitPics,
 }
 
+const sectionsFrom = (data: any) => {
+  const sections = []
+  if (data?.blogPosts) {
+    sections.push({ type: SectionType.BlogPosts, results: data?.blogPosts })
+  }
+  if (data?.justAddedTops?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
+  }
+  if (data?.homepage?.sections?.length) {
+    sections.push(
+      ...data?.homepage?.sections
+        .map((section) => {
+          switch (section.type) {
+            case SectionType.Brands:
+              return section
+            case SectionType.Products:
+              return section
+          }
+        })
+        .filter(Boolean)
+    )
+  }
+  if (data?.me?.savedItems?.length) {
+    const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
+    sections.push({ type: SectionType.SavedProducts, title: "Saved for later", results })
+  }
+  if (data?.archivalProducts?.length) {
+    sections.push({
+      type: SectionType.ArchivalProducts,
+      tagData: {
+        tag: "Vintage",
+        title: "Archives",
+        description:
+          "Great clothes are great clothes and we believe the past still lends itself to dressing for the now. What archive items lack in newness, they make up for by way of history. Through the Seasons archival section, we hope to add unique history and vibrance to our catalog, made possible by yesterday’s clothes.\n\nHere you’ll find garments celebrating historic eras of fashion, music, film, media and beyond. From 80s concert merchandise to early 2000s runway pieces, the archive section encompasses a unique field of textile designs, production styles and comfortable wear that can bring style and biography to any outfit or wardrobe.",
+      },
+      title: "Just added archival",
+      results: data?.archivalProducts,
+    })
+  }
+  if (data?.justAddedBottoms?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
+  }
+  if (data?.fitPics?.length) {
+    sections.push({ type: SectionType.FitPics, results: data?.fitPics })
+  }
+  return sections
+}
+
 export const HomeBottomSheet = ({ data }) => {
-  const [sections, setSections] = useState([])
+  const [sections, setSections] = useState(sectionsFrom(data))
   const [flatListHeight, setFlatListHeight] = useState(0)
   const fitPicCollectionRef: React.MutableRefObject<FitPicCollectionRef> = useRef(null)
   let [addPhotoButtonVisible, setAddPhotoButtonVisible] = useState(false)
@@ -31,53 +79,7 @@ export const HomeBottomSheet = ({ data }) => {
   const navigation = useNavigation()
   const reservationFeedback = data?.reservationFeedback
 
-  useEffect(() => {
-    const sections = []
-    if (data?.blogPosts) {
-      sections.push({ type: SectionType.BlogPosts, results: data?.blogPosts })
-    }
-    if (data?.justAddedTops?.length) {
-      sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
-    }
-    if (data?.homepage?.sections?.length) {
-      sections.push(
-        ...data?.homepage?.sections
-          .map((section) => {
-            switch (section.type) {
-              case SectionType.Brands:
-                return section
-              case SectionType.Products:
-                return section
-            }
-          })
-          .filter(Boolean)
-      )
-    }
-    if (data?.me?.savedItems?.length) {
-      const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
-      sections.push({ type: SectionType.SavedProducts, title: "Saved for later", results })
-    }
-    if (data?.archivalProducts?.length) {
-      sections.push({
-        type: SectionType.ArchivalProducts,
-        tagData: {
-          tag: "Vintage",
-          title: "Archives",
-          description:
-            "Great clothes are great clothes and we believe the past still lends itself to dressing for the now. What archive items lack in newness, they make up for by way of history. Through the Seasons archival section, we hope to add unique history and vibrance to our catalog, made possible by yesterday’s clothes.\n\nHere you’ll find garments celebrating historic eras of fashion, music, film, media and beyond. From 80s concert merchandise to early 2000s runway pieces, the archive section encompasses a unique field of textile designs, production styles and comfortable wear that can bring style and biography to any outfit or wardrobe.",
-        },
-        title: "Just added archival",
-        results: data?.archivalProducts,
-      })
-    }
-    if (data?.justAddedBottoms?.length) {
-      sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
-    }
-    if (data?.fitPics?.length) {
-      sections.push({ type: SectionType.FitPics, results: data?.fitPics })
-    }
-    setSections(sections)
-  }, [data])
+  useEffect(() => setSections(sectionsFrom(data)), [data])
 
   const blogContentHeight = dimensions.width
   const snapPoint = 20

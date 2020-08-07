@@ -11,7 +11,7 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { ReactNativeFile } from "apollo-upload-client"
 
 const SUBMIT_FIT_PIC = gql`
-  mutation submitFitPic($image: Upload!) {
+  mutation SubmitFitPic($image: Upload!) {
     submitFitPic(image: $image)
   }
 `

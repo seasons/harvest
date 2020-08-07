@@ -228,7 +228,7 @@ export const Home = screenTrack()(({ navigation }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       StatusBar.setBarStyle("light-content")
-      // refetch()
+      refetch()
     })
     return unsubscribe
   }, [navigation])
@@ -278,14 +278,6 @@ export const Home = screenTrack()(({ navigation }) => {
 
   const onPressReservationFeedbackReminder = () => {
     goToReservationFeedbackScreen()
-  }
-
-  if (error) {
-    console.error("error /home/index.tsx: ", error)
-  }
-
-  if (showLoader || !data) {
-    return <Loader />
   }
 
   return !network?.isConnected && !data ? (
