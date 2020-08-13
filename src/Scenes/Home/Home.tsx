@@ -305,14 +305,18 @@ export const Home = screenTrack()(({ navigation, route }) => {
           // fetched because refetch already made loading true.
           if (totalFitPics > fitPicsReceived && !loading && fitPicsReceived > 0) {
             fetchMore({
+              // const totalFitPics = data?.fitPicsCount?.aggregate?.count ?? 0
               variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
-              updateQuery: (prev: { fitPics: Homepage_fitPics[] }, { fetchMoreResult }) => {
+              updateQuery: (prev: { fitPics: Homepage_fitPics[]; fitPicsCount: any }, { fetchMoreResult }) => {
                 if (!prev) {
                   return []
                 } else if (!fetchMoreResult) {
                   return prev
                 } else {
-                  return Object.assign({}, prev, { fitPics: [...prev.fitPics, ...fetchMoreResult.fitPics] })
+                  return Object.assign({}, prev, {
+                    fitPics: [...prev.fitPics, ...fetchMoreResult.fitPics],
+                    fitPicsCount: fetchMoreResult.fitPicsCount,
+                  })
                 }
               },
             })
