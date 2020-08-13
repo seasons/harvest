@@ -16,9 +16,10 @@ import styled from "styled-components/native"
 
 import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
+import { Homepage_fitPics } from "App/generated/Homepage"
 
 export const GET_HOMEPAGE = gql`
-  query Homepage {
+  query Homepage($firstFitPics: Int!, $skipFitPics: Int) {
     homepage {
       sections {
         title
@@ -191,7 +192,12 @@ export const GET_HOMEPAGE = gql`
         }
       }
     }
-    fitPics: publicFitPics {
+    fitPicsCount: fitPicsConnection {
+      aggregate {
+        count
+      }
+    }
+    fitPics(first: $firstFitPics, skip: $skipFitPics, orderBy: createdAt_DESC) {
       id
       author
       location {
@@ -208,12 +214,17 @@ export const GET_HOMEPAGE = gql`
   }
 `
 
-export const Home = screenTrack()(({ navigation }) => {
+export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
-  const { loading, error, data, refetch } = useQuery(GET_HOMEPAGE, {})
+  const { loading, error, data, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
+    variables: { firstFitPics: 8, skipFitPics: 0 },
+  })
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
+
+  const totalFitPics = data?.fitPicsCount?.aggregate?.count ?? 0
+  const fitPicsReceived = data?.fitPics?.length ?? 0
 
   useEffect(() => {
     if (!loading && showSplash) {
@@ -228,7 +239,7 @@ export const Home = screenTrack()(({ navigation }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       StatusBar.setBarStyle("light-content")
-      refetch()
+      refetch({ firstFitPics: Math.max(8, fitPicsReceived), skipFitPics: 0 })
     })
     return unsubscribe
   }, [navigation])
@@ -236,7 +247,7 @@ export const Home = screenTrack()(({ navigation }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
       StatusBar.setBarStyle("dark-content")
-      refetch()
+      refetch({ firstFitPics: Math.max(8, fitPicsReceived), skipFitPics: 0 })
     })
     return unsubscribe
   }, [navigation])
@@ -245,7 +256,7 @@ export const Home = screenTrack()(({ navigation }) => {
     <ErrorScreen
       variant="No Internet"
       refreshAction={() => {
-        refetch()
+        refetch({ firstFitPics: Math.max(8, fitPicsReceived), skipFitPics: 0 })
       }}
     />
   )
@@ -286,7 +297,28 @@ export const Home = screenTrack()(({ navigation }) => {
     <Container insetsTop={false} insetsBottom={false}>
       <StatusBar barStyle="light-content" />
       <HomeBlogContent items={data?.blogPosts} />
-      <HomeBottomSheet data={data} />
+      <HomeBottomSheet
+        data={data}
+        isFetchingMoreFitPics={loading && fitPicsReceived < totalFitPics}
+        fetchMoreFitPics={() => {
+          // Potential bad UX: isFetchingMoreFitPics is true and the spinner shows, but more fit pics aren't
+          // fetched because refetch already made loading true.
+          if (totalFitPics > fitPicsReceived && !loading && fitPicsReceived > 0) {
+            fetchMore({
+              variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
+              updateQuery: (prev: { fitPics: Homepage_fitPics[] }, { fetchMoreResult }) => {
+                if (!prev) {
+                  return []
+                } else if (!fetchMoreResult) {
+                  return prev
+                } else {
+                  return Object.assign({}, prev, { fitPics: [...prev.fitPics, ...fetchMoreResult.fitPics] })
+                }
+              },
+            })
+          }
+        }}
+      />
       {reservationFeedback &&
         shouldRequestFeedback &&
         (reservationFeedback.rating ? (

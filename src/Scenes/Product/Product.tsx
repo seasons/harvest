@@ -64,6 +64,9 @@ export const Product = screenTrack({
     refetchQueries: [
       {
         query: GET_HOMEPAGE,
+        variables: {
+          firstFitPics: 8,
+        },
       },
     ],
   })

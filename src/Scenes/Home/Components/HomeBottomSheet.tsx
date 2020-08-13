@@ -1,4 +1,4 @@
-import { Handle } from "App/Components"
+import { Handle, Flex, Box } from "App/Components"
 import { NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native"
 import { BrandsRail, FitPicCollection, HomeFooter, ProductsRail, TagsRail } from "./"
 import { FitPicCollectionRef } from "./FitPicCollection"
 import { AddPhotoButton } from "./AddPhotoButton"
+import { Spinner } from "App/Components/Spinner"
 
 const dimensions = Dimensions.get("window")
 
@@ -70,7 +71,13 @@ const sectionsFrom = (data: any) => {
   return sections
 }
 
-export const HomeBottomSheet = ({ data }) => {
+interface HomeBottomSheetProps {
+  data: any
+  fetchMoreFitPics: () => void
+  isFetchingMoreFitPics: boolean
+}
+
+export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMoreFitPics, isFetchingMoreFitPics }) => {
   const [sections, setSections] = useState(sectionsFrom(data))
   const [flatListHeight, setFlatListHeight] = useState(0)
   const fitPicCollectionRef: React.MutableRefObject<FitPicCollectionRef> = useRef(null)
@@ -108,12 +115,19 @@ export const HomeBottomSheet = ({ data }) => {
         )
       case SectionType.FitPics:
         return (
-          <FitPicCollection
-            items={item.results}
-            navigation={navigation}
-            parentRef={bottomSheetRef}
-            ref={fitPicCollectionRef}
-          />
+          <Box>
+            <FitPicCollection
+              items={item.results}
+              navigation={navigation}
+              parentRef={bottomSheetRef}
+              ref={fitPicCollectionRef}
+            />
+            {isFetchingMoreFitPics && (
+              <Flex style={{ height: 40 }} flexDirection="row" justifyContent="center">
+                <Spinner />
+              </Flex>
+            )}
+          </Box>
         )
     }
   }
@@ -159,13 +173,16 @@ export const HomeBottomSheet = ({ data }) => {
             setFlatListHeight(e.nativeEvent.layout.height)
           }
         }}
+        onEndReached={() => {
+          fetchMoreFitPics()
+        }}
         ref={bottomSheetRef}
         animationConfig={{
           duration: 200,
         }}
       />
     )
-  }, [sections, flatListHeight])
+  }, [sections, flatListHeight, isFetchingMoreFitPics])
 
   return (
     <>

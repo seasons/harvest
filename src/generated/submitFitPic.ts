@@ -4,13 +4,13 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: submitFitPic
+// GraphQL mutation operation: SubmitFitPic
 // ====================================================
 
-export interface submitFitPic {
-  submitFitPic: boolean;
+export interface SubmitFitPic {
+  submitFitPic: string;
 }
 
-export interface submitFitPicVariables {
+export interface SubmitFitPicVariables {
   image: any;
 }

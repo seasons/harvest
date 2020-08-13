@@ -288,7 +288,7 @@ export interface Homepage_fitPics_image {
 }
 
 export interface Homepage_fitPics {
-  __typename: "PublicFitPic";
+  __typename: "FitPic";
   id: string;
   author: string;
   location: Homepage_fitPics_location | null;
