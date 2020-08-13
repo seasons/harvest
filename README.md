@@ -44,3 +44,7 @@ You only need to run the below if you are changing the types. Otherwise, you can
 ### Make a build on your phone
 
 1. Call Luc
+
+### Finding the latest production build
+
+Check the git logs for a commit message of the form X => Y, e.g 101 => 102. That's how we annotate version changes. Whichever is the latest commit with a message that fits that format is the latest commit to go to production.
