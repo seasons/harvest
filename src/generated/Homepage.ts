@@ -274,30 +274,25 @@ export interface Homepage_justAddedBottoms {
   variants: Homepage_justAddedBottoms_variants[] | null;
 }
 
-export interface Homepage_communityStyle_user {
-  __typename: "User";
-  firstName: string;
-  lastName: string;
-}
-
-export interface Homepage_communityStyle_location {
+export interface Homepage_fitPics_location {
   __typename: "Location";
+  id: string;
   city: string | null;
   state: string | null;
 }
 
-export interface Homepage_communityStyle_image {
+export interface Homepage_fitPics_image {
   __typename: "Image";
   id: string;
   url: string | null;
 }
 
-export interface Homepage_communityStyle {
-  __typename: "StyleSubmission";
+export interface Homepage_fitPics {
+  __typename: "FitPic";
   id: string;
-  user: Homepage_communityStyle_user;
-  location: Homepage_communityStyle_location | null;
-  image: Homepage_communityStyle_image;
+  author: string;
+  location: Homepage_fitPics_location | null;
+  image: Homepage_fitPics_image;
   createdAt: any;
 }
 
@@ -309,5 +304,5 @@ export interface Homepage {
   archivalProducts: (Homepage_archivalProducts | null)[];
   justAddedTops: (Homepage_justAddedTops | null)[];
   justAddedBottoms: (Homepage_justAddedBottoms | null)[];
-  communityStyle: Homepage_communityStyle[];
+  fitPics: Homepage_fitPics[];
 }

@@ -31,21 +31,15 @@ const ADD_VIEWED_PRODUCT = gql`
   }
 `
 
-interface ProductProps {
-  route: any
-  navigation: any
-}
-
 export const Product = screenTrack({
   entityType: Schema.EntityTypes.Product,
-})((props: ProductProps) => {
+})(({ route, navigation }) => {
   const { authState } = useAuthContext()
   const insets = useSafeArea()
   const flatListRef = useRef(null)
   const [showWantedConfirmation, setShowWantedConfirmation] = useState(false)
   const userHasSession = !!authState?.userSession
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
-  const { navigation, route } = props
   const { showPopUp, hidePopUp } = usePopUpContext()
 
   // If the slug is present, ignore the id. This would happen if a product is passed through a deep link.
@@ -70,6 +64,9 @@ export const Product = screenTrack({
     refetchQueries: [
       {
         query: GET_HOMEPAGE,
+        variables: {
+          firstFitPics: 8,
+        },
       },
     ],
   })

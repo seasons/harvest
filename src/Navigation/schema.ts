@@ -19,7 +19,7 @@ export enum PageNames {
   Home = "Home",
   Brand = "Brand",
   Brands = "Brands",
-  CommunityStyleDetail = "CommunityStyleDetail",
+  FitPicDetail = "FitPicDetail",
 
   // Browse
   Browse = "Browse",

@@ -1,4 +1,4 @@
-import { Handle } from "App/Components"
+import { Handle, Flex, Box } from "App/Components"
 import { NAV_HEIGHT, RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
@@ -7,81 +7,99 @@ import React, { useState, useEffect, useRef, useMemo } from "react"
 import { Dimensions } from "react-native"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
-import { BrandsRail, CommunityStyleCollection, HomeFooter, ProductsRail, TagsRail } from "./"
-import { CommunityStyleCollectionRef } from "./CommunityStyleCollection"
+import { BrandsRail, FitPicCollection, HomeFooter, ProductsRail, TagsRail } from "./"
+import { FitPicCollectionRef } from "./FitPicCollection"
 import { AddPhotoButton } from "./AddPhotoButton"
+import { Spinner } from "App/Components/Spinner"
 
 const dimensions = Dimensions.get("window")
 
-export const HomeBottomSheet = ({ data }) => {
-  const [sections, setSections] = useState([])
+enum SectionType {
+  BlogPosts,
+  Products,
+  Brands,
+  ArchivalProducts,
+  SavedProducts,
+  FitPics,
+}
+
+const sectionsFrom = (data: any) => {
+  const sections = []
+  if (data?.blogPosts) {
+    sections.push({ type: SectionType.BlogPosts, results: data?.blogPosts })
+  }
+  if (data?.justAddedTops?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
+  }
+  if (data?.homepage?.sections?.length) {
+    sections.push(
+      ...data?.homepage?.sections
+        .map((section) => {
+          switch (section.type) {
+            case SectionType.Brands:
+              return section
+            case SectionType.Products:
+              return section
+          }
+        })
+        .filter(Boolean)
+    )
+  }
+  if (data?.me?.savedItems?.length) {
+    const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
+    sections.push({ type: SectionType.SavedProducts, title: "Saved for later", results })
+  }
+  if (data?.archivalProducts?.length) {
+    sections.push({
+      type: SectionType.ArchivalProducts,
+      tagData: {
+        tag: "Vintage",
+        title: "Archives",
+        description:
+          "Great clothes are great clothes and we believe the past still lends itself to dressing for the now. What archive items lack in newness, they make up for by way of history. Through the Seasons archival section, we hope to add unique history and vibrance to our catalog, made possible by yesterday’s clothes.\n\nHere you’ll find garments celebrating historic eras of fashion, music, film, media and beyond. From 80s concert merchandise to early 2000s runway pieces, the archive section encompasses a unique field of textile designs, production styles and comfortable wear that can bring style and biography to any outfit or wardrobe.",
+      },
+      title: "Just added archival",
+      results: data?.archivalProducts,
+    })
+  }
+  if (data?.justAddedBottoms?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
+  }
+  if (data?.fitPics?.length) {
+    sections.push({ type: SectionType.FitPics, results: data?.fitPics })
+  }
+  return sections
+}
+
+interface HomeBottomSheetProps {
+  data: any
+  fetchMoreFitPics: () => void
+  isFetchingMoreFitPics: boolean
+}
+
+export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMoreFitPics, isFetchingMoreFitPics }) => {
+  const [sections, setSections] = useState(sectionsFrom(data))
   const [flatListHeight, setFlatListHeight] = useState(0)
-  const communityStylesRef: React.MutableRefObject<CommunityStyleCollectionRef> = useRef(null)
+  const fitPicCollectionRef: React.MutableRefObject<FitPicCollectionRef> = useRef(null)
   let [addPhotoButtonVisible, setAddPhotoButtonVisible] = useState(false)
   const bottomSheetRef: React.MutableRefObject<ScrollBottomSheet<string>> = useRef(null)
   const navigation = useNavigation()
   const reservationFeedback = data?.reservationFeedback
 
-  useEffect(() => {
-    const sections = []
-    if (data?.blogPosts) {
-      sections.push({ type: "BlogPosts", results: data?.blogPosts })
-    }
-    if (data?.justAddedTops?.length) {
-      sections.push({ type: "Products", results: data?.justAddedTops, title: "Just added tops" })
-    }
-    if (data?.homepage?.sections?.length) {
-      sections.push(
-        ...data?.homepage?.sections
-          .map((section) => {
-            switch (section.type) {
-              case "Brands":
-                return section
-              case "Products":
-                return section
-            }
-          })
-          .filter(Boolean)
-      )
-    }
-    if (data?.me?.savedItems?.length) {
-      const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
-      sections.push({ type: "SavedProducts", title: "Saved for later", results })
-    }
-    if (data?.archivalProducts?.length) {
-      sections.push({
-        type: "ArchivalProducts",
-        tagData: {
-          tag: "Vintage",
-          title: "Archives",
-          description:
-            "Great clothes are great clothes and we believe the past still lends itself to dressing for the now. What archive items lack in newness, they make up for by way of history. Through the Seasons archival section, we hope to add unique history and vibrance to our catalog, made possible by yesterday’s clothes.\n\nHere you’ll find garments celebrating historic eras of fashion, music, film, media and beyond. From 80s concert merchandise to early 2000s runway pieces, the archive section encompasses a unique field of textile designs, production styles and comfortable wear that can bring style and biography to any outfit or wardrobe.",
-        },
-        title: "Just added archival",
-        results: data?.archivalProducts,
-      })
-    }
-    if (data?.justAddedBottoms?.length) {
-      sections.push({ type: "Products", results: data?.justAddedBottoms, title: "Just added bottoms" })
-    }
-    if (data?.communityStyle?.length) {
-      sections.push({ type: "CommunityStyle", results: data?.communityStyle })
-    }
-    setSections(sections)
-  }, [data])
+  useEffect(() => setSections(sectionsFrom(data)), [data])
 
   const blogContentHeight = dimensions.width
   const snapPoint = 20
 
   const renderItem = (item) => {
     switch (item.type) {
-      case "Brands":
+      case SectionType.Brands:
         return <BrandsRail title={item.title} items={item.results} />
-      case "ArchivalProducts":
+      case SectionType.ArchivalProducts:
         return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
-      case "Products":
+      case SectionType.Products:
         return <ProductsRail title={item.title} items={item.results} />
-      case "SavedProducts":
+      case SectionType.SavedProducts:
         return (
           <ProductsRail
             large
@@ -95,14 +113,21 @@ export const HomeBottomSheet = ({ data }) => {
             }}
           />
         )
-      case "CommunityStyle":
+      case SectionType.FitPics:
         return (
-          <CommunityStyleCollection
-            items={item.results}
-            navigation={navigation}
-            parentRef={bottomSheetRef}
-            ref={communityStylesRef}
-          />
+          <Box>
+            <FitPicCollection
+              items={item.results}
+              navigation={navigation}
+              parentRef={bottomSheetRef}
+              ref={fitPicCollectionRef}
+            />
+            {isFetchingMoreFitPics && (
+              <Flex style={{ height: 40 }} flexDirection="row" justifyContent="center">
+                <Spinner />
+              </Flex>
+            )}
+          </Box>
         )
     }
   }
@@ -121,7 +146,7 @@ export const HomeBottomSheet = ({ data }) => {
         renderHandle={() => (
           <Handle style={{ marginTop: space(2), marginBottom: space(1) }} backgroundColor="black10" />
         )}
-        keyExtractor={(item: any, i) => item.type + i}
+        keyExtractor={(item: any, i) => item.type.toString() + i}
         data={sections}
         renderItem={({ item }) => renderItem(item)}
         ListFooterComponent={() => (
@@ -132,9 +157,9 @@ export const HomeBottomSheet = ({ data }) => {
         )}
         onScroll={(event) => {
           const offset = event.nativeEvent.contentOffset.y
-          if (communityStylesRef?.current?.getLayout()) {
-            const { y, height } = communityStylesRef?.current?.getLayout()
-            const minOffset = y - flatListHeight + 150
+          if (fitPicCollectionRef?.current?.getLayout()) {
+            const { y, height } = fitPicCollectionRef?.current?.getLayout()
+            const minOffset = y - flatListHeight + 70
             const maxOffset = y - flatListHeight + height + 50
             const show = minOffset < offset && offset < maxOffset
             if (addPhotoButtonVisible !== show) {
@@ -148,13 +173,16 @@ export const HomeBottomSheet = ({ data }) => {
             setFlatListHeight(e.nativeEvent.layout.height)
           }
         }}
+        onEndReached={() => {
+          fetchMoreFitPics()
+        }}
         ref={bottomSheetRef}
         animationConfig={{
           duration: 200,
         }}
       />
     )
-  }, [sections, flatListHeight])
+  }, [sections, flatListHeight, isFetchingMoreFitPics])
 
   return (
     <>

@@ -7,9 +7,9 @@ import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { Image } from "react-native"
 
-export const NavBar = ({ state, descriptors, navigation, currentScreen }) => {
+export const NavBar = ({ state, navigation, currentScreen }) => {
   const insets = useSafeArea()
-  const hideNav = currentScreen === "Product"
+  const hideNav = ["Product", "FitPicDetail"].includes(currentScreen)
   const buttonHeight = 50
   const trayHeight = buttonHeight + insets.bottom
 

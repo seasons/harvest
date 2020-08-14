@@ -10,9 +10,9 @@ import gql from "graphql-tag"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { ReactNativeFile } from "apollo-upload-client"
 
-const SUBMIT_STYLE = gql`
-  mutation submitCommunityStyle($image: Upload!) {
-    submitStyle(image: $image)
+const SUBMIT_FIT_PIC = gql`
+  mutation SubmitFitPic($image: Upload!) {
+    submitFitPic(image: $image)
   }
 `
 
@@ -27,7 +27,7 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ navigation, visi
   const {
     authState: { isSignedIn },
   } = useAuthContext()
-  const [submitStyle] = useMutation(SUBMIT_STYLE, {
+  const [submitFitPic] = useMutation(SUBMIT_FIT_PIC, {
     onCompleted: () => {
       showPopUp({
         title: "Thanks for your submission",
@@ -64,7 +64,7 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ navigation, visi
     setIsMutating(true)
 
     const file = new ReactNativeFile({ uri, type, name: "" })
-    await submitStyle({
+    await submitFitPic({
       variables: {
         image: file,
       },
@@ -75,7 +75,7 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ navigation, visi
     if (!isSignedIn) {
       showPopUp({
         title: "One sec!",
-        note: "You have to sign in or create an account before you add a Community Style.",
+        note: "You have to sign in or create an account before you add a fit pic.",
         buttonText: "Sign in",
         onClose: () => {
           hidePopUp()
