@@ -195,7 +195,7 @@ export const Browse = screenTrack()((props: any) => {
             keyExtractor={(item, index) => item.id + index}
             renderItem={({ item }, index) => {
               return (
-                <Box key={index}>
+                <Box key={item?.id || index}>
                   {item.id ? (
                     <ProductGridItem showBrandName product={item} addLeftSpacing={index % numColumns !== 0} />
                   ) : (

@@ -61,7 +61,7 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
   const { authState } = useAuthContext()
   const userHasSession = !!authState?.userSession
 
-  if (product?.variants?.length !== 0) {
+  if (product?.variants?.length === 0) {
     return null
   }
 

@@ -8,6 +8,8 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { color } from "App/utils"
 import { Spinner } from "App/Components/Spinner"
+import { GET_BAG } from "../BagQueries"
+import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -127,6 +129,19 @@ export const BagItem: React.FC<BagItemProps> = ({
                       id: variantId,
                       saved: false,
                     },
+                    refetchQueries: [
+                      {
+                        query: GET_BAG,
+                      },
+                      {
+                        query: GET_PRODUCT,
+                        variables: {
+                          where: {
+                            id: product.id,
+                          },
+                        },
+                      },
+                    ],
                   })
                 }
               }}
@@ -157,6 +172,16 @@ export const BagItem: React.FC<BagItemProps> = ({
                       id: variantId,
                       saved: false,
                     },
+                    refetchQueries: [
+                      {
+                        query: GET_PRODUCT,
+                        variables: {
+                          where: {
+                            id: product.id,
+                          },
+                        },
+                      },
+                    ],
                   })
                 }}
               >
