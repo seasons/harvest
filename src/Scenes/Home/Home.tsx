@@ -305,7 +305,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
           // fetched because refetch already made loading true.
           if (totalFitPics > fitPicsReceived && !loading && fitPicsReceived > 0) {
             fetchMore({
-              // const totalFitPics = data?.fitPicsCount?.aggregate?.count ?? 0
               variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
               updateQuery: (prev: { fitPics: Homepage_fitPics[]; fitPicsCount: any }, { fetchMoreResult }) => {
                 if (!prev) {

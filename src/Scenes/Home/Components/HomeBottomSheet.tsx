@@ -187,7 +187,7 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
   return (
     <>
       {content}
-      <AddPhotoButton navigation={navigation} visible={addPhotoButtonVisible} />
+      <AddPhotoButton visible={addPhotoButtonVisible} />
     </>
   )
 }
