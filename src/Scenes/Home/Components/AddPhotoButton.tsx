@@ -9,6 +9,8 @@ import { useMutation } from "react-apollo"
 import gql from "graphql-tag"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { ReactNativeFile } from "apollo-upload-client"
+import { useNavigation } from "@react-navigation/native"
+import { Schema as NavSchema } from "App/Navigation"
 
 const SUBMIT_FIT_PIC = gql`
   mutation SubmitFitPic($image: Upload!) {
@@ -17,12 +19,12 @@ const SUBMIT_FIT_PIC = gql`
 `
 
 export interface AddPhotoButtonProps {
-  navigation: any
   visible: boolean
 }
 
-export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ navigation, visible }) => {
+export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
   const [isMutating, setIsMutating] = useState(false)
+  const navigation = useNavigation()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const {
     authState: { isSignedIn },
@@ -74,12 +76,12 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ navigation, visi
   const onPress = async () => {
     if (!isSignedIn) {
       showPopUp({
-        title: "One sec!",
-        note: "You have to sign in or create an account before you add a fit pic.",
+        title: "Sign in or apply for membership",
+        note: "You must be signed in and have a membership to submit a fit pic.",
         buttonText: "Sign in",
         onClose: () => {
           hidePopUp()
-          navigation.navigate("Account")
+          navigation.navigate(NavSchema.StackNames.AccountStack)
         },
       })
       return
