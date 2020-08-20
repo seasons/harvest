@@ -234,7 +234,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
   )
 })
 
-const ImageContainer = styled(FadeInImage)`
+const ImageContainer = styled(FadeInImage)<{ imageWidth: number; height: number }>`
   background: #f6f6f6;
   height: ${(props) => props.height};
   width: ${(props) => props.imageWidth};

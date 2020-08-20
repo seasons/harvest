@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useTracking, Schema } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { GET_HOMEPAGE } from "App/Scenes/Home/Home"
 
 export const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
@@ -55,6 +56,10 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
       },
       {
         query: GET_BAG,
+      },
+      {
+        query: GET_HOMEPAGE,
+        variables: { firstFitPics: 8, skipFitPics: 0 },
       },
     ],
   })
