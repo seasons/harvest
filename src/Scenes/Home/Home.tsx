@@ -192,12 +192,12 @@ export const GET_HOMEPAGE = gql`
         }
       }
     }
-    fitPicsCount: fitPicsConnection {
+    fitPicsCount: fitPicsConnection(where: { status: Published }) {
       aggregate {
         count
       }
     }
-    fitPics(first: $firstFitPics, skip: $skipFitPics, orderBy: createdAt_DESC) {
+    fitPics(first: $firstFitPics, skip: $skipFitPics, orderBy: createdAt_DESC, where: { status: Published }) {
       id
       author
       location {
@@ -205,7 +205,7 @@ export const GET_HOMEPAGE = gql`
         city
         state
       }
-      image {
+      image(size: Thumb) {
         id
         url
       }
@@ -239,7 +239,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       StatusBar.setBarStyle("light-content")
-      refetch({ firstFitPics: Math.max(8, fitPicsReceived), skipFitPics: 0 })
     })
     return unsubscribe
   }, [navigation])
@@ -247,7 +246,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
       StatusBar.setBarStyle("dark-content")
-      refetch({ firstFitPics: Math.max(8, fitPicsReceived), skipFitPics: 0 })
     })
     return unsubscribe
   }, [navigation])
@@ -291,6 +289,8 @@ export const Home = screenTrack()(({ navigation, route }) => {
     goToReservationFeedbackScreen()
   }
 
+  const isFetchingMoreFitPics = loading && fitPicsReceived < totalFitPics
+
   return !network?.isConnected && !data ? (
     NoInternetComponent
   ) : (
@@ -299,11 +299,9 @@ export const Home = screenTrack()(({ navigation, route }) => {
       <HomeBlogContent items={data?.blogPosts} />
       <HomeBottomSheet
         data={data}
-        isFetchingMoreFitPics={loading && fitPicsReceived < totalFitPics}
+        isFetchingMoreFitPics={isFetchingMoreFitPics}
         fetchMoreFitPics={() => {
-          // Potential bad UX: isFetchingMoreFitPics is true and the spinner shows, but more fit pics aren't
-          // fetched because refetch already made loading true.
-          if (totalFitPics > fitPicsReceived && !loading && fitPicsReceived > 0) {
+          if (!isFetchingMoreFitPics && fitPicsReceived > 0) {
             fetchMore({
               variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
               updateQuery: (prev: { fitPics: Homepage_fitPics[]; fitPicsCount: any }, { fetchMoreResult }) => {
