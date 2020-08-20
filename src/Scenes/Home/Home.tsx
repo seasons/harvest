@@ -205,7 +205,7 @@ export const GET_HOMEPAGE = gql`
         city
         state
       }
-      image(size: Thumb) {
+      image(size: Medium) {
         id
         url
       }
