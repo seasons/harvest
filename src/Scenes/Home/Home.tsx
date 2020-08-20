@@ -254,7 +254,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
     <ErrorScreen
       variant="No Internet"
       refreshAction={() => {
-        refetch({ firstFitPics: Math.max(8, fitPicsReceived), skipFitPics: 0 })
+        refetch()
       }}
     />
   )
