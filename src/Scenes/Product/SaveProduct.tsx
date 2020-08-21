@@ -25,6 +25,7 @@ import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { sizeToName } from "./Components/VariantList"
 import { SAVE_ITEM } from "./Components/SaveProductButton"
 import { useNavigation } from "@react-navigation/native"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 const screenWidth = Dimensions.get("window").width
 
@@ -101,7 +102,11 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
                   </Sans>
                 )}
               </Flex>
-              <ImageContainer height={112} imageWidth={90} source={{ uri: images?.[0]?.url || "" }} />
+              <ImageContainer
+                height={90 * PRODUCT_ASPECT_RATIO}
+                imageWidth={90}
+                source={{ uri: images?.[0]?.url || "" }}
+              />
             </Flex>
             <Spacer mt={20} />
             <Sans size="1" color={color("black50")}>

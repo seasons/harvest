@@ -5,6 +5,7 @@ import { get, head } from "lodash"
 import React from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 interface ReservationItemProps {
   bagItem: any
@@ -57,7 +58,7 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
             {!!imageURL && (
               <FadeInImage
-                style={{ height: sectionHeight, width: 170 }}
+                style={{ height: 170 * PRODUCT_ASPECT_RATIO, width: 170 }}
                 resizeMode="contain"
                 source={{ uri: imageURL }}
               />
