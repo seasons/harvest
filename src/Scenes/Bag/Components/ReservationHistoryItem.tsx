@@ -57,7 +57,7 @@ export const ReservationHistoryItem = ({ item }) => {
   )
 }
 
-const ImageContainer = styled(FadeInImage)`
+const ImageContainer = styled(FadeInImage)<{ imageWidth: number }>`
   background: ${color("black04")};
   height: ${(props) => props.height};
   width: ${(props) => props.imageWidth};

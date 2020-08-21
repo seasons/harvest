@@ -13,6 +13,7 @@ import { GreenCheck } from "Assets/svgs"
 import { Spinner } from "App/Components/Spinner"
 import { Variant } from "App/Scenes/Product/Components/VariantList"
 import * as Sentry from "@sentry/react-native"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 interface BagItemProps {
   bagIsFull: boolean
@@ -183,7 +184,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
               <ImageWrapper>
                 <ImageContainer
                   radius
-                  style={{ height: sectionHeight, width: 170 }}
+                  style={{ height: 170 * PRODUCT_ASPECT_RATIO, width: 170 }}
                   resizeMode="contain"
                   source={{ uri: imageURL }}
                 />

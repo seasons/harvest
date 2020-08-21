@@ -8,6 +8,7 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { color } from "App/utils"
 import { Spinner } from "App/Components/Spinner"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { GET_BAG } from "../BagQueries"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 
@@ -222,7 +223,11 @@ export const BagItem: React.FC<BagItemProps> = ({
             {isReserved ? <ReservedItemContent /> : <NonReservedItemContent />}
             <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
               {!!imageURL && (
-                <ImageContainer style={{ height: 216, width: 170 }} resizeMode="contain" source={{ uri: imageURL }} />
+                <ImageContainer
+                  style={{ height: 170 * PRODUCT_ASPECT_RATIO, width: 170 }}
+                  resizeMode="contain"
+                  source={{ uri: imageURL }}
+                />
               )}
             </Flex>
           </BagItemContainer>
