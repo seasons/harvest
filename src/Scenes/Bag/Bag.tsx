@@ -55,7 +55,6 @@ export const Bag = screenTrack()((props) => {
     }
     const status = data?.me?.customer?.status
     if (!!status && !(status === "Active" || status === "Paused")) {
-      console.log("disabling", status)
       setDisabledTabs(["Bag", "History"])
       setCurrentView(BagView.Saved)
     }

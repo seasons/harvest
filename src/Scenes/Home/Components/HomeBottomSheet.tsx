@@ -15,12 +15,12 @@ import { Spinner } from "App/Components/Spinner"
 const dimensions = Dimensions.get("window")
 
 enum SectionType {
-  BlogPosts,
-  Products,
-  Brands,
-  ArchivalProducts,
-  SavedProducts,
-  FitPics,
+  BlogPosts = "BlogPosts",
+  Products = "Products",
+  Brands = "Brands",
+  ArchivalProducts = "ArchivalProducts",
+  SavedProducts = "SavedProducts",
+  FitPics = "FitPics",
 }
 
 const sectionsFrom = (data: any) => {
