@@ -19,7 +19,10 @@ const ADD_MEASUREMENTS = gql`
     $topSizes: CustomerDetailCreatetopSizesInput
     $waistSizes: CustomerDetailCreatewaistSizesInput
   ) {
-    addCustomerDetails(details: { height: $height, weight: $weight, topSizes: $topSizes, waistSizes: $waistSizes }) {
+    addCustomerDetails(
+      details: { height: $height, weight: $weight, topSizes: $topSizes, waistSizes: $waistSizes }
+      event: CompletedWaitlistForm
+    ) {
       id
     }
   }
