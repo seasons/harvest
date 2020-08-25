@@ -1,11 +1,12 @@
-import { Container, Sans, Spacer, Flex } from "App/Components"
+import { Container, Flex, Sans, Spacer } from "App/Components"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { Schema, useTracking } from "App/utils/track"
+import gql from "graphql-tag"
 import LottieView from "lottie-react-native"
 import React, { useEffect, useState } from "react"
-import * as Sentry from "@sentry/react-native"
-
-import gql from "graphql-tag"
 import { useLazyQuery } from "react-apollo"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+
+import * as Sentry from "@sentry/react-native"
 
 const CHECK_PAYMENT_PROCESSED = gql`
   query checkPaymentProcessed {
@@ -32,6 +33,7 @@ enum CheckStatus {
 }
 
 export const ProcessingPaymentPane: React.FC<ProcessingPaymentPaneProps> = ({ process, onProcessingComplete }) => {
+  const tracking = useTracking()
   const [checkStatus, setCheckStatus] = useState(CheckStatus.Waiting)
 
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -52,6 +54,11 @@ export const ProcessingPaymentPane: React.FC<ProcessingPaymentPaneProps> = ({ pr
         if (customer?.billingInfo) {
           onProcessingComplete()
           // Allow FlatList to transition before hiding spinner
+          tracking.trackEvent({
+            actionName: Schema.ActionNames.SignupCompleted,
+            actionType: Schema.ActionTypes.Success,
+            additionalProperties: customer?.billingInfo,
+          })
           setTimeout(() => {
             setCheckStatus(CheckStatus.Processed)
           }, 3000)

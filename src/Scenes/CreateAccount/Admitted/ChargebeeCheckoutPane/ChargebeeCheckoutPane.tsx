@@ -1,10 +1,10 @@
-import { Container, Sans, Flex, Separator, Spacer, Box } from "App/Components"
-import React, { useState, useEffect } from "react"
-import WebView from "react-native-webview"
+import { Box, Container, Flex, Sans, Separator, Spacer } from "App/Components"
 import { BackArrowIcon } from "Assets/icons"
+import React, { useState } from "react"
 import { TouchableOpacity } from "react-native"
-import { animated, useSpring } from "react-spring"
+import WebView from "react-native-webview"
 import { WebViewProgressEvent } from "react-native-webview/lib/WebViewTypes"
+import { animated, useSpring } from "react-spring"
 
 interface ChargebeeCheckoutPaneProps {
   url?: string
