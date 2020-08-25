@@ -1,10 +1,15 @@
 import { Box, CloseButton } from "App/Components"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { get } from "lodash"
-import React, { useRef, useState, MutableRefObject, useEffect } from "react"
-import { Modal, FlatList, Dimensions } from "react-native"
+import React, { MutableRefObject, useEffect, useRef, useState } from "react"
+import { Dimensions, FlatList, Modal } from "react-native"
 
-import { CreateAccountPane, SendCodePane, VerifyCodePane, GetMeasurementsPane, TriagePane } from "./Undetermined"
-import { ChoosePlanPane, ChargebeeCheckoutPane, ProcessingPaymentPane, WelcomePane } from "./Admitted"
+import {
+  ChargebeeCheckoutPane, ChoosePlanPane, ProcessingPaymentPane, WelcomePane
+} from "./Admitted"
+import {
+  CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane
+} from "./Undetermined"
 import { WaitlistedPane } from "./Waitlisted"
 
 interface CreateAccountProps {
@@ -67,7 +72,8 @@ const statesWithoutCloseButton = [
   State.Welcome,
   State.Waitlisted,
 ]
-export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route }) => {
+export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navigation, route }) => {
+  const tracking = useTracking()
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
   const initialUserState: UserState = get(route?.params, "initialUserState", UserState.Undetermined)
 
@@ -188,7 +194,15 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route 
       />
 
       <Modal visible={currentState === State.Welcome} animated>
-        <WelcomePane onPressGetStarted={() => navigation.goBack()} />
+        <WelcomePane
+          onPressGetStarted={() => {
+            navigation.goBack()
+            tracking.trackEvent({
+              actionName: Schema.ActionNames.SignupStarted,
+              actionType: Schema.ActionTypes.Tap,
+            })
+          }}
+        />
       </Modal>
 
       <Modal visible={currentState === State.Waitlisted} animated>
@@ -196,4 +210,4 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ navigation, route 
       </Modal>
     </>
   )
-}
+})

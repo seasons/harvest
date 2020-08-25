@@ -209,6 +209,9 @@ export enum ActionNames {
 
   TopsTabTapped = "Tops Tab Tapped",
   BottomsTabTapped = "Bottoms Tab Tapped",
+
+  SignupStarted = "Signup Started",
+  SignupCompleted = "Signup Completed",
 }
 
 /**
