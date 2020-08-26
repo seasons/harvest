@@ -74,11 +74,13 @@ export const GET_BAG = gql`
         phase
         updatedAt
         returnedPackage {
+          id
           shippingLabel {
             trackingURL
           }
         }
         sentPackage {
+          id
           shippingLabel {
             trackingURL
           }
