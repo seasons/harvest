@@ -10,12 +10,14 @@ import { GetBagAndSavedItems_me_activeReservation } from "App/generated/GetBagAn
 
 export const DeliveryStatus: React.FC<{
   activeReservation: GetBagAndSavedItems_me_activeReservation
-  trackingURL: string
-}> = ({ activeReservation, trackingURL }) => {
+}> = ({ activeReservation }) => {
   const navigation = useNavigation()
   const status = activeReservation?.status
   const updatedMoreThan24HoursAgo = DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
   const hideComponent = status === "Delivered" && updatedMoreThan24HoursAgo
+
+  const sentPackageTrackingURL = activeReservation?.sentPackage?.shippingLabel?.trackingURL
+  const returnedPackageTrackingURL = activeReservation?.returnedPackage?.shippingLabel?.trackingURL
 
   if (hideComponent) {
     return null
@@ -24,9 +26,12 @@ export const DeliveryStatus: React.FC<{
   let step
   let statusText = ""
   let statusColor = color("lightGreen")
+  let trackingURL
 
   if (activeReservation.phase === "CustomerToBusiness") {
+    // Package is heading back to the warehouse
     statusColor = color("blue100")
+    trackingURL = returnedPackageTrackingURL
     if (status === "Delivered") {
       statusText = "Returned"
       step = 3
@@ -40,6 +45,8 @@ export const DeliveryStatus: React.FC<{
       return null
     }
   } else {
+    // Package is being sent to customer
+    trackingURL = sentPackageTrackingURL
     if (status === "Delivered") {
       statusText = "Delivered"
       step = 3
@@ -76,8 +83,8 @@ export const DeliveryStatus: React.FC<{
           <Spacer mr={1} />
           <Sans size="1">{statusText}</Sans>
         </Flex>
-        <Box>
-          {!!trackingURL && (
+        {!!trackingURL && (
+          <Box>
             <TouchableWithoutFeedback
               onPress={() => {
                 navigation.navigate(Schema.PageNames.Webview, { uri: trackingURL })
@@ -87,8 +94,8 @@ export const DeliveryStatus: React.FC<{
                 Track order
               </Sans>
             </TouchableWithoutFeedback>
-          )}
-        </Box>
+          </Box>
+        )}
       </Flex>
       <Spacer mb={3} />
     </Box>
