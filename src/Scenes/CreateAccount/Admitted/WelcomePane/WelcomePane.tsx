@@ -26,7 +26,7 @@ export const WelcomePane: React.FC<WelcomePaneProps> = ({ onPressGetStarted }) =
       </Box>
       <Box p="2" pb={insets.bottom} style={{ position: "absolute", bottom: 0 }}>
         <Sans color="black50" size="0">
-          Your credit card has been succesfully billed and your membership will automatically renew on June 12.
+          Your credit card has been succesfully billed and your membership will automatically renew.
         </Sans>
         <Spacer mb="3" />
         <Button block onPress={onPressGetStarted} variant="primaryBlack">
