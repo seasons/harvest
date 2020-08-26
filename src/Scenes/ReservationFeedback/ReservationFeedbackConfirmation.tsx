@@ -11,6 +11,7 @@ import { space } from "App/utils"
 import { screenTrack, useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { Container } from "Components/Container"
 import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
+import { GET_HOMEPAGE } from "../Home/Home"
 
 export const ReservationFeedbackConfirmation: React.FC<{
   navigation: any
@@ -20,7 +21,13 @@ export const ReservationFeedbackConfirmation: React.FC<{
   const { showPopUp, hidePopUp } = usePopUpContext()
   const reservationFeedback = route?.params?.reservationFeedback
   const [comment, setComment] = useState(reservationFeedback?.comment)
-  const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK)
+  const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK, {
+    refetchQueries: [
+      {
+        query: GET_HOMEPAGE,
+      },
+    ],
+  })
   const insets = useSafeArea()
   const { width: windowWidth } = Dimensions.get("window")
   const buttonWidth = (windowWidth - 42) / 2
@@ -31,6 +38,7 @@ export const ReservationFeedbackConfirmation: React.FC<{
         id: reservationFeedback?.id,
         input: { comment, respondedAt: new Date() },
       },
+      awaitRefetchQueries: true,
     })
     if (!result?.data) {
       const popUpData = {
