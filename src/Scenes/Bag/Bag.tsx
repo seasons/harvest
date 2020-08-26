@@ -12,9 +12,7 @@ import { assign, fill } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, RefreshControl, StatusBar } from "react-native"
-
 import { useFocusEffect } from "@react-navigation/native"
-
 import { GET_BROWSE_PRODUCTS } from "../Browse/Browse"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
