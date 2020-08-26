@@ -1,15 +1,11 @@
 import { Box, CloseButton } from "App/Components"
-import { Schema, screenTrack, useTracking } from "App/utils/track"
+import { screenTrack, useTracking } from "App/utils/track"
 import { get } from "lodash"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, Modal } from "react-native"
 
-import {
-  ChargebeeCheckoutPane, ChoosePlanPane, ProcessingPaymentPane, WelcomePane
-} from "./Admitted"
-import {
-  CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane
-} from "./Undetermined"
+import { ChargebeeCheckoutPane, ChoosePlanPane, ProcessingPaymentPane, WelcomePane } from "./Admitted"
+import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane } from "./Undetermined"
 import { WaitlistedPane } from "./Waitlisted"
 
 interface CreateAccountProps {
@@ -197,10 +193,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
         <WelcomePane
           onPressGetStarted={() => {
             navigation.goBack()
-            tracking.trackEvent({
-              actionName: Schema.ActionNames.SignupStarted,
-              actionType: Schema.ActionTypes.Tap,
-            })
           }}
         />
       </Modal>

@@ -24,18 +24,20 @@ export const setupApolloClient = async () => {
   })
 
   const authLink = setContext(async (_, { headers }) => {
+    const newHeaders = { ...headers, client: "Harvest" }
+
     // get the authentication token from local storage if it exists
     const accessToken = await getAccessTokenFromSession()
     if (accessToken) {
       return {
         headers: {
-          ...headers,
+          ...newHeaders,
           authorization: accessToken ? `Bearer ${accessToken}` : "",
         },
       }
     } else {
       return {
-        headers,
+        headers: newHeaders,
       }
     }
     // return the headers to the context so createUploadLink can read them
