@@ -210,6 +210,12 @@ export enum ActionNames {
   TopsTabTapped = "Tops Tab Tapped",
   BottomsTabTapped = "Bottoms Tab Tapped",
 
+  // Signup Action names
+  CreateAccountTapped = "Create My Account Tapped",
+  EnterPhoneNumberNextTapped = "Enter Phone Number Next Tapped",
+  EnterPhoneNumberVerificationCodeNextTapped = "Enter Phone Number Verification Code Next Tapped",
+  GetMeasurementsFinishTapped = "Get Measurements Finish Tapped",
+  ChoosePlanTapped = "Choose Plan Tapped",
   SignupStarted = "Signup Started",
   SignupCompleted = "Signup Completed",
 }
