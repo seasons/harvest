@@ -3,8 +3,10 @@ import { color } from "App/utils"
 import { SeasonsLogoSVG } from "Assets/svgs"
 import React from "react"
 import { TouchableOpacity, Linking } from "react-native"
+import { Schema, useTracking } from "App/utils/track"
 
 export const GuestView = ({ navigation }) => {
+  const tracking = useTracking()
   return (
     <Container>
       <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="space-between">
@@ -26,7 +28,13 @@ export const GuestView = ({ navigation }) => {
         <Box px={2}>
           <Button
             block
-            onPress={() => navigation.navigate("Modal", { screen: "CreateAccountModal" })}
+            onPress={() => {
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.CreateAnAccountTapped,
+                actionType: Schema.ActionTypes.Tap,
+              })
+              navigation.navigate("Modal", { screen: "CreateAccountModal" })
+            }}
             variant="primaryBlack"
           >
             Create an account

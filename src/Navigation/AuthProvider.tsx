@@ -101,6 +101,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         await AsyncStorage.removeItem("userSession")
         await AsyncStorage.removeItem("beamsData")
         RNPusherPushNotifications.clearAllState()
+        analytics.reset()
         dispatch({ type: "SIGN_OUT" })
         apolloClient.resetStore()
       },

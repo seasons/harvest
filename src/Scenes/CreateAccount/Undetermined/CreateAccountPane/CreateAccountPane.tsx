@@ -135,7 +135,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
     setIsMutating(true)
 
     tracking.trackEvent({
-      actionName: Schema.ActionNames.CreateAccountTapped,
+      actionName: Schema.ActionNames.CreateMyAccountTapped,
       actionType: Schema.ActionTypes.Tap,
     })
     const result = await signup({
