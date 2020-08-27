@@ -25,7 +25,7 @@ export const setupApolloClient = async () => {
   })
 
   const authLink = setContext(async (_, { headers: oldHeaders }) => {
-    const headers = { ...oldHeaders, application: "Harvest", platform: Platform.OS }
+    const headers = { ...oldHeaders, application: "harvest", platform: Platform.OS }
 
     // get the authentication token from local storage if it exists
     const accessToken = await getAccessTokenFromSession()
