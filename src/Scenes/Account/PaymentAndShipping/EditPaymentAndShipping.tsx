@@ -1,14 +1,13 @@
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
+import stripe from "tipsi-stripe"
 import { Dimensions } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, Radio, Sans, Spacer, TextInput } from "App/Components"
-import { Loader } from "App/Components/Loader"
 import styled from "styled-components/native"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
-import { chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage } from "src/generated/chargebeeUpdatePaymentPage"
 import {
   GetUserPaymentData_me_customer_billingInfo,
   GetUserPaymentData_me_customer_detail_shippingAddress,
@@ -17,20 +16,25 @@ import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { space } from "App/utils"
 import * as Sentry from "@sentry/react-native"
 
-export const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
-  query chargebeeUpdatePaymentPage {
-    chargebeeUpdatePaymentPage {
-      created_at
-      embed
-      expires_at
-      id
-      object
-      resource_version
-      state
-      type
-      updated_at
-      url
+export const GET_CURRENT_PLAN = gql`
+  query GetCurrentPlan {
+    me {
+      customer {
+        id
+        paymentPlan {
+          id
+          planID
+          price
+          name
+        }
+      }
     }
+  }
+`
+
+const PAYMENT_UPDATE = gql`
+  mutation applePayUpdatePaymentMethod($planID: String!, $token: StripeToken!) {
+    applePayUpdatePaymentMethod(planID: $planID, token: $token)
   }
 `
 
@@ -58,6 +62,7 @@ export const EditPaymentAndShipping: React.FC<{
   route: any
 }> = ({ navigation, route }) => {
   const { showPopUp, hidePopUp } = usePopUpContext()
+  const { data } = useQuery(GET_CURRENT_PLAN)
   const billingInfo: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
   const currentPhoneNumber = route?.params?.phoneNumber
@@ -80,6 +85,24 @@ export const EditPaymentAndShipping: React.FC<{
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState(currentPhoneNumber)
 
+  const [applePayUpdatePayment] = useMutation(PAYMENT_UPDATE, {
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: (err) => {
+      console.log("Error ChoosePlanPane.tsx", err)
+      Sentry.captureException(JSON.stringify(err))
+      const popUpData = {
+        title: "Oops! Try again!",
+        note: "There was an issue updating your payment method. Please retry or contact us.",
+        buttonText: "Close",
+        onClose: hidePopUp,
+      }
+      showPopUp(popUpData)
+      setIsMutating(false)
+    },
+  })
+
   const [updatePaymentAndShipping] = useMutation(UPDATE_PAYMENT_AND_SHIPPING, {
     onError: (error) => {
       let popUpData = {
@@ -93,21 +116,6 @@ export const EditPaymentAndShipping: React.FC<{
       console.log("Error EditView.tsx: ", error)
     },
   })
-
-  const { data, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE)
-
-  if (!data || error) {
-    if (error) console.error("error EditPaymentAndShipping.tsx: ", error)
-    return (
-      <>
-        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-        <Loader />
-      </>
-    )
-  }
-
-  const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage =
-    data?.chargebeeUpdatePaymentPage
 
   const {
     address1: shippingAddress1,
@@ -124,6 +132,8 @@ export const EditPaymentAndShipping: React.FC<{
     state: billingState,
     zipCode: billingZipCode,
   } = billingAddress
+
+  const paymentPlan = data?.me?.customer?.paymentPlan
 
   const handleSameAsDeliveryAddress = () => {
     if (sameAsDeliveryRadioSelected) {
@@ -178,12 +188,42 @@ export const EditPaymentAndShipping: React.FC<{
     }
   }
 
-  const handleEditBillingInfoBtnPressed = () => {
-    if (chargebeeUpdatePaymentHostedPage?.url) {
-      navigation.navigate("Webview", {
-        uri: chargebeeUpdatePaymentHostedPage?.url,
-        variant: "whiteBackground",
-      })
+  const handleEditBillingInfoBtnPressed = async () => {
+    const applePaySupportedOnDevice = await stripe.deviceSupportsApplePay()
+    if (applePaySupportedOnDevice) {
+      const canMakeApplePayment = await stripe.canMakeApplePayPayments()
+      if (canMakeApplePayment) {
+        // Customer has a payment card set up
+        try {
+          const token = await stripe.paymentRequestWithNativePay(
+            {
+              requiredBillingAddressFields: ["all"],
+            },
+            [
+              {
+                label: `${paymentPlan.name} plan`,
+                amount: `${paymentPlan.price / 100}.00`,
+              },
+            ]
+          )
+          applePayUpdatePayment({
+            variables: {
+              planID: paymentPlan.planID,
+              token: token,
+            },
+          })
+          // You should complete the operation by calling
+          stripe.completeApplePayRequest()
+        } catch (error) {
+          console.log("error", error)
+          stripe.cancelApplePayRequest()
+          setIsMutating(false)
+        }
+      } else {
+        // Customer hasn't set up apple pay on this device so we request payment setup
+        stripe.openApplePaySetup()
+        setIsMutating(false)
+      }
     }
   }
 
@@ -252,7 +292,7 @@ export const EditPaymentAndShipping: React.FC<{
               borderRadius={4}
               selected={sameAsDeliveryRadioSelected}
               onSelect={handleSameAsDeliveryAddress}
-              label="Same as Delivery Address"
+              label="Same as delivery address"
               labelSize="1"
             />
             <Spacer mb={2} />
@@ -310,9 +350,11 @@ export const EditPaymentAndShipping: React.FC<{
       case EDIT_BILLING_INFO:
         return (
           <Flex flexDirection="row" justifyContent="space-between">
-            <Button variant="primaryWhite" size="large" width="100%" onPress={handleEditBillingInfoBtnPressed}>
-              Edit payment method
-            </Button>
+            {paymentPlan && (
+              <Button variant="primaryWhite" size="large" width="100%" onPress={handleEditBillingInfoBtnPressed}>
+                Edit payment method
+              </Button>
+            )}
           </Flex>
         )
       default:

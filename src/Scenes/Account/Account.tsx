@@ -130,7 +130,7 @@ export const Account = screenTrack()(({ navigation }) => {
       tracking: Schema.ActionNames.PersonalPreferencesTapped,
     },
     {
-      title: "Payments & shipping",
+      title: "Payment & shipping",
       icon: <PaymentShippingIcon />,
       onPress: () => navigation.navigate("PaymentAndShipping"),
       tracking: Schema.ActionNames.PaymentAndShippingTapped,
