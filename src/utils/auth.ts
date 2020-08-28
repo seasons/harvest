@@ -16,6 +16,7 @@ export interface UserSession {
   refreshToken: string
   user?: {
     email: string
+    id: string
   }
 }
 

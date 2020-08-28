@@ -1,5 +1,5 @@
 import { Box, CloseButton } from "App/Components"
-import { Schema, screenTrack, useTracking } from "App/utils/track"
+import { screenTrack } from "App/utils/track"
 import { get } from "lodash"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, Modal } from "react-native"
@@ -76,7 +76,6 @@ const sliceArray: <T>(array: T[], afterValue: T) => T[] = (array, afterValue) =>
 const statesWithoutCloseButton = [State.Triage, State.Welcome, State.Waitlisted]
 export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navigation, route }) => {
   const { data } = useQuery(GET_PLANS)
-  const tracking = useTracking()
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
   const initialUserState: UserState = get(route?.params, "initialUserState", UserState.Undetermined)
 
@@ -180,10 +179,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
         <WelcomePane
           onPressGetStarted={() => {
             navigation.goBack()
-            tracking.trackEvent({
-              actionName: Schema.ActionNames.SignupStarted,
-              actionType: Schema.ActionTypes.Tap,
-            })
           }}
         />
       </Modal>

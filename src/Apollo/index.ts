@@ -9,6 +9,7 @@ import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { config, Env } from "App/utils/config"
 import * as Sentry from "@sentry/react-native"
 import { createUploadLink } from "apollo-upload-client"
+import { Platform } from "react-native"
 
 export const setupApolloClient = async () => {
   const fragmentMatcher = new IntrospectionFragmentMatcher({
@@ -23,7 +24,9 @@ export const setupApolloClient = async () => {
     fetch: unfetch,
   })
 
-  const authLink = setContext(async (_, { headers }) => {
+  const authLink = setContext(async (_, { headers: oldHeaders }) => {
+    const headers = { ...oldHeaders, application: "harvest", platform: Platform.OS }
+
     // get the authentication token from local storage if it exists
     const accessToken = await getAccessTokenFromSession()
     if (accessToken) {

@@ -71,7 +71,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
           if (userSession && userSession.token) {
             const user = userSession?.user
             if (user) {
-              analytics.identify(user.email, user)
+              analytics.identify(user.id, user)
             }
             dispatch({ type: "RESTORE_TOKEN", token: userSession.token })
           }
@@ -93,7 +93,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         dispatch({ type: "SIGN_IN", token: session.token })
         const user = session?.user
         if (user) {
-          analytics.identify(user.email, user)
+          analytics.identify(user.id, user)
         }
         apolloClient.resetStore()
       },
@@ -101,6 +101,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         await AsyncStorage.removeItem("userSession")
         await AsyncStorage.removeItem("beamsData")
         RNPusherPushNotifications.clearAllState()
+        analytics.reset()
         dispatch({ type: "SIGN_OUT" })
         apolloClient.resetStore()
       },

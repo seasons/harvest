@@ -11,6 +11,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { useTracking, Schema } from "App/utils/track"
 
 const ADD_MEASUREMENTS = gql`
   mutation addMeasurements(
@@ -47,6 +48,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
   onRequestBack,
   useEditingLayout = false,
 }) => {
+  const tracking = useTracking()
+
   const [height, setHeight] = useState(initialMeasurements?.height)
   const [weight, setWeight] = useState(initialMeasurements?.weight)
   const [topSizeIndices, setTopSizeIndices] = useState(initialMeasurements?.topSizeIndices || Array<number>())
@@ -79,6 +82,13 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
   const submitMeasurements = async () => {
     if (isMutating) {
       return
+    }
+
+    if (!useEditingLayout) {
+      tracking.trackEvent({
+        actionName: Schema.ActionNames.GetMeasurementsFinishTapped,
+        actionType: Schema.ActionTypes.Tap,
+      })
     }
 
     setIsMutating(true)

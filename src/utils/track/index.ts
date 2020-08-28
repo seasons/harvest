@@ -4,6 +4,7 @@ import analytics from "@segment/analytics-react-native"
 import { PageViewEvent } from "./schema"
 import * as Schema from "./schema"
 export { Schema }
+import { Platform } from "react-native"
 
 /**
  * Useful notes:
@@ -85,13 +86,14 @@ export function screenTrack<P>(trackingInfo?: TrackingInfo<PageViewEvent, P, nul
 
   return _track(decorateTracking as any, {
     dispatch: (data) => {
+      const newData = { ...data, platform: Platform.OS, application: "harvest" } as any
       if (__DEV__) {
-        console.log("[Event tracked]", JSON.stringify(data, null, 2))
+        console.log("[Event tracked]", JSON.stringify(newData, null, 2))
       }
-      if (data.actionName) {
-        return analytics.track(data.page, data)
+      if (newData.actionName) {
+        return analytics.track(newData.page, newData)
       } else {
-        return analytics.screen(data.page, data)
+        return analytics.screen(newData.page, newData)
       }
     },
     dispatchOnMount: true,

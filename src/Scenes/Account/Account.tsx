@@ -1,6 +1,6 @@
 import { Box, Button, Container, GuestView, Sans, Separator, Skeleton, Spacer, Flex } from "App/Components"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { screenTrack, Schema } from "App/utils/track"
+import { screenTrack, Schema, useTracking } from "App/utils/track"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
@@ -59,6 +59,8 @@ export const GET_USER = gql`
 `
 
 export const Account = screenTrack()(({ navigation }) => {
+  const tracking = useTracking()
+
   const { authState, signOut } = useAuthContext()
   const { data, refetch } = useQuery(GET_USER)
 
@@ -219,12 +221,16 @@ export const Account = screenTrack()(({ navigation }) => {
             <Button
               block
               variant="primaryWhite"
-              onPress={() =>
+              onPress={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.ChoosePlanTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                })
                 navigation.navigate("Modal", {
                   screen: "CreateAccountModal",
                   params: { initialState: State.ChoosePlan, initialUserState: UserState.Admitted },
                 })
-              }
+              }}
             >
               Choose plan
             </Button>

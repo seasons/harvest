@@ -13,6 +13,7 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import { useTracking, Schema } from "App/utils/track"
 
 const SIGN_UP = gql`
   mutation SignUp($email: String!, $password: String!, $firstName: String!, $lastName: String!, $zipCode: String!) {
@@ -43,6 +44,8 @@ interface CreateAccountPaneProps {
 }
 
 export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }) => {
+  const tracking = useTracking()
+
   // Hooks
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -125,13 +128,16 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
 
   const handleSignup = async () => {
     Keyboard.dismiss()
-
     if (isMutating) {
       return
     }
 
     setIsMutating(true)
 
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.CreateMyAccountTapped,
+      actionType: Schema.ActionTypes.Tap,
+    })
     const result = await signup({
       variables: {
         email,

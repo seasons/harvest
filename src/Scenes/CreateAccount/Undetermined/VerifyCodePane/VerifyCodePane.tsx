@@ -11,6 +11,7 @@ import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { START_VERIFICATION } from "../SendCodePane/"
 import { TextInputRef } from "App/Components/TextInput"
+import { useTracking, Schema } from "App/utils/track"
 
 const CHECK_VERIFICATION = gql`
   mutation checkSMSVerification($code: String!) {
@@ -29,6 +30,7 @@ interface VerifyCodePaneProps {
 }
 
 export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ focus, onVerifyPhone, onRequestBack, phoneNumber }) => {
+  const tracking = useTracking()
   const [code, setCode] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
   const insets = useSafeArea()
@@ -128,6 +130,10 @@ export const VerifyCodePane: React.FC<VerifyCodePaneProps> = ({ focus, onVerifyP
     }
 
     setIsMutating(true)
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.EnterPhoneNumberVerificationCodeNextTapped,
+      actionType: Schema.ActionTypes.Tap,
+    })
     const result = await checkVerification({
       variables: {
         code: code.replace("-", ""),
