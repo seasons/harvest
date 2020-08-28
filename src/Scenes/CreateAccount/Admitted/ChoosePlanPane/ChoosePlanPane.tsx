@@ -17,12 +17,11 @@ const PAYMENT_CHECKOUT = gql`
 `
 
 interface ChoosePlanPaneProps {
-  setIndex: (index: number) => void
+  setNextState: () => void
   plans: any
-  paneIndex: number
 }
 
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, paneIndex, setIndex }) => {
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextState }) => {
   const [footerBoxHeight, setFooterBoxHeight] = useState(0)
   const [selectedPlan, setSelectedPlan] = useState(null)
   const insets = useSafeArea()
@@ -32,14 +31,14 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, paneIndex
   const [applePayCheckout] = useMutation(PAYMENT_CHECKOUT, {
     onCompleted: () => {
       setIsMutating(false)
-      setIndex(paneIndex + 1)
+      setNextState()
     },
     onError: (err) => {
       console.log("Error ChoosePlanPane.tsx", err)
       Sentry.captureException(err)
       const popUpData = {
         title: "Oops! Try again!",
-        note: "There was an issue choosing your plan. Please retry.",
+        note: "There was an issue processing your payment. Please retry or contact us.",
         buttonText: "Close",
         onClose: hidePopUp,
       }
@@ -48,7 +47,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, paneIndex
     },
   })
 
-  const _onChoosePlan = async () => {
+  const onChoosePlan = async () => {
     if (isMutating) {
       return
     }
@@ -125,7 +124,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, paneIndex
       </Box>
       <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
         <Box p={2} onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height)}>
-          <Button block disabled={!selectedPlan} loading={isMutating} onPress={_onChoosePlan} variant="primaryBlack">
+          <Button block disabled={!selectedPlan} loading={isMutating} onPress={onChoosePlan} variant="primaryBlack">
             Choose plan
           </Button>
           <Box style={{ height: insets.bottom }} />

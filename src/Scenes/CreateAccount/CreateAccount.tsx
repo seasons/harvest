@@ -4,7 +4,7 @@ import { get } from "lodash"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, Modal } from "react-native"
 import gql from "graphql-tag"
-import { ChargebeeCheckoutPane, ChoosePlanPane, ProcessingPaymentPane, WelcomePane } from "./Admitted"
+import { ChoosePlanPane, WelcomePane } from "./Admitted"
 import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane } from "./Undetermined"
 import { WaitlistedPane } from "./Waitlisted"
 import { useQuery } from "react-apollo"
@@ -31,8 +31,6 @@ export enum State {
   Triage,
 
   ChoosePlan,
-  Checkout,
-  ProcessingPayment,
   Welcome,
 
   Waitlisted,
@@ -59,7 +57,7 @@ const statesFor = (userState: UserState): State[] => {
     case UserState.Undetermined:
       return commonStates
     case UserState.Admitted:
-      return commonStates.concat([State.ChoosePlan, State.Checkout, State.ProcessingPayment, State.Welcome])
+      return commonStates.concat([State.ChoosePlan, State.Welcome])
     case UserState.Waitlisted:
       return commonStates.concat([State.Waitlisted])
   }
@@ -75,16 +73,9 @@ const sliceArray: <T>(array: T[], afterValue: T) => T[] = (array, afterValue) =>
 }
 
 // States in which to hide the close button
-const statesWithoutCloseButton = [
-  State.Triage,
-  State.Checkout,
-  State.ProcessingPayment,
-  State.Welcome,
-  State.Waitlisted,
-]
+const statesWithoutCloseButton = [State.Triage, State.Welcome, State.Waitlisted]
 export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navigation, route }) => {
   const { data } = useQuery(GET_PLANS)
-  console.log("data", data)
   const tracking = useTracking()
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
   const initialUserState: UserState = get(route?.params, "initialUserState", UserState.Undetermined)
@@ -104,13 +95,13 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   useEffect(() => flatListRef?.current?.scrollToIndex?.({ index: Math.min(index, maxScrollableIndex) }), [index])
 
   const [phoneNumber, setPhoneNumber] = useState(null as string)
-  const [checkoutUrl, setCheckoutUrl] = useState(null as string)
 
   const setPrevState = () => setIndex(Math.max(0, index - 1))
   const setNextState = () => setIndex(index + 1)
 
   const paneForState = (state: State) => {
     let pane
+    console.log("state", state)
     switch (state) {
       case State.CreateAccount:
         pane = <CreateAccountPane onSignUp={setNextState} />
@@ -151,30 +142,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
         )
         break
       case State.ChoosePlan:
-        pane = (
-          <ChoosePlanPane
-            plans={data?.paymentPlans}
-            paneIndex={index}
-            setIndex={setIndex}
-            onChargebeeChoosePlan={(checkoutUrl) => {
-              setCheckoutUrl(checkoutUrl)
-              setNextState()
-            }}
-          />
-        )
-        break
-      case State.ProcessingPayment:
-        pane = (
-          <ProcessingPaymentPane
-            onProcessingComplete={setNextState}
-            process={currentState === State.ProcessingPayment}
-          />
-        )
-        break
-      case State.Checkout:
-        pane = (
-          <ChargebeeCheckoutPane url={checkoutUrl} onFinishedCheckout={setNextState} onRequestBack={setPrevState} />
-        )
+        pane = <ChoosePlanPane plans={data?.paymentPlans} setNextState={setNextState} />
         break
     }
     return (
