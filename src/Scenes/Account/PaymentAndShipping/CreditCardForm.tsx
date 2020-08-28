@@ -88,18 +88,6 @@ export class CreditCardForm extends Component<CreditCardFormProps, CreditCardFor
       </Box>
     )
 
-    // const styles = StyleSheet.create({
-    //   field: {
-    //     fontFamily: Fonts.GaramondRegular,
-    //     height: 40,
-    //     fontSize: theme.fontSizes[3],
-    //     width: "100%",
-    //     borderColor: this.state.isError ? theme.colors.red100 : theme.colors.purple100,
-    //     borderWidth: 1,
-    //     borderRadius: 0,
-    //   },
-    // })
-
     const errorText = "There was an error. Please try again."
 
     return (

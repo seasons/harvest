@@ -5,48 +5,34 @@ import React, { useState } from "react"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import * as Sentry from "@sentry/react-native"
-
 import gql from "graphql-tag"
-import { useLazyQuery } from "react-apollo"
+import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import stripe from "tipsi-stripe"
 
-const CHARGEBEE_CHECKOUT = gql`
-  query chargebeeCheckout($planID: PlanID!) {
-    hostedChargebeeCheckout(planID: $planID) {
-      id
-      type
-      url
-      state
-      embed
-      created_at
-      expires_at
-    }
+const PAYMENT_CHECKOUT = gql`
+  mutation applePayCheckout($planID: String!, $token: StripeToken!) {
+    applePayCheckout(planID: $planID, token: $token)
   }
 `
 
 interface ChoosePlanPaneProps {
-  onChoosePlan: (checkoutUrl: string) => void
+  setIndex: (index: number) => void
+  plans: any
+  paneIndex: number
 }
 
-export enum Plan {
-  Essential = "Essential",
-  AllAccess = "AllAccess",
-  None = "None",
-}
-
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) => {
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, paneIndex, setIndex }) => {
   const [footerBoxHeight, setFooterBoxHeight] = useState(0)
-  const [selectedPlan, setSelectedPlan] = useState(Plan.None)
+  const [selectedPlan, setSelectedPlan] = useState(null)
   const insets = useSafeArea()
 
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
-  const [runQuery, { data }] = useLazyQuery(CHARGEBEE_CHECKOUT, {
+  const [applePayCheckout] = useMutation(PAYMENT_CHECKOUT, {
     onCompleted: () => {
       setIsMutating(false)
-      if (data) {
-        onChoosePlan(data.hostedChargebeeCheckout.url)
-      }
+      setIndex(paneIndex + 1)
     },
     onError: (err) => {
       console.log("Error ChoosePlanPane.tsx", err)
@@ -68,11 +54,43 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
     }
 
     setIsMutating(true)
-    runQuery({
-      variables: {
-        planID: selectedPlan,
-      },
-    })
+
+    const applePaySupportedOnDevice = await stripe.deviceSupportsApplePay()
+    if (applePaySupportedOnDevice) {
+      const canMakeApplePayment = await stripe.canMakeApplePayPayments()
+      if (canMakeApplePayment) {
+        // Customer has a payment card set up
+        try {
+          const token = await stripe.paymentRequestWithNativePay(
+            {
+              requiredBillingAddressFields: ["all"],
+            },
+            [
+              {
+                label: `${selectedPlan.name} plan`,
+                amount: `${selectedPlan.price / 100}.00`,
+              },
+            ]
+          )
+          applePayCheckout({
+            variables: {
+              planID: selectedPlan.planID,
+              token: token,
+            },
+          })
+          // You should complete the operation by calling
+          stripe.completeApplePayRequest()
+        } catch (error) {
+          console.log("error", error)
+          stripe.cancelApplePayRequest()
+          setIsMutating(false)
+        }
+      } else {
+        // Customer hasn't set up apple pay on this device so we request payment setup
+        stripe.openApplePaySetup()
+        setIsMutating(false)
+      }
+    }
   }
 
   return (
@@ -90,40 +108,24 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onChoosePlan }) 
             <Sans color="black50" size="1">
               Don't worry, you can change your plan from your profile settings at any time.
             </Sans>
-
             <Spacer mb={2} />
           </Box>
-          <PlanTile
-            description="A monthly wardrobe refresh to make getting dressed more exciting. The must have."
-            inputKey={Plan.Essential}
-            price={125}
-            shouldSelect={setSelectedPlan}
-            selected={selectedPlan == Plan.Essential}
-            subtitle="1 swap, 3 items per month"
-            title="Essential"
-          />
-          <PlanTile
-            description="Experience that new-clothes feeling every week."
-            inputKey={Plan.AllAccess}
-            price={175}
-            shouldSelect={setSelectedPlan}
-            selected={selectedPlan == Plan.AllAccess}
-            subtitle="Unlimited swaps, 3 items at a time"
-            title="All Access"
-          />
-
+          {plans?.map((plan) => {
+            return (
+              <PlanTile
+                plan={plan}
+                key={plan.id}
+                shouldSelect={setSelectedPlan}
+                selected={selectedPlan?.id === plan.id}
+              />
+            )
+          })}
           <Box height={footerBoxHeight} />
         </ScrollView>
       </Box>
       <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
         <Box p={2} onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height)}>
-          <Button
-            block
-            disabled={selectedPlan === Plan.None}
-            loading={isMutating}
-            onPress={_onChoosePlan}
-            variant="primaryBlack"
-          >
+          <Button block disabled={!selectedPlan} loading={isMutating} onPress={_onChoosePlan} variant="primaryBlack">
             Choose plan
           </Button>
           <Box style={{ height: insets.bottom }} />

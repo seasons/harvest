@@ -102,6 +102,17 @@ export interface GetBagAndSavedItems_me_customer {
   reservations: GetBagAndSavedItems_me_customer_reservations[] | null;
 }
 
+export interface GetBagAndSavedItems_me_activeReservation_returnedPackage_shippingLabel {
+  __typename: "Label";
+  trackingURL: string | null;
+}
+
+export interface GetBagAndSavedItems_me_activeReservation_returnedPackage {
+  __typename: "Package";
+  id: string;
+  shippingLabel: GetBagAndSavedItems_me_activeReservation_returnedPackage_shippingLabel;
+}
+
 export interface GetBagAndSavedItems_me_activeReservation_sentPackage_shippingLabel {
   __typename: "Label";
   trackingURL: string | null;
@@ -109,6 +120,7 @@ export interface GetBagAndSavedItems_me_activeReservation_sentPackage_shippingLa
 
 export interface GetBagAndSavedItems_me_activeReservation_sentPackage {
   __typename: "Package";
+  id: string;
   shippingLabel: GetBagAndSavedItems_me_activeReservation_sentPackage_shippingLabel;
 }
 
@@ -121,6 +133,7 @@ export interface GetBagAndSavedItems_me_activeReservation {
   status: ReservationStatus;
   phase: ReservationPhase;
   updatedAt: any;
+  returnedPackage: GetBagAndSavedItems_me_activeReservation_returnedPackage | null;
   sentPackage: GetBagAndSavedItems_me_activeReservation_sentPackage | null;
 }
 

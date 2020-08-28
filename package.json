@@ -87,7 +87,7 @@
     "reanimated-bottom-sheet": "^1.0.0-alpha.20",
     "styled-components": "^4.3.2",
     "styled-system": "^5.1.1",
-    "tipsi-stripe": "^7.5.1",
+    "tipsi-stripe": "^7.5.3",
     "unfetch": "^4.1.0"
   },
   "devDependencies": {

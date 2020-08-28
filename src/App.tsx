@@ -10,6 +10,7 @@ import * as Sentry from "@sentry/react-native"
 import DeviceInfo from "react-native-device-info"
 import AsyncStorage from "@react-native-community/async-storage"
 import { Platform } from "react-native"
+import stripe from "tipsi-stripe"
 
 enableScreens()
 
@@ -28,6 +29,11 @@ export const App = () => {
       }
     }
     loadClient()
+
+    stripe.setOptions({
+      publishableKey: config.get(Env.STRIPE_KEY),
+      merchantId: config.get(Env.APPLE_MERCHANT_ID),
+    })
   }, [])
 
   const checkApolloBuildCache = async () => {

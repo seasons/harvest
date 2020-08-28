@@ -4,51 +4,39 @@ import { color } from "App/utils/color"
 import React from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
-import { Plan } from "./ChoosePlanPane"
 
 interface PlanTileProps {
-  description: string
-  inputKey: Plan
-  price: number
-  shouldSelect: (key: Plan) => void
+  shouldSelect: (plan: any) => void
   selected: boolean
-  subtitle: string
-  title: string
+  plan: any
 }
 
-export const PlanTile: React.FC<PlanTileProps> = ({
-  description,
-  inputKey,
-  price,
-  shouldSelect,
-  selected,
-  subtitle,
-  title,
-}) => {
+export const PlanTile: React.FC<PlanTileProps> = ({ shouldSelect, selected, plan }) => {
+  const { description, price, tagline, name } = plan
   const strokeColor = selected ? color("black100") : color("black10")
 
   return (
-    <TouchableOpacity onPress={() => shouldSelect(inputKey)}>
+    <TouchableOpacity onPress={() => shouldSelect(plan)}>
       <StyledBox style={{ borderColor: strokeColor }}>
         <Flex p={2} flexDirection="row" justifyContent="space-between">
           <Sans color="black100" size="1">
-            {title}
+            {name}
           </Sans>
-          <Radio width={24} height={24} selected={selected} onSelect={() => shouldSelect(inputKey)}>
+          <Radio width={24} height={24} selected={selected} onSelect={() => shouldSelect(plan)}>
             <GreenCheck width={24} height={24} strokeWidth={4} />
           </Radio>
         </Flex>
         <Separator color={strokeColor} />
         <Box p={2}>
           <Sans color="black100" size="3">
-            ${price}
+            ${price / 100}
           </Sans>
           <Sans color="black50" size="1">
             per \ month
           </Sans>
           <Spacer mb={3} />
           <Sans color="black100" size="1">
-            {subtitle}
+            {tagline}
           </Sans>
           <Sans color="black50" size="1">
             {description}

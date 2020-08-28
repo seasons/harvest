@@ -370,6 +370,10 @@ PODS:
   - Sentry (4.4.3):
     - Sentry/Core (= 4.4.3)
   - Sentry/Core (4.4.3)
+  - Stripe (14.0.1)
+  - tipsi-stripe (7.5.3):
+    - React
+    - Stripe (~> 14.0.1)
   - UMAppLoader (1.2.0)
   - UMBarCodeScannerInterface (5.2.1)
   - UMCameraInterface (5.2.1)
@@ -456,6 +460,7 @@ DEPENDENCIES:
   - RNShare (from `../node_modules/react-native-share`)
   - RNSharedElement (from `../node_modules/react-native-shared-element`)
   - RNSVG (from `../node_modules/react-native-svg`)
+  - tipsi-stripe (from `../node_modules/tipsi-stripe`)
   - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
   - UMBarCodeScannerInterface (from `../node_modules/expo/node_modules/unimodules-barcode-scanner-interface/ios`)
   - UMCameraInterface (from `../node_modules/expo/node_modules/unimodules-camera-interface/ios`)
@@ -485,6 +490,7 @@ SPEC REPOS:
     - Segment-GoogleAnalytics
     - Segment-Mixpanel
     - Sentry
+    - Stripe
 
 EXTERNAL SOURCES:
   A0Auth0:
@@ -624,6 +630,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-shared-element"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  tipsi-stripe:
+    :path: "../node_modules/tipsi-stripe"
   UMAppLoader:
     :path: !ruby/object:Pathname
     path: "../node_modules/unimodules-app-loader/ios"
@@ -742,6 +750,8 @@ SPEC CHECKSUMS:
   Segment-GoogleAnalytics: 227a9a25c62f11853bd4e4b5f31c3cf28ed06f95
   Segment-Mixpanel: b5d949a7eda1018a8d5afbb2cfcb59c870ecce34
   Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390
+  Stripe: 4305b646743612854819fb5d5cf67aaeb93577c0
+  tipsi-stripe: fb5b32e890a4528322c491e1827133a3cb919e0a
   UMAppLoader: 61049c8d55590b74e9ae1d5429bf68d96b4a2528
   UMBarCodeScannerInterface: e5e4c87797d3d01214e25cd1618866caf5d4f17f
   UMCameraInterface: 415ac060034edecacdbbaa739c223e3f276e0056
@@ -757,6 +767,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 80653f25c55d9e6d79d6a0a65589fa213feaee11
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
 
-PODFILE CHECKSUM: 9675ad738bbadfe6c37cee53715921e0a7158efc
+PODFILE CHECKSUM: a8ed45fed4de380bb60c8a103f180fc682597174
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.9.1

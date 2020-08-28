@@ -3,14 +3,11 @@ import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { get } from "lodash"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, Modal } from "react-native"
-
-import {
-  ChargebeeCheckoutPane, ChoosePlanPane, ProcessingPaymentPane, WelcomePane
-} from "./Admitted"
-import {
-  CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane
-} from "./Undetermined"
+import gql from "graphql-tag"
+import { ChargebeeCheckoutPane, ChoosePlanPane, ProcessingPaymentPane, WelcomePane } from "./Admitted"
+import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane } from "./Undetermined"
 import { WaitlistedPane } from "./Waitlisted"
+import { useQuery } from "react-apollo"
 
 interface CreateAccountProps {
   navigation: any
@@ -40,6 +37,19 @@ export enum State {
 
   Waitlisted,
 }
+
+export const GET_PLANS = gql`
+  query GetPlans {
+    paymentPlans {
+      id
+      name
+      description
+      tagline
+      price
+      planID
+    }
+  }
+`
 
 const { width: windowWidth } = Dimensions.get("window")
 
@@ -73,6 +83,8 @@ const statesWithoutCloseButton = [
   State.Waitlisted,
 ]
 export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navigation, route }) => {
+  const { data } = useQuery(GET_PLANS)
+  console.log("data", data)
   const tracking = useTracking()
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
   const initialUserState: UserState = get(route?.params, "initialUserState", UserState.Undetermined)
@@ -141,7 +153,10 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       case State.ChoosePlan:
         pane = (
           <ChoosePlanPane
-            onChoosePlan={(checkoutUrl) => {
+            plans={data?.paymentPlans}
+            paneIndex={index}
+            setIndex={setIndex}
+            onChargebeeChoosePlan={(checkoutUrl) => {
               setCheckoutUrl(checkoutUrl)
               setNextState()
             }}

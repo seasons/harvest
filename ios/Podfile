@@ -73,6 +73,8 @@ target 'seasons' do
   pod 'RNRate', :path => '../node_modules/react-native-rate'
 
   pod 'RNSharedElement', :path => '../node_modules/react-native-shared-element'
+  
+  pod 'tipsi-stripe', :path => '../node_modules/tipsi-stripe'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|  

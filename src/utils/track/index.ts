@@ -73,6 +73,7 @@ export const track: Track = _track
 export function screenTrack<P>(trackingInfo?: TrackingInfo<PageViewEvent, P, null>) {
   const decorateTracking = (props, state, args) => {
     const baseData = typeof trackingInfo === "function" ? trackingInfo?.(props, state, args) : trackingInfo
+    console.log("baseData", baseData)
     const info = {
       page: props?.route?.name,
       entitySlug: props?.route?.params?.slug,
@@ -83,7 +84,7 @@ export function screenTrack<P>(trackingInfo?: TrackingInfo<PageViewEvent, P, nul
   }
 
   return _track(decorateTracking as any, {
-    dispatch: data => {
+    dispatch: (data) => {
       if (__DEV__) {
         console.log("[Event tracked]", JSON.stringify(data, null, 2))
       }
