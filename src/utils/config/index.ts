@@ -11,6 +11,8 @@ export enum Env {
   MONSOON_ENDPOINT = "MONSOON_ENDPOINT",
   SENTRY_DSN = "SENTRY_DSN",
   APOLLO_KEY = "APOLLO_KEY",
+  APPLE_MERCHANT_ID = "APPLE_MERCHANT_ID",
+  STRIPE_KEY = "STRIPE_KEY",
 }
 
 const downloadAndSetNewStoredEnv = async () => {

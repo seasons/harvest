@@ -274,6 +274,16 @@ export interface Homepage_justAddedBottoms {
   variants: Homepage_justAddedBottoms_variants[] | null;
 }
 
+export interface Homepage_fitPicsCount_aggregate {
+  __typename: "AggregateFitPic";
+  count: number;
+}
+
+export interface Homepage_fitPicsCount {
+  __typename: "FitPicConnection";
+  aggregate: Homepage_fitPicsCount_aggregate;
+}
+
 export interface Homepage_fitPics_location {
   __typename: "Location";
   id: string;
@@ -304,5 +314,11 @@ export interface Homepage {
   archivalProducts: (Homepage_archivalProducts | null)[];
   justAddedTops: (Homepage_justAddedTops | null)[];
   justAddedBottoms: (Homepage_justAddedBottoms | null)[];
+  fitPicsCount: Homepage_fitPicsCount;
   fitPics: Homepage_fitPics[];
+}
+
+export interface HomepageVariables {
+  firstFitPics: number;
+  skipFitPics?: number | null;
 }

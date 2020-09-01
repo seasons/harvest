@@ -9491,7 +9491,7 @@ tiny-queue@^0.2.1:
   resolved "https://registry.yarnpkg.com/tiny-queue/-/tiny-queue-0.2.1.tgz#25a67f2c6e253b2ca941977b5ef7442ef97a6046"
   integrity sha1-JaZ/LG4lOyypQZd7XvdELvl6YEY=
 
-tipsi-stripe@^7.5.1:
+tipsi-stripe@^7.5.3:
   version "7.5.3"
   resolved "https://registry.yarnpkg.com/tipsi-stripe/-/tipsi-stripe-7.5.3.tgz#dbfccf1aeb4d881091ad5c2ae69cd433169c3097"
   integrity sha512-KL6kDAwfHPWVpKrzMeFovLGC7uoJL/PBvzjdwy7e6aEFUiBXW+1RuAd7be7JVwSePnqkkXDKcWtJZLLLMvqsRw==
