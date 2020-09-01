@@ -1,11 +1,15 @@
 import "../../setupAnalytics"
-import _track, { Track as _Track, TrackingInfo, useTracking as _useTracking, TrackingProp } from "react-tracking"
-import analytics from "@segment/analytics-react-native"
-import { PageViewEvent } from "./schema"
-import * as Schema from "./schema"
-export { Schema }
-import { Platform } from "react-native"
 
+import { Platform } from "react-native"
+import _track, {
+  Track as _Track, TrackingInfo, TrackingProp, useTracking as _useTracking
+} from "react-tracking"
+
+import analytics from "@segment/analytics-react-native"
+
+import * as Schema from "./schema"
+
+export { Schema }
 /**
  * Useful notes:
  *  * At the bottom of this file there is an example of how to test track'd code.
@@ -71,10 +75,10 @@ export const track: Track = _track
  *
  */
 
-export function screenTrack<P>(trackingInfo?: TrackingInfo<PageViewEvent, P, null>) {
+export function screenTrack<P>(trackingInfo?: TrackingInfo<Schema.PageViewEvent, P, null>) {
   const decorateTracking = (props, state, args) => {
     const baseData = typeof trackingInfo === "function" ? trackingInfo?.(props, state, args) : trackingInfo
-    console.log("baseData", baseData)
+
     const info = {
       page: props?.route?.name,
       entitySlug: props?.route?.params?.slug,
