@@ -1,11 +1,13 @@
 import { Container } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
+import { useMutation } from "react-apollo"
+
 import * as Sentry from "@sentry/react-native"
 
-import gql from "graphql-tag"
-import { useMutation } from "react-apollo"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { TriageProgressScreen } from "./TriageProgressScreen"
 
 const TRIAGE = gql`
   mutation triage {
@@ -54,7 +56,7 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
   })
 
   useEffect(() => {
-    if ((checkStatus === CheckStatus.Waiting || checkStatus === CheckStatus.AwaitingRetry) && check) {
+    if (checkStatus === CheckStatus.AwaitingRetry && check) {
       triageCustomer()
     }
   }, [check, checkStatus])
@@ -79,7 +81,13 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      {checkStatus === CheckStatus.Checking && <Loader />}
+      {checkStatus === CheckStatus.Checking && (
+        <TriageProgressScreen
+          done={() => {
+            triageCustomer()
+          }}
+        />
+      )}
     </Container>
   )
 }

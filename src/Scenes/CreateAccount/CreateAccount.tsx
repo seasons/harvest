@@ -1,13 +1,14 @@
 import { Box, CloseButton } from "App/Components"
 import { screenTrack } from "App/utils/track"
+import gql from "graphql-tag"
 import { get } from "lodash"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
+import { useQuery } from "react-apollo"
 import { Dimensions, FlatList, Modal } from "react-native"
-import gql from "graphql-tag"
+
 import { ChoosePlanPane, WelcomePane } from "./Admitted"
 import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane } from "./Undetermined"
 import { WaitlistedPane } from "./Waitlisted"
-import { useQuery } from "react-apollo"
 
 interface CreateAccountProps {
   navigation: any
@@ -100,7 +101,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
 
   const paneForState = (state: State) => {
     let pane
-    console.log("state", state)
+
     switch (state) {
       case State.CreateAccount:
         pane = <CreateAccountPane onSignUp={setNextState} />
