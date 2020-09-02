@@ -26,9 +26,10 @@ This project is the mobile client for Seasons.nyc
 
 1. Run `cp .env.example .env` and update values
 
-1. Run `$ yarn start` from the top directory, which will:
+1. Run `$ yarn start-servers` from the top directory, which will:
 
    - Start the app’s React Native packager.
+   - Start the storybook server
 
 1. Now run `$ yarn ios` to run the app in the simulator.
 
@@ -44,6 +45,12 @@ You only need to run the below if you are changing the types. Otherwise, you can
 ### Make a build on your phone
 
 1. Call Luc
+
+### Create a Story for use in Storybook
+
+Storybook is a UI component dev environment for your app. A story is a single state of one or more UI components. You can have as many stories as you want. Basically a story is like a visual test case.
+
+To add new story, go to `storybook/stories` and look at an existing example.
 
 ### Finding the latest production build
 
