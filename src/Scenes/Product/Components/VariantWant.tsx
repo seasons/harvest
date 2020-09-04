@@ -1,17 +1,19 @@
-import { useMutation } from "@apollo/react-hooks"
+import { Flex, Sans } from "App/Components"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { color } from "App/utils"
+import { Schema, useTracking } from "App/utils/track"
+import { CheckCircled, LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import gql from "graphql-tag"
 import React from "react"
 import { Dimensions, Text, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { GreenCheck, LeftTabCorner, RightTabCorner } from "Assets/svgs"
-import { GET_PRODUCT } from "../Queries"
-import { Flex, Sans } from "App/Components"
-import { color } from "App/utils"
-import { useTracking, Schema } from "App/utils/track"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { useAuthContext } from "App/Navigation/AuthContext"
+
+import { useMutation } from "@apollo/react-hooks"
 import { useNavigation } from "@react-navigation/native"
 import * as Sentry from "@sentry/react-native"
+
+import { GET_PRODUCT } from "../Queries"
 
 const ADD_PRODUCT_VARIANT_WANT = gql`
   mutation AddProductVariantWant($variantID: ID!) {
@@ -98,7 +100,7 @@ export const VariantWant = (props: VariantWantProps) => {
       <LeftCorner />
       <RightCorner />
       <TextContainer>
-        {isWanted && <GreenCheck width={16} height={16} strokeWidth={6} />}
+        {isWanted && <CheckCircled width={16} height={16} strokeWidth={6} />}
         <Text>
           <Sans size="2" color={color("white100")}>
             {isWanted ? " Thanks! We'll let you know" : "Want this item? "}

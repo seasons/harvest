@@ -1,19 +1,21 @@
-import { Box, Flex, Sans, Button, Separator, Spacer } from "App/Components"
+import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { get, head } from "lodash"
-import React, { useState } from "react"
-import { TouchableWithoutFeedback } from "react-native"
-import styled from "styled-components/native"
+import { Spinner } from "App/Components/Spinner"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { Variant } from "App/Scenes/Product/Components/VariantList"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { CheckCircled } from "Assets/svgs"
+import { get, head } from "lodash"
+import React, { useState } from "react"
 import { useMutation } from "react-apollo"
-import { ADD_TO_BAG, GET_BAG } from "../BagQueries"
-import { GreenCheck } from "Assets/svgs"
-import { Spinner } from "App/Components/Spinner"
-import { Variant } from "App/Scenes/Product/Components/VariantList"
+import { TouchableWithoutFeedback } from "react-native"
+import styled from "styled-components/native"
+
 import * as Sentry from "@sentry/react-native"
-import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+
+import { ADD_TO_BAG, GET_BAG } from "../BagQueries"
 
 interface BagItemProps {
   bagIsFull: boolean
@@ -65,7 +67,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
       setAddingToBag(false)
       if (bagIsFull) {
         showPopUp({
-          icon: <GreenCheck />,
+          icon: <CheckCircled />,
           title: "Added to bag",
           note: "Your bag is full. Place your reservation from the bag tab.",
           buttonText: "Got It",

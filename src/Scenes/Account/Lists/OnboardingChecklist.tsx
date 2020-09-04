@@ -1,11 +1,12 @@
-import { Box, Flex, Sans, Spacer, Separator } from "App/Components"
+import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
 import { color } from "App/utils"
 import { ChevronIcon } from "Assets/icons"
-import { GreenCheck } from "Assets/svgs"
-import { State, UserState } from "../../CreateAccount/CreateAccount"
+import { CheckCircled } from "Assets/svgs"
 import React from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
+
+import { State, UserState } from "../../CreateAccount/CreateAccount"
 import { InitialMeasurements } from "../EditMeasurements"
 
 export enum OnboardingStep {
@@ -130,7 +131,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
         <TouchableOpacity disabled={!isTappable} onPress={() => onPressItem(key)}>
           <Flex flexDirection="row" alignItems="center" justifyContent="space-between" pt={2} pb={isLastItem ? 0 : 2}>
             <Flex flexDirection="row" alignItems="center">
-              {isComplete ? <GreenCheck width={24} height={24} /> : <EmptyCircle />}
+              {isComplete ? <CheckCircled width={24} height={24} /> : <EmptyCircle />}
               <Spacer mr={2} />
               <Sans size="1">{title}</Sans>
             </Flex>

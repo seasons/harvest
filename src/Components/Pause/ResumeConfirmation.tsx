@@ -1,8 +1,10 @@
-import { Flex, Container, Sans, Box, Spacer } from "App/Components"
+import { Box, Container, Flex, Sans, Spacer } from "App/Components"
+import { CheckCircled } from "Assets/svgs"
 import React from "react"
-import { GreenCheck } from "Assets/svgs"
-import { Button } from "../Button"
+
 import { useNavigation } from "@react-navigation/native"
+
+import { Button } from "../Button"
 
 export const ResumeConfirmation: React.FC = () => {
   const navigation = useNavigation()
@@ -13,7 +15,7 @@ export const ResumeConfirmation: React.FC = () => {
         <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="space-between" px={2}>
           <Box>
             <Spacer mb={100} />
-            <GreenCheck />
+            <CheckCircled />
             <Spacer mb={3} />
             <Sans size="3">Welcome back</Sans>
             <Spacer mb={1} />
