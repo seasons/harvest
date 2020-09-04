@@ -86,8 +86,8 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   // The current index into the `states(userState)` array
   const [index, setIndex] = useState(0)
   // All the states (after the initial state)
-  // const states = sliceArray(statesFor(userState), initialState)
-  const states = [State.Triage, State.ChoosePlan, State.Welcome]
+  const states = sliceArray(statesFor(userState), initialState)
+
   // The current state
   const currentState = states[index]
 
