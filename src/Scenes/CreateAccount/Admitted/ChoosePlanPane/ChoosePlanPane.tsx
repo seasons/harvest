@@ -102,7 +102,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
     }
   }
 
-  const tagLines = selectedPlan?.description?.split("\n") || []
+  const descriptionLines = selectedPlan?.description?.split("\n") || []
   const planColors = {
     essential: "#000",
     "all-access": "#e6b759",
@@ -127,7 +127,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
             <Spacer mb={2} />
           </Box>
           <Flex flexDirection="column">
-            {tagLines.map((line) => {
+            {descriptionLines.map((line) => {
               return (
                 <Flex flexDirection="row" pb={3} px={1} alignItems="center" key={line}>
                   <Box mx={1} mr={1.5}>
