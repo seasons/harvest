@@ -27,7 +27,7 @@ enum CheckStatus {
 }
 
 export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete }) => {
-  const [checkStatus, setCheckStatus] = useState(CheckStatus.Checking)
+  const [checkStatus, setCheckStatus] = useState(CheckStatus.Waiting)
   const [status, setStatus] = useState(null)
 
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -54,13 +54,13 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
   })
 
   useEffect(() => {
-    if (checkStatus == CheckStatus.Checking || (checkStatus === CheckStatus.AwaitingRetry && check)) {
+    if (checkStatus === CheckStatus.Waiting || (checkStatus === CheckStatus.AwaitingRetry && check)) {
       triageCustomer()
     }
   }, [check, checkStatus])
 
   const triageCustomer = async () => {
-    if (checkStatus == CheckStatus.Checking || checkStatus === CheckStatus.Checked) {
+    if (checkStatus === CheckStatus.Checking) {
       return
     }
 
