@@ -1,13 +1,14 @@
 import { Box, CloseButton } from "App/Components"
 import { screenTrack } from "App/utils/track"
+import gql from "graphql-tag"
 import { get } from "lodash"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
+import { useQuery } from "react-apollo"
 import { Dimensions, FlatList, Modal } from "react-native"
-import gql from "graphql-tag"
+
 import { ChoosePlanPane, WelcomePane } from "./Admitted"
 import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane } from "./Undetermined"
 import { WaitlistedPane } from "./Waitlisted"
-import { useQuery } from "react-apollo"
 
 interface CreateAccountProps {
   navigation: any
@@ -51,6 +52,18 @@ export const GET_PLANS = gql`
 
 const { width: windowWidth } = Dimensions.get("window")
 
+// Returns the slice of `array` after and including `afterValue`, or the entire array if the value is not present.
+const sliceArray: <T>(array: T[], afterValue: T) => T[] = (array, afterValue) => {
+  const index = array.indexOf(afterValue)
+  if (index <= 0) {
+    return array
+  }
+  return array.slice(index)
+}
+
+// States in which to hide the close button
+const statesWithoutCloseButton = [State.Triage, State.Welcome, State.Waitlisted]
+
 const statesFor = (userState: UserState): State[] => {
   const commonStates = [State.CreateAccount, State.SendCode, State.VerifyCode, State.GetMeasurements, State.Triage]
   switch (userState) {
@@ -63,17 +76,6 @@ const statesFor = (userState: UserState): State[] => {
   }
 }
 
-// Returns the slice of `array` after and including `afterValue`, or the entire array if the value is not present.
-const sliceArray: <T>(array: T[], afterValue: T) => T[] = (array, afterValue) => {
-  const index = array.indexOf(afterValue)
-  if (index <= 0) {
-    return array
-  }
-  return array.slice(index)
-}
-
-// States in which to hide the close button
-const statesWithoutCloseButton = [State.Triage, State.Welcome, State.Waitlisted]
 export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navigation, route }) => {
   const { data } = useQuery(GET_PLANS)
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
@@ -85,6 +87,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   const [index, setIndex] = useState(0)
   // All the states (after the initial state)
   const states = sliceArray(statesFor(userState), initialState)
+
   // The current state
   const currentState = states[index]
 
@@ -100,7 +103,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
 
   const paneForState = (state: State) => {
     let pane
-    console.log("state", state)
+
     switch (state) {
       case State.CreateAccount:
         pane = <CreateAccountPane onSignUp={setNextState} />

@@ -1,4 +1,4 @@
-import { App } from "./src/App"
+import App from "./src"
 import { AppRegistry } from "react-native"
 import * as Sentry from "@sentry/react-native"
 import "react-native-gesture-handler"

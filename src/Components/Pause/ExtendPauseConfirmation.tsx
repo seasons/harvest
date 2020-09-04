@@ -1,7 +1,8 @@
-import { Flex, Container, Sans, Box, Spacer, Button } from "App/Components"
-import React from "react"
-import { GreenCheck } from "Assets/svgs"
+import { Box, Button, Container, Flex, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
+import { CheckCircled } from "Assets/svgs"
+import React from "react"
+
 import { useNavigation } from "@react-navigation/native"
 
 export const ExtendPauseConfirmation: React.FC<{ route: any }> = ({ route }) => {
@@ -14,7 +15,7 @@ export const ExtendPauseConfirmation: React.FC<{ route: any }> = ({ route }) => 
         <Flex px={2} style={{ flex: 1 }} flexDirection="column" justifyContent="space-between">
           <Box>
             <Spacer mb={100} />
-            <GreenCheck backgroundColor={color("black100")} />
+            <CheckCircled backgroundColor={color("black100")} />
             <Spacer mb={3} />
             <Sans size="3">Your membership is paused for another month</Sans>
             <Spacer mb={1} />

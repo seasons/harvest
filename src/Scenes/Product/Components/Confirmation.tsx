@@ -1,7 +1,7 @@
 import { Flex, Sans, Spacer } from "App/Components"
 import { BAG_NUM_ITEMS } from "App/helpers/constants"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { GreenCheck } from "Assets/svgs"
+import { CheckCircled } from "Assets/svgs"
 import { get } from "lodash"
 import React from "react"
 import styled from "styled-components/native"
@@ -26,7 +26,7 @@ export const Confirmation = ({ type }) => {
       <Flex flexDirection="row" alignContent="center" justifyContent="center">
         <Flex alignContent="center" justifyContent="center" flexDirection="column">
           <Flex flexDirection="row" alignContent="center" justifyContent="center">
-            <GreenCheck />
+            <CheckCircled />
           </Flex>
           <Spacer mb={2} />
           <Sans size="2" color="white" textAlign="center">

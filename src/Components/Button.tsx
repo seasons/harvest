@@ -1,16 +1,17 @@
+import { color } from "App/utils"
+import { DownChevronIcon } from "Assets/icons"
 import React, { Component, ReactNode } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
+
 import { TextCheckSVG } from "../../assets/svgs"
 import { Box, BoxProps } from "./Box"
 import { Flex } from "./Flex"
 import { Spacer } from "./Spacer"
+import { Spinner } from "./Spinner"
 import { themeProps } from "./Theme"
 import { Sans } from "./Typography"
-import { Spinner } from "./Spinner"
-import { DownChevronIcon } from "Assets/icons"
-import { color } from "App/utils"
 
 enum DisplayState {
   Default = "default",
@@ -288,6 +289,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   render() {
     const {
       borderRadius = 28,
+      backgroundColor,
       children,
       showCheckMark,
       disabled,
@@ -303,7 +305,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
     const { current, previous } = this.state
     const from = disabled ? variantColors[DisplayState.Disabled] : variantColors[previous]
     const to = disabled ? variantColors[DisplayState.Disabled] : variantColors[current]
-
+    const overridenBg = backgroundColor ? { backgroundColor, borderColor: backgroundColor } : {}
     return (
       <Spring native from={from} to={to}>
         {(props) => (
@@ -327,7 +329,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
               <AnimatedContainer
                 disabled={disabled}
                 {...rest}
-                style={{ ...props, borderRadius, height: buttonHeight }}
+                style={{ ...props, ...overridenBg, borderRadius, height: buttonHeight }}
                 px={px}
               >
                 {!loading && (

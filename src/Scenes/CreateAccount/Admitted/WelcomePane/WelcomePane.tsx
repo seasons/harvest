@@ -1,5 +1,5 @@
 import { Box, Button, Container, Sans, Spacer } from "App/Components"
-import { GreenCheck } from "Assets/svgs"
+import { CheckCircled } from "Assets/svgs"
 import React from "react"
 import { useSafeArea } from "react-native-safe-area-context"
 
@@ -14,7 +14,7 @@ export const WelcomePane: React.FC<WelcomePaneProps> = ({ onPressGetStarted }) =
     <Container insetsBottom={false} insetsTop={false}>
       <Box p="2" pt={insets.top}>
         <Spacer height="90" />
-        <GreenCheck width={42} height={42} />
+        <CheckCircled width={42} height={42} />
         <Spacer mb="3" />
         <Sans color="black100" size="3">
           Welcome to Seasons

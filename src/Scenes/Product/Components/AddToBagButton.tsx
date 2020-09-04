@@ -1,15 +1,17 @@
 import { Button } from "App/Components"
+import { GetProduct } from "App/generated/GetProduct"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { GreenCheck } from "Assets/svgs"
+import { Schema, useTracking } from "App/utils/track"
+import { CheckCircled } from "Assets/svgs"
+import { head } from "lodash"
 import React, { useState } from "react"
+
 import { useMutation } from "@apollo/react-hooks"
 import { useNavigation } from "@react-navigation/native"
-import { useAuthContext } from "App/Navigation/AuthContext"
-import { useTracking, Schema } from "App/utils/track"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { GetProduct } from "App/generated/GetProduct"
+
 import { GET_PRODUCT } from "../Queries"
-import { head } from "lodash"
 
 interface Props {
   disabled?: Boolean
@@ -47,7 +49,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
       setAdded(true)
       if (data?.me?.bag?.length >= 2) {
         showPopUp({
-          icon: <GreenCheck />,
+          icon: <CheckCircled />,
           title: "Added to bag",
           note: "Your bag is full. Place your reservation.",
           buttonText: "Got It",

@@ -1,14 +1,15 @@
 import { Box, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
+import { Loader } from "App/Components/Loader"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { GreenCheck } from "Assets/svgs"
+import { CheckCircled } from "Assets/svgs"
 import gql from "graphql-tag"
 import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
-import { ReservationItem } from "./Components/ReservationItem"
-import { Loader } from "App/Components/Loader"
 import Rate, { AndroidMarket } from "react-native-rate"
+
+import { ReservationItem } from "./Components/ReservationItem"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -115,7 +116,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
       <Flex flex={1} px={2}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <Spacer mb={52} />
-          <GreenCheck />
+          <CheckCircled />
           <Box my={4}>
             <Sans size="3" color="black100">
               We've got your order!
