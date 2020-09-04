@@ -52,6 +52,18 @@ export const GET_PLANS = gql`
 
 const { width: windowWidth } = Dimensions.get("window")
 
+// Returns the slice of `array` after and including `afterValue`, or the entire array if the value is not present.
+const sliceArray: <T>(array: T[], afterValue: T) => T[] = (array, afterValue) => {
+  const index = array.indexOf(afterValue)
+  if (index <= 0) {
+    return array
+  }
+  return array.slice(index)
+}
+
+// States in which to hide the close button
+const statesWithoutCloseButton = [State.Triage, State.Welcome, State.Waitlisted]
+
 const statesFor = (userState: UserState): State[] => {
   const commonStates = [State.CreateAccount, State.SendCode, State.VerifyCode, State.GetMeasurements, State.Triage]
   switch (userState) {
@@ -64,17 +76,6 @@ const statesFor = (userState: UserState): State[] => {
   }
 }
 
-// Returns the slice of `array` after and including `afterValue`, or the entire array if the value is not present.
-const sliceArray: <T>(array: T[], afterValue: T) => T[] = (array, afterValue) => {
-  const index = array.indexOf(afterValue)
-  if (index <= 0) {
-    return array
-  }
-  return array.slice(index)
-}
-
-// States in which to hide the close button
-const statesWithoutCloseButton = [State.Triage, State.Welcome, State.Waitlisted]
 export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navigation, route }) => {
   const { data } = useQuery(GET_PLANS)
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
@@ -85,7 +86,8 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   // The current index into the `states(userState)` array
   const [index, setIndex] = useState(0)
   // All the states (after the initial state)
-  const states = sliceArray(statesFor(userState), initialState)
+  // const states = sliceArray(statesFor(userState), initialState)
+  const states = [State.Triage, State.ChoosePlan, State.Welcome]
   // The current state
   const currentState = states[index]
 

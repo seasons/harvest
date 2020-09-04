@@ -1,5 +1,4 @@
 import { Container } from "App/Components"
-import { Loader } from "App/Components/Loader"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
@@ -28,7 +27,8 @@ enum CheckStatus {
 }
 
 export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete }) => {
-  const [checkStatus, setCheckStatus] = useState(CheckStatus.Waiting)
+  const [checkStatus, setCheckStatus] = useState(CheckStatus.Checking)
+  const [status, setStatus] = useState(null)
 
   const { showPopUp, hidePopUp } = usePopUpContext()
   const errorPopUpData = {
@@ -44,9 +44,7 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
   const [triage] = useMutation(TRIAGE, {
     onCompleted: () => {
       // Allow FlatList to transition before hiding spinner
-      setTimeout(() => {
-        setCheckStatus(CheckStatus.Checked)
-      }, 3000)
+      setCheckStatus(CheckStatus.Checked)
     },
     onError: (err) => {
       Sentry.captureException(err)
@@ -56,7 +54,7 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
   })
 
   useEffect(() => {
-    if (checkStatus === CheckStatus.AwaitingRetry && check) {
+    if (checkStatus == CheckStatus.Checking || (checkStatus === CheckStatus.AwaitingRetry && check)) {
       triageCustomer()
     }
   }, [check, checkStatus])
@@ -69,22 +67,26 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
     setCheckStatus(CheckStatus.Checking)
 
     const result = await triage()
-    switch (result?.data?.triageCustomer) {
-      case "Authorized":
-        onTriageComplete(true)
-        break
-      case "Waitlisted":
-        onTriageComplete(false)
-        break
-    }
+    setStatus(result?.data?.triageCustomer)
   }
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
       {checkStatus === CheckStatus.Checking && (
         <TriageProgressScreen
+          start={check}
           done={() => {
-            triageCustomer()
+            switch (status) {
+              case "Authorized":
+                onTriageComplete(true)
+                break
+              case "Waitlisted":
+                onTriageComplete(false)
+                break
+              default:
+                onTriageComplete(false)
+                break
+            }
           }}
         />
       )}

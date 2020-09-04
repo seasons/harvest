@@ -1,14 +1,18 @@
-import { PlanTile } from "./PlanTile"
-import { Box, Button, Container, Sans, Spacer } from "App/Components"
+import { Box, Button, Container, Flex, Sans, Spacer } from "App/Components"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { CheckCircled } from "Assets/svgs/CheckCircled"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
-import React, { useState } from "react"
+import gql from "graphql-tag"
+import React, { useEffect, useState } from "react"
+import { useMutation } from "react-apollo"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import * as Sentry from "@sentry/react-native"
-import gql from "graphql-tag"
-import { useMutation } from "react-apollo"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import styled from "styled-components"
 import stripe from "tipsi-stripe"
+
+import * as Sentry from "@sentry/react-native"
+
+import { PlanTile } from "./PlanTile"
 
 const PAYMENT_CHECKOUT = gql`
   mutation applePayCheckout($planID: String!, $token: StripeToken!) {
@@ -23,7 +27,7 @@ interface ChoosePlanPaneProps {
 
 export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextState }) => {
   const [footerBoxHeight, setFooterBoxHeight] = useState(0)
-  const [selectedPlan, setSelectedPlan] = useState(null)
+  const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const insets = useSafeArea()
 
   const [isMutating, setIsMutating] = useState(false)
@@ -46,6 +50,12 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
       setIsMutating(false)
     },
   })
+
+  useEffect(() => {
+    if (plans && plans.length > 0) {
+      setSelectedPlan(plans[0])
+    }
+  }, [plans])
 
   const onChoosePlan = async () => {
     if (isMutating) {
@@ -92,6 +102,13 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
     }
   }
 
+  const tagLines = selectedPlan?.description?.split("\n") || []
+  const planColors = {
+    essential: "#000",
+    "all-access": "#e6b759",
+  }
+  const currentColor = planColors[selectedPlan?.planID] || "black"
+
   return (
     <Container insetsBottom={false} insetsTop={false}>
       <Box style={{ flex: 1 }}>
@@ -105,31 +122,63 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
             </Sans>
             <Spacer mb={1} />
             <Sans color="black50" size="1">
-              Don't worry, you can change your plan from your profile settings at any time.
+              Here’s whats included in this membership:
             </Sans>
             <Spacer mb={2} />
           </Box>
-          {plans?.map((plan) => {
-            return (
-              <PlanTile
-                plan={plan}
-                key={plan.id}
-                shouldSelect={setSelectedPlan}
-                selected={selectedPlan?.id === plan.id}
-              />
-            )
-          })}
-          <Box height={footerBoxHeight} />
+          <Flex flexDirection="column">
+            {tagLines.map((line) => {
+              return (
+                <Flex flexDirection="row" pb={3} px={1} alignItems="center" key={line}>
+                  <Box mx={1} mr={1.5}>
+                    <CheckCircled backgroundColor={currentColor} width={26} height={26} />
+                  </Box>
+                  <Sans color="black50" size="2">
+                    {line}
+                  </Sans>
+                </Flex>
+              )
+            })}
+          </Flex>
+          <Flex flexDirection="row" pl={"12px"} mt={2}>
+            {plans?.map((plan) => {
+              return (
+                <PlanTile
+                  plan={plan}
+                  key={plan.id}
+                  shouldSelect={setSelectedPlan}
+                  selected={selectedPlan?.id === plan.id}
+                  selectedColor={currentColor}
+                />
+              )
+            })}
+          </Flex>
+          <Box mt={3} px={2}>
+            <Sans color="black50" size="1">
+              Have a question about membership? Contact us at membership@seasons.nyc and we’ll be happy to help.
+            </Sans>
+          </Box>
         </ScrollView>
       </Box>
       <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
         <Box p={2} onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height)}>
-          <Button block disabled={!selectedPlan} loading={isMutating} onPress={onChoosePlan} variant="primaryBlack">
+          <ColoredButton
+            block
+            disabled={!selectedPlan}
+            loading={isMutating}
+            onPress={onChoosePlan}
+            variant="primaryBlack"
+            backgroundColor={currentColor}
+          >
             Choose plan
-          </Button>
+          </ColoredButton>
           <Box style={{ height: insets.bottom }} />
         </Box>
       </FadeBottom2>
     </Container>
   )
 }
+
+const ColoredButton = styled(Button)`
+  background-color: ${(p: any) => p.backgroundColor};
+`
