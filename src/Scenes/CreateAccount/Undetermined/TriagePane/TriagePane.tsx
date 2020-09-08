@@ -3,9 +3,7 @@ import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "react-apollo"
-
 import * as Sentry from "@sentry/react-native"
-
 import { TriageProgressScreen } from "./TriageProgressScreen"
 
 const TRIAGE = gql`
@@ -54,7 +52,7 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
   })
 
   useEffect(() => {
-    if (checkStatus === CheckStatus.Waiting || (checkStatus === CheckStatus.AwaitingRetry && check)) {
+    if ((checkStatus === CheckStatus.Waiting && check) || (checkStatus === CheckStatus.AwaitingRetry && check)) {
       triageCustomer()
     }
   }, [check, checkStatus])
@@ -72,7 +70,7 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      {checkStatus === CheckStatus.Checking && (
+      {(checkStatus === CheckStatus.Checking || checkStatus === CheckStatus.Checked) && (
         <TriageProgressScreen
           start={check}
           done={() => {

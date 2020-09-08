@@ -1,11 +1,11 @@
 import { Box, Button, Container, Flex, Sans, Spacer } from "App/Components"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { CheckCircled } from "Assets/svgs/CheckCircled"
+import { ListCheck } from "Assets/svgs/ListCheck"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "react-apollo"
-import { ScrollView } from "react-native"
+import { ScrollView, Dimensions } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
@@ -25,8 +25,9 @@ interface ChoosePlanPaneProps {
   plans: any
 }
 
+const viewWidth = Dimensions.get("window").width
+
 export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextState }) => {
-  const [footerBoxHeight, setFooterBoxHeight] = useState(0)
   const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const insets = useSafeArea()
 
@@ -124,16 +125,16 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
             <Sans color="black50" size="1">
               Here’s whats included in this membership:
             </Sans>
-            <Spacer mb={2} />
+            <Spacer mb={1} />
           </Box>
           <Flex flexDirection="column">
             {descriptionLines.map((line) => {
               return (
-                <Flex flexDirection="row" pb={3} px={1} alignItems="center" key={line}>
+                <Flex flexDirection="row" pb={1} px={1} alignItems="center" key={line} width="100%">
                   <Box mx={1} mr={1.5}>
-                    <CheckCircled backgroundColor={currentColor} width={26} height={26} />
+                    <ListCheck />
                   </Box>
-                  <Sans color="black50" size="2">
+                  <Sans color="black50" size="1" style={{ width: viewWidth - 75 }}>
                     {line}
                   </Sans>
                 </Flex>
@@ -158,10 +159,11 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
               Have a question about membership? Contact us at membership@seasons.nyc and we’ll be happy to help.
             </Sans>
           </Box>
+          <Spacer pb={150} />
         </ScrollView>
       </Box>
       <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-        <Box p={2} onLayout={(e) => setFooterBoxHeight(e.nativeEvent.layout.height)}>
+        <Box p={2}>
           <ColoredButton
             block
             disabled={!selectedPlan}
