@@ -54,7 +54,7 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
   })
 
   useEffect(() => {
-    if (checkStatus === CheckStatus.Waiting || (checkStatus === CheckStatus.AwaitingRetry && check)) {
+    if ((checkStatus === CheckStatus.Waiting && check) || (checkStatus === CheckStatus.AwaitingRetry && check)) {
       triageCustomer()
     }
   }, [check, checkStatus])
