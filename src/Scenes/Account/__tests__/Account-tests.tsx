@@ -13,6 +13,7 @@ beforeEach(() => {
   const authContextValues = {
     signIn: () => null,
     signOut: () => null,
+    resetStore: () => null,
     userSession: null,
     authState: { authInitializing: true, isSignedIn: false, userSession: "1234" },
   }

@@ -22,16 +22,15 @@ const TriageProgressFooter = styled(Box)`
 export const TriageProgressScreen: React.FC<TriageProgressScreenProps> = ({ start, done }) => {
   const steps = ["Verifying Account", "Checking Sizes", "Confirming Availability"]
   const [currentStep, setCurrentStep] = useState(0)
+  const [stepsComplete, setStepsComplete] = useState(false)
 
   useEffect(() => {
     if (start) {
       const interval = setInterval(() => {
         setCurrentStep((currentStep) => {
-          console.log("Current step inside useEffect: ", currentStep)
           if (currentStep === steps.length - 1) {
             clearInterval(interval)
-            console.log("Calling done")
-            done?.()
+            setStepsComplete(true)
             return currentStep
           } else {
             return currentStep + 1
@@ -42,6 +41,12 @@ export const TriageProgressScreen: React.FC<TriageProgressScreenProps> = ({ star
       return () => clearInterval(interval)
     }
   }, [start])
+
+  useEffect(() => {
+    if (stepsComplete) {
+      done?.()
+    }
+  }, [stepsComplete])
 
   return (
     <Flex flexDirection="row" alignItems="center" alignContent="center" height="100%">
