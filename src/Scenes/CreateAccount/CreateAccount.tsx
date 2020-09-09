@@ -9,6 +9,7 @@ import { Dimensions, FlatList, Modal } from "react-native"
 import { ChoosePlanPane, WelcomePane } from "./Admitted"
 import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane } from "./Undetermined"
 import { WaitlistedPane } from "./Waitlisted"
+import { useAuthContext } from "App/Navigation/AuthContext"
 
 interface CreateAccountProps {
   navigation: any
@@ -78,6 +79,7 @@ const statesFor = (userState: UserState): State[] => {
 
 export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navigation, route }) => {
   const { data } = useQuery(GET_PLANS)
+  const { resetStore } = useAuthContext()
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
   const initialUserState: UserState = get(route?.params, "initialUserState", UserState.Undetermined)
 
@@ -181,13 +183,19 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       <Modal visible={currentState === State.Welcome} animated>
         <WelcomePane
           onPressGetStarted={() => {
+            resetStore()
             navigation.goBack()
           }}
         />
       </Modal>
 
       <Modal visible={currentState === State.Waitlisted} animated>
-        <WaitlistedPane onPressFinish={() => navigation.goBack()} />
+        <WaitlistedPane
+          onPressFinish={() => {
+            resetStore()
+            navigation.goBack()
+          }}
+        />
       </Modal>
     </>
   )

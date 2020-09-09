@@ -13,6 +13,7 @@ import stripe from "tipsi-stripe"
 import * as Sentry from "@sentry/react-native"
 
 import { PlanTile } from "./PlanTile"
+import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 
 const PAYMENT_CHECKOUT = gql`
   mutation applePayCheckout($planID: String!, $token: StripeToken!) {
@@ -50,6 +51,11 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
       showPopUp(popUpData)
       setIsMutating(false)
     },
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+    ],
   })
 
   useEffect(() => {
@@ -87,6 +93,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
               planID: selectedPlan.planID,
               token: token,
             },
+            awaitRefetchQueries: true,
           })
           // You should complete the operation by calling
           stripe.completeApplePayRequest()

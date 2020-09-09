@@ -47,14 +47,17 @@ export const Bag = screenTrack()((props) => {
   )
 
   const { data, refetch } = useQuery(GET_BAG)
+  const me = data?.me
+  const customerStatus = me?.customer?.status
   useEffect(() => {
     if (data) {
       setIsLoading(false)
     }
-    const status = data?.me?.customer?.status
-    if (!!status && !(status === "Active" || status === "Paused")) {
+    if (!!customerStatus && !(customerStatus === "Active" || customerStatus === "Paused")) {
       setDisabledTabs(["Bag", "History"])
       setCurrentView(BagView.Saved)
+    } else {
+      setDisabledTabs([])
     }
   }, [data])
 
@@ -128,8 +131,6 @@ export const Bag = screenTrack()((props) => {
     refetch()
     setRefreshing(false)
   }
-
-  const me = data?.me
 
   const items =
     me?.bag?.map((item) => ({
@@ -225,7 +226,6 @@ export const Bag = screenTrack()((props) => {
   const bagIsFull = bagCount === BAG_NUM_ITEMS
 
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
-  const customerStatus = me?.customer?.status
   const pausePending = pauseRequest?.pausePending
   let pauseStatus: PauseStatus = "active"
 

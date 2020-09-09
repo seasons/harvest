@@ -26,6 +26,7 @@ export interface AuthProviderRef {
   authContext: () => {
     signIn: (session: any) => Promise<void>
     signOut: () => Promise<void>
+    resetStore: () => void
     authState: any
     userSession: any
   }
@@ -103,6 +104,9 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         RNPusherPushNotifications.clearAllState()
         analytics.reset()
         dispatch({ type: "SIGN_OUT" })
+        apolloClient.resetStore()
+      },
+      resetStore: () => {
         apolloClient.resetStore()
       },
       authState,
