@@ -3,12 +3,13 @@ import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { Box, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
+import { Box, Button, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { MembershipCard } from "./Components"
 import { PauseButtons } from "App/Components/Pause"
+import { Schema } from "App/Navigation"
 
 export const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
@@ -51,6 +52,7 @@ export const GET_MEMBERSHIP_INFO = gql`
 export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeArea()
   const { data } = useQuery(GET_MEMBERSHIP_INFO)
+  console.log("data", data)
   const customer = data?.me?.customer
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
@@ -105,18 +107,18 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
             </>
           )}
           <Spacer mb={4} />
-          <Sans size="1">Upgrade your plan</Sans>
-          <Spacer mb={12} />
-          <Separator />
-          <Spacer mb={1} />
-          <Sans size="1" color={color("black50")}>
-            Interested in upgrading or downgrading your current plan? Contact us below.
-          </Sans>
+          <Sans size="1">Change your plan</Sans>
+          <Spacer mb={2} />
+          <Button
+            variant="secondaryWhite"
+            onPress={() => navigation.navigate("Modal", { screen: Schema.PageNames.UpdatePaymentPlanModal })}
+            block
+          >
+            View membership options
+          </Button>
           <Spacer mb={4} />
           <Sans size="1">Pause or cancel</Sans>
-          <Spacer mb={12} />
-          <Separator />
-          <Spacer mb={1} />
+          <Spacer mb={2} />
           <PauseButtons customer={customer} />
         </Box>
       </ScrollView>

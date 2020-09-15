@@ -38,6 +38,7 @@ import { CreateAccount } from "App/Scenes/CreateAccount"
 import { FitPicDetail } from "App/Scenes/Home/Components/FitPicDetail"
 import { createSharedElementStackNavigator } from "react-navigation-shared-element"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
+import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
 
 const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
@@ -107,6 +108,7 @@ const ModalStackScreen = () => {
       }}
     >
       <ModalStack.Screen name={Schema.PageNames.FiltersModal} component={Filters} />
+      <ModalStack.Screen name={Schema.PageNames.UpdatePaymentPlanModal} component={UpdatePaymentPlanModal} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordModal} component={ResetPassword} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />

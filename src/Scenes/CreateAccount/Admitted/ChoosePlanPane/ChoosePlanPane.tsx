@@ -1,20 +1,23 @@
-import { Box, Button, Container, Flex, Sans, Spacer } from "App/Components"
+import { Box, Button, Container, Flex, Sans, Spacer, Separator } from "App/Components"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { ListCheck } from "Assets/svgs/ListCheck"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
+import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "react-apollo"
-import { ScrollView, Dimensions } from "react-native"
+import { ScrollView, Dimensions, Linking } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
-
+import { TabBar } from "Components/TabBar"
 import * as Sentry from "@sentry/react-native"
-
-import { PlanTile } from "./PlanTile"
+import { Schema as TrackSchema, useTracking } from "App/utils/track"
+import { PlanButton } from "./PlanButton"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { screenTrack, Schema, useTracking } from "App/utils/track"
+import { GetPlans_faq, GetPlans_paymentPlans } from "App/generated/GetPlans"
+import { ChevronIcon } from "Assets/icons"
+import { color } from "App/utils"
 
 const PAYMENT_CHECKOUT = gql`
   mutation applePayCheckout($planID: String!, $token: StripeToken!) {
@@ -23,23 +26,26 @@ const PAYMENT_CHECKOUT = gql`
 `
 
 interface ChoosePlanPaneProps {
-  setNextState: () => void
-  plans: any
+  onComplete?: () => void
+  headerText: String
+  plans: GetPlans_paymentPlans[]
+  faq: GetPlans_faq
 }
 
 const viewWidth = Dimensions.get("window").width
 
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextState }) => {
-  const tracking = useTracking()
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, onComplete, headerText, faq }) => {
   const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const insets = useSafeArea()
-
+  const tracking = useTracking()
+  const [currentView, setCurrentView] = useState(0)
+  const [tiers, setTiers] = useState([])
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [applePayCheckout] = useMutation(PAYMENT_CHECKOUT, {
     onCompleted: () => {
       setIsMutating(false)
-      setNextState()
+      onComplete?.()
     },
     onError: (err) => {
       console.log("Error ChoosePlanPane.tsx", err)
@@ -61,8 +67,19 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
   })
 
   useEffect(() => {
+    // Update the selected plan if you switch tabs
+    const newSelectedPlan =
+      plans?.filter(
+        (plan) => tierToReadableText(plan.tier) === tiers?.[currentView] && plan.itemCount === selectedPlan.itemCount
+      ) || plans?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])[0]
+    setSelectedPlan(newSelectedPlan[0])
+  }, [currentView])
+
+  useEffect(() => {
     if (plans && plans.length > 0) {
       setSelectedPlan(plans[0])
+      const planTiers = uniq(plans?.map((plan) => tierToReadableText(plan.tier)))
+      setTiers(planTiers)
     }
   }, [plans])
 
@@ -72,8 +89,8 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
     }
 
     tracking.trackEvent({
-      actionName: Schema.ActionNames.ChoosePlanTapped,
-      actionType: Schema.ActionTypes.Tap,
+      actionName: TrackSchema.ActionNames.ChoosePlanTapped,
+      actionType: TrackSchema.ActionTypes.Tap,
     })
 
     setIsMutating(true)
@@ -118,11 +135,18 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
   }
 
   const descriptionLines = selectedPlan?.description?.split("\n") || []
-  const planColors = {
-    essential: "#000",
-    "all-access": "#e6b759",
+  const planColors = ["#000", "#e6b759"]
+  const currentColor = planColors[currentView] || "black"
+
+  const tierToReadableText = (tier) => {
+    if (tier === "AllAccess") {
+      return "All Access"
+    } else {
+      return tier
+    }
   }
-  const currentColor = planColors[selectedPlan?.planID] || "black"
+
+  const faqSections = faq?.paymentPlanFaqSections
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
@@ -132,12 +156,11 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
           <Spacer mb={4} />
           <Box p={2}>
             <Sans color="black100" size="3">
-              You're in.{"\n"}
-              Let's choose your plan
+              {headerText}
             </Sans>
             <Spacer mb={1} />
             <Sans color="black50" size="1">
-              Here’s whats included in this membership:
+              Here's what's included in your selected plan:
             </Sans>
             <Spacer mb={1} />
           </Box>
@@ -155,25 +178,79 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
               )
             })}
           </Flex>
-          <Flex flexDirection="row" pl={"12px"} mt={2}>
-            {plans?.map((plan) => {
+          <Spacer mb={1} />
+          <TabBar
+            tabColor={currentColor}
+            spaceEvenly
+            tabs={tiers}
+            activeTab={currentView}
+            goToPage={(page) => {
+              tracking.trackEvent({
+                actionName: () => {
+                  if (page === 0) {
+                    return TrackSchema.ActionNames.Tier0PlanTabTapped
+                  } else {
+                    return TrackSchema.ActionNames.Tier1PlanTabTapped
+                  }
+                },
+                actionType: TrackSchema.ActionTypes.Tap,
+              })
+              setCurrentView(page as number)
+            }}
+          />
+          <Spacer mb={2} />
+          {plans
+            ?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])
+            ?.map((plan) => {
               return (
-                <PlanTile
-                  plan={plan}
-                  key={plan.id}
-                  shouldSelect={setSelectedPlan}
-                  selected={selectedPlan?.id === plan.id}
-                  selectedColor={currentColor}
-                />
+                <Box key={plan.id} px={2}>
+                  <PlanButton
+                    plan={plan}
+                    key={plan.id}
+                    shouldSelect={setSelectedPlan}
+                    selected={selectedPlan?.id === plan.id}
+                    selectedColor={currentColor}
+                  />
+                </Box>
               )
             })}
-          </Flex>
-          <Box mt={3} px={2}>
-            <Sans color="black50" size="1">
-              Have a question about membership? Contact us at membership@seasons.nyc and we’ll be happy to help.
-            </Sans>
+          <Spacer mb={2} />
+          <Separator />
+          {!!faqSections?.length &&
+            faqSections.map((section, index) => (
+              <Box mt={4} key={index} px={2}>
+                <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+                  <Sans size="2">{section.title}</Sans>
+                  <ChevronIcon rotateDeg="90deg" color={color("black100")} />
+                </Flex>
+                <Spacer mb={4} />
+                {section.subsections.map((subSection) => {
+                  return (
+                    <Box key={subSection.title}>
+                      <Sans size="2">{subSection.title}</Sans>
+                      <Spacer mb={1} />
+                      <Separator />
+                      <Spacer mb={1} />
+                      <Sans size="2" color="black50">
+                        {subSection.text}
+                      </Sans>
+                      <Spacer mb={4} />
+                    </Box>
+                  )
+                })}
+              </Box>
+            ))}
+          <Spacer mb={1} />
+          <Box px={2}>
+            <Button
+              block
+              variant="primaryWhite"
+              onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership question"`)}
+            >
+              Contact us
+            </Button>
           </Box>
-          <Spacer pb={150} />
+          <Spacer pb={120} />
         </ScrollView>
       </Box>
       <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>

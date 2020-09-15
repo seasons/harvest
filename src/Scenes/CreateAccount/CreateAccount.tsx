@@ -39,14 +39,26 @@ export enum State {
 }
 
 export const GET_PLANS = gql`
-  query GetPlans {
-    paymentPlans {
+  query GetPlans($where: PaymentPlanWhereInput) {
+    paymentPlans(where: $where) {
       id
       name
       description
       tagline
       price
       planID
+      tier
+      status
+      itemCount
+    }
+    faq {
+      paymentPlanFaqSections {
+        title
+        subsections {
+          title
+          text
+        }
+      }
     }
   }
 `
@@ -78,7 +90,11 @@ const statesFor = (userState: UserState): State[] => {
 }
 
 export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navigation, route }) => {
-  const { data } = useQuery(GET_PLANS)
+  const { data } = useQuery(GET_PLANS, {
+    variables: {
+      where: { status: "active" },
+    },
+  })
   const { resetStore } = useAuthContext()
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
   const initialUserState: UserState = get(route?.params, "initialUserState", UserState.Undetermined)
@@ -146,7 +162,14 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
         )
         break
       case State.ChoosePlan:
-        pane = <ChoosePlanPane plans={data?.paymentPlans} setNextState={setNextState} />
+        pane = (
+          <ChoosePlanPane
+            faq={data?.faq}
+            plans={data?.paymentPlans}
+            onComplete={setNextState}
+            headerText={"You're in.\nLet's choose your plan"}
+          />
+        )
         break
     }
     return (
