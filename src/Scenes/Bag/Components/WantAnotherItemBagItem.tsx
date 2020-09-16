@@ -1,14 +1,26 @@
 import { useNavigation } from "@react-navigation/native"
 import { Box, Flex, Separator } from "App/Components"
+import {
+  GetBagAndSavedItems_paymentPlans,
+  GetBagAndSavedItems_me_customer_membership_plan,
+} from "App/generated/GetBagAndSavedItems"
 import { Schema } from "App/Navigation"
 import { Sans } from "Components/Typography"
 import React from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 
-export const WantAnotherItemBagItem: React.FC<{ itemCount: number }> = ({ itemCount }) => {
+export const WantAnotherItemBagItem: React.FC<{
+  plan: GetBagAndSavedItems_me_customer_membership_plan
+  paymentPlans: (GetBagAndSavedItems_paymentPlans | null)[] | null
+}> = ({ plan, paymentPlans }) => {
   const navigation = useNavigation()
+  const itemCount = plan?.itemCount
   const nextItem = itemCount === 2 ? "3rd" : "2nd"
+
+  const nextPlan = paymentPlans?.find((p) => p.tier === plan?.tier && p.itemCount === plan?.itemCount + 1)
+  const priceIncrease = (nextPlan?.price - plan?.price) / 100 || 30
+
   return (
     <>
       <Separator />
@@ -23,7 +35,7 @@ export const WantAnotherItemBagItem: React.FC<{ itemCount: number }> = ({ itemCo
                   {`Want a ${nextItem} item?`}
                 </Sans>
                 <Sans size="2" color="black50" textAlign="center" style={{ textDecorationLine: "underline" }}>
-                  Add a slot for $30
+                  {`Add a slot for $${priceIncrease}`}
                 </Sans>
               </TouchableOpacity>
             </Flex>

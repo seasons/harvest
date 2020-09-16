@@ -257,7 +257,7 @@ export const Bag = screenTrack()((props) => {
       } else {
         return (
           <BagTab
-            me={data?.me}
+            data={data}
             pauseStatus={pauseStatus}
             items={item.data}
             removeFromBagAndSaveItem={removeFromBagAndSaveItem}

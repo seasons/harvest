@@ -18,7 +18,6 @@ export interface GetPlans_paymentPlans {
   price: number | null;
   planID: string;
   tier: PaymentPlanTier | null;
-  status: string | null;
   itemCount: number | null;
 }
 

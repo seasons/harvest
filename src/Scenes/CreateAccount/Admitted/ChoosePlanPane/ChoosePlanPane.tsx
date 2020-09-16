@@ -36,13 +36,11 @@ const viewWidth = Dimensions.get("window").width
 export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data }) => {
   const plans = data?.paymentPlans
   const faq = data?.faq
-  const customerPlan = data?.me?.customer?.membership?.plan
-  const initialPlan = customerPlan ? plans?.find((plan) => plan.id === customerPlan.id) : plans?.[0]
-  const initialTab = customerPlan?.tier === "AllAccess" ? 1 : 0
-  const [selectedPlan, setSelectedPlan] = useState(initialPlan)
+
+  const [selectedPlan, setSelectedPlan] = useState(plans[0])
   const insets = useSafeArea()
   const tracking = useTracking()
-  const [currentView, setCurrentView] = useState(initialTab)
+  const [currentView, setCurrentView] = useState(0)
   const [tiers, setTiers] = useState([])
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -85,6 +83,13 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
       const planTiers = uniq(plans?.map((plan) => tierToReadableText(plan.tier)))
       setTiers(planTiers)
     }
+
+    const customerPlan = data?.me?.customer?.membership?.plan
+    const initialPlan = customerPlan ? plans?.find((plan) => plan.id === customerPlan.id) : plans?.[0]
+    const initialTab = customerPlan?.tier === "AllAccess" ? 1 : 0
+
+    setCurrentView(initialTab)
+    setSelectedPlan(initialPlan)
   }, [plans])
 
   const onChoosePlan = async () => {

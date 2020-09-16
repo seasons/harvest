@@ -9,6 +9,13 @@ export const CHECK_ITEMS = gql`
 
 export const GET_BAG = gql`
   query GetBagAndSavedItems {
+    paymentPlans(where: { status: "active" }) {
+      id
+      planID
+      tier
+      price
+      itemCount
+    }
     me {
       customer {
         id
@@ -17,6 +24,8 @@ export const GET_BAG = gql`
           id
           plan {
             id
+            tier
+            price
             itemCount
           }
         }

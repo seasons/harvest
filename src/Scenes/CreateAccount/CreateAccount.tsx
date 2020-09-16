@@ -48,7 +48,6 @@ export const GET_PLANS = gql`
       price
       planID
       tier
-      status
       itemCount
     }
     me {

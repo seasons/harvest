@@ -3,15 +3,26 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CustomerStatus, ReservationStatus, ReservationPhase, BagItemStatus } from "./globalTypes";
+import { PaymentPlanTier, CustomerStatus, ReservationStatus, ReservationPhase, BagItemStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBagAndSavedItems
 // ====================================================
 
+export interface GetBagAndSavedItems_paymentPlans {
+  __typename: "PaymentPlan";
+  id: string;
+  planID: string;
+  tier: PaymentPlanTier | null;
+  price: number | null;
+  itemCount: number | null;
+}
+
 export interface GetBagAndSavedItems_me_customer_membership_plan {
   __typename: "PaymentPlan";
   id: string;
+  tier: PaymentPlanTier | null;
+  price: number | null;
   itemCount: number | null;
 }
 
@@ -262,5 +273,6 @@ export interface GetBagAndSavedItems_me {
 }
 
 export interface GetBagAndSavedItems {
+  paymentPlans: (GetBagAndSavedItems_paymentPlans | null)[] | null;
   me: GetBagAndSavedItems_me | null;
 }

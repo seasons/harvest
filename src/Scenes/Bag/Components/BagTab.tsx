@@ -13,19 +13,22 @@ import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { DeliveryStatus } from "./DeliveryStatus"
 import * as Sentry from "@sentry/react-native"
 import { WantAnotherItemBagItem } from "./"
+import { GetBagAndSavedItems } from "App/generated/GetBagAndSavedItems"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
-  me
+  data: GetBagAndSavedItems
   items
   deleteBagItem
   removeFromBagAndSaveItem
-}> = ({ pauseStatus, items, deleteBagItem, removeFromBagAndSaveItem, me }) => {
+}> = ({ pauseStatus, items, deleteBagItem, removeFromBagAndSaveItem, data }) => {
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
   const tracking = useTracking()
 
+  const me = data?.me
+  const paymentPlans = data?.paymentPlans
   const activeReservation = me?.activeReservation
 
   const hasActiveReservation = !!activeReservation
@@ -67,7 +70,6 @@ export const BagTab: React.FC<{
   }
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
   const showPendingMessage = pauseStatus === "pending" && !!pauseRequest?.pauseDate
-  const itemCount = me?.customer?.membership?.plan?.itemCount
 
   return (
     <Box>
@@ -150,7 +152,7 @@ export const BagTab: React.FC<{
       })}
       {items && items.length < 3 && (
         <Box px={2}>
-          <WantAnotherItemBagItem itemCount={itemCount} />
+          <WantAnotherItemBagItem plan={me?.customer?.membership?.plan} paymentPlans={paymentPlans} />
         </Box>
       )}
     </Box>
