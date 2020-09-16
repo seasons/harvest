@@ -14,6 +14,7 @@ import * as Sentry from "@sentry/react-native"
 
 import { PlanTile } from "./PlanTile"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { screenTrack, Schema, useTracking } from "App/utils/track"
 
 const PAYMENT_CHECKOUT = gql`
   mutation applePayCheckout($planID: String!, $token: StripeToken!) {
@@ -29,6 +30,7 @@ interface ChoosePlanPaneProps {
 const viewWidth = Dimensions.get("window").width
 
 export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextState }) => {
+  const tracking = useTracking()
   const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const insets = useSafeArea()
 
@@ -68,6 +70,11 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, setNextSt
     if (isMutating) {
       return
     }
+
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.ChoosePlanTapped,
+      actionType: Schema.ActionTypes.Tap,
+    })
 
     setIsMutating(true)
 
