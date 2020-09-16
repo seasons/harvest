@@ -9,6 +9,27 @@ import { Plan, CustomerStatus, ReservationStatus, ReservationPhase, BagItemStatu
 // GraphQL query operation: GetBagAndSavedItems
 // ====================================================
 
+export interface GetBagAndSavedItems_me_customer_membership_plan {
+  __typename: "PaymentPlan";
+  id: string;
+  itemCount: number | null;
+}
+
+export interface GetBagAndSavedItems_me_customer_membership_pauseRequests {
+  __typename: "PauseRequest";
+  id: string;
+  resumeDate: any | null;
+  pauseDate: any | null;
+  pausePending: boolean;
+}
+
+export interface GetBagAndSavedItems_me_customer_membership {
+  __typename: "CustomerMembership";
+  id: string;
+  plan: GetBagAndSavedItems_me_customer_membership_plan | null;
+  pauseRequests: GetBagAndSavedItems_me_customer_membership_pauseRequests[] | null;
+}
+
 export interface GetBagAndSavedItems_me_customer_invoices {
   __typename: "Invoice";
   id: string;
@@ -28,20 +49,6 @@ export interface GetBagAndSavedItems_me_customer_detail {
   __typename: "CustomerDetail";
   id: string;
   shippingAddress: GetBagAndSavedItems_me_customer_detail_shippingAddress | null;
-}
-
-export interface GetBagAndSavedItems_me_customer_membership_pauseRequests {
-  __typename: "PauseRequest";
-  id: string;
-  resumeDate: any | null;
-  pauseDate: any | null;
-  pausePending: boolean;
-}
-
-export interface GetBagAndSavedItems_me_customer_membership {
-  __typename: "CustomerMembership";
-  id: string;
-  pauseRequests: GetBagAndSavedItems_me_customer_membership_pauseRequests[] | null;
 }
 
 export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_internalSize {
@@ -96,9 +103,9 @@ export interface GetBagAndSavedItems_me_customer {
   id: string;
   plan: Plan | null;
   status: CustomerStatus | null;
+  membership: GetBagAndSavedItems_me_customer_membership | null;
   invoices: (GetBagAndSavedItems_me_customer_invoices | null)[] | null;
   detail: GetBagAndSavedItems_me_customer_detail | null;
-  membership: GetBagAndSavedItems_me_customer_membership | null;
   reservations: GetBagAndSavedItems_me_customer_reservations[] | null;
 }
 

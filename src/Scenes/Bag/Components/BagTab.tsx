@@ -12,19 +12,21 @@ import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { DeliveryStatus } from "./DeliveryStatus"
 import * as Sentry from "@sentry/react-native"
+import { WantAnotherItemBagItem } from "./"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
   me
   items
   deleteBagItem
-  activeReservation
   removeFromBagAndSaveItem
-}> = ({ activeReservation, pauseStatus, items, deleteBagItem, removeFromBagAndSaveItem, me }) => {
+}> = ({ pauseStatus, items, deleteBagItem, removeFromBagAndSaveItem, me }) => {
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
   const tracking = useTracking()
+
+  const activeReservation = me?.activeReservation
 
   const hasActiveReservation = !!activeReservation
 
@@ -65,6 +67,7 @@ export const BagTab: React.FC<{
   }
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
   const showPendingMessage = pauseStatus === "pending" && !!pauseRequest?.pauseDate
+  const itemCount = me?.customer?.membership?.plan?.itemCount
 
   return (
     <Box>
@@ -145,6 +148,11 @@ export const BagTab: React.FC<{
           </Box>
         )
       })}
+      {items && items.length < 3 && (
+        <Box px={2}>
+          <WantAnotherItemBagItem itemCount={itemCount} />
+        </Box>
+      )}
     </Box>
   )
 }

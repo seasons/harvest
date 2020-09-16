@@ -1360,6 +1360,7 @@ export interface CustomerMembershipCreateOneWithoutCustomerInput {
 export interface CustomerMembershipCreateWithoutCustomerInput {
   id?: string | null;
   subscriptionId: string;
+  plan?: PaymentPlanCreateOneInput | null;
   pauseRequests?: PauseRequestCreateManyWithoutMembershipInput | null;
 }
 
@@ -1374,6 +1375,7 @@ export interface CustomerMembershipUpdateOneWithoutCustomerInput {
 
 export interface CustomerMembershipUpdateWithoutCustomerDataInput {
   subscriptionId?: string | null;
+  plan?: PaymentPlanUpdateOneInput | null;
   pauseRequests?: PauseRequestUpdateManyWithoutMembershipInput | null;
 }
 
@@ -2641,6 +2643,48 @@ export interface PauseRequestWhereUniqueInput {
   id?: string | null;
 }
 
+export interface PaymentPlanCreateInput {
+  id?: string | null;
+  description?: string | null;
+  planID: string;
+  status?: string | null;
+  name?: string | null;
+  price?: number | null;
+  itemCount?: number | null;
+  tagline?: string | null;
+  tier?: PaymentPlanTier | null;
+}
+
+export interface PaymentPlanCreateOneInput {
+  create?: PaymentPlanCreateInput | null;
+  connect?: PaymentPlanWhereUniqueInput | null;
+}
+
+export interface PaymentPlanUpdateDataInput {
+  description?: string | null;
+  planID?: string | null;
+  status?: string | null;
+  name?: string | null;
+  price?: number | null;
+  itemCount?: number | null;
+  tagline?: string | null;
+  tier?: PaymentPlanTier | null;
+}
+
+export interface PaymentPlanUpdateOneInput {
+  create?: PaymentPlanCreateInput | null;
+  connect?: PaymentPlanWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: PaymentPlanUpdateDataInput | null;
+  upsert?: PaymentPlanUpsertNestedInput | null;
+}
+
+export interface PaymentPlanUpsertNestedInput {
+  update: PaymentPlanUpdateDataInput;
+  create: PaymentPlanCreateInput;
+}
+
 export interface PaymentPlanWhereInput {
   AND?: PaymentPlanWhereInput[] | null;
   OR?: PaymentPlanWhereInput[] | null;
@@ -2765,6 +2809,11 @@ export interface PaymentPlanWhereInput {
   updatedAt_lte?: any | null;
   updatedAt_gt?: any | null;
   updatedAt_gte?: any | null;
+}
+
+export interface PaymentPlanWhereUniqueInput {
+  id?: string | null;
+  planID?: string | null;
 }
 
 export interface PhysicalProductCreateInput {

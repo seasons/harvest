@@ -30,7 +30,7 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
         faq={data?.faq}
         plans={data?.paymentPlans}
         onComplete={() => navigation.goBack()}
-        headerText={"Let's choose your plan"}
+        headerText="Let's choose your plan"
       />
     </Container>
   )
