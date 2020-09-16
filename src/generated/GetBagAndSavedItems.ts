@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Plan, CustomerStatus, ReservationStatus, ReservationPhase, BagItemStatus } from "./globalTypes";
+import { CustomerStatus, ReservationStatus, ReservationPhase, BagItemStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBagAndSavedItems
@@ -101,7 +101,6 @@ export interface GetBagAndSavedItems_me_customer_reservations {
 export interface GetBagAndSavedItems_me_customer {
   __typename: "Customer";
   id: string;
-  plan: Plan | null;
   status: CustomerStatus | null;
   membership: GetBagAndSavedItems_me_customer_membership | null;
   invoices: (GetBagAndSavedItems_me_customer_invoices | null)[] | null;

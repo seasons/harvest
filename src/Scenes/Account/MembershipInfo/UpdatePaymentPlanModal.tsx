@@ -12,7 +12,6 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
       where: { status: "active" },
     },
   })
-  console.log("data", data)
 
   if (!data?.paymentPlans) {
     return (
@@ -26,12 +25,7 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <CloseButton variant="light" />
-      <ChoosePlanPane
-        faq={data?.faq}
-        plans={data?.paymentPlans}
-        onComplete={() => navigation.goBack()}
-        headerText="Let's choose your plan"
-      />
+      <ChoosePlanPane data={data} onComplete={() => navigation.goBack()} headerText="Let's choose your plan" />
     </Container>
   )
 })

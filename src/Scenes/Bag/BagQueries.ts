@@ -12,7 +12,6 @@ export const GET_BAG = gql`
     me {
       customer {
         id
-        plan
         status
         membership {
           id

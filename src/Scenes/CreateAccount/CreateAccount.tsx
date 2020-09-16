@@ -51,6 +51,18 @@ export const GET_PLANS = gql`
       status
       itemCount
     }
+    me {
+      customer {
+        id
+        membership {
+          id
+          plan {
+            id
+            tier
+          }
+        }
+      }
+    }
     faq {
       paymentPlanFaqSections {
         title
@@ -164,8 +176,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       case State.ChoosePlan:
         pane = (
           <ChoosePlanPane
-            faq={data?.faq}
-            plans={data?.paymentPlans}
+            data={data?.faq}
             onComplete={setNextState}
             headerText={"You're in.\nLet's choose your plan"}
           />

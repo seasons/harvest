@@ -22,6 +22,29 @@ export interface GetPlans_paymentPlans {
   itemCount: number | null;
 }
 
+export interface GetPlans_me_customer_membership_plan {
+  __typename: "PaymentPlan";
+  id: string;
+  tier: PaymentPlanTier | null;
+}
+
+export interface GetPlans_me_customer_membership {
+  __typename: "CustomerMembership";
+  id: string;
+  plan: GetPlans_me_customer_membership_plan | null;
+}
+
+export interface GetPlans_me_customer {
+  __typename: "Customer";
+  id: string;
+  membership: GetPlans_me_customer_membership | null;
+}
+
+export interface GetPlans_me {
+  __typename: "Me";
+  customer: GetPlans_me_customer | null;
+}
+
 export interface GetPlans_faq_paymentPlanFaqSections_subsections {
   __typename: "FaqSubsection";
   title: string;
@@ -41,6 +64,7 @@ export interface GetPlans_faq {
 
 export interface GetPlans {
   paymentPlans: (GetPlans_paymentPlans | null)[] | null;
+  me: GetPlans_me | null;
   faq: GetPlans_faq | null;
 }
 

@@ -15,7 +15,7 @@ import * as Sentry from "@sentry/react-native"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import { PlanButton } from "./PlanButton"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { GetPlans_faq, GetPlans_paymentPlans } from "App/generated/GetPlans"
+import { GetPlans } from "App/generated/GetPlans"
 import { ChevronIcon } from "Assets/icons"
 import { color } from "App/utils"
 
@@ -28,17 +28,21 @@ const PAYMENT_CHECKOUT = gql`
 interface ChoosePlanPaneProps {
   onComplete?: () => void
   headerText: String
-  plans: GetPlans_paymentPlans[]
-  faq: GetPlans_faq
+  data: GetPlans
 }
 
 const viewWidth = Dimensions.get("window").width
 
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ plans, onComplete, headerText, faq }) => {
-  const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data }) => {
+  const plans = data?.paymentPlans
+  const faq = data?.faq
+  const customerPlan = data?.me?.customer?.membership?.plan
+  const initialPlan = customerPlan ? plans?.find((plan) => plan.id === customerPlan.id) : plans?.[0]
+  const initialTab = customerPlan?.tier === "AllAccess" ? 1 : 0
+  const [selectedPlan, setSelectedPlan] = useState(initialPlan)
   const insets = useSafeArea()
   const tracking = useTracking()
-  const [currentView, setCurrentView] = useState(0)
+  const [currentView, setCurrentView] = useState(initialTab)
   const [tiers, setTiers] = useState([])
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
