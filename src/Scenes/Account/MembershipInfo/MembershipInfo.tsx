@@ -22,14 +22,6 @@ export const GET_MEMBERSHIP_INFO = gql`
           subscriptionId
           dueDate
         }
-        paymentPlan {
-          id
-          description
-          planID
-          status
-          name
-          price
-        }
         membership {
           id
           pauseRequests(orderBy: createdAt_DESC) {
@@ -37,6 +29,11 @@ export const GET_MEMBERSHIP_INFO = gql`
             resumeDate
             pauseDate
             pausePending
+          }
+          plan {
+            id
+            price
+            description
           }
         }
       }
@@ -56,7 +53,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const customer = data?.me?.customer
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
-  const plan = customer?.paymentPlan
+  const plan = customer?.membership?.plan
 
   if (!plan) {
     return (

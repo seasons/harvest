@@ -25,7 +25,12 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <CloseButton variant="light" />
-      <ChoosePlanPane data={data} onComplete={() => navigation.goBack()} headerText="Let's choose your plan" />
+      <ChoosePlanPane
+        paneType={0}
+        data={data}
+        onComplete={() => navigation.goBack()}
+        headerText="Let's choose your plan"
+      />
     </Container>
   )
 })

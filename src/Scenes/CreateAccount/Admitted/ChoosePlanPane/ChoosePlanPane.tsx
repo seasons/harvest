@@ -18,22 +18,35 @@ import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { GetPlans } from "App/generated/GetPlans"
 import { ChevronIcon } from "Assets/icons"
 import { color } from "App/utils"
+import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
 
 const PAYMENT_CHECKOUT = gql`
-  mutation applePayCheckout($planID: String!, $token: StripeToken!) {
+  mutation ApplePayCheckout($planID: String!, $token: StripeToken!) {
     applePayCheckout(planID: $planID, token: $token)
   }
 `
+
+const PLAN_UPDATE = gql`
+  mutation ChangeCustomerPlan($planID: String!) {
+    changeCustomerPlan(planID: $planID)
+  }
+`
+
+export enum PaneType {
+  Update = 0,
+  Create = 1,
+}
 
 interface ChoosePlanPaneProps {
   onComplete?: () => void
   headerText: String
   data: GetPlans
+  paneType: PaneType
 }
 
 const viewWidth = Dimensions.get("window").width
 
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data }) => {
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType }) => {
   const plans = data?.paymentPlans
   const faq = data?.faq
 
@@ -67,6 +80,32 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
       },
     ],
   })
+  const [updatePaymentPlan] = useMutation(PLAN_UPDATE, {
+    onCompleted: () => {
+      setIsMutating(false)
+      onComplete?.()
+    },
+    onError: (err) => {
+      console.log("Error ChoosePlanPane.tsx", err)
+      Sentry.captureException(err)
+      const popUpData = {
+        title: "Oops! Try again!",
+        note: "There was an issue updating your plan. Please retry or contact us.",
+        buttonText: "Close",
+        onClose: hidePopUp,
+      }
+      showPopUp(popUpData)
+      setIsMutating(false)
+    },
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+      {
+        query: GET_MEMBERSHIP_INFO,
+      },
+    ],
+  })
 
   useEffect(() => {
     // Update the selected plan if you switch tabs
@@ -92,18 +131,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
     setSelectedPlan(initialPlan)
   }, [plans])
 
-  const onChoosePlan = async () => {
-    if (isMutating) {
-      return
-    }
-
-    tracking.trackEvent({
-      actionName: TrackSchema.ActionNames.ChoosePlanTapped,
-      actionType: TrackSchema.ActionTypes.Tap,
-    })
-
-    setIsMutating(true)
-
+  const onChoosePlanCreate = async () => {
     const applePaySupportedOnDevice = await stripe.deviceSupportsApplePay()
     if (applePaySupportedOnDevice) {
       const canMakeApplePayment = await stripe.canMakeApplePayPayments()
@@ -141,6 +169,34 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
         setIsMutating(false)
       }
     }
+  }
+
+  const onChoosePlanUpdate = () => {
+    updatePaymentPlan({
+      variables: {
+        planID: selectedPlan.planID,
+      },
+      awaitRefetchQueries: true,
+    })
+  }
+
+  const onChoosePlan = async () => {
+    if (isMutating) {
+      return
+    }
+
+    tracking.trackEvent({
+      actionName: TrackSchema.ActionNames.ChoosePlanTapped,
+      actionType: TrackSchema.ActionTypes.Tap,
+    })
+
+    if (paneType === PaneType.Create) {
+      await onChoosePlanCreate()
+    } else if (paneType === PaneType.Update) {
+      await onChoosePlanUpdate()
+    }
+
+    setIsMutating(true)
   }
 
   const descriptionLines = selectedPlan?.description?.split("\n") || []

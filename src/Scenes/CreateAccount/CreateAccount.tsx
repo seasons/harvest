@@ -175,6 +175,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       case State.ChoosePlan:
         pane = (
           <ChoosePlanPane
+            paneType={1}
             data={data?.faq}
             onComplete={setNextState}
             headerText={"You're in.\nLet's choose your plan"}
