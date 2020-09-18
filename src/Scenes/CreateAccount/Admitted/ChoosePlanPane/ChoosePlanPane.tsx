@@ -51,7 +51,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
 
-  const [selectedPlan, setSelectedPlan] = useState(plans[0])
+  const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const insets = useSafeArea()
   const tracking = useTracking()
   const [currentView, setCurrentView] = useState(0)
@@ -113,13 +113,13 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
     const newSelectedPlan =
       plans?.filter(
         (plan) => tierToReadableText(plan.tier) === tiers?.[currentView] && plan.itemCount === selectedPlan.itemCount
-      ) || plans?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])[0]
-    setSelectedPlan(newSelectedPlan[0])
+      ) || plans?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])?.[0]
+    setSelectedPlan(newSelectedPlan?.[0])
   }, [currentView])
 
   useEffect(() => {
     if (plans && plans.length > 0) {
-      setSelectedPlan(plans[0])
+      setSelectedPlan(plans?.[0])
       const planTiers = uniq(plans?.map((plan) => tierToReadableText(plan.tier)))
       setTiers(planTiers)
     }
