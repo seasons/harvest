@@ -44,21 +44,21 @@ export interface GetPlans_me {
   customer: GetPlans_me_customer | null;
 }
 
-export interface GetPlans_faq_paymentPlanFaqSections_subsections {
+export interface GetPlans_faq_sections_subsections {
   __typename: "FaqSubsection";
   title: string;
   text: string;
 }
 
-export interface GetPlans_faq_paymentPlanFaqSections {
+export interface GetPlans_faq_sections {
   __typename: "FaqSection";
   title: string;
-  subsections: GetPlans_faq_paymentPlanFaqSections_subsections[];
+  subsections: GetPlans_faq_sections_subsections[];
 }
 
 export interface GetPlans_faq {
   __typename: "Faq";
-  paymentPlanFaqSections: GetPlans_faq_paymentPlanFaqSections[];
+  sections: GetPlans_faq_sections[];
 }
 
 export interface GetPlans {

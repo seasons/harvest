@@ -47,8 +47,9 @@ interface ChoosePlanPaneProps {
 const viewWidth = Dimensions.get("window").width
 
 export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType }) => {
+  console.log("data??", data)
   const plans = data?.paymentPlans
-  const faq = data?.faq
+  const faqSections = data?.faq?.sections
 
   const [selectedPlan, setSelectedPlan] = useState(plans[0])
   const insets = useSafeArea()
@@ -210,8 +211,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
       return tier
     }
   }
-
-  const faqSections = faq?.paymentPlanFaqSections
 
   return (
     <Container insetsBottom={false} insetsTop={false}>

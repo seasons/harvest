@@ -62,8 +62,8 @@ export const GET_PLANS = gql`
         }
       }
     }
-    faq {
-      paymentPlanFaqSections {
+    faq(sectionType: PaymentPlanPage) {
+      sections {
         title
         subsections {
           title

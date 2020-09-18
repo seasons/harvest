@@ -3,17 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { StripeToken } from "./globalTypes";
-
 // ====================================================
-// GraphQL mutation operation: ApplePayCheckout
+// GraphQL mutation operation: ChangeCustomerPlan
 // ====================================================
 
-export interface ApplePayCheckout {
-  applePayCheckout: boolean | null;
+export interface ChangeCustomerPlan {
+  changeCustomerPlan: boolean | null;
 }
 
-export interface ApplePayCheckoutVariables {
+export interface ChangeCustomerPlanVariables {
   planID: string;
-  token: StripeToken;
 }
