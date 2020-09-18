@@ -250,13 +250,8 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
             activeTab={currentView}
             goToPage={(page) => {
               tracking.trackEvent({
-                actionName: () => {
-                  if (page === 0) {
-                    return TrackSchema.ActionNames.Tier0PlanTabTapped
-                  } else {
-                    return TrackSchema.ActionNames.Tier1PlanTabTapped
-                  }
-                },
+                actionName:
+                  page === 0 ? TrackSchema.ActionNames.Tier0PlanTabTapped : TrackSchema.ActionNames.Tier1PlanTabTapped,
                 actionType: TrackSchema.ActionTypes.Tap,
               })
               setCurrentView(page as number)
