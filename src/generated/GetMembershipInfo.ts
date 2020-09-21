@@ -16,16 +16,6 @@ export interface GetMembershipInfo_me_customer_invoices {
   dueDate: any | null;
 }
 
-export interface GetMembershipInfo_me_customer_paymentPlan {
-  __typename: "PaymentPlan";
-  id: string;
-  description: string | null;
-  planID: string;
-  status: string | null;
-  name: string | null;
-  price: number | null;
-}
-
 export interface GetMembershipInfo_me_customer_membership_pauseRequests {
   __typename: "PauseRequest";
   id: string;
@@ -34,10 +24,18 @@ export interface GetMembershipInfo_me_customer_membership_pauseRequests {
   pausePending: boolean;
 }
 
+export interface GetMembershipInfo_me_customer_membership_plan {
+  __typename: "PaymentPlan";
+  id: string;
+  price: number | null;
+  description: string | null;
+}
+
 export interface GetMembershipInfo_me_customer_membership {
   __typename: "CustomerMembership";
   id: string;
   pauseRequests: GetMembershipInfo_me_customer_membership_pauseRequests[] | null;
+  plan: GetMembershipInfo_me_customer_membership_plan | null;
 }
 
 export interface GetMembershipInfo_me_customer {
@@ -45,7 +43,6 @@ export interface GetMembershipInfo_me_customer {
   id: string;
   status: CustomerStatus | null;
   invoices: (GetMembershipInfo_me_customer_invoices | null)[] | null;
-  paymentPlan: GetMembershipInfo_me_customer_paymentPlan | null;
   membership: GetMembershipInfo_me_customer_membership | null;
 }
 

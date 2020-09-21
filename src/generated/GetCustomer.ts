@@ -68,6 +68,18 @@ export interface GetCustomer_me_bag {
   productVariant: GetCustomer_me_bag_productVariant;
 }
 
+export interface GetCustomer_me_customer_membership_plan {
+  __typename: "PaymentPlan";
+  id: string;
+  itemCount: number | null;
+}
+
+export interface GetCustomer_me_customer_membership {
+  __typename: "CustomerMembership";
+  id: string;
+  plan: GetCustomer_me_customer_membership_plan | null;
+}
+
 export interface GetCustomer_me_customer_detail_shippingAddress {
   __typename: "Location";
   id: string;
@@ -94,6 +106,7 @@ export interface GetCustomer_me_customer_billingInfo {
 export interface GetCustomer_me_customer {
   __typename: "Customer";
   id: string;
+  membership: GetCustomer_me_customer_membership | null;
   detail: GetCustomer_me_customer_detail | null;
   billingInfo: GetCustomer_me_customer_billingInfo | null;
 }

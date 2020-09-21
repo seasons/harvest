@@ -126,6 +126,8 @@ export const Bag = screenTrack()((props) => {
     return <Loader />
   }
 
+  console.log("data", data)
+
   const onRefresh = () => {
     setRefreshing(true)
     refetch()
@@ -146,7 +148,8 @@ export const Bag = screenTrack()((props) => {
       productID: item.productVariant.product.id,
     })) || []
 
-  const bagItems = assign(fill(new Array(3), { variantID: "", productID: "" }), items)
+  const itemCount = data?.me?.customer?.membership?.plan?.itemCount
+  const bagItems = (itemCount && assign(fill(new Array(itemCount), { variantID: "", productID: "" }), items)) || []
   const hasActiveReservation = !!me?.activeReservation
 
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
@@ -254,8 +257,7 @@ export const Bag = screenTrack()((props) => {
       } else {
         return (
           <BagTab
-            me={data?.me}
-            activeReservation={data?.me?.activeReservation}
+            data={data}
             pauseStatus={pauseStatus}
             items={item.data}
             removeFromBagAndSaveItem={removeFromBagAndSaveItem}
