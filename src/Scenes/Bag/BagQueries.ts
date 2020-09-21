@@ -1,10 +1,31 @@
-import { BagItemFragment } from "./Components/BagItem"
 import gql from "graphql-tag"
+
+import { BagItemFragment } from "./Components/BagItem"
 
 export const CHECK_ITEMS = gql`
   mutation CheckItemsAvailability($items: [ID!]!) {
     checkItemsAvailability(items: $items)
   }
+`
+
+export const GET_LOCAL_BAG = gql`
+  query GetLocalBag {
+    me {
+      customer {
+        localBagItems @client {
+          id
+          productVariant {
+            id
+            ...BagItemProductVariant
+          }
+          position
+          saved
+          status
+        }
+      }
+    }
+  }
+  ${BagItemFragment}
 `
 
 export const GET_BAG = gql`
@@ -87,6 +108,16 @@ export const GET_BAG = gql`
         }
       }
       bag {
+        id
+        productVariant {
+          id
+          ...BagItemProductVariant
+        }
+        position
+        saved
+        status
+      }
+      localBagItems @client {
         id
         productVariant {
           id
