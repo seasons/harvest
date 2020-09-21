@@ -90,7 +90,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
   const noActiveUser = data?.me?.customer?.status !== "Active"
 
   const isInBag = selectedVariant?.isInBag || added
-  const disabled = !!props.disabled || isInBag || !variantInStock || isMutating || noActiveUser
+  const disabled = !!props.disabled || isInBag || !variantInStock || isMutating
 
   let text = "Add to bag"
   if (isInBag) {

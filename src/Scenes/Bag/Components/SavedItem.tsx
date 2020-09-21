@@ -140,7 +140,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
                             }
                           }}
                         >
-                          {"  "}Add to bag
+                          Add to bag
                         </Sans>
                       </>
                     ) : (
