@@ -9,9 +9,10 @@ import { Box, Sans } from "./"
  * these are prefixed with Auto:
  */
 interface TabBarProps {
+  tabColor?: string
   /** Auto: A list of strings for the buttons */
   tabs: string[]
-  disabledTabs: string[]
+  disabledTabs?: string[]
   /** Auto:  A callback for usage in the tab buttons */
   goToPage?: (page: Number) => null | void
   /** Auto: The index of the currently active tab */
@@ -34,7 +35,7 @@ const Tabs = styled(View)`
   justify-content: space-around;
 `
 
-const TabButton = styled.View<{ spaceEvenly?: boolean; active?: boolean }>`
+const TabButton = styled.View<{ spaceEvenly?: boolean; active?: boolean; tabColor?: string }>`
   align-items: center;
   justify-content: center;
   padding-top: 5;
@@ -45,7 +46,7 @@ const TabButton = styled.View<{ spaceEvenly?: boolean; active?: boolean }>`
   ${(p) =>
     p.active &&
     `
-    border-color: #000000;
+    border-color: ${p.tabColor ? p.tabColor : "#000000"};
   `};
 `
 
@@ -58,14 +59,14 @@ export const Tab: React.SFC<TabProps> = ({ children }) => (
 )
 
 export class TabBar extends React.Component<TabBarProps, null> {
-  renderTab(name, page, isTabActive, isTabDisabled, onPressHandler) {
-    let tabColor
+  renderTab(name, page, isTabActive, isTabDisabled, onPressHandler, tabColorProps) {
+    let tabTextColor
     if (isTabDisabled) {
-      tabColor = color("black25")
+      tabTextColor = color("black25")
     } else if (isTabActive) {
-      tabColor = color("black100")
+      tabTextColor = color("black100")
     } else {
-      tabColor = color("black50")
+      tabTextColor = color("black50")
     }
     return (
       <Button
@@ -75,8 +76,8 @@ export class TabBar extends React.Component<TabBarProps, null> {
         accessibilityTraits="button"
         onPress={() => (isTabDisabled ? null : onPressHandler(page))}
       >
-        <TabButton spaceEvenly={this.props.spaceEvenly} active={isTabActive}>
-          <Sans numberOfLines={1} weight="medium" size="2" color={tabColor}>
+        <TabButton spaceEvenly={this.props.spaceEvenly} active={isTabActive} tabColor={tabColorProps}>
+          <Sans numberOfLines={1} weight="medium" size="2" color={tabTextColor}>
             {name}
           </Sans>
         </TabButton>
@@ -91,7 +92,7 @@ export class TabBar extends React.Component<TabBarProps, null> {
           {this.props.tabs.map((name, index) => {
             const isTabActive = this.props.activeTab === index
             const isTabDisabled = this.props.disabledTabs?.includes(name)
-            return this.renderTab(name, index, isTabActive, isTabDisabled, this.props.goToPage)
+            return this.renderTab(name, index, isTabActive, isTabDisabled, this.props.goToPage, this.props.tabColor)
           })}
         </Tabs>
       </Wrapper>

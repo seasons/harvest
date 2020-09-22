@@ -1,1 +1,1 @@
-export { ChoosePlanPane, Plan } from "./ChoosePlanPane"
+export { ChoosePlanPane } from "./ChoosePlanPane"

@@ -30,11 +30,26 @@ export const GET_LOCAL_BAG = gql`
 
 export const GET_BAG = gql`
   query GetBagAndSavedItems {
+    paymentPlans(where: { status: "active" }) {
+      id
+      planID
+      tier
+      price
+      itemCount
+    }
     me {
       customer {
         id
-        plan
         status
+        membership {
+          id
+          plan {
+            id
+            tier
+            price
+            itemCount
+          }
+        }
         invoices {
           id
           subscriptionId

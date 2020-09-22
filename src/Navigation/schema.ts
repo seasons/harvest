@@ -1,5 +1,6 @@
 export enum PageNames {
   // Modals
+  UpdatePaymentPlanModal = "UpdatePaymentPlanModal",
   FiltersModal = "FiltersModal",
   ResetPasswordModal = "ResetPasswordModal",
   ResetPasswordConfirmationModal = "ResetPasswordConfirmationModal",

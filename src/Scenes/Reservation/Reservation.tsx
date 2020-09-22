@@ -39,6 +39,13 @@ const GET_CUSTOMER = gql`
       }
       customer {
         id
+        membership {
+          id
+          plan {
+            id
+            itemCount
+          }
+        }
         detail {
           id
           phoneNumber
@@ -118,6 +125,8 @@ export const Reservation = screenTrack()((props) => {
 
   const phoneNumber = customer?.detail?.phoneNumber
   const items = data?.me?.bag
+
+  const planItemCount = data?.me?.customer?.membership?.plan?.itemCount
 
   if (!customer || !items || !address) {
     return (
@@ -208,6 +217,7 @@ export const Reservation = screenTrack()((props) => {
             const itemIDs = items?.map((item) => item?.productVariant?.id)
             const { data } = await reserveItems({
               variables: {
+                planItemCount,
                 items: itemIDs,
               },
             })
