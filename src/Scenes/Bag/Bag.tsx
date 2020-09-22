@@ -126,8 +126,6 @@ export const Bag = screenTrack()((props) => {
     return <Loader />
   }
 
-  console.log("data", data)
-
   const onRefresh = () => {
     setRefreshing(true)
     refetch()
