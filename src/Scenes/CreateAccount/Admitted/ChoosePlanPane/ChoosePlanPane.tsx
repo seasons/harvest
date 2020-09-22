@@ -279,18 +279,18 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
             faqSections.map((section, index) => (
               <Box mt={4} key={index} px={2}>
                 <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-                  <Sans size="2">{section.title}</Sans>
+                  <Sans size="1">{section.title}</Sans>
                   <ChevronIcon rotateDeg="90deg" color={color("black100")} />
                 </Flex>
                 <Spacer mb={4} />
                 {section.subsections.map((subSection) => {
                   return (
                     <Box key={subSection.title}>
-                      <Sans size="2">{subSection.title}</Sans>
+                      <Sans size="1">{subSection.title}</Sans>
                       <Spacer mb={1} />
                       <Separator />
                       <Spacer mb={1} />
-                      <Sans size="2" color="black50">
+                      <Sans size="1" color="black50">
                         {subSection.text}
                       </Sans>
                       <Spacer mb={4} />
