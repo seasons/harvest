@@ -47,7 +47,6 @@ interface ChoosePlanPaneProps {
 const viewWidth = Dimensions.get("window").width
 
 export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType }) => {
-  console.log("data??", data)
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
 
@@ -260,6 +259,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
           <Spacer mb={2} />
           {plans
             ?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])
+            ?.sort((a, b) => b.itemCount - a.itemCount)
             ?.map((plan) => {
               return (
                 <Box key={plan.id} px={2}>
