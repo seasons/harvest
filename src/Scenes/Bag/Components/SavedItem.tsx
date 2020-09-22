@@ -16,12 +16,13 @@ import styled from "styled-components/native"
 import * as Sentry from "@sentry/react-native"
 
 import { ADD_TO_BAG, GET_BAG } from "../BagQueries"
+import { GET_PRODUCT } from "App/Scenes/Product/Queries"
+import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/Browse"
 
 interface BagItemProps {
   bagIsFull: boolean
   hasActiveReservation: boolean
   bagItem: any
-  sectionHeight: number
   navigation?: any
   removeItemFromBag?: Function
 }
@@ -29,7 +30,6 @@ interface BagItemProps {
 export const SavedItem: React.FC<BagItemProps> = ({
   bagIsFull,
   bagItem,
-  sectionHeight,
   navigation,
   removeItemFromBag,
   hasActiveReservation,
@@ -171,6 +171,29 @@ export const SavedItem: React.FC<BagItemProps> = ({
                     id: variantToUse.id,
                     saved: true,
                   },
+                  refetchQueries: [
+                    {
+                      query: GET_BAG,
+                    },
+                    {
+                      query: GET_PRODUCT,
+                      variables: {
+                        where: {
+                          id: product.id,
+                        },
+                      },
+                    },
+                    {
+                      query: GET_BROWSE_PRODUCTS,
+                      variables: {
+                        name: "all",
+                        first: 10,
+                        skip: 0,
+                        orderBy: "publishedAt_DESC",
+                        sizes: [],
+                      },
+                    },
+                  ],
                 })
               }}
               variant="secondaryWhite"
