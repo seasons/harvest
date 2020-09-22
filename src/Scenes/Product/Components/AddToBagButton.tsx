@@ -2,7 +2,7 @@ import { Button } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG, ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import { head } from "lodash"
@@ -31,7 +31,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
   const { authState } = useAuthContext()
   const userHasSession = authState?.userSession
 
-  const [addToBag] = useMutation(ADD_TO_BAG, {
+  const [addToBag] = useMutation(userHasSession ? ADD_TO_BAG : ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
       id: selectedVariant.id,
     },
@@ -44,24 +44,25 @@ export const AddToBagButton: React.FC<Props> = (props) => {
         variables: { where: { id: head(data?.products)?.id } },
       },
     ],
-    onCompleted: () => {
+    onCompleted: (res) => {
+      console.log(res)
       setIsMutating(false)
       setAdded(true)
-      if (data?.me?.bag?.length >= 2) {
-        showPopUp({
-          icon: <CheckCircled />,
-          title: "Added to bag",
-          note: "Your bag is full. Place your reservation.",
-          buttonText: "Got It",
-          secondaryButtonText: "Go to bag",
-          secondaryButtonOnPress: () => {
-            navigation.popToTop()
-            navigation.navigate("BagStack")
-            hidePopUp()
-          },
-          onClose: () => hidePopUp(),
-        })
-      }
+      // if (data?.me?.bag?.length >= 2) {
+      //   showPopUp({
+      //     icon: <CheckCircled />,
+      //     title: "Added to bag",
+      //     note: "Your bag is full. Place your reservation.",
+      //     buttonText: "Got It",
+      //     secondaryButtonText: "Go to bag",
+      //     secondaryButtonOnPress: () => {
+      //       navigation.popToTop()
+      //       navigation.navigate("BagStack")
+      //       hidePopUp()
+      //     },
+      //     onClose: () => hidePopUp(),
+      //   })
+      // }
     },
     onError: (err) => {
       setIsMutating(false)
@@ -78,12 +79,8 @@ export const AddToBagButton: React.FC<Props> = (props) => {
 
   const handleReserve = () => {
     if (!isMutating) {
-      if (userHasSession) {
-        setIsMutating(true)
-        addToBag()
-      } else {
-        navigation.navigate("Modal", { screen: "SignInModal" })
-      }
+      setIsMutating(true)
+      addToBag()
     }
   }
 

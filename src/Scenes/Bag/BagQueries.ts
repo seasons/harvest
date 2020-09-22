@@ -12,20 +12,10 @@ export const GET_LOCAL_BAG = gql`
   query GetLocalBag {
     me {
       customer {
-        localBagItems @client {
-          id
-          productVariant {
-            id
-            ...BagItemProductVariant
-          }
-          position
-          saved
-          status
-        }
+        localBagItems @client
       }
     }
   }
-  ${BagItemFragment}
 `
 
 export const GET_BAG = gql`
@@ -37,6 +27,7 @@ export const GET_BAG = gql`
       price
       itemCount
     }
+    localBagItems @client
     me {
       customer {
         id
@@ -132,16 +123,6 @@ export const GET_BAG = gql`
         saved
         status
       }
-      localBagItems @client {
-        id
-        productVariant {
-          id
-          ...BagItemProductVariant
-        }
-        position
-        saved
-        status
-      }
       savedItems {
         id
         productVariant {
@@ -153,6 +134,14 @@ export const GET_BAG = gql`
     }
   }
   ${BagItemFragment}
+`
+
+export const ADD_OR_REMOVE_FROM_LOCAL_BAG = gql`
+  mutation AddOrRemoveFromLocalBag($id: ID!) {
+    addOrRemoveFromLocalBag(id: $id) {
+      id
+    }
+  }
 `
 
 export const ADD_TO_BAG = gql`

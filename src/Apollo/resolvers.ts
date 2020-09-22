@@ -1,14 +1,11 @@
-import { ApolloCache, gql, Resolvers } from "@apollo/client"
+import { GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
 
-import { GET_CART_ITEMS } from "../"
+import { ApolloCache, gql, Resolvers } from "@apollo/client"
 
 export const typeDefs = gql`
   extend type Query {
     isLoggedIn: Boolean!
-  }
-
-  extend type Customer {
-    localBagItems: [BagItem!]
+    localBagItems: [ID!]!
   }
 
   extend type Product {
@@ -16,7 +13,7 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
-    addOrRemoveFromLocalBag(id: ID!): [BagItem!]!
+    addOrRemoveFromLocalBag(id: ID!): [ID!]!
   }
 `
 
@@ -31,12 +28,26 @@ interface AppResolvers extends Resolvers {
 }
 
 export const resolvers = {
-  Customer: {
-    localBagItems: (customer, _, { cache }) => {
+  localBagItems: (customer, _, { cache }) => {
+    const queryResult = cache.readQuery({
+      query: GET_LOCAL_BAG,
+    })
+    return queryResult
+  },
+  Mutation: {
+    addOrRemoveFromLocalBag: (_, { id }: { id: string }, { cache }): string[] => {
       const queryResult = cache.readQuery({
-        query: GET_CART_ITEMS,
+        query: GET_LOCAL_BAG,
       })
-      return queryResult
+      if (queryResult) {
+        const { localBagItems } = queryResult
+        const data = {
+          localBagItems: localBagItems.includes(id) ? localBagItems.filter((i) => i !== id) : [...localBagItems, id],
+        }
+        cache.writeQuery({ query: GET_LOCAL_BAG, data })
+        return data.localBagItems
+      }
+      return []
     },
   },
 }
