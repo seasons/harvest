@@ -34,6 +34,7 @@ export const GET_MEMBERSHIP_INFO = gql`
             id
             price
             description
+            tier
           }
         }
       }
@@ -49,7 +50,6 @@ export const GET_MEMBERSHIP_INFO = gql`
 export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeArea()
   const { data } = useQuery(GET_MEMBERSHIP_INFO)
-  console.log("data", data)
   const customer = data?.me?.customer
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
@@ -74,7 +74,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={80} />
           <Sans size="3">Membership info</Sans>
           <Spacer mb={3} />
-          <MembershipCard memberName={`${firstName} ${lastName}`} planName={plan?.name} />
+          <MembershipCard memberName={`${firstName} ${lastName}`} planName={plan?.tier} />
           <Spacer mb={4} />
           {!!plan?.price && (
             <>

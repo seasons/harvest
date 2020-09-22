@@ -35,6 +35,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
     variables: {
       id: selectedVariant.id,
     },
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
         query: GET_BAG,
@@ -47,7 +48,12 @@ export const AddToBagButton: React.FC<Props> = (props) => {
     onCompleted: () => {
       setIsMutating(false)
       setAdded(true)
-      if (data?.me?.bag?.length >= 2) {
+      const itemCount = data?.me?.customer?.membership?.plan?.itemCount
+      const bagItemCount = data?.me?.bag?.length
+      console.log("itemCount", itemCount)
+      console.log("bagItemCount", bagItemCount)
+      console.log("data?.me?.bag", data?.me?.bag)
+      if (itemCount && bagItemCount && bagItemCount >= itemCount) {
         showPopUp({
           icon: <CheckCircled />,
           title: "Added to bag",

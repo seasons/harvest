@@ -20,15 +20,6 @@ export const GET_BAG = gql`
       customer {
         id
         status
-        membership {
-          id
-          plan {
-            id
-            tier
-            price
-            itemCount
-          }
-        }
         invoices {
           id
           subscriptionId
@@ -45,6 +36,12 @@ export const GET_BAG = gql`
         }
         membership {
           id
+          plan {
+            id
+            tier
+            price
+            itemCount
+          }
           pauseRequests(orderBy: createdAt_DESC) {
             id
             resumeDate

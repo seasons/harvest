@@ -2,7 +2,6 @@ import { Box, FixedButton, Spacer } from "App/Components"
 import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { PauseButtons, PauseStatus } from "App/Components/Pause/PauseButtons"
-import { BAG_NUM_ITEMS } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
@@ -63,7 +62,8 @@ export const Bag = screenTrack()((props) => {
 
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {
-      const { me } = cache.readQuery({ query: GET_BAG })
+      // Note: This mutation is being called in BagItem.tsx and has it's variables and refetchQueries listed there
+      const { me, paymentPlans } = cache.readQuery({ query: GET_BAG })
       const key = currentView === BagView.Bag ? "bag" : "savedItems"
       const list = me[key]
       const filteredList = list.filter((a) => a.id !== data.removeFromBag.id)
@@ -74,24 +74,10 @@ export const Bag = screenTrack()((props) => {
             ...me,
             [key]: filteredList,
           },
+          paymentPlans,
         },
       })
     },
-    refetchQueries: [
-      {
-        query: GET_BAG,
-      },
-      {
-        query: GET_BROWSE_PRODUCTS,
-        variables: {
-          name: "all",
-          first: 10,
-          skip: 0,
-          orderBy: "publishedAt_DESC",
-          sizes: [],
-        },
-      },
-    ],
   })
 
   const [removeFromBagAndSaveItem] = useMutation(REMOVE_FROM_BAG_AND_SAVE_ITEM, {
@@ -125,8 +111,6 @@ export const Bag = screenTrack()((props) => {
   if (isLoading) {
     return <Loader />
   }
-
-  console.log("data", data)
 
   const onRefresh = () => {
     setRefreshing(true)
@@ -226,7 +210,7 @@ export const Bag = screenTrack()((props) => {
   const isSavedView = BagView.Saved == currentView
   const reservations = me?.customer?.reservations
   const bagCount = items.length
-  const bagIsFull = bagCount === BAG_NUM_ITEMS
+  const bagIsFull = itemCount && bagCount === itemCount
 
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
   const pausePending = pauseRequest?.pausePending
