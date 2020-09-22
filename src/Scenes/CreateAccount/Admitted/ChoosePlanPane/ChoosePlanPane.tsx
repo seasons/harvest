@@ -185,6 +185,8 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
       return
     }
 
+    setIsMutating(true)
+
     tracking.trackEvent({
       actionName: TrackSchema.ActionNames.ChoosePlanTapped,
       actionType: TrackSchema.ActionTypes.Tap,
@@ -195,8 +197,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
     } else if (paneType === PaneType.Update) {
       await onChoosePlanUpdate()
     }
-
-    setIsMutating(true)
   }
 
   const descriptionLines = selectedPlan?.description?.split("\n") || []

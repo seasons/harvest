@@ -20,7 +20,7 @@ const TriageProgressFooter = styled(Box)`
 `
 
 export const TriageProgressScreen: React.FC<TriageProgressScreenProps> = ({ start, done }) => {
-  const steps = ["Verifying Account", "Checking Sizes", "Confirming Availability"]
+  const steps = ["Verifying account", "Checking sizes", "Confirming availability"]
   const [currentStep, setCurrentStep] = useState(0)
   const [stepsComplete, setStepsComplete] = useState(false)
 
