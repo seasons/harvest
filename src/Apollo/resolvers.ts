@@ -3,9 +3,13 @@ import { GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
 import { ApolloCache, gql, Resolvers } from "@apollo/client"
 
 export const typeDefs = gql`
+  type LocalProduct {
+    productID: ID!
+    variantID: ID!
+  }
   extend type Query {
     isLoggedIn: Boolean!
-    localBagItems: [ID!]!
+    localBagItems: [LocalProduct!]!
   }
 
   extend type Product {
@@ -13,7 +17,7 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
-    addOrRemoveFromLocalBag(id: ID!): [ID!]!
+    addOrRemoveFromLocalBag($productID: ID!, $variantID: ID!): [LocalProduct!]!
   }
 `
 

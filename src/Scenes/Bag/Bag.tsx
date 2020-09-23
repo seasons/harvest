@@ -1,8 +1,7 @@
 import { Box, FixedButton, Spacer } from "App/Components"
-import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { PauseButtons, PauseStatus } from "App/Components/Pause/PauseButtons"
-import { BAG_NUM_ITEMS } from "App/helpers/constants"
+import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
@@ -16,7 +15,6 @@ import { FlatList, RefreshControl, StatusBar } from "react-native"
 
 import { useFocusEffect } from "@react-navigation/native"
 
-import { GET_BROWSE_PRODUCTS } from "../Browse/Browse"
 import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 
@@ -30,7 +28,7 @@ export const Bag = screenTrack()((props) => {
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
-  const [disabledTabs, setDisabledTabs] = useState([])
+
   const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const tracking = useTracking()
@@ -55,17 +53,12 @@ export const Bag = screenTrack()((props) => {
     if (data) {
       setIsLoading(false)
     }
-    if (!!customerStatus && !(customerStatus === "Active" || customerStatus === "Paused")) {
-      setDisabledTabs(["Bag", "History"])
-      setCurrentView(BagView.Saved)
-    } else {
-      setDisabledTabs([])
-    }
   }, [data])
 
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {
-      const { me } = cache.readQuery({ query: GET_BAG })
+      // Note: This mutation is being called in BagItem.tsx and has it's variables and refetchQueries listed there
+      const { me, paymentPlans } = cache.readQuery({ query: GET_BAG })
       const key = currentView === BagView.Bag ? "bag" : "savedItems"
       const list = me[key]
       const filteredList = list.filter((a) => a.id !== data.removeFromBag.id)
@@ -76,24 +69,10 @@ export const Bag = screenTrack()((props) => {
             ...me,
             [key]: filteredList,
           },
+          paymentPlans,
         },
       })
     },
-    refetchQueries: [
-      {
-        query: GET_BAG,
-      },
-      {
-        query: GET_BROWSE_PRODUCTS,
-        variables: {
-          name: "all",
-          first: 10,
-          skip: 0,
-          orderBy: "publishedAt_DESC",
-          sizes: [],
-        },
-      },
-    ],
   })
 
   const [removeFromBagAndSaveItem] = useMutation(REMOVE_FROM_BAG_AND_SAVE_ITEM, {
@@ -120,15 +99,9 @@ export const Bag = screenTrack()((props) => {
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
 
-  // if (!authState?.userSession) {
-  //   return <GuestView navigation={navigation} />
-  // }
-
   if (isLoading) {
     return <Loader />
   }
-
-  console.log("data", data)
 
   const onRefresh = () => {
     setRefreshing(true)
@@ -136,12 +109,13 @@ export const Bag = screenTrack()((props) => {
     setRefreshing(false)
   }
 
-  const items =
-    me?.bag?.map((item) => ({
-      ...item,
-      variantID: item.productVariant.id,
-      productID: item.productVariant.product.id,
-    })) || []
+  const items = !authState.isSignedIn
+    ? data?.localBagItems
+    : me?.bag?.map((item) => ({
+        ...item,
+        variantID: item.productVariant.id,
+        productID: item.productVariant.product.id,
+      })) || []
 
   const savedItems =
     me?.savedItems?.map((item) => ({
@@ -150,7 +124,7 @@ export const Bag = screenTrack()((props) => {
       productID: item.productVariant.product.id,
     })) || []
 
-  const itemCount = data?.me?.customer?.membership?.plan?.itemCount
+  const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
   const bagItems = (itemCount && assign(fill(new Array(itemCount), { variantID: "", productID: "" }), items)) || []
   const hasActiveReservation = !!me?.activeReservation
 
@@ -228,7 +202,7 @@ export const Bag = screenTrack()((props) => {
   const isSavedView = BagView.Saved == currentView
   const reservations = me?.customer?.reservations
   const bagCount = items.length
-  const bagIsFull = bagCount === BAG_NUM_ITEMS
+  const bagIsFull = itemCount && bagCount === itemCount
 
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
   const pausePending = pauseRequest?.pausePending
@@ -296,7 +270,6 @@ export const Bag = screenTrack()((props) => {
       <TabBar
         spaceEvenly
         tabs={["Bag", "Saved", "History"]}
-        disabledTabs={disabledTabs}
         activeTab={currentView}
         goToPage={(page: BagView) => {
           tracking.trackEvent({

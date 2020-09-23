@@ -10,11 +10,7 @@ export const CHECK_ITEMS = gql`
 
 export const GET_LOCAL_BAG = gql`
   query GetLocalBag {
-    me {
-      customer {
-        localBagItems @client
-      }
-    }
+    localBagItems @client
   }
 `
 
@@ -32,15 +28,6 @@ export const GET_BAG = gql`
       customer {
         id
         status
-        membership {
-          id
-          plan {
-            id
-            tier
-            price
-            itemCount
-          }
-        }
         invoices {
           id
           subscriptionId
@@ -57,6 +44,12 @@ export const GET_BAG = gql`
         }
         membership {
           id
+          plan {
+            id
+            tier
+            price
+            itemCount
+          }
           pauseRequests(orderBy: createdAt_DESC) {
             id
             resumeDate
@@ -137,10 +130,8 @@ export const GET_BAG = gql`
 `
 
 export const ADD_OR_REMOVE_FROM_LOCAL_BAG = gql`
-  mutation AddOrRemoveFromLocalBag($id: ID!) {
-    addOrRemoveFromLocalBag(id: $id) {
-      id
-    }
+  mutation AddOrRemoveFromLocalBag($productID: ID!, $variantID: ID!) {
+    addOrRemoveFromLocalBag(productID: $productID, variantID: $variantID) @client
   }
 `
 

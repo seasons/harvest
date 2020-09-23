@@ -47,7 +47,6 @@ interface ChoosePlanPaneProps {
 const viewWidth = Dimensions.get("window").width
 
 export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType }) => {
-  console.log("data??", data)
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
 
@@ -186,6 +185,8 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
       return
     }
 
+    setIsMutating(true)
+
     tracking.trackEvent({
       actionName: TrackSchema.ActionNames.ChoosePlanTapped,
       actionType: TrackSchema.ActionTypes.Tap,
@@ -196,8 +197,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
     } else if (paneType === PaneType.Update) {
       await onChoosePlanUpdate()
     }
-
-    setIsMutating(true)
   }
 
   const descriptionLines = selectedPlan?.description?.split("\n") || []
@@ -260,6 +259,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
           <Spacer mb={2} />
           {plans
             ?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])
+            ?.sort((a, b) => b.itemCount - a.itemCount)
             ?.map((plan) => {
               return (
                 <Box key={plan.id} px={2}>
@@ -279,18 +279,18 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
             faqSections.map((section, index) => (
               <Box mt={4} key={index} px={2}>
                 <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-                  <Sans size="2">{section.title}</Sans>
+                  <Sans size="1">{section.title}</Sans>
                   <ChevronIcon rotateDeg="90deg" color={color("black100")} />
                 </Flex>
                 <Spacer mb={4} />
                 {section.subsections.map((subSection) => {
                   return (
                     <Box key={subSection.title}>
-                      <Sans size="2">{subSection.title}</Sans>
+                      <Sans size="1">{subSection.title}</Sans>
                       <Spacer mb={1} />
                       <Separator />
                       <Spacer mb={1} />
-                      <Sans size="2" color="black50">
+                      <Sans size="1" color="black50">
                         {subSection.text}
                       </Sans>
                       <Spacer mb={4} />

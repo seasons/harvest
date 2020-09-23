@@ -1,5 +1,6 @@
 import { Button } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
+import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
@@ -19,6 +20,7 @@ interface Props {
   width: number
   selectedVariant: any
   data: GetProduct
+  products
 }
 
 export const AddToBagButton: React.FC<Props> = (props) => {
@@ -29,12 +31,15 @@ export const AddToBagButton: React.FC<Props> = (props) => {
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
   const { authState } = useAuthContext()
-  const userHasSession = authState?.userSession
+  const isUserSignedIn = authState?.isSignedIn
 
-  const [addToBag] = useMutation(userHasSession ? ADD_TO_BAG : ADD_OR_REMOVE_FROM_LOCAL_BAG, {
+  const [addToBag] = useMutation(isUserSignedIn ? ADD_TO_BAG : ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
       id: selectedVariant.id,
+      productID: props.data.products?.[0].id,
+      variantID: selectedVariant.id,
     },
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
         query: GET_BAG,
@@ -48,21 +53,26 @@ export const AddToBagButton: React.FC<Props> = (props) => {
       console.log(res)
       setIsMutating(false)
       setAdded(true)
-      // if (data?.me?.bag?.length >= 2) {
-      //   showPopUp({
-      //     icon: <CheckCircled />,
-      //     title: "Added to bag",
-      //     note: "Your bag is full. Place your reservation.",
-      //     buttonText: "Got It",
-      //     secondaryButtonText: "Go to bag",
-      //     secondaryButtonOnPress: () => {
-      //       navigation.popToTop()
-      //       navigation.navigate("BagStack")
-      //       hidePopUp()
-      //     },
-      //     onClose: () => hidePopUp(),
-      //   })
-      // }
+      const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
+      const bagItemCount = authState?.isSignedIn ? data?.me?.bag?.length : res.addOrRemoveFromLocalBag.length
+      console.log("itemCount", itemCount)
+      console.log("bagItemCount", bagItemCount)
+      console.log("data?.me?.bag", data?.me?.bag)
+      if (itemCount && bagItemCount && bagItemCount >= itemCount) {
+        showPopUp({
+          icon: <CheckCircled />,
+          title: "Added to bag",
+          note: "Your bag is full. Place your reservation.",
+          buttonText: "Got It",
+          secondaryButtonText: "Go to bag",
+          secondaryButtonOnPress: () => {
+            navigation.popToTop()
+            navigation.navigate("BagStack")
+            hidePopUp()
+          },
+          onClose: () => hidePopUp(),
+        })
+      }
     },
     onError: (err) => {
       setIsMutating(false)

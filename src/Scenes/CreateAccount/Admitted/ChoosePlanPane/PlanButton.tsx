@@ -30,7 +30,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
           </Sans>
           <Text>
             <Sans color="black50" size="0.5">
-              per \ month
+              per month
             </Sans>
             <Sans color="black100" size="1">
               {"  "}${price / 100}

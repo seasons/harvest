@@ -133,13 +133,14 @@ export const Product = screenTrack({
     console.error("Error:", error)
   }
 
-  if (!data) {
-    return <EmptyView navigation={navigation} />
-  }
-
   // Happens if the product could not be found. The useEffect above will show a popup.
-  if (!product) {
-    return <EmptyView navigation={navigation} />
+  if (!product || !data) {
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
   }
 
   const renderItem = ({ item: section }) => {
@@ -242,10 +243,3 @@ const VariantWantWrapper = styled(Box)`
 const AnimatedVariantWantWrapper = animated(VariantWantWrapper)
 const AnimatedVariantPicker = animated(VariantPickerWrapper)
 const AnimatedOverlay = animated(Overlay)
-
-const EmptyView = (navigation: any) => (
-  <>
-    <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-    <Loader />
-  </>
-)

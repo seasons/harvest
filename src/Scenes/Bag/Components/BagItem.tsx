@@ -11,6 +11,7 @@ import { Spinner } from "App/Components/Spinner"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { GET_BAG } from "../BagQueries"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
+import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/Browse"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -142,6 +143,16 @@ export const BagItem: React.FC<BagItemProps> = ({
                           },
                         },
                       },
+                      {
+                        query: GET_BROWSE_PRODUCTS,
+                        variables: {
+                          name: "all",
+                          first: 10,
+                          skip: 0,
+                          orderBy: "publishedAt_DESC",
+                          sizes: [],
+                        },
+                      },
                     ],
                   })
                 }
@@ -174,6 +185,9 @@ export const BagItem: React.FC<BagItemProps> = ({
                       saved: false,
                     },
                     refetchQueries: [
+                      {
+                        query: GET_BAG,
+                      },
                       {
                         query: GET_PRODUCT,
                         variables: {
