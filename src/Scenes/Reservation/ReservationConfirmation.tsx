@@ -96,7 +96,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
     return (
       <>
         <Flex flexDirection="row" flex={1} width="100%">
-          <Sans size="2" color="black100">
+          <Sans size="1" color="black100">
             {title}
           </Sans>
           {content && <Box ml="auto">{content}</Box>}
@@ -131,7 +131,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
               content={
                 <>
                   {!!reservation.reservationNumber && (
-                    <Sans size="2" color="black100" textAlign="right" ml="auto">
+                    <Sans size="1" color="black100" textAlign="right" ml="auto">
                       {reservation.reservationNumber}
                     </Sans>
                   )}
@@ -145,12 +145,12 @@ export const ReservationConfirmation = screenTrack()((props) => {
               content={
                 <>
                   {!!formatedAddress1 && (
-                    <Sans size="2" color="black100" textAlign="right">
+                    <Sans size="1" color="black100" textAlign="right">
                       {formatedAddress1}
                     </Sans>
                   )}
                   {!!formatedAddress2 && (
-                    <Sans size="2" color="black100" textAlign="right">
+                    <Sans size="1" color="black100" textAlign="right">
                       {formatedAddress2}
                     </Sans>
                   )}
@@ -163,7 +163,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
             <SectionHeader
               title="Delivery"
               content={
-                <Sans size="2" color="black100" ml="auto" textAlign="right">
+                <Sans size="1" color="black100" ml="auto" textAlign="right">
                   {`UPS Ground\n2 day shipping`}
                 </Sans>
               }
