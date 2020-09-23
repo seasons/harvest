@@ -17,7 +17,7 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
-    addOrRemoveFromLocalBag($productID: ID!, $variantID: ID!): [LocalProduct!]!
+    addOrRemoveFromLocalBag(productID: ID!, variantID: ID!): [LocalProduct!]!
   }
 `
 
@@ -39,14 +39,18 @@ export const resolvers = {
     return queryResult
   },
   Mutation: {
-    addOrRemoveFromLocalBag: (_, { id }: { id: string }, { cache }): string[] => {
+    addOrRemoveFromLocalBag: (_, product, { cache }): string[] => {
       const queryResult = cache.readQuery({
         query: GET_LOCAL_BAG,
       })
       if (queryResult) {
         const { localBagItems } = queryResult
+        const hasItem = localBagItems.indexOf((item) => item.productID === product.productID) !== -1
+
         const data = {
-          localBagItems: localBagItems.includes(id) ? localBagItems.filter((i) => i !== id) : [...localBagItems, id],
+          localBagItems: hasItem
+            ? localBagItems.filter((i) => i.productID !== product.productID)
+            : [...localBagItems, product],
         }
         cache.writeQuery({ query: GET_LOCAL_BAG, data })
         return data.localBagItems
