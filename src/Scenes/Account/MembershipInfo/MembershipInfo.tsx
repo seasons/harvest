@@ -74,7 +74,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={80} />
           <Sans size="3">Membership info</Sans>
           <Spacer mb={3} />
-          <MembershipCard memberName={`${firstName} ${lastName}`} planName={plan?.tier} />
+          <MembershipCard memberName={`${firstName} ${lastName}`} planTier={plan?.tier} />
           <Spacer mb={4} />
           {!!plan?.price && (
             <>
