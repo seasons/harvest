@@ -1,4 +1,5 @@
 import { InMemoryCache, IntrospectionFragmentMatcher } from "apollo-cache-inmemory"
+import { persistCache } from "apollo-cache-persist"
 import { ApolloClient } from "apollo-client"
 import { ApolloLink, Observable } from "apollo-link"
 import { setContext } from "apollo-link-context"
@@ -9,6 +10,7 @@ import { config, Env } from "App/utils/config"
 import { Platform } from "react-native"
 import unfetch from "unfetch"
 
+import AsyncStorage from "@react-native-community/async-storage"
 import * as Sentry from "@sentry/react-native"
 
 import introspectionQueryResultData from "../fragmentTypes.json"
@@ -95,6 +97,12 @@ export const setupApolloClient = async () => {
       isLoggedIn: !!accessToken,
       localBagItems: [],
     },
+  })
+
+  await persistCache({
+    cache,
+    storage: AsyncStorage,
+    debug: true,
   })
 
   return new ApolloClient({
