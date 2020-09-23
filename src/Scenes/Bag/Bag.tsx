@@ -150,8 +150,6 @@ export const Bag = screenTrack()((props) => {
   const bagItems = (itemCount && assign(fill(new Array(itemCount), { variantID: "", productID: "" }), items)) || []
   const hasActiveReservation = !!me?.activeReservation
 
-  console.log("active reservation", me.activeReservation)
-
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
   const handleReserve = async (navigation) => {
     setMutating(true)
