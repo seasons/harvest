@@ -49,7 +49,6 @@ export const GET_MEMBERSHIP_INFO = gql`
 export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeArea()
   const { data } = useQuery(GET_MEMBERSHIP_INFO)
-  console.log("data", data)
   const customer = data?.me?.customer
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName

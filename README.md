@@ -52,6 +52,8 @@ Storybook is a UI component dev environment for your app. A story is a single st
 
 To add new story, go to `storybook/stories` and look at an existing example.
 
+Enable storybooks by updating the `STORYBOOK_START` value to `true` in the main `index.tsx` entry file.
+
 ### Finding the latest production build
 
 Check the git logs for a commit message of the form X => Y, e.g 101 => 102. That's how we annotate version changes. Whichever is the latest commit with a message that fits that format is the latest commit to go to production.
