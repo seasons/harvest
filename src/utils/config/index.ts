@@ -13,6 +13,7 @@ export enum Env {
   APOLLO_KEY = "APOLLO_KEY",
   APPLE_MERCHANT_ID = "APPLE_MERCHANT_ID",
   STRIPE_KEY = "STRIPE_KEY",
+  IOS_APP_VERSION = "IOS_APP_VERSION",
 }
 
 const downloadAndSetNewStoredEnv = async () => {

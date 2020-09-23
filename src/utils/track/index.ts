@@ -1,9 +1,8 @@
 import "../../setupAnalytics"
 
+import { config, Env } from "App/utils/config"
 import { Platform } from "react-native"
-import _track, {
-  Track as _Track, TrackingInfo, TrackingProp, useTracking as _useTracking
-} from "react-tracking"
+import _track, { Track as _Track, TrackingInfo, TrackingProp, useTracking as _useTracking } from "react-tracking"
 
 import analytics from "@segment/analytics-react-native"
 
@@ -90,7 +89,12 @@ export function screenTrack<P>(trackingInfo?: TrackingInfo<Schema.PageViewEvent,
 
   return _track(decorateTracking as any, {
     dispatch: (data) => {
-      const newData = { ...data, platform: Platform.OS, application: "harvest" } as any
+      const newData = {
+        ...data,
+        platform: Platform.OS,
+        application: "harvest",
+        iosAppVersion: config.get(Env.IOS_APP_VERSION),
+      } as any
       if (__DEV__) {
         console.log("[Event tracked]", JSON.stringify(newData, null, 2))
       }
