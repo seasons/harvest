@@ -104,7 +104,6 @@ export const SavedItem: React.FC<BagItemProps> = ({
     <Box py={1} key={product.id}>
       <TouchableWithoutFeedback
         onPress={() => {
-          console.log("product.name", product.name)
           navigation ? navigation.navigate("Product", { id: product.id, slug: product.slug, name: product.name }) : null
         }}
       >
