@@ -3,9 +3,7 @@ import { GetProduct } from "App/generated/GetProduct"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import {
-  ADD_OR_REMOVE_FROM_LOCAL_BAG, ADD_TO_BAG, GET_BAG, GET_LOCAL_BAG
-} from "App/Scenes/Bag/BagQueries"
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG, ADD_TO_BAG, GET_BAG, GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
 import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import { head } from "lodash"
@@ -58,9 +56,6 @@ export const AddToBagButton: React.FC<Props> = (props) => {
       setAdded(true)
       const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
       const bagItemCount = authState?.isSignedIn ? data?.me?.bag?.length : res.addOrRemoveFromLocalBag.length
-      console.log("itemCount", itemCount)
-      console.log("bagItemCount", bagItemCount)
-      console.log("data?.me?.bag", data?.me?.bag)
       if (itemCount && bagItemCount && bagItemCount >= itemCount) {
         showPopUp({
           icon: <CheckCircled />,

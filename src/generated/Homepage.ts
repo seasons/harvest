@@ -49,6 +49,7 @@ export interface Homepage_homepage_sections_results_Product {
   __typename: "Product";
   id: string;
   slug: string;
+  name: string;
   images: Homepage_homepage_sections_results_Product_images[];
   brand: Homepage_homepage_sections_results_Product_brand;
   variants: Homepage_homepage_sections_results_Product_variants[] | null;

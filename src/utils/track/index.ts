@@ -1,9 +1,7 @@
 import "../../setupAnalytics"
 
 import { Platform } from "react-native"
-import _track, {
-  Track as _Track, TrackingInfo, TrackingProp, useTracking as _useTracking
-} from "react-tracking"
+import _track, { Track as _Track, TrackingInfo, TrackingProp, useTracking as _useTracking } from "react-tracking"
 
 import analytics from "@segment/analytics-react-native"
 
@@ -78,11 +76,11 @@ export const track: Track = _track
 export function screenTrack<P>(trackingInfo?: TrackingInfo<Schema.PageViewEvent, P, null>) {
   const decorateTracking = (props, state, args) => {
     const baseData = typeof trackingInfo === "function" ? trackingInfo?.(props, state, args) : trackingInfo
-
     const info = {
       page: props?.route?.name,
       entitySlug: props?.route?.params?.slug,
       entityId: props?.route?.params?.id,
+      entityName: props?.route?.params?.name,
       ...baseData,
     }
     return info

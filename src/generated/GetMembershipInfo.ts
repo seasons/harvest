@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CustomerStatus } from "./globalTypes";
+import { CustomerStatus, PaymentPlanTier } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetMembershipInfo
@@ -29,6 +29,7 @@ export interface GetMembershipInfo_me_customer_membership_plan {
   id: string;
   price: number | null;
   description: string | null;
+  tier: PaymentPlanTier | null;
 }
 
 export interface GetMembershipInfo_me_customer_membership {

@@ -18,6 +18,33 @@ import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../Reserv
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
 import { Homepage_fitPics } from "App/generated/Homepage"
 
+const HomePageProductFragment = gql`
+  fragment HomePageProduct on Product {
+    id
+    name
+    modelSize {
+      id
+      display
+    }
+    brand {
+      id
+      name
+    }
+    images(size: Thumb) {
+      id
+      url
+    }
+    variants {
+      id
+      reservable
+      internalSize {
+        id
+        display
+      }
+    }
+  }
+`
+
 export const GET_HOMEPAGE = gql`
   query Homepage($firstFitPics: Int!, $skipFitPics: Int) {
     homepage {
@@ -33,6 +60,7 @@ export const GET_HOMEPAGE = gql`
           ... on Product {
             id
             slug
+            name
             images(size: Thumb) {
               id
               url
@@ -131,6 +159,7 @@ export const GET_HOMEPAGE = gql`
     ) {
       id
       slug
+      name
       images(size: Thumb) {
         id
         url
@@ -142,27 +171,7 @@ export const GET_HOMEPAGE = gql`
       orderBy: publishedAt_DESC
       where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
     ) {
-      id
-      slug
-      images(size: Thumb) {
-        id
-        url
-      }
-      brand {
-        id
-        name
-      }
-      variants {
-        id
-        total
-        reservable
-        nonReservable
-        reserved
-        internalSize {
-          id
-          display
-        }
-      }
+      ...HomePageProduct
     }
     justAddedBottoms: products(
       first: 8
@@ -170,27 +179,7 @@ export const GET_HOMEPAGE = gql`
       orderBy: publishedAt_DESC
       where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
     ) {
-      id
-      slug
-      images(size: Thumb) {
-        id
-        url
-      }
-      brand {
-        id
-        name
-      }
-      variants {
-        id
-        total
-        reservable
-        nonReservable
-        reserved
-        internalSize {
-          id
-          display
-        }
-      }
+      ...HomePageProduct
     }
     fitPicsCount: fitPicsConnection(where: { status: Published }) {
       aggregate {
@@ -212,6 +201,7 @@ export const GET_HOMEPAGE = gql`
       createdAt
     }
   }
+  ${HomePageProductFragment}
 `
 
 export const Home = screenTrack()(({ navigation, route }) => {

@@ -39,7 +39,9 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData }) => 
       const uri = item?.images?.[0]?.url || ""
       return (
         <Animatable.View animation="fadeIn" duration={300} key={item.id}>
-          <TouchableWithoutFeedback onPress={() => navigation.navigate("Product", { id: item.id, slug: item.slug })}>
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate("Product", { id: item.id, slug: item.slug, name: item.name })}
+          >
             <Box mr={0.5} style={{ width: slideWidth }}>
               <FadeInImage
                 source={{ uri }}
