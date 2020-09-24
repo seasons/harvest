@@ -68,12 +68,16 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
   useEffect(() => {
     checkPermissions()
     // If user leaves the app to turn on notifications in the settings recheck status
-    const appChangeListener = AppState.addEventListener("change", (nextAppState) => {
+    AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState === "active") {
         checkPermissions()
       }
     })
-    return appChangeListener
+    return AppState.removeEventListener("change", (nextAppState) => {
+      if (nextAppState === "active") {
+        checkPermissions()
+      }
+    })
   }, [])
 
   const callback = (status) => {

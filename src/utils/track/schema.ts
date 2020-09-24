@@ -95,8 +95,12 @@ export enum ActionTypes {
  * Action event discriptors / names
  */
 export enum ActionNames {
+  // CreateAccount
+  CreateAccountStepSessionEnded = "Create Account Step Session Ended",
+
   // Web view
   ShareButtonTapped = "Share button tapped",
+
   // Home page
   BrowseButtonTapped = "Browse Button Tapped",
   ViewAllBrandsTapped = "View All Brands Tapped",
