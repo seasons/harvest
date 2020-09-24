@@ -17,6 +17,8 @@ export const ReservationFeedbackConfirmation: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ route, navigation }) => {
+  const [isMutatingSkip, setIsMutatingSkip] = useState(false)
+  const [isMutatingSubmit, setIsMutatingSubmit] = useState(false)
   const tracking = useTracking()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const reservationFeedback = route?.params?.reservationFeedback
@@ -25,14 +27,26 @@ export const ReservationFeedbackConfirmation: React.FC<{
     refetchQueries: [
       {
         query: GET_HOMEPAGE,
+        variables: { firstFitPics: 8, skipFitPics: 0 },
       },
     ],
   })
   const insets = useSafeArea()
+
   const { width: windowWidth } = Dimensions.get("window")
   const buttonWidth = (windowWidth - 42) / 2
 
-  const submitFeedback = async () => {
+  const submitFeedback = async (origin: "skipButton" | "submitButton") => {
+    if (isMutatingSkip || isMutatingSubmit) {
+      return
+    }
+
+    if (origin === "skipButton") {
+      setIsMutatingSkip(true)
+    } else {
+      setIsMutatingSubmit(true)
+    }
+
     const result = await updateReservationFeedback({
       variables: {
         id: reservationFeedback?.id,
@@ -50,6 +64,8 @@ export const ReservationFeedbackConfirmation: React.FC<{
       showPopUp(popUpData)
       return
     }
+    setIsMutatingSkip(false)
+    setIsMutatingSubmit(false)
     navigation.pop()
     navigation.pop()
     navigation.navigate("Modal", {
@@ -89,17 +105,19 @@ export const ReservationFeedbackConfirmation: React.FC<{
         </TouchableWithoutFeedback>
       </Box>
       <FixedKeyboardAvoidingView behavior="padding" keyboardVerticalOffset={64} style={{ bottom: insets.bottom + 32 }}>
-        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
+        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" pb={1}>
           <Button
             block
             variant="primaryWhite"
             width={buttonWidth}
+            loading={isMutatingSkip}
+            disabled={isMutatingSubmit || isMutatingSubmit}
             onPress={() => {
               tracking.trackEvent({
                 actionName: TrackingSchema.ActionNames.ReservationFeedbackConfirmationSkipButtonTapped,
                 actionType: TrackingSchema.ActionTypes.Tap,
               })
-              submitFeedback()
+              submitFeedback("skipButton")
             }}
           >
             Skip
@@ -107,6 +125,8 @@ export const ReservationFeedbackConfirmation: React.FC<{
           <Spacer ml={1} />
           <Button
             block
+            loading={isMutatingSubmit}
+            disabled={isMutatingSubmit || isMutatingSubmit}
             variant="primaryBlack"
             width={buttonWidth}
             onPress={() => {
@@ -114,7 +134,7 @@ export const ReservationFeedbackConfirmation: React.FC<{
                 actionName: TrackingSchema.ActionNames.ReservationFeedbackConfirmationSubmitButtonTapped,
                 actionType: TrackingSchema.ActionTypes.Tap,
               })
-              submitFeedback()
+              submitFeedback("submitButton")
             }}
           >
             Submit
