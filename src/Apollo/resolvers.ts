@@ -10,10 +10,7 @@ export const typeDefs = gql`
   extend type Query {
     isLoggedIn: Boolean!
     localBagItems: [LocalProduct!]!
-  }
-
-  extend type Product {
-    isInBag: Boolean!
+    isInBag(productID: ID!): Boolean!
   }
 
   extend type Mutation {
@@ -32,20 +29,30 @@ interface AppResolvers extends Resolvers {
 }
 
 export const resolvers = {
-  localBagItems: (customer, _, { cache }) => {
+  localBagItems: (_, __, { cache }) => {
     const queryResult = cache.readQuery({
       query: GET_LOCAL_BAG,
     })
     return queryResult
   },
+  isInBag: (_, product, { cache }): boolean => {
+    const queryResult = cache.readQuery({
+      query: GET_LOCAL_BAG,
+    })
+    if (queryResult) {
+      const { localBagItems } = queryResult
+      return !!localBagItems.find((item) => item.productID === product.productID)
+    }
+    return false
+  },
   Mutation: {
-    addOrRemoveFromLocalBag: (_, product, { cache }): string[] => {
+    addOrRemoveFromLocalBag: (_, product, { cache }) => {
       const queryResult = cache.readQuery({
         query: GET_LOCAL_BAG,
       })
       if (queryResult) {
         const { localBagItems } = queryResult
-        const hasItem = localBagItems.indexOf((item) => item.productID === product.productID) !== -1
+        const hasItem = !!localBagItems.find((item) => item.productID === product.productID)
 
         const data = {
           localBagItems: hasItem

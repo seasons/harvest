@@ -1,17 +1,21 @@
-import { Box, Flex, Sans, Button, Spacer } from "App/Components"
+import { Box, Button, Flex, Sans, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
+import { Spinner } from "App/Components/Spinner"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/Browse"
+import { GET_PRODUCT } from "App/Scenes/Product/Queries"
+import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { get, head } from "lodash"
 import React, { useState } from "react"
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { color } from "App/utils"
-import { Spinner } from "App/Components/Spinner"
-import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
-import { GET_BAG } from "../BagQueries"
-import { GET_PRODUCT } from "App/Scenes/Product/Queries"
-import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/Browse"
+
+import { useMutation } from "@apollo/react-hooks"
+
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -57,6 +61,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   removeItemFromBag,
   removeFromBagAndSaveItem,
 }) => {
+  const { authState } = useAuthContext()
   const [isMutating, setIsMutating] = useState(false)
   const tracking = useTracking()
   if (!bagItem) {
@@ -75,6 +80,23 @@ export const BagItem: React.FC<BagItemProps> = ({
 
   const variantSize = get(variantToUse, "internalSize.display")
   const variantId = bagItem.variantID
+
+  const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {
+    variables: {
+      productID: product.id,
+      variantID: variantToUse.id,
+    },
+    awaitRefetchQueries: true,
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+      {
+        query: GET_PRODUCT,
+        variables: { where: { id: product.id } },
+      },
+    ],
+  })
 
   const ReservedItemContent = () => {
     return (
@@ -115,53 +137,55 @@ export const BagItem: React.FC<BagItemProps> = ({
               Size {variantSize}
             </Sans>
             <Spacer mb={3} />
-            <TouchableOpacity
-              onPress={() => {
-                if (!isMutating) {
-                  setIsMutating(true)
-                  tracking.trackEvent({
-                    actionName: Schema.ActionNames.BagItemSaved,
-                    actionType: Schema.ActionTypes.Tap,
-                    productSlug: product.slug,
-                    productId: product.id,
-                    variantId: variantId,
-                  })
-                  removeFromBagAndSaveItem({
-                    variables: {
-                      id: variantId,
-                      saved: false,
-                    },
-                    refetchQueries: [
-                      {
-                        query: GET_BAG,
+            {authState.isSignedIn && (
+              <TouchableOpacity
+                onPress={() => {
+                  if (!isMutating) {
+                    setIsMutating(true)
+                    tracking.trackEvent({
+                      actionName: Schema.ActionNames.BagItemSaved,
+                      actionType: Schema.ActionTypes.Tap,
+                      productSlug: product.slug,
+                      productId: product.id,
+                      variantId: variantId,
+                    })
+                    removeFromBagAndSaveItem({
+                      variables: {
+                        id: variantId,
+                        saved: false,
                       },
-                      {
-                        query: GET_PRODUCT,
-                        variables: {
-                          where: {
-                            id: product.id,
+                      refetchQueries: [
+                        {
+                          query: GET_BAG,
+                        },
+                        {
+                          query: GET_PRODUCT,
+                          variables: {
+                            where: {
+                              id: product.id,
+                            },
                           },
                         },
-                      },
-                      {
-                        query: GET_BROWSE_PRODUCTS,
-                        variables: {
-                          name: "all",
-                          first: 10,
-                          skip: 0,
-                          orderBy: "publishedAt_DESC",
-                          sizes: [],
+                        {
+                          query: GET_BROWSE_PRODUCTS,
+                          variables: {
+                            name: "all",
+                            first: 10,
+                            skip: 0,
+                            orderBy: "publishedAt_DESC",
+                            sizes: [],
+                          },
                         },
-                      },
-                    ],
-                  })
-                }
-              }}
-            >
-              <Sans size="1" style={{ textDecorationLine: "underline" }}>
-                Save for later
-              </Sans>
-            </TouchableOpacity>
+                      ],
+                    })
+                  }
+                }}
+              >
+                <Sans size="1" style={{ textDecorationLine: "underline" }}>
+                  Save for later
+                </Sans>
+              </TouchableOpacity>
+            )}
           </Box>
         </Box>
         {!isReserved && (
@@ -179,25 +203,29 @@ export const BagItem: React.FC<BagItemProps> = ({
                     productId: product.id,
                     variantId: variantId,
                   })
-                  removeItemFromBag({
-                    variables: {
-                      id: variantId,
-                      saved: false,
-                    },
-                    refetchQueries: [
-                      {
-                        query: GET_BAG,
+                  if (!authState.isSignedIn) {
+                    removeFromLocalBag()
+                  } else {
+                    removeItemFromBag({
+                      variables: {
+                        id: variantId,
+                        saved: false,
                       },
-                      {
-                        query: GET_PRODUCT,
-                        variables: {
-                          where: {
-                            id: product.id,
+                      refetchQueries: [
+                        {
+                          query: GET_BAG,
+                        },
+                        {
+                          query: GET_PRODUCT,
+                          variables: {
+                            where: {
+                              id: product.id,
+                            },
                           },
                         },
-                      },
-                    ],
-                  })
+                      ],
+                    })
+                  }
                 }}
               >
                 Remove
