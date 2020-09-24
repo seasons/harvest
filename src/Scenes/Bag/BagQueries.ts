@@ -9,7 +9,7 @@ export const CHECK_ITEMS = gql`
 `
 
 export const GET_LOCAL_BAG = gql`
-  query GetLocalBag($ids: [ID!]) {
+  query GetLocalBag {
     localBagItems @client
   }
 `
@@ -37,7 +37,6 @@ export const GET_BAG = gql`
       price
       itemCount
     }
-    localBagItems @client
     me {
       customer {
         id

@@ -41,21 +41,17 @@ export const BagTab: React.FC<{
 
   const [getLocalBag, { data: localItems }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
     variables: {
-      ids: data?.localBagItems.map((i) => i.productID),
+      ids: items?.map((i) => i.productID),
     },
   })
 
-  // console.log(localItems)
-
   const bagItems = !authState.isSignedIn
     ? localItems?.products.map((item, i) => ({
-        ...data?.localBagItems[i],
+        ...items?.[i],
         productVariant: item.variants[0],
         status: "Added",
       }))
     : items
-
-  console.log(bagItems)
 
   const paddedItems = assign(fill(new Array(DEFAULT_ITEM_COUNT), { variantID: "", productID: "" }), bagItems) || []
 
@@ -63,7 +59,7 @@ export const BagTab: React.FC<{
     if (!authState.isSignedIn) {
       getLocalBag()
     }
-  }, [data?.localBagItems])
+  }, [items])
 
   const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
     refetchQueries: [

@@ -15,7 +15,9 @@ import { FlatList, RefreshControl, StatusBar } from "react-native"
 
 import { useFocusEffect } from "@react-navigation/native"
 
-import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
+import {
+  CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM
+} from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 
 export enum BagView {
@@ -47,6 +49,8 @@ export const Bag = screenTrack()((props) => {
   )
 
   const { data, refetch } = useQuery(GET_BAG)
+  const { data: localItems } = useQuery(GET_LOCAL_BAG)
+
   const me = data?.me
   const customerStatus = me?.customer?.status
   useEffect(() => {
@@ -110,7 +114,7 @@ export const Bag = screenTrack()((props) => {
   }
 
   const items = !authState.isSignedIn
-    ? data?.localBagItems
+    ? localItems?.localBagItems || []
     : me?.bag?.map((item) => ({
         ...item,
         variantID: item.productVariant.id,
@@ -132,41 +136,55 @@ export const Bag = screenTrack()((props) => {
   const handleReserve = async (navigation) => {
     setMutating(true)
     try {
-      const hasShippingAddress =
-        !!shippingAddress.address1 && !!shippingAddress.city && !!shippingAddress.state && !!shippingAddress.zipCode
-      if (!hasShippingAddress) {
+      if (!authState.isSignedIn) {
         showPopUp({
-          title: "Your shipping address is incomplete",
-          note:
-            "Please update your shipping address under Payment & Shipping in your account settings to complete your reservation.",
+          title: "Sign up to Reserve your items",
+          note: "You need to create an account before you can reserve items",
           buttonText: "Got it",
-          onClose: () => hidePopUp(),
-          secondaryButtonText: "Go to settings",
-          secondaryButtonOnPress: () => {
-            navigation.navigate(NavigationSchema.StackNames.AccountStack, {
-              screen: NavigationSchema.PageNames.PaymentAndShipping,
-            })
+          onClose: () => {
             hidePopUp()
+            navigation.navigate("Modal", {
+              screen: "CreateAccountModal",
+            })
           },
         })
-        setMutating(false)
-        return
-      }
-      const { data } = await checkItemsAvailability({
-        variables: {
-          items: items.map((item) => item.variantID),
-        },
-        refetchQueries: [
-          {
-            query: GET_BAG,
+      } else {
+        const hasShippingAddress =
+          !!shippingAddress.address1 && !!shippingAddress.city && !!shippingAddress.state && !!shippingAddress.zipCode
+        if (!hasShippingAddress) {
+          showPopUp({
+            title: "Your shipping address is incomplete",
+            note:
+              "Please update your shipping address under Payment & Shipping in your account settings to complete your reservation.",
+            buttonText: "Got it",
+            onClose: () => hidePopUp(),
+            secondaryButtonText: "Go to settings",
+            secondaryButtonOnPress: () => {
+              navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+                screen: NavigationSchema.PageNames.PaymentAndShipping,
+              })
+              hidePopUp()
+            },
+          })
+          setMutating(false)
+          return
+        }
+        const { data } = await checkItemsAvailability({
+          variables: {
+            items: items.map((item) => item.variantID),
           },
-        ],
-        update(cache, { data, errors }) {
-          console.log(data, errors)
-        },
-      })
-      if (data.checkItemsAvailability) {
-        navigation.navigate(NavigationSchema.StackNames.BagStack, { screen: NavigationSchema.PageNames.Reservation })
+          refetchQueries: [
+            {
+              query: GET_BAG,
+            },
+          ],
+          update(cache, { data, errors }) {
+            console.log(data, errors)
+          },
+        })
+        if (data.checkItemsAvailability) {
+          navigation.navigate(NavigationSchema.StackNames.BagStack, { screen: NavigationSchema.PageNames.Reservation })
+        }
       }
       setMutating(false)
     } catch (e) {

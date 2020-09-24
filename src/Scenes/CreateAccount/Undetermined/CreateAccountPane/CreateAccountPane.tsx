@@ -1,19 +1,21 @@
 import { Box, Button, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { isWholeNumber } from "App/helpers/validation"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { ADD_TO_BAG, GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
+import { Schema, useTracking } from "App/utils/track"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
-import React, { useEffect, useRef, useState, MutableRefObject } from "react"
+import React, { MutableRefObject, useEffect, useRef, useState } from "react"
+import { useLazyQuery, useMutation, useQuery } from "react-apollo"
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
-import { useMutation } from "react-apollo"
-import { WebviewModal } from "./WebviewModal"
 
-import { useAuthContext } from "App/Navigation/AuthContext"
 import AsyncStorage from "@react-native-community/async-storage"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
-import { useTracking, Schema } from "App/utils/track"
+
+import { WebviewModal } from "./WebviewModal"
 
 const SIGN_UP = gql`
   mutation SignUp($email: String!, $password: String!, $firstName: String!, $lastName: String!, $zipCode: String!) {
@@ -80,6 +82,9 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { signIn } = useAuthContext()
 
+  const { data: localItems } = useQuery(GET_LOCAL_BAG)
+  const [addToBag] = useMutation(ADD_TO_BAG)
+
   // Keyboard handling
   const onFocusTextInput = (index: number) => scrollViewRef?.current?.scrollTo?.({ y: index * 90 + 10, animated: true })
 
@@ -90,6 +95,16 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
       setZipCode(zipCode)
     } else {
       setZipCode(val)
+    }
+  }
+
+  const persistBagItems = async () => {
+    for (const item of localItems.localBagItems) {
+      await addToBag({
+        variables: {
+          id: item.variantID,
+        },
+      })
     }
   }
 
@@ -157,6 +172,9 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
       const beamsData = { beamsToken, email, roles }
       AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
       AsyncStorage.setItem("userSession", JSON.stringify(userSession))
+
+      // Add local bag items to backend
+      await persistBagItems()
       onSignUp()
     }
   }
