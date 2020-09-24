@@ -85,6 +85,7 @@ export interface GetBrowseProducts_products_variants {
 export interface GetBrowseProducts_products {
   __typename: "Product";
   id: string;
+  slug: string;
   name: string;
   description: string | null;
   images: GetBrowseProducts_products_images[];

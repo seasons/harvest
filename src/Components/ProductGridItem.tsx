@@ -32,7 +32,7 @@ const ProductGridItemComponent: React.FC<{
           productSlug: product.slug,
           productId: product.id,
         })
-        navigation.navigate("Product", { id: product.id, slug: product.slug })
+        navigation.navigate("Product", { id: product.id, slug: product.slug, name: product.name })
         if (!!flatListRef?.current) {
           // If the flatList is passed down we scroll to the top when the page is reloaded
           // this is used for when the product view is being reloaded with a new product

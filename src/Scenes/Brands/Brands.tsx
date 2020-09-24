@@ -134,7 +134,7 @@ export const Brands = screenTrack()((props: any) => {
               brandId: item?.id,
               brandSlug: item?.slug,
             })
-            navigation.navigate("Brand", { id: item?.id, slug: item?.slug })
+            navigation.navigate("Brand", { id: item?.id, slug: item?.slug, name: item.name })
           }}
         >
           <Sans size="2" style={{ textDecorationLine: "underline" }}>

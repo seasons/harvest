@@ -18,6 +18,27 @@ export interface GetBagAndSavedItems_paymentPlans {
   itemCount: number | null;
 }
 
+export interface GetBagAndSavedItems_me_customer_invoices {
+  __typename: "Invoice";
+  id: string;
+  subscriptionId: string | null;
+}
+
+export interface GetBagAndSavedItems_me_customer_detail_shippingAddress {
+  __typename: "Location";
+  id: string;
+  city: string | null;
+  state: string | null;
+  address1: string | null;
+  zipCode: string;
+}
+
+export interface GetBagAndSavedItems_me_customer_detail {
+  __typename: "CustomerDetail";
+  id: string;
+  shippingAddress: GetBagAndSavedItems_me_customer_detail_shippingAddress | null;
+}
+
 export interface GetBagAndSavedItems_me_customer_membership_plan {
   __typename: "PaymentPlan";
   id: string;
@@ -41,27 +62,6 @@ export interface GetBagAndSavedItems_me_customer_membership {
   pauseRequests: GetBagAndSavedItems_me_customer_membership_pauseRequests[] | null;
 }
 
-export interface GetBagAndSavedItems_me_customer_invoices {
-  __typename: "Invoice";
-  id: string;
-  subscriptionId: string | null;
-}
-
-export interface GetBagAndSavedItems_me_customer_detail_shippingAddress {
-  __typename: "Location";
-  id: string;
-  city: string | null;
-  state: string | null;
-  address1: string | null;
-  zipCode: string;
-}
-
-export interface GetBagAndSavedItems_me_customer_detail {
-  __typename: "CustomerDetail";
-  id: string;
-  shippingAddress: GetBagAndSavedItems_me_customer_detail_shippingAddress | null;
-}
-
 export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_internalSize {
   __typename: "Size";
   id: string;
@@ -83,6 +83,8 @@ export interface GetBagAndSavedItems_me_customer_reservations_products_productVa
 export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product {
   __typename: "Product";
   id: string;
+  slug: string;
+  name: string;
   images: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_images[];
   brand: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_brand;
 }
@@ -113,9 +115,9 @@ export interface GetBagAndSavedItems_me_customer {
   __typename: "Customer";
   id: string;
   status: CustomerStatus | null;
-  membership: GetBagAndSavedItems_me_customer_membership | null;
   invoices: (GetBagAndSavedItems_me_customer_invoices | null)[] | null;
   detail: GetBagAndSavedItems_me_customer_detail | null;
+  membership: GetBagAndSavedItems_me_customer_membership | null;
   reservations: GetBagAndSavedItems_me_customer_reservations[] | null;
 }
 

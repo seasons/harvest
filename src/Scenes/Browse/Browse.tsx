@@ -50,6 +50,7 @@ export const GET_BROWSE_PRODUCTS = gql`
       where: { status: Available }
     ) {
       id
+      slug
       name
       description
       images(size: Thumb) {

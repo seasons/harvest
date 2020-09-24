@@ -35,7 +35,10 @@ export const ReservationHistoryItem = ({ item }) => {
           const imageURL = image?.url || ""
           return (
             <TouchableOpacity
-              onPress={() => product?.id && navigation.navigate("Product", { id: product?.id })}
+              onPress={() =>
+                product?.id &&
+                navigation.navigate("Product", { id: product.id, slug: product.slug, name: product.name })
+              }
               key={physicalProduct.id}
             >
               <Box width={imageWidth}>

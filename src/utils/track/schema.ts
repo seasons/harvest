@@ -35,6 +35,8 @@ export interface Event extends Global {
    */
   entityId?: string
 
+  entityName?: string
+
   /**
    * The public slug for this entity.
    */

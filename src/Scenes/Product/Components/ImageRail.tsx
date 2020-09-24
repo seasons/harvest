@@ -89,7 +89,7 @@ export const ImageRail: React.FC<{
   )
 }
 
-const ImageContainer = styled(FadeInImage)`
+const ImageContainer = styled(FadeInImage)<{ imageWidth: number }>`
   background: #f6f6f6;
   height: ${(props) => props.height};
   width: ${(props) => props.imageWidth};
