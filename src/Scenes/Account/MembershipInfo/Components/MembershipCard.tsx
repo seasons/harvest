@@ -7,41 +7,41 @@ import { SeasonsLogoSVG } from "Assets/svgs"
 
 export interface MembershipCardProps {
   memberName: string
-  planName: string
+  planTier: string
 }
 
-export const MembershipCard: React.FC<MembershipCardProps> = ({
-  memberName,
-  planName,
-}) => {
+export const MembershipCard: React.FC<MembershipCardProps> = ({ memberName, planTier }) => {
   let backgroundColor
-  let planNameColor
-  switch (planName) {
+  let planTierColor
+  let planName
+  switch (planTier) {
     case "Essential":
       backgroundColor = color("white100")
-      planNameColor = color("black100")
-      break;
-    case "All Access":
+      planTierColor = color("black100")
+      planName = "Essential"
+      break
+    case "AllAccess":
       backgroundColor = color("black100")
-      planNameColor = color("white100")
-      break;
+      planTierColor = color("white100")
+      planName = "All Access"
+      break
   }
 
-  if (!memberName || !planName || !backgroundColor || !planNameColor) {
+  if (!memberName || !planTier || !backgroundColor || !planTierColor) {
     return null
   }
 
   return (
-    <Card backgroundColor={backgroundColor} >
+    <Card backgroundColor={backgroundColor}>
       <Box px={3}>
         <Spacer mt={3} />
-        <Flex flexDirection="column" justifyContent="space-between" >
+        <Flex flexDirection="column" justifyContent="space-between">
           <SeasonsLogoSVG width={28} height={28} />
           <Spacer mt={104} />
-          <Flex flexDirection="row" justifyContent="space-between" >
+          <Flex flexDirection="row" justifyContent="space-between">
             <Text style={{ letterSpacing: 2 }}>
-              <Sans color={planNameColor} size="1" >
-                {planName.toUpperCase()}
+              <Sans color={planTierColor} size="1">
+                {planName}
               </Sans>
             </Text>
             <Sans color={color("black50")} size="1">
@@ -51,12 +51,12 @@ export const MembershipCard: React.FC<MembershipCardProps> = ({
         </Flex>
         <Spacer mt={3} />
       </Box>
-    </Card >
+    </Card>
   )
 }
 
 const Card = styled(Box)`
-  background-color: ${props => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor};
   height: 200;
   border-radius: 8;
   shadow-offset: 0px 6px;

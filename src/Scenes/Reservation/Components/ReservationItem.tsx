@@ -43,13 +43,13 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
         <ReservationItemContainer flexDirection="row">
           <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
             <Box>
-              <Sans size="2">{index + 1}</Sans>
-              <Sans size="2">{product.brand.name}</Sans>
-              <Sans size="2" color="black50">
+              <Sans size="1">{index + 1}</Sans>
+              <Sans size="1">{product.brand.name}</Sans>
+              <Sans size="1" color="black50">
                 {product.name}
               </Sans>
               {!!variantSize && (
-                <Sans size="2" color="black50">
+                <Sans size="1" color="black50">
                   Size {variantSize}
                 </Sans>
               )}
