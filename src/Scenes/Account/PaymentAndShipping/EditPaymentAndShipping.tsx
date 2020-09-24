@@ -2,7 +2,7 @@ import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import stripe from "tipsi-stripe"
-import { Dimensions } from "react-native"
+import { Dimensions, KeyboardAvoidingView } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeArea } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, Radio, Sans, Spacer, TextInput } from "App/Components"
@@ -382,11 +382,12 @@ export const EditPaymentAndShipping: React.FC<{
           showsVerticalScrollIndicator={false}
         />
       </Box>
-      <ButtonWrapper>
-        <Flex flexDirection="row" justifyContent="space-between" p={2}>
+      <FixedKeyboardAvoidingView behavior="padding" keyboardVerticalOffset={space(2)} style={{ bottom: insets.bottom }}>
+        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
           <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
             Cancel
           </Button>
+          <Spacer ml={1} />
           <Button
             loading={isMutating}
             variant="secondaryBlack"
@@ -397,14 +398,12 @@ export const EditPaymentAndShipping: React.FC<{
             Save
           </Button>
         </Flex>
-      </ButtonWrapper>
+      </FixedKeyboardAvoidingView>
     </Container>
   )
 }
 
-const ButtonWrapper = styled(Box)`
+const FixedKeyboardAvoidingView = styled(KeyboardAvoidingView)`
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
+  left: ${space(2)};
 `

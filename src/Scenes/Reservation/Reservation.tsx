@@ -72,7 +72,7 @@ const SectionHeader = ({ title }) => {
   return (
     <>
       <Flex flexDirection="row" flex={1} width="100%">
-        <Sans size="2" color="black">
+        <Sans size="1" color="black">
           {title}
         </Sans>
       </Flex>
@@ -150,9 +150,9 @@ export const Reservation = screenTrack()((props) => {
               </Sans>
             </Box>
             <Box mb={4}>
-              <Sans size="2" color="black50">
+              <Sans size="1" color="black50">
                 As a reminder, orders placed{" "}
-                <Sans size="2" color="black100" style={{ textDecorationLine: "underline" }}>
+                <Sans size="1" color="black100" style={{ textDecorationLine: "underline" }}>
                   after 5:00pm
                 </Sans>{" "}
                 will be processed the following business day.
@@ -160,17 +160,17 @@ export const Reservation = screenTrack()((props) => {
             </Box>
             <Box mb={4}>
               <SectionHeader title="Delivery Time" />
-              <Sans size="2" color="black50" mt={1}>
+              <Sans size="1" color="black50" mt={1}>
                 2-day Shipping
               </Sans>
             </Box>
             {address && (
               <Box mb={4}>
                 <SectionHeader title="Shipping address" />
-                <Sans size="2" color="black50" mt={1}>
+                <Sans size="1" color="black50" mt={1}>
                   {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
                 </Sans>
-                <Sans size="2" color="black50">
+                <Sans size="1" color="black50">
                   {`${address.city}, ${address.state} ${address.zipCode}`}
                 </Sans>
               </Box>
@@ -178,7 +178,7 @@ export const Reservation = screenTrack()((props) => {
             {!!phoneNumber && (
               <Box mb={4}>
                 <SectionHeader title="Phone number" />
-                <Sans size="2" color="black50" mt={1}>
+                <Sans size="1" color="black50" mt={1}>
                   {phoneNumber}
                 </Sans>
               </Box>
