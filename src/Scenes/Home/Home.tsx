@@ -210,7 +210,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
   const { loading, error, data, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
     variables: { firstFitPics: 8, skipFitPics: 0 },
   })
-  console.log("homepage data", data)
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
 
