@@ -3,13 +3,15 @@ import { GetProduct } from "App/generated/GetProduct"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { ADD_OR_REMOVE_FROM_LOCAL_BAG, ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
+import {
+  ADD_OR_REMOVE_FROM_LOCAL_BAG, ADD_TO_BAG, GET_BAG, GET_LOCAL_BAG
+} from "App/Scenes/Bag/BagQueries"
 import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import { head } from "lodash"
 import React, { useState } from "react"
 
-import { useMutation } from "@apollo/react-hooks"
+import { useMutation, useQuery } from "@apollo/react-hooks"
 import { useNavigation } from "@react-navigation/native"
 
 import { GET_PRODUCT } from "../Queries"
@@ -33,6 +35,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
   const { authState } = useAuthContext()
   const isUserSignedIn = authState?.isSignedIn
 
+  const { data: localItems } = useQuery(GET_LOCAL_BAG)
   const [addToBag] = useMutation(isUserSignedIn ? ADD_TO_BAG : ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
       id: selectedVariant.id,
@@ -94,7 +97,9 @@ export const AddToBagButton: React.FC<Props> = (props) => {
     }
   }
 
-  const isInBag = selectedVariant?.isInBag || added
+  const isInBag = isUserSignedIn
+    ? selectedVariant?.isInBag || added
+    : !!localItems.localBagItems.find((item) => item.variantID === selectedVariant.id)
   const disabled = !!props.disabled || isInBag || !variantInStock || isMutating
 
   let text = "Add to bag"

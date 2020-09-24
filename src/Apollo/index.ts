@@ -102,7 +102,6 @@ export const setupApolloClient = async () => {
   await persistCache({
     cache,
     storage: AsyncStorage,
-    debug: true,
   })
 
   return new ApolloClient({
