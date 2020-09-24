@@ -1,7 +1,8 @@
 import { Box, FixedButton, Spacer } from "App/Components"
-import { GuestView } from "App/Components/GuestView"
 import { Loader } from "App/Components/Loader"
 import { PauseButtons, PauseStatus } from "App/Components/Pause/PauseButtons"
+import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
@@ -11,10 +12,13 @@ import { assign, fill } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, RefreshControl, StatusBar } from "react-native"
+
 import { useFocusEffect } from "@react-navigation/native"
-import { CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
+
+import {
+  CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM
+} from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
-import { Schema as NavigationSchema } from "App/Navigation"
 
 export enum BagView {
   Bag = 0,
@@ -26,7 +30,7 @@ export const Bag = screenTrack()((props) => {
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
-  const [disabledTabs, setDisabledTabs] = useState([])
+
   const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const tracking = useTracking()
@@ -45,17 +49,13 @@ export const Bag = screenTrack()((props) => {
   )
 
   const { data, refetch } = useQuery(GET_BAG)
+  const { data: localItems } = useQuery(GET_LOCAL_BAG)
+
   const me = data?.me
   const customerStatus = me?.customer?.status
   useEffect(() => {
     if (data) {
       setIsLoading(false)
-    }
-    if (!!customerStatus && !(customerStatus === "Active" || customerStatus === "Paused")) {
-      setDisabledTabs(["Bag", "History"])
-      setCurrentView(BagView.Saved)
-    } else {
-      setDisabledTabs([])
     }
   }, [data])
 
@@ -103,10 +103,6 @@ export const Bag = screenTrack()((props) => {
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
 
-  if (!authState?.userSession) {
-    return <GuestView navigation={navigation} />
-  }
-
   if (isLoading) {
     return <Loader />
   }
@@ -117,12 +113,13 @@ export const Bag = screenTrack()((props) => {
     setRefreshing(false)
   }
 
-  const items =
-    me?.bag?.map((item) => ({
-      ...item,
-      variantID: item.productVariant.id,
-      productID: item.productVariant.product.id,
-    })) || []
+  const items = !authState.isSignedIn
+    ? localItems?.localBagItems || []
+    : me?.bag?.map((item) => ({
+        ...item,
+        variantID: item.productVariant.id,
+        productID: item.productVariant.product.id,
+      })) || []
 
   const savedItems =
     me?.savedItems?.map((item) => ({
@@ -131,7 +128,7 @@ export const Bag = screenTrack()((props) => {
       productID: item.productVariant.product.id,
     })) || []
 
-  const itemCount = data?.me?.customer?.membership?.plan?.itemCount
+  const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
   const bagItems = (itemCount && assign(fill(new Array(itemCount), { variantID: "", productID: "" }), items)) || []
   const hasActiveReservation = !!me?.activeReservation
 
@@ -139,41 +136,55 @@ export const Bag = screenTrack()((props) => {
   const handleReserve = async (navigation) => {
     setMutating(true)
     try {
-      const hasShippingAddress =
-        !!shippingAddress.address1 && !!shippingAddress.city && !!shippingAddress.state && !!shippingAddress.zipCode
-      if (!hasShippingAddress) {
+      if (!authState.isSignedIn) {
         showPopUp({
-          title: "Your shipping address is incomplete",
-          note:
-            "Please update your shipping address under Payment & Shipping in your account settings to complete your reservation.",
+          title: "Sign up to Reserve your items",
+          note: "You need to create an account before you can reserve items",
           buttonText: "Got it",
-          onClose: () => hidePopUp(),
-          secondaryButtonText: "Go to settings",
-          secondaryButtonOnPress: () => {
-            navigation.navigate(NavigationSchema.StackNames.AccountStack, {
-              screen: NavigationSchema.PageNames.PaymentAndShipping,
-            })
+          onClose: () => {
             hidePopUp()
+            navigation.navigate("Modal", {
+              screen: "CreateAccountModal",
+            })
           },
         })
-        setMutating(false)
-        return
-      }
-      const { data } = await checkItemsAvailability({
-        variables: {
-          items: items.map((item) => item.variantID),
-        },
-        refetchQueries: [
-          {
-            query: GET_BAG,
+      } else {
+        const hasShippingAddress =
+          !!shippingAddress.address1 && !!shippingAddress.city && !!shippingAddress.state && !!shippingAddress.zipCode
+        if (!hasShippingAddress) {
+          showPopUp({
+            title: "Your shipping address is incomplete",
+            note:
+              "Please update your shipping address under Payment & Shipping in your account settings to complete your reservation.",
+            buttonText: "Got it",
+            onClose: () => hidePopUp(),
+            secondaryButtonText: "Go to settings",
+            secondaryButtonOnPress: () => {
+              navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+                screen: NavigationSchema.PageNames.PaymentAndShipping,
+              })
+              hidePopUp()
+            },
+          })
+          setMutating(false)
+          return
+        }
+        const { data } = await checkItemsAvailability({
+          variables: {
+            items: items.map((item) => item.variantID),
           },
-        ],
-        update(cache, { data, errors }) {
-          console.log(data, errors)
-        },
-      })
-      if (data.checkItemsAvailability) {
-        navigation.navigate(NavigationSchema.StackNames.BagStack, { screen: NavigationSchema.PageNames.Reservation })
+          refetchQueries: [
+            {
+              query: GET_BAG,
+            },
+          ],
+          update(cache, { data, errors }) {
+            console.log(data, errors)
+          },
+        })
+        if (data.checkItemsAvailability) {
+          navigation.navigate(NavigationSchema.StackNames.BagStack, { screen: NavigationSchema.PageNames.Reservation })
+        }
       }
       setMutating(false)
     } catch (e) {
@@ -277,7 +288,6 @@ export const Bag = screenTrack()((props) => {
       <TabBar
         spaceEvenly
         tabs={["Bag", "Saved", "History"]}
-        disabledTabs={disabledTabs}
         activeTab={currentView}
         goToPage={(page: BagView) => {
           tracking.trackEvent({

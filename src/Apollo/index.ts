@@ -1,15 +1,20 @@
 import { InMemoryCache, IntrospectionFragmentMatcher } from "apollo-cache-inmemory"
+import { persistCache } from "apollo-cache-persist"
 import { ApolloClient } from "apollo-client"
 import { ApolloLink, Observable } from "apollo-link"
 import { setContext } from "apollo-link-context"
 import { onError } from "apollo-link-error"
-import unfetch from "unfetch"
-import introspectionQueryResultData from "../fragmentTypes.json"
+import { createUploadLink } from "apollo-upload-client"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { config, Env } from "App/utils/config"
-import * as Sentry from "@sentry/react-native"
-import { createUploadLink } from "apollo-upload-client"
 import { Platform } from "react-native"
+import unfetch from "unfetch"
+
+import AsyncStorage from "@react-native-community/async-storage"
+import * as Sentry from "@sentry/react-native"
+
+import introspectionQueryResultData from "../fragmentTypes.json"
+import { resolvers, typeDefs } from "./resolvers"
 
 export const setupApolloClient = async () => {
   const fragmentMatcher = new IntrospectionFragmentMatcher({
@@ -86,11 +91,25 @@ export const setupApolloClient = async () => {
     }
   })
 
+  const accessToken = await getAccessTokenFromSession()
+  cache.writeData({
+    data: {
+      isLoggedIn: !!accessToken,
+      localBagItems: [],
+    },
+  })
+
+  await persistCache({
+    cache,
+    storage: AsyncStorage,
+  })
+
   return new ApolloClient({
     // Provide required constructor fields
     cache,
-    // link: authLink.concat(link),
     link: ApolloLink.from([authLink, errorLink, link]),
+    typeDefs,
+    resolvers,
     // Provide some optional constructor fields
     name: "react-web-client",
     version: "1.3",

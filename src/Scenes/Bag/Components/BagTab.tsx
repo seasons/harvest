@@ -1,19 +1,24 @@
-import { Box, Separator, Sans, Flex, Spacer } from "App/Components"
-import React, { useState } from "react"
-import { EmptyBagItem } from "./EmptyBagItem"
-import { BagItem } from "./BagItem"
-import { useNavigation } from "@react-navigation/native"
-import { color } from "App/utils"
-import { DateTime } from "luxon"
-import { Schema, useTracking } from "App/utils/track"
-import { REMOVE_SCHEDULED_PAUSE, PauseStatus } from "App/Components/Pause/PauseButtons"
-import { GET_BAG } from "../BagQueries"
-import { useMutation } from "react-apollo"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { DeliveryStatus } from "./DeliveryStatus"
-import * as Sentry from "@sentry/react-native"
-import { WantAnotherItemBagItem } from "./"
+import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
+import { PauseStatus, REMOVE_SCHEDULED_PAUSE } from "App/Components/Pause/PauseButtons"
 import { GetBagAndSavedItems } from "App/generated/GetBagAndSavedItems"
+import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { color } from "App/utils"
+import { Schema, useTracking } from "App/utils/track"
+import { assign, fill } from "lodash"
+import { DateTime } from "luxon"
+import React, { useEffect, useState } from "react"
+import { useLazyQuery, useMutation } from "react-apollo"
+
+import { useNavigation } from "@react-navigation/native"
+import * as Sentry from "@sentry/react-native"
+
+import { GET_BAG, GET_LOCAL_BAG_ITEMS } from "../BagQueries"
+import { WantAnotherItemBagItem } from "./"
+import { BagItem } from "./BagItem"
+import { DeliveryStatus } from "./DeliveryStatus"
+import { EmptyBagItem } from "./EmptyBagItem"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
@@ -23,6 +28,7 @@ export const BagTab: React.FC<{
   removeFromBagAndSaveItem
 }> = ({ pauseStatus, items, deleteBagItem, removeFromBagAndSaveItem, data }) => {
   const [isMutating, setIsMutating] = useState(false)
+  const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
   const tracking = useTracking()
@@ -32,6 +38,28 @@ export const BagTab: React.FC<{
   const activeReservation = me?.activeReservation
 
   const hasActiveReservation = !!activeReservation
+
+  const [getLocalBag, { data: localItems }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
+    variables: {
+      ids: items?.map((i) => i.productID),
+    },
+  })
+
+  const bagItems = !authState.isSignedIn
+    ? localItems?.products.map((item, i) => ({
+        ...items?.[i],
+        productVariant: item.variants[0],
+        status: "Added",
+      }))
+    : items
+
+  const paddedItems = assign(fill(new Array(DEFAULT_ITEM_COUNT), { variantID: "", productID: "" }), bagItems) || []
+
+  useEffect(() => {
+    if (!authState.isSignedIn) {
+      getLocalBag()
+    }
+  }, [items])
 
   const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
     refetchQueries: [
@@ -131,7 +159,7 @@ export const BagTab: React.FC<{
       <Separator />
       <Spacer mb={3} />
       {hasActiveReservation && <DeliveryStatus activeReservation={activeReservation} />}
-      {items?.map((bagItem, index) => {
+      {paddedItems?.map((bagItem, index) => {
         return bagItem?.productID?.length > 0 ? (
           <Box key={bagItem.productID} px={2} pt={hasActiveReservation ? 0 : 2}>
             <BagItem

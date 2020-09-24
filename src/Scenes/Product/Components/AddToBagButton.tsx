@@ -1,14 +1,17 @@
 import { Button } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
+import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
+import {
+  ADD_OR_REMOVE_FROM_LOCAL_BAG, ADD_TO_BAG, GET_BAG, GET_LOCAL_BAG
+} from "App/Scenes/Bag/BagQueries"
 import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import { head } from "lodash"
 import React, { useState } from "react"
 
-import { useMutation } from "@apollo/react-hooks"
+import { useMutation, useQuery } from "@apollo/react-hooks"
 import { useNavigation } from "@react-navigation/native"
 
 import { GET_PRODUCT } from "../Queries"
@@ -19,6 +22,7 @@ interface Props {
   width: number
   selectedVariant: any
   data: GetProduct
+  products
 }
 
 export const AddToBagButton: React.FC<Props> = (props) => {
@@ -29,11 +33,14 @@ export const AddToBagButton: React.FC<Props> = (props) => {
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
   const { authState } = useAuthContext()
-  const userHasSession = authState?.userSession
+  const isUserSignedIn = authState?.isSignedIn
 
-  const [addToBag] = useMutation(ADD_TO_BAG, {
+  const { data: localItems } = useQuery(GET_LOCAL_BAG)
+  const [addToBag] = useMutation(isUserSignedIn ? ADD_TO_BAG : ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
       id: selectedVariant.id,
+      productID: props.data.products?.[0].id,
+      variantID: selectedVariant.id,
     },
     awaitRefetchQueries: true,
     refetchQueries: [
@@ -45,11 +52,12 @@ export const AddToBagButton: React.FC<Props> = (props) => {
         variables: { where: { id: head(data?.products)?.id } },
       },
     ],
-    onCompleted: () => {
+    onCompleted: (res) => {
+      console.log(res)
       setIsMutating(false)
       setAdded(true)
-      const itemCount = data?.me?.customer?.membership?.plan?.itemCount
-      const bagItemCount = data?.me?.bag?.length
+      const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
+      const bagItemCount = authState?.isSignedIn ? data?.me?.bag?.length : res.addOrRemoveFromLocalBag.length
       console.log("itemCount", itemCount)
       console.log("bagItemCount", bagItemCount)
       console.log("data?.me?.bag", data?.me?.bag)
@@ -84,19 +92,15 @@ export const AddToBagButton: React.FC<Props> = (props) => {
 
   const handleReserve = () => {
     if (!isMutating) {
-      if (userHasSession) {
-        setIsMutating(true)
-        addToBag()
-      } else {
-        navigation.navigate("Modal", { screen: "SignInModal" })
-      }
+      setIsMutating(true)
+      addToBag()
     }
   }
 
-  const noActiveUser = data?.me?.customer?.status !== "Active"
-
-  const isInBag = selectedVariant?.isInBag || added
-  const disabled = !!props.disabled || isInBag || !variantInStock || isMutating || noActiveUser
+  const isInBag = isUserSignedIn
+    ? selectedVariant?.isInBag || added
+    : !!localItems.localBagItems.find((item) => item.variantID === selectedVariant.id)
+  const disabled = !!props.disabled || isInBag || !variantInStock || isMutating
 
   let text = "Add to bag"
   if (isInBag) {
