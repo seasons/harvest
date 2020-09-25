@@ -138,6 +138,7 @@
 #endif
 
 - (NSString *)deviceModel;
+- (NSString *)IFA;
 
 - (void)archivePeople;
 - (NSString *)defaultDistinctId;

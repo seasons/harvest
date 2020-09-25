@@ -53,7 +53,7 @@
 }
 
 - (instancetype)initWithMethod:(NSString *)method headers:(NSDictionary<NSString *,NSString *> *)headers body:(NSData *)body {
-    method = method ? [method copy] : @"GET";
+    method = [method copy];
     headers = [headers copy];
     body = [body copy];
     return [self initWithBlock:^NSURLRequest * _Nullable(NSURLRequest * _Nonnull request) {

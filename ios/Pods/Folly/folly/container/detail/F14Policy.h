@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2017-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,9 +22,7 @@
 
 #include <folly/Memory.h>
 #include <folly/Portability.h>
-#include <folly/Traits.h>
 #include <folly/Unit.h>
-#include <folly/container/HeterogeneousAccess.h>
 #include <folly/container/detail/F14Table.h>
 #include <folly/hash/Hash.h>
 #include <folly/lang/Align.h>
@@ -157,6 +155,13 @@ struct BasePolicy
   struct AllocIsAlwaysEqual<A, typename A::is_always_equal>
       : A::is_always_equal {};
 
+  // emulate c++17 has std::is_nothrow_swappable
+  template <typename T>
+  static constexpr bool isNothrowSwap() {
+    using std::swap;
+    return noexcept(swap(std::declval<T&>(), std::declval<T&>()));
+  }
+
  public:
   static constexpr bool kAllocIsAlwaysEqual = AllocIsAlwaysEqual<Alloc>::value;
 
@@ -166,7 +171,7 @@ struct BasePolicy
       std::is_nothrow_default_constructible<Alloc>::value;
 
   static constexpr bool kSwapIsNoexcept = kAllocIsAlwaysEqual &&
-      IsNothrowSwappable<Hasher>{} && IsNothrowSwappable<KeyEqual>{};
+      isNothrowSwap<Hasher>() && isNothrowSwap<KeyEqual>();
 
   static constexpr bool isAvalanchingHasher() {
     return IsAvalanchingHasher<Hasher, Key>::value;
@@ -190,10 +195,6 @@ struct BasePolicy
       "Assumption for the kIsMap check violated.");
 
   using MappedOrBool = std::conditional_t<kIsMap, Mapped, bool>;
-
-  // if true, bucket_count() after reserve(n) will be as close as possible
-  // to n for multi-chunk tables
-  static constexpr bool kContinuousCapacity = false;
 
   //////// methods
 
@@ -221,40 +222,21 @@ struct BasePolicy
         KeyEqualHolder{std::move(rhs.keyEqual())},
         AllocHolder{alloc} {}
 
- private:
-  template <typename Src>
-  void maybeAssignAlloc(std::true_type, Src&& src) {
-    alloc() = std::forward<Src>(src);
-  }
-
-  template <typename Src>
-  void maybeAssignAlloc(std::false_type, Src&&) {}
-
-  template <typename A>
-  void maybeSwapAlloc(std::true_type, A& rhs) {
-    using std::swap;
-    swap(alloc(), rhs);
-  }
-
-  template <typename A>
-  void maybeSwapAlloc(std::false_type, A&) {}
-
- public:
   BasePolicy& operator=(BasePolicy const& rhs) {
     hasher() = rhs.hasher();
     keyEqual() = rhs.keyEqual();
-    maybeAssignAlloc(
-        typename AllocTraits::propagate_on_container_copy_assignment{},
-        rhs.alloc());
+    if (AllocTraits::propagate_on_container_copy_assignment::value) {
+      alloc() = rhs.alloc();
+    }
     return *this;
   }
 
   BasePolicy& operator=(BasePolicy&& rhs) noexcept {
     hasher() = std::move(rhs.hasher());
     keyEqual() = std::move(rhs.keyEqual());
-    maybeAssignAlloc(
-        typename AllocTraits::propagate_on_container_move_assignment{},
-        std::move(rhs.alloc()));
+    if (AllocTraits::propagate_on_container_move_assignment::value) {
+      alloc() = std::move(rhs.alloc());
+    }
     return *this;
   }
 
@@ -262,8 +244,9 @@ struct BasePolicy
     using std::swap;
     swap(hasher(), rhs.hasher());
     swap(keyEqual(), rhs.keyEqual());
-    maybeSwapAlloc(
-        typename AllocTraits::propagate_on_container_swap{}, rhs.alloc());
+    if (AllocTraits::propagate_on_container_swap::value) {
+      swap(alloc(), rhs.alloc());
+    }
   }
 
   Hasher& hasher() {
@@ -399,7 +382,7 @@ struct BasePolicy
   }
 
   void afterDestroyWithoutDeallocate(Value* addr, std::size_t n) {
-    if (kIsLibrarySanitizeAddress) {
+    if (kIsSanitizeAddress) {
       memset(static_cast<void*>(addr), 0x66, sizeof(Value) * n);
     }
   }
@@ -588,16 +571,13 @@ class ValueContainerPolicy : public BasePolicy<
     return Super::moveValue(item);
   }
 
-  Value const& valueAtItem(Item const& item) const {
-    return item;
-  }
-
   Value&& valueAtItemForExtract(Item& item) {
     return std::move(item);
   }
 
-  template <typename Table, typename... Args>
-  void constructValueAtItem(Table&&, Item* itemAddr, Args&&... args) {
+  template <typename... Args>
+  void
+  constructValueAtItem(std::size_t /*size*/, Item* itemAddr, Args&&... args) {
     Alloc& a = this->alloc();
     // GCC < 6 doesn't use the fact that itemAddr came from a reference
     // to avoid a null-check in the placement new.  folly::assume-ing it
@@ -663,7 +643,7 @@ class ValueContainerPolicy : public BasePolicy<
 
   //////// F14BasicMap/Set policy
 
-  FOLLY_ALWAYS_INLINE Iter makeIter(ItemIter const& underlying) const {
+  Iter makeIter(ItemIter const& underlying) const {
     return Iter{underlying};
   }
   ConstIter makeConstIter(ItemIter const& underlying) const {
@@ -840,16 +820,13 @@ class NodeContainerPolicy
     return Super::moveValue(*item);
   }
 
-  Value const& valueAtItem(Item const& item) const {
-    return *item;
-  }
-
   Value&& valueAtItemForExtract(Item& item) {
     return std::move(*item);
   }
 
-  template <typename Table, typename... Args>
-  void constructValueAtItem(Table&&, Item* itemAddr, Args&&... args) {
+  template <typename... Args>
+  void
+  constructValueAtItem(std::size_t /*size*/, Item* itemAddr, Args&&... args) {
     Alloc& a = this->alloc();
     // TODO(T31574848): clean up assume-s used to optimize placement new
     assume(itemAddr != nullptr);
@@ -857,9 +834,7 @@ class NodeContainerPolicy
     auto p = std::addressof(**itemAddr);
     // TODO(T31574848): clean up assume-s used to optimize placement new
     assume(p != nullptr);
-    auto rollback = makeGuard([&] { AllocTraits::deallocate(a, p, 1); });
     AllocTraits::construct(a, p, std::forward<Args>(args)...);
-    rollback.dismiss();
   }
 
   void moveItemDuringRehash(Item* itemAddr, Item& src) {
@@ -904,7 +879,7 @@ class NodeContainerPolicy
 
   //////// F14BasicMap/Set policy
 
-  FOLLY_ALWAYS_INLINE Iter makeIter(ItemIter const& underlying) const {
+  Iter makeIter(ItemIter const& underlying) const {
     return Iter{underlying};
   }
   ConstIter makeConstIter(ItemIter const& underlying) const {
@@ -922,8 +897,7 @@ template <
     typename MappedTypeOrVoid,
     typename HasherOrVoid,
     typename KeyEqualOrVoid,
-    typename AllocOrVoid,
-    typename EligibleForPerturbedInsertionOrder>
+    typename AllocOrVoid>
 class VectorContainerPolicy;
 
 template <typename ValuePtr>
@@ -988,13 +962,7 @@ class VectorContainerIterator : public BaseIter<ValuePtr, uint32_t> {
     return current_ - lowest_;
   }
 
-  template <
-      typename K,
-      typename M,
-      typename H,
-      typename E,
-      typename A,
-      typename P>
+  template <typename K, typename M, typename H, typename E, typename A>
   friend class VectorContainerPolicy;
 
   template <typename P>
@@ -1010,8 +978,7 @@ template <
     typename MappedTypeOrVoid,
     typename HasherOrVoid,
     typename KeyEqualOrVoid,
-    typename AllocOrVoid,
-    typename EligibleForPerturbedInsertionOrder>
+    typename AllocOrVoid>
 class VectorContainerPolicy : public BasePolicy<
                                   Key,
                                   MappedTypeOrVoid,
@@ -1045,8 +1012,6 @@ class VectorContainerPolicy : public BasePolicy<
 
  public:
   static constexpr bool kEnableItemIteration = false;
-
-  static constexpr bool kContinuousCapacity = true;
 
   using InternalSizeType = Item;
 
@@ -1187,61 +1152,26 @@ class VectorContainerPolicy : public BasePolicy<
     return {item};
   }
 
-  Value const& valueAtItem(Item const& item) const {
-    return values_[item];
-  }
-
   Value&& valueAtItemForExtract(Item& item) {
     return std::move(values_[item]);
   }
 
-  template <typename Table>
   void constructValueAtItem(
-      Table&&,
+      std::size_t /*size*/,
       Item* itemAddr,
       VectorContainerIndexSearch arg) {
     *itemAddr = arg.index_;
   }
 
-  template <typename Table, typename... Args>
-  void constructValueAtItem(Table&& table, Item* itemAddr, Args&&... args) {
+  template <typename... Args>
+  void constructValueAtItem(std::size_t size, Item* itemAddr, Args&&... args) {
     Alloc& a = this->alloc();
-    auto size = static_cast<InternalSizeType>(table.size());
-    FOLLY_SAFE_DCHECK(
-        table.size() < std::numeric_limits<InternalSizeType>::max(), "");
-    *itemAddr = size;
+    FOLLY_SAFE_DCHECK(size < std::numeric_limits<InternalSizeType>::max(), "");
+    *itemAddr = static_cast<InternalSizeType>(size);
     auto dst = std::addressof(values_[size]);
     // TODO(T31574848): clean up assume-s used to optimize placement new
     assume(dst != nullptr);
     AllocTraits::construct(a, dst, std::forward<Args>(args)...);
-
-    constexpr bool perturb = FOLLY_F14_PERTURB_INSERTION_ORDER;
-    if (EligibleForPerturbedInsertionOrder::value && perturb &&
-        !tlsPendingSafeInserts()) {
-      // Pick a random victim. We have to do this post-construction
-      // because the item and tag are already set in the table before
-      // calling constructValueAtItem, so if there is a tag collision
-      // find may evaluate values_[size] during the search.
-      auto i = static_cast<InternalSizeType>(tlsMinstdRand(size + 1));
-      if (i != size) {
-        auto& lhsItem = *itemAddr;
-        auto rhsIter = table.find(
-            VectorContainerIndexSearch{static_cast<InternalSizeType>(i)});
-        FOLLY_SAFE_DCHECK(!rhsIter.atEnd(), "");
-        auto& rhsItem = rhsIter.item();
-        FOLLY_SAFE_DCHECK(lhsItem == size, "");
-        FOLLY_SAFE_DCHECK(rhsItem == i, "");
-
-        aligned_storage_for_t<Value> tmp;
-        Value* tmpValue = static_cast<Value*>(static_cast<void*>(&tmp));
-        transfer(a, std::addressof(values_[i]), tmpValue, 1);
-        transfer(
-            a, std::addressof(values_[size]), std::addressof(values_[i]), 1);
-        transfer(a, tmpValue, std::addressof(values_[size]), 1);
-        lhsItem = i;
-        rhsItem = size;
-      }
-    }
   }
 
   void moveItemDuringRehash(Item* itemAddr, Item& src) {
@@ -1270,10 +1200,7 @@ class VectorContainerPolicy : public BasePolicy<
 
     auto origSrc = src;
     if (valueIsTriviallyCopyable()) {
-      std::memcpy(
-          static_cast<void*>(dst),
-          static_cast<void const*>(src),
-          n * sizeof(Value));
+      std::memcpy(static_cast<void*>(dst), src, n * sizeof(Value));
     } else {
       for (std::size_t i = 0; i < n; ++i, ++src, ++dst) {
         // TODO(T31574848): clean up assume-s used to optimize placement new
@@ -1299,10 +1226,7 @@ class VectorContainerPolicy : public BasePolicy<
     Value* dst = std::addressof(values_[0]);
 
     if (valueIsTriviallyCopyable()) {
-      std::memcpy(
-          static_cast<void*>(dst),
-          static_cast<void const*>(src),
-          size * sizeof(Value));
+      std::memcpy(dst, src, size * sizeof(Value));
     } else {
       for (std::size_t i = 0; i < size; ++i, ++src, ++dst) {
         try {
@@ -1351,11 +1275,11 @@ class VectorContainerPolicy : public BasePolicy<
  private:
   // Returns the byte offset of the first Value in a unified allocation
   // that first holds prefixBytes of data, where prefixBytes comes from
-  // Chunk storage and may be only 4-byte aligned due to sub-chunk
-  // allocation.
+  // Chunk storage and hence must be at least 8-byte aligned (sub-Chunk
+  // allocations always have an even capacity and sizeof(Item) == 4).
   static std::size_t valuesOffset(std::size_t prefixBytes) {
-    FOLLY_SAFE_DCHECK((prefixBytes % alignof(Item)) == 0, "");
-    if (alignof(Value) > alignof(Item)) {
+    FOLLY_SAFE_DCHECK((prefixBytes % 8) == 0, "");
+    if (alignof(Value) > 8) {
       prefixBytes = -(-prefixBytes & ~(alignof(Value) - 1));
     }
     FOLLY_SAFE_DCHECK((prefixBytes % alignof(Value)) == 0, "");
@@ -1393,7 +1317,7 @@ class VectorContainerPolicy : public BasePolicy<
             &*outChunkAllocation + valuesOffset(chunkAllocSize))));
 
     if (size > 0) {
-      Alloc& a = this->alloc();
+      Alloc& a{this->alloc()};
       transfer(a, std::addressof(before[0]), std::addressof(after[0]), size);
     }
 
@@ -1530,37 +1454,31 @@ class VectorContainerPolicy : public BasePolicy<
 };
 
 template <
-    template <typename, typename, typename, typename, typename, typename...>
-    class Policy,
+    template <typename, typename, typename, typename, typename> class Policy,
     typename Key,
     typename Mapped,
     typename Hasher,
     typename KeyEqual,
-    typename Alloc,
-    typename... Args>
+    typename Alloc>
 using MapPolicyWithDefaults = Policy<
     Key,
     Mapped,
     VoidDefault<Hasher, DefaultHasher<Key>>,
     VoidDefault<KeyEqual, DefaultKeyEqual<Key>>,
-    VoidDefault<Alloc, DefaultAlloc<std::pair<Key const, Mapped>>>,
-    Args...>;
+    VoidDefault<Alloc, DefaultAlloc<std::pair<Key const, Mapped>>>>;
 
 template <
-    template <typename, typename, typename, typename, typename, typename...>
-    class Policy,
+    template <typename, typename, typename, typename, typename> class Policy,
     typename Key,
     typename Hasher,
     typename KeyEqual,
-    typename Alloc,
-    typename... Args>
+    typename Alloc>
 using SetPolicyWithDefaults = Policy<
     Key,
     void,
     VoidDefault<Hasher, DefaultHasher<Key>>,
     VoidDefault<KeyEqual, DefaultKeyEqual<Key>>,
-    VoidDefault<Alloc, DefaultAlloc<Key>>,
-    Args...>;
+    VoidDefault<Alloc, DefaultAlloc<Key>>>;
 
 } // namespace detail
 } // namespace f14

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -54,9 +54,12 @@ inline fbstring demangle(const std::type_info& type) {
  * libiberty), so it is possible for the fbstring version to work, while this
  * version returns the original, mangled name.
  */
-size_t demangle(const char* name, char* out, size_t outSize);
+size_t demangle(const char* name, char* buf, size_t bufSize);
 inline size_t demangle(const std::type_info& type, char* buf, size_t bufSize) {
   return demangle(type.name(), buf, bufSize);
 }
+
+// glibc doesn't have strlcpy
+size_t strlcpy(char* dest, const char* const src, size_t size);
 
 } // namespace folly

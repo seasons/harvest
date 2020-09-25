@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2011-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include <folly/Conv.h>
 #include <array>
 
@@ -276,7 +275,7 @@ Expected<bool, ConversionCode> str_to_bool(StringPiece* src) noexcept {
   }
 
   bool result;
-  auto len = size_t(e - b);
+  size_t len = size_t(e - b);
   switch (*b) {
     case '0':
     case '1': {
@@ -400,7 +399,7 @@ Expected<Tgt, ConversionCode> str_to_floating(StringPiece* src) noexcept {
 
   // There must be non-whitespace, otherwise we would have caught this above
   assert(b < e);
-  auto size = size_t(e - b);
+  size_t size = size_t(e - b);
 
   bool negative = false;
   if (*b == '-') {
@@ -544,7 +543,7 @@ inline Expected<Tgt, ConversionCode> digits_to(
     return makeUnexpected(err);
   }
 
-  auto size = size_t(e - b);
+  size_t size = size_t(e - b);
 
   /* Although the string is entirely made of digits, we still need to
    * check for overflow.
@@ -778,7 +777,7 @@ ConversionError makeConversionError(ConversionCode code, StringPiece input) {
   if (err.quote) {
     tmp.append(1, '"');
   }
-  if (!input.empty()) {
+  if (input.size() > 0) {
     tmp.append(input.data(), input.size());
   }
   if (err.quote) {

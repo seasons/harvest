@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2018-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,7 @@
 // So we extract the inclusion of `<demangle.h>` which includes `<libiberty.h>`
 // to here, isolating it.
 #if FOLLY_DETAIL_HAVE_DEMANGLE_H
-#include <demangle.h> // @manual
+#include <demangle.h>
 #endif
 
 namespace folly {
@@ -37,9 +37,6 @@ int cplus_demangle_v3_callback_wrapper(
   auto const options = DMGL_PARAMS | DMGL_ANSI | DMGL_TYPES;
   return cplus_demangle_v3_callback(mangled, options, cbref, opaque);
 #else
-  (void)mangled;
-  (void)cbref;
-  (void)opaque;
   return 0;
 #endif
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2012-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,9 +27,7 @@
 #include <folly/Likely.h>
 #include <folly/Optional.h>
 #include <folly/Traits.h>
-#include <folly/Utility.h>
 #include <folly/dynamic.h>
-#include <folly/lang/Exception.h>
 
 namespace folly {
 template <typename T>
@@ -112,7 +110,7 @@ struct Dereferencer {
   static inline void derefToCache(
       Optional<T>* /* mem */,
       const dynamic::const_item_iterator& /* it */) {
-    throw_exception<TypeError>("array", dynamic::Type::OBJECT);
+    throw TypeError("array", dynamic::Type::OBJECT);
   }
 
   static inline void derefToCache(
@@ -251,7 +249,7 @@ struct DynamicConverter<std::pair<F, S>> {
       auto it = d.items().begin();
       return std::make_pair(convertTo<F>(it->first), convertTo<S>(it->second));
     } else {
-      throw_exception<TypeError>("array (size 2) or object (size 1)", d.type());
+      throw TypeError("array (size 2) or object (size 1)", d.type());
     }
   }
 };
@@ -273,7 +271,7 @@ struct DynamicConverter<
           dynamicconverter_detail::conversionIterator<C>(d.items().begin()),
           dynamicconverter_detail::conversionIterator<C>(d.items().end()));
     } else {
-      throw_exception<TypeError>("object or array", d.type());
+      throw TypeError("object or array", d.type());
     }
   }
 };
@@ -297,7 +295,7 @@ struct DynamicConverter<
           dynamicconverter_detail::conversionIterator<C>(d.items().begin()),
           dynamicconverter_detail::conversionIterator<C>(d.items().end()));
     } else {
-      throw_exception<TypeError>("object or array", d.type());
+      throw TypeError("object or array", d.type());
     }
     return ret;
   }
@@ -326,16 +324,6 @@ struct DynamicConstructor<
     typename std::enable_if<std::is_same<C, dynamic>::value>::type> {
   static dynamic construct(const C& x) {
     return x;
-  }
-};
-
-// enums
-template <typename C>
-struct DynamicConstructor<
-    C,
-    typename std::enable_if<std::is_enum<C>::value>::type> {
-  static dynamic construct(const C& x) {
-    return dynamic(to_underlying(x));
   }
 };
 

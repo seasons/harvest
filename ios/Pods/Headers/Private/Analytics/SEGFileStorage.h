@@ -1,1 +1,1 @@
-../../../Analytics/Analytics/Internal/SEGFileStorage.h
+../../../Analytics/Analytics/Classes/Internal/SEGFileStorage.h

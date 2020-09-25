@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2011-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
 
 #include <functional>
@@ -120,6 +119,7 @@ struct hash<::folly::dynamic> {
         apply(std::string);           \
         break;                        \
       default:                        \
+        CHECK(0);                     \
         abort();                      \
     }                                 \
   } while (0)
@@ -134,6 +134,17 @@ struct FOLLY_EXPORT TypeError : std::runtime_error {
       const std::string& expected,
       dynamic::Type actual1,
       dynamic::Type actual2);
+  // TODO: noexcept calculation required through gcc-v4.9; remove once upgrading
+  // to gcc-v5.
+  TypeError(const TypeError&) noexcept(
+      std::is_nothrow_copy_constructible<std::runtime_error>::value);
+  TypeError& operator=(const TypeError&) noexcept(
+      std::is_nothrow_copy_assignable<std::runtime_error>::value);
+  TypeError(TypeError&&) noexcept(
+      std::is_nothrow_move_constructible<std::runtime_error>::value);
+  TypeError& operator=(TypeError&&) noexcept(
+      std::is_nothrow_move_assignable<std::runtime_error>::value);
+  ~TypeError() override;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -159,7 +170,12 @@ dynamic numericOp(dynamic const& a, dynamic const& b) {
   if (!a.isNumber() || !b.isNumber()) {
     throw_exception<TypeError>("numeric", a.type(), b.type());
   }
-  if (a.isDouble() || b.isDouble()) {
+  if (a.type() != b.type()) {
+    auto& integ = a.isInt() ? a : b;
+    auto& nonint = a.isInt() ? b : a;
+    return Op<double>()(to<double>(integ.asInt()), nonint.asDouble());
+  }
+  if (a.isDouble()) {
     return Op<double>()(a.asDouble(), b.asDouble());
   }
   return Op<int64_t>()(a.asInt(), b.asInt());
@@ -233,13 +249,11 @@ inline dynamic::ObjectMaker dynamic::object(dynamic a, dynamic b) {
 struct dynamic::item_iterator : detail::IteratorAdaptor<
                                     dynamic::item_iterator,
                                     dynamic::ObjectImpl::iterator,
-                                    std::pair<dynamic const, dynamic>,
-                                    std::forward_iterator_tag> {
+                                    std::pair<dynamic const, dynamic>> {
   using Super = detail::IteratorAdaptor<
       dynamic::item_iterator,
       dynamic::ObjectImpl::iterator,
-      std::pair<dynamic const, dynamic>,
-      std::forward_iterator_tag>;
+      std::pair<dynamic const, dynamic>>;
   /* implicit */ item_iterator(dynamic::ObjectImpl::iterator b) : Super(b) {}
 
   using object_type = dynamic::ObjectImpl;
@@ -248,13 +262,11 @@ struct dynamic::item_iterator : detail::IteratorAdaptor<
 struct dynamic::value_iterator : detail::IteratorAdaptor<
                                      dynamic::value_iterator,
                                      dynamic::ObjectImpl::iterator,
-                                     dynamic,
-                                     std::forward_iterator_tag> {
+                                     dynamic> {
   using Super = detail::IteratorAdaptor<
       dynamic::value_iterator,
       dynamic::ObjectImpl::iterator,
-      dynamic,
-      std::forward_iterator_tag>;
+      dynamic>;
   /* implicit */ value_iterator(dynamic::ObjectImpl::iterator b) : Super(b) {}
 
   using object_type = dynamic::ObjectImpl;
@@ -268,13 +280,11 @@ struct dynamic::const_item_iterator
     : detail::IteratorAdaptor<
           dynamic::const_item_iterator,
           dynamic::ObjectImpl::const_iterator,
-          std::pair<dynamic const, dynamic> const,
-          std::forward_iterator_tag> {
+          std::pair<dynamic const, dynamic> const> {
   using Super = detail::IteratorAdaptor<
       dynamic::const_item_iterator,
       dynamic::ObjectImpl::const_iterator,
-      std::pair<dynamic const, dynamic> const,
-      std::forward_iterator_tag>;
+      std::pair<dynamic const, dynamic> const>;
   /* implicit */ const_item_iterator(dynamic::ObjectImpl::const_iterator b)
       : Super(b) {}
   /* implicit */ const_item_iterator(const_item_iterator const& i)
@@ -287,13 +297,11 @@ struct dynamic::const_item_iterator
 struct dynamic::const_key_iterator : detail::IteratorAdaptor<
                                          dynamic::const_key_iterator,
                                          dynamic::ObjectImpl::const_iterator,
-                                         dynamic const,
-                                         std::forward_iterator_tag> {
+                                         dynamic const> {
   using Super = detail::IteratorAdaptor<
       dynamic::const_key_iterator,
       dynamic::ObjectImpl::const_iterator,
-      dynamic const,
-      std::forward_iterator_tag>;
+      dynamic const>;
   /* implicit */ const_key_iterator(dynamic::ObjectImpl::const_iterator b)
       : Super(b) {}
 
@@ -307,13 +315,11 @@ struct dynamic::const_key_iterator : detail::IteratorAdaptor<
 struct dynamic::const_value_iterator : detail::IteratorAdaptor<
                                            dynamic::const_value_iterator,
                                            dynamic::ObjectImpl::const_iterator,
-                                           dynamic const,
-                                           std::forward_iterator_tag> {
+                                           dynamic const> {
   using Super = detail::IteratorAdaptor<
       dynamic::const_value_iterator,
       dynamic::ObjectImpl::const_iterator,
-      dynamic const,
-      std::forward_iterator_tag>;
+      dynamic const>;
   /* implicit */ const_value_iterator(dynamic::ObjectImpl::const_iterator b)
       : Super(b) {}
   /* implicit */ const_value_iterator(value_iterator i) : Super(i.base()) {}
@@ -767,27 +773,6 @@ inline dynamic* dynamic::get_ptr(StringPiece idx) & {
   return const_cast<dynamic*>(const_cast<dynamic const*>(this)->get_ptr(idx));
 }
 
-// clang-format off
-inline
-dynamic::resolved_json_pointer<dynamic>
-dynamic::try_get_ptr(json_pointer const& jsonPtr) & {
-  auto ret = const_cast<dynamic const*>(this)->try_get_ptr(jsonPtr);
-  if (ret.hasValue()) {
-    return json_pointer_resolved_value<dynamic>{
-        const_cast<dynamic*>(ret.value().parent),
-        const_cast<dynamic*>(ret.value().value),
-        ret.value().parent_key, ret.value().parent_index};
-  } else {
-    return makeUnexpected(
-        json_pointer_resolution_error<dynamic>{
-            ret.error().error_code,
-            ret.error().index,
-            const_cast<dynamic*>(ret.error().context)}
-        );
-  }
-}
-// clang-format on
-
 inline dynamic* dynamic::get_ptr(json_pointer const& jsonPtr) & {
   return const_cast<dynamic*>(
       const_cast<dynamic const*>(this)->get_ptr(jsonPtr));
@@ -855,15 +840,9 @@ inline std::size_t dynamic::count(StringPiece key) const {
 }
 
 template <class K, class V>
-inline dynamic::IfNotIterator<K, void> dynamic::insert(K&& key, V&& val) {
+inline void dynamic::insert(K&& key, V&& val) {
   auto& obj = get<ObjectImpl>();
   obj[std::forward<K>(key)] = std::forward<V>(val);
-}
-
-template <class T>
-inline dynamic::iterator dynamic::insert(const_iterator pos, T&& value) {
-  auto& arr = get<Array>();
-  return arr.insert(pos, std::forward<T>(value));
 }
 
 inline void dynamic::update(const dynamic& mergeObj) {
@@ -992,11 +971,6 @@ inline void dynamic::pop_back() {
   arr.pop_back();
 }
 
-inline const dynamic& dynamic::back() const {
-  auto& arr = get<Array>();
-  return arr.back();
-}
-
 //////////////////////////////////////////////////////////////////////
 
 inline dynamic::dynamic(Array&& r) : type_(ARRAY) {
@@ -1032,9 +1006,6 @@ T dynamic::asImpl() const {
       return to<T>(*get_nothrow<bool>());
     case STRING:
       return to<T>(*get_nothrow<std::string>());
-    case NULLT:
-    case ARRAY:
-    case OBJECT:
     default:
       throw_exception<TypeError>("int/double/bool/string", type());
   }

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -50,11 +50,10 @@ namespace folly {
 namespace detail {
 
 /**
- * Currently this only supports forward and bidirectional iteration.  The
- * derived class must must have definitions for these methods:
+ * Currently this only supports forward iteration.  The derived class must
+ * must have definitions for these three methods:
  *
  *   void increment();
- *   void decrement(); // optional, to be used with bidirectional
  *   reference dereference() const;
  *   bool equal([appropriate iterator type] const& rhs) const;
  *
@@ -64,18 +63,15 @@ namespace detail {
  * Template parameters:
  * D: the deriving class (CRTP)
  * V: value type
- * Tag: the iterator category, one of:
- *   std::forward_iterator_tag
- *   std::bidirectional_iterator_tag
  */
-template <class D, class V, class Tag>
+template <class D, class V>
 class IteratorFacade {
  public:
   using value_type = V;
   using reference = value_type&;
   using pointer = value_type*;
   using difference_type = ssize_t;
-  using iterator_category = Tag;
+  using iterator_category = std::forward_iterator_tag;
 
   bool operator==(D const& rhs) const {
     return asDerivedConst().equal(rhs);
@@ -123,17 +119,6 @@ class IteratorFacade {
     return ret;
   }
 
-  D& operator--() {
-    asDerived().decrement();
-    return asDerived();
-  }
-
-  D operator--(int) {
-    auto ret = asDerived(); // copy
-    asDerived().decrement();
-    return ret;
-  }
-
  private:
   D& asDerived() {
     return static_cast<D&>(*this);
@@ -153,10 +138,10 @@ class IteratorFacade {
  * I: the wrapper iterator type
  * V: value type
  */
-template <class D, class I, class V, class Tag>
-class IteratorAdaptor : public IteratorFacade<D, V, Tag> {
+template <class D, class I, class V>
+class IteratorAdaptor : public IteratorFacade<D, V> {
  public:
-  using Super = IteratorFacade<D, V, Tag>;
+  using Super = IteratorFacade<D, V>;
   using value_type = typename Super::value_type;
   using iterator_category = typename Super::iterator_category;
   using reference = typename Super::reference;
@@ -164,13 +149,8 @@ class IteratorAdaptor : public IteratorFacade<D, V, Tag> {
   using difference_type = typename Super::difference_type;
 
   explicit IteratorAdaptor(I base) : base_(base) {}
-
   void increment() {
     ++base_;
-  }
-
-  void decrement() {
-    --base_;
   }
 
   V& dereference() const {

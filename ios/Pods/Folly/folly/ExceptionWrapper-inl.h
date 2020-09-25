@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2017-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /*
  *
  * Author: Eric Niebler <eniebler@fb.com>
@@ -202,7 +201,7 @@ inline void exception_wrapper::InPlace<Ex>::delete_(exception_wrapper* that) {
 template <class Ex>
 [[noreturn]] inline void exception_wrapper::InPlace<Ex>::throw_(
     exception_wrapper const* that) {
-  throw that->buff_.as<Ex>();
+  throw that->buff_.as<Ex>(); // @nolint
 }
 template <class Ex>
 inline std::type_info const* exception_wrapper::InPlace<Ex>::type_(
@@ -227,7 +226,7 @@ inline exception_wrapper exception_wrapper::InPlace<Ex>::get_exception_ptr_(
 template <class Ex>
 [[noreturn]] inline void exception_wrapper::SharedPtr::Impl<Ex>::throw_()
     const {
-  throw ex_;
+  throw ex_; // @nolint
 }
 template <class Ex>
 inline std::exception const*
@@ -344,7 +343,7 @@ inline exception_wrapper::exception_wrapper(
 namespace exception_wrapper_detail {
 template <class Ex>
 Ex&& dont_slice(Ex&& ex) {
-  assert(typeid(ex) == typeid(std::decay_t<Ex>) ||
+  assert(typeid(ex) == typeid(_t<std::decay<Ex>>) ||
        !"Dynamic and static exception types don't match. Exception would "
         "be sliced when storing in exception_wrapper.");
   return std::forward<Ex>(ex);
@@ -480,12 +479,12 @@ template <class Ex>
 
 template <class CatchFn, bool IsConst>
 struct exception_wrapper::ExceptionTypeOf {
-  using type = arg_type<std::decay_t<CatchFn>>;
+  using type = arg_type<_t<std::decay<CatchFn>>>;
   static_assert(
       std::is_reference<type>::value,
       "Always catch exceptions by reference.");
   static_assert(
-      !IsConst || std::is_const<std::remove_reference_t<type>>::value,
+      !IsConst || std::is_const<_t<std::remove_reference<type>>>::value,
       "handle() or with_exception() called on a const exception_wrapper "
       "and asked to catch a non-const exception. Handler will never fire. "
       "Catch exception by const reference to fix this.");
@@ -551,7 +550,7 @@ struct exception_wrapper::HandleStdExceptReduce {
     return
         [th = std::forward<ThrowFn>(th), &ca](auto&& continuation) -> StdEx* {
           if (auto e = const_cast<StdEx*>(th(continuation))) {
-            if (auto e2 = dynamic_cast<std::add_pointer_t<Ex>>(e)) {
+            if (auto e2 = dynamic_cast<_t<std::add_pointer<Ex>>>(e)) {
               ca(*e2);
             } else {
               return e;

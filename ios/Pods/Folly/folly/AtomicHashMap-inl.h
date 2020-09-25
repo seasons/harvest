@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2012-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,9 +19,6 @@
 #endif
 
 #include <folly/detail/AtomicHashUtils.h>
-#include <folly/detail/Iterators.h>
-
-#include <type_traits>
 
 namespace folly {
 
@@ -569,10 +566,10 @@ struct AtomicHashMap<
     Allocator,
     ProbeFcn,
     KeyConvertFcn>::ahm_iterator
-    : detail::IteratorFacade<
+    : boost::iterator_facade<
           ahm_iterator<ContT, IterVal, SubIt>,
           IterVal,
-          std::forward_iterator_tag> {
+          boost::forward_traversal_tag> {
   explicit ahm_iterator() : ahm_(nullptr) {}
 
   // Conversion ctor for interoperability between const_iterator and
@@ -599,8 +596,7 @@ struct AtomicHashMap<
   explicit ahm_iterator(ContT* ahm, uint32_t subMap, const SubIt& subIt)
       : ahm_(ahm), subMap_(subMap), subIt_(subIt) {}
 
-  friend class detail::
-      IteratorFacade<ahm_iterator, IterVal, std::forward_iterator_tag>;
+  friend class boost::iterator_core_access;
 
   void increment() {
     CHECK(!isEnd());
