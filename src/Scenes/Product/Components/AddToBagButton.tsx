@@ -94,7 +94,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
 
   const isInBag = isUserSignedIn
     ? selectedVariant?.isInBag || added
-    : !!localItems.localBagItems.find((item) => item.variantID === selectedVariant.id)
+    : !!localItems?.localBagItems?.find((item) => item.variantID === selectedVariant.id) || false
   const disabled = !!props.disabled || isInBag || !variantInStock || isMutating
 
   let text = "Add to bag"
