@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,6 +34,8 @@
 
 #include <type_traits>
 
+#include <boost/noncopyable.hpp>
+
 #include <folly/Portability.h>
 #include <folly/synchronization/SmallLocks.h>
 
@@ -41,16 +43,16 @@ namespace folly {
 
 class SpinLock {
  public:
-  FOLLY_ALWAYS_INLINE SpinLock() noexcept {
+  FOLLY_ALWAYS_INLINE SpinLock() {
     lock_.init();
   }
-  FOLLY_ALWAYS_INLINE void lock() const noexcept {
+  FOLLY_ALWAYS_INLINE void lock() const {
     lock_.lock();
   }
-  FOLLY_ALWAYS_INLINE void unlock() const noexcept {
+  FOLLY_ALWAYS_INLINE void unlock() const {
     lock_.unlock();
   }
-  FOLLY_ALWAYS_INLINE bool try_lock() const noexcept {
+  FOLLY_ALWAYS_INLINE bool try_lock() const {
     return lock_.try_lock();
   }
 
@@ -59,17 +61,11 @@ class SpinLock {
 };
 
 template <typename LOCK>
-class SpinLockGuardImpl {
+class SpinLockGuardImpl : private boost::noncopyable {
  public:
-  FOLLY_ALWAYS_INLINE explicit SpinLockGuardImpl(LOCK& lock) noexcept(
-      noexcept(lock.lock()))
-      : lock_(lock) {
+  FOLLY_ALWAYS_INLINE explicit SpinLockGuardImpl(LOCK& lock) : lock_(lock) {
     lock_.lock();
   }
-
-  SpinLockGuardImpl(const SpinLockGuardImpl&) = delete;
-  SpinLockGuardImpl& operator=(const SpinLockGuardImpl&) = delete;
-
   FOLLY_ALWAYS_INLINE ~SpinLockGuardImpl() {
     lock_.unlock();
   }

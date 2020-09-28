@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,16 +20,13 @@
 #include <iosfwd>
 #include <memory>
 #include <string>
-#include <type_traits>
 #include <utility> // std::pair
 
-#include <folly/ConstexprMath.h>
 #include <folly/IPAddressException.h>
 #include <folly/IPAddressV4.h>
 #include <folly/IPAddressV6.h>
 #include <folly/Range.h>
 #include <folly/detail/IPAddress.h>
-#include <folly/lang/Exception.h>
 
 namespace folly {
 
@@ -71,68 +68,7 @@ class IPAddress {
  private:
   template <typename F>
   auto pick(F f) const {
-    return isV4() ? f(asV4()) : isV6() ? f(asV6()) : f(asNone());
-  }
-
-  class IPAddressNone {
-   public:
-    bool isZero() const {
-      return true;
-    }
-    size_t bitCount() const {
-      return 0;
-    }
-    std::string toJson() const {
-      return "{family:'AF_UNSPEC', addr:'', hash:0}";
-    }
-    std::size_t hash() const {
-      return std::hash<uint64_t>{}(0);
-    }
-    bool isLoopback() const {
-      throw_exception<InvalidAddressFamilyException>("empty address");
-    }
-    bool isLinkLocal() const {
-      throw_exception<InvalidAddressFamilyException>("empty address");
-    }
-    bool isLinkLocalBroadcast() const {
-      throw_exception<InvalidAddressFamilyException>("empty address");
-    }
-    bool isNonroutable() const {
-      throw_exception<InvalidAddressFamilyException>("empty address");
-    }
-    bool isPrivate() const {
-      throw_exception<InvalidAddressFamilyException>("empty address");
-    }
-    bool isMulticast() const {
-      throw_exception<InvalidAddressFamilyException>("empty address");
-    }
-    IPAddress mask(uint8_t numBits) const {
-      (void)numBits;
-      return IPAddress();
-    }
-    std::string str() const {
-      return "";
-    }
-    std::string toFullyQualified() const {
-      return "";
-    }
-    void toFullyQualifiedAppend(std::string& out) const {
-      (void)out;
-      return;
-    }
-    uint8_t version() const {
-      return 0;
-    }
-    const unsigned char* bytes() const {
-      return nullptr;
-    }
-  };
-
-  IPAddressNone const& asNone() const {
-    if (!empty()) {
-      throw_exception<InvalidAddressFamilyException>("not empty");
-    }
-    return addr_.ipNoneAddr;
+    return isV4() ? f(asV4()) : f(asV6());
   }
 
  public:
@@ -234,7 +170,7 @@ class IPAddress {
    *
    * @throws IPAddressFormatException
    */
-  explicit IPAddress(StringPiece str);
+  explicit IPAddress(StringPiece ip);
 
   /**
    * Create an IPAddress from a sockaddr.
@@ -251,10 +187,10 @@ class IPAddress {
   /* implicit */ IPAddress(const in6_addr& addr) noexcept;
 
   // Assign from V4 address
-  IPAddress& operator=(const IPAddressV4& ipv4_addr) noexcept;
+  IPAddress& operator=(const IPAddressV4& ipV4Addr) noexcept;
 
   // Assign from V6 address
-  IPAddress& operator=(const IPAddressV6& ipv6_addr) noexcept;
+  IPAddress& operator=(const IPAddressV6& ipV6Addr) noexcept;
 
   /**
    * Converts an IPAddress to an IPAddressV4 instance.
@@ -330,7 +266,7 @@ class IPAddress {
    * @throws IPAddressFormatException if no /mask
    * @return true if address is part of specified subnet with cidr
    */
-  bool inSubnet(StringPiece cidrNetwork) const;
+  bool inSubnet(StringPiece ipSlashCidr) const;
 
   /**
    * Check if an IPAddress belongs to a subnet.
@@ -489,7 +425,7 @@ class IPAddress {
     return pick([&](auto& _) { return _.toFullyQualifiedAppend(out); });
   }
 
-  // Address version (0 if empty, or 4 or 6 if nonempty)
+  // Address version (4 or 6)
   uint8_t version() const {
     return pick([&](auto& _) { return _.version(); });
   }
@@ -506,10 +442,12 @@ class IPAddress {
   [[noreturn]] void asV6Throw() const;
 
   typedef union IPAddressV46 {
-    IPAddressNone ipNoneAddr;
     IPAddressV4 ipV4Addr;
     IPAddressV6 ipV6Addr;
-    IPAddressV46() noexcept : ipNoneAddr() {}
+    // default constructor
+    IPAddressV46() noexcept {
+      std::memset(this, 0, sizeof(IPAddressV46));
+    }
     explicit IPAddressV46(const IPAddressV4& addr) noexcept : ipV4Addr(addr) {}
     explicit IPAddressV46(const IPAddressV6& addr) noexcept : ipV6Addr(addr) {}
   } IPAddressV46;

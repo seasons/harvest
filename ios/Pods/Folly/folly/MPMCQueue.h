@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2013-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,8 @@
 #include <cstring>
 #include <limits>
 #include <type_traits>
+
+#include <boost/noncopyable.hpp>
 
 #include <folly/Traits.h>
 #include <folly/concurrency/CacheLocality.h>
@@ -114,9 +116,6 @@ class MPMCQueue : public detail::MPMCQueueBase<MPMCQueue<T, Atom, Dynamic>> {
 
   MPMCQueue() noexcept {}
 };
-
-/// *** The dynamic version of MPMCQueue is deprecated. ***
-/// Use UnboundedQueue instead.
 
 /// The dynamic version of MPMCQueue allows dynamic expansion of queue
 /// capacity, such that a queue may start with a smaller capacity than
@@ -211,10 +210,8 @@ class MPMCQueue<T, Atom, true>
 
   MPMCQueue(MPMCQueue<T, Atom, true>&& rhs) noexcept {
     this->capacity_ = rhs.capacity_;
-    new (&this->dslots_)
-        Atom<Slot*>(rhs.dslots_.load(std::memory_order_relaxed));
-    new (&this->dstride_)
-        Atom<int>(rhs.dstride_.load(std::memory_order_relaxed));
+    this->slots_ = rhs.slots_;
+    this->stride_ = rhs.stride_;
     this->dstate_.store(
         rhs.dstate_.load(std::memory_order_relaxed), std::memory_order_relaxed);
     this->dcapacity_.store(
@@ -236,8 +233,8 @@ class MPMCQueue<T, Atom, true>
     closed_ = rhs.closed_;
 
     rhs.capacity_ = 0;
-    rhs.dslots_.store(nullptr, std::memory_order_relaxed);
-    rhs.dstride_.store(0, std::memory_order_relaxed);
+    rhs.slots_ = nullptr;
+    rhs.stride_ = 0;
     rhs.dstate_.store(0, std::memory_order_relaxed);
     rhs.dcapacity_.store(0, std::memory_order_relaxed);
     rhs.pushTicket_.store(0, std::memory_order_relaxed);
@@ -263,13 +260,6 @@ class MPMCQueue<T, Atom, true>
       }
       delete[] closed_;
     }
-    using AtomInt = Atom<int>;
-    this->dstride_.~AtomInt();
-    using AtomSlot = Atom<Slot*>;
-    // Sort of a hack to get ~MPMCQueueBase to free dslots_
-    auto slots = this->dslots_.load();
-    this->dslots_.~AtomSlot();
-    this->slots_ = slots;
   }
 
   size_t allocatedCapacity() const noexcept {
@@ -347,9 +337,8 @@ class MPMCQueue<T, Atom, true>
   ClosedArray* closed_;
 
   void initQueue(const size_t cap, const size_t mult) {
-    new (&this->dstride_) Atom<int>(this->computeStride(cap));
-    Slot* slots = new Slot[cap + 2 * this->kSlotPadding];
-    new (&this->dslots_) Atom<Slot*>(slots);
+    this->stride_ = this->computeStride(cap);
+    this->slots_ = new Slot[cap + 2 * this->kSlotPadding];
     this->dstate_.store(0);
     this->dcapacity_.store(cap);
     dmult_ = mult;
@@ -641,7 +630,7 @@ template <
     typename T,
     template <typename> class Atom,
     bool Dynamic>
-class MPMCQueueBase<Derived<T, Atom, Dynamic>> {
+class MPMCQueueBase<Derived<T, Atom, Dynamic>> : boost::noncopyable {
   // Note: Using CRTP static casts in several functions of this base
   // template instead of making called functions virtual or duplicating
   // the code of calling functions in the derived partially specialized
@@ -659,8 +648,6 @@ class MPMCQueueBase<Derived<T, Atom, Dynamic>> {
 
   explicit MPMCQueueBase(size_t queueCapacity)
       : capacity_(queueCapacity),
-        dstate_(0),
-        dcapacity_(0),
         pushTicket_(0),
         popTicket_(0),
         pushSpinCutoff_(0),
@@ -733,9 +720,6 @@ class MPMCQueueBase<Derived<T, Atom, Dynamic>> {
     }
     return *this;
   }
-
-  MPMCQueueBase(const MPMCQueueBase&) = delete;
-  MPMCQueueBase& operator=(const MPMCQueueBase&) = delete;
 
   /// MPMCQueue can only be safely destroyed when there are no
   /// pending enqueuers or dequeuers (this is not checked).
@@ -1443,7 +1427,7 @@ struct SingleElementQueue {
 
  private:
   /// Storage for a T constructed with placement new
-  aligned_storage_for_t<T> contents_;
+  typename std::aligned_storage<sizeof(T), alignof(T)>::type contents_;
 
   /// Even turns are pushes, odd turns are pops
   TurnSequencer<Atom> sequencer_;
@@ -1458,9 +1442,9 @@ struct SingleElementQueue {
     } catch (...) {
       // g++ doesn't seem to have std::is_nothrow_destructible yet
     }
-    if (kIsDebug) {
-      memset(&contents_, 'Q', sizeof(T));
-    }
+#ifndef NDEBUG
+    memset(&contents_, 'Q', sizeof(T));
+#endif
   }
 
   /// Tag classes for dispatching to enqueue/dequeue implementation.
@@ -1488,10 +1472,7 @@ struct SingleElementQueue {
       T&& goner,
       ImplByRelocation) noexcept {
     sequencer_.waitForTurn(turn * 2, spinCutoff, updateSpinCutoff);
-    memcpy(
-        static_cast<void*>(&contents_),
-        static_cast<void const*>(&goner),
-        sizeof(T));
+    memcpy(&contents_, &goner, sizeof(T));
     sequencer_.completeTurn(turn * 2);
     new (&goner) T();
   }
@@ -1510,10 +1491,7 @@ struct SingleElementQueue {
       // unlikely, but if we don't complete our turn the queue will die
     }
     sequencer_.waitForTurn(turn * 2 + 1, spinCutoff, updateSpinCutoff);
-    memcpy(
-        static_cast<void*>(&elem),
-        static_cast<void const*>(&contents_),
-        sizeof(T));
+    memcpy(&elem, &contents_, sizeof(T));
     sequencer_.completeTurn(turn * 2 + 1);
   }
 

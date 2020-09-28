@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2011-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -59,9 +59,8 @@ namespace folly {
 template <class T>
 struct IsSomeString : std::false_type {};
 
-template <typename Alloc>
-struct IsSomeString<std::basic_string<char, std::char_traits<char>, Alloc>>
-    : std::true_type {};
+template <>
+struct IsSomeString<std::string> : std::true_type {};
 
 template <class Iter>
 class Range;
@@ -112,6 +111,32 @@ inline size_t qfind_first_of(
  */
 namespace detail {
 
+/**
+ * For random-access iterators, the value before is simply i[-1].
+ */
+template <class Iter>
+typename std::enable_if<
+    std::is_same<
+        typename std::iterator_traits<Iter>::iterator_category,
+        std::random_access_iterator_tag>::value,
+    typename std::iterator_traits<Iter>::reference>::type
+value_before(Iter i) {
+  return i[-1];
+}
+
+/**
+ * For all other iterators, we need to use the decrement operator.
+ */
+template <class Iter>
+typename std::enable_if<
+    !std::is_same<
+        typename std::iterator_traits<Iter>::iterator_category,
+        std::random_access_iterator_tag>::value,
+    typename std::iterator_traits<Iter>::reference>::type
+value_before(Iter i) {
+  return *--i;
+}
+
 /*
  * Use IsCharPointer<T>::type to enable const char* or char*.
  * Use IsCharPointer<T>::const_type to enable only const char*.
@@ -145,10 +170,6 @@ struct IsCharPointer<const char*> {
  */
 template <class Iter>
 class Range {
- private:
-  template <typename Alloc>
-  using string = std::basic_string<char, std::char_traits<char>, Alloc>;
-
  public:
   typedef std::size_t size_type;
   typedef Iter iterator;
@@ -188,7 +209,9 @@ class Range {
   // Works only for random-access iterators
   constexpr Range(Iter start, size_t size) : b_(start), e_(start + size) {}
 
+#if !__clang__ || __CLANG_PREREQ(3, 7) // Clang 3.6 crashes on this line
   /* implicit */ Range(std::nullptr_t) = delete;
+#endif
 
   constexpr /* implicit */ Range(Iter str)
       : b_(str), e_(str + constexpr_strlen(str)) {
@@ -197,18 +220,12 @@ class Range {
         "This constructor is only available for character ranges");
   }
 
-  template <
-      class Alloc,
-      class T = Iter,
-      typename detail::IsCharPointer<T>::const_type = 0>
-  /* implicit */ Range(const string<Alloc>& str)
+  template <class T = Iter, typename detail::IsCharPointer<T>::const_type = 0>
+  /* implicit */ Range(const std::string& str)
       : b_(str.data()), e_(b_ + str.size()) {}
 
-  template <
-      class Alloc,
-      class T = Iter,
-      typename detail::IsCharPointer<T>::const_type = 0>
-  Range(const string<Alloc>& str, typename string<Alloc>::size_type startFrom) {
+  template <class T = Iter, typename detail::IsCharPointer<T>::const_type = 0>
+  Range(const std::string& str, std::string::size_type startFrom) {
     if (UNLIKELY(startFrom > str.size())) {
       throw_exception<std::out_of_range>("index out of range");
     }
@@ -216,14 +233,11 @@ class Range {
     e_ = str.data() + str.size();
   }
 
-  template <
-      class Alloc,
-      class T = Iter,
-      typename detail::IsCharPointer<T>::const_type = 0>
+  template <class T = Iter, typename detail::IsCharPointer<T>::const_type = 0>
   Range(
-      const string<Alloc>& str,
-      typename string<Alloc>::size_type startFrom,
-      typename string<Alloc>::size_type size) {
+      const std::string& str,
+      std::string::size_type startFrom,
+      std::string::size_type size) {
     if (UNLIKELY(startFrom > str.size())) {
       throw_exception<std::out_of_range>("index out of range");
     }
@@ -391,11 +405,8 @@ class Range {
   Range& operator=(const Range& rhs) & = default;
   Range& operator=(Range&& rhs) & = default;
 
-  template <
-      class Alloc,
-      class T = Iter,
-      typename detail::IsCharPointer<T>::const_type = 0>
-  Range& operator=(string<Alloc>&& rhs) = delete;
+  template <class T = Iter, typename detail::IsCharPointer<T>::const_type = 0>
+  Range& operator=(std::string&& rhs) = delete;
 
   void clear() {
     b_ = Iter();
@@ -413,15 +424,17 @@ class Range {
   }
 
   // Works only for Range<const char*>
-  template <typename Alloc>
-  void reset(const string<Alloc>& str) {
+  void reset(const std::string& str) {
     reset(str.data(), str.size());
   }
 
   constexpr size_type size() const {
-#if __clang__ || !__GNUC__ || __GNUC__ >= 7
-    assert(b_ <= e_);
-#endif
+    // It would be nice to assert(b_ <= e_) here.  This can be achieved even
+    // in a C++11 compatible constexpr function:
+    // http://ericniebler.com/2014/09/27/assert-and-constexpr-in-cxx11/
+    // Unfortunately current gcc versions have a bug causing it to reject
+    // this check in a constexpr function:
+    // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71448
     return size_type(e_ - b_);
   }
   constexpr size_type walk_size() const {
@@ -454,7 +467,7 @@ class Range {
   }
   value_type& back() {
     assert(b_ < e_);
-    return *std::prev(e_);
+    return detail::value_before(e_);
   }
   const value_type& front() const {
     assert(b_ < e_);
@@ -462,7 +475,7 @@ class Range {
   }
   const value_type& back() const {
     assert(b_ < e_);
-    return *std::prev(e_);
+    return detail::value_before(e_);
   }
 
  private:
@@ -483,22 +496,13 @@ class Range {
   // At the moment the set of implicit target types consists of just
   // std::string_view (when it is available).
 #if FOLLY_HAS_STRING_VIEW
-  struct NotStringView {};
-  template <typename ValueType>
-  struct StringViewType
-      : std::conditional<
-            std::is_pod<std::remove_const_t<ValueType>>::value,
-            std::basic_string_view<std::remove_const_t<ValueType>>,
-            NotStringView> {};
+  using StringViewType =
+      std::basic_string_view<std::remove_const_t<value_type>>;
 
   template <typename Target>
-  struct IsConstructibleViaStringView
-      : Conjunction<
-            std::is_constructible<
-                _t<StringViewType<value_type>>,
-                Iter const&,
-                size_type>,
-            std::is_constructible<Target, _t<StringViewType<value_type>>>> {};
+  using IsConstructibleViaStringView = StrictConjunction<
+      std::is_constructible<StringViewType, Iter const&, size_type>,
+      std::is_constructible<Target, StringViewType>>;
 #else
   template <typename Target>
   using IsConstructibleViaStringView = std::false_type;
@@ -538,14 +542,11 @@ class Range {
   /// implicit operator conversion to std::string_view
   template <
       typename Tgt,
-      typename ValueType = value_type,
       std::enable_if_t<
           StrictConjunction<
-              std::is_same<Tgt, _t<StringViewType<ValueType>>>,
-              std::is_constructible<
-                  _t<StringViewType<ValueType>>,
-                  Iter const&,
-                  size_type>>::value,
+              std::is_same<Tgt, StringViewType>,
+              std::is_constructible<StringViewType, Iter const&, size_type>>::
+              value,
           int> = 0>
   constexpr operator Tgt() const noexcept(
       std::is_nothrow_constructible<Tgt, Iter const&, size_type>::value) {
@@ -598,6 +599,7 @@ class Range {
     return const_range_type(*this);
   }
 
+  // Works only for Range<const char*> and Range<char*>
   int compare(const const_range_type& o) const {
     const size_type tsize = this->size();
     const size_type osize = o.size();
@@ -1234,9 +1236,8 @@ struct ComparableAsStringPiece {
  * operator== through conversion for Range<const char*>
  */
 template <class T, class U>
-std::enable_if_t<detail::ComparableAsStringPiece<T, U>::value, bool> operator==(
-    const T& lhs,
-    const U& rhs) {
+_t<std::enable_if<detail::ComparableAsStringPiece<T, U>::value, bool>>
+operator==(const T& lhs, const U& rhs) {
   return StringPiece(lhs) == StringPiece(rhs);
 }
 
@@ -1244,9 +1245,8 @@ std::enable_if_t<detail::ComparableAsStringPiece<T, U>::value, bool> operator==(
  * operator!= through conversion for Range<const char*>
  */
 template <class T, class U>
-std::enable_if_t<detail::ComparableAsStringPiece<T, U>::value, bool> operator!=(
-    const T& lhs,
-    const U& rhs) {
+_t<std::enable_if<detail::ComparableAsStringPiece<T, U>::value, bool>>
+operator!=(const T& lhs, const U& rhs) {
   return StringPiece(lhs) != StringPiece(rhs);
 }
 
@@ -1254,9 +1254,8 @@ std::enable_if_t<detail::ComparableAsStringPiece<T, U>::value, bool> operator!=(
  * operator< through conversion for Range<const char*>
  */
 template <class T, class U>
-std::enable_if_t<detail::ComparableAsStringPiece<T, U>::value, bool> operator<(
-    const T& lhs,
-    const U& rhs) {
+_t<std::enable_if<detail::ComparableAsStringPiece<T, U>::value, bool>>
+operator<(const T& lhs, const U& rhs) {
   return StringPiece(lhs) < StringPiece(rhs);
 }
 
@@ -1264,9 +1263,8 @@ std::enable_if_t<detail::ComparableAsStringPiece<T, U>::value, bool> operator<(
  * operator> through conversion for Range<const char*>
  */
 template <class T, class U>
-std::enable_if_t<detail::ComparableAsStringPiece<T, U>::value, bool> operator>(
-    const T& lhs,
-    const U& rhs) {
+_t<std::enable_if<detail::ComparableAsStringPiece<T, U>::value, bool>>
+operator>(const T& lhs, const U& rhs) {
   return StringPiece(lhs) > StringPiece(rhs);
 }
 
@@ -1274,9 +1272,8 @@ std::enable_if_t<detail::ComparableAsStringPiece<T, U>::value, bool> operator>(
  * operator< through conversion for Range<const char*>
  */
 template <class T, class U>
-std::enable_if_t<detail::ComparableAsStringPiece<T, U>::value, bool> operator<=(
-    const T& lhs,
-    const U& rhs) {
+_t<std::enable_if<detail::ComparableAsStringPiece<T, U>::value, bool>>
+operator<=(const T& lhs, const U& rhs) {
   return StringPiece(lhs) <= StringPiece(rhs);
 }
 
@@ -1284,9 +1281,8 @@ std::enable_if_t<detail::ComparableAsStringPiece<T, U>::value, bool> operator<=(
  * operator> through conversion for Range<const char*>
  */
 template <class T, class U>
-std::enable_if_t<detail::ComparableAsStringPiece<T, U>::value, bool> operator>=(
-    const T& lhs,
-    const U& rhs) {
+_t<std::enable_if<detail::ComparableAsStringPiece<T, U>::value, bool>>
+operator>=(const T& lhs, const U& rhs) {
   return StringPiece(lhs) >= StringPiece(rhs);
 }
 
@@ -1495,16 +1491,10 @@ struct hasher;
 template <class T>
 struct hasher<
     folly::Range<T*>,
-    std::enable_if_t<std::is_integral<T>::value, void>> {
+    typename std::enable_if<std::is_pod<T>::value, void>::type> {
   using folly_is_avalanching = std::true_type;
 
   size_t operator()(folly::Range<T*> r) const {
-    // std::is_integral<T> is too restrictive, but is sufficient to
-    // guarantee we can just hash all of the underlying bytes to get a
-    // suitable hash of T.  Something like absl::is_uniquely_represented<T>
-    // would be better.  std::is_pod is not enough, because POD types
-    // can contain pointers and padding.  Also, floating point numbers
-    // may be == without being bit-identical.
     return hash::SpookyHashV2::Hash64(r.begin(), r.size() * sizeof(T), 0);
   }
 };

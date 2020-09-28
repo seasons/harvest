@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2018-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,17 +16,16 @@
 
 #pragma once
 
+#include <functional>
 #include <memory>
-
-#include <folly/container/HeterogeneousAccess-fwd.h>
 
 namespace folly {
 namespace f14 {
 template <typename T>
-using DefaultHasher = HeterogeneousAccessHash<T>;
+using DefaultHasher = std::hash<T>;
 
 template <typename T>
-using DefaultKeyEqual = HeterogeneousAccessEqualTo<T>;
+using DefaultKeyEqual = std::equal_to<T>;
 
 template <typename T>
 using DefaultAlloc = std::allocator<T>;

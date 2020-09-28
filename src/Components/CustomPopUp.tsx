@@ -1,7 +1,4 @@
-import { Box } from "App/Components/Box"
-import { Button } from "App/Components/Button"
-import { Sans } from "App/Components/Typography"
-import { Spacer } from "App/Components/Spacer"
+import { Box, Button, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import React, { useState, useEffect } from "react"

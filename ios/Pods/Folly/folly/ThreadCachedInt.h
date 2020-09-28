@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2011-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,6 +24,8 @@
 
 #include <atomic>
 
+#include <boost/noncopyable.hpp>
+
 #include <folly/Likely.h>
 #include <folly/ThreadLocal.h>
 
@@ -34,15 +36,12 @@ namespace folly {
 // ThreadCachedInt's you should considering breaking up the Tag space even
 // further.
 template <class IntT, class Tag = IntT>
-class ThreadCachedInt {
+class ThreadCachedInt : boost::noncopyable {
   struct IntCache;
 
  public:
   explicit ThreadCachedInt(IntT initialVal = 0, uint32_t cacheSize = 1000)
       : target_(initialVal), cacheSize_(cacheSize) {}
-
-  ThreadCachedInt(const ThreadCachedInt&) = delete;
-  ThreadCachedInt& operator=(const ThreadCachedInt&) = delete;
 
   void increment(IntT inc) {
     auto cache = cache_.get();
