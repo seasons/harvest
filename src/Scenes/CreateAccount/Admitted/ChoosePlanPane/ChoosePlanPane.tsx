@@ -65,11 +65,21 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
     onError: (err) => {
       console.log("Error ChoosePlanPane.tsx", err)
       Sentry.captureException(err)
-      const popUpData = {
-        title: "Oops! Try again!",
-        note: "There was an issue processing your payment. Please retry or contact us.",
-        buttonText: "Close",
-        onClose: hidePopUp,
+      let popUpData
+      if (err.message.includes("(card_declined)")) {
+        popUpData = {
+          title: "Sorry, your card was declined",
+          note: "You can enter in a different card in the Apple Pay menu.",
+          buttonText: "Close",
+          onClose: hidePopUp,
+        }
+      } else {
+        popUpData = {
+          title: "Oops! Try again!",
+          note: "There was an issue processing your payment. Please retry or contact us.",
+          buttonText: "Close",
+          onClose: hidePopUp,
+        }
       }
       showPopUp(popUpData)
       setIsMutating(false)
