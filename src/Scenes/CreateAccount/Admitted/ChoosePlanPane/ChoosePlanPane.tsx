@@ -97,12 +97,23 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
     },
     onError: (err) => {
       console.log("Error ChoosePlanPane.tsx", err)
+      const errorAsString = err.toString()
       Sentry.captureException(err)
-      const popUpData = {
-        title: "Oops! Try again!",
-        note: "There was an issue updating your plan. Please retry or contact us.",
-        buttonText: "Close",
-        onClose: hidePopUp,
+      let popUpData
+      if (errorAsString.includes("return your current reservation before")) {
+        popUpData = {
+          title: "Please return your current order first",
+          note: "You must return your current reservation before changing your plan.",
+          buttonText: "Close",
+          onClose: hidePopUp,
+        }
+      } else {
+        popUpData = {
+          title: "Oops! Try again!",
+          note: "There was an issue updating your plan. Please retry or contact us.",
+          buttonText: "Close",
+          onClose: hidePopUp,
+        }
       }
       showPopUp(popUpData)
       setIsMutating(false)
