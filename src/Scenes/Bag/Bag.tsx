@@ -128,7 +128,6 @@ export const Bag = screenTrack()((props) => {
 
   const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
   const bagItems = (itemCount && assign(fill(new Array(itemCount), { variantID: "", productID: "" }), items)) || []
-  console.log("bagItems", bagItems)
   const hasActiveReservation = !!me?.activeReservation
 
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
