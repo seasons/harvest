@@ -15,9 +15,7 @@ import { FlatList, RefreshControl, StatusBar } from "react-native"
 
 import { useFocusEffect } from "@react-navigation/native"
 
-import {
-  CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM
-} from "./BagQueries"
+import { CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 
 export enum BagView {

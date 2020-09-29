@@ -36,7 +36,7 @@ export const BagTab: React.FC<{
   const me = data?.me
   const paymentPlans = data?.paymentPlans
   const activeReservation = me?.activeReservation
-
+  const itemCount = me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
   const hasActiveReservation = !!activeReservation
 
   const [getLocalBag, { data: localItems }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
@@ -53,7 +53,7 @@ export const BagTab: React.FC<{
       }))
     : items
 
-  const paddedItems = assign(fill(new Array(DEFAULT_ITEM_COUNT), { variantID: "", productID: "" }), bagItems) || []
+  const paddedItems = assign(fill(new Array(itemCount), { variantID: "", productID: "" }), bagItems) || []
 
   useEffect(() => {
     if (!authState.isSignedIn) {
