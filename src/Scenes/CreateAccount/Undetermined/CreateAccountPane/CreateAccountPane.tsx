@@ -99,18 +99,19 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   }
 
   const persistBagItems = async () => {
-    for (const item of localItems.localBagItems) {
-      await addToBag({
-        variables: {
-          id: item.variantID,
-        },
-      })
+    if (!!localItems?.localBagItems) {
+      for (const item of localItems.localBagItems) {
+        await addToBag({
+          variables: {
+            id: item.variantID,
+          },
+        })
+      }
     }
   }
 
   // networking
   const [signup] = useMutation(SIGN_UP, {
-    onCompleted: () => setIsMutating(false),
     onError: (err) => {
       console.log("[Error CreateAccountPane.tsx]", err)
       let popUpData = {
@@ -176,6 +177,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
       // Add local bag items to backend
       await persistBagItems()
       onSignUp()
+      setIsMutating(false)
     }
   }
 
