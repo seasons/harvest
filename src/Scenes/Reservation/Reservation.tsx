@@ -153,7 +153,7 @@ export const Reservation = screenTrack()((props) => {
               <Sans size="1" color="black50">
                 As a reminder, orders placed{" "}
                 <Sans size="1" color="black100" style={{ textDecorationLine: "underline" }}>
-                  after 5:00pm
+                  after 4:00pm
                 </Sans>{" "}
                 will be processed the following business day.
               </Sans>
