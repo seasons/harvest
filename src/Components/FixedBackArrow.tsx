@@ -1,9 +1,10 @@
 import React from "react"
-import styled from "styled-components/native"
-import { Flex } from "./Flex"
-import { BackArrowIcon } from "../../assets/icons"
 import { TouchableOpacity } from "react-native"
+import styled from "styled-components/native"
+
+import { BackArrowIcon } from "../../assets/icons"
 import { Box } from "./Box"
+import { Flex } from "./Flex"
 import { themeProps } from "./Theme"
 
 type FixedBackArrowVariant = "blackBackground" | "whiteBackground" | "black04Background"
@@ -66,7 +67,7 @@ const Wrapper = styled(Box)`
   z-index: 2000;
 `
 
-const ArrowWrapper = styled(Flex)`
+const ArrowWrapper = styled(Flex)<{ backgroundColor: string }>`
   flex-direction: row;
   background-color: ${(p) => p.backgroundColor};
   border-radius: 100;
