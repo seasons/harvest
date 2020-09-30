@@ -49,6 +49,8 @@
 	<string>Allow Seasons to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow Seasons to use your location</string>
+	<key>NSMainNibFile</key>
+	<string>SplashScreen</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow Seasons to access your microphone</string>
 	<key>NSMotionUsageDescription</key>

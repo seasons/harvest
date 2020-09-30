@@ -1,80 +1,15 @@
 platform :ios, '10.0'
 
-require_relative '../node_modules/react-native-unimodules/cocoapods'
-
-# ignore all warnings from all pods
-inhibit_all_warnings!
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'seasons' do
-  # Pods for seasons
-  use_unimodules!
+  config = use_native_modules!
 
-  permissions_path = '../node_modules/react-native-permissions/ios'
-  pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
-  pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
-  pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
-  pod 'RCTTypeSafety', :path => "../node_modules/react-native/Libraries/TypeSafety"
-  pod 'React', :path => '../node_modules/react-native/'
-  pod 'React-Core', :path => '../node_modules/react-native/'
-  pod 'React-CoreModules', :path => '../node_modules/react-native/React/CoreModules'
-  pod 'React-Core/DevSupport', :path => '../node_modules/react-native/'
-  pod 'React-RCTActionSheet', :path => '../node_modules/react-native/Libraries/ActionSheetIOS'
-  pod 'React-RCTAnimation', :path => '../node_modules/react-native/Libraries/NativeAnimation'
-  pod 'React-RCTBlob', :path => '../node_modules/react-native/Libraries/Blob'
-  pod 'React-RCTImage', :path => '../node_modules/react-native/Libraries/Image'
-  pod 'React-RCTLinking', :path => '../node_modules/react-native/Libraries/LinkingIOS'
-  pod 'React-RCTNetwork', :path => '../node_modules/react-native/Libraries/Network'
-  pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
-  pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text'
-  pod 'React-RCTVibration', :path => '../node_modules/react-native/Libraries/Vibration'
-  pod 'React-Core/RCTWebSocket', :path => '../node_modules/react-native/'
+  use_react_native!(:path => config["reactNativePath"])
 
-  pod 'React-cxxreact', :path => '../node_modules/react-native/ReactCommon/cxxreact'
-  pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi'
-  pod 'React-jsiexecutor', :path => '../node_modules/react-native/ReactCommon/jsiexecutor'
-  pod 'React-jsinspector', :path => '../node_modules/react-native/ReactCommon/jsinspector'
-  pod 'ReactCommon/callinvoker', :path => "../node_modules/react-native/ReactCommon"
-  pod 'ReactCommon/turbomodule/core', :path => "../node_modules/react-native/ReactCommon"
-  pod 'Yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
-
-  pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
-  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
-  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-
-  pod 'RNSVG', :path => '../node_modules/react-native-svg'
-  pod 'RNGestureHandler', :podspec => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
-  pod 'RNReanimated', :podspec => '../node_modules/react-native-reanimated/RNReanimated.podspec'
-  pod 'A0Auth0', :path => '../node_modules/react-native-auth0/ios'
-  pod 'RNScreens', :path => '../node_modules/react-native-screens'
-  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
-  pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
-  pod 'lottie-ios', :path => '../node_modules/lottie-ios'
-  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
-  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
-  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
-  pod 'RNSentry', :path => '../node_modules/@sentry/react-native'
-  pod 'react-native-config', :path => '../node_modules/react-native-config'
-  pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
-  pod 'RNAnalytics', :path => '../node_modules/@segment/analytics-react-native'
-  pod 'RNAnalyticsIntegration-Google-Analytics', :path => '../node_modules/@segment/analytics-react-native-google-analytics'
-  pod 'RNAnalyticsIntegration-Mixpanel', :path => '../node_modules/@segment/analytics-react-native-mixpanel' 
-  pod 'react-native-pusher-push-notifications', :path => '../node_modules/react-native-pusher-push-notifications'
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
-  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
-
-  pod 'RCTRestart', :path => '../node_modules/react-native-restart'
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
-  pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
-  pod 'RNShare', :path => '../node_modules/react-native-share'
-
-  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
-  pod 'RNCPicker', :path => '../node_modules/@react-native-community/picker'
-
-  pod 'RNRate', :path => '../node_modules/react-native-rate'
-
-  pod 'RNSharedElement', :path => '../node_modules/react-native-shared-element'
-  
-  pod 'tipsi-stripe', :path => '../node_modules/tipsi-stripe'
+  pod 'Permission-Notifications', :path => "../node_modules/react-native-permissions/ios/Notifications.podspec"
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|  
