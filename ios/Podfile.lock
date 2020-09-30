@@ -326,9 +326,9 @@ PODS:
     - React
   - RNSVG (12.1.0):
     - React
-  - SDWebImage (5.9.2):
-    - SDWebImage/Core (= 5.9.2)
-  - SDWebImage/Core (5.9.2)
+  - SDWebImage (5.9.1):
+    - SDWebImage/Core (= 5.9.1)
+  - SDWebImage/Core (5.9.1)
   - SDWebImageWebPCoder (0.2.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.0)
@@ -606,7 +606,7 @@ SPEC CHECKSUMS:
   RNShare: ec48772563576a8ff19022c3d1db410429fb3e2e
   RNSharedElement: 00b1a1420d213a34459bb9a5aacabb38107d7948
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
-  SDWebImage: 0b42b8719ab0c5257177d5894306e8a336b21cbb
+  SDWebImage: a990c053fff71e388a10f3357edb0be17929c9c5
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Segment-GoogleAnalytics: 46c74aff83e5352bfca343dab7f2a0e59708d3b8
   Segment-Mixpanel: 05d5021ffa0edc37642980ef44e03748ceb804da
@@ -617,4 +617,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c7e2077cb7d54c507ae3942b4d89c56271cb5a0c
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.9.1
