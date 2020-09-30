@@ -29,29 +29,15 @@ export const ShareButton: React.FC<{
         // For sharing url with custom title.
         placeholderItem: { type: "url", content: url },
         item: {
-          default: { type: "url", content: url },
+          default: {
+            type: "url",
+            content: `${message} ${url}`,
+          },
         },
         subject: {
           default: title,
         },
-        linkMetadata: { originalUrl: url, url, title },
-      },
-      {
-        // For using custom icon instead of default text icon at share preview when sharing with message.
-        placeholderItem: {
-          type: "url",
-          content: icon,
-        },
-        item: {
-          default: {
-            type: "text",
-            content: `${message} ${url}`,
-          },
-        },
-        linkMetadata: {
-          title: message,
-          image: icon,
-        },
+        linkMetadata: { originalUrl: url, url, title, image: icon },
       },
     ],
   }

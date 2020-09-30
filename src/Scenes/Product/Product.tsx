@@ -117,7 +117,7 @@ export const Product = screenTrack({
 
   const viewWidth = Dimensions.get("window").width
   const images = product?.largeImages
-  const imageWidth = images?.length > 1 ? viewWidth - space(3) : viewWidth
+  const imageWidth = viewWidth
 
   let selectedVariantIsWanted = false
   if (product?.variants?.length > 0 && selectedVariant.id) {
