@@ -62,5 +62,6 @@ buck-out/
 
 .jest/cache
 .vscode/react/
+ios/report.*.json
 
 env.json
