@@ -13934,10 +13934,10 @@ react-native-scroll-bottom-sheet@^0.6.2:
   dependencies:
     utility-types "^3.10.0"
 
-react-native-share@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-3.3.0.tgz#07ab21e6e6dc2399a9c4b5517f5bca831907ffa3"
-  integrity sha512-BH/l3UMk+g+JVa/0W4pw9Jr92fOJPg6KyK9sOjPe9SSNxei/NObo+D80MaecZaBoORV9lrktmlCD+ka/ed1JuA==
+react-native-share@^3.8.3:
+  version "3.8.3"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-3.8.3.tgz#df8226310dc0cfbd7f6bf9480a20cc49cf51f247"
+  integrity sha512-aPcRnFnC3TgAUZ/7B1NIvUixfq3doiOKLUeSekNlP76UZohX2cvBFM0iqqvBSomc78bVse89mLYuIZmkmwo2nQ==
 
 react-native-shared-element@^0.7.0:
   version "0.7.0"

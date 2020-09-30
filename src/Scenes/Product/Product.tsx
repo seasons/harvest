@@ -1,23 +1,28 @@
-import { useMutation, useQuery } from "@apollo/react-hooks"
 import { Box, Container, FixedBackArrow, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { space } from "App/utils"
 import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
-import { head, find } from "lodash"
-import React, { useEffect, useState, useRef } from "react"
+import { find, head } from "lodash"
+import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
+
+import { useMutation, useQuery } from "@apollo/react-hooks"
+
 import { GET_HOMEPAGE } from "../Home/Home"
-import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements, VariantWant } from "./Components"
+import {
+  ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements, VariantWant
+} from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 import { GET_PRODUCT } from "./Queries"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -168,10 +173,25 @@ export const Product = screenTrack({
   const selectionButtonsBottom = shouldShowVariantWant ? VARIANT_WANT_HEIGHT : 0
   const listFooterSpacing = selectionButtonsBottom + 58
   const sections = ["imageRail", "productDetails", "productMeasurements", "aboutTheBrand", "moreLikeThis"]
+  const url = `https://www.seasons.nyc/product/${product.slug}`
+  const title = product.name
+  const message = `Check out ${product.name} on Seasons!`
+  const icon = images?.[0]?.url
 
   return (
     <Container insetsTop={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "black04Background"} />
+      <ShareButtonWrapper>
+        <ShareButton
+          variant={showVariantPicker ? "blackBackground" : "black04Background"}
+          options={{
+            title,
+            message,
+            url,
+            icon,
+          }}
+        />
+      </ShareButtonWrapper>
       <FlatList
         ListHeaderComponent={() => <Spacer mb={insets.top} />}
         data={sections}
@@ -238,6 +258,13 @@ const VariantWantWrapper = styled(Box)`
   left: 0;
   width: 100%;
   height: ${VARIANT_WANT_HEIGHT};
+`
+
+const ShareButtonWrapper = styled(Box)`
+  position: absolute;
+  top: 50;
+  right: 7;
+  z-index: 2000;
 `
 
 const AnimatedVariantWantWrapper = animated(VariantWantWrapper)
