@@ -123,7 +123,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
     }
     // If user leaves the app to turn on notifications in the settings recheck status
     AppState.addEventListener("change", (nextAppState) => onChange(nextAppState))
-    return AppState.removeEventListener("change", (nextAppState) => onChange(nextAppState))
+    return () => AppState.removeEventListener("change", (nextAppState) => onChange(nextAppState))
   }, [])
 
   useEffect(() => {
