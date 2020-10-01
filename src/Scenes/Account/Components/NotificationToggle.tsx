@@ -73,11 +73,12 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
         checkPermissions()
       }
     })
-    return AppState.removeEventListener("change", (nextAppState) => {
-      if (nextAppState === "active") {
-        checkPermissions()
-      }
-    })
+    return () =>
+      AppState.removeEventListener("change", (nextAppState) => {
+        if (nextAppState === "active") {
+          checkPermissions()
+        }
+      })
   }, [])
 
   const callback = (status) => {
