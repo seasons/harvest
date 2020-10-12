@@ -1,11 +1,19 @@
 import { useNavigation } from "@react-navigation/native"
+import { gql } from "apollo-boost"
 import { Box, Button, CloseButton, Container, Sans, Spacer, TextInput } from "App/Components"
 import { TextInputRef } from "App/Components/TextInput"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
+import { get } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
+import { useMutation } from "react-apollo"
 import { Keyboard, KeyboardAvoidingView } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 
+const CHECK_COUPON = gql`
+  mutation CheckCoupon($couponID: String!) {
+    checkCoupon(couponID: $couponID)
+  }
+`
 interface ApplyPromoCodeProps {
   onPromoCodeApplied?: () => void
 }
@@ -19,8 +27,20 @@ export const ApplyPromoCode: React.FC<ApplyPromoCodeProps> = screenTrack()(({ on
   const [isFormValid, setIsFormValid] = useState(false)
   const [isMutating, setIsMutating] = useState(false)
   const insets = useSafeArea()
-
   const textInputRef: React.MutableRefObject<TextInputRef> = useRef(null)
+  const [checkCoupon] = useMutation(CHECK_COUPON, {
+    onCompleted: (success) => {
+      console.log(success)
+      setIsMutating(false)
+      if (get(success, 'checkCoupon')) {
+        navigation.navigate("PromoCodeAppliedConfirmation")
+      }
+    },
+    onError: (err) => {
+      console.log("Error ApplyPromoCode.tsx", err)
+      setIsMutating(false)
+    },
+  })
   useEffect(() => {
     textInputRef?.current?.focus()
   }, [true])
@@ -42,9 +62,11 @@ export const ApplyPromoCode: React.FC<ApplyPromoCodeProps> = screenTrack()(({ on
     })
 
     // TODO: Hookup to backend once mutation is made
-    setTimeout(() => {
-      navigation.navigate("PromoCodeAppliedConfirmation")
-    }, 2000)
+    checkCoupon({
+      variables: {
+        couponID: "test",
+      },
+    })
 
     setIsMutating(true)
   }
