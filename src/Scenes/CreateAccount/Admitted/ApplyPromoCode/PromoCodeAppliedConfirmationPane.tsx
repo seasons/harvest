@@ -1,11 +1,12 @@
-import { StackActions, useNavigation } from "@react-navigation/native"
 import { Box, Button, Container, Flex, Sans, Spacer } from "App/Components"
 import { CheckCircled } from "Assets/svgs"
 import React from "react"
 
-export const PromoCodeAppliedConfirmation: React.FC = () => {
-  const navigation = useNavigation()
+interface PromoCodeAppliedConfirmationPaneProps {
+  onComplete: () => void
+}
 
+export const PromoCodeAppliedConfirmationPane: React.FC<PromoCodeAppliedConfirmationPaneProps> = ({ onComplete }) => {
   return (
     <Container>
       <Flex style={{ flex: 1 }}>
@@ -25,9 +26,7 @@ export const PromoCodeAppliedConfirmation: React.FC = () => {
               Your promo code has been successfully applied.
             </Sans>
             <Spacer mb={3} />
-            <Button block onPress={() => {
-              navigation.dispatch(StackActions.pop(2))
-            }}>
+            <Button block onPress={onComplete}>
               Done
             </Button>
           </Box>

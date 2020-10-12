@@ -44,11 +44,12 @@ interface ChoosePlanPaneProps {
   data: GetPlans
   paneType: PaneType
   discount?: number
+  source: string
 }
 
 const viewWidth = Dimensions.get("window").width
 
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType, discount }) => {
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType, discount, source }) => {
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
 
@@ -222,14 +223,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
       await onChoosePlanUpdate()
     }
   }
-
-  const onApplyPromoCode = () => {
-    tracking.trackEvent({
-      actionName: TrackSchema.ActionNames.ApplyPromoCodeTapped,
-      actionType: TrackSchema.ActionTypes.Tap,
-    })
-    navigation.navigate("ApplyPromoCode", { onPromoCodeApplied: () => { console.log("test") } })
-  }
+  const onApplyPromoCode = () => navigation.navigate("ApplyPromoCode", { source: source })
 
   const descriptionLines = selectedPlan?.description?.split("\n") || []
   const planColors = ["#000", "#e6b759"]

@@ -1,8 +1,6 @@
-import { useNavigation } from "@react-navigation/native"
 import { gql } from "apollo-boost"
 import { Box, Button, CloseButton, Container, Sans, Spacer, TextInput } from "App/Components"
 import { TextInputRef } from "App/Components/TextInput"
-import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { get } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
 import { useMutation } from "react-apollo"
@@ -14,14 +12,11 @@ const CHECK_COUPON = gql`
     checkCoupon(couponID: $couponID)
   }
 `
-interface ApplyPromoCodeProps {
-  onPromoCodeApplied?: () => void
+interface ApplyPromoCodePaneProps {
+  onApplyPromoCode: (number) => void
 }
 
-export const ApplyPromoCode: React.FC<ApplyPromoCodeProps> = screenTrack()(({ onPromoCodeApplied }) => {
-  const tracking = useTracking()
-  const navigation = useNavigation()
-
+export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = (({ onApplyPromoCode }) => {
   // Hooks
   const [promoCode, setPromoCode] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
@@ -33,7 +28,7 @@ export const ApplyPromoCode: React.FC<ApplyPromoCodeProps> = screenTrack()(({ on
       console.log(success)
       setIsMutating(false)
       if (get(success, 'checkCoupon')) {
-        navigation.navigate("PromoCodeAppliedConfirmation")
+        onApplyPromoCode(5000)
       }
     },
     onError: (err) => {
@@ -55,12 +50,6 @@ export const ApplyPromoCode: React.FC<ApplyPromoCodeProps> = screenTrack()(({ on
     if (isMutating) {
       return
     }
-
-    tracking.trackEvent({
-      actionName: Schema.ActionNames.PromoCodeApplied,
-      actionType: Schema.ActionTypes.Tap
-    })
-
     // TODO: Hookup to backend once mutation is made
     checkCoupon({
       variables: {

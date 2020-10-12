@@ -15,7 +15,7 @@ import { Brand } from "App/Scenes/Brand"
 import { Brands } from "App/Scenes/Brands"
 import { Browse, Filters } from "App/Scenes/Browse"
 import { CreateAccount } from "App/Scenes/CreateAccount"
-import { ApplyPromoCode, PromoCodeAppliedConfirmation } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane"
+import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane"
 import { DebugMenu } from "App/Scenes/DebugMenu"
 import { Faq } from "App/Scenes/Faq"
 import { Home } from "App/Scenes/Home"
@@ -128,7 +128,6 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.PauseConfirmation} component={PauseConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ExtendPauseConfirmation} component={ExtendPauseConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ApplyPromoCode} component={ApplyPromoCode}/>
-      <ModalStack.Screen name={Schema.PageNames.PromoCodeAppliedConfirmation} component={PromoCodeAppliedConfirmation} />
     </ModalStack.Navigator>
   )
 }
