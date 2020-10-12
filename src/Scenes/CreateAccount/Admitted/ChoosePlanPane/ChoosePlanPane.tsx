@@ -1,24 +1,25 @@
-import { Box, Button, Container, Flex, Sans, Spacer, Separator } from "App/Components"
+import { useNavigation } from "@react-navigation/native"
+import * as Sentry from "@sentry/react-native"
+import { Box, Button, Container, Flex, Sans, Separator, Spacer } from "App/Components"
+import { GetPlans } from "App/generated/GetPlans"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { ListCheck } from "Assets/svgs/ListCheck"
+import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
+import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { color } from "App/utils"
+import { Schema as TrackSchema, useTracking } from "App/utils/track"
+import { ChevronIcon } from "Assets/icons"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import { ListCheck } from "Assets/svgs/ListCheck"
+import { TabBar } from "Components/TabBar"
 import gql from "graphql-tag"
 import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "react-apollo"
-import { ScrollView, Dimensions, Linking } from "react-native"
+import { Dimensions, Linking, ScrollView, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
-import { TabBar } from "Components/TabBar"
-import * as Sentry from "@sentry/react-native"
-import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import { PlanButton } from "./PlanButton"
-import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { GetPlans } from "App/generated/GetPlans"
-import { ChevronIcon } from "Assets/icons"
-import { color } from "App/utils"
-import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
 
 const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout($planID: String!, $token: StripeToken!) {
@@ -42,17 +43,19 @@ interface ChoosePlanPaneProps {
   headerText: String
   data: GetPlans
   paneType: PaneType
+  discount?: number
 }
 
 const viewWidth = Dimensions.get("window").width
 
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType }) => {
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType, discount }) => {
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
 
   const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const insets = useSafeArea()
   const tracking = useTracking()
+  const navigation = useNavigation()
   const [currentView, setCurrentView] = useState(0)
   const [tiers, setTiers] = useState([])
   const [isMutating, setIsMutating] = useState(false)
@@ -220,6 +223,14 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
     }
   }
 
+  const onApplyPromoCode = () => {
+    tracking.trackEvent({
+      actionName: TrackSchema.ActionNames.ApplyPromoCodeTapped,
+      actionType: TrackSchema.ActionTypes.Tap,
+    })
+    navigation.navigate("ApplyPromoCode", { onPromoCodeApplied: () => { console.log("test") } })
+  }
+
   const descriptionLines = selectedPlan?.description?.split("\n") || []
   const planColors = ["#000", "#e6b759"]
   const currentColor = planColors[currentView] || "black"
@@ -290,6 +301,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
                     shouldSelect={setSelectedPlan}
                     selected={selectedPlan?.id === plan.id}
                     selectedColor={currentColor}
+                    discount={discount}
                   />
                 </Box>
               )
@@ -330,11 +342,11 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
               Contact us
             </Button>
           </Box>
-          <Spacer pb={120} />
+          <Spacer pb={160} />
         </ScrollView>
       </Box>
       <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-        <Box p={2}>
+        <Box p={2} style={{ alignItems: "center" }}>
           <ColoredButton
             block
             disabled={!selectedPlan}
@@ -345,6 +357,13 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
           >
             Choose plan
           </ColoredButton>
+          <Spacer mt={2} />
+          <TouchableOpacity
+            onPress={onApplyPromoCode}>
+            <Sans size="2" style={{ textDecorationLine: "underline" }}>
+              Apply promo code
+            </Sans>
+          </TouchableOpacity>
           <Box style={{ height: insets.bottom }} />
         </Box>
       </FadeBottom2>

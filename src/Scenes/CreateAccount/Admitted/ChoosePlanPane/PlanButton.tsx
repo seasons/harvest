@@ -9,10 +9,41 @@ interface PlanButtonProps {
   selected: boolean
   plan: any
   selectedColor?: string
+  discount?: number
 }
 
-export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor }) => {
+export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor, discount }) => {
   const { price, itemCount } = plan
+
+  const priceText = (discount?: number) => {
+    const originalPrice = price / 100
+    const discountedPrice = originalPrice - discount / 100
+    const isDiscounted = !!discount
+
+    return (isDiscounted ? (
+      <Text>
+        <Sans color="black50" size="0.5">
+          / month
+        </Sans>
+        <Sans color="black100" size="1">{" "}</Sans>
+          <Sans color="black50" size="1" style={{ textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>
+            ${originalPrice}
+          </Sans>
+        <Sans color="black100" size="1">
+          {" "}${discountedPrice}
+        </Sans>
+      </Text>)
+      : (
+      <Text>
+        <Sans color="black50" size="0.5">
+          per month
+        </Sans>
+        <Sans color="black100" size="1">
+          {" "}${originalPrice}
+        </Sans>
+      </Text>)
+    )
+  }
 
   return (
     <PlanSelectionBorder width="100%" p={0.5} selected={selected} selectedColor={selectedColor}>
@@ -28,14 +59,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
           <Sans color="black100" size="1">
             {itemCount} items
           </Sans>
-          <Text>
-            <Sans color="black50" size="0.5">
-              per month
-            </Sans>
-            <Sans color="black100" size="1">
-              {"  "}${price / 100}
-            </Sans>
-          </Text>
+          {priceText(discount)}
         </StyledFlex>
       </TouchableOpacity>
     </PlanSelectionBorder>
