@@ -6,7 +6,7 @@ import { screenTrack } from "App/utils/track"
 import React from "react"
 import { useQuery } from "react-apollo"
 
-export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
+export const UpdatePaymentPlanModal = screenTrack()(({ navigation, route }) => {
   const { data } = useQuery(GET_PLANS, {
     variables: {
       where: { status: "active" },
@@ -31,6 +31,8 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
         onComplete={() => navigation.goBack()}
         headerText="Let's choose your plan"
         source={"UpdatePaymentPlanModal"}
+        discount={route?.params?.discount}
+        discountType={route?.params?.discountType}
       />
     </Container>
   )

@@ -44,12 +44,13 @@ interface ChoosePlanPaneProps {
   data: GetPlans
   paneType: PaneType
   discount?: number
+  discountType?: "Flat" | "Percentage"
   source: string
 }
 
 const viewWidth = Dimensions.get("window").width
 
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType, discount, source }) => {
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType, discount, discountType, source }) => {
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
 
@@ -296,6 +297,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
                     selected={selectedPlan?.id === plan.id}
                     selectedColor={currentColor}
                     discount={discount}
+                    discountType={discountType}
                   />
                 </Box>
               )

@@ -1,7 +1,6 @@
 import { gql } from "apollo-boost"
 import { Box, Button, CloseButton, Container, Sans, Spacer, TextInput } from "App/Components"
 import { TextInputRef } from "App/Components/TextInput"
-import { get } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, KeyboardAvoidingView } from "react-native"
@@ -9,36 +8,34 @@ import { useSafeArea } from "react-native-safe-area-context"
 
 const CHECK_COUPON = gql`
   mutation CheckCoupon($couponID: String!) {
-    checkCoupon(couponID: $couponID)
+    checkCoupon(couponID: $couponID) {
+      amount
+      type
+    }
   }
 `
 interface ApplyPromoCodePaneProps {
-  onApplyPromoCode: (number) => void
+  onApplyPromoCode: (number, type) => void
 }
 
 export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = (({ onApplyPromoCode }) => {
-  // Hooks
   const [promoCode, setPromoCode] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
   const [isMutating, setIsMutating] = useState(false)
   const insets = useSafeArea()
   const textInputRef: React.MutableRefObject<TextInputRef> = useRef(null)
   const [checkCoupon] = useMutation(CHECK_COUPON, {
-    onCompleted: (success) => {
-      console.log(success)
+    onCompleted: (data) => {
+      const { amount, type } = data?.checkCoupon
       setIsMutating(false)
-      if (get(success, 'checkCoupon')) {
-        onApplyPromoCode(5000)
-      }
+      onApplyPromoCode(amount, type)
     },
     onError: (err) => {
-      console.log("Error ApplyPromoCode.tsx", err)
+      console.log("Error ApplyPromoCodePane.tsx", err)
       setIsMutating(false)
     },
   })
-  useEffect(() => {
-    textInputRef?.current?.focus()
-  }, [true])
+  useEffect(() => textInputRef?.current?.focus())
 
   const onPromoCodeChange = (val: string) => {
     setPromoCode(val)
@@ -50,10 +47,9 @@ export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = (({ onApply
     if (isMutating) {
       return
     }
-    // TODO: Hookup to backend once mutation is made
     checkCoupon({
       variables: {
-        couponID: "test",
+        couponID: promoCode,
       },
     })
 

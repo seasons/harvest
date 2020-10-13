@@ -4,20 +4,32 @@ import React from "react"
 import { Text, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 
+export type DiscountType = "Flat" | "Percentage"
+
 interface PlanButtonProps {
   shouldSelect: (plan: any) => void
   selected: boolean
   plan: any
   selectedColor?: string
   discount?: number
+  discountType?: DiscountType
 }
 
-export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor, discount }) => {
+export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor, discount, discountType }) => {
   const { price, itemCount } = plan
 
-  const priceText = (discount?: number) => {
+  const priceText = (discount?: number, discountType?: DiscountType) => {
     const originalPrice = price / 100
-    const discountedPrice = originalPrice - discount / 100
+    let discountedPrice
+    switch (discountType) {
+      case "Flat":
+        discountedPrice = originalPrice - discount / 100
+        break
+
+      case "Percentage":
+        discountedPrice = originalPrice - (originalPrice * discount / 100.0)
+        break
+    }
     const isDiscounted = !!discount
 
     return (isDiscounted ? (
@@ -59,7 +71,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
           <Sans color="black100" size="1">
             {itemCount} items
           </Sans>
-          {priceText(discount)}
+          {priceText(discount, discountType)}
         </StyledFlex>
       </TouchableOpacity>
     </PlanSelectionBorder>

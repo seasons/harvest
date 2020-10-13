@@ -260,7 +260,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
         )
         break
       case State.ChoosePlan:
-        console.log(route?.params?.discount)
         pane = (
           <ChoosePlanPane
             paneType={1}
@@ -275,6 +274,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             headerText={"You're in.\nLet's choose your plan"}
             source={"CreateAccountModal"}
             discount={route?.params?.discount}
+            discountType={route?.params?.discountType}
           />
         )
         break

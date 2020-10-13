@@ -15,6 +15,7 @@ export const ApplyPromoCode: React.FC = (props: any) => {
   const { navigation, route } = props
   const source = route?.params?.source
   const [discount, setDiscount] = useState(0)
+  const [discountType, setDiscountType] = useState("Flat")
   // The current index into the `states(userState)` array
   const [index, setIndex] = useState(0)
   // All the states (after the initial state)
@@ -31,14 +32,15 @@ export const ApplyPromoCode: React.FC = (props: any) => {
 
     switch (state) {
       case State.ApplyPromoCode:
-        pane = <ApplyPromoCodePane onApplyPromoCode={(discount) => {
+        pane = <ApplyPromoCodePane onApplyPromoCode={(discount, type) => {
           setDiscount(discount)
+          setDiscountType(type)
           setNextState()
         }}/>
         break
       
       case State.Confirmation:
-        pane = <PromoCodeAppliedConfirmationPane onComplete={() => navigation.navigate(source, { discount })}/>
+        pane = <PromoCodeAppliedConfirmationPane onComplete={() => navigation.navigate(source, { discount, discountType })}/>
         break
     }
     return (
