@@ -3,7 +3,6 @@ import React, { useState } from "react"
 import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
-
 import { Box, Button, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput } from "App/Components"
 import { Schema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
@@ -11,7 +10,7 @@ import { space } from "App/utils"
 import { screenTrack, useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { Container } from "Components/Container"
 import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
-import { GET_HOMEPAGE } from "../Home/Home"
+import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
 
 export const ReservationFeedbackConfirmation: React.FC<{
   navigation: any

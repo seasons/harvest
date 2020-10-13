@@ -4,7 +4,6 @@ import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { space } from "App/utils"
 import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
 import { find, head } from "lodash"
@@ -16,10 +15,8 @@ import styled from "styled-components/native"
 
 import { useMutation, useQuery } from "@apollo/react-hooks"
 
-import { GET_HOMEPAGE } from "../Home/Home"
-import {
-  ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements, VariantWant
-} from "./Components"
+import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
+import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements, VariantWant } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 import { GET_PRODUCT } from "./Queries"
