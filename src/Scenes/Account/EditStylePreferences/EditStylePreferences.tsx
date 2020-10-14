@@ -3,13 +3,13 @@ import { color } from "App/utils"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import React, { useState } from "react"
 import { Dimensions, FlatList, TouchableOpacity } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { areIndicesEqual, Index, Item, Section, sections } from "./Sections"
 
 import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 
 const UPDATE_STYLE_PREFERENCES = gql`
   mutation setStylePreferences($styles: [String!], $patterns: [String!], $colors: [String!], $brands: [String!]) {
@@ -61,7 +61,7 @@ export const EditStylePreferences: React.FC<{
   route: any
 }> = ({ navigation, route }) => {
   const [selectedItemIndices, setSelectedItemIndices] = useState(initialSelectedItemIndicesFrom(route?.params))
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
 
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()

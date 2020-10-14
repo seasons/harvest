@@ -6,7 +6,7 @@ import { Box, FixedButton, Flex, Sans, Spacer, TextInput, FixedBackArrow, Contai
 import { color, space } from "App/utils"
 import * as Sentry from "@sentry/react-native"
 import { screenTrack, useTracking, Schema } from "App/utils/track"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 
 const ADD_PRODUCT_REQUEST = gql`
   mutation AddProductRequest($reason: String!, $url: String!) {

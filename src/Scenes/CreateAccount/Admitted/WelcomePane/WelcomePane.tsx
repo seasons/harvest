@@ -1,14 +1,14 @@
 import { Box, Button, Container, Sans, Spacer } from "App/Components"
 import { CheckCircled } from "Assets/svgs"
 import React from "react"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 interface WelcomePaneProps {
   onPressGetStarted: () => void
 }
 
 export const WelcomePane: React.FC<WelcomePaneProps> = ({ onPressGetStarted }) => {
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
 
   return (
     <Container insetsBottom={false} insetsTop={false}>

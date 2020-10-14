@@ -57,14 +57,15 @@ export const Home = screenTrack()(({ navigation, route }) => {
   useEffect(() => {
     const onChange = (nextAppState) => {
       const status = data?.me?.customer?.status
-      console.log("status", data?.me)
-      if (nextAppState === "active" && appState !== "active") {
+      if (nextAppState === "active" && appState === "background") {
         // Check if user status is authorized and navigate to account pane
         if (status && status === "Authorized") {
           navigation.navigate("Account")
         }
       }
-      if (nextAppState !== appState) {
+      if ((nextAppState === "background" || nextAppState === "active") && nextAppState !== appState && !!appState) {
+        // We only care about changes from the background to active,
+        // If we record 'inactive' changes it can break due to apple pay causing inactive state, etc
         setAppState(nextAppState)
       }
     }

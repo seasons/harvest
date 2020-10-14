@@ -5,7 +5,7 @@ import { Check } from "Assets/svgs"
 import get from "lodash/get"
 import React, { useState } from "react"
 import { Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Flex, Handle, Radio, Sans, Separator, Spacer, Container } from "../../Components"
 
 enum FilterView {
@@ -18,7 +18,7 @@ export const Filters = screenTrack()((props: any) => {
   const [sizeFilters, setSizeFilters] = useState(currentFilters)
   const [currentView, setCurrentView] = useState<FilterView>(FilterView.Tops)
   const tracking = useTracking()
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
 
   const filterData = {
     tops: ["X-Small", "Small", "Medium", "Large", "X-Large", "XX-Large"],

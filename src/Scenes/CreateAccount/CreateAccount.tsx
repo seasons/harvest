@@ -1,4 +1,4 @@
-import { Box, CloseButton } from "App/Components"
+import { Box } from "App/Components"
 import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { get } from "lodash"
@@ -9,6 +9,7 @@ import { ChoosePlanPane, WelcomePane } from "./Admitted"
 import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane } from "./Undetermined"
 import { WaitlistedPane } from "./Waitlisted"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { CreditCardFormPane } from "./Admitted/CreditCardFormPane"
 
 interface CreateAccountProps {
   navigation: any
@@ -24,6 +25,11 @@ export enum UserState {
   Waitlisted,
 }
 
+export enum PaymentMethod {
+  ApplePay = "ApplePay",
+  CreditCard = "CreditCard",
+}
+
 export enum State {
   CreateAccount = "CreateAccount",
   SendCode = "SendCode",
@@ -32,6 +38,7 @@ export enum State {
   Triage = "Triage",
 
   ChoosePlan = "ChoosePlan",
+  CreditCardForm = "CreditCardForm",
   Welcome = "Welcome",
 
   Waitlisted = "Waitlisted",
@@ -84,16 +91,13 @@ const sliceArray: <T>(array: T[], afterValue: T) => T[] = (array, afterValue) =>
   return array.slice(index)
 }
 
-// States in which to hide the close button
-const statesWithoutCloseButton = [State.Triage, State.Welcome, State.Waitlisted]
-
 const statesFor = (userState: UserState): State[] => {
   const commonStates = [State.CreateAccount, State.SendCode, State.VerifyCode, State.GetMeasurements, State.Triage]
   switch (userState) {
     case UserState.Undetermined:
       return commonStates
     case UserState.Admitted:
-      return commonStates.concat([State.ChoosePlan, State.Welcome])
+      return commonStates.concat([State.ChoosePlan, State.CreditCardForm, State.Welcome])
     case UserState.Waitlisted:
       return commonStates.concat([State.Waitlisted])
   }
@@ -105,6 +109,8 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       where: { status: "active" },
     },
   })
+  const plans = data?.paymentPlans
+  const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const [timeStart, setTimeStart] = useState(Date.now())
   const [appState, setAppState] = useState("active")
   const [finishedFlow, setFinishedFlow] = useState(false)
@@ -119,7 +125,11 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       if (nextAppState === "active" && appState !== "active") {
         setTimeStart(Date.now())
       }
-      setAppState(nextAppState)
+      if ((nextAppState === "background" || nextAppState === "active") && nextAppState !== appState && !!appState) {
+        // We only care about changes from the background to active,
+        // If we record 'inactive' changes it can break due to apple pay causing inactive state, etc
+        setAppState(nextAppState)
+      }
     }
     // If user leaves the app to turn on notifications in the settings recheck status
     AppState.addEventListener("change", (nextAppState) => onChange(nextAppState))
@@ -262,16 +272,41 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       case State.ChoosePlan:
         pane = (
           <ChoosePlanPane
+            selectedPlan={selectedPlan}
+            setSelectedPlan={setSelectedPlan}
             paneType={1}
             data={data}
-            onComplete={() => {
-              setNextState()
+            onComplete={(paymentMethod) => {
+              paymentMethod === PaymentMethod.CreditCard ? setIndex(index + 1) : setIndex(index + 2)
+              console.log("paymentMethod", paymentMethod)
               // Track the time viewed
               trackStepTimer(states[index + 1])
               // Restart the timer
               setTimeStart(Date.now())
             }}
             headerText={"You're in.\nLet's choose your plan"}
+          />
+        )
+        break
+      case State.CreditCardForm:
+        pane = (
+          <CreditCardFormPane
+            onRequestBack={() => {
+              setPrevState()
+              // Track the time viewed
+              trackStepTimer(states[index - 1])
+              // Restart the timer
+              setTimeStart(Date.now())
+            }}
+            plan={selectedPlan}
+            onSubmit={() => {
+              // Track the time viewed
+              trackStepTimer(states[index + 1])
+
+              setNextState()
+              // Restart the timer
+              setTimeStart(Date.now())
+            }}
           />
         )
         break
@@ -283,10 +318,10 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
     )
   }
 
+  // console.log("???", index)
+
   return (
     <>
-      {!statesWithoutCloseButton.includes(currentState) && <CloseButton variant="light" />}
-
       <FlatList
         data={states}
         horizontal

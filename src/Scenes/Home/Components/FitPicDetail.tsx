@@ -5,13 +5,13 @@ import { color } from "App/utils"
 import { CloseXSVG, More } from "Assets/svgs"
 import { useActionSheet } from "@expo/react-native-action-sheet"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useMutation } from "react-apollo"
 import gql from "graphql-tag"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { SharedElement } from "react-navigation-shared-element"
 import FastImage from "react-native-fast-image"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { DateTime } from "luxon"
 
 interface FitPicDetailProps {
@@ -37,7 +37,7 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = ({ navigation, route })
   const actionSheet = useActionSheet()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
-  const topInset = useSafeArea().top + 2 * 8
+  const topInset = useSafeAreaInsets().top + 2 * 8
   const [reportFitPic] = useMutation(REPORT_FIT_PIC, {
     onCompleted: () => {
       showPopUp({

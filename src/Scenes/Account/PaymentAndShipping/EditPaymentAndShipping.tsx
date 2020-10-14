@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "react-apollo"
 import stripe from "tipsi-stripe"
 import { Dimensions, KeyboardAvoidingView } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, Radio, Sans, Spacer, TextInput } from "App/Components"
 import styled from "styled-components/native"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
@@ -12,7 +12,7 @@ import {
   GetUserPaymentData_me_customer_billingInfo,
   GetUserPaymentData_me_customer_detail_shippingAddress,
 } from "src/generated/getUserPaymentData"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { space } from "App/utils"
 import * as Sentry from "@sentry/react-native"
 
@@ -66,7 +66,7 @@ export const EditPaymentAndShipping: React.FC<{
   const billingInfo: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
   const currentPhoneNumber = route?.params?.phoneNumber
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
   const [isMutating, setIsMutating] = useState(false)
   const [shippingAddress, setShippingAddress] = useState({
     address1: currentShippingAddress?.address1 || "",

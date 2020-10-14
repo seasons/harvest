@@ -1,14 +1,14 @@
 import { Box, Button, Container, Sans, Spacer } from "App/Components"
 import { CheckCircled } from "Assets/svgs"
 import React from "react"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 interface WaitlistedPaneProps {
   onPressFinish: () => void
 }
 
 export const WaitlistedPane: React.FC<WaitlistedPaneProps> = ({ onPressFinish }) => {
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
 
   // fix bottom, button text; check color to black100
 

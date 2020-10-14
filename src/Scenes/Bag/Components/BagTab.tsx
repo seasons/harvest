@@ -3,7 +3,7 @@ import { PauseStatus, REMOVE_SCHEDULED_PAUSE } from "App/Components/Pause/PauseB
 import { GetBagAndSavedItems } from "App/generated/GetBagAndSavedItems"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { assign, fill } from "lodash"

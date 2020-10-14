@@ -5,15 +5,15 @@ import React, { useEffect, useState } from "react"
 import { Dimensions } from "react-native"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
-import { useSafeArea } from "react-native-safe-area-context"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 
 const windowDimensions = Dimensions.get("window")
 const windowHeight = windowDimensions.height
 const twoButtonWidth = windowDimensions.width / 2 - (space(2) + space(0.5))
 
-export const PopUp: React.FC = () => {
-  const insets = useSafeArea()
+export const ErrorPopUp: React.FC = () => {
+  const insets = useSafeAreaInsets()
   const { popUpState } = usePopUpContext()
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
@@ -32,7 +32,7 @@ export const PopUp: React.FC = () => {
     backgroundColor: show && mounted ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0)",
   })
 
-  const colorsForTheme = theme => {
+  const colorsForTheme = (theme) => {
     switch (theme) {
       case "dark":
         return {
@@ -120,7 +120,7 @@ const Overlay = styled(Box)`
 const Container = styled(Box)`
   border-top-left-radius: 30;
   border-top-right-radius: 30;
-  background-color: ${p => p.color};
+  background-color: ${(p) => p.color};
   position: absolute;
   width: 100%;
   height: 100%;

@@ -3,12 +3,12 @@ import { isWholeNumber } from "App/helpers/validation"
 import { FakeTextInput } from "App/Components"
 import React, { useState } from "react"
 import { FlatList, Keyboard, KeyboardAvoidingView } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { StatePickerPopUp } from "./StatePickerPopup"
 
 import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 
 const UPDATE_ADDRESS = gql`
@@ -59,7 +59,7 @@ export const EditShippingAddress: React.FC<{
   const [state, setState] = useState((shippingAddress?.state as string) || "")
 
   const [isStatePickerVisible, setIsStatePickerVisible] = useState(false)
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
 
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()

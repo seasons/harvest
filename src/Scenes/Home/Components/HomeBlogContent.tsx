@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Box, Flex, FadeInImage } from "App/Components"
 import { LogoText, Sans } from "App/Components/Typography"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { space } from "App/utils"
 import styled from "styled-components/native"
 import { FlatList, TouchableWithoutFeedback, Dimensions } from "react-native"
@@ -15,7 +15,7 @@ const slideHeight = windowWidth
 
 export const HomeBlogContent = ({ items }) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
   const tracking = useTracking()
   const navigation = useNavigation()
 

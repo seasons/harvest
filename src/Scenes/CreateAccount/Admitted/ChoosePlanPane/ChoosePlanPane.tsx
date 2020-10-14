@@ -1,5 +1,5 @@
-import { Box, Button, Container, Flex, Sans, Spacer, Separator } from "App/Components"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { Box, Button, Container, Flex, Sans, Spacer, Separator, CloseButton } from "App/Components"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { ListCheck } from "Assets/svgs/ListCheck"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
@@ -7,7 +7,7 @@ import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "react-apollo"
 import { ScrollView, Dimensions, Linking } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
 import { TabBar } from "Components/TabBar"
@@ -15,14 +15,17 @@ import * as Sentry from "@sentry/react-native"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import { PlanButton } from "./PlanButton"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { GetPlans } from "App/generated/GetPlans"
+import { GetPlans, GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { ChevronIcon } from "Assets/icons"
 import { color } from "App/utils"
 import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
+import { PopUp } from "App/Components/PopUp"
+import { AppleLogo } from "Assets/svgs/AppleLogo"
+import { PaymentMethod } from "../../CreateAccount"
 
-const PAYMENT_CHECKOUT = gql`
-  mutation ApplePayCheckout($planID: String!, $token: StripeToken!) {
-    applePayCheckout(planID: $planID, token: $token)
+export const PAYMENT_CHECKOUT = gql`
+  mutation ApplePayCheckout($planID: String!, $token: StripeToken!, $tokenType: String) {
+    applePayCheckout(planID: $planID, token: $token, tokenType: $tokenType)
   }
 `
 
@@ -38,7 +41,9 @@ export enum PaneType {
 }
 
 interface ChoosePlanPaneProps {
-  onComplete?: () => void
+  onComplete?: (method: PaymentMethod) => void
+  selectedPlan: GetPlans_paymentPlans
+  setSelectedPlan: (plan: GetPlans_paymentPlans) => void
   headerText: String
   data: GetPlans
   paneType: PaneType
@@ -46,12 +51,18 @@ interface ChoosePlanPaneProps {
 
 const viewWidth = Dimensions.get("window").width
 
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType }) => {
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
+  onComplete,
+  headerText,
+  data,
+  paneType,
+  setSelectedPlan,
+  selectedPlan,
+}) => {
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
-
-  const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
-  const insets = useSafeArea()
+  const [openPopUp, setOpenPopUp] = useState(false)
+  const insets = useSafeAreaInsets()
   const tracking = useTracking()
   const [currentView, setCurrentView] = useState(0)
   const [tiers, setTiers] = useState([])
@@ -60,7 +71,8 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
   const [applePayCheckout] = useMutation(PAYMENT_CHECKOUT, {
     onCompleted: () => {
       setIsMutating(false)
-      onComplete?.()
+      setOpenPopUp(false)
+      onComplete?.(PaymentMethod.ApplePay)
     },
     onError: (err) => {
       console.log("Error ChoosePlanPane.tsx", err)
@@ -90,10 +102,11 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
       },
     ],
   })
+
   const [updatePaymentPlan] = useMutation(PLAN_UPDATE, {
     onCompleted: () => {
       setIsMutating(false)
-      onComplete?.()
+      onComplete?.(PaymentMethod.ApplePay)
     },
     onError: (err) => {
       console.log("Error ChoosePlanPane.tsx", err)
@@ -152,7 +165,24 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
     setSelectedPlan(initialPlan)
   }, [plans])
 
-  const onChoosePlanCreate = async () => {
+  const onAddCreditCard = () => {
+    console.log("PaymentMethod.CreditCard", PaymentMethod.CreditCard)
+    tracking.trackEvent({
+      actionName: TrackSchema.ActionNames.AddCreditCardTapped,
+      actionType: TrackSchema.ActionTypes.Tap,
+    })
+    onComplete(PaymentMethod.CreditCard)
+  }
+
+  const onApplePay = async () => {
+    if (isMutating) {
+      return
+    }
+    setIsMutating(true)
+    tracking.trackEvent({
+      actionName: TrackSchema.ActionNames.ApplePayTapped,
+      actionType: TrackSchema.ActionTypes.Tap,
+    })
     const applePaySupportedOnDevice = await stripe.deviceSupportsApplePay()
     if (applePaySupportedOnDevice) {
       const canMakeApplePayment = await stripe.canMakeApplePayPayments()
@@ -174,6 +204,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
             variables: {
               planID: selectedPlan.planID,
               token: token,
+              tokenType: "apple_pay",
             },
             awaitRefetchQueries: true,
           })
@@ -193,6 +224,10 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
   }
 
   const onChoosePlanUpdate = () => {
+    if (isMutating) {
+      return
+    }
+    setIsMutating(true)
     updatePaymentPlan({
       variables: {
         planID: selectedPlan.planID,
@@ -201,22 +236,16 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
     })
   }
 
-  const onChoosePlan = async () => {
-    if (isMutating) {
-      return
-    }
-
-    setIsMutating(true)
-
+  const onChoosePlan = () => {
     tracking.trackEvent({
       actionName: TrackSchema.ActionNames.ChoosePlanTapped,
       actionType: TrackSchema.ActionTypes.Tap,
     })
 
     if (paneType === PaneType.Create) {
-      await onChoosePlanCreate()
+      setOpenPopUp(true)
     } else if (paneType === PaneType.Update) {
-      await onChoosePlanUpdate()
+      onChoosePlanUpdate()
     }
   }
 
@@ -233,122 +262,155 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
   }
 
   return (
-    <Container insetsBottom={false} insetsTop={false}>
-      <Box style={{ flex: 1 }}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Spacer mb={5} />
-          <Spacer mb={4} />
-          <Box p={2}>
-            <Sans color="black100" size="3">
-              {headerText}
-            </Sans>
+    <>
+      <CloseButton variant="light" />
+      <Container insetsBottom={false} insetsTop={false}>
+        <Box style={{ flex: 1 }}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <Spacer mb={5} />
+            <Spacer mb={4} />
+            <Box p={2}>
+              <Sans color="black100" size="3">
+                {headerText}
+              </Sans>
+              <Spacer mb={1} />
+              <Sans color="black50" size="1">
+                Here's what's included in your selected plan:
+              </Sans>
+              <Spacer mb={1} />
+            </Box>
+            <Flex flexDirection="column">
+              {descriptionLines.map((line) => {
+                return (
+                  <Flex flexDirection="row" pb={1} px={1} alignItems="center" key={line} width="100%">
+                    <Box mx={1} mr={1.5}>
+                      <ListCheck />
+                    </Box>
+                    <Sans color="black50" size="1" style={{ width: viewWidth - 75 }}>
+                      {line}
+                    </Sans>
+                  </Flex>
+                )
+              })}
+            </Flex>
             <Spacer mb={1} />
-            <Sans color="black50" size="1">
-              Here's what's included in your selected plan:
-            </Sans>
-            <Spacer mb={1} />
-          </Box>
-          <Flex flexDirection="column">
-            {descriptionLines.map((line) => {
-              return (
-                <Flex flexDirection="row" pb={1} px={1} alignItems="center" key={line} width="100%">
-                  <Box mx={1} mr={1.5}>
-                    <ListCheck />
+            <TabBar
+              tabColor={currentColor}
+              spaceEvenly
+              tabs={tiers}
+              activeTab={currentView}
+              goToPage={(page) => {
+                tracking.trackEvent({
+                  actionName:
+                    page === 0
+                      ? TrackSchema.ActionNames.Tier0PlanTabTapped
+                      : TrackSchema.ActionNames.Tier1PlanTabTapped,
+                  actionType: TrackSchema.ActionTypes.Tap,
+                })
+                setCurrentView(page as number)
+              }}
+            />
+            <Spacer mb={2} />
+            {plans
+              ?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])
+              ?.sort((a, b) => b.itemCount - a.itemCount)
+              ?.map((plan) => {
+                return (
+                  <Box key={plan.id} px={2}>
+                    <PlanButton
+                      plan={plan}
+                      key={plan.id}
+                      shouldSelect={setSelectedPlan}
+                      selected={selectedPlan?.id === plan.id}
+                      selectedColor={currentColor}
+                    />
                   </Box>
-                  <Sans color="black50" size="1" style={{ width: viewWidth - 75 }}>
-                    {line}
-                  </Sans>
-                </Flex>
-              )
-            })}
-          </Flex>
-          <Spacer mb={1} />
-          <TabBar
-            tabColor={currentColor}
-            spaceEvenly
-            tabs={tiers}
-            activeTab={currentView}
-            goToPage={(page) => {
-              tracking.trackEvent({
-                actionName:
-                  page === 0 ? TrackSchema.ActionNames.Tier0PlanTabTapped : TrackSchema.ActionNames.Tier1PlanTabTapped,
-                actionType: TrackSchema.ActionTypes.Tap,
-              })
-              setCurrentView(page as number)
-            }}
-          />
-          <Spacer mb={2} />
-          {plans
-            ?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])
-            ?.sort((a, b) => b.itemCount - a.itemCount)
-            ?.map((plan) => {
-              return (
-                <Box key={plan.id} px={2}>
-                  <PlanButton
-                    plan={plan}
-                    key={plan.id}
-                    shouldSelect={setSelectedPlan}
-                    selected={selectedPlan?.id === plan.id}
-                    selectedColor={currentColor}
-                  />
+                )
+              })}
+            <Spacer mb={2} />
+            <Separator />
+            {!!faqSections?.length &&
+              faqSections.map((section, index) => (
+                <Box mt={4} key={index} px={2}>
+                  <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+                    <Sans size="1">{section.title}</Sans>
+                    <ChevronIcon rotateDeg="90deg" color={color("black100")} />
+                  </Flex>
+                  <Spacer mb={4} />
+                  {section.subsections.map((subSection) => {
+                    return (
+                      <Box key={subSection.title}>
+                        <Sans size="1">{subSection.title}</Sans>
+                        <Spacer mb={1} />
+                        <Separator />
+                        <Spacer mb={1} />
+                        <Sans size="1" color="black50">
+                          {subSection.text}
+                        </Sans>
+                        <Spacer mb={4} />
+                      </Box>
+                    )
+                  })}
                 </Box>
-              )
-            })}
+              ))}
+            <Spacer mb={1} />
+            <Box px={2}>
+              <Button
+                block
+                variant="primaryWhite"
+                onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership question"`)}
+              >
+                Contact us
+              </Button>
+            </Box>
+            <Spacer pb={120} />
+          </ScrollView>
+        </Box>
+        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
+          <Box p={2}>
+            <ColoredButton
+              block
+              disabled={!selectedPlan}
+              loading={isMutating}
+              onPress={onChoosePlan}
+              variant="primaryBlack"
+              backgroundColor={currentColor}
+            >
+              Choose plan
+            </ColoredButton>
+            <Box style={{ height: insets.bottom }} />
+          </Box>
+        </FadeBottom2>
+      </Container>
+
+      <PopUp show={openPopUp}>
+        <Box px={2} pb={insets.bottom}>
+          <Spacer mb={4} />
+          <Sans size="1" style={{ textAlign: "center" }}>
+            Select payment type
+          </Sans>
           <Spacer mb={2} />
           <Separator />
-          {!!faqSections?.length &&
-            faqSections.map((section, index) => (
-              <Box mt={4} key={index} px={2}>
-                <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-                  <Sans size="1">{section.title}</Sans>
-                  <ChevronIcon rotateDeg="90deg" color={color("black100")} />
-                </Flex>
-                <Spacer mb={4} />
-                {section.subsections.map((subSection) => {
-                  return (
-                    <Box key={subSection.title}>
-                      <Sans size="1">{subSection.title}</Sans>
-                      <Spacer mb={1} />
-                      <Separator />
-                      <Spacer mb={1} />
-                      <Sans size="1" color="black50">
-                        {subSection.text}
-                      </Sans>
-                      <Spacer mb={4} />
-                    </Box>
-                  )
-                })}
-              </Box>
-            ))}
+          <Spacer mb={3} />
+          <Button block variant="primaryWhite" onPress={onAddCreditCard}>
+            Credit card
+          </Button>
           <Spacer mb={1} />
-          <Box px={2}>
-            <Button
-              block
-              variant="primaryWhite"
-              onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership question"`)}
-            >
-              Contact us
-            </Button>
-          </Box>
-          <Spacer pb={120} />
-        </ScrollView>
-      </Box>
-      <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-        <Box p={2}>
-          <ColoredButton
-            block
-            disabled={!selectedPlan}
-            loading={isMutating}
-            onPress={onChoosePlan}
-            variant="primaryBlack"
-            backgroundColor={currentColor}
+          <Button block Icon={AppleLogo} onPress={onApplePay}>
+            Apple Pay
+          </Button>
+          <Spacer mb={3} />
+          <Sans
+            size="1"
+            style={{ textAlign: "center", textDecorationLine: "underline" }}
+            onPress={() => setOpenPopUp(false)}
           >
-            Choose plan
-          </ColoredButton>
-          <Box style={{ height: insets.bottom }} />
+            Cancel
+          </Sans>
+          <Spacer mb={4} />
         </Box>
-      </FadeBottom2>
-    </Container>
+      </PopUp>
+    </>
   )
 }
 

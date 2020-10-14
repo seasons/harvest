@@ -7,7 +7,7 @@ import { checkNotifications } from "react-native-permissions"
 import { useNotificationsContext } from "App/Notifications/NotificationsContext"
 import { useTracking, Schema } from "App/utils/track"
 import { useMutation } from "react-apollo"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import * as Sentry from "@sentry/react-native"
 import { GetUser_me_customer_user_pushNotification } from "App/generated/getUser"
 
@@ -25,6 +25,7 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
 }) => {
   const { requestPermissions, unsubscribe, init } = useNotificationsContext()
   const [isMutating, setIsMutating] = useState(false)
+  const [appState, setAppState] = useState("")
   const [deviceStatus, setDeviceStatus] = useState(null)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
@@ -67,19 +68,19 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
 
   useEffect(() => {
     checkPermissions()
-    // If user leaves the app to turn on notifications in the settings recheck status
-    AppState.addEventListener("change", (nextAppState) => {
-      if (nextAppState === "active") {
+    const onChange = (nextAppState) => {
+      if (nextAppState === "active" && appState === "background") {
         checkPermissions()
       }
-    })
-    return () =>
-      AppState.removeEventListener("change", (nextAppState) => {
-        if (nextAppState === "active") {
-          checkPermissions()
-        }
-      })
-  }, [])
+      if ((nextAppState === "background" || nextAppState === "active") && nextAppState !== appState && !!appState) {
+        // We only care about changes from the background to active,
+        // If we record 'inactive' changes it can break due to apple pay causing inactive state, etc
+        setAppState(nextAppState)
+      }
+    }
+    AppState.addEventListener("change", (nextAppState) => onChange(nextAppState))
+    return AppState.removeEventListener("change", (nextAppState) => onChange(nextAppState))
+  }, [AppState, setAppState, appState, checkPermissions])
 
   const callback = (status) => {
     setDeviceStatus(status)

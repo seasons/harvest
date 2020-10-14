@@ -1,11 +1,11 @@
 import { Box, Button, Container, Sans, Spacer, TextInput } from "App/Components"
 import React, { useState, useEffect, useRef } from "react"
 import { KeyboardAvoidingView, Keyboard } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { TextInputRef } from "App/Components/TextInput"
 import { useTracking, Schema } from "App/utils/track"
 
@@ -24,7 +24,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ focus, onSendCode })
   const tracking = useTracking()
   const [phoneNumber, setPhoneNumber] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
 
   const textInputRef: React.MutableRefObject<TextInputRef> = useRef(null)
   useEffect(() => {
@@ -76,7 +76,7 @@ export const SendCodePane: React.FC<SendCodePaneProps> = ({ focus, onSendCode })
 
     tracking.trackEvent({
       actionName: Schema.ActionNames.EnterPhoneNumberNextTapped,
-      actionType: Schema.ActionTypes.Tap
+      actionType: Schema.ActionTypes.Tap,
     })
     setIsMutating(true)
     const result = await startVerification({

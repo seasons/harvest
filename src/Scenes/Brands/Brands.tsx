@@ -5,7 +5,7 @@ import { Container, Box, Spacer, Sans, FixedBackArrow, Flex, Separator } from "A
 import { FlatList, TouchableOpacity, PanResponder } from "react-native"
 import { GetBrands } from "App/generated/GetBrands"
 import styled from "styled-components/native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { color } from "App/utils"
 import { groupBy, map, sortBy, toPairs } from "lodash"
 import { Loader } from "App/Components/Loader"
@@ -30,7 +30,7 @@ export const Brands = screenTrack()((props: any) => {
   const [groupedBrands, setGroupedBrands] = useState([])
   const [alphabet, setAlphabet] = useState([])
   const [containerSize, setContainerSize] = useState({ containerTop: null, containerHeight: null })
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
   const { navigation } = props
   const { data } = useQuery<GetBrands>(GET_BRANDS, {
     variables: {

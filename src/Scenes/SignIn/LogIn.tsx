@@ -9,7 +9,7 @@ import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { checkNotifications } from "react-native-permissions"
 import AsyncStorage from "@react-native-community/async-storage"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useNotificationsContext } from "App/Notifications/NotificationsContext"
 
 const LOG_IN = gql`

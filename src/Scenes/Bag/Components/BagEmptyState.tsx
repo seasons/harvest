@@ -3,10 +3,10 @@ import { color } from "App/utils"
 import React from "react"
 import { Dimensions } from "react-native"
 import { BagView } from "../Bag"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export const BagEmptyState: React.FC<{ currentView: BagView }> = ({ currentView }) => {
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
   const { height } = Dimensions.get("window")
   const rowHeight = height - 140 - insets.top
   const title = currentView === BagView.Saved ? "Nothing saved" : "No history"

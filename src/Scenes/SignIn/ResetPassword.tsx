@@ -4,7 +4,7 @@ import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { Box, Button, Flex, CloseButton, Sans, Spacer, TextInput, Container } from "../../Components"
 import { isValidEmail } from "../../helpers/regex"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import * as Sentry from "@sentry/react-native"
 
 const RESET_PASSWORD = gql`

@@ -11,7 +11,7 @@ import { TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useTracking, Schema } from "App/utils/track"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GET_HOMEPAGE } from "App/Scenes/Home/queries/homeQueries"
 
 export const SAVE_ITEM = gql`

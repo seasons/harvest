@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/react-hooks"
 import React, { useState } from "react"
 import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 import { GET_PRODUCT } from "./Queries"
 import {
@@ -34,7 +34,7 @@ interface SaveProductProps {
 }
 
 export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route }) => {
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
   const tracking = useTracking()
   const [selectedVariantID, setSelectedVariantID] = useState(null)
   const navigation = useNavigation()
