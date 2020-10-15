@@ -30,9 +30,8 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation, route }) => {
         data={data}
         onComplete={() => navigation.goBack()}
         headerText="Let's choose your plan"
-        source={"UpdatePaymentPlanModal"}
-        discount={route?.params?.discount}
-        discountType={route?.params?.discountType}
+        source="UpdatePaymentPlanModal"
+        coupon={{discount: route?.params?.discount, type:route?.params?.couponType}}
       />
     </Container>
   )

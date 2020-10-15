@@ -1,6 +1,6 @@
 import gql from "graphql-tag"
-
 import { BagItemFragment } from "./Components/BagItem"
+
 
 export const CHECK_ITEMS = gql`
   mutation CheckItemsAvailability($items: [ID!]!) {
@@ -10,7 +10,10 @@ export const CHECK_ITEMS = gql`
 
 export const GET_LOCAL_BAG = gql`
   query GetLocalBag {
-    localBagItems @client
+    localBagItems @client {
+      productID
+      variantID
+    }
   }
 `
 
@@ -146,7 +149,10 @@ export const GET_BAG = gql`
 
 export const ADD_OR_REMOVE_FROM_LOCAL_BAG = gql`
   mutation AddOrRemoveFromLocalBag($productID: ID!, $variantID: ID!) {
-    addOrRemoveFromLocalBag(productID: $productID, variantID: $variantID) @client
+    addOrRemoveFromLocalBag(productID: $productID, variantID: $variantID) @client {
+      productID
+      variantID
+    }
   }
 `
 

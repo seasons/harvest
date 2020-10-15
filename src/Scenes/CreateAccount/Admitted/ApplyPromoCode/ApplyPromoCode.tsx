@@ -1,4 +1,6 @@
 import { Box, CloseButton } from "App/Components"
+import { CouponType } from "App/generated/globalTypes"
+import { screenTrack } from "App/utils/track"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList } from "react-native"
 import { ApplyPromoCodePane } from "./ApplyPromoCodePane"
@@ -11,20 +13,20 @@ export enum State {
   Confirmation = "Confirmation"
 }
 
-export const ApplyPromoCode: React.FC = (props: any) => {
+export const ApplyPromoCode: React.FC = screenTrack()((props: any) => {
   const { navigation, route } = props
   const source = route?.params?.source
   const [discount, setDiscount] = useState(0)
-  const [discountType, setDiscountType] = useState("Flat")
-  // The current index into the `states(userState)` array
+  const [couponType, setCouponType] = useState(CouponType.FixedAmount)
+  // The current index into the `states` array
   const [index, setIndex] = useState(0)
-  // All the states (after the initial state)
+  // All the states 
   const states = [State.ApplyPromoCode, State.Confirmation]
 
   const flatListRef: MutableRefObject<FlatList<State>> = useRef(null)
   // The maximum index shown in the FlatList
   const maxScrollableIndex = states.length - 1
-  useEffect(() => flatListRef?.current?.scrollToIndex?.({ index: Math.min(index, maxScrollableIndex) }), [index])
+  useEffect(() => flatListRef?.current?.scrollToIndex?.({ index: Math.min(index, maxScrollableIndex) }), [index, flatListRef])
   const setNextState = () => setIndex(index + 1)
 
   const paneForState = (state: State) => {
@@ -34,13 +36,13 @@ export const ApplyPromoCode: React.FC = (props: any) => {
       case State.ApplyPromoCode:
         pane = <ApplyPromoCodePane onApplyPromoCode={(discount, type) => {
           setDiscount(discount)
-          setDiscountType(type)
+          setCouponType(type)
           setNextState()
         }}/>
         break
       
       case State.Confirmation:
-        pane = <PromoCodeAppliedConfirmationPane onComplete={() => navigation.navigate(source, { discount, discountType })}/>
+        pane = <PromoCodeAppliedConfirmationPane onComplete={() => navigation.navigate(source, { discount, couponType })}/>
         break
     }
     return (
@@ -67,4 +69,4 @@ export const ApplyPromoCode: React.FC = (props: any) => {
     />
     </>
   )
-}
+})

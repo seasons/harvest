@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native"
 import * as Sentry from "@sentry/react-native"
 import { Box, Button, Container, Flex, Sans, Separator, Spacer } from "App/Components"
 import { GetPlans } from "App/generated/GetPlans"
+import { CouponType } from "App/generated/globalTypes"
 import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
@@ -43,14 +44,16 @@ interface ChoosePlanPaneProps {
   headerText: String
   data: GetPlans
   paneType: PaneType
-  discount?: number
-  discountType?: "Flat" | "Percentage"
+  coupon?: {
+    discount: number
+    type: CouponType
+  }
   source: string
 }
 
 const viewWidth = Dimensions.get("window").width
 
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType, discount, discountType, source }) => {
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType, coupon, source }) => {
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
 
@@ -296,8 +299,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
                     shouldSelect={setSelectedPlan}
                     selected={selectedPlan?.id === plan.id}
                     selectedColor={currentColor}
-                    discount={discount}
-                    discountType={discountType}
+                    coupon={{discount: coupon?.discount, type: coupon?.type}}
                   />
                 </Box>
               )

@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react-native"
 import { gql } from "apollo-boost"
 import { Box, Button, CloseButton, Container, Sans, Spacer, TextInput } from "App/Components"
 import { TextInputRef } from "App/Components/TextInput"
@@ -27,15 +28,17 @@ export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = (({ onApply
   const [checkCoupon] = useMutation(CHECK_COUPON, {
     onCompleted: (data) => {
       const { amount, type } = data?.checkCoupon
+      console.log(amount, type)
       setIsMutating(false)
       onApplyPromoCode(amount, type)
     },
     onError: (err) => {
+      Sentry.captureException(err)
       console.log("Error ApplyPromoCodePane.tsx", err)
       setIsMutating(false)
     },
   })
-  useEffect(() => textInputRef?.current?.focus())
+  useEffect(() => textInputRef?.current?.focus(), [textInputRef])
 
   const onPromoCodeChange = (val: string) => {
     setPromoCode(val)

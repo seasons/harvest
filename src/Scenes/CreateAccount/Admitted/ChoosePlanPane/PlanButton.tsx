@@ -1,32 +1,34 @@
 import { Flex, Sans } from "App/Components"
+import { CouponType } from "App/generated/globalTypes"
 import { color } from "App/utils/color"
 import React from "react"
 import { Text, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 
-export type DiscountType = "Flat" | "Percentage"
+interface Coupon {
+  discount: number
+  type: CouponType
+}
 
 interface PlanButtonProps {
   shouldSelect: (plan: any) => void
   selected: boolean
   plan: any
   selectedColor?: string
-  discount?: number
-  discountType?: DiscountType
+  coupon?: Coupon
 }
 
-export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor, discount, discountType }) => {
+export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor, coupon }) => {
   const { price, itemCount } = plan
-
-  const priceText = (discount?: number, discountType?: DiscountType) => {
+  const PriceText: React.FC<Coupon> = ({discount, type}) => {
     const originalPrice = price / 100
     let discountedPrice
-    switch (discountType) {
-      case "Flat":
+    switch (type) {
+      case CouponType.FixedAmount:
         discountedPrice = originalPrice - discount / 100
         break
 
-      case "Percentage":
+      case CouponType.Percentage:
         discountedPrice = originalPrice - (originalPrice * discount / 100.0)
         break
     }
@@ -71,7 +73,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
           <Sans color="black100" size="1">
             {itemCount} items
           </Sans>
-          {priceText(discount, discountType)}
+          {PriceText({discount: coupon?.discount, type:coupon?.type})}
         </StyledFlex>
       </TouchableOpacity>
     </PlanSelectionBorder>
