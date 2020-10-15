@@ -19,7 +19,7 @@ interface ApplyPromoCodePaneProps {
   onApplyPromoCode: (number, type) => void
 }
 
-export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = (({ onApplyPromoCode }) => {
+export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = ({ onApplyPromoCode }) => {
   const [promoCode, setPromoCode] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
   const [isMutating, setIsMutating] = useState(false)
@@ -91,4 +91,4 @@ export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = (({ onApply
       </KeyboardAvoidingView>
     </Container>
   )
-})
+}

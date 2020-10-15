@@ -4,58 +4,52 @@ import { color } from "App/utils/color"
 import React from "react"
 import { Text, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
-
-interface Coupon {
-  discount: number
-  type: CouponType
-}
+import { calcFinalPrice } from "./utils"
 
 interface PlanButtonProps {
   shouldSelect: (plan: any) => void
   selected: boolean
   plan: any
   selectedColor?: string
-  coupon?: Coupon
+  coupon?: {
+    discount: number
+    type: CouponType
+  }
 }
 
 export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor, coupon }) => {
   const { price, itemCount } = plan
-  const PriceText: React.FC<Coupon> = ({discount, type}) => {
-    const originalPrice = price / 100
-    let discountedPrice
-    switch (type) {
-      case CouponType.FixedAmount:
-        discountedPrice = originalPrice - discount / 100
-        break
-
-      case CouponType.Percentage:
-        discountedPrice = originalPrice - (originalPrice * discount / 100.0)
-        break
-    }
-    const isDiscounted = !!discount
-
-    return (isDiscounted ? (
+  const finalPrice = calcFinalPrice(price, coupon?.discount, coupon?.type)
+  const PriceText = ({ originalPrice, finalPrice }) => {
+    originalPrice /= 100
+    finalPrice /= 100
+    const isDiscounted = originalPrice != finalPrice
+    return isDiscounted ? (
       <Text>
         <Sans color="black50" size="0.5">
           / month
         </Sans>
-        <Sans color="black100" size="1">{" "}</Sans>
-          <Sans color="black50" size="1" style={{ textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>
-            ${originalPrice}
-          </Sans>
         <Sans color="black100" size="1">
-          {" "}${discountedPrice}
+          {" "}
         </Sans>
-      </Text>)
-      : (
+        <Sans color="black50" size="1" style={{ textDecorationLine: "line-through", textDecorationStyle: "solid" }}>
+          ${originalPrice}
+        </Sans>
+        <Sans color="black100" size="1">
+          {" "}
+          ${finalPrice}
+        </Sans>
+      </Text>
+    ) : (
       <Text>
         <Sans color="black50" size="0.5">
           per month
         </Sans>
         <Sans color="black100" size="1">
-          {" "}${originalPrice}
+          {" "}
+          ${originalPrice}
         </Sans>
-      </Text>)
+      </Text>
     )
   }
 
@@ -73,7 +67,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
           <Sans color="black100" size="1">
             {itemCount} items
           </Sans>
-          {PriceText({discount: coupon?.discount, type:coupon?.type})}
+          {PriceText({ originalPrice: price, finalPrice })}
         </StyledFlex>
       </TouchableOpacity>
     </PlanSelectionBorder>
@@ -82,7 +76,6 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
 
 const StyledFlex = styled(Flex)`
   border-radius: 28;
-
   background-color: ${color("black04")};
   z-index: 10;
   elevation: 6;

@@ -1,7 +1,6 @@
 import gql from "graphql-tag"
 import { BagItemFragment } from "./Components/BagItem"
 
-
 export const CHECK_ITEMS = gql`
   mutation CheckItemsAvailability($items: [ID!]!) {
     checkItemsAvailability(items: $items)

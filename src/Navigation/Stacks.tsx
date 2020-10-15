@@ -4,9 +4,11 @@ import { ExtendPauseConfirmation, PauseConfirmation, ResumeConfirmation } from "
 import { Schema } from "App/Navigation"
 import {
   Account,
-  EditMeasurements, EditPaymentAndShipping,
+  EditMeasurements,
+  EditPaymentAndShipping,
   EditShippingAddress,
-  EditStylePreferences, PaymentAndShipping
+  EditStylePreferences,
+  PaymentAndShipping,
 } from "App/Scenes/Account"
 import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
@@ -27,7 +29,7 @@ import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
 import {
   ReservationFeedback,
   ReservationFeedbackConfirmation,
-  ReservationFeedbackFinish
+  ReservationFeedbackFinish,
 } from "App/Scenes/ReservationFeedback"
 import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn } from "App/Scenes/SignIn"
 import { Tag } from "App/Scenes/Tag"
@@ -127,7 +129,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ResumeConfirmation} component={ResumeConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.PauseConfirmation} component={PauseConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ExtendPauseConfirmation} component={ExtendPauseConfirmation} />
-      <ModalStack.Screen name={Schema.PageNames.ApplyPromoCode} component={ApplyPromoCode}/>
+      <ModalStack.Screen name={Schema.PageNames.ApplyPromoCode} component={ApplyPromoCode} />
     </ModalStack.Navigator>
   )
 }

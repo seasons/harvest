@@ -10,7 +10,7 @@ const { width: windowWidth } = Dimensions.get("window")
 
 export enum State {
   ApplyPromoCode = "ApplyPromoCode",
-  Confirmation = "Confirmation"
+  Confirmation = "Confirmation",
 }
 
 export const ApplyPromoCode: React.FC = screenTrack()((props: any) => {
@@ -20,13 +20,16 @@ export const ApplyPromoCode: React.FC = screenTrack()((props: any) => {
   const [couponType, setCouponType] = useState(CouponType.FixedAmount)
   // The current index into the `states` array
   const [index, setIndex] = useState(0)
-  // All the states 
+  // All the states
   const states = [State.ApplyPromoCode, State.Confirmation]
 
   const flatListRef: MutableRefObject<FlatList<State>> = useRef(null)
   // The maximum index shown in the FlatList
   const maxScrollableIndex = states.length - 1
-  useEffect(() => flatListRef?.current?.scrollToIndex?.({ index: Math.min(index, maxScrollableIndex) }), [index, flatListRef])
+  useEffect(() => flatListRef?.current?.scrollToIndex?.({ index: Math.min(index, maxScrollableIndex) }), [
+    index,
+    flatListRef,
+  ])
   const setNextState = () => setIndex(index + 1)
 
   const paneForState = (state: State) => {
@@ -34,15 +37,22 @@ export const ApplyPromoCode: React.FC = screenTrack()((props: any) => {
 
     switch (state) {
       case State.ApplyPromoCode:
-        pane = <ApplyPromoCodePane onApplyPromoCode={(discount, type) => {
-          setDiscount(discount)
-          setCouponType(type)
-          setNextState()
-        }}/>
+        pane = (
+          <ApplyPromoCodePane
+            onApplyPromoCode={(discount, type) => {
+              console.log(discount)
+              setDiscount(discount)
+              setCouponType(type)
+              setNextState()
+            }}
+          />
+        )
         break
-      
+
       case State.Confirmation:
-        pane = <PromoCodeAppliedConfirmationPane onComplete={() => navigation.navigate(source, { discount, couponType })}/>
+        pane = (
+          <PromoCodeAppliedConfirmationPane onComplete={() => navigation.navigate(source, { discount, couponType })} />
+        )
         break
     }
     return (
@@ -55,18 +65,18 @@ export const ApplyPromoCode: React.FC = screenTrack()((props: any) => {
   // Render
   return (
     <>
-    <CloseButton variant="light" />
-    <FlatList
-      data={states}
-      horizontal
-      initialScrollIndex={Math.min(index, maxScrollableIndex)}
-      keyExtractor={(item) => item.toString()}
-      ref={flatListRef}
-      renderItem={({ item }) => paneForState(item)}
-      scrollEnabled={false}
-      keyboardShouldPersistTaps="always"
-      showsHorizontalScrollIndicator={false}
-    />
+      <CloseButton variant="light" />
+      <FlatList
+        data={states}
+        horizontal
+        initialScrollIndex={Math.min(index, maxScrollableIndex)}
+        keyExtractor={(item) => item.toString()}
+        ref={flatListRef}
+        renderItem={({ item }) => paneForState(item)}
+        scrollEnabled={false}
+        keyboardShouldPersistTaps="always"
+        showsHorizontalScrollIndicator={false}
+      />
     </>
   )
 })

@@ -53,7 +53,14 @@ interface ChoosePlanPaneProps {
 
 const viewWidth = Dimensions.get("window").width
 
-export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, headerText, data, paneType, coupon, source }) => {
+export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
+  onComplete,
+  headerText,
+  data,
+  paneType,
+  coupon,
+  source,
+}) => {
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
 
@@ -299,7 +306,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
                     shouldSelect={setSelectedPlan}
                     selected={selectedPlan?.id === plan.id}
                     selectedColor={currentColor}
-                    coupon={{discount: coupon?.discount, type: coupon?.type}}
+                    coupon={{ discount: coupon?.discount, type: coupon?.type }}
                   />
                 </Box>
               )
@@ -356,8 +363,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({ onComplete, head
             Choose plan
           </ColoredButton>
           <Spacer mt={2} />
-          <TouchableOpacity
-            onPress={onApplyPromoCode}>
+          <TouchableOpacity onPress={onApplyPromoCode}>
             <Sans size="2" style={{ textDecorationLine: "underline" }}>
               Apply promo code
             </Sans>

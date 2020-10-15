@@ -273,7 +273,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             }}
             headerText={"You're in.\nLet's choose your plan"}
             source="CreateAccountModal"
-            coupon={{discount: route?.params?.discount, type: route?.params?.couponType}}
+            coupon={{ discount: route?.params?.discount, type: route?.params?.couponType }}
           />
         )
         break

@@ -1,2 +1,2 @@
-export { ApplyPromoCode } from "./ApplyPromoCode";
-export { ApplyPromoCodePane } from "./ApplyPromoCodePane";
+export { ApplyPromoCode } from "./ApplyPromoCode"
+export { ApplyPromoCodePane } from "./ApplyPromoCodePane"
