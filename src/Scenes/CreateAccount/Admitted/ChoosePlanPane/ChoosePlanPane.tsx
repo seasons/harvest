@@ -19,9 +19,9 @@ import { GetPlans, GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { ChevronIcon } from "Assets/icons"
 import { color } from "App/utils"
 import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
-import { PopUp } from "App/Components/PopUp"
-import { AppleLogo } from "Assets/svgs/AppleLogo"
 import { PaymentMethod } from "../../CreateAccount"
+import { PopUp } from "App/Components/PopUp"
+import { PaymentMethods } from "./PaymentMethods"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout($planID: String!, $token: StripeToken!, $tokenType: String) {
@@ -166,7 +166,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   }, [plans])
 
   const onAddCreditCard = () => {
-    console.log("PaymentMethod.CreditCard", PaymentMethod.CreditCard)
     tracking.trackEvent({
       actionName: TrackSchema.ActionNames.AddCreditCardTapped,
       actionType: TrackSchema.ActionTypes.Tap,
@@ -203,7 +202,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
           applePayCheckout({
             variables: {
               planID: selectedPlan.planID,
-              token: token,
+              token,
               tokenType: "apple_pay",
             },
             awaitRefetchQueries: true,
@@ -384,31 +383,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       </Container>
 
       <PopUp show={openPopUp}>
-        <Box px={2} pb={insets.bottom}>
-          <Spacer mb={4} />
-          <Sans size="1" style={{ textAlign: "center" }}>
-            Select payment type
-          </Sans>
-          <Spacer mb={2} />
-          <Separator />
-          <Spacer mb={3} />
-          <Button block variant="primaryWhite" onPress={onAddCreditCard}>
-            Credit card
-          </Button>
-          <Spacer mb={1} />
-          <Button block Icon={AppleLogo} onPress={onApplePay}>
-            Apple Pay
-          </Button>
-          <Spacer mb={3} />
-          <Sans
-            size="1"
-            style={{ textAlign: "center", textDecorationLine: "underline" }}
-            onPress={() => setOpenPopUp(false)}
-          >
-            Cancel
-          </Sans>
-          <Spacer mb={4} />
-        </Box>
+        <PaymentMethods onApplePay={onApplePay} setOpenPopUp={setOpenPopUp} onCreditCard={onAddCreditCard} />
       </PopUp>
     </>
   )

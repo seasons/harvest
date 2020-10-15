@@ -37,7 +37,6 @@ interface CreditCardFormPaneProps {
 
 export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit, plan, onRequestBack }) => {
   const insets = useSafeAreaInsets()
-  const paymentCardInputRef = useRef(null)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
   const [name, setName] = useState("")
@@ -200,14 +199,13 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit
                 </Sans>
               </Flex>
               <PaymentField
-                ref={paymentCardInputRef}
                 cursorColor={color("black50")}
                 textErrorColor={color("black50")}
                 placeholderColor={color("black50")}
                 numberPlaceholder="16 digits"
                 expirationPlaceholder="MM / YY"
                 cvcPlaceholder="3-digits"
-                disabled={false}
+                disabled={isMutating}
                 onParamsChange={handleFieldParamsChange}
               />
               <Separator />

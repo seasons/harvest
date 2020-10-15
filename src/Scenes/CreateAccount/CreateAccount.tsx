@@ -9,6 +9,7 @@ import { ChoosePlanPane, WelcomePane } from "./Admitted"
 import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane } from "./Undetermined"
 import { WaitlistedPane } from "./Waitlisted"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { useIsFocused } from "@react-navigation/native"
 import { CreditCardFormPane } from "./Admitted/CreditCardFormPane"
 
 interface CreateAccountProps {
@@ -30,7 +31,7 @@ export enum PaymentMethod {
   CreditCard = "CreditCard",
 }
 
-export enum State {
+enum State {
   CreateAccount = "CreateAccount",
   SendCode = "SendCode",
   VerifyCode = "VerifyCode",
@@ -109,6 +110,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       where: { status: "active" },
     },
   })
+  const isFocused = useIsFocused()
   const plans = data?.paymentPlans
   const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const [timeStart, setTimeStart] = useState(Date.now())
@@ -116,25 +118,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   const [finishedFlow, setFinishedFlow] = useState(false)
   const tracking = useTracking()
   const { resetStore } = useAuthContext()
-
-  useEffect(() => {
-    const onChange = (nextAppState) => {
-      if (nextAppState === "background" && appState !== "background") {
-        trackStepTimer("Background")
-      }
-      if (nextAppState === "active" && appState !== "active") {
-        setTimeStart(Date.now())
-      }
-      if ((nextAppState === "background" || nextAppState === "active") && nextAppState !== appState && !!appState) {
-        // We only care about changes from the background to active,
-        // If we record 'inactive' changes it can break due to apple pay causing inactive state, etc
-        setAppState(nextAppState)
-      }
-    }
-    // If user leaves the app to turn on notifications in the settings recheck status
-    AppState.addEventListener("change", (nextAppState) => onChange(nextAppState))
-    return () => AppState.removeEventListener("change", (nextAppState) => onChange(nextAppState))
-  }, [])
 
   useEffect(() => {
     const unsubscribe = navigation?.addListener("focus", () => {
@@ -185,6 +168,25 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       nextStep,
     })
   }
+
+  useEffect(() => {
+    const onChange = (nextAppState) => {
+      if (nextAppState === "background" && appState !== "background" && isFocused) {
+        trackStepTimer("Background")
+      }
+      if (nextAppState === "active" && appState !== "active" && isFocused) {
+        setTimeStart(Date.now())
+      }
+      if ((nextAppState === "background" || nextAppState === "active") && nextAppState !== appState && !!appState) {
+        // We only care about changes from the background to active,
+        // If we record 'inactive' changes it can break due to apple pay causing inactive state, etc
+        setAppState(nextAppState)
+      }
+    }
+    // If user leaves the app to turn on notifications in the settings recheck status
+    AppState.addEventListener("change", (nextAppState) => onChange(nextAppState))
+    return () => AppState.removeEventListener("change", (nextAppState) => onChange(nextAppState))
+  }, [setAppState, trackStepTimer])
 
   const paneForState = (state: State) => {
     let pane
@@ -317,8 +319,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       </Box>
     )
   }
-
-  // console.log("???", index)
 
   return (
     <>
