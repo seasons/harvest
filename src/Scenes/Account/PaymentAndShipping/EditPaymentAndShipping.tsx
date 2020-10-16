@@ -427,7 +427,7 @@ export const EditPaymentAndShipping: React.FC<{
       </Container>
 
       <EditPaymentPopUp
-        planID={paymentPlan.planID}
+        planID={paymentPlan?.planID}
         billingAddress={billingAddress}
         setOpenPopUp={setOpenPaymentPopUp}
         openPopUp={openPaymentPopUp}

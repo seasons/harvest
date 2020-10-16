@@ -9,7 +9,7 @@ import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
 import React, { useContext, useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
-import { AppState, StatusBar } from "react-native"
+import { StatusBar } from "react-native"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
 import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
@@ -19,7 +19,6 @@ import { GET_HOMEPAGE } from "./queries/homeQueries"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
-  const [appState, setAppState] = useState("")
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
   const { loading, error, data, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
     variables: { firstFitPics: 8, skipFitPics: 0 },
@@ -55,23 +54,12 @@ export const Home = screenTrack()(({ navigation, route }) => {
   }, [navigation])
 
   useEffect(() => {
-    const onChange = (nextAppState) => {
-      const status = data?.me?.customer?.status
-      if (nextAppState === "active" && appState === "background") {
-        // Check if user status is authorized and navigate to account pane
-        if (status && status === "Authorized") {
-          navigation.navigate("Account")
-        }
-      }
-      if ((nextAppState === "background" || nextAppState === "active") && nextAppState !== appState && !!appState) {
-        // We only care about changes from the background to active,
-        // If we record 'inactive' changes it can break due to apple pay causing inactive state, etc
-        setAppState(nextAppState)
-      }
+    const status = data?.me?.customer?.status
+    // Check if user status is authorized and navigate to account pane
+    if (!!status && status === "Authorized") {
+      navigation?.navigate("Account")
     }
-    AppState.addEventListener("change", (nextAppState) => onChange(nextAppState))
-    return AppState.removeEventListener("change", (nextAppState) => onChange(nextAppState))
-  }, [AppState, setAppState, appState, data, navigation])
+  }, [data, navigation])
 
   const NoInternetComponent = (
     <ErrorScreen
