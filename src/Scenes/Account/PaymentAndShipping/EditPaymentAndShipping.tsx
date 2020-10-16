@@ -92,7 +92,13 @@ export const EditPaymentAndShipping: React.FC<{
   const [applePayUpdatePayment] = useMutation(PAYMENT_UPDATE, {
     onCompleted: () => {
       setIsMutating(false)
+      setOpenPaymentPopUp(false)
     },
+    refetchQueries: [
+      {
+        query: GET_PAYMENT_DATA,
+      },
+    ],
     onError: (err) => {
       console.log("Error ChoosePlanPane.tsx", err)
       Sentry.captureException(JSON.stringify(err))
@@ -224,6 +230,7 @@ export const EditPaymentAndShipping: React.FC<{
               token,
               tokenType: "apple_pay",
             },
+            awaitRefetchQueries: true,
           })
           // You should complete the operation by calling
           stripe.completeApplePayRequest()

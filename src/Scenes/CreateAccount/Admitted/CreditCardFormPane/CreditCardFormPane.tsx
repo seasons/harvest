@@ -238,23 +238,15 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit
                 />
                 <Spacer width={9} />
                 <TextInput
-                  currentValue={zipCode}
-                  headerText="ZIP"
-                  keyboardType="number-pad"
-                  onChangeText={(_, val) => setZipCode(val)}
-                  style={{ flex: 1 }}
-                />
-              </Flex>
-              <Spacer mb={3} />
-              <Flex flexDirection="row">
-                <TextInput
                   autoCapitalize="words"
                   currentValue={city}
                   headerText="City"
                   onChangeText={(_, val) => setCity(val)}
                   style={{ flex: 1 }}
                 />
-                <Spacer width={9} />
+              </Flex>
+              <Spacer mb={3} />
+              <Flex flexDirection="row">
                 <FakeTextInput
                   currentValue={state}
                   headerText="State"
@@ -262,6 +254,14 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit
                     Keyboard.dismiss()
                     setIsStatePickerVisible(true)
                   }}
+                  style={{ flex: 1 }}
+                />
+                <Spacer width={9} />
+                <TextInput
+                  currentValue={zipCode}
+                  headerText="ZIP"
+                  keyboardType="number-pad"
+                  onChangeText={(_, val) => setZipCode(val)}
                   style={{ flex: 1 }}
                 />
               </Flex>
