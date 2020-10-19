@@ -41,7 +41,14 @@ export enum EditPaymentPopUpState {
 const windowDimensions = Dimensions.get("window")
 const windowWidth = windowDimensions.width
 
-export const EditPaymentPopUp: React.FC<Props> = ({ openPopUp, onApplePay, setOpenPopUp, billingAddress, planID }) => {
+export const EditPaymentPopUp: React.FC<Props> = ({
+  onAddCreditCard,
+  openPopUp,
+  onApplePay,
+  setOpenPopUp,
+  billingAddress,
+  planID,
+}) => {
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
@@ -98,6 +105,8 @@ export const EditPaymentPopUp: React.FC<Props> = ({ openPopUp, onApplePay, setOp
       return
     }
     setIsMutating(true)
+
+    onAddCreditCard()
 
     if (!address1 || !city || !state || !zipCode) {
       showPopUp({
