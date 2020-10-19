@@ -3,7 +3,7 @@ import { config, Env } from "App/utils/config"
 import React from "react"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 
-import { ApolloClient, InMemoryCache } from "@apollo/client"
+import { ApolloClient, InMemoryCache } from "@apollo/react-hooks"
 import { ApolloProvider } from "@apollo/react-hooks"
 import { linkTo } from "@storybook/addon-links"
 import { storiesOf } from "@storybook/react-native"

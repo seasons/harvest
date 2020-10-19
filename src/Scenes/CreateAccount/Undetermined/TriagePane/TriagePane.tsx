@@ -1,5 +1,5 @@
 import { Container } from "App/Components"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "react-apollo"

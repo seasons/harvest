@@ -5,7 +5,7 @@ import { CloseXIcon } from "Assets/icons"
 import { Modal, TouchableOpacity } from "react-native"
 import { animated, useSpring } from "react-spring"
 import { WebViewProgressEvent, WebViewNavigationEvent } from "react-native-webview/lib/WebViewTypes"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 interface WebviewModalProps {
   onRequestBack: () => void
@@ -17,7 +17,7 @@ export const WebviewModal: React.FC<WebviewModalProps> = ({ onRequestBack, url, 
   const [loadProgress, setLoadProgress] = useState(5)
   const [showProgressBar, setShowProgressBar] = useState(true)
   const [title, setTitle] = useState("")
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
 
   const progressBarAnimation = useSpring({
     width: loadProgress + "%",

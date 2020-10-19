@@ -227,6 +227,9 @@ export enum ActionNames {
 
   Tier0PlanTabTapped = "Tier 0 Plan Tab Tapped",
   Tier1PlanTabTapped = "Tier 0 Plan Tab Tapped",
+
+  ApplePayTapped = "Apple Pay Tapped",
+  AddCreditCardTapped = "Add Credit Card Tapped",
 }
 
 /**

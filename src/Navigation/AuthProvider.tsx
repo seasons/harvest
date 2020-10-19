@@ -1,5 +1,5 @@
-import { PopUp } from "App/Navigation/PopUp"
-import { PopUpProvider } from "App/Navigation/PopUp/PopUpProvider"
+import { ErrorPopUp } from "App/Navigation/ErrorPopUp"
+import { PopUpProvider } from "App/Navigation/ErrorPopUp/PopUpProvider"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { NotificationsProvider } from "App/Notifications"
 import { getUserSession } from "App/utils/auth"
@@ -126,7 +126,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
                 )}
               </RootStack.Screen>
             </RootStack.Navigator>
-            <PopUp />
+            <ErrorPopUp />
           </PopUpProvider>
         </ActionSheetProvider>
       </AuthContext.Provider>

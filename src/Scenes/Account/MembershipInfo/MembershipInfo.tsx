@@ -2,7 +2,7 @@ import gql from "graphql-tag"
 import React from "react"
 import { useQuery } from "react-apollo"
 import { ScrollView } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
@@ -48,7 +48,7 @@ export const GET_MEMBERSHIP_INFO = gql`
 `
 
 export const MembershipInfo = screenTrack()(({ navigation }) => {
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
   const { data } = useQuery(GET_MEMBERSHIP_INFO)
   const customer = data?.me?.customer
   const firstName = data?.me?.user?.firstName

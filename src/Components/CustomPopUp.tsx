@@ -3,7 +3,7 @@ import { color } from "App/utils"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import React, { useState, useEffect } from "react"
 import { Dimensions, Modal } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 
@@ -20,7 +20,7 @@ export interface CustomPopUpProps {
 
 export const CustomPopUp: React.FC<CustomPopUpProps> = ({ buttonText, children, onRequestClose, visible, title }) => {
   // layout
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
 
   // animation
   const [showModal, setShowModal] = useState(false)

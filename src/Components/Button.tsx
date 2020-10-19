@@ -1,5 +1,3 @@
-import { color } from "App/utils"
-import { DownChevronIcon } from "Assets/icons"
 import React, { Component, ReactNode } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
@@ -39,8 +37,7 @@ export interface ButtonProps extends BoxProps {
   width?: number | string
   borderRadius?: number
   loading?: boolean
-  rotateChevron?: boolean
-  showChevron?: boolean
+  Icon?: ComponentType
   block?: boolean
 }
 
@@ -294,8 +291,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
       showCheckMark,
       disabled,
       loading,
-      showChevron,
-      rotateChevron,
+      Icon,
       selected = false,
       ...rest
     } = this.props
@@ -333,23 +329,23 @@ export class Button extends Component<ButtonProps, ButtonState> {
                 px={px}
               >
                 {!loading && (
-                  <>
+                  <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
+                    {!!Icon && (
+                      <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" pb="4px">
+                        <Icon />
+                        <Spacer mr={1} />
+                      </Flex>
+                    )}
                     <Sans color={to.color} size={size}>
                       {children}
                     </Sans>
-                    {showChevron && (
-                      <>
-                        <Spacer mr={1} />
-                        <DownChevronIcon color={color("black100")} rotate={rotateChevron} />
-                      </>
-                    )}
                     {showCheckMark && (
-                      <Flex flexDirection="row" flexWrap="nowrap">
+                      <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
                         <Spacer mr={0.5} />
                         <TextCheckSVG color={to.color} />
                       </Flex>
                     )}
-                  </>
+                  </Flex>
                 )}
                 {loading && <Spinner size={this.props.size} color={this.spinnerColor as any} />}
               </AnimatedContainer>

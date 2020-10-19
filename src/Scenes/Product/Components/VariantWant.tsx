@@ -1,6 +1,6 @@
 import { Flex, Sans } from "App/Components"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled, LeftTabCorner, RightTabCorner } from "Assets/svgs"

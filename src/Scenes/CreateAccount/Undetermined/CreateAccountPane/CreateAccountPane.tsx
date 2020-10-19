@@ -1,8 +1,8 @@
-import { Box, Button, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { isWholeNumber } from "App/helpers/validation"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { ADD_TO_BAG, GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
 import { Schema, useTracking } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
@@ -11,7 +11,7 @@ import gql from "graphql-tag"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { useLazyQuery, useMutation, useQuery } from "react-apollo"
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import AsyncStorage from "@react-native-community/async-storage"
 
@@ -77,7 +77,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const [isMutating, setIsMutating] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
   const scrollViewRef: MutableRefObject<ScrollView> = useRef(null)
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
 
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { signIn } = useAuthContext()
@@ -189,140 +189,143 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
 
   // Render
   return (
-    <Container insetsBottom={false} insetsTop={false}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={82 - 28}>
-        <ScrollView
-          keyboardDismissMode="interactive"
-          keyboardShouldPersistTaps="always"
-          showsVerticalScrollIndicator={false}
-          style={{ paddingTop: 85, paddingHorizontal: 16, overflow: "visible" }}
-          ref={scrollViewRef}
-        >
-          <Sans color="black100" size="3">
-            Let's create your account
-          </Sans>
-          <Spacer mb={1} />
-          <Sans color="black50" size="1">
-            You'll use this to sign into the app, choose your plan, and manage your membership.
-          </Sans>
-          <Spacer mb={5} />
-          <Flex flexDirection="row">
-            <TextInput
-              autoCapitalize="words"
-              autoCompleteType="name"
-              currentValue={firstName}
-              headerText="First name"
-              onChangeText={(_, val) => setFirstName(val)}
-              onFocus={() => onFocusTextInput(0)}
-              style={{ flex: 1 }}
-              textContentType="givenName"
-              variant="light"
-            />
-            <Spacer mr={9} />
-            <TextInput
-              autoCapitalize="words"
-              autoCompleteType="name"
-              currentValue={lastName}
-              headerText="Last name"
-              onChangeText={(_, val) => setLastName(val)}
-              onFocus={() => onFocusTextInput(0)}
-              style={{ flex: 1 }}
-              textContentType="familyName"
-              variant="light"
-            />
-          </Flex>
-          <Spacer mb={4} />
-          <TextInput
-            autoCompleteType="email"
-            headerText="Email"
-            keyboardType="email-address"
-            onChangeText={(_, val) => setEmail(val)}
-            onFocus={() => onFocusTextInput(1)}
-            textContentType="emailAddress"
-            variant="light"
-          />
-          <Spacer mb={4} />
-          <TextInput
-            autoCompleteType="password"
-            headerText="Password"
-            onChangeText={(_, val) => setPassword(val)}
-            onFocus={() => onFocusTextInput(3)}
-            secureTextEntry
-            textContentType="password"
-            variant="light"
-          />
-          <Spacer mb={1} />
-          <Sans size="0" color="black50">
-            Your password must be at least 8 characters long, include at least one uppercase letter, one lowercase
-            letter, & one number.
-          </Sans>
-          <Spacer mb={4} />
-          <TextInput
-            autoCompleteType="password"
-            headerText="Confirm Password"
-            onChangeText={(_, val) => setPasswordConfirmation(val)}
-            onFocus={() => onFocusTextInput(4)}
-            secureTextEntry
-            textContentType="password"
-            variant="light"
-          />
-          <Spacer mb={4} />
-          <TextInput
-            autoCompleteType="postal-code"
-            currentValue={zipCode}
-            headerText="ZIP Code"
-            keyboardType="number-pad"
-            onChangeText={(_, val) => onZipCodeChange(val)}
-            onFocus={() => onFocusTextInput(5)}
-            textContentType="postalCode"
-            variant="light"
-          />
-          <Spacer height={92} />
-        </ScrollView>
-        <FadeBottom2>
-          <Box p={2}>
-            <Button
-              block
-              disabled={!isFormValid}
-              loading={isMutating}
-              onPress={() => handleSignup()}
-              variant="primaryBlack"
-            >
-              Create my account
-            </Button>
-          </Box>
-        </FadeBottom2>
-      </KeyboardAvoidingView>
-      <Box px={2} style={{ paddingBottom: insets.bottom + 16, backgroundColor: "white" }}>
-        <Flex flexDirection="column" alignItems="center">
-          <Text>
-            <Sans size="0" color="black50">
-              By creating an account, you agree to our
-            </Sans>{" "}
-          </Text>
-          <Text>
-            <TouchableWithoutFeedback onPress={() => showWebview("https://www.seasons.nyc/privacy-policy")}>
-              <Sans style={{ textDecorationLine: "underline" }} size="0" color="black50">
-                Privacy Policy
-              </Sans>
-            </TouchableWithoutFeedback>
-            <Sans size="0" color="black50">
-              {" & "}
+    <>
+      <CloseButton variant="light" />
+      <Container insetsBottom={false} insetsTop={false}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={82 - 28}>
+          <ScrollView
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="always"
+            showsVerticalScrollIndicator={false}
+            style={{ paddingTop: 85, paddingHorizontal: 16, overflow: "visible" }}
+            ref={scrollViewRef}
+          >
+            <Sans color="black100" size="3">
+              Let's create your account
             </Sans>
-            <TouchableWithoutFeedback onPress={() => showWebview("https://www.seasons.nyc/terms-of-service")}>
-              <Sans style={{ textDecorationLine: "underline" }} size="0" color="black50">
-                Terms of Service
+            <Spacer mb={1} />
+            <Sans color="black50" size="1">
+              You'll use this to sign into the app, choose your plan, and manage your membership.
+            </Sans>
+            <Spacer mb={5} />
+            <Flex flexDirection="row">
+              <TextInput
+                autoCapitalize="words"
+                autoCompleteType="name"
+                currentValue={firstName}
+                headerText="First name"
+                onChangeText={(_, val) => setFirstName(val)}
+                onFocus={() => onFocusTextInput(0)}
+                style={{ flex: 1 }}
+                textContentType="givenName"
+                variant="light"
+              />
+              <Spacer mr={9} />
+              <TextInput
+                autoCapitalize="words"
+                autoCompleteType="name"
+                currentValue={lastName}
+                headerText="Last name"
+                onChangeText={(_, val) => setLastName(val)}
+                onFocus={() => onFocusTextInput(0)}
+                style={{ flex: 1 }}
+                textContentType="familyName"
+                variant="light"
+              />
+            </Flex>
+            <Spacer mb={4} />
+            <TextInput
+              autoCompleteType="email"
+              headerText="Email"
+              keyboardType="email-address"
+              onChangeText={(_, val) => setEmail(val)}
+              onFocus={() => onFocusTextInput(1)}
+              textContentType="emailAddress"
+              variant="light"
+            />
+            <Spacer mb={4} />
+            <TextInput
+              autoCompleteType="password"
+              headerText="Password"
+              onChangeText={(_, val) => setPassword(val)}
+              onFocus={() => onFocusTextInput(3)}
+              secureTextEntry
+              textContentType="password"
+              variant="light"
+            />
+            <Spacer mb={1} />
+            <Sans size="0" color="black50">
+              Your password must be at least 8 characters long, include at least one uppercase letter, one lowercase
+              letter, & one number.
+            </Sans>
+            <Spacer mb={4} />
+            <TextInput
+              autoCompleteType="password"
+              headerText="Confirm Password"
+              onChangeText={(_, val) => setPasswordConfirmation(val)}
+              onFocus={() => onFocusTextInput(4)}
+              secureTextEntry
+              textContentType="password"
+              variant="light"
+            />
+            <Spacer mb={4} />
+            <TextInput
+              autoCompleteType="postal-code"
+              currentValue={zipCode}
+              headerText="ZIP Code"
+              keyboardType="number-pad"
+              onChangeText={(_, val) => onZipCodeChange(val)}
+              onFocus={() => onFocusTextInput(5)}
+              textContentType="postalCode"
+              variant="light"
+            />
+            <Spacer height={92} />
+          </ScrollView>
+          <FadeBottom2>
+            <Box p={2}>
+              <Button
+                block
+                disabled={!isFormValid}
+                loading={isMutating}
+                onPress={() => handleSignup()}
+                variant="primaryBlack"
+              >
+                Create my account
+              </Button>
+            </Box>
+          </FadeBottom2>
+        </KeyboardAvoidingView>
+        <Box px={2} style={{ paddingBottom: insets.bottom + 16, backgroundColor: "white" }}>
+          <Flex flexDirection="column" alignItems="center">
+            <Text>
+              <Sans size="0" color="black50">
+                By creating an account, you agree to our
+              </Sans>{" "}
+            </Text>
+            <Text>
+              <TouchableWithoutFeedback onPress={() => showWebview("https://www.seasons.nyc/privacy-policy")}>
+                <Sans style={{ textDecorationLine: "underline" }} size="0" color="black50">
+                  Privacy Policy
+                </Sans>
+              </TouchableWithoutFeedback>
+              <Sans size="0" color="black50">
+                {" & "}
               </Sans>
-            </TouchableWithoutFeedback>
-          </Text>
-        </Flex>
-      </Box>
+              <TouchableWithoutFeedback onPress={() => showWebview("https://www.seasons.nyc/terms-of-service")}>
+                <Sans style={{ textDecorationLine: "underline" }} size="0" color="black50">
+                  Terms of Service
+                </Sans>
+              </TouchableWithoutFeedback>
+            </Text>
+          </Flex>
+        </Box>
 
-      <WebviewModal
-        visible={isWebviewModalVisible}
-        onRequestBack={() => setIsWebviewModalVisible(false)}
-        url={webViewUrl}
-      />
-    </Container>
+        <WebviewModal
+          visible={isWebviewModalVisible}
+          onRequestBack={() => setIsWebviewModalVisible(false)}
+          url={webViewUrl}
+        />
+      </Container>
+    </>
   )
 }

@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "react-apollo"
 import stripe from "tipsi-stripe"
 import { Dimensions, KeyboardAvoidingView } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, Radio, Sans, Spacer, TextInput } from "App/Components"
 import styled from "styled-components/native"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
@@ -12,9 +12,11 @@ import {
   GetUserPaymentData_me_customer_billingInfo,
   GetUserPaymentData_me_customer_detail_shippingAddress,
 } from "src/generated/getUserPaymentData"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { space } from "App/utils"
+import { Schema as TrackSchema, useTracking, screenTrack } from "App/utils/track"
 import * as Sentry from "@sentry/react-native"
+import { EditPaymentPopUp } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane/EditPaymentPopUp"
 
 export const GET_CURRENT_PLAN = gql`
   query GetCurrentPlan {
@@ -32,9 +34,9 @@ export const GET_CURRENT_PLAN = gql`
   }
 `
 
-const PAYMENT_UPDATE = gql`
-  mutation applePayUpdatePaymentMethod($planID: String!, $token: StripeToken!) {
-    applePayUpdatePaymentMethod(planID: $planID, token: $token)
+export const PAYMENT_UPDATE = gql`
+  mutation applePayUpdatePaymentMethod($planID: String!, $token: StripeToken!, $tokenType: String) {
+    applePayUpdatePaymentMethod(planID: $planID, token: $token, tokenType: $tokenType)
   }
 `
 
@@ -60,13 +62,15 @@ const SHIPPING_ADDRESS = "Shipping address"
 export const EditPaymentAndShipping: React.FC<{
   navigation: any
   route: any
-}> = ({ navigation, route }) => {
+}> = screenTrack()(({ navigation, route }) => {
+  const tracking = useTracking()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { data } = useQuery(GET_CURRENT_PLAN)
+  const [openPaymentPopUp, setOpenPaymentPopUp] = useState(false)
   const billingInfo: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
   const currentPhoneNumber = route?.params?.phoneNumber
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
   const [isMutating, setIsMutating] = useState(false)
   const [shippingAddress, setShippingAddress] = useState({
     address1: currentShippingAddress?.address1 || "",
@@ -88,7 +92,13 @@ export const EditPaymentAndShipping: React.FC<{
   const [applePayUpdatePayment] = useMutation(PAYMENT_UPDATE, {
     onCompleted: () => {
       setIsMutating(false)
+      setOpenPaymentPopUp(false)
     },
+    refetchQueries: [
+      {
+        query: GET_PAYMENT_DATA,
+      },
+    ],
     onError: (err) => {
       console.log("Error ChoosePlanPane.tsx", err)
       Sentry.captureException(JSON.stringify(err))
@@ -188,7 +198,15 @@ export const EditPaymentAndShipping: React.FC<{
     }
   }
 
-  const handleEditBillingInfoBtnPressed = async () => {
+  const onApplePay = async () => {
+    if (isMutating) {
+      return
+    }
+    setIsMutating(true)
+    tracking.trackEvent({
+      actionName: TrackSchema.ActionNames.ApplePayTapped,
+      actionType: TrackSchema.ActionTypes.Tap,
+    })
     const applePaySupportedOnDevice = await stripe.deviceSupportsApplePay()
     if (applePaySupportedOnDevice) {
       const canMakeApplePayment = await stripe.canMakeApplePayPayments()
@@ -209,8 +227,10 @@ export const EditPaymentAndShipping: React.FC<{
           applePayUpdatePayment({
             variables: {
               planID: paymentPlan.planID,
-              token: token,
+              token,
+              tokenType: "apple_pay",
             },
+            awaitRefetchQueries: true,
           })
           // You should complete the operation by calling
           stripe.completeApplePayRequest()
@@ -351,7 +371,7 @@ export const EditPaymentAndShipping: React.FC<{
         return (
           <Flex flexDirection="row" justifyContent="space-between">
             {paymentPlan && (
-              <Button variant="primaryWhite" size="large" width="100%" onPress={handleEditBillingInfoBtnPressed}>
+              <Button variant="primaryWhite" size="large" width="100%" onPress={() => setOpenPaymentPopUp(true)}>
                 Edit payment method
               </Button>
             )}
@@ -362,46 +382,68 @@ export const EditPaymentAndShipping: React.FC<{
     }
   }
 
+  const onAddCreditCard = () => {
+    tracking.trackEvent({
+      actionName: TrackSchema.ActionNames.AddCreditCardTapped,
+      actionType: TrackSchema.ActionTypes.Tap,
+    })
+  }
+
   return (
-    <Container insetsBottom={false}>
-      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      <Box px={2}>
-        <KeyboardAwareFlatList
-          data={sections}
-          ListHeaderComponent={() => (
-            <Box mt={insets.top}>
-              <Spacer mb={2} />
-              <Sans size="3">Payment & Shipping</Sans>
-              <Spacer mb={4} />
-            </Box>
-          )}
-          ItemSeparatorComponent={() => <Spacer mb={6} />}
-          keyExtractor={(item, index) => item + String(index)}
-          renderItem={renderItem}
-          ListFooterComponent={() => <Spacer mb={space(1) * 8 + 50} />}
-          showsVerticalScrollIndicator={false}
-        />
-      </Box>
-      <FixedKeyboardAvoidingView behavior="padding" keyboardVerticalOffset={space(2)} style={{ bottom: insets.bottom }}>
-        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
-          <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
-            Cancel
-          </Button>
-          <Spacer ml={1} />
-          <Button
-            loading={isMutating}
-            variant="secondaryBlack"
-            size="large"
-            width={buttonWidth}
-            onPress={handleSaveBtnPressed}
-          >
-            Save
-          </Button>
-        </Flex>
-      </FixedKeyboardAvoidingView>
-    </Container>
+    <>
+      <Container insetsBottom={false}>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Box px={2}>
+          <KeyboardAwareFlatList
+            data={sections}
+            ListHeaderComponent={() => (
+              <Box mt={insets.top}>
+                <Spacer mb={2} />
+                <Sans size="3">Payment & Shipping</Sans>
+                <Spacer mb={4} />
+              </Box>
+            )}
+            ItemSeparatorComponent={() => <Spacer mb={6} />}
+            keyExtractor={(item, index) => item + String(index)}
+            renderItem={renderItem}
+            ListFooterComponent={() => <Spacer mb={space(1) * 8 + 50} />}
+            showsVerticalScrollIndicator={false}
+          />
+        </Box>
+        <FixedKeyboardAvoidingView
+          behavior="padding"
+          keyboardVerticalOffset={space(2)}
+          style={{ bottom: insets.bottom }}
+        >
+          <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
+            <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
+              Cancel
+            </Button>
+            <Spacer ml={1} />
+            <Button
+              loading={isMutating}
+              variant="secondaryBlack"
+              size="large"
+              width={buttonWidth}
+              onPress={handleSaveBtnPressed}
+            >
+              Save
+            </Button>
+          </Flex>
+        </FixedKeyboardAvoidingView>
+      </Container>
+
+      <EditPaymentPopUp
+        planID={paymentPlan?.planID}
+        billingAddress={billingAddress}
+        setOpenPopUp={setOpenPaymentPopUp}
+        openPopUp={openPaymentPopUp}
+        onApplePay={onApplePay}
+        onAddCreditCard={onAddCreditCard}
+      />
+    </>
   )
-}
+})
 
 const FixedKeyboardAvoidingView = styled(KeyboardAvoidingView)`
   position: absolute;

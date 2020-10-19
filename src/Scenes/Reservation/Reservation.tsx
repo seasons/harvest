@@ -1,6 +1,6 @@
 import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"

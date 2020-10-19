@@ -1,4 +1,4 @@
-import { Box, Button, Container, Sans, Spacer, Flex } from "App/Components"
+import { Box, Button, Container, Sans, Spacer, Flex, CloseButton } from "App/Components"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { BoxPicker } from "./BoxPicker"
 import Item from "./Item"
@@ -6,11 +6,11 @@ import Measurements from "./Measurements"
 import { MultiSelectionTable } from "./MultiSelectionTable"
 import React, { useState } from "react"
 import { ScrollView } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useTracking, Schema } from "App/utils/track"
 
 const ADD_MEASUREMENTS = gql`
@@ -56,7 +56,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
   const [waistSizeIndices, setWaistSizeIndices] = useState(initialMeasurements?.waistSizeIndices || Array<number>())
 
   const [footerBoxHeight, setFooterBoxHeight] = useState(0)
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
 
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -104,6 +104,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
 
   return (
     <Container insetsTop={false} insetsBottom={false}>
+      <CloseButton variant="light" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Box p={2} pt={useEditingLayout ? "80px" : "85px"}>
           <Sans color="black100" size="3">
