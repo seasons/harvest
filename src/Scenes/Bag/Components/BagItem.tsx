@@ -190,7 +190,7 @@ export const BagItem: React.FC<BagItemProps> = ({
         </Box>
         {!isReserved && (
           <Flex flexDirection="row" pt={1}>
-            <Box flex={1}>
+            <Box>
               <Button
                 size="small"
                 variant="secondaryWhite"
@@ -261,7 +261,7 @@ export const BagItem: React.FC<BagItemProps> = ({
         }}
       >
         <Box style={shadowStyles}>
-          <BagItemContainer isReserved={isReserved} flexDirection="row">
+          <BagItemContainer isReserved={isReserved}>
             {isReserved ? <ReservedItemContent /> : <NonReservedItemContent />}
             <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
               {!!imageURL && (
