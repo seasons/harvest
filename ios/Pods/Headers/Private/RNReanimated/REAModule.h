@@ -1,1 +1,1 @@
-../../../../../node_modules/react-native-reanimated/ios/REAModule.h
+../../../RNReanimated/ios/REAModule.h

@@ -1,1 +1,1 @@
-../../../../../node_modules/react-native-reanimated/ios/Nodes/REABezierNode.h
+../../../RNReanimated/ios/Nodes/REABezierNode.h
