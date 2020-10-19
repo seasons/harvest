@@ -1,33 +1,34 @@
-import { Box, Button, Container, GuestView, Sans, Separator, Skeleton, Spacer, Flex } from "App/Components"
-import { useAuthContext } from "App/Navigation/AuthContext"
-import { screenTrack, Schema, useTracking } from "App/utils/track"
-import { NotificationToggle } from "./Components/NotificationToggle"
-import { HourMinuteSecondCountdown } from "./Components/HourMinuteSecondCountdown"
-import gql from "graphql-tag"
-import React, { useEffect } from "react"
-import { useQuery } from "react-apollo"
+import { Box, Button, Container, Flex, GuestView, Sans, Separator, Skeleton, Spacer } from "App/Components"
 import { Schema as NavigationSchema } from "App/Navigation"
-import { ScrollView, StatusBar, Linking, Platform } from "react-native"
-import * as Animatable from "react-native-animatable"
-import { DateTime, Duration } from "luxon"
-import { CustomerStatus, OnboardingChecklist, AccountList } from "./Lists"
-import { State, UserState } from "../CreateAccount/CreateAccount"
-import Share from "react-native-share"
-import styled from "styled-components/native"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
 import {
-  PersonalPreferences,
-  PrivacyPolicy,
+  DocumentWithText,
+  Envelope,
+  Instagram,
   LogOutSVG,
   ManageMembership,
-  DocumentWithText,
   MapPin,
-  Instagram,
-  SpeechBubble,
   MonocromeSeasonsLogo,
+  PersonalPreferences,
+  PrivacyPolicy,
+  SpeechBubble,
   Star,
-  Envelope,
 } from "Assets/svgs"
+import gql from "graphql-tag"
+import { DateTime, Duration } from "luxon"
+import { default as React, default as React, useEffect } from "react"
+import { useQuery } from "react-apollo"
+import { Linking, Platform, ScrollView, StatusBar } from "react-native"
+import * as Animatable from "react-native-animatable"
+import Share from "react-native-share"
+import styled from "styled-components/native"
+import { State, UserState } from "../CreateAccount/CreateAccount"
+import { HourMinuteSecondCountdown } from "./Components/HourMinuteSecondCountdown"
+import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
+import { NotificationToggle } from "./Components/NotificationToggle"
+import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
 
 const SansUnderline = styled(Sans)`
   text-decoration: underline;
@@ -387,6 +388,8 @@ export const Account = screenTrack()(({ navigation }) => {
           <Box px={2} py={4}>
             {!!data ? renderBody() : <ListSkeleton />}
           </Box>
+          <InsetSeparator />
+          <InvitedFriendsRow />
           <InsetSeparator />
           <NotificationToggle pushNotification={pushNotification} />
           <InsetSeparator />

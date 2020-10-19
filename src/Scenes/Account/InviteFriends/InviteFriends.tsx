@@ -1,0 +1,82 @@
+import Clipboard from "@react-native-community/clipboard"
+import { Box, Button, Container, FixedBackArrow, Flex, Sans, Separator, Spacer } from "App/Components"
+import { PopUp } from "App/Navigation/PopUp"
+import { color } from "App/utils"
+import { screenTrack } from "App/utils/track"
+import React, { useState } from "react"
+import { Share, TouchableOpacity } from "react-native"
+import { useSafeArea } from "react-native-safe-area-context"
+
+export const InviteFriends = screenTrack()(({ navigation }) => {
+  const insets = useSafeArea()
+  const [openPopUp, setOpenPopUp] = useState(false)
+  const inviteLink = "seasons.nyc/join/regy"
+
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message: "Here’s my referral link for Seasons. Get $50 off your first month when you sign-up:",
+      })
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
+  const onInviteFromContacts = async () => {}
+
+  return (
+    <Container insetsBottom={false}>
+      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+      <Box px={2}>
+        <Spacer mb={156} />
+        <Sans size="3">Refer & earn</Sans>
+        <Spacer mb={1} />
+        <Sans size="1" color="black50">
+          Give $50 off of a Seasons membership and get $50 off your next month for every sign-up.
+        </Sans>
+        <Spacer mb={4} />
+        <Box px={2} py={12} style={{ height: 48, backgroundColor: color("black04"), borderRadius: 24 }}>
+          <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Sans size="1" color="black50">
+              {inviteLink}
+            </Sans>
+            <TouchableOpacity
+              onPress={() => {
+                Clipboard.setString(inviteLink)
+              }}
+            >
+              <Sans size="1" color="black100">
+                Copy Link
+              </Sans>
+            </TouchableOpacity>
+          </Flex>
+        </Box>
+        <Spacer mb={3} />
+      </Box>
+      <Separator />
+      <Box px={2} pb={insets.bottom} style={{ position: "absolute", bottom: 0 }}>
+        <Button variant="primaryBlack" block>
+          Invite from contacts
+        </Button>
+        <Spacer mb={1} />
+        <Button variant="secondaryWhite" onPress={onShare} block>
+          Share
+        </Button>
+        <Spacer mb={3} />
+        <Flex flexDirection="row" justifyContent="center">
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })}
+          >
+            <Sans size="2" color="black50">
+              Terms & Conditions
+            </Sans>
+          </TouchableOpacity>
+        </Flex>
+        <Spacer mb={2} />
+      </Box>
+      <PopUp show={openPopUp}>
+        <Box />
+      </PopUp>
+    </Container>
+  )
+})

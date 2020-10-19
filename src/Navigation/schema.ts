@@ -49,6 +49,7 @@ export enum PageNames {
   FinishProductRequest = "FinishProductRequest",
   ProductRequestConfirmation = "ProductRequestConfirmation",
   ProductRequestGallery = "ProductRequestGallery",
+  InviteFriends = "InviteFriends",
 
   // Shared
   Product = "Product",

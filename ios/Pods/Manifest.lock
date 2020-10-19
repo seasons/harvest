@@ -293,6 +293,8 @@ PODS:
     - Segment-Mixpanel
   - RNCAsyncStorage (1.12.0):
     - React
+  - RNCClipboard (1.5.0):
+    - React-Core
   - RNCMaskedView (0.1.10):
     - React
   - RNCPicker (1.6.6):
@@ -392,6 +394,7 @@ DEPENDENCIES:
   - "RNAnalyticsIntegration-Google-Analytics (from `../node_modules/@segment/analytics-react-native-google-analytics`)"
   - "RNAnalyticsIntegration-Mixpanel (from `../node_modules/@segment/analytics-react-native-mixpanel`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-community/picker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
@@ -503,6 +506,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@segment/analytics-react-native-mixpanel"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
+  RNCClipboard:
+    :path: "../node_modules/@react-native-community/clipboard"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
   RNCPicker:
@@ -581,6 +586,7 @@ SPEC CHECKSUMS:
   RNAnalyticsIntegration-Google-Analytics: b9ee84deb74d6ca72260c4f4544f74e0f936f1d8
   RNAnalyticsIntegration-Mixpanel: b6189df6949ec6cab33cdb7b737f36ceb95f4de6
   RNCAsyncStorage: 2a692bcb9b69b76a2f1a95f33db057129700af64
+  RNCClipboard: c7abea1baea58adca5c1f29e56dd5261837b4892
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNCPicker: 494015f2b7ec4bee5484b6f235aa19691426dcdb
   RNDeviceInfo: b6e650fbd234732c759544218657d549b4339038
