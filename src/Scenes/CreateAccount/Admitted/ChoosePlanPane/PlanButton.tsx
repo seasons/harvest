@@ -67,7 +67,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
           <Sans color="black100" size="1">
             {itemCount} items
           </Sans>
-          {PriceText({ originalPrice: price, finalPrice })}
+          <PriceText originalPrice={price} finalPrice={finalPrice} />
         </StyledFlex>
       </TouchableOpacity>
     </PlanSelectionBorder>

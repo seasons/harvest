@@ -21,6 +21,7 @@ import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
 import { PlanButton } from "./PlanButton"
+import { calcFinalPrice } from "./utils"
 
 const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout($planID: String!, $token: StripeToken!) {
@@ -174,6 +175,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       if (canMakeApplePayment) {
         // Customer has a payment card set up
         try {
+          const finalPrice = calcFinalPrice(selectedPlan.price, coupon?.discount, coupon?.type)
           const token = await stripe.paymentRequestWithNativePay(
             {
               requiredBillingAddressFields: ["all"],
@@ -181,7 +183,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
             [
               {
                 label: `${selectedPlan.name} plan`,
-                amount: `${selectedPlan.price / 100}.00`,
+                amount: `${finalPrice / 100}.00`,
               },
             ]
           )

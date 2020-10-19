@@ -28,7 +28,6 @@ export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = ({ onApplyP
   const [checkCoupon] = useMutation(CHECK_COUPON, {
     onCompleted: (data) => {
       const { amount, type } = data?.checkCoupon
-      console.log(amount, type)
       setIsMutating(false)
       onApplyPromoCode(amount, type)
     },
