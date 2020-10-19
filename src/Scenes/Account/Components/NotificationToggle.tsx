@@ -79,7 +79,7 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
       }
     }
     AppState.addEventListener("change", (nextAppState) => onChange(nextAppState))
-    return AppState.removeEventListener("change", (nextAppState) => onChange(nextAppState))
+    return () => AppState.removeEventListener("change", (nextAppState) => onChange(nextAppState))
   }, [AppState, setAppState, appState, checkPermissions])
 
   const callback = (status) => {
