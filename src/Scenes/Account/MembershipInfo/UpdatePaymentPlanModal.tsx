@@ -30,13 +30,6 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation, route }) => {
     )
   }
 
-  useEffect(() => {
-    const customersPlan = data?.me?.customer?.membership?.plan
-    if (customersPlan) {
-      setSelectedPlan(customersPlan)
-    }
-  }, [data, setSelectedPlan])
-
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <CloseButton variant="light" />
