@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/react-native"
 import { gql } from "apollo-boost"
 import { Box, Button, CloseButton, Container, Sans, Spacer, TextInput } from "App/Components"
 import { TextInputRef } from "App/Components/TextInput"
+import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import React, { useEffect, useRef, useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, KeyboardAvoidingView } from "react-native"
@@ -20,6 +21,7 @@ interface ApplyPromoCodePaneProps {
 }
 
 export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = ({ onApplyPromoCode }) => {
+  const tracking = useTracking()
   const [promoCode, setPromoCode] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
   const [isMutating, setIsMutating] = useState(false)
@@ -49,6 +51,10 @@ export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = ({ onApplyP
     if (isMutating) {
       return
     }
+    tracking.trackEvent({
+      actionName: TrackSchema.ActionNames.ApplyPromoCodeTapped,
+      actionType: TrackSchema.ActionTypes.Tap,
+    })
     checkCoupon({
       variables: {
         couponID: promoCode,

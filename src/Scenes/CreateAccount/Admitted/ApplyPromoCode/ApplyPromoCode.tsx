@@ -40,7 +40,6 @@ export const ApplyPromoCode: React.FC = screenTrack()((props: any) => {
         pane = (
           <ApplyPromoCodePane
             onApplyPromoCode={(discount, type) => {
-              console.log(discount)
               setDiscount(discount)
               setCouponType(type)
               setNextState()

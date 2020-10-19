@@ -236,7 +236,14 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       await onChoosePlanUpdate()
     }
   }
-  const onApplyPromoCode = () => navigation.navigate("ApplyPromoCode", { source: source })
+  const onApplyPromoCode = () => {
+    tracking.trackEvent({
+      actionName: TrackSchema.ActionNames.ApplyPromoCodeEntrypointTapped,
+      actionType: TrackSchema.ActionTypes.Tap,
+    })
+
+    navigation.navigate("ApplyPromoCode", { source: source })
+  }
 
   const descriptionLines = selectedPlan?.description?.split("\n") || []
   const planColors = ["#000", "#e6b759"]
