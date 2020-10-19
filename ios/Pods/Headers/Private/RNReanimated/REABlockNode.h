@@ -1,1 +1,1 @@
-../../../../../node_modules/react-native-reanimated/ios/Nodes/REABlockNode.h
+../../../RNReanimated/ios/Nodes/REABlockNode.h

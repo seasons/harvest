@@ -9,6 +9,7 @@
 #import "STPShippingAddressViewController.h"
 
 #import "NSArray+Stripe.h"
+#import "STPAnalyticsClient.h"
 #import "STPAddress.h"
 #import "STPAddressViewModel.h"
 #import "STPColorUtils.h"
@@ -16,6 +17,7 @@
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentActivityIndicatorView.h"
+#import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentContext+Private.h"
 #import "STPSectionHeaderView.h"
 #import "STPShippingMethodsViewController.h"
@@ -43,16 +45,23 @@
 
 @implementation STPShippingAddressViewController
 
++ (void)initialize{
+    [[STPAnalyticsClient sharedClient] addClassToProductUsageIfNecessary:[self class]];
+}
+
 - (instancetype)init {
     return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil prefilledInformation:nil];
 }
 
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
     STPAddress *billingAddress = nil;
-    id<STPPaymentMethod> paymentMethod = paymentContext.selectedPaymentMethod;
-    if ([paymentMethod isKindOfClass:[STPCard class]]) {
-        STPCard *card = (STPCard *)paymentMethod;
+    id<STPPaymentOption> paymentOption = paymentContext.selectedPaymentOption;
+    if ([paymentOption isKindOfClass:[STPCard class]]) {
+        STPCard *card = (STPCard *)paymentOption;
         billingAddress = [card address];
+    } else if ([paymentOption isKindOfClass:[STPPaymentMethod class]]) {
+        STPPaymentMethod *paymentMethod = (STPPaymentMethod *)paymentOption;
+        billingAddress = [[STPAddress alloc] initWithPaymentMethodBillingDetails:paymentMethod.billingDetails];
     }
     STPUserInformation *prefilledInformation;
     if (paymentContext.prefilledInformation != nil) {
@@ -79,17 +88,17 @@
                  prefilledInformation:(STPUserInformation *)prefilledInformation {
     self = [super initWithTheme:theme];
     if (self) {
+        NSCAssert([configuration.requiredShippingAddressFields count] > 0, @"`requiredShippingAddressFields` must not be empty when initializing an STPShippingAddressViewController.");
         _configuration = configuration;
         _currency = currency ?: @"usd";
         _selectedShippingMethod = selectedShippingMethod;
         _billingAddress = prefilledInformation.billingAddress;
         _hasUsedBillingAddress = NO;
-        _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredShippingFields:configuration.requiredShippingAddressFields];
+        _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredShippingFields:configuration.requiredShippingAddressFields availableCountries:configuration._availableCountries];
         _addressViewModel.delegate = self;
         if (shippingAddress != nil) {
             _addressViewModel.address = shippingAddress;
-        }
-        else if (prefilledInformation.shippingAddress != nil) {
+        } else if (prefilledInformation.shippingAddress != nil) {
             _addressViewModel.address = prefilledInformation.shippingAddress;
         }
         self.title = [self titleForShippingType:self.configuration.shippingType];
@@ -117,7 +126,8 @@
     self.nextItem = nextItem;
     self.stp_navigationItemProxy.rightBarButtonItem = nextItem;
     self.stp_navigationItemProxy.rightBarButtonItem.enabled = NO;
-
+    self.stp_navigationItemProxy.rightBarButtonItem.accessibilityIdentifier = @"ShippingViewControllerNextButtonIdentifier";
+    
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeShippingImage]];
     imageView.contentMode = UIViewContentModeCenter;
     imageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, imageView.bounds.size.height + (57 * 2));
@@ -128,6 +138,7 @@
 
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    [self.tableView reloadData];
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)]];
 
     STPSectionHeaderView *headerView = [STPSectionHeaderView new];
@@ -137,6 +148,7 @@
                        forState:UIControlStateNormal];
     [headerView.button addTarget:self action:@selector(useBillingAddress:)
                 forControlEvents:UIControlEventTouchUpInside];
+    headerView.button.accessibilityIdentifier = @"ShippingAddressViewControllerUseBillingButton";
     NSSet<STPContactField> *requiredFields = self.configuration.requiredShippingAddressFields;
     BOOL needsAddress = [requiredFields containsObject:STPContactFieldPostalAddress] && !self.addressViewModel.isValid;
     BOOL buttonVisible = (needsAddress
@@ -165,6 +177,7 @@
     for (STPAddressFieldTableViewCell *cell in self.addressViewModel.addressCells) {
         cell.theme = self.theme;
     }
+    self.addressHeaderView.theme = self.theme;
 }
 
 
@@ -226,14 +239,12 @@
                                                                                                                                            theme:self.theme];
                         nextViewController.delegate = self;
                         [self.navigationController pushViewController:nextViewController animated:YES];
-                    }
-                    else {
+                    } else {
                         [self.delegate shippingAddressViewController:self
                                                 didFinishWithAddress:address
                                                       shippingMethod:nil];
                     }
-                }
-                else {
+                } else {
                     [self handleShippingValidationError:shippingValidationError];
                 }
             }];
@@ -271,8 +282,7 @@
 - (void)dismissWithCompletion:(STPVoidBlock)completion {
     if ([self stp_isAtRootOfNavigationController]) {
         [self.presentingViewController dismissViewControllerAnimated:YES completion:completion];
-    }
-    else {
+    } else {
         UIViewController *previous = self.navigationController.viewControllers.firstObject;
         for (UIViewController *viewController in self.navigationController.viewControllers) {
             if (viewController == self) {
@@ -298,6 +308,14 @@
 
 - (void)addressViewModelDidChange:(__unused STPAddressViewModel *)addressViewModel {
     [self updateDoneButton];
+}
+
+- (void)addressViewModelWillUpdate:(__unused STPAddressViewModel *)addressViewModel {
+    [self.tableView beginUpdates];
+}
+
+- (void)addressViewModelDidUpdate:(__unused STPAddressViewModel *)addressViewModel {
+    [self.tableView endUpdates];
 }
 
 #pragma mark - UITableView
@@ -366,8 +384,7 @@
                 return STPLocalizedString(@"Delivery", @"Title for delivery info form");
                 break;
         }
-    }
-    else {
+    } else {
         return STPLocalizedString(@"Contact", @"Title for contact info form");
     }
 }
@@ -382,8 +399,7 @@
                 return STPLocalizedString(@"Delivery Address", @"Title for delivery address entry section");
                 break;
         }
-    }
-    else {
+    } else {
         return STPLocalizedString(@"Contact", @"Title for contact info form");
     }
 }

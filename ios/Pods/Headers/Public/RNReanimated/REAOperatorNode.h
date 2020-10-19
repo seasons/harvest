@@ -1,1 +1,1 @@
-../../../../../node_modules/react-native-reanimated/ios/Nodes/REAOperatorNode.h
+../../../RNReanimated/ios/Nodes/REAOperatorNode.h
