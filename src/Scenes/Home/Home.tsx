@@ -57,7 +57,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
     const status = data?.me?.customer?.status
     // Check if user status is authorized and navigate to account pane
     if (!!status && status === "Authorized") {
-      navigation?.navigate("Account")
+      navigation?.navigate("AccountStack", { screen: "Account" })
     }
   }, [data, navigation])
 
