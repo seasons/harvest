@@ -114,6 +114,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />
       <ModalStack.Screen name={Schema.PageNames.CreateAccountModal} component={CreateAccount} />
+      <ModalStack.Screen name={Schema.PageNames.SurpriseMe} component={SurpriseMe} />
       <ModalStack.Screen name={Schema.PageNames.EditShippingAddress} component={EditShippingAddress} />
       <ModalStack.Screen name={Schema.PageNames.EditStylePreferences} component={EditStylePreferences} />
       <ModalStack.Screen name={Schema.PageNames.EditMeasurements} component={EditMeasurements} />

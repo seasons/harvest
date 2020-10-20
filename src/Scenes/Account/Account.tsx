@@ -64,6 +64,8 @@ export const Account = screenTrack()(({ navigation }) => {
   const { authState, signOut } = useAuthContext()
   const { data, refetch } = useQuery(GET_USER)
 
+  console.log("data", data)
+
   useEffect(() => {
     const unsubscribe = navigation?.addListener("focus", () => {
       StatusBar.setBarStyle("dark-content")

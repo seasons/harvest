@@ -20,6 +20,7 @@ import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
 import { BagCardButton } from "./BagCardButton"
 import { AddSlot, Stylist, SurpriseMe } from "Assets/svgs"
+import { Linking } from "react-native"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
@@ -209,7 +210,7 @@ export const BagTab: React.FC<{
           Icon={Stylist}
           title="Chat with our stylist"
           caption="Get a personalized consultation"
-          onPress={() => navigation.navigate("Modal", { screen: NavigationSchema.PageNames.UpdatePaymentPlanModal })}
+          onPress={() => Linking.openURL("https://szns.co/stylist")}
         />
       </Box>
     </Box>
