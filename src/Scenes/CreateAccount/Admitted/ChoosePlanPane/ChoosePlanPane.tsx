@@ -1,27 +1,30 @@
 import { Box, Button, Container, Flex, Sans, Spacer, Separator, CloseButton } from "App/Components"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { ListCheck } from "Assets/svgs/ListCheck"
+import { useNavigation } from "@react-navigation/native"
+import * as Sentry from "@sentry/react-native"
+import { CouponType } from "App/generated/globalTypes"
+import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
+import { color } from "App/utils"
+import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import { ListCheck } from "Assets/svgs/ListCheck"
+import { TabBar } from "Components/TabBar"
 import gql from "graphql-tag"
 import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "react-apollo"
-import { ScrollView, Dimensions, Linking } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Dimensions, Linking, ScrollView, TouchableOpacity } from "react-native"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
-import { TabBar } from "Components/TabBar"
-import * as Sentry from "@sentry/react-native"
-import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import { PlanButton } from "./PlanButton"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { GetPlans, GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { ChevronIcon } from "Assets/icons"
-import { color } from "App/utils"
-import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
 import { PaymentMethod } from "../../CreateAccount"
 import { PopUp } from "App/Components/PopUp"
 import { PaymentMethods } from "./PaymentMethods"
+import { calcFinalPrice } from "./utils"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout($planID: String!, $token: StripeToken!, $tokenType: String) {
@@ -47,6 +50,11 @@ interface ChoosePlanPaneProps {
   headerText: String
   data: GetPlans
   paneType: PaneType
+  coupon?: {
+    discount: number
+    type: CouponType
+  }
+  source: string
 }
 
 const viewWidth = Dimensions.get("window").width
@@ -58,12 +66,15 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   paneType,
   setSelectedPlan,
   selectedPlan,
+  coupon,
+  source,
 }) => {
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
   const [openPopUp, setOpenPopUp] = useState(false)
   const insets = useSafeAreaInsets()
   const tracking = useTracking()
+  const navigation = useNavigation()
   const [currentView, setCurrentView] = useState(0)
   const [tiers, setTiers] = useState([])
   const [isMutating, setIsMutating] = useState(false)
@@ -188,6 +199,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       if (canMakeApplePayment) {
         // Customer has a payment card set up
         try {
+          const finalPrice = calcFinalPrice(selectedPlan.price, coupon?.discount, coupon?.type)
           const token = await stripe.paymentRequestWithNativePay(
             {
               requiredBillingAddressFields: ["all"],
@@ -195,7 +207,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
             [
               {
                 label: `${selectedPlan.name} plan`,
-                amount: `${selectedPlan.price / 100}.00`,
+                amount: `${finalPrice / 100}.00`,
               },
             ]
           )
@@ -246,6 +258,15 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     } else if (paneType === PaneType.Update) {
       onChoosePlanUpdate()
     }
+  }
+
+  const onApplyPromoCode = () => {
+    tracking.trackEvent({
+      actionName: TrackSchema.ActionNames.ApplyPromoCodeEntrypointTapped,
+      actionType: TrackSchema.ActionTypes.Tap,
+    })
+
+    navigation.navigate("Modal", { screen: "ApplyPromoCode", params: { source } })
   }
 
   const descriptionLines = selectedPlan?.description?.split("\n") || []
@@ -362,11 +383,11 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                 Contact us
               </Button>
             </Box>
-            <Spacer pb={120} />
+            <Spacer pb={160} />
           </ScrollView>
         </Box>
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-          <Box p={2}>
+          <Box p={2} style={{ alignItems: "center" }}>
             <ColoredButton
               block
               disabled={!selectedPlan}
@@ -377,6 +398,12 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
             >
               Choose plan
             </ColoredButton>
+            <Spacer mt={2} />
+            <TouchableOpacity onPress={onApplyPromoCode}>
+              <Sans size="2" style={{ textDecorationLine: "underline" }}>
+                Apply promo code
+              </Sans>
+            </TouchableOpacity>
             <Box style={{ height: insets.bottom }} />
           </Box>
         </FadeBottom2>

@@ -225,6 +225,10 @@ export enum ActionNames {
   ChoosePlanTapped = "Choose Plan Tapped",
   SignupCompleted = "Signup Completed",
 
+  // Promo Code
+  ApplyPromoCodeEntrypointTapped = "Apply Promo Code Entrypoint Tapped",
+  ApplyPromoCodeTapped = "Promo Code Apply Button Tapped",
+
   Tier0PlanTabTapped = "Tier 0 Plan Tab Tapped",
   Tier1PlanTabTapped = "Tier 0 Plan Tab Tapped",
 

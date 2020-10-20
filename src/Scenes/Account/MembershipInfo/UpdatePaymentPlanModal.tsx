@@ -1,12 +1,12 @@
-import React from "react"
-import { useQuery } from "react-apollo"
 import { CloseButton, Container } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { screenTrack } from "App/utils/track"
 import { ChoosePlanPane } from "App/Scenes/CreateAccount/Admitted"
 import { GET_PLANS } from "App/Scenes/CreateAccount/CreateAccount"
+import { screenTrack } from "App/utils/track"
+import React from "react"
+import { useQuery } from "react-apollo"
 
-export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
+export const UpdatePaymentPlanModal = screenTrack()(({ navigation, route }) => {
   const { data } = useQuery(GET_PLANS, {
     variables: {
       where: { status: "active" },
@@ -30,6 +30,8 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
         data={data}
         onComplete={() => navigation.goBack()}
         headerText="Let's choose your plan"
+        source="UpdatePaymentPlanModal"
+        coupon={{ discount: route?.params?.discount, type: route?.params?.couponType }}
       />
     </Container>
   )

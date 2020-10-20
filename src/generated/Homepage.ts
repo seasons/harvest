@@ -198,19 +198,26 @@ export interface Homepage_archivalProducts {
   __typename: "Product";
   id: string;
   slug: string;
+  name: string;
   images: Homepage_archivalProducts_images[];
 }
 
-export interface Homepage_justAddedTops_images {
-  __typename: "Image";
+export interface Homepage_justAddedTops_modelSize {
+  __typename: "Size";
   id: string;
-  url: string | null;
+  display: string;
 }
 
 export interface Homepage_justAddedTops_brand {
   __typename: "Brand";
   id: string;
   name: string;
+}
+
+export interface Homepage_justAddedTops_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
 }
 
 export interface Homepage_justAddedTops_variants_internalSize {
@@ -222,32 +229,36 @@ export interface Homepage_justAddedTops_variants_internalSize {
 export interface Homepage_justAddedTops_variants {
   __typename: "ProductVariant";
   id: string;
-  total: number;
   reservable: number;
-  nonReservable: number;
-  reserved: number;
   internalSize: Homepage_justAddedTops_variants_internalSize | null;
 }
 
 export interface Homepage_justAddedTops {
   __typename: "Product";
   id: string;
-  slug: string;
-  images: Homepage_justAddedTops_images[];
+  name: string;
+  modelSize: Homepage_justAddedTops_modelSize | null;
   brand: Homepage_justAddedTops_brand;
+  images: Homepage_justAddedTops_images[];
   variants: Homepage_justAddedTops_variants[] | null;
 }
 
-export interface Homepage_justAddedBottoms_images {
-  __typename: "Image";
+export interface Homepage_justAddedBottoms_modelSize {
+  __typename: "Size";
   id: string;
-  url: string | null;
+  display: string;
 }
 
 export interface Homepage_justAddedBottoms_brand {
   __typename: "Brand";
   id: string;
   name: string;
+}
+
+export interface Homepage_justAddedBottoms_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
 }
 
 export interface Homepage_justAddedBottoms_variants_internalSize {
@@ -259,19 +270,17 @@ export interface Homepage_justAddedBottoms_variants_internalSize {
 export interface Homepage_justAddedBottoms_variants {
   __typename: "ProductVariant";
   id: string;
-  total: number;
   reservable: number;
-  nonReservable: number;
-  reserved: number;
   internalSize: Homepage_justAddedBottoms_variants_internalSize | null;
 }
 
 export interface Homepage_justAddedBottoms {
   __typename: "Product";
   id: string;
-  slug: string;
-  images: Homepage_justAddedBottoms_images[];
+  name: string;
+  modelSize: Homepage_justAddedBottoms_modelSize | null;
   brand: Homepage_justAddedBottoms_brand;
+  images: Homepage_justAddedBottoms_images[];
   variants: Homepage_justAddedBottoms_variants[] | null;
 }
 

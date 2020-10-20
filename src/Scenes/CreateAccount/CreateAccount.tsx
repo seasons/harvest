@@ -1,14 +1,14 @@
 import { Box } from "App/Components"
+import { useAuthContext } from "App/Navigation/AuthContext"
 import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { useQuery } from "react-apollo"
-import { Dimensions, FlatList, Modal, AppState } from "react-native"
+import { AppState, Dimensions, FlatList, Modal } from "react-native"
 import { ChoosePlanPane, WelcomePane } from "./Admitted"
 import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane } from "./Undetermined"
 import { WaitlistedPane } from "./Waitlisted"
-import { useAuthContext } from "App/Navigation/AuthContext"
 import { useIsFocused } from "@react-navigation/native"
 import { CreditCardFormPane } from "./Admitted/CreditCardFormPane"
 
@@ -31,7 +31,7 @@ export enum PaymentMethod {
   CreditCard = "CreditCard",
 }
 
-enum State {
+export enum State {
   CreateAccount = "CreateAccount",
   SendCode = "SendCode",
   VerifyCode = "VerifyCode",
@@ -287,6 +287,8 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
               setTimeStart(Date.now())
             }}
             headerText={"You're in.\nLet's choose your plan"}
+            source="CreateAccountModal"
+            coupon={{ discount: route?.params?.discount, type: route?.params?.couponType }}
           />
         )
         break

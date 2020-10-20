@@ -15,6 +15,8 @@ export enum PageNames {
   ResumeConfirmation = "ResumeConfirmation",
   PauseConfirmation = "PauseConfirmation",
   ExtendPauseConfirmation = "ExtendPauseConfirmation",
+  ApplyPromoCode = "ApplyPromoCode",
+  PromoCodeAppliedConfirmation = "PromoCodeAppliedConfirmation",
 
   // Home
   Home = "Home",
