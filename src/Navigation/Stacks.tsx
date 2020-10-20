@@ -1,23 +1,27 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
+import { ExtendPauseConfirmation, PauseConfirmation, ResumeConfirmation } from "App/Components/Pause"
 import { Schema } from "App/Navigation"
 import {
   Account,
+  EditMeasurements,
   EditPaymentAndShipping,
-  PaymentAndShipping,
   EditShippingAddress,
   EditStylePreferences,
-  EditMeasurements,
+  PaymentAndShipping,
 } from "App/Scenes/Account"
+import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
 import { Brand } from "App/Scenes/Brand"
 import { Brands } from "App/Scenes/Brands"
-import { Tag } from "App/Scenes/Tag"
 import { Browse, Filters } from "App/Scenes/Browse"
+import { CreateAccount } from "App/Scenes/CreateAccount"
+import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane"
 import { DebugMenu } from "App/Scenes/DebugMenu"
 import { Faq } from "App/Scenes/Faq"
 import { Home } from "App/Scenes/Home"
+import { FitPicDetail } from "App/Scenes/Home/Components/FitPicDetail"
 import { Product, SaveProduct } from "App/Scenes/Product"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
@@ -28,17 +32,14 @@ import {
   ReservationFeedbackFinish,
 } from "App/Scenes/ReservationFeedback"
 import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn } from "App/Scenes/SignIn"
+import { Tag } from "App/Scenes/Tag"
 import { Webview } from "App/Scenes/Webview"
 import { color } from "App/utils"
 import React from "react"
-import { MembershipInfo } from "Scenes/Account/MembershipInfo"
-import { NavBar } from "./NavBar"
-import { ResumeConfirmation, PauseConfirmation, ExtendPauseConfirmation } from "App/Components/Pause"
-import { CreateAccount } from "App/Scenes/CreateAccount"
-import { FitPicDetail } from "App/Scenes/Home/Components/FitPicDetail"
 import { createSharedElementStackNavigator } from "react-navigation-shared-element"
+import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
-import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
+import { NavBar } from "./NavBar"
 
 const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
@@ -128,6 +129,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ResumeConfirmation} component={ResumeConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.PauseConfirmation} component={PauseConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ExtendPauseConfirmation} component={ExtendPauseConfirmation} />
+      <ModalStack.Screen name={Schema.PageNames.ApplyPromoCode} component={ApplyPromoCode} />
     </ModalStack.Navigator>
   )
 }
