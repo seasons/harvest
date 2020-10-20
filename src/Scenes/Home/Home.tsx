@@ -19,6 +19,7 @@ import { GET_HOMEPAGE } from "./queries/homeQueries"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
+  const [navigatedToAccount, setNavigatedToAccount] = useState(false)
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
   const { loading, error, data, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
     variables: { firstFitPics: 8, skipFitPics: 0 },
@@ -56,7 +57,8 @@ export const Home = screenTrack()(({ navigation, route }) => {
   useEffect(() => {
     const status = data?.me?.customer?.status
     // Check if user status is authorized and navigate to account pane
-    if (!!status && status === "Authorized") {
+    if (!!status && status === "Authorized" && navigatedToAccount) {
+      setNavigatedToAccount(true)
       navigation?.navigate("AccountStack", { screen: "Account" })
     }
   }, [data, navigation])

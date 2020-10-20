@@ -85,7 +85,7 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = ({ navigation, route })
               buttonText: "Sign in",
               onClose: () => {
                 hidePopUp()
-                navigation.navigate("Account")
+                navigation?.navigate("AccountStack", { screen: "Account" })
               },
             })
             return

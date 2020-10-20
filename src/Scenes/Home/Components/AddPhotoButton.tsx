@@ -31,16 +31,17 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
   } = useAuthContext()
   const [submitFitPic] = useMutation(SUBMIT_FIT_PIC, {
     onCompleted: () => {
+      setIsMutating(false)
       showPopUp({
         title: "Thanks for your submission",
         note: "We’ll let you know if your photo gets chosen to be featured on our community board.",
         buttonText: "Done",
         onClose: hidePopUp,
       })
-      setIsMutating(false)
     },
     onError: (err) => {
       console.log("[Error AddPhotoButton.tsx]", err)
+      setIsMutating(false)
       showPopUp({
         title: "Uh Oh. Something went wrong",
         note:
@@ -49,7 +50,6 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
         buttonText: "Close",
         onClose: hidePopUp,
       })
-      setIsMutating(false)
     },
   })
 
@@ -112,7 +112,15 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
 
   return (
     <FixedButtonContainer opacity={animation.opacity} style={{ transform: [{ translateY: animation.translateY }] }}>
-      <Button color="white100" onPress={onPress} loading={isMutating} size="small" variant="primaryWhite" width={120}>
+      <Button
+        color="white100"
+        onPress={onPress}
+        loading={isMutating}
+        disabled={isMutating}
+        size="small"
+        variant="primaryWhite"
+        width={120}
+      >
         Add photo
       </Button>
     </FixedButtonContainer>
