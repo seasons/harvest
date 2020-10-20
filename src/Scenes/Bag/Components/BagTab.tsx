@@ -193,7 +193,10 @@ export const BagTab: React.FC<{
             Icon={AddSlot}
             title="Add a slot"
             caption="Reserve another item"
-            onPress={() => navigation.navigate("Modal", { screen: NavigationSchema.PageNames.UpdatePaymentPlanModal })}
+            onPress={() => {
+              console.log("???")
+              navigation.navigate("Modal", { screen: NavigationSchema.PageNames.UpdatePaymentPlanModal })
+            }}
           />
         </Box>
       )}
@@ -202,7 +205,10 @@ export const BagTab: React.FC<{
           Icon={SurpriseMe}
           title="Surprise me"
           caption="Discover styles in your size"
-          onPress={() => navigation.navigate("Modal", { screen: NavigationSchema.PageNames.UpdatePaymentPlanModal })}
+          onPress={() => {
+            console.log("naving")
+            navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
+          }}
         />
       </Box>
       <Box px={1}>

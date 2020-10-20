@@ -1,6 +1,4 @@
-import { useNavigation } from "@react-navigation/native"
 import { Box, Flex } from "App/Components"
-import { Schema } from "App/Navigation"
 import { color } from "App/utils"
 import { Sans } from "Components/Typography"
 import React, { ComponentType } from "react"
@@ -13,8 +11,6 @@ export const BagCardButton: React.FC<{
   caption: string
   onPress: () => void
 }> = ({ Icon, title, caption, onPress }) => {
-  const navigation = useNavigation()
-
   const shadowStyles = {
     shadowColor: "black",
     shadowRadius: 10,
@@ -25,9 +21,7 @@ export const BagCardButton: React.FC<{
 
   return (
     <Box p={1}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Modal", { screen: Schema.PageNames.UpdatePaymentPlanModal })}
-      >
+      <TouchableOpacity onPress={onPress}>
         <EmptyBagItemContainer style={shadowStyles}>
           <Flex
             flexDirection="row"
