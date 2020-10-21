@@ -98,6 +98,48 @@ export const BagItem: React.FC<BagItemProps> = ({
     ],
   })
 
+  const onSaveForLater = () => {
+    if (!isMutating) {
+      setIsMutating(true)
+      tracking.trackEvent({
+        actionName: Schema.ActionNames.BagItemSaved,
+        actionType: Schema.ActionTypes.Tap,
+        productSlug: product.slug,
+        productId: product.id,
+        variantId: variantId,
+      })
+      removeFromBagAndSaveItem({
+        variables: {
+          id: variantId,
+          saved: false,
+        },
+        refetchQueries: [
+          {
+            query: GET_BAG,
+          },
+          {
+            query: GET_PRODUCT,
+            variables: {
+              where: {
+                id: product.id,
+              },
+            },
+          },
+          {
+            query: GET_BROWSE_PRODUCTS,
+            variables: {
+              name: "all",
+              first: 10,
+              skip: 0,
+              orderBy: "publishedAt_DESC",
+              sizes: [],
+            },
+          },
+        ],
+      })
+    }
+  }
+
   const ReservedItemContent = () => {
     return (
       <Flex
@@ -126,7 +168,7 @@ export const BagItem: React.FC<BagItemProps> = ({
 
   const NonReservedItemContent = () => {
     return (
-      <Flex style={{ flex: 2, width: "100%" }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
+      <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
         <Box>
           <Box style={{ width: "100%" }}>
             <Sans size="1">{`${index + 1}. ${product?.brand?.name}`}</Sans>
@@ -138,49 +180,7 @@ export const BagItem: React.FC<BagItemProps> = ({
             </Sans>
             <Spacer mb={3} />
             {authState.isSignedIn && (
-              <TouchableOpacity
-                onPress={() => {
-                  if (!isMutating) {
-                    setIsMutating(true)
-                    tracking.trackEvent({
-                      actionName: Schema.ActionNames.BagItemSaved,
-                      actionType: Schema.ActionTypes.Tap,
-                      productSlug: product.slug,
-                      productId: product.id,
-                      variantId: variantId,
-                    })
-                    removeFromBagAndSaveItem({
-                      variables: {
-                        id: variantId,
-                        saved: false,
-                      },
-                      refetchQueries: [
-                        {
-                          query: GET_BAG,
-                        },
-                        {
-                          query: GET_PRODUCT,
-                          variables: {
-                            where: {
-                              id: product.id,
-                            },
-                          },
-                        },
-                        {
-                          query: GET_BROWSE_PRODUCTS,
-                          variables: {
-                            name: "all",
-                            first: 10,
-                            skip: 0,
-                            orderBy: "publishedAt_DESC",
-                            sizes: [],
-                          },
-                        },
-                      ],
-                    })
-                  }
-                }}
-              >
+              <TouchableOpacity onPress={onSaveForLater}>
                 <Sans size="1" style={{ textDecorationLine: "underline" }}>
                   Save for later
                 </Sans>
@@ -188,51 +188,49 @@ export const BagItem: React.FC<BagItemProps> = ({
             )}
           </Box>
         </Box>
-        {!isReserved && (
-          <Flex flexDirection="row" pt={1}>
-            <Box>
-              <Button
-                size="small"
-                variant="secondaryWhite"
-                disabled={isMutating}
-                onPress={() => {
-                  tracking.trackEvent({
-                    actionName: Schema.ActionNames.BagItemRemoved,
-                    actionType: Schema.ActionTypes.Tap,
-                    productSlug: product.slug,
-                    productId: product.id,
-                    variantId: variantId,
-                  })
-                  if (!authState.isSignedIn) {
-                    removeFromLocalBag()
-                  } else {
-                    removeItemFromBag({
-                      variables: {
-                        id: variantId,
-                        saved: false,
+        <Flex flexDirection="row" pt={1}>
+          <Box>
+            <Button
+              size="small"
+              variant="secondaryWhite"
+              disabled={isMutating}
+              onPress={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.BagItemRemoved,
+                  actionType: Schema.ActionTypes.Tap,
+                  productSlug: product.slug,
+                  productId: product.id,
+                  variantId: variantId,
+                })
+                if (!authState.isSignedIn) {
+                  removeFromLocalBag()
+                } else {
+                  removeItemFromBag({
+                    variables: {
+                      id: variantId,
+                      saved: false,
+                    },
+                    refetchQueries: [
+                      {
+                        query: GET_BAG,
                       },
-                      refetchQueries: [
-                        {
-                          query: GET_BAG,
-                        },
-                        {
-                          query: GET_PRODUCT,
-                          variables: {
-                            where: {
-                              id: product.id,
-                            },
+                      {
+                        query: GET_PRODUCT,
+                        variables: {
+                          where: {
+                            id: product.id,
                           },
                         },
-                      ],
-                    })
-                  }
-                }}
-              >
-                Remove
-              </Button>
-            </Box>
-          </Flex>
-        )}
+                      },
+                    ],
+                  })
+                }
+              }}
+            >
+              Remove
+            </Button>
+          </Box>
+        </Flex>
       </Flex>
     )
   }
@@ -265,8 +263,8 @@ export const BagItem: React.FC<BagItemProps> = ({
             {isReserved ? <ReservedItemContent /> : <NonReservedItemContent />}
             <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
               {!!imageURL && (
-                <ImageContainer
-                  style={{ height: 170 * PRODUCT_ASPECT_RATIO, width: 170 }}
+                <FadeInImage
+                  style={{ height: 216, width: 216 / PRODUCT_ASPECT_RATIO }}
                   resizeMode="contain"
                   source={{ uri: imageURL }}
                 />
@@ -287,17 +285,14 @@ export const BagItem: React.FC<BagItemProps> = ({
   )
 }
 
-const BagItemContainer = styled(Box)<{ isReserved: boolean }>`
+const BagItemContainer = styled(Flex)<{ isReserved: boolean }>`
   height: 216px;
   overflow: hidden;
+  flex-direction: row;
   background-color: ${color("white100")};
   border-color: ${color("black10")};
   border-width: ${(p) => (p.isReserved ? "1px" : "0px")};
   border-radius: ${(p) => (p.isReserved ? "8px" : "0px")};
-`
-
-const ImageContainer = styled(FadeInImage)`
-  height: 214;
 `
 
 const Overlay = styled(Box)`

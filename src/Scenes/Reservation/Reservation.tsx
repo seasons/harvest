@@ -141,7 +141,7 @@ export const Reservation = screenTrack()((props) => {
     <>
       <Container insetsTop insetsBottom={false} backgroundColor="white100">
         <FixedBackArrow navigation={props.navigation} variant="whiteBackground" />
-        <Flex flex={1} px={2}>
+        <Flex style={{ flex: 1 }} px={2}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <Spacer mb={80} />
             <Box pb={1}>

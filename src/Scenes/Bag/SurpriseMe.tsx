@@ -170,6 +170,15 @@ export const SurpriseMe = screenTrack()(() => {
     }, 200)
   }
 
+  let addText
+  if (added) {
+    addText = "Added"
+  } else if (bagIsFull) {
+    addText = "Bag is full"
+  } else {
+    addText = "Add to bag"
+  }
+
   return (
     <>
       <CloseButton variant="light" />
@@ -239,12 +248,12 @@ export const SurpriseMe = screenTrack()(() => {
               <Button
                 block
                 variant="primaryWhite"
-                disabled={isAddingToBag || added}
+                disabled={isAddingToBag || added || bagIsFull}
                 loading={isAddingToBag}
                 size="large"
                 onPress={onAddToBag}
               >
-                {added ? "Added" : "Add to bag"}
+                {addText}
               </Button>
             </Box>
             <Spacer mr={1} />

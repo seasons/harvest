@@ -31,5 +31,5 @@ export const EmptyBagItem: React.FC<{ index: number; navigation: any }> = ({ ind
 const EmptyBagItemContainer = styled(Box)`
   border-radius: 8px;
   overflow: hidden;
-  height: 270;
+  height: 216;
 `

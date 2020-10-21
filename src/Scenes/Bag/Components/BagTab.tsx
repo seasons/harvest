@@ -168,7 +168,6 @@ export const BagTab: React.FC<{
       {paddedItems?.map((bagItem, index) => {
         return bagItem?.productID?.length > 0 ? (
           <Box key={bagItem.productID} px={2} pt={hasActiveReservation ? 0 : 2}>
-            <Spacer mb={3} />
             <BagItem
               removeItemFromBag={deleteBagItem}
               removeFromBagAndSaveItem={removeFromBagAndSaveItem}
@@ -185,6 +184,7 @@ export const BagTab: React.FC<{
           </Box>
         )
       })}
+      {hasActiveReservation && <Spacer mb={1} />}
       <Separator />
       <Spacer mb={1} />
       {!hasActiveReservation && items && items.length < 3 && (
