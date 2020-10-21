@@ -121,6 +121,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
 
               <Flex flexDirection="row" alignItems="center">
                 <ColoredDot reservable={reservable} />
+                <Spacer mr={1} />
                 {!!reservable ? (
                   <>
                     {!hasActiveReservation ? (
