@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { HomePageSectionType, Rating, QuestionType } from "./globalTypes";
+import { HomePageSectionType, Rating, QuestionType, CustomerStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: Homepage
@@ -117,6 +117,7 @@ export interface Homepage_reservationFeedback {
 export interface Homepage_me_customer {
   __typename: "Customer";
   id: string;
+  status: CustomerStatus | null;
   shouldRequestFeedback: boolean | null;
 }
 
