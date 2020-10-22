@@ -15,7 +15,6 @@ interface PlanButtonProps {
 }
 
 export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor, coupon }) => {
-  console.log("coupon", coupon)
   const { price, itemCount } = plan
   const finalPrice = calcFinalPrice(price, coupon)
   const PriceText = ({ originalPrice, finalPrice }) => {

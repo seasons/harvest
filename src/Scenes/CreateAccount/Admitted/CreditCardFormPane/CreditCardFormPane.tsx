@@ -98,8 +98,6 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit
     setCvc(cvc)
   }
 
-  console.log("CC coupon", coupon)
-
   const handleOnSubmit = async () => {
     Keyboard.dismiss()
     if (isMutating) {
