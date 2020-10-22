@@ -15,7 +15,6 @@
 @interface STPToken()
 @property (nonatomic, nonnull) NSString *tokenId;
 @property (nonatomic) BOOL livemode;
-@property (nonatomic) STPTokenType type;
 @property (nonatomic, nullable) STPCard *card;
 @property (nonatomic, nullable) STPBankAccount *bankAccount;
 @property (nonatomic, nullable) NSDate *created;
@@ -63,12 +62,8 @@
         return NO;
     }
 
-    return self.livemode == object.livemode &&
-    self.type == object.type &&
-    [self.tokenId isEqualToString:object.tokenId] &&
-    [self.created isEqualToDate:object.created] &&
-    [self.card isEqual:object.card] &&
-    [self.created isEqualToDate:object.created];
+    return self.livemode == object.livemode && [self.tokenId isEqualToString:object.tokenId] && [self.created isEqualToDate:object.created] &&
+           [self.card isEqual:object.card] && [self.tokenId isEqualToString:object.tokenId] && [self.created isEqualToDate:object.created];
 }
 
 #pragma mark - STPSourceProtocol
@@ -88,8 +83,7 @@
     // required fields
     NSString *stripeId = [dict stp_stringForKey:@"id"];
     NSDate *created = [dict stp_dateForKey:@"created"];
-    NSString *rawType = [dict stp_stringForKey:@"type"];
-    if (!stripeId || !created || !dict[@"livemode"] || ![[self class] _isValidRawTokenType:rawType]) {
+    if (!stripeId || !created || !dict[@"livemode"]) {
         return nil;
     }
     
@@ -97,7 +91,6 @@
     token.tokenId = stripeId;
     token.livemode = [dict stp_boolForKey:@"livemode" or:YES];
     token.created = created;
-    token.type = [[self class] _tokenTypeForString:rawType];
     
     NSDictionary *rawCard = [dict stp_dictionaryForKey:@"card"];
     token.card = [STPCard decodedObjectFromAPIResponse:rawCard];
@@ -107,37 +100,6 @@
 
     token.allResponseFields = dict;
     return token;
-}
-
-#pragma mark - STPTokenType
-
-+ (BOOL)_isValidRawTokenType:(NSString *)rawType {
-    if ([rawType isEqualToString:@"account"] ||
-        [rawType isEqualToString:@"bank_account"] ||
-        [rawType isEqualToString:@"card"] ||
-        [rawType isEqualToString:@"pii"] ||
-        [rawType isEqualToString:@"cvc_update"]
-        ) {
-        return YES;
-    }
-    return NO;
-}
-
-+ (STPTokenType)_tokenTypeForString:(NSString *)rawType {
-    if ([rawType isEqualToString:@"account"]) {
-        return STPTokenTypeAccount;
-    } else if ([rawType isEqualToString:@"bank_account"]) {
-        return STPTokenTypeBankAccount;
-    } else if ([rawType isEqualToString:@"card"]) {
-        return STPTokenTypeCard;
-    } else if ([rawType isEqualToString:@"pii"]) {
-        return STPTokenTypePII;
-    } else if ([rawType isEqualToString:@"cvc_update"]) {
-        return STPTokenTypeCVCUpdate;
-    }
-
-    // default return STPTokenTypeAccount (this matches other default enum behavior)
-    return STPTokenTypeAccount;
 }
 
 @end

@@ -26,7 +26,8 @@
                         completion:^(NSString *__unused newString, NSRange tagRange) {
                             if (tagRange.location == NSNotFound) {
                                 tagsToRange[tag] = [NSValue valueWithRange:tagRange];
-                            } else {
+                            }
+                            else {
                                 NSRange interiorRange = NSMakeRange(tagRange.location + tag.length + 2, 
                                                             tagRange.length);
                                 interiorRangesToTags[[NSValue valueWithRange:interiorRange]] = tag;
@@ -41,9 +42,11 @@
         
         if (range1.location < range2.location) {
             return NSOrderedAscending;
-        } else if (range1.location > range2.location) {
+        }
+        else if (range1.location > range2.location) {
             return NSOrderedDescending;
-        } else {
+        }
+        else {
             return NSOrderedSame;
         }
     }];
@@ -110,27 +113,5 @@
     completion(finalString, finalTagRange);
 }
 
-+ (NSString *)expirationDateStringFromString:(NSString *)string {
-    // This code was adapted from Stripe.js
-    static dispatch_once_t onceToken;
-    static NSRegularExpression *regex = nil;
-    dispatch_once(&onceToken, ^{
-        regex = [[NSRegularExpression alloc] initWithPattern:@"^(\\d{2}\\D{1,3})(\\d{1,4})?"
-                                                     options:0
-                                                       error:NULL];
-    });
-    NSTextCheckingResult *result = [[regex matchesInString:string options:0 range:NSMakeRange(0, string.length)] firstObject];
-    if (result && [result numberOfRanges] > 1 && [result rangeAtIndex:2].length == 4) {
-        // If a 4-digit year was pasted, shorten it to the last 2 digits
-        NSRange range = [result rangeAtIndex:2];
-        range.length = 2;
-        range.location = range.location + 2;
-        NSString *month = [string substringWithRange:[result rangeAtIndex:1]];
-        NSString *year = [string substringWithRange:range];
-        return [NSString stringWithFormat:@"%@%@", month, year];
-    }
-    
-    return string;
-}
 
 @end

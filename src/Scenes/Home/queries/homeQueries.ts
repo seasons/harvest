@@ -152,7 +152,7 @@ export const GET_HOMEPAGE = gql`
       first: 8
       category: "tops"
       orderBy: publishedAt_DESC
-      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
+      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }, { tags_none: { name: "Vintage" } }] }
     ) {
       ...HomePageProduct
     }
@@ -160,7 +160,7 @@ export const GET_HOMEPAGE = gql`
       first: 8
       category: "bottoms"
       orderBy: publishedAt_DESC
-      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
+      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }, { tags_none: { name: "Vintage" } }] }
     ) {
       ...HomePageProduct
     }

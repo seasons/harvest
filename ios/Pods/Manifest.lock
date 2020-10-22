@@ -348,10 +348,10 @@ PODS:
   - Sentry (4.4.3):
     - Sentry/Core (= 4.4.3)
   - Sentry/Core (4.4.3)
-  - Stripe (19.4.0)
-  - tipsi-stripe (8.0.0-beta.11):
+  - Stripe (14.0.1)
+  - tipsi-stripe (7.5.1):
     - React
-    - Stripe (>= 19.0.1)
+    - Stripe (~> 14.0.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -611,8 +611,8 @@ SPEC CHECKSUMS:
   Segment-GoogleAnalytics: 3252a00441ea31fef75c16cc7794f4bf3765c7ba
   Segment-Mixpanel: 18c35e15fa95ee61ee2254577cf2c968db42e68a
   Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390
-  Stripe: 92f1c73a9dbd3c54277ed06a1fea6e08f20414c6
-  tipsi-stripe: b0655ee97dfd4b865d178d81b53ff54b95348701
+  Stripe: 4305b646743612854819fb5d5cf67aaeb93577c0
+  tipsi-stripe: 61c247493a58d7e8e0bf6ee6b014271f473d2b11
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
 
 PODFILE CHECKSUM: c7e2077cb7d54c507ae3942b4d89c56271cb5a0c

@@ -32,11 +32,6 @@ typedef NS_ENUM(NSInteger, STPSourceRedirectStatus) {
     STPSourceRedirectStatusFailed,
 
     /**
-     The redirect should not be used.
-     */
-    STPSourceRedirectStatusNotRequired,
-    
-    /**
      The state of the redirect is unknown.
      */
     STPSourceRedirectStatusUnknown

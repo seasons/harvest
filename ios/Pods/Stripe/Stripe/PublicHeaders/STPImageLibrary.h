@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "STPFPXBankBrand.h"
 #import "STPCardBrand.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -44,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)jcbCardImage;
 
 /**
- An icon representing Mastercard.
+ An icon representing MasterCard.
  */
 + (UIImage *)masterCardCardImage;
 
@@ -67,21 +66,6 @@ NS_ASSUME_NONNULL_BEGIN
  This returns the appropriate icon for the specified card brand.
  */
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)brand;
-
-/**
-This returns the appropriate icon for the specified bank brand.
-*/
-+ (UIImage *)brandImageForFPXBankBrand:(STPFPXBankBrand)brand;
-
-/**
- An icon representing FPX.
- */
-+ (UIImage *)fpxLogo;
-
-/**
- A large branding image for FPX.
- */
-+ (UIImage *)largeFpxLogo;
 
 /**
  This returns the appropriate icon for the specified card brand as a 

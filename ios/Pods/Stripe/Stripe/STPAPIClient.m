@@ -9,40 +9,26 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
-#import <Stripe/Stripe3DS2.h>
-
 #import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient+Private.h"
-#import "STPAPIClient+Beta.h"
 
 #import "NSBundle+Stripe_AppName.h"
 #import "NSError+Stripe.h"
 #import "NSMutableURLRequest+Stripe.h"
-#import "STP3DS2AuthenticateResponse.h"
 #import "STPAnalyticsClient.h"
 #import "STPAPIRequest.h"
 #import "STPBankAccount.h"
 #import "STPCard.h"
 #import "STPDispatchFunctions.h"
-#import "STPEmptyStripeResponse.h"
 #import "STPEphemeralKey.h"
 #import "STPFormEncoder.h"
-#import "STPFPXBankStatusResponse.h"
 #import "STPGenericStripeObject.h"
-#import "STPAppInfo.h"
 #import "STPMultipartFormDataEncoder.h"
 #import "STPMultipartFormDataPart.h"
 #import "STPPaymentConfiguration.h"
-#import "STPPaymentMethodListDeserializer.h"
-#import "STPPaymentMethodParams.h"
-#import "STPPaymentMethod+Private.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentParams.h"
-#import "STPPaymentIntentParams+Utilities.h"
-#import "STPSetupIntent+Private.h"
-#import "STPSetupIntentConfirmParams.h"
-#import "STPSetupIntentConfirmParams+Utilities.h"
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
 #import "STPSourceParams+Private.h"
@@ -51,63 +37,50 @@
 #import "STPToken.h"
 #import "UIImage+Stripe.h"
 
+#if __has_include("Fabric.h")
+#import "Fabric+FABKits.h"
+#import "FABKitProtocol.h"
+#endif
+
 #ifdef STP_STATIC_LIBRARY_BUILD
 #import "STPCategoryLoader.h"
 #endif
 
-static NSString * const APIVersion = @"2019-05-16";
+static NSString * const APIVersion = @"2015-10-12";
 static NSString * const APIBaseURL = @"https://api.stripe.com/v1";
 static NSString * const APIEndpointToken = @"tokens";
 static NSString * const APIEndpointSources = @"sources";
 static NSString * const APIEndpointCustomers = @"customers";
 static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 static NSString * const APIEndpointPaymentIntents = @"payment_intents";
-static NSString * const APIEndpointSetupIntents = @"setup_intents";
-static NSString * const APIEndpointPaymentMethods = @"payment_methods";
-static NSString * const APIEndpoint3DS2 = @"3ds2";
-static NSString * const APIEndpointFPXStatus = @"fpx/bank_statuses";
 
 #pragma mark - Stripe
 
 @implementation Stripe
 
-static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
-static NSString *_defaultPublishableKey;
-static BOOL _advancedFraudSignalsEnabled;
-
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
-    _defaultPublishableKey = [publishableKey copy];
+    [STPPaymentConfiguration sharedConfiguration].publishableKey = publishableKey;
 }
 
 + (NSString *)defaultPublishableKey {
-    return _defaultPublishableKey;
-}
-
-+ (void)setAdvancedFraudSignalsEnabled:(BOOL)enabled {
-    [self advancedFraudSignalsEnabled];
-    _advancedFraudSignalsEnabled = enabled;
-}
-
-+ (BOOL)advancedFraudSignalsEnabled {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _advancedFraudSignalsEnabled = YES;
-    });
-    return _advancedFraudSignalsEnabled;
+    return [STPPaymentConfiguration sharedConfiguration].publishableKey;
 }
 
 @end
 
 #pragma mark - STPAPIClient
 
+#if __has_include("Fabric.h")
+@interface STPAPIClient ()<FABKit>
+#else
 @interface STPAPIClient()
+#endif
 
 @property (nonatomic, strong, readwrite) NSMutableDictionary<NSString *,NSObject *> *sourcePollers;
 @property (nonatomic, strong, readwrite) dispatch_queue_t sourcePollersQueue;
+@property (nonatomic, strong, readwrite) NSString *apiKey;
 
 // See STPAPIClient+Private.h
-@property (nonatomic) NSSet<NSString *> *betas;
-
 
 @end
 
@@ -118,6 +91,7 @@ static BOOL _advancedFraudSignalsEnabled;
 }
 
 + (void)initialize {
+    [STPAnalyticsClient initializeIfNeeded];
     [STPTelemetryClient sharedInstance];
 #ifdef STP_STATIC_LIBRARY_BUILD
     [STPCategoryLoader loadCategories];
@@ -132,74 +106,57 @@ static BOOL _advancedFraudSignalsEnabled;
 }
 
 - (instancetype)init {
+    return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration]];
+}
+
+- (instancetype)initWithPublishableKey:(NSString *)publishableKey {
+    STPPaymentConfiguration *config = [[STPPaymentConfiguration alloc] init];
+    config.publishableKey = [publishableKey copy];
+    return [self initWithConfiguration:config];
+}
+
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration {
+    NSString *publishableKey = [configuration.publishableKey copy];
+    if (publishableKey) {
+        [self.class validateKey:publishableKey];
+    }
     self = [super init];
     if (self) {
+        _apiKey = publishableKey;
         _apiURL = [NSURL URLWithString:APIBaseURL];
-        _configuration = [STPPaymentConfiguration sharedConfiguration];
+        _configuration = configuration;
+        _stripeAccount = configuration.stripeAccount;
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
-        _urlSession = [NSURLSession sessionWithConfiguration:[self.class sharedUrlSessionConfiguration]];
-        _publishableKey = [Stripe defaultPublishableKey];
+        _urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     }
     return self;
 }
 
-- (instancetype)initWithPublishableKey:(NSString *)publishableKey {
-    STPAPIClient *apiClient = [self init];
-    apiClient.publishableKey = publishableKey;
-    return apiClient;
-}
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration {
-    // For legacy reasons, we'll support this initializer and use the deprecated configuration.{publishableKey, stripeAccount} properties
-    STPAPIClient *apiClient = [self init];
-    apiClient.publishableKey = configuration.publishableKey;
-    apiClient.stripeAccount = configuration.stripeAccount;
-    return apiClient;
-}
-#pragma clang diagnostic pop
-
-+ (NSURLSessionConfiguration *)sharedUrlSessionConfiguration {
-    static NSURLSessionConfiguration  *STPSharedURLSessionConfiguration;
-    static dispatch_once_t configToken;
-    dispatch_once(&configToken, ^{
-        STPSharedURLSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    });
-    
-    return STPSharedURLSessionConfiguration;
-}
-
-- (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url additionalHeaders:(NSDictionary<NSString *, NSString *> *)additionalHeaders {
+- (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    NSMutableDictionary *headers = [self.defaultHeaders mutableCopy];
-    [headers addEntriesFromDictionary:additionalHeaders ?: @{}]; // additionalHeaders can overwrite defaultHeaders
-    [headers enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, __unused BOOL * _Nonnull stop) {
+    [[self defaultHeaders] enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, __unused BOOL * _Nonnull stop) {
         [request setValue:obj forHTTPHeaderField:key];
     }];
     return request;
 }
 
-/// Headers common to all API requests for a given API Client.
 - (NSDictionary<NSString *, NSString *> *)defaultHeaders {
-    NSMutableDictionary *defaultHeaders = [NSMutableDictionary new];
-    defaultHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetailsWithAppInfo:self.appInfo];
-    NSString *stripeVersion = APIVersion;
-    if (self.betas && self.betas.count > 0) {
-        for (NSString *betaHeader in self.betas) {
-            stripeVersion = [stripeVersion stringByAppendingString:[NSString stringWithFormat:@"; %@", betaHeader]];
-        }
-    }
-    defaultHeaders[@"Stripe-Version"] = stripeVersion;
-    defaultHeaders[@"Stripe-Account"] = self.stripeAccount;
-    [defaultHeaders addEntriesFromDictionary:[self authorizationHeaderUsingEphemeralKey:nil]];
-    return [defaultHeaders copy];
+    NSMutableDictionary *additionalHeaders = [NSMutableDictionary new];
+    additionalHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetails];
+    additionalHeaders[@"Stripe-Version"] = APIVersion;
+    additionalHeaders[@"Authorization"] = [@"Bearer " stringByAppendingString:self.apiKey ?: @""];
+    additionalHeaders[@"Stripe-Account"] = self.stripeAccount;
+    return [additionalHeaders copy];
 }
 
 - (void)setPublishableKey:(NSString *)publishableKey {
-    [self.class validateKey:publishableKey];
-    _publishableKey = [publishableKey copy];
+    self.configuration.publishableKey = [publishableKey copy];
+    self.apiKey = [publishableKey copy];
+}
+
+- (NSString *)publishableKey {
+    return self.configuration.publishableKey;
 }
 
 - (void)createTokenWithParameters:(NSDictionary *)parameters
@@ -224,10 +181,10 @@ static BOOL _advancedFraudSignalsEnabled;
 #pragma clang diagnostic ignored "-Wunused-variable"
 + (void)validateKey:(NSString *)publishableKey {
     NSCAssert(publishableKey != nil && ![publishableKey isEqualToString:@""],
-              @"You must use a valid publishable key. For more info, see https://stripe.com/docs/keys");
+              @"You must use a valid publishable key to create a token. For more info, see https://stripe.com/docs/stripe.js");
     BOOL secretKey = [publishableKey hasPrefix:@"sk_"];
     NSCAssert(!secretKey,
-              @"You are using a secret key. Use a publishable key instead. For more info, see https://stripe.com/docs/keys");
+              @"You are using a secret key to create a token, instead of the publishable one. For more info, see https://stripe.com/docs/stripe.js");
 #ifndef DEBUG
     if ([publishableKey.lowercaseString hasPrefix:@"pk_test"]) {
         FAUXPAS_IGNORED_IN_METHOD(NSLogUsed);
@@ -240,7 +197,7 @@ static BOOL _advancedFraudSignalsEnabled;
 }
 #pragma clang diagnostic pop
 
-+ (NSString *)stripeUserAgentDetailsWithAppInfo:(nullable STPAppInfo *)appInfo {
++ (NSString *)stripeUserAgentDetails {
     NSMutableDictionary *details = [@{
         @"lang": @"objective-c",
         @"bindings_version": STPSDKVersion,
@@ -264,26 +221,39 @@ static BOOL _advancedFraudSignalsEnabled;
     if (vendorIdentifier) {
         details[@"vendor_identifier"] = vendorIdentifier;
     }
-    if (appInfo) {
-        details[@"name"] = appInfo.name;
-        details[@"partner_id"] = appInfo.partnerId;
-        if (appInfo.version) {
-            details[@"version"] = appInfo.version;
-        }
-        if (appInfo.url) {
-            details[@"url"] = appInfo.url;
-        }
-    }
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[details copy] options:(NSJSONWritingOptions)kNilOptions error:NULL] encoding:NSUTF8StringEncoding];
 }
 
-- (NSDictionary<NSString *, NSString *> *)authorizationHeaderUsingEphemeralKey:(STPEphemeralKey *)ephemeralKey {
-    NSString *authorizationBearer = self.publishableKey ?: @"";
-    if (ephemeralKey != nil) {
-        authorizationBearer = ephemeralKey.secret;
-    }
-    return @{@"Authorization": [@"Bearer " stringByAppendingString:authorizationBearer]};
+#pragma mark Fabric
+
+#if __has_include("Fabric.h")
+
++ (NSString *)bundleIdentifier {
+    return @"com.stripe.stripe-ios";
 }
+
++ (NSString *)kitDisplayVersion {
+    return STPSDKVersion;
+}
+
++ (void)initializeIfNeeded {
+    Class fabric = NSClassFromString(@"Fabric");
+    if (fabric) {
+        // The app must be using Fabric, as it exists at runtime. We fetch our default publishable key from Fabric.
+        NSDictionary *fabricConfiguration = [fabric configurationDictionaryForKitClass:[STPAPIClient class]];
+        NSString *publishableKey = fabricConfiguration[@"publishable"];
+        if (!publishableKey) {
+            NSLog(@"Configuration dictionary returned by Fabric was nil, or doesn't have publishableKey. Can't initialize Stripe.");
+            return;
+        }
+        [self validateKey:publishableKey];
+        [Stripe setDefaultPublishableKey:publishableKey];
+    } else {
+        NSCAssert(fabric, @"initializeIfNeeded method called from a project that doesn't have Fabric.");
+    }
+}
+
+#endif
 
 @end
 
@@ -309,15 +279,9 @@ static BOOL _advancedFraudSignalsEnabled;
     NSMutableDictionary *params = [@{@"pii": @{ @"personal_id_number": pii }} mutableCopy];
     [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
     [self createTokenWithParameters:params completion:completion];
-    [[STPTelemetryClient sharedInstance] sendTelemetryData];}
-
-- (void)createTokenWithSSNLast4:(NSString *)ssnLast4 completion:(STPTokenCompletionBlock)completion {
-    NSMutableDictionary *params = [@{@"pii": @{ @"ssn_last_4": ssnLast4 }} mutableCopy];
-    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
-    [self createTokenWithParameters:params completion:completion];
     [[STPTelemetryClient sharedInstance] sendTelemetryData];
 }
-    
+
 @end
 
 #pragma mark - Connect Accounts
@@ -374,7 +338,7 @@ static BOOL _advancedFraudSignalsEnabled;
     NSString *boundary = [STPMultipartFormDataEncoder generateBoundary];
     NSData *data = [STPMultipartFormDataEncoder multipartFormDataForParts:@[purposePart, imagePart] boundary:boundary];
 
-    NSMutableURLRequest *request = [self configuredRequestForURL:[NSURL URLWithString:FileUploadURL] additionalHeaders:nil];
+    NSMutableURLRequest *request = [self configuredRequestForURL:[NSURL URLWithString:FileUploadURL]];
     [request setHTTPMethod:@"POST"];
     [request stp_setMultipartFormData:data boundary:boundary];
 
@@ -414,13 +378,6 @@ static BOOL _advancedFraudSignalsEnabled;
     [[STPTelemetryClient sharedInstance] sendTelemetryData];
 }
 
-- (void)createTokenForCVCUpdate:(NSString *)cvc completion:(nullable STPTokenCompletionBlock)completion {
-    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:@{@"cvc": cvc} forKey:@"cvc_update"];
-    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
-    [self createTokenWithParameters:params completion:completion];
-    [[STPTelemetryClient sharedInstance] sendTelemetryData];
-}
-
 @end
 
 #pragma mark - Apple Pay
@@ -437,12 +394,7 @@ static BOOL _advancedFraudSignalsEnabled;
     if (paymentRequest.merchantIdentifier == nil) {
         return NO;
     }
-    // "In versions of iOS prior to version 12.0 and watchOS prior to version 5.0, the amount of the grand total must be greater than zero."
-    if (@available(iOS 12, *)) {
-        return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] >= 0;
-    } else {
-        return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] > 0;
-    }
+    return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] > 0;
 }
 
 + (NSArray<NSString *> *)supportedPKPaymentNetworks {
@@ -450,8 +402,7 @@ static BOOL _advancedFraudSignalsEnabled;
     if ((&PKPaymentNetworkDiscover) != NULL) {
         supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
     }
-    
-    return [supportedNetworks arrayByAddingObjectsFromArray:self.additionalEnabledApplePayNetworks];
+    return supportedNetworks;
 }
 
 + (BOOL)deviceSupportsApplePay {
@@ -471,42 +422,7 @@ static BOOL _advancedFraudSignalsEnabled;
     [paymentRequest setMerchantCapabilities:PKMerchantCapability3DS];
     [paymentRequest setCountryCode:countryCode.uppercaseString];
     [paymentRequest setCurrencyCode:currencyCode.uppercaseString];
-    if (@available(iOS 11, *)) {
-        paymentRequest.requiredBillingContactFields = [NSSet setWithArray:@[PKContactFieldPostalAddress]];
-    } else {
-#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
-        paymentRequest.requiredBillingAddressFields = PKAddressFieldPostalAddress;
-#endif
-    }
     return paymentRequest;
-}
-
-+ (void)setJCBPaymentNetworkSupported:(BOOL)JCBPaymentNetworkSupported {
-    if (@available(iOS 10.1, *)) {
-        if (JCBPaymentNetworkSupported && ![self.additionalEnabledApplePayNetworks containsObject:PKPaymentNetworkJCB]) {
-            self.additionalEnabledApplePayNetworks = [self.additionalEnabledApplePayNetworks arrayByAddingObject:PKPaymentNetworkJCB];
-        } else if (!JCBPaymentNetworkSupported) {
-            NSMutableArray<PKPaymentNetwork> *updatedNetworks = [self.additionalEnabledApplePayNetworks mutableCopy];
-            [updatedNetworks removeObject:PKPaymentNetworkJCB];
-            self.additionalEnabledApplePayNetworks = updatedNetworks;
-        }
-    }
-}
-
-+ (BOOL)isJCBPaymentNetworkSupported {
-    if (@available(iOS 10.1, *)) {
-        return [self.additionalEnabledApplePayNetworks containsObject:PKPaymentNetworkJCB];
-    } else {
-        return NO;
-    }
-}
-
-+ (NSArray<PKPaymentNetwork> *)additionalEnabledApplePayNetworks {
-    return _additionalEnabledApplePayNetworks ?: @[];
-}
-
-+ (void)setAdditionalEnabledApplePayNetworks:(NSArray<PKPaymentNetwork> *)additionalEnabledApplePayNetworks {
-    _additionalEnabledApplePayNetworks = [additionalEnabledApplePayNetworks copy];
 }
 
 @end
@@ -583,11 +499,17 @@ static BOOL _advancedFraudSignalsEnabled;
 
 @implementation STPAPIClient (Customers)
 
-- (void)retrieveCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPCustomerCompletionBlock)completion {
++ (STPAPIClient *)apiClientWithEphemeralKey:(STPEphemeralKey *)key {
+    STPAPIClient *client = [[self alloc] init];
+    client.apiKey = key.secret;
+    return client;
+}
+
++ (void)retrieveCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPCustomerCompletionBlock)completion {
+    STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointCustomers, ephemeralKey.customerID];
-    [STPAPIRequest<STPCustomer *> getWithAPIClient:self
+    [STPAPIRequest<STPCustomer *> getWithAPIClient:client
                                           endpoint:endpoint
-                                 additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                         parameters:nil
                                       deserializer:[STPCustomer new]
                                         completion:^(STPCustomer *object, __unused NSHTTPURLResponse *response, NSError *error) {
@@ -595,13 +517,13 @@ static BOOL _advancedFraudSignalsEnabled;
                                         }];
 }
 
-- (void)updateCustomerWithParameters:(NSDictionary *)parameters
++ (void)updateCustomerWithParameters:(NSDictionary *)parameters
                             usingKey:(STPEphemeralKey *)ephemeralKey
                           completion:(STPCustomerCompletionBlock)completion {
+    STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointCustomers, ephemeralKey.customerID];
-    [STPAPIRequest<STPCustomer *> postWithAPIClient:self
+    [STPAPIRequest<STPCustomer *> postWithAPIClient:client
                                            endpoint:endpoint
-                                  additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                          parameters:parameters
                                        deserializer:[STPCustomer new]
                                          completion:^(STPCustomer *object, __unused NSHTTPURLResponse *response, NSError *error) {
@@ -609,13 +531,13 @@ static BOOL _advancedFraudSignalsEnabled;
                                          }];
 }
 
-- (void)addSource:(NSString *)sourceID
++ (void)addSource:(NSString *)sourceID
 toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
-       completion:(STPSourceProtocolCompletionBlock)completion { FAUXPAS_IGNORED(UnusedMethod)
+       completion:(STPSourceProtocolCompletionBlock)completion {
+    STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@", APIEndpointCustomers, ephemeralKey.customerID, APIEndpointSources];
-    [STPAPIRequest<STPSourceProtocol> postWithAPIClient:self
+    [STPAPIRequest<STPSourceProtocol> postWithAPIClient:client
                                                endpoint:endpoint
-                                      additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                              parameters:@{@"source": sourceID}
                                           deserializers:@[[STPCard new], [STPSource new]]
                                              completion:^(id object, __unused NSHTTPURLResponse *response, NSError *error) {
@@ -623,102 +545,16 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                              }];
 }
 
-- (void)deleteSource:(NSString *)sourceID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
++ (void)deleteSource:(NSString *)sourceID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion {
+    STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@/%@", APIEndpointCustomers, ephemeralKey.customerID, APIEndpointSources, sourceID];
-    [STPAPIRequest<STPSourceProtocol> deleteWithAPIClient:self
+    [STPAPIRequest<STPSourceProtocol> deleteWithAPIClient:client
                                                  endpoint:endpoint
-                                        additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                                parameters:nil
                                             deserializers:@[[STPGenericStripeObject new]]
                                                completion:^(__unused STPGenericStripeObject *object, __unused NSHTTPURLResponse *response, NSError *error) {
                                                    completion(error);
                                                }];
-}
-
-- (void)attachPaymentMethod:(NSString *)paymentMethodID toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion {
-    NSString *endpoint = [NSString stringWithFormat:@"%@/%@/attach", APIEndpointPaymentMethods, paymentMethodID];
-    [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:self
-                                                endpoint:endpoint
-                                       additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
-                                              parameters:@{@"customer": ephemeralKey.customerID}
-                                            deserializer:[STPPaymentMethod new]
-                                              completion:^(__unused STPPaymentMethod *paymentMethod, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                  completion(error);
-                                              }];
-}
-
-- (void)detachPaymentMethod:(NSString *)paymentMethodID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion {
-    NSString *endpoint = [NSString stringWithFormat:@"%@/%@/detach", APIEndpointPaymentMethods, paymentMethodID];
-    [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:self
-                                                endpoint:endpoint
-                                       additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
-                                              parameters:nil
-                                            deserializer:[STPPaymentMethod new]
-                                              completion:^(__unused STPPaymentMethod *paymentMethod, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                  completion(error);
-                                              }];
-}
-
-- (void)listPaymentMethodsForCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPPaymentMethodsCompletionBlock)completion {
-    NSDictionary *params = @{
-                             @"customer": ephemeralKey.customerID,
-                             @"type": [STPPaymentMethod stringFromType:STPPaymentMethodTypeCard],
-                             };
-    [STPAPIRequest<STPPaymentMethodListDeserializer *> getWithAPIClient:self
-                                                               endpoint:APIEndpointPaymentMethods
-                                                      additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
-                                                             parameters:params
-                                                           deserializer:[STPPaymentMethodListDeserializer new]
-                                                             completion:^(STPPaymentMethodListDeserializer *deserializer, __unused NSHTTPURLResponse *response, NSError *error) {
-        completion(deserializer.paymentMethods, error);
-    }];
-}
-
-@end
-
-#pragma mark - ThreeDS2
-
-@implementation STPAPIClient (ThreeDS2)
-
-- (void)authenticate3DS2:(STDSAuthenticationRequestParameters *)authRequestParams
-        sourceIdentifier:(NSString *)sourceID
-               returnURL:(nullable NSString *)returnURLString
-              maxTimeout:(NSInteger)maxTimeout
-              completion:(STP3DS2AuthenticateCompletionBlock)completion {
-    NSString *endpoint = [NSString stringWithFormat:@"%@/authenticate", APIEndpoint3DS2];
-
-    NSMutableDictionary *appParams = [[STDSJSONEncoder dictionaryForObject:authRequestParams] mutableCopy];
-    appParams[@"deviceRenderOptions"] = @{@"sdkInterface": @"03",
-                                          @"sdkUiType": @[@"01", @"02", @"03", @"04", @"05"],
-                                          };
-    appParams[@"sdkMaxTimeout"] = [NSString stringWithFormat:@"%02ld", (long)maxTimeout];
-    NSData *appData = [NSJSONSerialization dataWithJSONObject:appParams options:NSJSONWritingPrettyPrinted error:NULL];
-
-    NSMutableDictionary *params = [@{@"app": [[NSString alloc] initWithData:appData encoding:NSUTF8StringEncoding],
-                                    @"source": sourceID,
-                                     } mutableCopy];
-    if (returnURLString != nil) {
-        params[@"fallback_return_url"] = returnURLString;
-    }
-
-     [STPAPIRequest<STP3DS2AuthenticateResponse *> postWithAPIClient:self
-                                                            endpoint:endpoint
-                                                          parameters:[params copy]
-                                                        deserializer:[STP3DS2AuthenticateResponse new]
-                                                          completion:^(STP3DS2AuthenticateResponse *authenticateResponse, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                              completion(authenticateResponse, error);
-                                                          }];
-}
-
-- (void)complete3DS2AuthenticationForSource:(NSString *)sourceID completion:(STPBooleanSuccessBlock)completion {
-
-    [STPAPIRequest<STPEmptyStripeResponse *> postWithAPIClient:self
-                                                      endpoint:[NSString stringWithFormat:@"%@/challenge_complete", APIEndpoint3DS2]
-                                                    parameters:@{ @"source": sourceID }
-                                                  deserializer:[STPEmptyStripeResponse new]
-                                                    completion:^(__unused STPEmptyStripeResponse *emptyResponse, NSHTTPURLResponse *response, NSError *responseError) {
-                                                        completion(response.statusCode == 200, responseError);
-                                                    }];
 }
 
 @end
@@ -729,30 +565,15 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 
 - (void)retrievePaymentIntentWithClientSecret:(NSString *)secret
                                    completion:(STPPaymentIntentCompletionBlock)completion {
-    [self retrievePaymentIntentWithClientSecret:secret
-                                         expand:nil
-                                     completion:completion];
-}
-
-- (void)retrievePaymentIntentWithClientSecret:(NSString *)secret
-                                       expand:(nullable NSArray<NSString *> *)expand
-                                   completion:(STPPaymentIntentCompletionBlock)completion {
     NSCAssert(secret != nil, @"'secret' is required to retrieve a PaymentIntent");
-    NSCAssert([STPPaymentIntentParams isClientSecretValid:secret], @"`secret` format does not match expected client secret formatting.");
     NSCAssert(completion != nil, @"'completion' is required to use the PaymentIntent that is retrieved");
     NSString *identifier = [STPPaymentIntent idFromClientSecret:secret];
 
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointPaymentIntents, identifier];
 
-    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-    parameters[@"client_secret"] = secret;
-    if (expand.count > 0) {
-        parameters[@"expand"] = expand;
-    }
-
     [STPAPIRequest<STPPaymentIntent *> getWithAPIClient:self
                                                endpoint:endpoint
-                                             parameters:[parameters copy]
+                                             parameters:@{ @"client_secret": secret }
                                            deserializer:[STPPaymentIntent new]
                                              completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *error) {
                                                  completion(paymentIntent, error);
@@ -761,21 +582,11 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 
 - (void)confirmPaymentIntentWithParams:(STPPaymentIntentParams *)paymentIntentParams
                             completion:(STPPaymentIntentCompletionBlock)completion {
-    [self confirmPaymentIntentWithParams:paymentIntentParams
-                                  expand:nil
-                              completion:completion];
-}
-
-- (void)confirmPaymentIntentWithParams:(STPPaymentIntentParams *)paymentIntentParams
-                                expand:(nullable NSArray<NSString *> *)expand
-                            completion:(STPPaymentIntentCompletionBlock)completion {
     NSCAssert(paymentIntentParams.clientSecret != nil, @"'clientSecret' is required to confirm a PaymentIntent");
-    NSCAssert([STPPaymentIntentParams isClientSecretValid:paymentIntentParams.clientSecret], @"`paymentIntentParams.clientSecret` format does not match expected client secret formatting.");
-
     NSString *identifier = paymentIntentParams.stripeId;
-    NSString *type = paymentIntentParams.paymentMethodParams.rawTypeString ?: paymentIntentParams.sourceParams.rawTypeString;
+    NSString *sourceType = [STPSource stringFromType:paymentIntentParams.sourceParams.type];
     [[STPAnalyticsClient sharedClient] logPaymentIntentConfirmationAttemptWithConfiguration:self.configuration
-                                                                          paymentMethodType:type];
+                                                                                 sourceType:sourceType];
 
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointPaymentIntents, identifier];
 
@@ -785,9 +596,6 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
         [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:sourceParamsDict];
         params[@"source_data"] = [sourceParamsDict copy];
     }
-    if (expand.count > 0) {
-        params[@"expand"] = expand;
-    }
 
     [STPAPIRequest<STPPaymentIntent *> postWithAPIClient:self
                                                 endpoint:endpoint
@@ -796,108 +604,6 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                               completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *error) {
                                                   completion(paymentIntent, error);
                                               }];
-}
-
-- (void)cancel3DSAuthenticationForPaymentIntent:(NSString *)paymentIntentID
-                                     withSource:(NSString *)sourceID
-                                     completion:(STPPaymentIntentCompletionBlock)completion {
-    [STPAPIRequest<STPPaymentIntent *> postWithAPIClient:self
-                                                endpoint:[NSString stringWithFormat:@"%@/%@/source_cancel", APIEndpointPaymentIntents, paymentIntentID]
-                                              parameters:@{ @"source": sourceID }
-                                            deserializer:[STPPaymentIntent new]
-                                              completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *responseError) {
-        completion(paymentIntent, responseError);
-    }];
-}
-
-@end
-
-#pragma mark - Setup Intents
-
-@implementation STPAPIClient (SetupIntents)
-
-- (void)retrieveSetupIntentWithClientSecret:(NSString *)secret
-                                   completion:(STPSetupIntentCompletionBlock)completion {
-    NSCAssert(secret != nil, @"'secret' is required to retrieve a SetupIntent");
-    NSCAssert([STPSetupIntentConfirmParams isClientSecretValid:secret], @"`secret` format does not match expected client secret formatting.");
-    NSCAssert(completion != nil, @"'completion' is required to use the SetupIntent that is retrieved");
-    NSString *identifier = [STPSetupIntent idFromClientSecret:secret];
-    
-    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointSetupIntents, identifier];
-    
-    [STPAPIRequest<STPSetupIntent *> getWithAPIClient:self
-                                               endpoint:endpoint
-                                             parameters:@{ @"client_secret": secret }
-                                           deserializer:[STPSetupIntent new]
-                                             completion:^(STPSetupIntent *setupIntent, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                 completion(setupIntent, error);
-                                             }];
-}
-
-- (void)confirmSetupIntentWithParams:(STPSetupIntentConfirmParams *)setupIntentParams
-                            completion:(STPSetupIntentCompletionBlock)completion {
-    NSCAssert(setupIntentParams.clientSecret != nil, @"'clientSecret' is required to confirm a SetupIntent");
-    NSCAssert([STPSetupIntentConfirmParams isClientSecretValid:setupIntentParams.clientSecret], @"`setupIntentParams.clientSecret` format does not match expected client secret formatting.");
-
-    [[STPAnalyticsClient sharedClient] logSetupIntentConfirmationAttemptWithConfiguration:self.configuration
-                                                                        paymentMethodType:setupIntentParams.paymentMethodParams.rawTypeString];
-
-    NSString *identifier = [STPSetupIntent idFromClientSecret:setupIntentParams.clientSecret];
-    NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointSetupIntents, identifier];
-    NSDictionary *params = [STPFormEncoder dictionaryForObject:setupIntentParams];
-    [STPAPIRequest<STPSetupIntent *> postWithAPIClient:self
-                                                endpoint:endpoint
-                                              parameters:params
-                                            deserializer:[STPSetupIntent new]
-                                              completion:^(STPSetupIntent *setupIntent, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                  completion(setupIntent, error);
-                                              }];
-}
-
-- (void)cancel3DSAuthenticationForSetupIntent:(NSString *)setupIntentID
-                                   withSource:(NSString *)sourceID
-                                   completion:(STPSetupIntentCompletionBlock)completion {
-    [STPAPIRequest<STPSetupIntent *> postWithAPIClient:self
-                                              endpoint:[NSString stringWithFormat:@"%@/%@/source_cancel", APIEndpointSetupIntents, setupIntentID]
-                                            parameters:@{ @"source": sourceID }
-                                          deserializer:[STPSetupIntent new]
-                                            completion:^(STPSetupIntent *setupIntent, __unused NSHTTPURLResponse *response, NSError *responseError) {
-        completion(setupIntent, responseError);
-    }];
-}
-
-@end
-
-#pragma mark - Payment Methods
-
-@implementation STPAPIClient (PaymentMethods)
-
-- (void)createPaymentMethodWithParams:(STPPaymentMethodParams *)paymentMethodParams
-                                 completion:(STPPaymentMethodCompletionBlock)completion {
-    NSCAssert(paymentMethodParams != nil, @"'paymentMethodParams' is required to create a PaymentMethod");
-    NSCAssert(paymentMethodParams.rawTypeString != nil, @"Set the `type` or `rawTypeString` property on paymentMethodParams.");
-    [[STPAnalyticsClient sharedClient] logPaymentMethodCreationAttemptWithConfiguration:self.configuration paymentMethodType:paymentMethodParams.rawTypeString];
-    
-    [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:self
-                                               endpoint:APIEndpointPaymentMethods
-                                             parameters:[STPFormEncoder dictionaryForObject:paymentMethodParams]
-                                           deserializer:[STPPaymentMethod new]
-                                             completion:^(STPPaymentMethod *paymentMethod, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                 completion(paymentMethod, error);
-                                             }];
-
-}
-
-#pragma mark - FPX
-
-- (void)retrieveFPXBankStatusWithCompletion:(STPFPXBankStatusCompletionBlock)completion {
-    [STPAPIRequest<STPFPXBankStatusResponse *> getWithAPIClient:self
-                                               endpoint:APIEndpointFPXStatus
-                                             parameters:@{ @"account_holder_type": @"individual" }
-                                           deserializer:[STPFPXBankStatusResponse new]
-                                             completion:^(STPFPXBankStatusResponse *statusResponse, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                 completion(statusResponse, error);
-                                             }];
 }
 
 @end

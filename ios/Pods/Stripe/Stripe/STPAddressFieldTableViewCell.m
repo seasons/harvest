@@ -46,7 +46,8 @@
             formTextField.preservesContentsOnPaste = NO;
             formTextField.selectionEnabled = NO;
             textField = formTextField;
-        } else {
+        }
+        else {
             textField = [[STPValidatedTextField alloc] init];
         }
         textField.delegate = self;
@@ -68,18 +69,9 @@
         _inputAccessoryToolbar = toolbar;
         
         NSString *countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
-        NSMutableArray *otherCountryCodes = [[self.delegate.availableCountries allObjects] mutableCopy];
-        if (otherCountryCodes == nil) {            
-            otherCountryCodes = [[NSLocale ISOCountryCodes] mutableCopy];
-        }
-        if ([otherCountryCodes containsObject:countryCode]) {
-            // Remove the current country code to re-add it once we sort the list.
-            [otherCountryCodes removeObject:countryCode];
-        } else {
-            // If it isn't in the list (if we've been configured to not show that country), don't re-add it.
-            countryCode = nil;
-        }
+        NSMutableArray *otherCountryCodes = [[NSLocale ISOCountryCodes] mutableCopy];
         NSLocale *locale = [NSLocale currentLocale];
+        [otherCountryCodes removeObject:countryCode];
         [otherCountryCodes sortUsingComparator:^NSComparisonResult(NSString *code1, NSString *code2) {
             NSString *localeID1 = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: code1}];
             NSString *localeID2 = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: code2}];
@@ -89,7 +81,8 @@
         }];
         if (countryCode) {
            _countryCodes = [@[@"", countryCode] arrayByAddingObjectsFromArray:otherCountryCodes];
-        } else {
+        }
+        else {
            _countryCodes = [@[@""] arrayByAddingObjectsFromArray:otherCountryCodes];
         }
         UIPickerView *pickerView = [UIPickerView new];
@@ -111,33 +104,6 @@
         }
         [self delegateCountryCodeDidChange:ourCountryCode];
         [self updateAppearance];
-
-        self.textField.translatesAutoresizingMaskIntoConstraints = NO;
-        if (@available(iOS 11.0, *)) {
-            [NSLayoutConstraint activateConstraints:@[
-                [self.textField.leadingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.leadingAnchor constant:15],
-                [self.textField.trailingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.trailingAnchor constant:-15],
-
-                [self.textField.topAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.topAnchor constant:1],
-                [self.contentView.safeAreaLayoutGuide.bottomAnchor constraintGreaterThanOrEqualToAnchor:self.textField.bottomAnchor],
-                [self.textField.heightAnchor constraintGreaterThanOrEqualToConstant:43],
-
-                [self.inputAccessoryToolbar.heightAnchor constraintEqualToConstant:44],
-            ]];
-        } else {
-            // Fallback on earlier versions
-            [NSLayoutConstraint activateConstraints:@[
-                [self.textField.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:15],
-                [self.textField.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-15],
-
-                [self.textField.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:1],
-                [self.contentView.bottomAnchor constraintGreaterThanOrEqualToAnchor:self.textField.bottomAnchor],
-                [self.textField.heightAnchor constraintGreaterThanOrEqualToConstant:43],
-
-
-                [self.inputAccessoryToolbar.heightAnchor constraintEqualToConstant:44],
-            ]];
-        }
     }
     return self;
 }
@@ -154,57 +120,77 @@
 
 - (void)updateTextFieldsAndCaptions {
     self.textField.placeholder = [self placeholderForAddressField:self.type];
-    
     if (!self.lastInList) {
         self.textField.returnKeyType = UIReturnKeyNext;
-    } else {
+    }
+    else {
         self.textField.returnKeyType = UIReturnKeyDefault;
     }
     switch (self.type) {
         case STPAddressFieldTypeName: 
             self.textField.keyboardType = UIKeyboardTypeDefault;
-            self.textField.textContentType = UITextContentTypeName;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeName;
+            }
             break;
         case STPAddressFieldTypeLine1: 
-            self.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-            self.textField.textContentType = UITextContentTypeStreetAddressLine1;
+            self.textField.keyboardType = UIKeyboardTypeDefault;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeStreetAddressLine1;
+            }
             break;
         case STPAddressFieldTypeLine2: 
-            self.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-            self.textField.textContentType = UITextContentTypeStreetAddressLine2;
+            self.textField.keyboardType = UIKeyboardTypeDefault;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeStreetAddressLine2;
+            }
             break;
         case STPAddressFieldTypeCity:
             self.textField.keyboardType = UIKeyboardTypeDefault;
-            self.textField.textContentType = UITextContentTypeAddressCity;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeAddressCity;
+            }
             break;
         case STPAddressFieldTypeState:
             self.textField.keyboardType = UIKeyboardTypeDefault;
-            self.textField.textContentType = UITextContentTypeAddressState;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeAddressState;
+            }
             break;
         case STPAddressFieldTypeZip:
-            self.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-            self.textField.textContentType = UITextContentTypePostalCode;
+            if ([self countryCodeIsUnitedStates]) { 
+                self.textField.keyboardType = UIKeyboardTypePhonePad;
+            } else {
+                self.textField.keyboardType = UIKeyboardTypeASCIICapable;
+            }
+
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypePostalCode;
+            }
+
+            if (!self.lastInList) {
+                self.textField.inputAccessoryView = self.inputAccessoryToolbar;
+            }
+            else {
+                self.textField.inputAccessoryView = nil;
+            }
             break;
         case STPAddressFieldTypeCountry:
             self.textField.keyboardType = UIKeyboardTypeDefault;
             // Don't set textContentType for Country, because we don't want iOS to skip the UIPickerView for input
             self.textField.inputView = self.countryPickerView;
-            
-            // If we're being set directly to a country we don't allow, add it to the allowed list
-            if (![self.countryCodes containsObject:self.contents] && [[NSLocale ISOCountryCodes] containsObject:self.contents]) {
-                self.countryCodes = [self.countryCodes arrayByAddingObject:self.contents];
-            }
             NSInteger index = [self.countryCodes indexOfObject:self.contents];
             if (index == NSNotFound) {
                 self.textField.text = @"";
-            } else {
+            }
+            else {
                 [self.countryPickerView selectRow:index inComponent:0 animated:NO];
                 self.textField.text = [self pickerView:self.countryPickerView titleForRow:index forComponent:0];
             }
             self.textField.validText = [self validContents];
             break;
         case STPAddressFieldTypePhone:
-            self.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+            self.textField.keyboardType = UIKeyboardTypePhonePad;
             if (@available(iOS 10.0, *)) {
                 self.textField.textContentType = UITextContentTypeTelephoneNumber;
             }
@@ -212,8 +198,16 @@
                                                                STPFormTextFieldAutoFormattingBehaviorPhoneNumbers :
                                                                STPFormTextFieldAutoFormattingBehaviorNone);
             ((STPFormTextField *)self.textField).autoFormattingBehavior = behavior;
+            if (!self.lastInList) {
+                self.textField.inputAccessoryView = self.inputAccessoryToolbar;
+            }
+            else {
+                self.textField.inputAccessoryView = nil;
+            }
             break;
         case STPAddressFieldTypeEmail:
+            self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             self.textField.keyboardType = UIKeyboardTypeEmailAddress;
             if (@available(iOS 10.0, *)) {
                 self.textField.textContentType = UITextContentTypeEmailAddress;
@@ -221,47 +215,20 @@
             break;
             
     }
-
-    if (!self.lastInList) {
-        self.textField.inputAccessoryView = self.inputAccessoryToolbar;
-    } else {
-        self.textField.inputAccessoryView = nil;
-    }
     self.textField.accessibilityLabel = self.textField.placeholder;
-    self.textField.accessibilityIdentifier = [self accessibilityIdentifierForAddressField:self.type];
-}
-
-- (NSString *)accessibilityIdentifierForAddressField:(STPAddressFieldType)type {
-    switch (type) {
-        case STPAddressFieldTypeName:
-            return @"ShippingAddressFieldTypeNameIdentifier";
-        case STPAddressFieldTypeLine1:
-            return @"ShippingAddressFieldTypeLine1Identifier";
-        case STPAddressFieldTypeLine2:
-            return @"ShippingAddressFieldTypeLine2Identifier";
-        case STPAddressFieldTypeCity:
-            return @"ShippingAddressFieldTypeCityIdentifier";
-        case STPAddressFieldTypeState:
-            return @"ShippingAddressFieldTypeStateIdentifier";
-        case STPAddressFieldTypeZip:
-            return @"ShippingAddressFieldTypeZipIdentifier";
-        case STPAddressFieldTypeCountry:
-            return @"ShippingAddressFieldTypeCountryIdentifier";
-        case STPAddressFieldTypePhone:
-            return @"ShippingAddressFieldTypePhoneIdentifier";
-        case STPAddressFieldTypeEmail:
-            return @"ShippingAddressFieldTypeEmailIdentifier";
-    }
 }
 
 + (NSString *)stateFieldCaptionForCountryCode:(NSString *)countryCode {
     if ([countryCode isEqualToString:@"US"]) {
         return STPLocalizedString(@"State", @"Caption for State field on address form (only countries that use state , like United States)");
-    } else if ([countryCode isEqualToString:@"CA"]) {
+    }
+    else if ([countryCode isEqualToString:@"CA"]) {
         return STPLocalizedString(@"Province", @"Caption for Province field on address form (only countries that use province, like Canada)");
-    } else if ([countryCode isEqualToString:@"GB"]) {
+    }
+    else if ([countryCode isEqualToString:@"GB"]) {
         return STPLocalizedString(@"County", @"Caption for County field on address form (only countries that use county, like United Kingdom)");
-    } else  {
+    }
+    else  {
         return STPLocalizedString(@"State / Province / Region", @"Caption for generalized state/province/region field on address form (not tied to a specific country's format)");
     }
 }
@@ -269,7 +236,7 @@
 - (NSString *)placeholderForAddressField:(STPAddressFieldType)addressFieldType {
     switch (addressFieldType) {
         case STPAddressFieldTypeName:
-            return [STPLocalizationUtils localizedNameString];
+            return STPLocalizedString(@"Name", @"Caption for Name field on address form");
         case STPAddressFieldTypeLine1:
             return STPLocalizedString(@"Address", @"Caption for Address field on address form");
         case STPAddressFieldTypeLine2:
@@ -285,7 +252,7 @@
         case STPAddressFieldTypeCountry:
             return STPLocalizedString(@"Country", @"Caption for Country field on address form");
         case STPAddressFieldTypeEmail:
-            return [STPLocalizationUtils localizedEmailString];
+            return STPLocalizedString(@"Email", @"Caption for Email field on address form");
         case STPAddressFieldTypePhone:
             return STPLocalizedString(@"Phone", @"Caption for Phone field on address form");
     }
@@ -315,6 +282,14 @@
     return [self.ourCountryCode isEqualToString:@"US"];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    CGRect bounds = [self stp_boundsWithHorizontalSafeAreaInsets];
+    CGFloat textFieldX = 15;
+    self.textField.frame = CGRectMake(textFieldX, 1, bounds.size.width - textFieldX, bounds.size.height - 1);
+    self.inputAccessoryToolbar.frame = CGRectMake(0, 0, bounds.size.width, 44);
+}
+
 - (BOOL)becomeFirstResponder {
     return [self.textField becomeFirstResponder];
 }
@@ -323,18 +298,6 @@
     if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCellDidReturn:)]) {
         [self.delegate addressFieldTableViewCellDidReturn:self];
     }
-}
-
-- (NSInteger)accessibilityElementCount {
-    return 1;
-}
-
-- (id)accessibilityElementAtIndex:(__unused NSInteger)index {
-    return self.textField;
-}
-
-- (NSInteger)indexOfAccessibilityElement:(__unused id)element {
-    return 0;
 }
 
 #pragma mark - UITextFieldDelegate
