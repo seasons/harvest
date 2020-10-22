@@ -30,8 +30,8 @@
 }
 
 - (BOOL)stp_matchesURLComponents:(NSURLComponents *)rhsComponents {
-    BOOL matches = ([[self.scheme lowercaseString] isEqualToString:[rhsComponents.scheme lowercaseString]]
-                    && [[self.host lowercaseString] isEqualToString:[rhsComponents.host lowercaseString]]
+    BOOL matches = ([self.scheme isEqualToString:rhsComponents.scheme]
+                    && [self.host isEqualToString:rhsComponents.host]
                     && [self.path isEqualToString:rhsComponents.path]);
 
     if (matches) {

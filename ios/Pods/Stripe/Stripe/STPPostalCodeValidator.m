@@ -23,14 +23,17 @@ static NSString *const STPCountryCodeUnitedStates = @"US";
     if ([self postalCodeIsRequiredForCountryCode:countryCode]) {
         if ([sanitizedCountryCode isEqualToString:STPCountryCodeUnitedStates]) {
             return [self validationStateForUSPostalCode:postalCode];
-        } else {
+        }
+        else {
             if (postalCode.length > 0) {
                 return STPCardValidationStateValid;
-            } else {
+            }
+            else {
                 return STPCardValidationStateIncomplete;
             }
         }
-    } else {
+    }
+    else {
         return STPCardValidationStateValid;
     }
 }
@@ -45,7 +48,8 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
             range = [string rangeOfCharacterFromSet:cs options:(NSStringCompareOptions)kNilOptions range:NSMakeRange(lastPosition, string.length - lastPosition)];
             if (range.location == NSNotFound) {
                 break;
-            } else {
+            }
+            else {
                 count += range.length;
                 lastPosition = NSMaxRange(range);
             }
@@ -65,28 +69,34 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
     if (!firstFiveIsNumeric) {
         // Non-numbers included in first five characters
         return STPCardValidationStateInvalid;
-    } else if (firstFiveLength < 5) {
+    }
+    else if (firstFiveLength < 5) {
         // Incomplete ZIP with only numbers
         return STPCardValidationStateIncomplete;
-    } else if (totalLength == 5) {
+    }
+    else if (totalLength == 5) {
         // Valid 5 digit zip
         return STPCardValidationStateValid;
-    } else {
+    }
+    else {
         // ZIP+4 territory
         NSUInteger numberOfDigits = countOfCharactersFromSetInString(postalCode, [NSCharacterSet stp_asciiDigitCharacterSet]);
 
         if (numberOfDigits > 9) {
             // Too many digits
             return STPCardValidationStateInvalid;
-        } else if (numberOfDigits == totalLength) {
+        }
+        else if (numberOfDigits == totalLength) {
             // All numeric postal code entered
             if (numberOfDigits == 9) {
                 return STPCardValidationStateValid;
-            } else {
+            }
+            else {
                 return STPCardValidationStateIncomplete;
             }
 
-        } else if ((numberOfDigits + 1) == totalLength) {
+        }
+        else if ((numberOfDigits + 1) == totalLength) {
             // Possibly has a separator character for ZIP+4, check to see if
             // its in the right place
 
@@ -95,14 +105,17 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
                 // Non-digit is in right position to be separator
                 if (numberOfDigits == 9) {
                     return STPCardValidationStateValid;
-                } else {
+                }
+                else {
                     return STPCardValidationStateIncomplete;
                 }
-            } else {
+            }
+            else {
                 // Non-digit is in wrong position to be separator
                 return STPCardValidationStateInvalid;
             }
-        } else {
+        }
+        else {
             // Not a valid zip code (too many non-numeric characters)
             return STPCardValidationStateInvalid;
         }
@@ -111,19 +124,19 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
 + (NSString *)formattedSanitizedPostalCodeFromString:(NSString *)postalCode
                                          countryCode:(NSString *)countryCode
                                                usage:(STPPostalCodeIntendedUsage)usage {
-    NSString *sanitizedCountryCode = countryCode.uppercaseString;
-    if (usage != STPPostalCodeIntendedUsageCardField && [sanitizedCountryCode isEqualToString:STPCountryCodeUnitedStates]) {
-        return [self formattedSanitizedUSZipCodeFromString:postalCode
-                                                     usage:usage];
-    } else {
-        return [self formattedSanitizedPostalCodeFromString:postalCode];
+    if (countryCode == nil) {
+        return postalCode;
     }
 
-}
+    NSString *sanitizedCountryCode = countryCode.uppercaseString;
+    if ([sanitizedCountryCode isEqualToString:STPCountryCodeUnitedStates]) {
+        return [self formattedSanitizedUSZipCodeFromString:postalCode
+                                                     usage:usage];
+    }
+    else {
+        return postalCode;
+    }
 
-+ (NSString *)formattedSanitizedPostalCodeFromString:(NSString *)zipCode {
-    NSString *formattedString = [STPCardValidator sanitizedPostalStringForString:zipCode];
-    return [formattedString uppercaseString];
 }
 
 + (NSString *)formattedSanitizedUSZipCodeFromString:(NSString *)zipCode
@@ -131,7 +144,6 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
     NSUInteger maxLength = 0;
     switch (usage) {
         case STPPostalCodeIntendedUsageBillingAddress:
-        case STPPostalCodeIntendedUsageCardField:
             maxLength = 5;
             break;
         case STPPostalCodeIntendedUsageShippingAddress:
@@ -160,7 +172,8 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
 + (BOOL)postalCodeIsRequiredForCountryCode:(NSString *)countryCode {
     if (countryCode == nil) {
         return YES;
-    } else {
+    }
+    else {
         return (![[self countriesWithNoPostalCodes] containsObject:countryCode.uppercaseString]);
     }
 }
@@ -214,6 +227,7 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
               @"PA",
               @"QA",
               @"RW",
+              @"SA",
               @"SB",
               @"SC",
               @"SL",

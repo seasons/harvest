@@ -386,6 +386,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
             <Spacer pb={160} />
           </ScrollView>
         </Box>
+
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
           <Box p={2} style={{ alignItems: "center" }}>
             <ColoredButton

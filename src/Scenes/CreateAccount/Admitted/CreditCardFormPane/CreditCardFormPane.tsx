@@ -13,7 +13,7 @@ import {
 } from "App/Components"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { color } from "App/utils/color"
-import React, { useRef, useState } from "react"
+import React, { useState } from "react"
 import * as Sentry from "@sentry/react-native"
 import { isWholeNumber } from "App/helpers/validation"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
@@ -58,6 +58,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit
       onSubmit()
     },
     onError: (err) => {
+      Keyboard.dismiss()
       console.log("Error ChoosePlanPane.tsx", err)
       Sentry.captureException(err)
       let popUpData
@@ -96,6 +97,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit
   }
 
   const handleOnSubmit = async () => {
+    Keyboard.dismiss()
     if (isMutating) {
       return
     }
@@ -251,7 +253,6 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit
                   currentValue={state}
                   headerText="State"
                   onPress={() => {
-                    Keyboard.dismiss()
                     setIsStatePickerVisible(true)
                   }}
                   style={{ flex: 1 }}
@@ -266,12 +267,12 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit
                 />
               </Flex>
             </Box>
+            <Spacer pb={160} />
           </ScrollView>
         </Box>
 
         <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={insets.bottom - 16}>
-          <FadeBottom2 width="100%">
-            <Spacer mb={2} />
+          <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
             <Flex p={2} flexDirection="row">
               <Box style={{ flex: 1 }}>
                 <Button
