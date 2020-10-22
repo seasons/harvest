@@ -11,6 +11,7 @@ import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, Verif
 import { WaitlistedPane } from "./Waitlisted"
 import { useIsFocused } from "@react-navigation/native"
 import { CreditCardFormPane } from "./Admitted/CreditCardFormPane"
+import { CouponType } from "App/generated/globalTypes"
 
 interface CreateAccountProps {
   navigation: any
@@ -18,6 +19,13 @@ interface CreateAccountProps {
   initialUserState?: UserState
   params?: any
   route?: any
+}
+
+export interface Coupon {
+  discountAmount: number
+  discountPercentage: number
+  couponType: CouponType
+  couponCode: string
 }
 
 export enum UserState {
@@ -116,8 +124,25 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   const [timeStart, setTimeStart] = useState(Date.now())
   const [appState, setAppState] = useState("active")
   const [finishedFlow, setFinishedFlow] = useState(false)
+  const [coupon, setCoupon] = useState({
+    discountAmount: 0,
+    discountPercentage: 0,
+    couponType: null,
+    couponCode: null,
+  })
   const tracking = useTracking()
   const { resetStore } = useAuthContext()
+
+  useEffect(() => {
+    if (route?.params) {
+      setCoupon({
+        discountAmount: route?.params?.discountAmount || coupon.discountAmount,
+        discountPercentage: route?.params?.discountPercentage || coupon.discountPercentage,
+        couponType: route?.params?.couponType || coupon.couponType,
+        couponCode: route?.params?.couponCode || coupon.couponCode,
+      })
+    }
+  }, [route, setCoupon])
 
   useEffect(() => {
     const unsubscribe = navigation?.addListener("focus", () => {
@@ -280,7 +305,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             data={data}
             onComplete={(paymentMethod) => {
               paymentMethod === PaymentMethod.CreditCard ? setIndex(index + 1) : setIndex(index + 2)
-              console.log("paymentMethod", paymentMethod)
               // Track the time viewed
               trackStepTimer(states[index + 1])
               // Restart the timer
@@ -288,7 +312,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             }}
             headerText={"You're in.\nLet's choose your plan"}
             source="CreateAccountModal"
-            coupon={{ discount: route?.params?.discount, type: route?.params?.couponType }}
+            coupon={coupon}
           />
         )
         break
@@ -311,6 +335,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
               // Restart the timer
               setTimeStart(Date.now())
             }}
+            coupon={coupon}
           />
         )
         break

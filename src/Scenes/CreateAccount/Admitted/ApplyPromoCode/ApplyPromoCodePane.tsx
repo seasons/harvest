@@ -13,12 +13,13 @@ const CHECK_COUPON = gql`
   mutation CheckCoupon($couponID: String!) {
     checkCoupon(couponID: $couponID) {
       amount
+      percentage
       type
     }
   }
 `
 interface ApplyPromoCodePaneProps {
-  onApplyPromoCode: (number, type) => void
+  onApplyPromoCode: (amount, percentage, type, code) => void
 }
 
 export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = ({ onApplyPromoCode }) => {
@@ -31,9 +32,9 @@ export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = ({ onApplyP
   const textInputRef: React.MutableRefObject<TextInputRef> = useRef(null)
   const [checkCoupon] = useMutation(CHECK_COUPON, {
     onCompleted: (data) => {
-      const { amount, type } = data?.checkCoupon
+      const { amount, percentage, type } = data?.checkCoupon
       setIsMutating(false)
-      onApplyPromoCode(amount, type)
+      onApplyPromoCode(amount, percentage, type, promoCode)
     },
     onError: (err) => {
       const popUpData = {
