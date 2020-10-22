@@ -15,8 +15,10 @@ export enum State {
 
 export const ApplyPromoCode: React.FC = screenTrack()((props: any) => {
   const { navigation, route } = props
-  const source = route?.params?.source
-  const [discount, setDiscount] = useState(0)
+  const source = route?.params?.source as "CreateAccountModal" | "UpdatePaymentPlanModal"
+  const [discountAmount, setDiscountAmount] = useState(0)
+  const [discountPercentage, setDiscountPercentage] = useState(0)
+  const [couponCode, setCouponCode] = useState("")
   const [couponType, setCouponType] = useState(CouponType.FixedAmount)
   // The current index into the `states` array
   const [index, setIndex] = useState(0)
@@ -39,9 +41,14 @@ export const ApplyPromoCode: React.FC = screenTrack()((props: any) => {
       case State.ApplyPromoCode:
         pane = (
           <ApplyPromoCodePane
-            onApplyPromoCode={(discount, type) => {
-              setDiscount(discount)
+            onApplyPromoCode={(amount, percentage, type, code) => {
+              if (amount) {
+                setDiscountAmount(amount)
+              } else if (percentage) {
+                setDiscountPercentage(percentage)
+              }
               setCouponType(type)
+              setCouponCode(code)
               setNextState()
             }}
           />
@@ -50,7 +57,11 @@ export const ApplyPromoCode: React.FC = screenTrack()((props: any) => {
 
       case State.Confirmation:
         pane = (
-          <PromoCodeAppliedConfirmationPane onComplete={() => navigation.navigate(source, { discount, couponType })} />
+          <PromoCodeAppliedConfirmationPane
+            onComplete={() =>
+              navigation.navigate(source, { discountAmount, discountPercentage, couponType, couponCode })
+            }
+          />
         )
         break
     }

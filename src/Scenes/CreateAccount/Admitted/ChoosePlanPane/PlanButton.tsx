@@ -1,9 +1,9 @@
 import { Flex, Sans } from "App/Components"
-import { CouponType } from "App/generated/globalTypes"
 import { color } from "App/utils/color"
 import React from "react"
 import { Text, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
+import { Coupon } from "../../CreateAccount"
 import { calcFinalPrice } from "./utils"
 
 interface PlanButtonProps {
@@ -11,23 +11,21 @@ interface PlanButtonProps {
   selected: boolean
   plan: any
   selectedColor?: string
-  coupon?: {
-    discount: number
-    type: CouponType
-  }
+  coupon?: Coupon
 }
 
 export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor, coupon }) => {
+  console.log("coupon", coupon)
   const { price, itemCount } = plan
-  const finalPrice = calcFinalPrice(price, coupon?.discount, coupon?.type)
+  const finalPrice = calcFinalPrice(price, coupon)
   const PriceText = ({ originalPrice, finalPrice }) => {
     originalPrice /= 100
     finalPrice /= 100
-    const isDiscounted = originalPrice != finalPrice
+    const isDiscounted = originalPrice !== finalPrice && !!finalPrice
     return isDiscounted ? (
       <Text>
         <Sans color="black50" size="0.5">
-          / month
+          per month
         </Sans>
         <Sans color="black100" size="1">
           {" "}

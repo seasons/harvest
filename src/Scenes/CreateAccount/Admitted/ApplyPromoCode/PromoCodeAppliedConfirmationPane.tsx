@@ -22,10 +22,6 @@ export const PromoCodeAppliedConfirmationPane: React.FC<PromoCodeAppliedConfirma
             </Sans>
           </Box>
           <Box>
-            <Sans size="1" color="black50">
-              Your promo code has been successfully applied.
-            </Sans>
-            <Spacer mb={3} />
             <Button block onPress={onComplete}>
               Done
             </Button>

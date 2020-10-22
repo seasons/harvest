@@ -26,6 +26,7 @@ import styled from "styled-components"
 import { PAYMENT_CHECKOUT } from "../ChoosePlanPane/ChoosePlanPane"
 import { GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { BackArrowIcon } from "Assets/icons"
+import { Coupon } from "../../CreateAccount"
 
 const windowDimensions = Dimensions.get("window")
 
@@ -33,9 +34,10 @@ interface CreditCardFormPaneProps {
   plan: GetPlans_paymentPlans
   onSubmit: () => void
   onRequestBack: () => void
+  coupon: Coupon
 }
 
-export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit, plan, onRequestBack }) => {
+export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit, plan, onRequestBack, coupon }) => {
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
@@ -96,6 +98,8 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit
     setCvc(cvc)
   }
 
+  console.log("CC coupon", coupon)
+
   const handleOnSubmit = async () => {
     Keyboard.dismiss()
     if (isMutating) {
@@ -124,6 +128,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({ onSubmit
           planID: plan?.planID,
           token,
           tokenType: "card",
+          couponID: coupon?.couponCode,
         },
         awaitRefetchQueries: true,
       })
