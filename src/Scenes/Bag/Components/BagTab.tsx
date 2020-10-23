@@ -92,7 +92,11 @@ export const BagTab: React.FC<{
   })
 
   let returnReminder
-  if (hasActiveReservation && me?.customer?.plan === "Essential" && !!me?.activeReservation?.returnAt) {
+  if (
+    hasActiveReservation &&
+    me?.customer?.membership?.plan?.tier === "Essential" &&
+    !!me?.activeReservation?.returnAt
+  ) {
     const luxonDate = DateTime.fromISO(me?.activeReservation?.returnAt)
     returnReminder = `Return by ${luxonDate.weekdayLong}, ${luxonDate.monthLong} ${luxonDate.day}`
   }
@@ -118,9 +122,11 @@ export const BagTab: React.FC<{
             View FAQ
           </Sans>
         </Flex>
-        <Sans size="1" color="black50">
-          {hasActiveReservation && !!returnReminder ? returnReminder : "Reserve your order below"}
-        </Sans>
+        {((hasActiveReservation && !!returnReminder) || !hasActiveReservation) && (
+          <Sans size="1" color="black50">
+            {hasActiveReservation && !!returnReminder ? returnReminder : "Reserve your order below"}
+          </Sans>
+        )}
         <Spacer mb={3} />
       </Box>
       {showPendingMessage && (
