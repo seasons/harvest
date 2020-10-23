@@ -65,6 +65,7 @@ export interface GetUser_me_customer {
   __typename: "Customer";
   id: string;
   status: CustomerStatus | null;
+  referralLink: string | null;
   onboardingSteps: OnboardingStep[];
   user: GetUser_me_customer_user;
   detail: GetUser_me_customer_detail | null;

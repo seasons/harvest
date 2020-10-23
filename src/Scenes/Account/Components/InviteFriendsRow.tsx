@@ -4,10 +4,14 @@ import { ChevronIcon } from "Assets/icons"
 import React from "react"
 import { TouchableOpacity } from "react-native"
 
-export const InvitedFriendsRow: React.FC = () => {
+interface InvitedFriendsRowProps {
+  referralLink: string
+}
+
+export const InvitedFriendsRow: React.FC<InvitedFriendsRowProps> = ({ referralLink }) => {
   const navigation = useNavigation()
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("InviteFriends")}>
+    <TouchableOpacity onPress={() => navigation.navigate("InviteFriends", { referralLink })}>
       <Box my={4} mx={2}>
         <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" justifyContent="space-between">
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center">

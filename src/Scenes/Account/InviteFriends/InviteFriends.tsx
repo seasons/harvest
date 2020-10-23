@@ -10,10 +10,10 @@ import { useSafeArea } from "react-native-safe-area-context"
 const windowDimensions = Dimensions.get("window")
 const windowWidth = windowDimensions.width
 
-export const InviteFriends = screenTrack()(({ navigation }) => {
+export const InviteFriends = screenTrack()(({ route, navigation }) => {
   const insets = useSafeArea()
   const [openPopUp, setOpenPopUp] = useState(false)
-  const inviteLink = "seasons.nyc/join/regy"
+  const referralLink = route.params.referralLink
 
   const onShare = async () => {
     try {
@@ -68,11 +68,11 @@ export const InviteFriends = screenTrack()(({ navigation }) => {
           <Box px={2} py={12} style={{ height: 48, backgroundColor: color("black04"), borderRadius: 24 }}>
             <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
               <Sans size="1" color="black50">
-                {inviteLink}
+                {referralLink}
               </Sans>
               <TouchableOpacity
                 onPress={() => {
-                  Clipboard.setString(inviteLink)
+                  Clipboard.setString(referralLink)
                 }}
               >
                 <Sans size="1" color="black100">

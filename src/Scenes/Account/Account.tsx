@@ -40,6 +40,7 @@ export const GET_USER = gql`
       customer {
         id
         status
+        referralLink
         onboardingSteps
         user {
           id
@@ -107,6 +108,7 @@ export const Account = screenTrack()(({ navigation }) => {
   const customer = data?.me?.customer
   const onboardingSteps = customer?.onboardingSteps
   const status = customer?.status
+  const referralLink = customer?.referralLink
 
   const user = customer?.user
   const email = user?.email
@@ -389,7 +391,7 @@ export const Account = screenTrack()(({ navigation }) => {
             {!!data ? renderBody() : <ListSkeleton />}
           </Box>
           <InsetSeparator />
-          <InvitedFriendsRow />
+          <InvitedFriendsRow referralLink={referralLink} />
           <InsetSeparator />
           <NotificationToggle pushNotification={pushNotification} />
           <InsetSeparator />
