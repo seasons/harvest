@@ -20,7 +20,6 @@ interface Props {
   width: number
   selectedVariant: any
   data: GetProduct
-  products
 }
 
 export const AddToBagButton: React.FC<Props> = (props) => {
