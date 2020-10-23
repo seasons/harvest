@@ -32,7 +32,7 @@ export const BagCardButton: React.FC<{
             style={{ flex: 1 }}
           >
             <Box>
-              <Sans size="0.5" color="black100">
+              <Sans size="1" color="black100">
                 {title}
               </Sans>
               <Sans size="0.5" color="black50">

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { shuffle, clone } from "lodash"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
-import { Dimensions, ScrollView, TouchableOpacity } from "react-native"
+import { Dimensions, ScrollView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { CheckCircled } from "Assets/svgs"
@@ -79,17 +79,22 @@ export const SurpriseMe = screenTrack()(() => {
 
   const bagIsFull = itemCount && bagCount && bagCount === itemCount
 
+  const createShuffledVariants = () => {
+    // Filter out products that are in the customers bag
+    const bagProductIDs = data?.me?.bag?.productVariant?.map((variant) => variant?.id)
+    const variants = !!bagProductIDs?.length
+      ? data.surpriseProductVariants.filter((variant) => !bagProductIDs.includes(variant.id))
+      : data.surpriseProductVariants
+
+    setVariants(shuffle(variants))
+  }
+
   useEffect(() => {
     if (!variants && data?.surpriseProductVariants) {
-      // Filter out products that are in the customers bag
-      const bagProductIDs = data?.me?.bag?.productVariant?.map((variant) => variant?.id)
-      const variants = !!bagProductIDs?.length
-        ? data.surpriseProductVariants.filter((variant) => !bagProductIDs.includes(variant.id))
-        : data.surpriseProductVariants
-
-      setVariants(shuffle(variants))
+      console.log("??")
+      createShuffledVariants()
     }
-  }, [data, variants, setVariants])
+  }, [data, variants, setVariants, createShuffledVariants])
 
   const variant = variants?.[0]
   const product = variant?.product
@@ -146,6 +151,10 @@ export const SurpriseMe = screenTrack()(() => {
     },
   })
 
+  const onRestart = () => {
+    createShuffledVariants()
+  }
+
   const onAddToBag = () => {
     if (isAddingToBag) {
       return
@@ -167,7 +176,7 @@ export const SurpriseMe = screenTrack()(() => {
     setTimeout(() => {
       setVariants(clonedArray)
       setLoadingNext(false)
-    }, 200)
+    }, 400)
   }
 
   let addText
@@ -179,65 +188,89 @@ export const SurpriseMe = screenTrack()(() => {
     addText = "Add to bag"
   }
 
+  const seenAllAvailableProducts = variants?.length === 0
+
+  const SeenAllContent = () => {
+    return (
+      <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignItems="center">
+        <Box px={2} pt={2}>
+          <Sans color="black50" size="2" style={{ textAlign: "center", maxWidth: 300 }}>
+            You've seen all of the available products in your size.
+          </Sans>
+          <Spacer mb={3} />
+          <Sans
+            color="black100"
+            size="2"
+            style={{ textAlign: "center", textDecorationLine: "underline" }}
+            onPress={onRestart}
+          >
+            Restart
+          </Sans>
+        </Box>
+      </Flex>
+    )
+  }
+
   return (
     <>
       <CloseButton variant="light" />
 
       <Container insetsBottom={false} insetsTop={false}>
         <Box style={{ flex: 1 }}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
             <Spacer mb={5} />
             <Spacer mb={4} />
-            <Box>
-              <Box px={2} pt={2}>
-                <Sans color="black100" size="3">
-                  Styles for you
-                </Sans>
-                <Sans color="black50" size="1">
-                  Available now and in your size
-                </Sans>
-                <Spacer mb={2} />
-                <FadeInImage
-                  source={{ uri: imageURL }}
-                  style={{ width: itemWidth, height: imageHeight }}
-                  key={product?.id}
-                />
-              </Box>
-              <Flex flexDirection="row" justifyContent="space-between" alignItems="flex-start" pl={2}>
-                <Box my={1}>
-                  {!!productName && (
-                    <Sans size="0.5" style={{ maxWidth: itemWidth - 50 }} key={product?.id}>
-                      {productName}
-                    </Sans>
-                  )}
-                  {!!brandName && (
-                    <Sans
-                      key={product?.id + "brand"}
-                      size="0.5"
-                      color="black50"
-                      style={{ maxWidth: itemWidth - 50, textDecorationLine: "underline" }}
-                    >
-                      {brandName}
-                    </Sans>
-                  )}
-                </Box>
-                <Box my={0.5}>
-                  <SaveProductButton
-                    height={22}
-                    width={16}
-                    noModal
-                    selectedVariant={variant}
-                    product={product}
-                    onPressSaveButton={() => {
-                      tracking.trackEvent({
-                        actionName: Schema.ActionNames.SaveProductButtonTapped,
-                        actionType: Schema.ActionTypes.Tap,
-                      })
-                    }}
-                  />
-                </Box>
-              </Flex>
+            <Box px={2} pt={2}>
+              <Sans color="black100" size="3">
+                Styles for you
+              </Sans>
+              <Sans color="black50" size="1">
+                Available now and in your size
+              </Sans>
+              <Spacer mb={2} />
             </Box>
+            {seenAllAvailableProducts ? (
+              <SeenAllContent />
+            ) : (
+              <Box key={variant?.id}>
+                <Box px={2}>
+                  <FadeInImage source={{ uri: imageURL }} style={{ width: itemWidth, height: imageHeight }} />
+                </Box>
+                <Flex flexDirection="row" justifyContent="space-between" alignItems="flex-start" pl={2}>
+                  <Box my={1}>
+                    {!!productName && (
+                      <Sans size="0.5" style={{ maxWidth: itemWidth - 50 }}>
+                        {productName}
+                      </Sans>
+                    )}
+                    {!!brandName && (
+                      <Sans
+                        size="0.5"
+                        color="black50"
+                        style={{ maxWidth: itemWidth - 50, textDecorationLine: "underline" }}
+                      >
+                        {brandName}
+                      </Sans>
+                    )}
+                  </Box>
+                  <Box my={0.5}>
+                    <SaveProductButton
+                      height={22}
+                      width={16}
+                      noModal
+                      selectedVariant={variant}
+                      product={product}
+                      onPressSaveButton={() => {
+                        tracking.trackEvent({
+                          actionName: Schema.ActionNames.SaveProductButtonTapped,
+                          actionType: Schema.ActionTypes.Tap,
+                        })
+                      }}
+                    />
+                  </Box>
+                </Flex>
+              </Box>
+            )}
           </ScrollView>
         </Box>
 
@@ -248,7 +281,7 @@ export const SurpriseMe = screenTrack()(() => {
               <Button
                 block
                 variant="primaryWhite"
-                disabled={isAddingToBag || added || bagIsFull}
+                disabled={isAddingToBag || added || bagIsFull || seenAllAvailableProducts}
                 loading={isAddingToBag}
                 size="large"
                 onPress={onAddToBag}
@@ -258,7 +291,7 @@ export const SurpriseMe = screenTrack()(() => {
             </Box>
             <Spacer mr={1} />
             <Box style={{ flex: 1 }}>
-              <Button block onPress={onNext} size="large" variant="primaryBlack">
+              <Button block onPress={onNext} size="large" variant="primaryBlack" disabled={seenAllAvailableProducts}>
                 Next
               </Button>
             </Box>
