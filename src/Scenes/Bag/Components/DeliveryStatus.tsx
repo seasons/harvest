@@ -66,7 +66,7 @@ export const DeliveryStatus: React.FC<{
 
   return (
     <Box>
-      <Box px={2} pt={2}>
+      <Box px={2} pt={3}>
         <Sans size="1">Status</Sans>
       </Box>
       <Spacer mb={1} />

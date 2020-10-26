@@ -20,7 +20,7 @@ export const BagCardButton: React.FC<{
   }
 
   return (
-    <Box p={1}>
+    <Box pb="12px" px={1}>
       <TouchableOpacity onPress={onPress}>
         <EmptyBagItemContainer style={shadowStyles}>
           <Flex

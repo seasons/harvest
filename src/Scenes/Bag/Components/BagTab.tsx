@@ -19,6 +19,7 @@ import { EmptyBagItem } from "./EmptyBagItem"
 import { BagCardButton } from "./BagCardButton"
 import { AddSlot, Stylist, SurpriseMe } from "Assets/svgs"
 import { Linking } from "react-native"
+import { GreyToWhiteFade } from "Assets/svgs/GreyToWhiteFade"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
@@ -103,8 +104,6 @@ export const BagTab: React.FC<{
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
   const showPendingMessage = pauseStatus === "pending" && !!pauseRequest?.pauseDate
 
-  console.log("itemCount", itemCount)
-
   return (
     <Box>
       <Box px={2} pt={4}>
@@ -136,7 +135,7 @@ export const BagTab: React.FC<{
           <Box px={2}>
             <Separator color={color("black10")} />
           </Box>
-          <Box px={2} py={2}>
+          <Box px={2} py={3}>
             <Sans size="1" color="black50">
               {`Your membership is scheduled to be paused on ${DateTime.fromISO(pauseRequest.pauseDate).toFormat(
                 "EEEE LLLL dd"
@@ -168,7 +167,7 @@ export const BagTab: React.FC<{
       {hasActiveReservation && <DeliveryStatus activeReservation={activeReservation} />}
       {paddedItems?.map((bagItem, index) => {
         return bagItem?.productID?.length > 0 ? (
-          <Box key={bagItem.productID} px={2} pt={hasActiveReservation ? 0 : 2}>
+          <Box key={bagItem.productID} px={2}>
             <BagItem
               removeItemFromBag={deleteBagItem}
               removeFromBagAndSaveItem={removeFromBagAndSaveItem}
@@ -185,42 +184,46 @@ export const BagTab: React.FC<{
           </Box>
         )
       })}
-      {hasActiveReservation && <Spacer mb={1} />}
+      <Spacer mb={hasActiveReservation ? "18px" : 0} />
       <Separator />
-      <Spacer mb={1} />
-      {!hasActiveReservation && itemCount && itemCount < 3 && (
+      <Box style={{ backgroundColor: color("black04") }}>
+        <Spacer mb={3} />
+        {!hasActiveReservation && itemCount && itemCount < 3 && (
+          <Box px={1}>
+            <BagCardButton
+              Icon={AddSlot}
+              title="Add a slot"
+              caption="Reserve another item"
+              onPress={() => {
+                authState.isSignedIn
+                  ? navigation.navigate("Modal", { screen: NavigationSchema.PageNames.UpdatePaymentPlanModal })
+                  : setItemCount(itemCount + 1)
+              }}
+            />
+          </Box>
+        )}
         <Box px={1}>
           <BagCardButton
-            Icon={AddSlot}
-            title="Add a slot"
-            caption="Reserve another item"
+            Icon={SurpriseMe}
+            title="Surprise me"
+            caption="Discover styles in your size"
             onPress={() => {
-              authState.isSignedIn
-                ? navigation.navigate("Modal", { screen: NavigationSchema.PageNames.UpdatePaymentPlanModal })
-                : setItemCount(itemCount + 1)
+              console.log("naving")
+              navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
             }}
           />
         </Box>
-      )}
-      <Box px={1}>
-        <BagCardButton
-          Icon={SurpriseMe}
-          title="Surprise me"
-          caption="Discover styles in your size"
-          onPress={() => {
-            console.log("naving")
-            navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
-          }}
-        />
+        <Box px={1}>
+          <BagCardButton
+            Icon={Stylist}
+            title="Chat with our stylist"
+            caption="Get a personalized consultation"
+            onPress={() => Linking.openURL("https://szns.co/stylist")}
+          />
+        </Box>
+        <Spacer mb={2} />
       </Box>
-      <Box px={1}>
-        <BagCardButton
-          Icon={Stylist}
-          title="Chat with our stylist"
-          caption="Get a personalized consultation"
-          onPress={() => Linking.openURL("https://szns.co/stylist")}
-        />
-      </Box>
+      <GreyToWhiteFade />
     </Box>
   )
 }

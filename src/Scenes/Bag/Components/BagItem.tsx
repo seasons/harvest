@@ -246,7 +246,7 @@ export const BagItem: React.FC<BagItemProps> = ({
     : {}
 
   return (
-    <Box key={product.id}>
+    <Box key={product.id} py={isReserved ? "6px" : 3}>
       <TouchableWithoutFeedback
         onPress={() => {
           tracking.trackEvent({
@@ -271,7 +271,6 @@ export const BagItem: React.FC<BagItemProps> = ({
               )}
             </Flex>
           </BagItemContainer>
-          <Spacer mb={isReserved ? 1 : 2} />
         </Box>
       </TouchableWithoutFeedback>
       {isMutating && (

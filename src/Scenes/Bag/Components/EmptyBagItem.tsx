@@ -7,7 +7,7 @@ import { BagPlus } from "../../../../assets/svgs"
 
 export const EmptyBagItem: React.FC<{ index: number; navigation: any }> = ({ index, navigation }) => {
   return (
-    <Box py={2}>
+    <Box py={3}>
       <EmptyBagItemContainer>
         <Spacer />
         <Sans size="1" color="black100">

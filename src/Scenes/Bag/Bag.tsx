@@ -285,7 +285,6 @@ export const Bag = screenTrack()((props) => {
   } else {
     sections = [{ data: reservations }]
   }
-  const footerMarginBottom = currentView === BagView.Bag ? 96 : 2
 
   return (
     <Container insetsBottom={false}>
@@ -317,7 +316,7 @@ export const Bag = screenTrack()((props) => {
         renderItem={(item) => {
           return renderItem(item)
         }}
-        ListFooterComponent={() => <Spacer mb={footerMarginBottom} />}
+        ListFooterComponent={() => <Spacer mb={2} />}
       />
       {isBagView && pauseStatus !== "paused" && !hasActiveReservation && (
         <FixedButton
