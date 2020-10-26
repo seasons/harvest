@@ -208,7 +208,6 @@ export const BagTab: React.FC<{
             title="Surprise me"
             caption="Discover styles in your size"
             onPress={() => {
-              console.log("naving")
               navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
             }}
           />

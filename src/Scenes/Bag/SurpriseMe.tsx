@@ -91,7 +91,6 @@ export const SurpriseMe = screenTrack()(() => {
 
   useEffect(() => {
     if (!variants && data?.surpriseProductVariants) {
-      console.log("??")
       createShuffledVariants()
     }
   }, [data, variants, setVariants, createShuffledVariants])

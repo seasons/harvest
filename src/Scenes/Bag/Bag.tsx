@@ -50,7 +50,6 @@ export const Bag = screenTrack()((props) => {
 
   const me = data?.me
   const customerStatus = me?.customer?.status
-  console.log("here", DEFAULT_ITEM_COUNT)
 
   useEffect(() => {
     if (data) {
