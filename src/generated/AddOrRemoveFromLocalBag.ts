@@ -8,16 +8,16 @@
 // ====================================================
 
 export interface AddOrRemoveFromLocalBag_addOrRemoveFromLocalBag {
-  __typename: "LocalProduct"
-  productID: string
-  variantID: string
+  __typename: "LocalProduct";
+  productID: string;
+  variantID: string;
 }
 
 export interface AddOrRemoveFromLocalBag {
-  addOrRemoveFromLocalBag: AddOrRemoveFromLocalBag_addOrRemoveFromLocalBag[]
+  addOrRemoveFromLocalBag: AddOrRemoveFromLocalBag_addOrRemoveFromLocalBag[];
 }
 
 export interface AddOrRemoveFromLocalBagVariables {
-  productID: string
-  variantID: string
+  productID: string;
+  variantID: string;
 }

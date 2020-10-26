@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 const CHECK_COUPON = gql`
   mutation CheckCoupon($couponID: String!) {
     checkCoupon(couponID: $couponID) {
+      id
       amount
       percentage
       type
@@ -32,9 +33,9 @@ export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = ({ onApplyP
   const textInputRef: React.MutableRefObject<TextInputRef> = useRef(null)
   const [checkCoupon] = useMutation(CHECK_COUPON, {
     onCompleted: (data) => {
-      const { amount, percentage, type } = data?.checkCoupon
+      const { id, amount, percentage, type } = data?.checkCoupon
       setIsMutating(false)
-      onApplyPromoCode(amount, percentage, type, promoCode)
+      onApplyPromoCode(amount, percentage, type, id)
     },
     onError: (err) => {
       const popUpData = {

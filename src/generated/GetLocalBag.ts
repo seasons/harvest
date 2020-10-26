@@ -8,11 +8,11 @@
 // ====================================================
 
 export interface GetLocalBag_localBagItems {
-  __typename: "LocalProduct"
-  productID: string
-  variantID: string
+  __typename: "LocalProduct";
+  productID: string;
+  variantID: string;
 }
 
 export interface GetLocalBag {
-  localBagItems: GetLocalBag_localBagItems[]
+  localBagItems: GetLocalBag_localBagItems[];
 }

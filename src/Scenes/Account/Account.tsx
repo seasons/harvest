@@ -109,6 +109,7 @@ export const Account = screenTrack()(({ navigation }) => {
   const onboardingSteps = customer?.onboardingSteps
   const status = customer?.status
   const referralLink = customer?.referralLink
+  console.log(referralLink)
 
   const user = customer?.user
   const email = user?.email
@@ -391,7 +392,7 @@ export const Account = screenTrack()(({ navigation }) => {
             {!!data ? renderBody() : <ListSkeleton />}
           </Box>
           <InsetSeparator />
-          <InvitedFriendsRow referralLink={referralLink} />
+          {!!referralLink && <InvitedFriendsRow referralLink={referralLink} />}
           <InsetSeparator />
           <NotificationToggle pushNotification={pushNotification} />
           <InsetSeparator />

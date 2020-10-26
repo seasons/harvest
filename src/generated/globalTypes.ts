@@ -112,6 +112,15 @@ export enum HomePageSectionType {
   Products = "Products",
 }
 
+export enum InAdmissableReason {
+  AutomaticAdmissionsFlagOff = "AutomaticAdmissionsFlagOff",
+  InsufficientInventory = "InsufficientInventory",
+  OpsThresholdExceeded = "OpsThresholdExceeded",
+  UnserviceableZipcode = "UnserviceableZipcode",
+  UnsupportedPlatform = "UnsupportedPlatform",
+  Untriageable = "Untriageable",
+}
+
 export enum InventoryStatus {
   NonReservable = "NonReservable",
   Offloaded = "Offloaded",
@@ -1260,23 +1269,109 @@ export interface ColorWhereUniqueInput {
   colorCode?: string | null;
 }
 
+export interface CustomerAdmissionsDataCreateOneWithoutCustomersInput {
+  create?: CustomerAdmissionsDataCreateWithoutCustomersInput | null;
+  connect?: CustomerAdmissionsDataWhereUniqueInput | null;
+}
+
+export interface CustomerAdmissionsDataCreateWithoutCustomersInput {
+  id?: string | null;
+  inServiceableZipcode: boolean;
+  admissable: boolean;
+  inAdmissableReason?: InAdmissableReason | null;
+}
+
+export interface CustomerAdmissionsDataUpdateOneWithoutCustomersInput {
+  create?: CustomerAdmissionsDataCreateWithoutCustomersInput | null;
+  connect?: CustomerAdmissionsDataWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: CustomerAdmissionsDataUpdateWithoutCustomersDataInput | null;
+  upsert?: CustomerAdmissionsDataUpsertWithoutCustomersInput | null;
+}
+
+export interface CustomerAdmissionsDataUpdateWithoutCustomersDataInput {
+  inServiceableZipcode?: boolean | null;
+  admissable?: boolean | null;
+  inAdmissableReason?: InAdmissableReason | null;
+}
+
+export interface CustomerAdmissionsDataUpsertWithoutCustomersInput {
+  update: CustomerAdmissionsDataUpdateWithoutCustomersDataInput;
+  create: CustomerAdmissionsDataCreateWithoutCustomersInput;
+}
+
+export interface CustomerAdmissionsDataWhereUniqueInput {
+  id?: string | null;
+}
+
+export interface CustomerCreateManyWithoutReferrerInput {
+  create?: CustomerCreateWithoutReferrerInput[] | null;
+  connect?: CustomerWhereUniqueInput[] | null;
+}
+
+export interface CustomerCreateOneWithoutReferreesInput {
+  create?: CustomerCreateWithoutReferreesInput | null;
+  connect?: CustomerWhereUniqueInput | null;
+}
+
 export interface CustomerCreateOneWithoutReservationsInput {
   create?: CustomerCreateWithoutReservationsInput | null;
   connect?: CustomerWhereUniqueInput | null;
 }
 
-export interface CustomerCreateWithoutReservationsInput {
+export interface CustomerCreateWithoutReferreesInput {
   id?: string | null;
   status?: CustomerStatus | null;
-  referralLink?: string | null;
   plan?: Plan | null;
+  referralLink?: string | null;
+  referrerId?: string | null;
   authorizedAt?: any | null;
   user: UserCreateOneInput;
   detail?: CustomerDetailCreateOneInput | null;
   billingInfo?: BillingInfoCreateOneInput | null;
   membership?: CustomerMembershipCreateOneWithoutCustomerInput | null;
   bagItems?: BagItemCreateManyWithoutCustomerInput | null;
+  reservations?: ReservationCreateManyWithoutCustomerInput | null;
+  referrer?: CustomerCreateOneWithoutReferreesInput | null;
   emailedProducts?: ProductCreateManyInput | null;
+  admissions?: CustomerAdmissionsDataCreateOneWithoutCustomersInput | null;
+}
+
+export interface CustomerCreateWithoutReferrerInput {
+  id?: string | null;
+  status?: CustomerStatus | null;
+  plan?: Plan | null;
+  referralLink?: string | null;
+  referrerId?: string | null;
+  authorizedAt?: any | null;
+  user: UserCreateOneInput;
+  detail?: CustomerDetailCreateOneInput | null;
+  billingInfo?: BillingInfoCreateOneInput | null;
+  membership?: CustomerMembershipCreateOneWithoutCustomerInput | null;
+  bagItems?: BagItemCreateManyWithoutCustomerInput | null;
+  reservations?: ReservationCreateManyWithoutCustomerInput | null;
+  referrees?: CustomerCreateManyWithoutReferrerInput | null;
+  emailedProducts?: ProductCreateManyInput | null;
+  admissions?: CustomerAdmissionsDataCreateOneWithoutCustomersInput | null;
+}
+
+export interface CustomerCreateWithoutReservationsInput {
+  id?: string | null;
+  status?: CustomerStatus | null;
+  plan?: Plan | null;
+  referralLink?: string | null;
+  referrerId?: string | null;
+  authorizedAt?: any | null;
+  user: UserCreateOneInput;
+  detail?: CustomerDetailCreateOneInput | null;
+  billingInfo?: BillingInfoCreateOneInput | null;
+  membership?: CustomerMembershipCreateOneWithoutCustomerInput | null;
+  bagItems?: BagItemCreateManyWithoutCustomerInput | null;
+  referrer?: CustomerCreateOneWithoutReferreesInput | null;
+  referrees?: CustomerCreateManyWithoutReferrerInput | null;
+  emailedProducts?: ProductCreateManyInput | null;
+  admissions?: CustomerAdmissionsDataCreateOneWithoutCustomersInput | null;
 }
 
 export interface CustomerDetailCreateInput {
@@ -1413,6 +1508,111 @@ export interface CustomerMembershipWhereUniqueInput {
   id?: string | null;
 }
 
+export interface CustomerScalarWhereInput {
+  AND?: CustomerScalarWhereInput[] | null;
+  OR?: CustomerScalarWhereInput[] | null;
+  NOT?: CustomerScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  status?: CustomerStatus | null;
+  status_not?: CustomerStatus | null;
+  status_in?: CustomerStatus[] | null;
+  status_not_in?: CustomerStatus[] | null;
+  plan?: Plan | null;
+  plan_not?: Plan | null;
+  plan_in?: Plan[] | null;
+  plan_not_in?: Plan[] | null;
+  referralLink?: string | null;
+  referralLink_not?: string | null;
+  referralLink_in?: string[] | null;
+  referralLink_not_in?: string[] | null;
+  referralLink_lt?: string | null;
+  referralLink_lte?: string | null;
+  referralLink_gt?: string | null;
+  referralLink_gte?: string | null;
+  referralLink_contains?: string | null;
+  referralLink_not_contains?: string | null;
+  referralLink_starts_with?: string | null;
+  referralLink_not_starts_with?: string | null;
+  referralLink_ends_with?: string | null;
+  referralLink_not_ends_with?: string | null;
+  referrerId?: string | null;
+  referrerId_not?: string | null;
+  referrerId_in?: string[] | null;
+  referrerId_not_in?: string[] | null;
+  referrerId_lt?: string | null;
+  referrerId_lte?: string | null;
+  referrerId_gt?: string | null;
+  referrerId_gte?: string | null;
+  referrerId_contains?: string | null;
+  referrerId_not_contains?: string | null;
+  referrerId_starts_with?: string | null;
+  referrerId_not_starts_with?: string | null;
+  referrerId_ends_with?: string | null;
+  referrerId_not_ends_with?: string | null;
+  authorizedAt?: any | null;
+  authorizedAt_not?: any | null;
+  authorizedAt_in?: any[] | null;
+  authorizedAt_not_in?: any[] | null;
+  authorizedAt_lt?: any | null;
+  authorizedAt_lte?: any | null;
+  authorizedAt_gt?: any | null;
+  authorizedAt_gte?: any | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+}
+
+export interface CustomerUpdateManyDataInput {
+  status?: CustomerStatus | null;
+  plan?: Plan | null;
+  referralLink?: string | null;
+  referrerId?: string | null;
+  authorizedAt?: any | null;
+}
+
+export interface CustomerUpdateManyWithWhereNestedInput {
+  where: CustomerScalarWhereInput;
+  data: CustomerUpdateManyDataInput;
+}
+
+export interface CustomerUpdateManyWithoutReferrerInput {
+  create?: CustomerCreateWithoutReferrerInput[] | null;
+  connect?: CustomerWhereUniqueInput[] | null;
+  set?: CustomerWhereUniqueInput[] | null;
+  disconnect?: CustomerWhereUniqueInput[] | null;
+  delete?: CustomerWhereUniqueInput[] | null;
+  update?: CustomerUpdateWithWhereUniqueWithoutReferrerInput[] | null;
+  updateMany?: CustomerUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: CustomerScalarWhereInput[] | null;
+  upsert?: CustomerUpsertWithWhereUniqueWithoutReferrerInput[] | null;
+}
+
 export interface CustomerUpdateOneRequiredWithoutReservationsInput {
   create?: CustomerCreateWithoutReservationsInput | null;
   connect?: CustomerWhereUniqueInput | null;
@@ -1420,17 +1620,80 @@ export interface CustomerUpdateOneRequiredWithoutReservationsInput {
   upsert?: CustomerUpsertWithoutReservationsInput | null;
 }
 
-export interface CustomerUpdateWithoutReservationsDataInput {
+export interface CustomerUpdateOneWithoutReferreesInput {
+  create?: CustomerCreateWithoutReferreesInput | null;
+  connect?: CustomerWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: CustomerUpdateWithoutReferreesDataInput | null;
+  upsert?: CustomerUpsertWithoutReferreesInput | null;
+}
+
+export interface CustomerUpdateWithWhereUniqueWithoutReferrerInput {
+  where: CustomerWhereUniqueInput;
+  data: CustomerUpdateWithoutReferrerDataInput;
+}
+
+export interface CustomerUpdateWithoutReferreesDataInput {
   status?: CustomerStatus | null;
-  referralLink?: string | null;
   plan?: Plan | null;
+  referralLink?: string | null;
+  referrerId?: string | null;
   authorizedAt?: any | null;
   user?: UserUpdateOneRequiredInput | null;
   detail?: CustomerDetailUpdateOneInput | null;
   billingInfo?: BillingInfoUpdateOneInput | null;
   membership?: CustomerMembershipUpdateOneWithoutCustomerInput | null;
   bagItems?: BagItemUpdateManyWithoutCustomerInput | null;
+  reservations?: ReservationUpdateManyWithoutCustomerInput | null;
+  referrer?: CustomerUpdateOneWithoutReferreesInput | null;
   emailedProducts?: ProductUpdateManyInput | null;
+  admissions?: CustomerAdmissionsDataUpdateOneWithoutCustomersInput | null;
+}
+
+export interface CustomerUpdateWithoutReferrerDataInput {
+  status?: CustomerStatus | null;
+  plan?: Plan | null;
+  referralLink?: string | null;
+  referrerId?: string | null;
+  authorizedAt?: any | null;
+  user?: UserUpdateOneRequiredInput | null;
+  detail?: CustomerDetailUpdateOneInput | null;
+  billingInfo?: BillingInfoUpdateOneInput | null;
+  membership?: CustomerMembershipUpdateOneWithoutCustomerInput | null;
+  bagItems?: BagItemUpdateManyWithoutCustomerInput | null;
+  reservations?: ReservationUpdateManyWithoutCustomerInput | null;
+  referrees?: CustomerUpdateManyWithoutReferrerInput | null;
+  emailedProducts?: ProductUpdateManyInput | null;
+  admissions?: CustomerAdmissionsDataUpdateOneWithoutCustomersInput | null;
+}
+
+export interface CustomerUpdateWithoutReservationsDataInput {
+  status?: CustomerStatus | null;
+  plan?: Plan | null;
+  referralLink?: string | null;
+  referrerId?: string | null;
+  authorizedAt?: any | null;
+  user?: UserUpdateOneRequiredInput | null;
+  detail?: CustomerDetailUpdateOneInput | null;
+  billingInfo?: BillingInfoUpdateOneInput | null;
+  membership?: CustomerMembershipUpdateOneWithoutCustomerInput | null;
+  bagItems?: BagItemUpdateManyWithoutCustomerInput | null;
+  referrer?: CustomerUpdateOneWithoutReferreesInput | null;
+  referrees?: CustomerUpdateManyWithoutReferrerInput | null;
+  emailedProducts?: ProductUpdateManyInput | null;
+  admissions?: CustomerAdmissionsDataUpdateOneWithoutCustomersInput | null;
+}
+
+export interface CustomerUpsertWithWhereUniqueWithoutReferrerInput {
+  where: CustomerWhereUniqueInput;
+  update: CustomerUpdateWithoutReferrerDataInput;
+  create: CustomerCreateWithoutReferrerInput;
+}
+
+export interface CustomerUpsertWithoutReferreesInput {
+  update: CustomerUpdateWithoutReferreesDataInput;
+  create: CustomerCreateWithoutReferreesInput;
 }
 
 export interface CustomerUpsertWithoutReservationsInput {
@@ -5576,9 +5839,33 @@ export interface ReservationCreateInput {
   lastLocation?: LocationCreateOneInput | null;
 }
 
+export interface ReservationCreateManyWithoutCustomerInput {
+  create?: ReservationCreateWithoutCustomerInput[] | null;
+  connect?: ReservationWhereUniqueInput[] | null;
+}
+
 export interface ReservationCreateOneWithoutPackageEventsInput {
   create?: ReservationCreateWithoutPackageEventsInput | null;
   connect?: ReservationWhereUniqueInput | null;
+}
+
+export interface ReservationCreateWithoutCustomerInput {
+  id?: string | null;
+  reservationNumber: number;
+  phase: ReservationPhase;
+  shipped: boolean;
+  status: ReservationStatus;
+  shippedAt?: any | null;
+  receivedAt?: any | null;
+  reminderSentAt?: any | null;
+  statusUpdatedAt?: any | null;
+  user: UserCreateOneInput;
+  sentPackage?: PackageCreateOneInput | null;
+  returnedPackage?: PackageCreateOneInput | null;
+  products?: PhysicalProductCreateManyInput | null;
+  packageEvents?: PackageTransitEventCreateManyWithoutReservationInput | null;
+  receipt?: ReservationReceiptCreateOneWithoutReservationInput | null;
+  lastLocation?: LocationCreateOneInput | null;
 }
 
 export interface ReservationCreateWithoutPackageEventsInput {
@@ -5734,6 +6021,92 @@ export interface ReservationReceiptWhereUniqueInput {
   id?: string | null;
 }
 
+export interface ReservationScalarWhereInput {
+  AND?: ReservationScalarWhereInput[] | null;
+  OR?: ReservationScalarWhereInput[] | null;
+  NOT?: ReservationScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  reservationNumber?: number | null;
+  reservationNumber_not?: number | null;
+  reservationNumber_in?: number[] | null;
+  reservationNumber_not_in?: number[] | null;
+  reservationNumber_lt?: number | null;
+  reservationNumber_lte?: number | null;
+  reservationNumber_gt?: number | null;
+  reservationNumber_gte?: number | null;
+  phase?: ReservationPhase | null;
+  phase_not?: ReservationPhase | null;
+  phase_in?: ReservationPhase[] | null;
+  phase_not_in?: ReservationPhase[] | null;
+  shipped?: boolean | null;
+  shipped_not?: boolean | null;
+  status?: ReservationStatus | null;
+  status_not?: ReservationStatus | null;
+  status_in?: ReservationStatus[] | null;
+  status_not_in?: ReservationStatus[] | null;
+  shippedAt?: any | null;
+  shippedAt_not?: any | null;
+  shippedAt_in?: any[] | null;
+  shippedAt_not_in?: any[] | null;
+  shippedAt_lt?: any | null;
+  shippedAt_lte?: any | null;
+  shippedAt_gt?: any | null;
+  shippedAt_gte?: any | null;
+  receivedAt?: any | null;
+  receivedAt_not?: any | null;
+  receivedAt_in?: any[] | null;
+  receivedAt_not_in?: any[] | null;
+  receivedAt_lt?: any | null;
+  receivedAt_lte?: any | null;
+  receivedAt_gt?: any | null;
+  receivedAt_gte?: any | null;
+  reminderSentAt?: any | null;
+  reminderSentAt_not?: any | null;
+  reminderSentAt_in?: any[] | null;
+  reminderSentAt_not_in?: any[] | null;
+  reminderSentAt_lt?: any | null;
+  reminderSentAt_lte?: any | null;
+  reminderSentAt_gt?: any | null;
+  reminderSentAt_gte?: any | null;
+  statusUpdatedAt?: any | null;
+  statusUpdatedAt_not?: any | null;
+  statusUpdatedAt_in?: any[] | null;
+  statusUpdatedAt_not_in?: any[] | null;
+  statusUpdatedAt_lt?: any | null;
+  statusUpdatedAt_lte?: any | null;
+  statusUpdatedAt_gt?: any | null;
+  statusUpdatedAt_gte?: any | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+}
+
 export interface ReservationUpdateDataInput {
   reservationNumber?: number | null;
   phase?: ReservationPhase | null;
@@ -5753,6 +6126,34 @@ export interface ReservationUpdateDataInput {
   lastLocation?: LocationUpdateOneInput | null;
 }
 
+export interface ReservationUpdateManyDataInput {
+  reservationNumber?: number | null;
+  phase?: ReservationPhase | null;
+  shipped?: boolean | null;
+  status?: ReservationStatus | null;
+  shippedAt?: any | null;
+  receivedAt?: any | null;
+  reminderSentAt?: any | null;
+  statusUpdatedAt?: any | null;
+}
+
+export interface ReservationUpdateManyWithWhereNestedInput {
+  where: ReservationScalarWhereInput;
+  data: ReservationUpdateManyDataInput;
+}
+
+export interface ReservationUpdateManyWithoutCustomerInput {
+  create?: ReservationCreateWithoutCustomerInput[] | null;
+  connect?: ReservationWhereUniqueInput[] | null;
+  set?: ReservationWhereUniqueInput[] | null;
+  disconnect?: ReservationWhereUniqueInput[] | null;
+  delete?: ReservationWhereUniqueInput[] | null;
+  update?: ReservationUpdateWithWhereUniqueWithoutCustomerInput[] | null;
+  updateMany?: ReservationUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: ReservationScalarWhereInput[] | null;
+  upsert?: ReservationUpsertWithWhereUniqueWithoutCustomerInput[] | null;
+}
+
 export interface ReservationUpdateOneRequiredInput {
   create?: ReservationCreateInput | null;
   connect?: ReservationWhereUniqueInput | null;
@@ -5767,6 +6168,29 @@ export interface ReservationUpdateOneWithoutPackageEventsInput {
   delete?: boolean | null;
   update?: ReservationUpdateWithoutPackageEventsDataInput | null;
   upsert?: ReservationUpsertWithoutPackageEventsInput | null;
+}
+
+export interface ReservationUpdateWithWhereUniqueWithoutCustomerInput {
+  where: ReservationWhereUniqueInput;
+  data: ReservationUpdateWithoutCustomerDataInput;
+}
+
+export interface ReservationUpdateWithoutCustomerDataInput {
+  reservationNumber?: number | null;
+  phase?: ReservationPhase | null;
+  shipped?: boolean | null;
+  status?: ReservationStatus | null;
+  shippedAt?: any | null;
+  receivedAt?: any | null;
+  reminderSentAt?: any | null;
+  statusUpdatedAt?: any | null;
+  user?: UserUpdateOneRequiredInput | null;
+  sentPackage?: PackageUpdateOneInput | null;
+  returnedPackage?: PackageUpdateOneInput | null;
+  products?: PhysicalProductUpdateManyInput | null;
+  packageEvents?: PackageTransitEventUpdateManyWithoutReservationInput | null;
+  receipt?: ReservationReceiptUpdateOneWithoutReservationInput | null;
+  lastLocation?: LocationUpdateOneInput | null;
 }
 
 export interface ReservationUpdateWithoutPackageEventsDataInput {
@@ -5790,6 +6214,12 @@ export interface ReservationUpdateWithoutPackageEventsDataInput {
 export interface ReservationUpsertNestedInput {
   update: ReservationUpdateDataInput;
   create: ReservationCreateInput;
+}
+
+export interface ReservationUpsertWithWhereUniqueWithoutCustomerInput {
+  where: ReservationWhereUniqueInput;
+  update: ReservationUpdateWithoutCustomerDataInput;
+  create: ReservationCreateWithoutCustomerInput;
 }
 
 export interface ReservationUpsertWithoutPackageEventsInput {
