@@ -191,13 +191,13 @@ export const EditShippingAddress: React.FC<{
         <FadeBottom2 width="100%">
           <Spacer mb={2} />
           <Flex p={2} flexDirection="row">
-            <Box flex={1}>
+            <Box style={{ flex: 1 }}>
               <Button block variant="primaryWhite" size="large" onPress={navigation.goBack}>
                 Cancel
               </Button>
             </Box>
             <Spacer mr={1} />
-            <Box flex={1}>
+            <Box style={{ flex: 1 }}>
               <Button
                 block
                 disabled={

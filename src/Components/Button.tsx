@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from "react"
+import React, { Component, ComponentType, ReactNode } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
@@ -73,8 +73,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: white100,
         },
         pressed: {
-          backgroundColor: black85,
-          borderColor: black85,
+          backgroundColor: black50,
+          borderColor: black50,
           color: white100,
         },
         disabled: {

@@ -16,4 +16,5 @@ export interface applePayUpdatePaymentMethod {
 export interface applePayUpdatePaymentMethodVariables {
   planID: string;
   token: StripeToken;
+  tokenType?: string | null;
 }

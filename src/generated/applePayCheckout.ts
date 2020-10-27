@@ -16,4 +16,5 @@ export interface ApplePayCheckout {
 export interface ApplePayCheckoutVariables {
   planID: string;
   token: StripeToken;
+  tokenType?: string | null;
 }

@@ -70,9 +70,8 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
   )
 }
 
-const ReservationItemContainer = styled(Box)`
+const ReservationItemContainer = styled(Flex)`
   background: white;
-  border-radius: 8px;
   overflow: hidden;
   height: 210px;
 `

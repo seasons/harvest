@@ -17,7 +17,6 @@ import { Brand } from "App/Scenes/Brand"
 import { Brands } from "App/Scenes/Brands"
 import { Browse, Filters } from "App/Scenes/Browse"
 import { CreateAccount } from "App/Scenes/CreateAccount"
-import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane"
 import { DebugMenu } from "App/Scenes/DebugMenu"
 import { Faq } from "App/Scenes/Faq"
 import { Home } from "App/Scenes/Home"
@@ -40,6 +39,8 @@ import { createSharedElementStackNavigator } from "react-navigation-shared-eleme
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 import { NavBar } from "./NavBar"
+import { SurpriseMe } from "App/Scenes/Bag/SurpriseMe"
+import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ApplyPromoCode/ApplyPromoCode"
 
 const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
@@ -114,6 +115,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />
       <ModalStack.Screen name={Schema.PageNames.CreateAccountModal} component={CreateAccount} />
+      <ModalStack.Screen name={Schema.PageNames.SurpriseMe} component={SurpriseMe} />
       <ModalStack.Screen name={Schema.PageNames.EditShippingAddress} component={EditShippingAddress} />
       <ModalStack.Screen name={Schema.PageNames.EditStylePreferences} component={EditStylePreferences} />
       <ModalStack.Screen name={Schema.PageNames.EditMeasurements} component={EditMeasurements} />

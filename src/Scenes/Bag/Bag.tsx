@@ -1,7 +1,6 @@
 import { Box, FixedButton, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { PauseButtons, PauseStatus } from "App/Components/Pause/PauseButtons"
-import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
@@ -12,11 +11,10 @@ import { assign, fill } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, RefreshControl, StatusBar } from "react-native"
-
 import { useFocusEffect } from "@react-navigation/native"
-
 import { CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
+import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 
 export enum BagView {
   Bag = 0,
@@ -28,13 +26,14 @@ export const Bag = screenTrack()((props) => {
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
-
+  const [itemCount, setItemCount] = useState(DEFAULT_ITEM_COUNT)
   const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const tracking = useTracking()
 
   const { navigation, route } = props
   const routeTab = route?.params?.tab
+  const isSignedIn = authState.isSignedIn
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
 
   useFocusEffect(
@@ -51,11 +50,16 @@ export const Bag = screenTrack()((props) => {
 
   const me = data?.me
   const customerStatus = me?.customer?.status
+
   useEffect(() => {
     if (data) {
+      const dataItemCount = data?.me?.customer?.membership?.plan?.itemCount
+      if (!!dataItemCount && dataItemCount !== itemCount && isSignedIn) {
+        setItemCount(dataItemCount)
+      }
       setIsLoading(false)
     }
-  }, [data])
+  }, [data, setIsLoading, setItemCount])
 
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {
@@ -111,7 +115,7 @@ export const Bag = screenTrack()((props) => {
     setRefreshing(false)
   }
 
-  const items = !authState.isSignedIn
+  const items = !isSignedIn
     ? localItems?.localBagItems || []
     : me?.bag?.map((item) => ({
         ...item,
@@ -126,7 +130,6 @@ export const Bag = screenTrack()((props) => {
       productID: item.productVariant.product.id,
     })) || []
 
-  const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
   const bagItems = (itemCount && assign(fill(new Array(itemCount), { variantID: "", productID: "" }), items)) || []
   const hasActiveReservation = !!me?.activeReservation
 
@@ -134,7 +137,7 @@ export const Bag = screenTrack()((props) => {
   const handleReserve = async (navigation) => {
     setMutating(true)
     try {
-      if (!authState.isSignedIn) {
+      if (!isSignedIn) {
         showPopUp({
           title: "Sign up to Reserve your items",
           note: "You need to create an account before you can reserve items",
@@ -249,11 +252,13 @@ export const Bag = screenTrack()((props) => {
       } else {
         return (
           <BagTab
+            itemCount={itemCount}
             data={data}
             pauseStatus={pauseStatus}
             items={item.data}
             removeFromBagAndSaveItem={removeFromBagAndSaveItem}
             deleteBagItem={deleteBagItem}
+            setItemCount={setItemCount}
           />
         )
       }
@@ -279,7 +284,6 @@ export const Bag = screenTrack()((props) => {
   } else {
     sections = [{ data: reservations }]
   }
-  const footerMarginBottom = currentView === BagView.Bag ? 96 : 2
 
   return (
     <Container insetsBottom={false}>
@@ -311,7 +315,7 @@ export const Bag = screenTrack()((props) => {
         renderItem={(item) => {
           return renderItem(item)
         }}
-        ListFooterComponent={() => <Spacer mb={footerMarginBottom} />}
+        ListFooterComponent={() => <Spacer mb={2} />}
       />
       {isBagView && pauseStatus !== "paused" && !hasActiveReservation && (
         <FixedButton
