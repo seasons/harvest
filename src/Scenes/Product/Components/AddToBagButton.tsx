@@ -1,6 +1,5 @@
 import { Button } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
-import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, ADD_TO_BAG, GET_BAG, GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
@@ -13,6 +12,7 @@ import { useMutation, useQuery } from "@apollo/react-hooks"
 import { useNavigation } from "@react-navigation/native"
 
 import { GET_PRODUCT } from "../Queries"
+import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 
 interface Props {
   disabled?: Boolean

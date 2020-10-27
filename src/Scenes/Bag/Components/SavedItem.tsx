@@ -121,6 +121,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
 
               <Flex flexDirection="row" alignItems="center">
                 <ColoredDot reservable={reservable} />
+                <Spacer mr={1} />
                 {!!reservable ? (
                   <>
                     {!hasActiveReservation ? (
@@ -219,7 +220,9 @@ export const SavedItem: React.FC<BagItemProps> = ({
         </BagItemContainer>
       </TouchableWithoutFeedback>
       <Spacer mb={2} />
-      <Separator color={color("black10")} />
+      <Box px={2}>
+        <Separator color={color("black10")} />
+      </Box>
       {addingToBag && (
         <Overlay>
           <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
@@ -241,7 +244,7 @@ const Overlay = styled(Box)`
   background-color: rgba(255, 255, 255, 0.5);
 `
 
-const BagItemContainer = styled(Box)`
+const BagItemContainer = styled(Flex)`
   overflow: hidden;
   height: 210px;
 `
@@ -250,12 +253,7 @@ const ImageContainer = styled(FadeInImage)`
   height: 214;
 `
 
-const ImageWrapper = styled(FadeInImage)`
-  border-radius: 30px;
-  overflow: hidden;
-`
-
-const ColoredDot = styled(Box)`
+const ColoredDot = styled(Box)<{ reservable: boolean }>`
   height: 8;
   width: 8;
   background-color: ${(p) => (!!p.reservable ? color("green100") : color("black50"))};

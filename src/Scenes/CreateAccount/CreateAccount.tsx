@@ -319,6 +319,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       case State.CreditCardForm:
         pane = (
           <CreditCardFormPane
+            currentState={currentState}
             onRequestBack={() => {
               setPrevState()
               // Track the time viewed

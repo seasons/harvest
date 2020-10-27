@@ -78,6 +78,22 @@ export enum CustomerStatus {
   Waitlisted = "Waitlisted",
 }
 
+export enum EmailId {
+  CompleteAccount = "CompleteAccount",
+  FreeToReserve = "FreeToReserve",
+  Paused = "Paused",
+  PriorityAccess = "PriorityAccess",
+  ReservationConfirmation = "ReservationConfirmation",
+  ReservationReturnConfirmation = "ReservationReturnConfirmation",
+  ResumeReminder = "ResumeReminder",
+  ReturnReminder = "ReturnReminder",
+  Rewaitlisted = "Rewaitlisted",
+  SubmittedEmail = "SubmittedEmail",
+  TwentyFourHourAuthorizationFollowup = "TwentyFourHourAuthorizationFollowup",
+  Waitlisted = "Waitlisted",
+  WelcomeToSeasons = "WelcomeToSeasons",
+}
+
 export enum FitPicReportStatus {
   Pending = "Pending",
   Reviewed = "Reviewed",
@@ -1253,11 +1269,13 @@ export interface CustomerCreateWithoutReservationsInput {
   id?: string | null;
   status?: CustomerStatus | null;
   plan?: Plan | null;
+  authorizedAt?: any | null;
   user: UserCreateOneInput;
   detail?: CustomerDetailCreateOneInput | null;
   billingInfo?: BillingInfoCreateOneInput | null;
   membership?: CustomerMembershipCreateOneWithoutCustomerInput | null;
   bagItems?: BagItemCreateManyWithoutCustomerInput | null;
+  emailedProducts?: ProductCreateManyInput | null;
 }
 
 export interface CustomerDetailCreateInput {
@@ -1404,11 +1422,13 @@ export interface CustomerUpdateOneRequiredWithoutReservationsInput {
 export interface CustomerUpdateWithoutReservationsDataInput {
   status?: CustomerStatus | null;
   plan?: Plan | null;
+  authorizedAt?: any | null;
   user?: UserUpdateOneRequiredInput | null;
   detail?: CustomerDetailUpdateOneInput | null;
   billingInfo?: BillingInfoUpdateOneInput | null;
   membership?: CustomerMembershipUpdateOneWithoutCustomerInput | null;
   bagItems?: BagItemUpdateManyWithoutCustomerInput | null;
+  emailedProducts?: ProductUpdateManyInput | null;
 }
 
 export interface CustomerUpsertWithoutReservationsInput {
@@ -1417,6 +1437,137 @@ export interface CustomerUpsertWithoutReservationsInput {
 }
 
 export interface CustomerWhereUniqueInput {
+  id?: string | null;
+}
+
+export interface EmailReceiptCreateManyWithoutUserInput {
+  create?: EmailReceiptCreateWithoutUserInput[] | null;
+  connect?: EmailReceiptWhereUniqueInput[] | null;
+}
+
+export interface EmailReceiptCreateWithoutUserInput {
+  id?: string | null;
+  emailId: EmailId;
+}
+
+export interface EmailReceiptScalarWhereInput {
+  AND?: EmailReceiptScalarWhereInput[] | null;
+  OR?: EmailReceiptScalarWhereInput[] | null;
+  NOT?: EmailReceiptScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  emailId?: EmailId | null;
+  emailId_not?: EmailId | null;
+  emailId_in?: EmailId[] | null;
+  emailId_not_in?: EmailId[] | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+}
+
+export interface EmailReceiptUpdateManyDataInput {
+  emailId?: EmailId | null;
+}
+
+export interface EmailReceiptUpdateManyWithWhereNestedInput {
+  where: EmailReceiptScalarWhereInput;
+  data: EmailReceiptUpdateManyDataInput;
+}
+
+export interface EmailReceiptUpdateManyWithoutUserInput {
+  create?: EmailReceiptCreateWithoutUserInput[] | null;
+  connect?: EmailReceiptWhereUniqueInput[] | null;
+  set?: EmailReceiptWhereUniqueInput[] | null;
+  disconnect?: EmailReceiptWhereUniqueInput[] | null;
+  delete?: EmailReceiptWhereUniqueInput[] | null;
+  update?: EmailReceiptUpdateWithWhereUniqueWithoutUserInput[] | null;
+  updateMany?: EmailReceiptUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: EmailReceiptScalarWhereInput[] | null;
+  upsert?: EmailReceiptUpsertWithWhereUniqueWithoutUserInput[] | null;
+}
+
+export interface EmailReceiptUpdateWithWhereUniqueWithoutUserInput {
+  where: EmailReceiptWhereUniqueInput;
+  data: EmailReceiptUpdateWithoutUserDataInput;
+}
+
+export interface EmailReceiptUpdateWithoutUserDataInput {
+  emailId?: EmailId | null;
+}
+
+export interface EmailReceiptUpsertWithWhereUniqueWithoutUserInput {
+  where: EmailReceiptWhereUniqueInput;
+  update: EmailReceiptUpdateWithoutUserDataInput;
+  create: EmailReceiptCreateWithoutUserInput;
+}
+
+export interface EmailReceiptWhereInput {
+  AND?: EmailReceiptWhereInput[] | null;
+  OR?: EmailReceiptWhereInput[] | null;
+  NOT?: EmailReceiptWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  emailId?: EmailId | null;
+  emailId_not?: EmailId | null;
+  emailId_in?: EmailId[] | null;
+  emailId_not_in?: EmailId[] | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+  user?: UserWhereInput | null;
+}
+
+export interface EmailReceiptWhereUniqueInput {
   id?: string | null;
 }
 
@@ -2014,6 +2165,7 @@ export interface LocationCreateInput {
   address1?: string | null;
   address2?: string | null;
   city?: string | null;
+  country?: string | null;
   state?: string | null;
   zipCode: string;
   locationType?: LocationType | null;
@@ -2042,6 +2194,7 @@ export interface LocationCreateWithoutPhysicalProductsInput {
   address1?: string | null;
   address2?: string | null;
   city?: string | null;
+  country?: string | null;
   state?: string | null;
   zipCode: string;
   locationType?: LocationType | null;
@@ -2058,6 +2211,7 @@ export interface LocationUpdateDataInput {
   address1?: string | null;
   address2?: string | null;
   city?: string | null;
+  country?: string | null;
   state?: string | null;
   zipCode?: string | null;
   locationType?: LocationType | null;
@@ -2100,6 +2254,7 @@ export interface LocationUpdateWithoutPhysicalProductsDataInput {
   address1?: string | null;
   address2?: string | null;
   city?: string | null;
+  country?: string | null;
   state?: string | null;
   zipCode?: string | null;
   locationType?: LocationType | null;
@@ -2234,6 +2389,20 @@ export interface LocationWhereInput {
   city_not_starts_with?: string | null;
   city_ends_with?: string | null;
   city_not_ends_with?: string | null;
+  country?: string | null;
+  country_not?: string | null;
+  country_in?: string[] | null;
+  country_not_in?: string[] | null;
+  country_lt?: string | null;
+  country_lte?: string | null;
+  country_gt?: string | null;
+  country_gte?: string | null;
+  country_contains?: string | null;
+  country_not_contains?: string | null;
+  country_starts_with?: string | null;
+  country_not_starts_with?: string | null;
+  country_ends_with?: string | null;
+  country_not_ends_with?: string | null;
   state?: string | null;
   state_not?: string | null;
   state_in?: string[] | null;
@@ -6103,7 +6272,7 @@ export interface StripeContact {
 export interface StripeToken {
   card: StripeTokenCard;
   created: number;
-  extra: StripeTokenExtra;
+  extra?: StripeTokenExtra | null;
   livemode: boolean;
   tokenId: string;
 }
@@ -6112,6 +6281,7 @@ export interface StripeTokenCard {
   addressCity?: string | null;
   addressCountry?: string | null;
   addressLine1?: string | null;
+  addressLine2?: string | null;
   addressState?: string | null;
   addressZip?: string | null;
   brand?: string | null;
@@ -6505,6 +6675,7 @@ export interface UserCreateInput {
   verificationMethod?: UserVerificationMethod | null;
   roles?: UserCreaterolesInput | null;
   pushNotifications?: PushNotificationReceiptCreateManyWithoutUsersInput | null;
+  emails?: EmailReceiptCreateManyWithoutUserInput | null;
   pushNotification?: UserPushNotificationCreateOneInput | null;
   smsReceipts?: SmsReceiptCreateManyInput | null;
   fitPics?: FitPicCreateManyWithoutUserInput | null;
@@ -6531,6 +6702,7 @@ export interface UserCreateWithoutPushNotificationsInput {
   verificationStatus?: UserVerificationStatus | null;
   verificationMethod?: UserVerificationMethod | null;
   roles?: UserCreaterolesInput | null;
+  emails?: EmailReceiptCreateManyWithoutUserInput | null;
   pushNotification?: UserPushNotificationCreateOneInput | null;
   smsReceipts?: SmsReceiptCreateManyInput | null;
   fitPics?: FitPicCreateManyWithoutUserInput | null;
@@ -6862,6 +7034,7 @@ export interface UserUpdateDataInput {
   verificationMethod?: UserVerificationMethod | null;
   roles?: UserUpdaterolesInput | null;
   pushNotifications?: PushNotificationReceiptUpdateManyWithoutUsersInput | null;
+  emails?: EmailReceiptUpdateManyWithoutUserInput | null;
   pushNotification?: UserPushNotificationUpdateOneInput | null;
   smsReceipts?: SmsReceiptUpdateManyInput | null;
   fitPics?: FitPicUpdateManyWithoutUserInput | null;
@@ -6927,6 +7100,7 @@ export interface UserUpdateWithoutPushNotificationsDataInput {
   verificationStatus?: UserVerificationStatus | null;
   verificationMethod?: UserVerificationMethod | null;
   roles?: UserUpdaterolesInput | null;
+  emails?: EmailReceiptUpdateManyWithoutUserInput | null;
   pushNotification?: UserPushNotificationUpdateOneInput | null;
   smsReceipts?: SmsReceiptUpdateManyInput | null;
   fitPics?: FitPicUpdateManyWithoutUserInput | null;
@@ -7056,6 +7230,9 @@ export interface UserWhereInput {
   pushNotifications_every?: PushNotificationReceiptWhereInput | null;
   pushNotifications_some?: PushNotificationReceiptWhereInput | null;
   pushNotifications_none?: PushNotificationReceiptWhereInput | null;
+  emails_every?: EmailReceiptWhereInput | null;
+  emails_some?: EmailReceiptWhereInput | null;
+  emails_none?: EmailReceiptWhereInput | null;
   pushNotification?: UserPushNotificationWhereInput | null;
   smsReceipts_every?: SmsReceiptWhereInput | null;
   smsReceipts_some?: SmsReceiptWhereInput | null;

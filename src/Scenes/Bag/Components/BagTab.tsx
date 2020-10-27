@@ -1,7 +1,6 @@
 import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
 import { PauseStatus, REMOVE_SCHEDULED_PAUSE } from "App/Components/Pause/PauseButtons"
 import { GetBagAndSavedItems } from "App/generated/GetBagAndSavedItems"
-import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { color } from "App/utils"
@@ -10,23 +9,27 @@ import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
 import React, { useEffect, useState } from "react"
 import { useLazyQuery, useMutation } from "react-apollo"
-
+import { Schema as NavigationSchema } from "App/Navigation"
 import { useNavigation } from "@react-navigation/native"
 import * as Sentry from "@sentry/react-native"
-
 import { GET_BAG, GET_LOCAL_BAG_ITEMS } from "../BagQueries"
-import { WantAnotherItemBagItem } from "./"
 import { BagItem } from "./BagItem"
 import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
+import { BagCardButton } from "./BagCardButton"
+import { AddSlot, Stylist, SurpriseMe } from "Assets/svgs"
+import { Linking } from "react-native"
+import { GreyToWhiteFade } from "Assets/svgs/GreyToWhiteFade"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
   data: GetBagAndSavedItems
+  itemCount: number
   items
+  setItemCount: (count: number) => void
   deleteBagItem
   removeFromBagAndSaveItem
-}> = ({ pauseStatus, items, deleteBagItem, removeFromBagAndSaveItem, data }) => {
+}> = ({ pauseStatus, items, deleteBagItem, removeFromBagAndSaveItem, data, itemCount, setItemCount }) => {
   const [isMutating, setIsMutating] = useState(false)
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -34,9 +37,7 @@ export const BagTab: React.FC<{
   const tracking = useTracking()
 
   const me = data?.me
-  const paymentPlans = data?.paymentPlans
   const activeReservation = me?.activeReservation
-  const itemCount = me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
   const hasActiveReservation = !!activeReservation
 
   const [getLocalBag, { data: localItems }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
@@ -134,7 +135,7 @@ export const BagTab: React.FC<{
           <Box px={2}>
             <Separator color={color("black10")} />
           </Box>
-          <Box px={2} py={2}>
+          <Box px={2} py={3}>
             <Sans size="1" color="black50">
               {`Your membership is scheduled to be paused on ${DateTime.fromISO(pauseRequest.pauseDate).toFormat(
                 "EEEE LLLL dd"
@@ -163,11 +164,10 @@ export const BagTab: React.FC<{
         </>
       )}
       <Separator />
-      <Spacer mb={3} />
       {hasActiveReservation && <DeliveryStatus activeReservation={activeReservation} />}
       {paddedItems?.map((bagItem, index) => {
         return bagItem?.productID?.length > 0 ? (
-          <Box key={bagItem.productID} px={2} pt={hasActiveReservation ? 0 : 2}>
+          <Box key={bagItem.productID} px={2}>
             <BagItem
               removeItemFromBag={deleteBagItem}
               removeFromBagAndSaveItem={removeFromBagAndSaveItem}
@@ -184,11 +184,45 @@ export const BagTab: React.FC<{
           </Box>
         )
       })}
-      {!hasActiveReservation && items && items.length < 3 && (
-        <Box px={2}>
-          <WantAnotherItemBagItem plan={me?.customer?.membership?.plan} paymentPlans={paymentPlans} />
+      <Spacer mb={hasActiveReservation ? "18px" : 0} />
+      <Separator />
+      <Box style={{ backgroundColor: color("black04") }}>
+        <Spacer mb={3} />
+        {!hasActiveReservation && itemCount && itemCount < 3 && (
+          <Box px={1}>
+            <BagCardButton
+              Icon={AddSlot}
+              title="Add a slot"
+              caption="Reserve another item"
+              onPress={() => {
+                authState.isSignedIn
+                  ? navigation.navigate("Modal", { screen: NavigationSchema.PageNames.UpdatePaymentPlanModal })
+                  : setItemCount(itemCount + 1)
+              }}
+            />
+          </Box>
+        )}
+        <Box px={1}>
+          <BagCardButton
+            Icon={SurpriseMe}
+            title="Surprise me"
+            caption="Discover styles in your size"
+            onPress={() => {
+              navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
+            }}
+          />
         </Box>
-      )}
+        <Box px={1}>
+          <BagCardButton
+            Icon={Stylist}
+            title="Chat with our stylist"
+            caption="Get a personalized consultation"
+            onPress={() => Linking.openURL("https://szns.co/stylist")}
+          />
+        </Box>
+        <Spacer mb={2} />
+      </Box>
+      <GreyToWhiteFade />
     </Box>
   )
 }

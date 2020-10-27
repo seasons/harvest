@@ -2,7 +2,7 @@ import { Flex, Sans, Spacer } from "App/Components"
 import { AddToBagButton } from "App/Scenes/Product/Components"
 import { color, space } from "App/utils"
 import { DownChevronIcon } from "Assets/icons"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { Schema, useTracking } from "App/utils/track"
@@ -20,10 +20,17 @@ const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5
 
 export const SelectionButtons: React.FC<Props> = (props) => {
   const tracking = useTracking()
+  const [loaded, setLoaded] = useState(false)
   const { bottom = 0, selectedVariant, showVariantPicker, toggleShowVariantPicker, data } = props
   const inStock = selectedVariant && selectedVariant.reservable > 0
 
-  if (!selectedVariant) {
+  useEffect(() => {
+    if (selectedVariant?.reservable && !loaded) {
+      setLoaded(true)
+    }
+  }, [setLoaded, selectedVariant])
+
+  if (!loaded) {
     return null
   }
 
@@ -39,7 +46,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
             toggleShowVariantPicker(!showVariantPicker)
           }}
         >
-          <VariantSelectionButton p={2} inStock={inStock}>
+          <VariantSelectionButton inStock={inStock}>
             <Flex
               px={2}
               style={{ width: "100%" }}
