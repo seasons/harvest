@@ -7,6 +7,7 @@ import { onError } from "apollo-link-error"
 import { createUploadLink } from "apollo-upload-client"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { config, Env } from "App/utils/config"
+import { GraphQLError } from "graphql"
 import { Platform } from "react-native"
 import unfetch from "unfetch"
 
@@ -52,8 +53,29 @@ export const setupApolloClient = async () => {
   const errorLink = onError(({ graphQLErrors, networkError, operation, forward, response }) => {
     if (graphQLErrors) {
       console.log("graphQLErrors", graphQLErrors)
-      Sentry.captureException(graphQLErrors)
+
+      for (const err of graphQLErrors) {
+        // Add scoped report details and send to Sentry
+        Sentry.withScope((scope) => {
+          // Annotate whether failing operation was query/mutation/subscription
+          scope.setTag("kind", operation.operationName)
+          // Log query and variables as extras
+          // (make sure to strip out sensitive data!)
+          scope.setExtra("query", operation.query)
+          scope.setExtra("variables", operation.variables)
+          if (err.path) {
+            // We can also add the path as breadcrumb
+            scope.addBreadcrumb({
+              category: "query-path",
+              message: err.path.join(" > "),
+              level: Sentry.Severity.Debug,
+            })
+          }
+          Sentry.captureException(err)
+        })
+      }
     }
+
     if (networkError) {
       console.log("networkError", JSON.stringify(networkError))
       // User access token has expired
