@@ -1,5 +1,6 @@
 import { CloseButton, Container } from "App/Components"
 import React from "react"
+import { screenTrack } from "App/utils/track"
 import { GetMeasurementsPane, Measurements } from "App/Scenes/CreateAccount/Undetermined"
 
 export interface InitialMeasurements {
@@ -51,7 +52,7 @@ const measurementsFrom = (params: any) => {
 export const EditMeasurements: React.FC<{
   navigation: any
   route: any
-}> = ({ navigation, route }) => {
+}> = screenTrack()(({ navigation, route }) => {
   const measurements = measurementsFrom(route?.params)
 
   return (
@@ -65,4 +66,4 @@ export const EditMeasurements: React.FC<{
       />
     </Container>
   )
-}
+})
