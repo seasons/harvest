@@ -209,7 +209,6 @@ export const SavedItem: React.FC<BagItemProps> = ({
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
             {!!imageURL && (
               <ImageContainer
-                radius
                 style={{ height: 170 * PRODUCT_ASPECT_RATIO, width: 170 }}
                 resizeMode="contain"
                 source={{ uri: imageURL }}
