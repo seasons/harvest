@@ -190,7 +190,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     const applePaySupportedOnDevice = await stripe.deviceSupportsApplePay()
     if (applePaySupportedOnDevice) {
       const canMakeApplePayment = await stripe.canMakeApplePayPayments()
-      console.log("canMakeApplePayment", canMakeApplePayment)
       if (canMakeApplePayment) {
         // Customer has a payment card set up
         try {
