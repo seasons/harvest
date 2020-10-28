@@ -2,7 +2,7 @@ import { Box, Flex, Sans, Separator, Spacer, Button, Theme } from "App/Component
 import { color, space } from "App/utils"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import React, { useEffect, useState } from "react"
-import { Dimensions } from "react-native"
+import { Dimensions, Keyboard } from "react-native"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
@@ -102,7 +102,7 @@ export const ErrorPopUp: React.FC = () => {
           </Flex>
         </Box>
       </AnimatedPopUp>
-      <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor }} />
+      <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor }} onPress={() => Keyboard.dismiss()} />
     </Theme>
   )
 }
@@ -117,7 +117,7 @@ const Overlay = styled(Box)`
   z-index: 99;
 `
 
-const Container = styled(Box)`
+const Container = styled(Box)<{ color: string }>`
   border-top-left-radius: 30;
   border-top-right-radius: 30;
   background-color: ${(p) => p.color};
