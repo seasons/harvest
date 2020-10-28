@@ -14,6 +14,7 @@ import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { ADD_TO_BAG, GET_BAG } from "./BagQueries"
 import { SaveProductButton } from "../Product/Components"
 import { Schema, useTracking, screenTrack } from "App/utils/track"
+import { Loader } from "App/Components/Loader"
 
 export const GET_SURPRISE_PRODUCT_VARIANTS = gql`
   query SurpriseProductVariants {
@@ -28,7 +29,7 @@ export const GET_SURPRISE_PRODUCT_VARIANTS = gql`
           id
           name
         }
-        images {
+        images(size: Small) {
           id
           url
         }
@@ -210,6 +211,15 @@ export const SurpriseMe = screenTrack()(() => {
     )
   }
 
+  if (!data?.surpriseProductVariants) {
+    return (
+      <>
+        <CloseButton variant="light" />
+        <Loader />
+      </>
+    )
+  }
+
   return (
     <>
       <CloseButton variant="light" />
@@ -273,7 +283,7 @@ export const SurpriseMe = screenTrack()(() => {
           </ScrollView>
         </Box>
 
-        <FadeBottom2 width="100%">
+        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
           <Spacer mb={2} />
           <Flex p={2} flexDirection="row">
             <Box style={{ flex: 1 }}>

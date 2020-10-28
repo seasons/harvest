@@ -7,7 +7,7 @@ import styled from "styled-components/native"
 import { Flex } from "./"
 import { themeProps } from "./Theme"
 
-type ShareIconVariant = "blackBackground" | "whiteBackground" | "black04Background"
+type ShareIconVariant = "blackBackground" | "whiteBackground" | "productBackground"
 
 export const ShareButton: React.FC<{
   onPress?: () => void
@@ -44,7 +44,7 @@ export const ShareButton: React.FC<{
 
   const getColorsForVariant = (variant: ShareIconVariant) => {
     const {
-      colors: { black100, white100, black10, black04 },
+      colors: { black100, white100, black10, productBackgroundColor },
     } = themeProps
 
     switch (variant) {
@@ -58,9 +58,9 @@ export const ShareButton: React.FC<{
           backgroundColor: white100,
           arrowColor: black100,
         }
-      case "black04Background":
+      case "productBackground":
         return {
-          backgroundColor: black04,
+          backgroundColor: productBackgroundColor,
           arrowColor: black100,
         }
       default:
