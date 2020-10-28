@@ -24,7 +24,7 @@ export const HomeBlogContent = ({ items }) => {
     return (
       <TouchableWithoutFeedback
         onPress={() => {
-          navigation.navigate(Schema.PageNames.Webview, { uri: item.url })
+          navigation.navigate(Schema.PageNames.Webview, { uri: item?.url || "" })
         }}
       >
         <Box>
