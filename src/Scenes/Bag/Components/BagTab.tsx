@@ -20,6 +20,7 @@ import { BagCardButton } from "./BagCardButton"
 import { AddSlot, Stylist, SurpriseMe } from "Assets/svgs"
 import { Linking } from "react-native"
 import { GreyToWhiteFade } from "Assets/svgs/GreyToWhiteFade"
+import { UserState, State as CreateAccountState } from "App/Scenes/CreateAccount/CreateAccount"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
@@ -91,6 +92,25 @@ export const BagTab: React.FC<{
       setIsMutating(false)
     },
   })
+
+  const onAddSlot = () => {
+    const userStatus = data?.me?.customer?.status
+    if (!!userStatus && userStatus === "Authorized") {
+      // If user is authorized send them to plan creation
+      navigation.navigate("Modal", {
+        screen: NavigationSchema.PageNames.CreateAccountModal,
+        params: { initialState: CreateAccountState.ChoosePlan, initialUserState: UserState.Admitted },
+      })
+    } else if (
+      !!userStatus &&
+      (userStatus === "Active" || userStatus === "Paused" || userStatus === "Deactivated" || userStatus === "Suspended")
+    ) {
+      navigation.navigate("Modal", { screen: NavigationSchema.PageNames.UpdatePaymentPlanModal })
+    } else {
+      // If user isn't signed in or isnt active or authorized
+      setItemCount(itemCount + 1)
+    }
+  }
 
   let returnReminder
   if (
@@ -190,16 +210,7 @@ export const BagTab: React.FC<{
         <Spacer mb={3} />
         {!hasActiveReservation && itemCount && itemCount < 3 && (
           <Box px={1}>
-            <BagCardButton
-              Icon={AddSlot}
-              title="Add a slot"
-              caption="Reserve another item"
-              onPress={() => {
-                authState.isSignedIn
-                  ? navigation.navigate("Modal", { screen: NavigationSchema.PageNames.UpdatePaymentPlanModal })
-                  : setItemCount(itemCount + 1)
-              }}
-            />
+            <BagCardButton Icon={AddSlot} title="Add a slot" caption="Reserve another item" onPress={onAddSlot} />
           </Box>
         )}
         <Box px={1}>
