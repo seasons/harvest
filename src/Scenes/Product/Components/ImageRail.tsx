@@ -45,8 +45,7 @@ export const ImageRail: React.FC<{
         }}
         onScroll={onScroll}
         keyExtractor={(item) => {
-          const itemID = item && item.url
-          return itemID
+          return item?.url || ""
         }}
         showsHorizontalScrollIndicator={false}
         horizontal

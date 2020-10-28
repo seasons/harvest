@@ -9,7 +9,7 @@ export function calcFinalPrice(price: number, coupon: Coupon) {
         return price - discountAmount
       case CouponType.Percentage:
         return price - (price * discountPercentage) / 100.0
-      case undefined:
+      default:
         return price
     }
   } else {

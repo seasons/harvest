@@ -301,7 +301,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
           <ChoosePlanPane
             selectedPlan={selectedPlan}
             setSelectedPlan={setSelectedPlan}
-            paneType={1}
             data={data}
             onComplete={(paymentMethod) => {
               paymentMethod === PaymentMethod.CreditCard ? setIndex(index + 1) : setIndex(index + 2)

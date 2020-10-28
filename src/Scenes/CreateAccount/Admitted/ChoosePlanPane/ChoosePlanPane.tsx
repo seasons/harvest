@@ -48,7 +48,6 @@ interface ChoosePlanPaneProps {
   setSelectedPlan: (plan: GetPlans_paymentPlans) => void
   headerText: String
   data: GetPlans
-  paneType: PaneType
   coupon?: Coupon
   source: "CreateAccountModal" | "UpdatePaymentPlanModal"
 }
@@ -59,7 +58,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   onComplete,
   headerText,
   data,
-  paneType,
   setSelectedPlan,
   selectedPlan,
   coupon,
@@ -192,6 +190,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     const applePaySupportedOnDevice = await stripe.deviceSupportsApplePay()
     if (applePaySupportedOnDevice) {
       const canMakeApplePayment = await stripe.canMakeApplePayPayments()
+      console.log("canMakeApplePayment", canMakeApplePayment)
       if (canMakeApplePayment) {
         // Customer has a payment card set up
         try {
@@ -250,9 +249,9 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       actionType: TrackSchema.ActionTypes.Tap,
     })
 
-    if (paneType === PaneType.Create) {
+    if (source === "CreateAccountModal") {
       setOpenPopUp(true)
-    } else if (paneType === PaneType.Update) {
+    } else {
       onChoosePlanUpdate()
     }
   }
