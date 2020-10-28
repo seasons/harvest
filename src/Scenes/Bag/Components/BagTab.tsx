@@ -186,8 +186,17 @@ export const BagTab: React.FC<{
       <Separator />
       {hasActiveReservation && <DeliveryStatus activeReservation={activeReservation} />}
       {paddedItems?.map((bagItem, index) => {
+        const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
+        const spacing = isReserved ? "7px" : 2
         return bagItem?.productID?.length > 0 ? (
           <Box key={bagItem.productID} px={2}>
+            {index !== 0 && (
+              <>
+                <Spacer mb={spacing} />
+                {!isReserved && <Separator color={color("black10")} />}
+              </>
+            )}
+            <Spacer mb={index === 0 ? 3 : spacing} />
             <BagItem
               removeItemFromBag={deleteBagItem}
               removeFromBagAndSaveItem={removeFromBagAndSaveItem}
@@ -195,49 +204,54 @@ export const BagTab: React.FC<{
               bagItem={bagItem}
               navigation={navigation}
             />
-            {!hasActiveReservation && index !== items.length - 1 && <Separator color={color("black10")} />}
           </Box>
         ) : (
           <Box key={index} px={2}>
+            <Spacer mb={3} />
+            {index !== 0 && (
+              <>
+                <Separator color={color("black10")} />
+                <Spacer mb={3} />
+              </>
+            )}
             <EmptyBagItem index={index} navigation={navigation} />
-            {!hasActiveReservation && index !== items.length - 1 && <Separator color={color("black10")} />}
           </Box>
         )
       })}
-      <Spacer mb={hasActiveReservation ? "18px" : 0} />
+      <Spacer mb={3} />
       <Separator />
-      <Box style={{ backgroundColor: color("black04") }}>
-        <Spacer mb={3} />
-        {!hasActiveReservation && itemCount && itemCount < 3 && (
-          <Box px={1}>
-            <BagCardButton Icon={AddSlot} title="Add a slot" caption="Reserve another item" onPress={onAddSlot} />
-          </Box>
-        )}
-        <Box px={1}>
-          <BagCardButton
-            Icon={SurpriseMe}
-            title="Surprise me"
-            caption="Discover styles in your size"
-            onPress={() => {
-              navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
-            }}
-          />
-        </Box>
-        <Box px={1}>
-          <BagCardButton
-            Icon={Stylist}
-            title="Chat with our stylist"
-            caption="Get a personalized consultation"
-            onPress={() =>
-              Linking.openURL(
-                "mailto:membership@seasons.nyc?subject=Speak%20to%20a%20stylist?body=I%20would%20like%20to%20speak%20to%20a%20seasons%20stylist%20to%20help%20find%20items%20that%20suit%20me.%20Thanks!"
-              )
-            }
-          />
-        </Box>
-        <Spacer mb={2} />
-      </Box>
-      <GreyToWhiteFade />
+      <Spacer mb={3} />
+      {!hasActiveReservation && itemCount && itemCount < 3 && (
+        <>
+          <BagCardButton Icon={AddSlot} title="Add a slot" caption="Reserve another item" onPress={onAddSlot} />
+          <Spacer mb={3} />
+          <Separator />
+          <Spacer mb={3} />
+        </>
+      )}
+
+      <BagCardButton
+        Icon={SurpriseMe}
+        title="Surprise me"
+        caption="Discover styles in your size"
+        onPress={() => {
+          navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
+        }}
+      />
+      <Spacer mb={3} />
+      <Separator />
+      <Spacer mb={3} />
+      <BagCardButton
+        Icon={Stylist}
+        title="Chat with our stylist"
+        caption="Get a personalized consultation"
+        onPress={() =>
+          Linking.openURL(
+            "mailto:membership@seasons.nyc?subject=Speak%20to%20a%20stylist?body=I%20would%20like%20to%20speak%20to%20a%20seasons%20stylist%20to%20help%20find%20items%20that%20suit%20me.%20Thanks!"
+          )
+        }
+      />
+      <Spacer mb={10} />
     </Box>
   )
 }
