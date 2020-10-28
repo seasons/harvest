@@ -231,6 +231,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
               </Sans>
               <Spacer mb={2} />
               <TextInput
+                autoFocus={false}
                 autoCapitalize="words"
                 currentValue={name}
                 headerText="Name"
@@ -238,6 +239,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
               />
               <Spacer mb={3} />
               <TextInput
+                autoFocus={false}
                 autoCapitalize="words"
                 currentValue={address1}
                 headerText="Address 1"
@@ -246,6 +248,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
               <Spacer mb={3} />
               <Flex flexDirection="row">
                 <TextInput
+                  autoFocus={false}
                   autoCapitalize="words"
                   currentValue={address2}
                   headerText="Address 2"
@@ -254,6 +257,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
                 />
                 <Spacer width={9} />
                 <TextInput
+                  autoFocus={false}
                   autoCapitalize="words"
                   currentValue={city}
                   headerText="City"
@@ -273,6 +277,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
                 />
                 <Spacer width={9} />
                 <TextInput
+                  autoFocus={false}
                   currentValue={zipCode}
                   headerText="ZIP"
                   keyboardType="number-pad"

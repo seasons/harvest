@@ -36,7 +36,6 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation, route }) => {
       <ChoosePlanPane
         selectedPlan={selectedPlan}
         setSelectedPlan={setSelectedPlan}
-        paneType={0}
         data={data}
         onComplete={() => navigation.goBack()}
         headerText="Let's choose your plan"

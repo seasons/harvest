@@ -51,7 +51,7 @@ export const FitPicCollection = React.forwardRef<FitPicCollectionRef, FitPicColl
             <SharedElement id={`fitpic.photo.${item.id}`}>
               <FadeInImage
                 source={{
-                  uri: item.image.url,
+                  uri: item?.image?.url || "",
                 }}
                 style={{ width: imageWidth, height: imageHeight }}
               />
