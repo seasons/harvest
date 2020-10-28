@@ -27,6 +27,7 @@ import { PAYMENT_CHECKOUT } from "../ChoosePlanPane/ChoosePlanPane"
 import { GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { BackArrowIcon } from "Assets/icons"
 import { Coupon, State } from "../../CreateAccount"
+import { calcFinalPrice } from "../ChoosePlanPane/utils"
 
 const windowDimensions = Dimensions.get("window")
 
@@ -165,6 +166,9 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
     !expYear
 
   const description = plan?.description.split("\n")?.[0]
+  const originalPrice = plan?.price
+  const finalPrice = calcFinalPrice(originalPrice, coupon)
+  const isDiscounted = originalPrice !== finalPrice && !!finalPrice
 
   if (currentState !== State.CreditCardForm) {
     return null
@@ -193,16 +197,31 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
                 Enter payment details to complete checkout
               </Sans>
               <Spacer mb={3} />
-              <Sans color="black100" size="1">
-                {plan?.name}
-              </Sans>
               <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-                <Sans color="black50" size="1">
-                  {description}
-                </Sans>
-                <Sans color="black100" size="1">
-                  ${plan?.price / 100}
-                </Sans>
+                <Box>
+                  <Sans color="black100" size="1">
+                    {plan?.name}
+                  </Sans>
+                  <Sans color="black50" size="1">
+                    {description}
+                  </Sans>
+                </Box>
+                <Box>
+                  {isDiscounted ? (
+                    <>
+                      <Sans color="black100" size="1" textAlign="right">
+                        This month ${finalPrice / 100}
+                      </Sans>
+                      <Sans color="black50" size="1" textAlign="right">
+                        Next month ${originalPrice / 100}
+                      </Sans>
+                    </>
+                  ) : (
+                    <Sans color="black100" size="1" textAlign="right">
+                      ${originalPrice / 100}
+                    </Sans>
+                  )}
+                </Box>
               </Flex>
               <Spacer mb={4} />
               <Sans color="black100" size="1">
@@ -291,23 +310,25 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
         </Box>
 
         <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={insets.bottom - 16}>
-          <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-            <Flex p={2} flexDirection="row">
-              <Box style={{ flex: 1 }}>
-                <Button
-                  block
-                  disabled={disabled}
-                  loading={isMutating}
-                  onPress={handleOnSubmit}
-                  size="large"
-                  variant="primaryBlack"
-                >
-                  Submit payment
-                </Button>
-              </Box>
-            </Flex>
-            <Spacer height={insets.bottom + 8} />
-          </FadeBottom2>
+          <Box width="100%" style={{ position: "relative" }}>
+            <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
+              <Flex p={2} flexDirection="row">
+                <Box style={{ flex: 1 }}>
+                  <Button
+                    block
+                    disabled={disabled}
+                    loading={isMutating}
+                    onPress={handleOnSubmit}
+                    size="large"
+                    variant="primaryBlack"
+                  >
+                    Submit payment
+                  </Button>
+                </Box>
+              </Flex>
+              <Spacer height={insets.bottom + 8} />
+            </FadeBottom2>
+          </Box>
         </KeyboardAvoidingView>
 
         <StatePickerPopUp

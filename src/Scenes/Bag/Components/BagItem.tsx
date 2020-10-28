@@ -12,9 +12,7 @@ import { get, head } from "lodash"
 import React, { useState } from "react"
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-
 import { useMutation } from "@apollo/react-hooks"
-
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
 
 export const BagItemFragment = gql`
@@ -246,7 +244,7 @@ export const BagItem: React.FC<BagItemProps> = ({
     : {}
 
   return (
-    <Box key={product.id} py={isReserved ? "6px" : 3}>
+    <Box key={product.id}>
       <TouchableWithoutFeedback
         onPress={() => {
           tracking.trackEvent({

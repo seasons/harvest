@@ -97,7 +97,6 @@ export const DeliveryStatus: React.FC<{
           </Box>
         )}
       </Flex>
-      <Spacer mb={3} />
     </Box>
   )
 }

@@ -1,4 +1,4 @@
-import { Box, FixedButton, Spacer } from "App/Components"
+import { Box, Button, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { PauseButtons, PauseStatus } from "App/Components/Pause/PauseButtons"
 import { Schema as NavigationSchema } from "App/Navigation"
@@ -15,6 +15,7 @@ import { useFocusEffect } from "@react-navigation/native"
 import { CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 
 export enum BagView {
   Bag = 0,
@@ -315,24 +316,30 @@ export const Bag = screenTrack()((props) => {
         renderItem={(item) => {
           return renderItem(item)
         }}
-        ListFooterComponent={() => <Spacer mb={2} />}
+        ListFooterComponent={() => <Spacer pb={160} />}
       />
       {isBagView && pauseStatus !== "paused" && !hasActiveReservation && (
-        <FixedButton
-          block
-          onPress={() => {
-            tracking.trackEvent({
-              actionName: TrackSchema.ActionNames.ReserveButtonTapped,
-              actionType: TrackSchema.ActionTypes.Tap,
-              bagIsFull,
-            })
-            handleReserve(navigation)
-          }}
-          disabled={!bagIsFull || isMutating}
-          loading={isMutating}
-        >
-          Reserve
-        </FixedButton>
+        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
+          <Spacer mb={2} />
+          <Box px={2}>
+            <Button
+              block
+              onPress={() => {
+                tracking.trackEvent({
+                  actionName: TrackSchema.ActionNames.ReserveButtonTapped,
+                  actionType: TrackSchema.ActionTypes.Tap,
+                  bagIsFull,
+                })
+                handleReserve(navigation)
+              }}
+              disabled={!bagIsFull || isMutating}
+              loading={isMutating}
+            >
+              Reserve
+            </Button>
+          </Box>
+          <Spacer mb={2} />
+        </FadeBottom2>
       )}
     </Container>
   )
