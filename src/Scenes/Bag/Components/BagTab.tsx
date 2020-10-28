@@ -19,7 +19,6 @@ import { EmptyBagItem } from "./EmptyBagItem"
 import { BagCardButton } from "./BagCardButton"
 import { AddSlot, Stylist, SurpriseMe } from "Assets/svgs"
 import { Linking } from "react-native"
-import { GreyToWhiteFade } from "Assets/svgs/GreyToWhiteFade"
 import { UserState, State as CreateAccountState } from "App/Scenes/CreateAccount/CreateAccount"
 
 export const BagTab: React.FC<{
@@ -47,7 +46,9 @@ export const BagTab: React.FC<{
     },
   })
 
-  const bagItems = !authState.isSignedIn
+  const isSignedIn = authState.isSignedIn
+
+  const bagItems = !isSignedIn
     ? localItems?.products.map((item, i) => ({
         ...items?.[i],
         productVariant: item.variants[0],
@@ -58,7 +59,7 @@ export const BagTab: React.FC<{
   const paddedItems = assign(fill(new Array(itemCount), { variantID: "", productID: "" }), bagItems) || []
 
   useEffect(() => {
-    if (!authState.isSignedIn) {
+    if (!isSignedIn) {
       getLocalBag()
     }
   }, [items])
@@ -230,24 +231,29 @@ export const BagTab: React.FC<{
         </>
       )}
 
-      <BagCardButton
-        Icon={SurpriseMe}
-        title="Surprise me"
-        caption="Discover styles in your size"
-        onPress={() => {
-          navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
-        }}
-      />
-      <Spacer mb={3} />
-      <Separator />
-      <Spacer mb={3} />
+      {isSignedIn && (
+        <>
+          <BagCardButton
+            Icon={SurpriseMe}
+            title="Surprise me"
+            caption="Discover styles in your size"
+            onPress={() => {
+              navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
+            }}
+          />
+          <Spacer mb={3} />
+          <Separator />
+          <Spacer mb={3} />
+        </>
+      )}
+
       <BagCardButton
         Icon={Stylist}
         title="Chat with our stylist"
         caption="Get a personalized consultation"
         onPress={() =>
           Linking.openURL(
-            "mailto:membership@seasons.nyc?subject=Speak%20to%20a%20stylist?body=I%20would%20like%20to%20speak%20to%20a%20seasons%20stylist%20to%20help%20find%20items%20that%20suit%20me.%20Thanks!"
+            "mailto:membership@seasons.nyc?subject=Speak%20to%20a%20stylist&body=I%20would%20like%20to%20speak%20to%20a%20seasons%20stylist%20to%20help%20find%20items%20that%20suit%20me.%20Thanks!"
           )
         }
       />

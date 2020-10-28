@@ -7,7 +7,7 @@ import { Box } from "./Box"
 import { Flex } from "./Flex"
 import { themeProps } from "./Theme"
 
-type FixedBackArrowVariant = "blackBackground" | "whiteBackground" | "black04Background"
+type FixedBackArrowVariant = "blackBackground" | "whiteBackground" | "productBackground"
 
 export const FixedBackArrow: React.FC<{
   navigation: any
@@ -16,7 +16,7 @@ export const FixedBackArrow: React.FC<{
 }> = ({ navigation, variant, onPress }) => {
   const getColorsForVariant = (variant: FixedBackArrowVariant) => {
     const {
-      colors: { black100, white100, black10, black04 },
+      colors: { black100, white100, black10, productBackgroundColor },
     } = themeProps
 
     switch (variant) {
@@ -30,9 +30,9 @@ export const FixedBackArrow: React.FC<{
           backgroundColor: white100,
           arrowColor: black100,
         }
-      case "black04Background":
+      case "productBackground":
         return {
-          backgroundColor: black04,
+          backgroundColor: productBackgroundColor,
           arrowColor: black100,
         }
       default:

@@ -2,7 +2,7 @@ import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import stripe from "tipsi-stripe"
-import { Dimensions, KeyboardAvoidingView } from "react-native"
+import { Dimensions, Keyboard, KeyboardAvoidingView } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, Radio, Sans, Spacer, TextInput } from "App/Components"
@@ -108,6 +108,7 @@ export const EditPaymentAndShipping: React.FC<{
         buttonText: "Close",
         onClose: hidePopUp,
       }
+      Keyboard.dismiss()
       showPopUp(popUpData)
       setIsMutating(false)
     },
@@ -122,6 +123,7 @@ export const EditPaymentAndShipping: React.FC<{
         onClose: () => hidePopUp(),
       }
       Sentry.captureException(error)
+      Keyboard.dismiss()
       showPopUp(popUpData)
       console.log("Error EditView.tsx: ", error)
     },

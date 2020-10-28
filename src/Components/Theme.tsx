@@ -38,6 +38,7 @@ export const themeProps = {
     lightGreen: "#01b06c",
     blue100: "#2442EC",
     blue: "#2B50DF",
+    productBackgroundColor: "#E9E9EB",
   },
 
   fontFamily,

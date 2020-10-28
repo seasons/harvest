@@ -177,10 +177,10 @@ export const Product = screenTrack({
 
   return (
     <Container insetsTop={false}>
-      <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "black04Background"} />
+      <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "productBackground"} />
       <ShareButtonWrapper>
         <ShareButton
-          variant={showVariantPicker ? "blackBackground" : "black04Background"}
+          variant={showVariantPicker ? "blackBackground" : "productBackground"}
           options={{
             title,
             message,
