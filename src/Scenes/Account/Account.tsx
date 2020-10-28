@@ -11,7 +11,7 @@ import * as Animatable from "react-native-animatable"
 import { CustomerStatus, OnboardingChecklist, AccountList } from "./Lists"
 import { State, UserState } from "../CreateAccount/CreateAccount"
 import { MembershipInfoIcon, PersonalPreferencesIcon, PaymentShippingIcon, ChevronIcon } from "Assets/icons"
-import { QuestionMark, PrivacyPolicy, TermsOfService, LogOutSVG } from "Assets/svgs"
+import { QuestionMark, PrivacyPolicy, DocumentWithText, LogOutSVG } from "Assets/svgs"
 
 export const GET_USER = gql`
   query GetUser {
@@ -163,7 +163,7 @@ export const Account = screenTrack()(({ navigation }) => {
     },
     {
       title: "Terms of Service",
-      icon: <TermsOfService />,
+      icon: <DocumentWithText />,
       tracking: Schema.ActionNames.TermsOfServiceTapped,
       onPress: () => {
         navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })
