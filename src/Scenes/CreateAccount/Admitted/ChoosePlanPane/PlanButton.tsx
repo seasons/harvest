@@ -24,7 +24,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
     return isDiscounted ? (
       <Text>
         <Sans color="black50" size="0.5">
-          per month
+          This month
         </Sans>
         <Sans color="black100" size="1">
           {" "}
@@ -40,7 +40,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
     ) : (
       <Text>
         <Sans color="black50" size="0.5">
-          per month
+          Per month
         </Sans>
         <Sans color="black100" size="1">
           {" "}

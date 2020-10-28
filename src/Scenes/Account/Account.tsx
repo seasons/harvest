@@ -5,6 +5,7 @@ import { NotificationToggle } from "./Components/NotificationToggle"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { Image, ScrollView, StatusBar, Linking } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { CustomerStatus, OnboardingChecklist, AccountList } from "./Lists"
@@ -227,7 +228,7 @@ export const Account = screenTrack()(({ navigation }) => {
                   actionType: Schema.ActionTypes.Tap,
                 })
                 navigation.navigate("Modal", {
-                  screen: "CreateAccountModal",
+                  screen: NavigationSchema.PageNames.CreateAccountModal,
                   params: { initialState: State.ChoosePlan, initialUserState: UserState.Admitted },
                 })
               }}

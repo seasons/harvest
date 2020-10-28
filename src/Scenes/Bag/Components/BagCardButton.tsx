@@ -1,9 +1,9 @@
-import { Box, Flex } from "App/Components"
+import { Box, Flex, Spacer } from "App/Components"
 import { color } from "App/utils"
 import { Sans } from "Components/Typography"
 import React, { ComponentType } from "react"
 import { TouchableOpacity } from "react-native"
-import styled from "styled-components/native"
+import { ChevronIcon } from "Assets/icons"
 
 export const BagCardButton: React.FC<{
   Icon: ComponentType
@@ -11,44 +11,32 @@ export const BagCardButton: React.FC<{
   caption: string
   onPress: () => void
 }> = ({ Icon, title, caption, onPress }) => {
-  const shadowStyles = {
-    shadowColor: "black",
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.1,
-    elevation: 1,
-  }
-
   return (
-    <Box pb="12px" px={1}>
+    <Box>
       <TouchableOpacity onPress={onPress}>
-        <EmptyBagItemContainer style={shadowStyles}>
-          <Flex
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center"
-            flexWrap="nowrap"
-            p={2}
-            style={{ flex: 1 }}
-          >
+        <Flex
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+          flexWrap="nowrap"
+          p={2}
+          style={{ flex: 1 }}
+        >
+          <Flex flexDirection="row" justifyContent="flex-start" alignItems="center" flexWrap="nowrap">
+            <Icon />
+            <Spacer mr={2} />
             <Box>
               <Sans size="1" color="black100">
                 {title}
               </Sans>
-              <Sans size="0.5" color="black50">
+              <Sans size="1" color="black50">
                 {caption}
               </Sans>
             </Box>
-            <Icon />
           </Flex>
-        </EmptyBagItemContainer>
+          <ChevronIcon color={color("black10")} />
+        </Flex>
       </TouchableOpacity>
     </Box>
   )
 }
-
-const EmptyBagItemContainer = styled(Box)`
-  border-radius: 8px;
-  height: 80;
-  background-color: ${color("white100")};
-`
