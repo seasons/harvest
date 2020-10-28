@@ -217,7 +217,11 @@ export const BagTab: React.FC<{
             Icon={Stylist}
             title="Chat with our stylist"
             caption="Get a personalized consultation"
-            onPress={() => Linking.openURL("https://szns.co/stylist")}
+            onPress={() =>
+              Linking.openURL(
+                "mailto:membership@seasons.nyc?subject=Speak%20to%20a%20stylist?body=I%20would%20like%20to%20speak%20to%20a%20seasons%20stylist%20to%20help%20find%20items%20that%20suit%20me.%20Thanks!"
+              )
+            }
           />
         </Box>
         <Spacer mb={2} />
