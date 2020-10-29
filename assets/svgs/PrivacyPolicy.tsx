@@ -1,15 +1,15 @@
 import * as React from "react"
-import Svg, { G, Path, Ellipse, Rect, Circle } from "react-native-svg"
+import Svg, { G, Path, Rect, Circle } from "react-native-svg"
 
 export const PrivacyPolicy = (props) => {
   return (
-    <Svg width={20} height={36} viewBox="0 0 20 36" {...props}>
-      <G fill="#FFF" fillRule="evenodd" opacity={0.3}>
-        <Path d="M0 0h20v36H0z" />
-        <G transform="translate(0 5)" stroke="#000" strokeWidth={2}>
-          <Ellipse cx={10} cy={5.5} rx={5} ry={5.5} />
-          <Rect x={1} y={7} width={18} height={18} rx={4} />
-          <Circle cx={10} cy={16} r={3} />
+    <Svg width={24} height={36} viewBox="0 0 24 36" {...props}>
+      <G fill="none" fillRule="evenodd" opacity={0.3}>
+        <Path fill="#FFF" d="M0 0h24v36H0z" />
+        <G transform="translate(0 3)" stroke="#000" strokeWidth={1.5}>
+          <Rect fill="#FFF" x={7} width={10} height={16} rx={5} />
+          <Rect fill="#FFF" x={0.75} y={6.75} width={22.5} height={22.5} rx={11.25} />
+          <Circle cx={12} cy={18} r={4} />
         </G>
       </G>
     </Svg>

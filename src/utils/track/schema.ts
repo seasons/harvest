@@ -103,6 +103,9 @@ export enum ActionNames {
   // Web view
   ShareButtonTapped = "Share button tapped",
 
+  RateUsTapped = "Rate us tapped",
+  FollowUsTapped = "Follow us tapped",
+
   // Home page
   BrowseButtonTapped = "Browse Button Tapped",
   ViewAllBrandsTapped = "View All Brands Tapped",
