@@ -253,7 +253,7 @@ export const BagTab: React.FC<{
         caption="Get a personalized consultation"
         onPress={() =>
           Linking.openURL(
-            "mailto:membership@seasons.nyc?subject=Chat%20to%20a%20stylist&body=I%20would%20like%20to%20chat%20to%20a%20seasons%20stylist%20to%20help%20find%20items%20that%20suit%20me.%20Thanks!"
+            "mailto:membership@seasons.nyc?subject=Chat%20with%20a%20stylist&body=I%20would%20like%20to%20chat%20with%20a%20seasons%20stylist%20to%20help%20find%20items%20that%20suit%20me.%20Thanks!"
           )
         }
       />

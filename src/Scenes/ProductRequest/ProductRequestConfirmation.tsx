@@ -39,7 +39,7 @@ export const ProductRequestConfirmation = screenTrack()(({ navigation, route }) 
           <Spacer mb={2} />
           <Separator />
           <Spacer mb={3} />
-          <ProductRequestGallery images={images}></ProductRequestGallery>
+          <ProductRequestGallery images={images} />
           <Spacer mb={3} />
           {primarySections.map((section, index) => (
             <Box key={index}>

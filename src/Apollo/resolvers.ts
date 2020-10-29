@@ -57,7 +57,7 @@ export const resolvers = {
         const data = {
           localBagItems: hasItem
             ? localBagItems.filter((i) => i.productID !== product.productID)
-            : [...localBagItems, product],
+            : [...localBagItems, { ...product, __typename: "LocalProduct" }],
         }
         cache.writeQuery({ query: GET_LOCAL_BAG, data })
         return data.localBagItems

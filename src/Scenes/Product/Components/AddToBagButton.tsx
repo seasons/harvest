@@ -74,6 +74,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
     onError: (err) => {
       setIsMutating(false)
       if (err && err.graphQLErrors) {
+        console.log("error AddToBagButton.tsx ", err)
         showPopUp({
           title: "Your bag is full",
           note: "Remove one or more items from your bag to continue adding this item.",

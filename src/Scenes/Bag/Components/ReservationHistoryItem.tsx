@@ -27,7 +27,7 @@ export const ReservationHistoryItem = ({ item }) => {
         )}
       </Box>
       <Spacer mb={3} />
-      <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start" px={1}>
+      <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start" px="14px">
         {item.products?.map((physicalProduct) => {
           const variant = physicalProduct?.productVariant
           const variantSizeDisplay = variant?.internalSize?.display
@@ -36,7 +36,7 @@ export const ReservationHistoryItem = ({ item }) => {
           const image = product?.images?.[0]
           const imageURL = image?.url || ""
           return (
-            <Box key={physicalProduct.id} px={1}>
+            <Box key={physicalProduct.id} px="2px">
               <TouchableOpacity
                 onPress={() =>
                   product?.id &&
