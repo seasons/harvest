@@ -2,7 +2,7 @@ import * as React from "react"
 import Svg, { Defs, Rect, G, Path, Mask, Use } from "react-native-svg"
 /* SVGR has dropped some elements not supported by react-native-svg: title */
 
-const MonocromSeasonsLogo = (props) => {
+export const MonocromeSeasonsLogo = (props) => {
   return (
     <Svg width={24} height={36} viewBox="0 0 24 36" {...props}>
       <Defs>
@@ -21,5 +21,3 @@ const MonocromSeasonsLogo = (props) => {
     </Svg>
   )
 }
-
-export default SvgComponent
