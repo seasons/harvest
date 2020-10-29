@@ -6,12 +6,25 @@ import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
 import { Schema as NavigationSchema } from "App/Navigation"
-import { Image, ScrollView, StatusBar, Linking } from "react-native"
+import { Image, ScrollView, StatusBar, Linking, Platform } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { CustomerStatus, OnboardingChecklist, AccountList } from "./Lists"
 import { State, UserState } from "../CreateAccount/CreateAccount"
-import { MembershipInfoIcon, PersonalPreferencesIcon, PaymentShippingIcon, ChevronIcon } from "Assets/icons"
-import { QuestionMark, PrivacyPolicy, TermsOfService, LogOutSVG } from "Assets/svgs"
+import Share from "react-native-share"
+import { ChevronIcon } from "Assets/icons"
+import {
+  PersonalPreferences,
+  PrivacyPolicy,
+  LogOutSVG,
+  ManageMembership,
+  DocumentWithText,
+  MapPin,
+  Instagram,
+  SpeechBubble,
+  MonocromeSeasonsLogo,
+  Star,
+  Envelope,
+} from "Assets/svgs"
 
 export const GET_USER = gql`
   query GetUser {
@@ -100,6 +113,34 @@ export const Account = screenTrack()(({ navigation }) => {
     waistSizes: detail?.waistSizes,
   }
 
+  const onShare = () => {
+    const url = "https://www.wearseasons.com"
+    const options = Platform.select({
+      ios: {
+        activityItemSources: [
+          {
+            placeholderItem: { type: "url", content: url },
+            item: {
+              default: { type: "url", content: url },
+            },
+            linkMetadata: { originalUrl: url, url },
+          },
+        ],
+      },
+      default: {
+        message: url,
+      },
+    })
+
+    return Share.open(options)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        err && console.log(err)
+      })
+  }
+
   const ListSkeleton = () => {
     return (
       <Box pt="5px">
@@ -121,40 +162,61 @@ export const Account = screenTrack()(({ navigation }) => {
 
   const topList = [
     {
-      title: "Membership info",
-      icon: <MembershipInfoIcon />,
+      title: "Manage Membership",
+      icon: <ManageMembership />,
       onPress: () => navigation.navigate("MembershipInfo"),
       tracking: Schema.ActionNames.MembershipInfoTapped,
     },
     {
-      title: "Personal preferences",
-      icon: <PersonalPreferencesIcon />,
+      title: "Personal Preferences",
+      icon: <PersonalPreferences />,
       onPress: () => navigation.navigate("PersonalPreferences"),
       tracking: Schema.ActionNames.PersonalPreferencesTapped,
     },
     {
-      title: "Payment & shipping",
-      icon: <PaymentShippingIcon />,
+      title: "Payment & Shipping",
+      icon: <MapPin />,
       onPress: () => navigation.navigate("PaymentAndShipping"),
       tracking: Schema.ActionNames.PaymentAndShippingTapped,
     },
     {
-      title: "FAQ",
-      icon: <QuestionMark />,
+      title: "Frequently Asked Questions",
+      icon: <SpeechBubble />,
       onPress: () => navigation.navigate("Faq"),
       tracking: Schema.ActionNames.FAQTapped,
     },
   ]
 
+  const middleList = [
+    {
+      title: "Follow us on Instagram",
+      icon: <Instagram />,
+      onPress: () => Linking.openURL("https://www.instagram.com/seasons.ny"),
+      tracking: Schema.ActionNames.FollowUsTapped,
+    },
+    {
+      title: "Rate us in the App Store",
+      icon: <Star />,
+      tracking: Schema.ActionNames.RateUsTapped,
+      onPress: () => Linking.openURL("https://itunes.apple.com/us/app/appName/id1483089476?mt=8&action=write-review"),
+    },
+    {
+      title: "Share Seasons",
+      icon: <MonocromeSeasonsLogo />,
+      tracking: Schema.ActionNames.ShareButtonTapped,
+      onPress: onShare,
+    },
+  ]
+
   const bottomList = [
     {
-      title: "Help and support",
-      icon: <QuestionMark />,
+      title: "Help & Support",
+      icon: <Envelope />,
       onPress: () => Linking.openURL(`mailto:membership@seasons.nyc?subject=Support`),
       tracking: Schema.ActionNames.SupportTapped,
     },
     {
-      title: "Privacy policy",
+      title: "Privacy Policy",
       icon: <PrivacyPolicy />,
       tracking: Schema.ActionNames.PrivacyPolicyTapped,
       onPress: () => {
@@ -163,14 +225,14 @@ export const Account = screenTrack()(({ navigation }) => {
     },
     {
       title: "Terms of Service",
-      icon: <TermsOfService />,
+      icon: <DocumentWithText />,
       tracking: Schema.ActionNames.TermsOfServiceTapped,
       onPress: () => {
         navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })
       },
     },
     {
-      title: "Sign out",
+      title: "Sign Out",
       icon: <LogOutSVG />,
       tracking: Schema.ActionNames.LogOutTapped,
       onPress: () => {
@@ -276,6 +338,12 @@ export const Account = screenTrack()(({ navigation }) => {
           </Box>
           <InsetSeparator />
           <NotificationToggle pushNotification={pushNotification} />
+          <InsetSeparator />
+          <Spacer mb={4} />
+          <Box px={2}>
+            <AccountList list={middleList} roles={roles} />
+          </Box>
+          <Spacer mb={4} />
           <InsetSeparator />
           <Spacer mb={4} />
           <Box px={2}>
