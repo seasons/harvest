@@ -140,7 +140,7 @@ export const Bag = screenTrack()((props) => {
     try {
       if (!isSignedIn) {
         showPopUp({
-          title: "Sign up to Reserve your items",
+          title: "Sign up to reserve your items",
           note: "You need to create an account before you can reserve items",
           buttonText: "Got it",
           onClose: () => {
