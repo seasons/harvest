@@ -1,5 +1,5 @@
 import { gql } from "apollo-boost"
-import { Button, CloseButton, Container, FadeInImage, Flex, Sans, Spacer } from "App/Components"
+import { Button, CloseButton, Container, FadeInImage, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Box } from "App/Components/Box"
 import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
@@ -62,11 +62,100 @@ export const GET_SURPRISE_PRODUCT_VARIANTS = gql`
   }
 `
 
-const itemWidth = Dimensions.get("window").width - 32
+const itemWidth = Math.min(Dimensions.get("window").width - 32, 280)
 const imageHeight = itemWidth * PRODUCT_ASPECT_RATIO
 
-export const SurpriseMe = screenTrack()(() => {
+const Content = ({ data, variant, product, onRestart, seenAllAvailableProducts }) => {
   const tracking = useTracking()
+
+  const imageURL = product?.images?.[0]?.url
+  const productName = product?.name
+  const brandName = product?.brand?.name
+
+  const NoProducts = () => {
+    return (
+      <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignItems="center">
+        <Box px={2}>
+          <Sans color="black100" size="2" style={{ textAlign: "center", maxWidth: 300 }}>
+            We can't find any products in your size. Check you've added your measurements in Personal Preferences in
+            account settings.
+          </Sans>
+          <Spacer mb={100} />
+        </Box>
+      </Flex>
+    )
+  }
+
+  const SeenAllContent = () => {
+    return (
+      <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignItems="center">
+        <Box px={2} pt={2}>
+          <Sans color="black50" size="2" style={{ textAlign: "center", maxWidth: 300 }}>
+            You've seen all of the available products in your size.
+          </Sans>
+          <Spacer mb={3} />
+          <Sans
+            color="black100"
+            size="2"
+            style={{ textAlign: "center", textDecorationLine: "underline" }}
+            onPress={onRestart}
+          >
+            Restart
+          </Sans>
+        </Box>
+      </Flex>
+    )
+  }
+
+  if (!!data && data?.surpriseProductVariants.length === 0) {
+    return <NoProducts />
+  } else if (seenAllAvailableProducts) {
+    return <SeenAllContent />
+  } else {
+    return (
+      <Box key={variant?.id}>
+        <Spacer mb={3} />
+        <Flex px={2} flexDirection="row" justifyContent="center">
+          <FadeInImage source={{ uri: imageURL }} style={{ width: itemWidth, height: imageHeight }} />
+        </Flex>
+        <Spacer mb={5} />
+        <Separator />
+        <Spacer mb={2} />
+        <Flex flexDirection="row" justifyContent="space-between" alignItems="flex-start" pl={2}>
+          <Box my={1}>
+            {!!productName && (
+              <Sans size="0.5" style={{ maxWidth: itemWidth - 50 }}>
+                {productName}
+              </Sans>
+            )}
+            {!!brandName && (
+              <Sans size="0.5" color="black50" style={{ maxWidth: itemWidth - 50, textDecorationLine: "underline" }}>
+                {brandName}
+              </Sans>
+            )}
+          </Box>
+          <Box my={0.5}>
+            <SaveProductButton
+              height={22}
+              width={16}
+              noModal
+              selectedVariant={variant}
+              product={product}
+              onPressSaveButton={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.SaveProductButtonTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                })
+              }}
+            />
+          </Box>
+        </Flex>
+      </Box>
+    )
+  }
+}
+
+export const SurpriseMe = screenTrack()(() => {
   const [variants, setVariants] = useState(null)
   const { data } = useQuery(GET_SURPRISE_PRODUCT_VARIANTS)
   const insets = useSafeAreaInsets()
@@ -79,6 +168,8 @@ export const SurpriseMe = screenTrack()(() => {
   const bagCount = data?.me?.bag?.length
 
   const bagIsFull = itemCount && bagCount && bagCount === itemCount
+
+  const seenAllAvailableProducts = variants?.length === 0
 
   const createShuffledVariants = () => {
     // Filter out products that are in the customers bag
@@ -98,9 +189,6 @@ export const SurpriseMe = screenTrack()(() => {
 
   const variant = variants?.[0]
   const product = variant?.product
-  const imageURL = product?.images?.[0]?.url
-  const productName = product?.name
-  const brandName = product?.brand?.name
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
@@ -188,29 +276,6 @@ export const SurpriseMe = screenTrack()(() => {
     addText = "Add to bag"
   }
 
-  const seenAllAvailableProducts = variants?.length === 0
-
-  const SeenAllContent = () => {
-    return (
-      <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignItems="center">
-        <Box px={2} pt={2}>
-          <Sans color="black50" size="2" style={{ textAlign: "center", maxWidth: 300 }}>
-            You've seen all of the available products in your size.
-          </Sans>
-          <Spacer mb={3} />
-          <Sans
-            color="black100"
-            size="2"
-            style={{ textAlign: "center", textDecorationLine: "underline" }}
-            onPress={onRestart}
-          >
-            Restart
-          </Sans>
-        </Box>
-      </Flex>
-    )
-  }
-
   if (!data?.surpriseProductVariants) {
     return (
       <>
@@ -226,7 +291,7 @@ export const SurpriseMe = screenTrack()(() => {
 
       <Container insetsBottom={false} insetsTop={false}>
         <Box style={{ flex: 1 }}>
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flex: 1 }}>
             <Spacer mb={5} />
             <Spacer mb={4} />
             <Box px={2} pt={2}>
@@ -238,48 +303,13 @@ export const SurpriseMe = screenTrack()(() => {
               </Sans>
               <Spacer mb={2} />
             </Box>
-            {seenAllAvailableProducts ? (
-              <SeenAllContent />
-            ) : (
-              <Box key={variant?.id}>
-                <Box px={2}>
-                  <FadeInImage source={{ uri: imageURL }} style={{ width: itemWidth, height: imageHeight }} />
-                </Box>
-                <Flex flexDirection="row" justifyContent="space-between" alignItems="flex-start" pl={2}>
-                  <Box my={1}>
-                    {!!productName && (
-                      <Sans size="0.5" style={{ maxWidth: itemWidth - 50 }}>
-                        {productName}
-                      </Sans>
-                    )}
-                    {!!brandName && (
-                      <Sans
-                        size="0.5"
-                        color="black50"
-                        style={{ maxWidth: itemWidth - 50, textDecorationLine: "underline" }}
-                      >
-                        {brandName}
-                      </Sans>
-                    )}
-                  </Box>
-                  <Box my={0.5}>
-                    <SaveProductButton
-                      height={22}
-                      width={16}
-                      noModal
-                      selectedVariant={variant}
-                      product={product}
-                      onPressSaveButton={() => {
-                        tracking.trackEvent({
-                          actionName: Schema.ActionNames.SaveProductButtonTapped,
-                          actionType: Schema.ActionTypes.Tap,
-                        })
-                      }}
-                    />
-                  </Box>
-                </Flex>
-              </Box>
-            )}
+            <Content
+              data={data}
+              variant={variant}
+              product={product}
+              onRestart={onRestart}
+              seenAllAvailableProducts={seenAllAvailableProducts}
+            />
           </ScrollView>
         </Box>
 
