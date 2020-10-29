@@ -15,6 +15,8 @@ import { ADD_TO_BAG, GET_BAG } from "./BagQueries"
 import { SaveProductButton } from "../Product/Components"
 import { Schema, useTracking, screenTrack } from "App/utils/track"
 import { Loader } from "App/Components/Loader"
+import { TouchableWithoutFeedback } from "react-native-gesture-handler"
+import { useNavigation } from "@react-navigation/native"
 
 export const GET_SURPRISE_PRODUCT_VARIANTS = gql`
   query SurpriseProductVariants {
@@ -27,6 +29,7 @@ export const GET_SURPRISE_PRODUCT_VARIANTS = gql`
         name
         brand {
           id
+          slug
           name
         }
         images(size: Small) {
@@ -67,10 +70,12 @@ const imageHeight = itemWidth * PRODUCT_ASPECT_RATIO
 
 const Content = ({ data, variant, product, onRestart, seenAllAvailableProducts }) => {
   const tracking = useTracking()
+  const navigation = useNavigation()
 
   const imageURL = product?.images?.[0]?.url
   const productName = product?.name
-  const brandName = product?.brand?.name
+  const brand = product?.brand
+  const brandName = brand?.name
 
   const NoProducts = () => {
     return (
@@ -116,7 +121,13 @@ const Content = ({ data, variant, product, onRestart, seenAllAvailableProducts }
       <Box key={variant?.id}>
         <Spacer mb={3} />
         <Flex px={2} flexDirection="row" justifyContent="center">
-          <FadeInImage source={{ uri: imageURL }} style={{ width: itemWidth, height: imageHeight }} />
+          <TouchableWithoutFeedback
+            onPress={() =>
+              navigation.navigate("Product", { id: product?.id, slug: product?.slug, name: product?.name })
+            }
+          >
+            <FadeInImage source={{ uri: imageURL }} style={{ width: itemWidth, height: imageHeight }} />
+          </TouchableWithoutFeedback>
         </Flex>
         <Spacer mb={5} />
         <Separator />
@@ -129,9 +140,13 @@ const Content = ({ data, variant, product, onRestart, seenAllAvailableProducts }
               </Sans>
             )}
             {!!brandName && (
-              <Sans size="0.5" color="black50" style={{ maxWidth: itemWidth - 50, textDecorationLine: "underline" }}>
-                {brandName}
-              </Sans>
+              <TouchableWithoutFeedback
+                onPress={() => navigation.navigate("Brand", { id: brand?.id, slug: brand?.slug, name: brand?.name })}
+              >
+                <Sans size="0.5" color="black50" style={{ maxWidth: itemWidth - 50, textDecorationLine: "underline" }}>
+                  {brandName}
+                </Sans>
+              </TouchableWithoutFeedback>
             )}
           </Box>
           <Box my={0.5}>
@@ -310,6 +325,7 @@ export const SurpriseMe = screenTrack()(() => {
               onRestart={onRestart}
               seenAllAvailableProducts={seenAllAvailableProducts}
             />
+            <Spacer pb={160} />
           </ScrollView>
         </Box>
 
