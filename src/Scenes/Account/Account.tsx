@@ -162,25 +162,25 @@ export const Account = screenTrack()(({ navigation }) => {
 
   const topList = [
     {
-      title: "Manage membership",
+      title: "Manage Membership",
       icon: <ManageMembership />,
       onPress: () => navigation.navigate("MembershipInfo"),
       tracking: Schema.ActionNames.MembershipInfoTapped,
     },
     {
-      title: "Personal preferences",
+      title: "Personal Preferences",
       icon: <PersonalPreferences />,
       onPress: () => navigation.navigate("PersonalPreferences"),
       tracking: Schema.ActionNames.PersonalPreferencesTapped,
     },
     {
-      title: "Payment & shipping",
+      title: "Payment & Shipping",
       icon: <MapPin />,
       onPress: () => navigation.navigate("PaymentAndShipping"),
       tracking: Schema.ActionNames.PaymentAndShippingTapped,
     },
     {
-      title: "Frequently asked questions",
+      title: "Frequently Asked Questions",
       icon: <SpeechBubble />,
       onPress: () => navigation.navigate("Faq"),
       tracking: Schema.ActionNames.FAQTapped,
@@ -210,13 +210,13 @@ export const Account = screenTrack()(({ navigation }) => {
 
   const bottomList = [
     {
-      title: "Help & support",
+      title: "Help & Support",
       icon: <Envelope />,
       onPress: () => Linking.openURL(`mailto:membership@seasons.nyc?subject=Support`),
       tracking: Schema.ActionNames.SupportTapped,
     },
     {
-      title: "Privacy policy",
+      title: "Privacy Policy",
       icon: <PrivacyPolicy />,
       tracking: Schema.ActionNames.PrivacyPolicyTapped,
       onPress: () => {
@@ -232,7 +232,7 @@ export const Account = screenTrack()(({ navigation }) => {
       },
     },
     {
-      title: "Sign out",
+      title: "Sign Out",
       icon: <LogOutSVG />,
       tracking: Schema.ActionNames.LogOutTapped,
       onPress: () => {
