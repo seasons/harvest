@@ -103,6 +103,12 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         await AsyncStorage.removeItem("beamsData")
         RNPusherPushNotifications.clearAllState()
         analytics.reset()
+        apolloClient.writeData({
+          data: {
+            isLoggedIn: false,
+            localBagItems: [],
+          },
+        })
         dispatch({ type: "SIGN_OUT" })
         apolloClient.resetStore()
       },
