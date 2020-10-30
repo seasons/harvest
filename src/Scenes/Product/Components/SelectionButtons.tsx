@@ -25,7 +25,8 @@ export const SelectionButtons: React.FC<Props> = (props) => {
   const inStock = selectedVariant && selectedVariant.reservable > 0
 
   useEffect(() => {
-    if (selectedVariant?.reservable && !loaded) {
+    // Wait to load the buttons until we know their state so user doesn't see the state change on load
+    if (typeof selectedVariant?.reservable === "number" && !loaded) {
       setLoaded(true)
     }
   }, [setLoaded, selectedVariant])
