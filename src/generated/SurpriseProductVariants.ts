@@ -12,6 +12,7 @@ import { BagItemStatus } from "./globalTypes";
 export interface SurpriseProductVariants_surpriseProductVariants_product_brand {
   __typename: "Brand";
   id: string;
+  slug: string;
   name: string;
 }
 

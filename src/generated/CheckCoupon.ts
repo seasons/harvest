@@ -11,7 +11,8 @@ import { CouponType } from "./globalTypes";
 
 export interface CheckCoupon_checkCoupon {
   __typename: "Coupon";
-  amount: number;
+  amount: number | null;
+  percentage: number | null;
   type: CouponType;
 }
 

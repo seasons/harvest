@@ -33,10 +33,17 @@ export interface GetPlans_me_customer_membership {
   plan: GetPlans_me_customer_membership_plan | null;
 }
 
+export interface GetPlans_me_customer_admissions {
+  __typename: "CustomerAdmissionsData";
+  id: string;
+  allAccessEnabled: boolean;
+}
+
 export interface GetPlans_me_customer {
   __typename: "Customer";
   id: string;
   membership: GetPlans_me_customer_membership | null;
+  admissions: GetPlans_me_customer_admissions | null;
 }
 
 export interface GetPlans_me {

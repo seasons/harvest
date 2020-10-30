@@ -63,6 +63,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   coupon,
   source,
 }) => {
+  const allAccessEnabled = data?.me?.customer?.admissions?.allAccessEnabled
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
   const [openPopUp, setOpenPopUp] = useState(false)
@@ -150,7 +151,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     // Update the selected plan if you switch tabs
     const newSelectedPlan =
       plans?.filter(
-        (plan) => tierToReadableText(plan.tier) === tiers?.[currentView] && plan.itemCount === selectedPlan.itemCount
+        (plan) => tierToReadableText(plan.tier) === tiers?.[currentView] && plan.itemCount === selectedPlan?.itemCount
       ) || plans?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])?.[0]
     setSelectedPlan(newSelectedPlan?.[0])
   }, [currentView])
@@ -313,6 +314,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
               tabColor={currentColor}
               spaceEvenly
               tabs={tiers}
+              strikethroughTabs={allAccessEnabled ? [] : ["All Access"]}
               activeTab={currentView}
               goToPage={(page) => {
                 tracking.trackEvent({
