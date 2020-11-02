@@ -143,6 +143,8 @@ export const Reservation = screenTrack()((props) => {
 
   const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
 
+  console.log("shippingOptions", shippingOptions)
+
   const ShippingOption = ({ option, index }) => {
     const method = option?.shippingMethod
     let price
@@ -192,7 +194,7 @@ export const Reservation = screenTrack()((props) => {
                 will be processed the following business day.
               </Sans>
             </Box>
-            {!!shippingOptions && (
+            {shippingOptions?.length > 0 && (
               <Box mb={4}>
                 <SectionHeader title="Select shipping" />
                 {shippingOptions.map((option, index) => {
