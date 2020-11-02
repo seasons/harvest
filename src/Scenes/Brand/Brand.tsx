@@ -101,12 +101,12 @@ export const Brand = screenTrack({
             <Sans size="3" style={{ textDecorationLine: "underline" }}>
               {data?.brand?.name}
             </Sans>
-            {basedIn && (
+            {!!basedIn && (
               <Sans size="2" color={color("black50")}>
                 {basedIn}
               </Sans>
             )}
-            {description && (
+            {!!description && (
               <>
                 <Spacer mb={3} />
                 <Sans size="2">About</Sans>
