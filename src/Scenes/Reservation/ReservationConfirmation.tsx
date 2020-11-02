@@ -124,8 +124,6 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const averageDuration = shippingOption?.averageDuration
   const externalCost = shippingOption?.externalCost
 
-  console.log("shippingOption", shippingOption)
-
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
       <Flex style={{ flex: 1 }} px={2}>

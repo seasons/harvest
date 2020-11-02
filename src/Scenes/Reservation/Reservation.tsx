@@ -143,8 +143,6 @@ export const Reservation = screenTrack()((props) => {
 
   const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
 
-  console.log("shippingOptions", shippingOptions)
-
   const ShippingOption = ({ option, index }) => {
     const method = option?.shippingMethod
     let price
