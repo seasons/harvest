@@ -122,6 +122,21 @@ export const EditPaymentAndShipping: React.FC<{
         title: "Something went wrong!",
         onClose: () => hidePopUp(),
       }
+      if (error.toString().includes("shipping address is invalid")) {
+        popUpData = {
+          title: "Your shipping address is invalid",
+          note: "Please check if your shipping address looks valid. If you're having trouble contact us.",
+          buttonText: "Close",
+          onClose: hidePopUp,
+        }
+      } else if (error.toString().includes("billing address is invalid")) {
+        popUpData = {
+          title: "Your billing address is invalid",
+          note: "Please check if your billing address looks valid. If you're having trouble contact us.",
+          buttonText: "Close",
+          onClose: hidePopUp,
+        }
+      }
       Sentry.captureException(error)
       Keyboard.dismiss()
       showPopUp(popUpData)
@@ -424,6 +439,7 @@ export const EditPaymentAndShipping: React.FC<{
             <Spacer ml={1} />
             <Button
               loading={isMutating}
+              disabled={isMutating}
               variant="secondaryBlack"
               size="large"
               width={buttonWidth}
