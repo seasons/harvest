@@ -87,6 +87,11 @@ export const themeProps = {
       fontSize: 24,
       lineHeight: 32,
     },
+    /** Equivalent to 32px size / 40px line-height  */
+    "4": {
+      fontSize: 32,
+      lineHeight: 40,
+    },
   },
 }
 
@@ -105,3 +110,5 @@ export type Color = keyof typeof themeProps["colors"]
 export type TypeSizes = typeof themeProps.typeSizes
 /** All available sizes for our sans font */
 export type SansSize = keyof TypeSizes | Array<keyof TypeSizes>
+/** All available sizes for our display font */
+export type DisplaySize = keyof TypeSizes | Array<keyof TypeSizes>
