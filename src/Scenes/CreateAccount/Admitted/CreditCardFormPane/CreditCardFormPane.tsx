@@ -1,32 +1,28 @@
-import { useMutation } from "@apollo/react-hooks"
 import {
-  Flex,
-  Sans,
-  Box,
-  CloseButton,
-  Container,
-  Spacer,
-  Separator,
-  TextInput,
-  FakeTextInput,
-  Button,
+  Box, Button, CloseButton, Container, FakeTextInput, Flex, Sans, Separator, Spacer, TextInput
 } from "App/Components"
-import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { color } from "App/utils/color"
-import React, { useState } from "react"
-import * as Sentry from "@sentry/react-native"
+import { GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { isWholeNumber } from "App/helpers/validation"
-import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
-import { Keyboard, KeyboardAvoidingView, ScrollView, Dimensions, TouchableOpacity } from "react-native"
-import stripe, { PaymentCardTextField } from "tipsi-stripe"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { StatePickerPopUp } from "App/Scenes/Account/EditShippingAddress/StatePickerPopup"
+import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { color } from "App/utils/color"
+import { BackArrowIcon } from "Assets/icons"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import React, { useState } from "react"
+import {
+  Dimensions, Keyboard, KeyboardAvoidingView, ScrollView, TouchableOpacity
+} from "react-native"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
-import { PAYMENT_CHECKOUT } from "../ChoosePlanPane/ChoosePlanPane"
-import { GetPlans_paymentPlans } from "App/generated/GetPlans"
-import { BackArrowIcon } from "Assets/icons"
+import stripe, { PaymentCardTextField } from "tipsi-stripe"
+
+import { useMutation } from "@apollo/react-hooks"
+import * as Sentry from "@sentry/react-native"
+
 import { Coupon, State } from "../../CreateAccount"
+import { PAYMENT_CHECKOUT } from "../ChoosePlanPane/ChoosePlanPane"
 import { calcFinalPrice } from "../ChoosePlanPane/utils"
 
 const windowDimensions = Dimensions.get("window")
@@ -184,6 +180,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
         </TouchableOpacity>
       </BackArrowWrapper>
       <CloseButton variant="light" />
+
       <Container insetsBottom={false} insetsTop={false}>
         <Box style={{ flex: 1 }}>
           <ScrollView showsVerticalScrollIndicator={false}>
