@@ -2,7 +2,7 @@ import React, { CSSProperties } from "react"
 import styled from "styled-components/native"
 import { Color } from "./Theme"
 import { color as colorHelper } from "App/utils/color"
-import { SansSize, themeProps } from "./Theme"
+import { SansSize, DisplaySize, themeProps } from "./Theme"
 import {
   color,
   ColorProps,
@@ -187,6 +187,31 @@ export const Sans: React.SFC<SansProps> = (props) => {
 }
 
 Sans.displayName = "Sans"
+
+export interface DisplayProps extends Partial<TextProps> {
+  role?: string
+  size: DisplaySize
+  color?: Color | string
+  /**
+   * Explicitly specify `null` to inherit weight from parent, otherwise default
+   * to `regular`.
+   */
+  onPress?: () => void
+}
+
+export const Display: React.SFC<DisplayProps> = (props) => {
+  const { size, numberOfLines } = props
+  const color = props.color ? colorHelper(props.color) : colorHelper("black")
+  return (
+    <Text
+      {...props}
+      fontFamily={fontFamily.display.regular}
+      {...determineFontSizes(size)}
+      color={color}
+      numberOfLines={numberOfLines}
+    />
+  )
+}
 
 export const LogoText = styled.Text`
   font-family: "Apercu-Mono";

@@ -312,6 +312,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             headerText={"You're in.\nLet's choose your plan"}
             source="CreateAccountModal"
             coupon={coupon}
+            onMountScrollToFaqSection={route?.params?.onMountScrollToFaqSection}
           />
         )
         break

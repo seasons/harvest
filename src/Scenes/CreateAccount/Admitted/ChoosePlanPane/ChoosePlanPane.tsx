@@ -13,7 +13,7 @@ import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "react-apollo"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Dimensions, Linking, ScrollView, TouchableOpacity } from "react-native"
+import { Dimensions, Linking, ScrollView, TouchableOpacity, LayoutEvent } from "react-native"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
 import { PlanButton } from "./PlanButton"
@@ -22,6 +22,7 @@ import { GetPlans, GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { ChevronIcon } from "Assets/icons"
 import { Coupon, PaymentMethod } from "../../CreateAccount"
 import { PopUp } from "App/Components/PopUp"
+import { themeProps } from "App/Components/Theme"
 import { PaymentMethods } from "./PaymentMethods"
 import { calcFinalPrice } from "./utils"
 
@@ -50,6 +51,7 @@ interface ChoosePlanPaneProps {
   data: GetPlans
   coupon?: Coupon
   source: "CreateAccountModal" | "UpdatePaymentPlanModal"
+  onMountScrollToFaqSection?: boolean
 }
 
 const viewWidth = Dimensions.get("window").width
@@ -62,6 +64,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   selectedPlan,
   coupon,
   source,
+  onMountScrollToFaqSection,
 }) => {
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
@@ -73,6 +76,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   const [tiers, setTiers] = useState([])
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
+  const scrollViewRef = React.useRef(null)
   const [applePayCheckout] = useMutation(PAYMENT_CHECKOUT, {
     onCompleted: () => {
       setIsMutating(false)
@@ -264,6 +268,16 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     navigation.navigate("Modal", { screen: "ApplyPromoCode", params: { source } })
   }
 
+  const onFaqSectionHeaderLayout = (event: LayoutEvent) => {
+    if (onMountScrollToFaqSection && scrollViewRef.current) {
+      const { x, y } = event.nativeEvent.layout
+      // layout event y does not include section header top margin,
+      // manually subtract so that we don't overshoot the component.
+      const scrollDestY = y - themeProps.space["4"]
+      scrollViewRef.current.scrollTo({ x, y: scrollDestY, animated: false })
+    }
+  }
+
   const descriptionLines = selectedPlan?.description?.split("\n") || []
   const planColors = ["#000", "#e6b759"]
   const currentColor = planColors[currentView] || "black"
@@ -281,7 +295,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       <CloseButton variant="light" />
       <Container insetsBottom={false} insetsTop={false}>
         <Box style={{ flex: 1 }}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
             <Spacer mb={5} />
             <Spacer mb={4} />
             <Box p={2}>
@@ -347,7 +361,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
             <Separator />
             {!!faqSections?.length &&
               faqSections.map((section, index) => (
-                <Box mt={4} key={index} px={2}>
+                <Box mt={4} key={index} px={2} onLayout={onFaqSectionHeaderLayout}>
                   <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
                     <Sans size="1">{section.title}</Sans>
                     <ChevronIcon rotateDeg="90deg" color={color("black100")} />

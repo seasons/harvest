@@ -226,6 +226,7 @@ export enum ActionNames {
   EnterPhoneNumberVerificationCodeNextTapped = "Enter Phone Number Verification Code Next Tapped",
   GetMeasurementsFinishTapped = "Get Measurements Finish Tapped",
   ChoosePlanTapped = "Choose Plan Tapped",
+  LearnMoreTapped = "Learn More Tapped",
   SignupCompleted = "Signup Completed",
 
   // Promo Code

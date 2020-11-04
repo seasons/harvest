@@ -2,15 +2,18 @@ import { Box, Button, Container, GuestView, Sans, Separator, Skeleton, Spacer, F
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { screenTrack, Schema, useTracking } from "App/utils/track"
 import { NotificationToggle } from "./Components/NotificationToggle"
+import { HourMinuteSecondCountdown } from "./Components/HourMinuteSecondCountdown"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "react-apollo"
 import { Schema as NavigationSchema } from "App/Navigation"
-import { Image, ScrollView, StatusBar, Linking, Platform } from "react-native"
+import { ScrollView, StatusBar, Linking, Platform } from "react-native"
 import * as Animatable from "react-native-animatable"
+import { DateTime, Duration } from "luxon"
 import { CustomerStatus, OnboardingChecklist, AccountList } from "./Lists"
 import { State, UserState } from "../CreateAccount/CreateAccount"
 import Share from "react-native-share"
+import styled from "styled-components/native"
 import { ChevronIcon } from "Assets/icons"
 import {
   PersonalPreferences,
@@ -25,6 +28,10 @@ import {
   Star,
   Envelope,
 } from "Assets/svgs"
+
+const SansUnderline = styled(Sans)`
+  text-decoration: underline;
+`
 
 export const GET_USER = gql`
   query GetUser {
@@ -66,6 +73,10 @@ export const GET_USER = gql`
             colors
             brands
           }
+        }
+        authorizedAt
+        admissions {
+          authorizationWindowClosesAt
         }
       }
     }
@@ -267,36 +278,76 @@ export const Account = screenTrack()(({ navigation }) => {
           />
         )
       case CustomerStatus.Authorized:
+        const authorizedAt = DateTime.fromISO(customer?.authorizedAt)
+        const authorizationWindowClosesAt = DateTime.fromISO(customer?.admissions?.authorizationWindowClosesAt)
+        const targetAuthorizationDate = authorizationWindowClosesAt.isValid
+          ? authorizationWindowClosesAt
+          : authorizedAt.plus({ days: 2 })
+        const authorizationDuration =
+          targetAuthorizationDate.valueOf() > authorizedAt.valueOf()
+            ? targetAuthorizationDate.diff(authorizedAt, "hours")
+            : Duration.fromMillis(0)
+
         return (
           <Box pb={1}>
             <Flex alignItems="center" pb={3}>
-              <Image style={{ width: 136, height: 80 }} source={require("Assets/images/Sunset.png")} />
+              <HourMinuteSecondCountdown targetDate={targetAuthorizationDate} />
             </Flex>
             <Sans size="2" color="black100" textAlign="center">
               You're in. Let's choose your plan
             </Sans>
             <Spacer mb={1} />
             <Sans size="1" color="black50" textAlign="center">
-              You have 48 hours to choose your plan. If we don’t hear from you, your invite will go to the next person
-              in line.
+              You have{" "}
+              <SansUnderline size="1" color="black50">
+                {authorizationDuration.get("hours") === 1
+                  ? `${authorizationDuration.toFormat("h")} hour`
+                  : `${authorizationDuration.toFormat("h")} hours`}
+              </SansUnderline>{" "}
+              to secure your spot. If we don't hear from you, your invite will go to the next person and{" "}
+              <SansUnderline size="1" color="black50">
+                you'll be waitlisted
+              </SansUnderline>
+              .
             </Sans>
             <Spacer mb={3} />
-            <Button
-              block
-              variant="primaryWhite"
-              onPress={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.ChoosePlanTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                })
-                navigation.navigate("Modal", {
-                  screen: NavigationSchema.PageNames.CreateAccountModal,
-                  params: { initialState: State.ChoosePlan, initialUserState: UserState.Admitted },
-                })
-              }}
-            >
-              Choose plan
-            </Button>
+            <Flex flexDirection="row" justifyContent="center">
+              <Button
+                variant="primaryWhite"
+                onPress={() => {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.LearnMoreTapped,
+                    actionType: Schema.ActionTypes.Tap,
+                  })
+                  navigation.navigate("Modal", {
+                    screen: NavigationSchema.PageNames.CreateAccountModal,
+                    params: {
+                      initialState: State.ChoosePlan,
+                      initialUserState: UserState.Admitted,
+                      onMountScrollToFaqSection: true,
+                    },
+                  })
+                }}
+              >
+                Learn more
+              </Button>
+              <Spacer mr={1} />
+              <Button
+                variant="primaryBlack"
+                onPress={() => {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.ChoosePlanTapped,
+                    actionType: Schema.ActionTypes.Tap,
+                  })
+                  navigation.navigate("Modal", {
+                    screen: NavigationSchema.PageNames.CreateAccountModal,
+                    params: { initialState: State.ChoosePlan, initialUserState: UserState.Admitted },
+                  })
+                }}
+              >
+                Choose plan
+              </Button>
+            </Flex>
           </Box>
         )
       case CustomerStatus.Invited:
