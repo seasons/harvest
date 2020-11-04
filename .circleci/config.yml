@@ -1,12 +1,17 @@
 # .circleci/config.yml
 
 version: 2
+orbs:
+  node: circleci/node@4.0.0
+
 jobs:
   build-and-test:
     macos:
       xcode: "11.3.1"
     shell: /bin/bash --login -o pipefail
     steps:
+      - node/install:
+          node-version: "14.15.0"
       - checkout
       - restore_cache:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -48,6 +53,8 @@ jobs:
       FASTLANE_LANE: ios beta
     shell: /bin/bash --login -o pipefail
     steps:
+      - node/install:
+          node-version: "14.15.0"
       - checkout
       - restore_cache:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
