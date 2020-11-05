@@ -148,6 +148,14 @@ export const GET_HOMEPAGE = gql`
         url
       }
     }
+    justAddedOuterwear: products(
+      first: 8
+      category: "outerwear"
+      orderBy: publishedAt_DESC
+      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }, { tags_none: { name: "Vintage" } }] }
+    ) {
+      ...HomePageProduct
+    }
     justAddedTops: products(
       first: 8
       category: "tops"

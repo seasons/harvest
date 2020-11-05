@@ -28,8 +28,8 @@ const sectionsFrom = (data: any) => {
   if (data?.blogPosts) {
     sections.push({ type: SectionType.BlogPosts, results: data?.blogPosts })
   }
-  if (data?.justAddedTops?.length) {
-    sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
+  if (data?.justAddedOuterwear?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedOuterwear, title: "Just added outerwear" })
   }
   if (data?.homepage?.sections?.length) {
     sections.push(
@@ -44,6 +44,9 @@ const sectionsFrom = (data: any) => {
         })
         .filter(Boolean)
     )
+  }
+  if (data?.justAddedTops?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
   }
   if (data?.me?.savedItems?.length) {
     const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
