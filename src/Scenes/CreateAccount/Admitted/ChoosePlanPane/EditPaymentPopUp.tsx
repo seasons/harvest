@@ -1,19 +1,22 @@
-import { Box, Button, Sans, Spacer, Separator, Flex } from "App/Components"
+import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
 import { PopUp } from "App/Components/PopUp"
-import React, { MutableRefObject, useState, useRef, useEffect } from "react"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Dimensions, FlatList } from "react-native"
-import stripe, { PaymentCardTextField } from "tipsi-stripe"
-import { color } from "App/utils/color"
-import styled from "styled-components"
-import * as Sentry from "@sentry/react-native"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { PAYMENT_UPDATE } from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
-import { useMutation } from "react-apollo"
-import { String } from "aws-sdk/clients/augmentedairuntime"
-import { PaymentMethods } from "./PaymentMethods"
-import { CheckCircled } from "Assets/svgs/CheckCircled"
 import { GET_PAYMENT_DATA } from "App/Scenes/Account/PaymentAndShipping/PaymentAndShipping"
+import { color } from "App/utils/color"
+import { CheckCircled } from "Assets/svgs/CheckCircled"
+import { String } from "aws-sdk/clients/augmentedairuntime"
+import React, { MutableRefObject, useEffect, useRef, useState } from "react"
+import { useMutation } from "react-apollo"
+import { Dimensions, FlatList } from "react-native"
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import styled from "styled-components"
+import stripe, { PaymentCardTextField } from "tipsi-stripe"
+
+import * as Sentry from "@sentry/react-native"
+
+import { PaymentMethods } from "./PaymentMethods"
 
 interface BillingAddress {
   address1: string
@@ -255,7 +258,7 @@ export const EditPaymentPopUp: React.FC<Props> = ({
 
   return (
     <PopUp show={openPopUp}>
-      <FlatList
+      <KeyboardAwareFlatList
         data={["ChoosePaymentType", "EditCreditCard", "Confirmation"] as EditPaymentPopUpState[]}
         horizontal
         initialScrollIndex={index}

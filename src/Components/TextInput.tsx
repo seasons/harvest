@@ -1,6 +1,8 @@
 import { color } from "App/utils"
-import React, { useState, useEffect, MutableRefObject, useRef, useImperativeHandle } from "react"
-import { KeyboardType, TextInput as RNTextInput, TouchableWithoutFeedback, ViewStyle } from "react-native"
+import React, { MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react"
+import {
+  KeyboardType, TextInput as RNTextInput, TouchableWithoutFeedback, ViewStyle
+} from "react-native"
 import { animated, useSpring } from "react-spring"
 
 import { Box, Spacer } from "./"
