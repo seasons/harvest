@@ -5,6 +5,7 @@ import { useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { color } from "App/utils"
 import styled from "styled-components/native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { BRAND_SNAP_PADDING } from "./BrandBottomSheet"
 
 const windowWidth = Dimensions.get("window").width
 const imageHeight = windowWidth
@@ -62,7 +63,7 @@ const Wrapper = styled(Box)`
 `
 
 const BlackSpacer = styled(Box)<{ insetsTop: number }>`
-  height: ${(p) => p.insetsTop + 76};
+  height: ${(p) => p.insetsTop + BRAND_SNAP_PADDING};
   width: 100%;
   background-color: ${color("black100")};
 `

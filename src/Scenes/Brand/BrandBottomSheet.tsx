@@ -17,6 +17,8 @@ interface BrandBottomSheetProps {
   currentImage: number
 }
 
+export const BRAND_SNAP_PADDING = 70
+
 const MetaDataCarousel = ({ data }) => {
   return (
     <FlatList
@@ -71,8 +73,8 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loadin
   const numColumns = 2
 
   const imageContentHeight = dimensions.width
-  const topSnapPoint = 16
-  const secondSnapPoint = imageContentHeight - insets.top
+  const topSnapPoint = 0
+  const secondSnapPoint = imageContentHeight - insets.top - BRAND_SNAP_PADDING
 
   const snapPoints = hasImages ? [topSnapPoint, secondSnapPoint] : [topSnapPoint]
   const initialSnapPoint = hasImages ? 1 : 0
@@ -100,7 +102,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loadin
   const content = useMemo(() => {
     return (
       <ScrollBottomSheet<string>
-        topInset={95}
+        topInset={BRAND_SNAP_PADDING}
         componentType="FlatList"
         enableOverScroll
         ListHeaderComponent={() => (
@@ -146,7 +148,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loadin
         containerStyle={{
           backgroundColor: "white",
           borderRadius: 20,
-          marginTop: insets.top,
+          marginTop: insets.top + BRAND_SNAP_PADDING,
         }}
         snapPoints={snapPoints}
         initialSnapIndex={initialSnapPoint}
