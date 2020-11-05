@@ -39,8 +39,6 @@ const sectionsFrom = (data: any) => {
           switch (section.type) {
             case SectionType.Brands:
               return section
-            case SectionType.Products:
-              return section
           }
         })
         .filter(Boolean)
@@ -49,10 +47,10 @@ const sectionsFrom = (data: any) => {
   if (data?.justAddedTops?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
   }
-  if (data?.me?.savedItems?.length) {
-    const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
-    sections.push({ type: SectionType.SavedProducts, title: "Saved for later", results })
+  if (data?.justAddedBottoms?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
   }
+
   if (data?.archivalProducts?.length) {
     sections.push({
       type: SectionType.ArchivalProducts,
@@ -66,9 +64,25 @@ const sectionsFrom = (data: any) => {
       results: data?.archivalProducts,
     })
   }
-  if (data?.justAddedBottoms?.length) {
-    sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
+
+  if (data?.me?.savedItems?.length) {
+    const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
+    sections.push({ type: SectionType.SavedProducts, title: "Saved for later", results })
   }
+
+  if (data?.homepage?.sections?.length) {
+    sections.push(
+      ...data?.homepage?.sections
+        .map((section) => {
+          switch (section.type) {
+            case SectionType.Products:
+              return section
+          }
+        })
+        .filter(Boolean)
+    )
+  }
+
   if (data?.fitPics?.length) {
     sections.push({ type: SectionType.FitPics, results: data?.fitPics })
   }
