@@ -146,7 +146,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loadin
         containerStyle={{
           backgroundColor: "white",
           borderRadius: 20,
-          marginTop: images?.length > 0 ? 25 : insets.top + 60,
+          marginTop: insets.top,
         }}
         snapPoints={snapPoints}
         initialSnapIndex={initialSnapPoint}
