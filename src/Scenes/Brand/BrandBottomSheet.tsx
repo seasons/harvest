@@ -1,5 +1,4 @@
 import { Handle, Box, Spacer, Sans, ProductGridItem, Flex } from "App/Components"
-import { NAV_HEIGHT } from "App/helpers/constants"
 import { color, space } from "App/utils"
 import React, { useState, useRef, useMemo } from "react"
 import { Dimensions, FlatList, Linking, TouchableOpacity } from "react-native"

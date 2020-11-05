@@ -4,12 +4,14 @@ import { FlatList, Dimensions } from "react-native"
 import { useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { color } from "App/utils"
 import styled from "styled-components/native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 const windowWidth = Dimensions.get("window").width
 const imageHeight = windowWidth
 
 export const BrandPhotos = ({ images, currentImage, setCurrentImage }) => {
   const tracking = useTracking()
+  const insets = useSafeAreaInsets()
 
   const renderItem = ({ item }) => {
     return (
@@ -33,7 +35,7 @@ export const BrandPhotos = ({ images, currentImage, setCurrentImage }) => {
   }
 
   if (images.length === 0) {
-    return <BlackSpacer />
+    return <BlackSpacer insetsTop={insets?.top || 0} />
   }
 
   return (
@@ -59,8 +61,8 @@ const Wrapper = styled(Box)`
   background-color: ${color("white100")};
 `
 
-const BlackSpacer = styled(Box)`
-  height: 125;
+const BlackSpacer = styled(Box)<{ insetsTop: number }>`
+  height: ${(p) => p.insetsTop + 76};
   width: 100%;
   background-color: ${color("black100")};
 `
