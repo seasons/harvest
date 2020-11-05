@@ -1,7 +1,7 @@
-import LottieView from "lottie-react-native"
 import React from "react"
 import styled from "styled-components/native"
 import { Box } from "./Box"
+import { Spinner } from "./Spinner"
 import { themeProps } from "./Theme"
 
 type LoaderVariant = "whiteBackground" | "blackOpaque85"
@@ -32,12 +32,7 @@ export const Loader: React.FC<{
 
   return (
     <Container backgroundColor={variantProps.backgroundColor} opacity={variantProps.opacity}>
-      <LottieView
-        source={require("../../assets/animations/logo-loader.json")}
-        autoPlay
-        loop
-        style={{ width: 80, height: 80, alignSelf: "center" }}
-      />
+      <Spinner />
     </Container>
   )
 }
