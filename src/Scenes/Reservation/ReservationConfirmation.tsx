@@ -39,6 +39,15 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
         reservations(where: { id: $reservationID }) {
           id
           reservationNumber
+          shippingOption {
+            id
+            externalCost
+            averageDuration
+            shippingMethod {
+              id
+              displayText
+            }
+          }
           products {
             id
             productVariant {
@@ -95,7 +104,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const SectionHeader = ({ title, content = null, bottomSpacing = 1, hideSeparator = false }) => {
     return (
       <>
-        <Flex flexDirection="row" flex={1} width="100%">
+        <Flex flexDirection="row" style={{ flex: 1 }} width="100%">
           <Sans size="1" color="black100">
             {title}
           </Sans>
@@ -110,10 +119,14 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const formatedAddress1 =
     !!address?.address1 && `${address?.address1}${address?.address2 ? " " + address?.address2 : ""},`
   const formatedAddress2 = !!address?.city && `${address?.city}, ${address?.state} ${address?.zipCode}`
+  const shippingOption = reservation?.shippingOption
+  const shippingDisplayText = shippingOption?.shippingMethod?.displayText
+  const averageDuration = shippingOption?.averageDuration
+  const externalCost = shippingOption?.externalCost
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
-      <Flex flex={1} px={2}>
+      <Flex style={{ flex: 1 }} px={2}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <Spacer mb={52} />
           <CheckCircled />
@@ -163,14 +176,37 @@ export const ReservationConfirmation = screenTrack()((props) => {
             <SectionHeader
               title="Delivery"
               content={
-                <Sans size="1" color="black100" ml="auto" textAlign="right">
-                  {`UPS Ground\n2 day shipping`}
-                </Sans>
+                <>
+                  {!!averageDuration && (
+                    <Sans size="1" color="black100" ml="auto" textAlign="right">
+                      {averageDuration}-day shipping
+                    </Sans>
+                  )}
+                  {!!shippingDisplayText && (
+                    <Sans size="1" color="black100" ml="auto" textAlign="right">
+                      {shippingDisplayText}
+                    </Sans>
+                  )}
+                </>
               }
-              hideSeparator
+              hideSeparator={!externalCost}
               bottomSpacing={4}
             />
           </Box>
+          {!!externalCost && externalCost !== 0 && (
+            <Box pt={1}>
+              <SectionHeader
+                title="Order total"
+                content={
+                  <Sans size="1" color="black100" ml="auto" textAlign="right">
+                    ${externalCost / 100}
+                  </Sans>
+                }
+                hideSeparator
+                bottomSpacing={4}
+              />
+            </Box>
+          )}
           <Box mb={5}>
             <SectionHeader title="Items" />
             <Box mt={1} mb={4}>

@@ -56,6 +56,11 @@ export interface GetUser_me_customer_detail {
   stylePreferences: GetUser_me_customer_detail_stylePreferences | null;
 }
 
+export interface GetUser_me_customer_admissions {
+  __typename: "CustomerAdmissionsData";
+  authorizationWindowClosesAt: any | null;
+}
+
 export interface GetUser_me_customer {
   __typename: "Customer";
   id: string;
@@ -63,6 +68,8 @@ export interface GetUser_me_customer {
   onboardingSteps: OnboardingStep[];
   user: GetUser_me_customer_user;
   detail: GetUser_me_customer_detail | null;
+  authorizedAt: any | null;
+  admissions: GetUser_me_customer_admissions | null;
 }
 
 export interface GetUser_me {

@@ -206,7 +206,8 @@ export const EditShippingAddress: React.FC<{
                   !isWholeNumber(zipCode) ||
                   zipCode.length !== 5 ||
                   !city.trim() ||
-                  !state
+                  !state ||
+                  isMutating
                 }
                 loading={isMutating}
                 onPress={handleUpdateAddress}

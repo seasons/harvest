@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { ShippingCode } from "./globalTypes";
+
 // ====================================================
 // GraphQL query operation: GetCustomer
 // ====================================================
@@ -68,16 +70,19 @@ export interface GetCustomer_me_bag {
   productVariant: GetCustomer_me_bag_productVariant;
 }
 
-export interface GetCustomer_me_customer_membership_plan {
-  __typename: "PaymentPlan";
+export interface GetCustomer_me_customer_detail_shippingAddress_shippingOptions_shippingMethod {
+  __typename: "ShippingMethod";
   id: string;
-  itemCount: number | null;
+  code: ShippingCode;
+  displayText: string;
 }
 
-export interface GetCustomer_me_customer_membership {
-  __typename: "CustomerMembership";
+export interface GetCustomer_me_customer_detail_shippingAddress_shippingOptions {
+  __typename: "ShippingOption";
   id: string;
-  plan: GetCustomer_me_customer_membership_plan | null;
+  externalCost: number | null;
+  averageDuration: number | null;
+  shippingMethod: GetCustomer_me_customer_detail_shippingAddress_shippingOptions_shippingMethod | null;
 }
 
 export interface GetCustomer_me_customer_detail_shippingAddress {
@@ -88,6 +93,7 @@ export interface GetCustomer_me_customer_detail_shippingAddress {
   city: string | null;
   state: string | null;
   zipCode: string;
+  shippingOptions: GetCustomer_me_customer_detail_shippingAddress_shippingOptions[] | null;
 }
 
 export interface GetCustomer_me_customer_detail {
@@ -106,7 +112,6 @@ export interface GetCustomer_me_customer_billingInfo {
 export interface GetCustomer_me_customer {
   __typename: "Customer";
   id: string;
-  membership: GetCustomer_me_customer_membership | null;
   detail: GetCustomer_me_customer_detail | null;
   billingInfo: GetCustomer_me_customer_billingInfo | null;
 }

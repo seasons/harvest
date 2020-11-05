@@ -34,6 +34,20 @@ export interface GetCustomerReservationConfirmation_me_customer_detail {
   shippingAddress: GetCustomerReservationConfirmation_me_customer_detail_shippingAddress | null;
 }
 
+export interface GetCustomerReservationConfirmation_me_customer_reservations_shippingOption_shippingMethod {
+  __typename: "ShippingMethod";
+  id: string;
+  displayText: string;
+}
+
+export interface GetCustomerReservationConfirmation_me_customer_reservations_shippingOption {
+  __typename: "ShippingOption";
+  id: string;
+  externalCost: number | null;
+  averageDuration: number | null;
+  shippingMethod: GetCustomerReservationConfirmation_me_customer_reservations_shippingOption_shippingMethod | null;
+}
+
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_modelSize {
   __typename: "Size";
   id: string;
@@ -84,6 +98,7 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations {
   __typename: "Reservation";
   id: string;
   reservationNumber: number;
+  shippingOption: GetCustomerReservationConfirmation_me_customer_reservations_shippingOption | null;
   products: GetCustomerReservationConfirmation_me_customer_reservations_products[];
 }
 

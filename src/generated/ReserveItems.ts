@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ReserveItemsOptions } from "./globalTypes";
+import { ReserveItemsOptions, ShippingCode } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: ReserveItems
@@ -21,4 +21,5 @@ export interface ReserveItems {
 export interface ReserveItemsVariables {
   items: string[];
   options?: ReserveItemsOptions | null;
+  shippingCode?: ShippingCode | null;
 }

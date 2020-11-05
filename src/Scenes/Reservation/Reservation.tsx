@@ -2,20 +2,22 @@ import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spa
 import { Loader } from "App/Components/Loader"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { space } from "App/utils"
+import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import * as Sentry from "@sentry/react-native"
-import { ScrollView } from "react-native"
+import { ScrollView, TouchableWithoutFeedback } from "react-native"
 import { BagItemFragment } from "../Bag/Components/BagItem"
 import { ReservationItem } from "./Components/ReservationItem"
 import { useNavigation } from "@react-navigation/native"
+import styled from "styled-components"
+import { SmallCheckCircled } from "Assets/svgs"
 
 const RESERVE_ITEMS = gql`
-  mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
-    reserveItems(items: $items, options: $options) {
+  mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions, $shippingCode: ShippingCode) {
+    reserveItems(items: $items, options: $options, shippingCode: $shippingCode) {
       id
     }
   }
@@ -39,13 +41,6 @@ const GET_CUSTOMER = gql`
       }
       customer {
         id
-        membership {
-          id
-          plan {
-            id
-            itemCount
-          }
-        }
         detail {
           id
           phoneNumber
@@ -56,6 +51,16 @@ const GET_CUSTOMER = gql`
             city
             state
             zipCode
+            shippingOptions {
+              id
+              externalCost
+              averageDuration
+              shippingMethod {
+                id
+                code
+                displayText
+              }
+            }
           }
         }
         billingInfo {
@@ -71,7 +76,7 @@ const GET_CUSTOMER = gql`
 const SectionHeader = ({ title }) => {
   return (
     <>
-      <Flex flexDirection="row" flex={1} width="100%">
+      <Flex flexDirection="row" style={{ flex: 1 }} width="100%">
         <Sans size="1" color="black">
           {title}
         </Sans>
@@ -87,6 +92,7 @@ export const Reservation = screenTrack()((props) => {
   const tracking = useTracking()
   const navigation = useNavigation()
   const { data } = useQuery(GET_CUSTOMER)
+  const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
@@ -126,14 +132,42 @@ export const Reservation = screenTrack()((props) => {
   const phoneNumber = customer?.detail?.phoneNumber
   const items = data?.me?.bag
 
-  const planItemCount = data?.me?.customer?.membership?.plan?.itemCount
-
   if (!customer || !items || !address) {
     return (
       <>
         <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <Loader />
       </>
+    )
+  }
+
+  const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
+
+  const ShippingOption = ({ option, index }) => {
+    const method = option?.shippingMethod
+    let price
+    if (option?.externalCost === 0) {
+      price = "Free"
+    } else {
+      price = "$" + option?.externalCost / 100
+    }
+    const selected = index === shippingOptionIndex
+
+    return (
+      <TouchableWithoutFeedback onPress={() => setShippingOptionIndex(index)}>
+        <Flex flexDirection="row" justifyContent="space-between" alignItems="center" py={2}>
+          <Sans size="1" color="black100">
+            {method?.displayText}
+          </Sans>
+          <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Sans size="1" color="black100">
+              {price}
+            </Sans>
+            <Spacer mr={1} />
+            {selected ? <SmallCheckCircled /> : <EmptyCircle />}
+          </Flex>
+        </Flex>
+      </TouchableWithoutFeedback>
     )
   }
 
@@ -158,12 +192,19 @@ export const Reservation = screenTrack()((props) => {
                 will be processed the following business day.
               </Sans>
             </Box>
-            <Box mb={4}>
-              <SectionHeader title="Delivery Time" />
-              <Sans size="1" color="black50" mt={1}>
-                2-day Shipping
-              </Sans>
-            </Box>
+            {shippingOptions?.length > 0 && (
+              <Box mb={4}>
+                <SectionHeader title="Select shipping" />
+                {shippingOptions.map((option, index) => {
+                  return (
+                    <Box key={option?.id || index}>
+                      <ShippingOption option={option} index={index} />
+                      <Separator />
+                    </Box>
+                  )
+                })}
+              </Box>
+            )}
             {address && (
               <Box mb={4}>
                 <SectionHeader title="Shipping address" />
@@ -217,8 +258,8 @@ export const Reservation = screenTrack()((props) => {
             const itemIDs = items?.map((item) => item?.productVariant?.id)
             const { data } = await reserveItems({
               variables: {
-                planItemCount,
                 items: itemIDs,
+                shippingCode: shippingOptions?.[shippingOptionIndex]?.shippingMethod?.code,
               },
             })
             if (data?.reserveItems) {
@@ -236,3 +277,11 @@ export const Reservation = screenTrack()((props) => {
     </>
   )
 })
+
+const EmptyCircle = styled(Box)`
+  height: 24;
+  width: 24;
+  border-radius: 12;
+  border-color: ${color("black10")};
+  border-width: 1;
+`
