@@ -20,7 +20,7 @@ export interface SignUp_signup_user {
 }
 
 export interface SignUp_signup {
-  __typename: "AuthPayload";
+  __typename: "SignupPayload";
   user: SignUp_signup_user;
   token: string;
   refreshToken: string;
