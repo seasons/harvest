@@ -9,6 +9,12 @@ import { ProductOrderByInput, ProductStatus, LetterSize, BottomSizeType, Product
 // GraphQL query operation: GetBrandAndProducts
 // ====================================================
 
+export interface GetBrandAndProducts_brand_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetBrandAndProducts_brand_products_images {
   __typename: "Image";
   id: string;
@@ -68,8 +74,11 @@ export interface GetBrandAndProducts_brand {
   __typename: "Brand";
   id: string;
   name: string;
-  basedIn: string | null;
+  since: any | null;
   description: string | null;
+  websiteUrl: string | null;
+  basedIn: string | null;
+  images: GetBrandAndProducts_brand_images[] | null;
   products: GetBrandAndProducts_brand_products[] | null;
 }
 

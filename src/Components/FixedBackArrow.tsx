@@ -7,7 +7,7 @@ import { Box } from "./Box"
 import { Flex } from "./Flex"
 import { themeProps } from "./Theme"
 
-type FixedBackArrowVariant = "blackBackground" | "whiteBackground" | "productBackground"
+type FixedBackArrowVariant = "blackBackground" | "whiteBackground" | "productBackground" | "whiteTransparent"
 
 export const FixedBackArrow: React.FC<{
   navigation: any
@@ -34,6 +34,11 @@ export const FixedBackArrow: React.FC<{
         return {
           backgroundColor: productBackgroundColor,
           arrowColor: black100,
+        }
+      case "whiteTransparent":
+        return {
+          backgroundColor: "rgba(0,0,0,0)",
+          arrowColor: white100,
         }
       default:
         return {

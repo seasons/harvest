@@ -138,6 +138,7 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
   const content = useMemo(() => {
     return (
       <ScrollBottomSheet<string>
+        enableOverScroll
         componentType="FlatList"
         containerStyle={{
           backgroundColor: "white",

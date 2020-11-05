@@ -203,6 +203,47 @@ export interface Homepage_archivalProducts {
   images: Homepage_archivalProducts_images[];
 }
 
+export interface Homepage_justAddedOuterwear_modelSize {
+  __typename: "Size";
+  id: string;
+  display: string;
+}
+
+export interface Homepage_justAddedOuterwear_brand {
+  __typename: "Brand";
+  id: string;
+  name: string;
+}
+
+export interface Homepage_justAddedOuterwear_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
+export interface Homepage_justAddedOuterwear_variants_internalSize {
+  __typename: "Size";
+  id: string;
+  display: string;
+}
+
+export interface Homepage_justAddedOuterwear_variants {
+  __typename: "ProductVariant";
+  id: string;
+  reservable: number;
+  internalSize: Homepage_justAddedOuterwear_variants_internalSize | null;
+}
+
+export interface Homepage_justAddedOuterwear {
+  __typename: "Product";
+  id: string;
+  name: string;
+  modelSize: Homepage_justAddedOuterwear_modelSize | null;
+  brand: Homepage_justAddedOuterwear_brand;
+  images: Homepage_justAddedOuterwear_images[];
+  variants: Homepage_justAddedOuterwear_variants[] | null;
+}
+
 export interface Homepage_justAddedTops_modelSize {
   __typename: "Size";
   id: string;
@@ -323,6 +364,7 @@ export interface Homepage {
   me: Homepage_me | null;
   blogPosts: Homepage_blogPosts[];
   archivalProducts: (Homepage_archivalProducts | null)[];
+  justAddedOuterwear: (Homepage_justAddedOuterwear | null)[];
   justAddedTops: (Homepage_justAddedTops | null)[];
   justAddedBottoms: (Homepage_justAddedBottoms | null)[];
   fitPicsCount: Homepage_fitPicsCount;
