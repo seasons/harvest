@@ -32,7 +32,6 @@ const MetaDataCarousel = ({ data }) => {
           {item?.title === "Website" ? (
             <TouchableOpacity
               onPress={() => {
-                console.log("item?.text", item.text)
                 Linking.openURL(item?.text)
               }}
             >
