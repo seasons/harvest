@@ -11,6 +11,7 @@ import { BrandsRail, FitPicCollection, HomeFooter, ProductsRail, TagsRail } from
 import { FitPicCollectionRef } from "./FitPicCollection"
 import { AddPhotoButton } from "./AddPhotoButton"
 import { Spinner } from "App/Components/Spinner"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 const dimensions = Dimensions.get("window")
 
@@ -82,6 +83,7 @@ interface HomeBottomSheetProps {
 
 export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMoreFitPics, isFetchingMoreFitPics }) => {
   const [sections, setSections] = useState(sectionsFrom(data))
+  const insets = useSafeAreaInsets()
   const [flatListHeight, setFlatListHeight] = useState(0)
   const fitPicCollectionRef: React.MutableRefObject<FitPicCollectionRef> = useRef(null)
   let [addPhotoButtonVisible, setAddPhotoButtonVisible] = useState(false)
@@ -92,7 +94,8 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
   useEffect(() => setSections(sectionsFrom(data)), [data])
 
   const blogContentHeight = dimensions.width
-  const snapPoint = 20
+  const snapPoint = 16
+  const secondSnapPoint = blogContentHeight - insets.top
 
   const renderItem = (item) => {
     switch (item.type) {
@@ -143,9 +146,9 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
         containerStyle={{
           backgroundColor: "white",
           borderRadius: 20,
-          marginTop: 25,
+          marginTop: insets.top,
         }}
-        snapPoints={[snapPoint, dimensions.height - blogContentHeight - NAV_HEIGHT]}
+        snapPoints={[snapPoint, secondSnapPoint]}
         initialSnapIndex={1}
         renderHandle={() => (
           <Handle style={{ marginTop: space(2), marginBottom: space(1) }} backgroundColor="black10" />

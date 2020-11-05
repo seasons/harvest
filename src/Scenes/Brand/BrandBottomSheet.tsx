@@ -1,11 +1,13 @@
-import { Handle, Box, Spacer, Sans, ProductGridItem } from "App/Components"
+import { Handle, Box, Spacer, Sans, ProductGridItem, Flex } from "App/Components"
 import { NAV_HEIGHT } from "App/helpers/constants"
 import { color, space } from "App/utils"
 import React, { useState, useRef, useMemo } from "react"
-import { Dimensions } from "react-native"
+import { Dimensions, FlatList, Linking, TouchableOpacity } from "react-native"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 import { ReadMore } from "App/Components/ReadMore"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { CarouselPageDots } from "App/Components/CarouselPageDots"
+import { DateTime } from "luxon"
 
 const dimensions = Dimensions.get("window")
 
@@ -13,28 +15,88 @@ interface BrandBottomSheetProps {
   data: any
   loading: boolean
   fetchMore: any
+  currentImage: number
 }
 
-export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loading, fetchMore }) => {
+const MetaDataCarousel = ({ data }) => {
+  return (
+    <FlatList
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      data={data}
+      keyExtractor={(item, index) => item?.title + index}
+      renderItem={({ item, index }) => (
+        <Flex flexDirection="row" flexWrap="nowrap">
+          {index !== 0 && <Box style={{ height: "100%", width: 1, backgroundColor: color("black20") }} />}
+          {item?.title === "Website" ? (
+            <TouchableOpacity
+              onPress={() => {
+                console.log("item?.text", item.text)
+                Linking.openURL(item?.text)
+              }}
+            >
+              <Box ml={index === 0 ? 0 : 3} mr={3}>
+                <Sans size="0.5" color="black50">
+                  {item?.title}
+                </Sans>
+                <Sans size="0.5">{item?.text}</Sans>
+              </Box>
+            </TouchableOpacity>
+          ) : (
+            <Box ml={index === 0 ? 0 : 3} mr={3}>
+              <Sans size="0.5" color="black50">
+                {item?.title}
+              </Sans>
+              <Sans size="0.5">{item?.text}</Sans>
+            </Box>
+          )}
+        </Flex>
+      )}
+    />
+  )
+}
+
+export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loading, fetchMore, currentImage }) => {
   const [readMoreExpanded, setReadMoreExpanded] = useState(false)
   const [flatListHeight, setFlatListHeight] = useState(0)
   const insets = useSafeAreaInsets()
   const bottomSheetRef: React.MutableRefObject<ScrollBottomSheet<string>> = useRef(null)
 
-  const products = data?.brand?.products
-  const basedIn = data?.brand?.basedIn
-  const description = data?.brand?.description
-  const images = data?.brand?.images
+  const brand = data?.brand
+  const products = brand?.products
+  const description = brand?.description
+  const images = brand?.images
 
   const hasImages = images?.length > 0
 
   const numColumns = 2
 
   const imageContentHeight = dimensions.width
-  const topSnapPoint = 20
+  const topSnapPoint = 16
+  const secondSnapPoint = imageContentHeight - insets.top
 
-  const snapPoints = hasImages ? [topSnapPoint, dimensions.height - imageContentHeight - NAV_HEIGHT] : [topSnapPoint]
+  const snapPoints = hasImages ? [topSnapPoint, secondSnapPoint] : [topSnapPoint]
   const initialSnapPoint = hasImages ? 1 : 0
+
+  const metaData = []
+  if (brand?.basedIn) {
+    metaData.push({
+      title: "Headquarters",
+      text: brand?.basedIn,
+    })
+  }
+  if (brand?.websiteUrl) {
+    metaData.push({
+      title: "Website",
+      text: brand?.websiteUrl,
+    })
+  }
+  if (brand?.since) {
+    metaData.push({
+      title: "Since",
+      text: DateTime.fromISO(brand?.since).year,
+    })
+  }
 
   const content = useMemo(() => {
     return (
@@ -45,18 +107,25 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loadin
         ListHeaderComponent={() => (
           <Box px={2}>
             <Spacer mb={1} />
-            <Sans size="3" style={{ textDecorationLine: "underline" }}>
-              {data?.brand?.name}
-            </Sans>
-            {!!basedIn && (
-              <Sans size="2" color={color("black50")}>
-                {basedIn}
+            <Flex
+              flexDirection="row"
+              alignItems="flex-start"
+              flexWrap="nowrap"
+              justifyContent={!!hasImages ? "space-between" : "flex-start"}
+            >
+              <Sans size="3" style={{ textDecorationLine: "underline" }}>
+                {brand?.name}
               </Sans>
-            )}
+              {!!hasImages && (
+                <Box pt={0.5}>
+                  <CarouselPageDots slideCount={images?.length} currentSlide={currentImage - 1} />
+                </Box>
+              )}
+            </Flex>
             {!!description && (
               <>
                 <Spacer mb={3} />
-                <Sans size="2">About</Sans>
+                <Sans size="0.5">About</Sans>
                 <Spacer mb={0.5} />
                 <ReadMore
                   readMoreExpanded={readMoreExpanded}
@@ -65,6 +134,11 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loadin
                   maxChars={100}
                 />
               </>
+            )}
+            {metaData?.length > 0 && (
+              <Box mt={3}>
+                <MetaDataCarousel data={metaData} />
+              </Box>
             )}
             <Spacer mb={3} />
           </Box>
@@ -121,7 +195,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loadin
         }}
       />
     )
-  }, [products, flatListHeight, readMoreExpanded, setReadMoreExpanded, snapPoints, initialSnapPoint])
+  }, [products, flatListHeight, readMoreExpanded, setReadMoreExpanded, snapPoints, initialSnapPoint, metaData])
 
   return <>{content}</>
 }
