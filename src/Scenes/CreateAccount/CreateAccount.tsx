@@ -72,6 +72,7 @@ export const GET_PLANS = gql`
           id
           plan {
             id
+            description
             tier
           }
         }
