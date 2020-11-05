@@ -1,12 +1,11 @@
 import { useQuery } from "@apollo/react-hooks"
-import { Container, FixedBackArrow, Flex } from "App/Components"
+import { Container, FixedBackArrow } from "App/Components"
 import { GetBrand } from "App/generated/GetBrand"
 import { Schema, screenTrack } from "App/utils/track"
 import React, { useEffect, useState } from "react"
 import { Loader } from "App/Components/Loader"
 import { GET_BRAND } from "./queries/brandQueries"
 import { BrandBottomSheet } from "./BrandBottomSheet"
-import { color } from "App/utils"
 import { StatusBar } from "react-native"
 import { BrandPhotos } from "./BrandPhotos"
 
@@ -39,7 +38,7 @@ export const Brand = screenTrack({
   if (!data) {
     return (
       <>
-        <FixedBackArrow navigation={navigation} variant="whiteTransparent" />
+        <FixedBackArrow navigation={navigation} />
         <Loader />
       </>
     )
@@ -51,7 +50,7 @@ export const Brand = screenTrack({
     <Container insetsBottom={false} insetsTop={false}>
       <FixedBackArrow navigation={navigation} variant="whiteTransparent" />
       <BrandPhotos images={images} currentImage={currentImage} setCurrentImage={setCurrentImage} />
-      <BrandBottomSheet data={data} loading={loading} fetchMore={fetchMore} />
+      <BrandBottomSheet data={data} loading={loading} fetchMore={fetchMore} currentImage={currentImage} />
     </Container>
   )
 })
