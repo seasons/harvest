@@ -72,7 +72,7 @@
     "react-native-restart": "^0.0.14",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
-    "react-native-scroll-bottom-sheet": "^0.6.2",
+    "react-native-scroll-bottom-sheet": "^0.7.0",
     "react-native-share": "4.0.2",
     "react-native-shared-element": "0.7.0",
     "react-native-sortable-list": "^0.0.23",

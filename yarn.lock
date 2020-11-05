@@ -13908,10 +13908,10 @@ react-native-screens@~2.10.1:
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.10.1.tgz#06d22fae87ef0ce51c616c34a199726db1403b95"
   integrity sha512-Z2kKSk4AwWRQNCBmTjViuBQK0/Lx0jc25TZptn/2gKYUCOuVRvCekoA26u0Tsb3BIQ8tWDsZW14OwDlFUXW1aw==
 
-react-native-scroll-bottom-sheet@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/react-native-scroll-bottom-sheet/-/react-native-scroll-bottom-sheet-0.6.2.tgz#f68ea26cb10171ccc8eacf3b917a0e84c7508b82"
-  integrity sha512-VesAAzsv0xxtGKftFVRqbWiB1AaG3YttvilV16rpvbA45z0ow89tG5FZQtznH9ypKVY17O0bFFHocdji7bvZLg==
+react-native-scroll-bottom-sheet@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/react-native-scroll-bottom-sheet/-/react-native-scroll-bottom-sheet-0.7.0.tgz#00410d0a350f11327514108502dc6628dc4536d4"
+  integrity sha512-gLgGiB8roynIVcP8tw+Y+iVVCYDDVQW9ug//SX4HhM01Q0nDdRiwVgnCDnMbDQCmAFpwtJEdEs2a+Ys/7L9CIw==
   dependencies:
     utility-types "^3.10.0"
 
