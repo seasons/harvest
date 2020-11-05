@@ -25,6 +25,7 @@ import { PopUp } from "App/Components/PopUp"
 import { themeProps } from "App/Components/Theme"
 import { PaymentMethods } from "./PaymentMethods"
 import { calcFinalPrice } from "./utils"
+import { AllAccessDisabledPopup } from "./AllAccessDisabledPopup"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout($planID: String!, $token: StripeToken!, $tokenType: String, $couponID: String) {
@@ -66,6 +67,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   source,
   onMountScrollToFaqSection,
 }) => {
+  const allAccessEnabled = data?.me?.customer?.admissions?.allAccessEnabled
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
   const [openPopUp, setOpenPopUp] = useState(false)
@@ -75,6 +77,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   const [currentView, setCurrentView] = useState(0)
   const [tiers, setTiers] = useState([])
   const [isMutating, setIsMutating] = useState(false)
+  const [showAllAccessDisabledMessage, setShowAllAccessDisabledMessage] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const scrollViewRef = React.useRef(null)
   const [applePayCheckout] = useMutation(PAYMENT_CHECKOUT, {
@@ -154,7 +157,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     // Update the selected plan if you switch tabs
     const newSelectedPlan =
       plans?.filter(
-        (plan) => tierToReadableText(plan.tier) === tiers?.[currentView] && plan.itemCount === selectedPlan.itemCount
+        (plan) => tierToReadableText(plan.tier) === tiers?.[currentView] && plan.itemCount === selectedPlan?.itemCount
       ) || plans?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])?.[0]
     setSelectedPlan(newSelectedPlan?.[0])
   }, [currentView])
@@ -327,6 +330,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
               tabColor={currentColor}
               spaceEvenly
               tabs={tiers}
+              strikethroughTabs={allAccessEnabled ? [] : ["All Access"]}
               activeTab={currentView}
               goToPage={(page) => {
                 tracking.trackEvent({
@@ -336,7 +340,11 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                       : TrackSchema.ActionNames.Tier1PlanTabTapped,
                   actionType: TrackSchema.ActionTypes.Tap,
                 })
-                setCurrentView(page as number)
+                if (page === 1 && !allAccessEnabled) {
+                  setShowAllAccessDisabledMessage(true)
+                } else {
+                  setCurrentView(page as number)
+                }
               }}
             />
             <Spacer mb={2} />
@@ -427,6 +435,10 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       <PopUp show={openPopUp}>
         <PaymentMethods onApplePay={onApplePay} setOpenPopUp={setOpenPopUp} onCreditCard={onAddCreditCard} />
       </PopUp>
+      <AllAccessDisabledPopup
+        show={showAllAccessDisabledMessage}
+        onPress={() => setShowAllAccessDisabledMessage(false)}
+      />
     </>
   )
 }

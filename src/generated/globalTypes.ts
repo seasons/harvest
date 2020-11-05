@@ -112,6 +112,15 @@ export enum HomePageSectionType {
   Products = "Products",
 }
 
+export enum InAdmissableReason {
+  AutomaticAdmissionsFlagOff = "AutomaticAdmissionsFlagOff",
+  InsufficientInventory = "InsufficientInventory",
+  OpsThresholdExceeded = "OpsThresholdExceeded",
+  UnserviceableZipcode = "UnserviceableZipcode",
+  UnsupportedPlatform = "UnsupportedPlatform",
+  Untriageable = "Untriageable",
+}
+
 export enum InventoryStatus {
   NonReservable = "NonReservable",
   Offloaded = "Offloaded",
@@ -127,6 +136,7 @@ export enum LetterSize {
   XL = "XL",
   XS = "XS",
   XXL = "XXL",
+  XXS = "XXS",
   XXXL = "XXXL",
 }
 
@@ -1260,6 +1270,46 @@ export interface ColorWhereUniqueInput {
   colorCode?: string | null;
 }
 
+export interface CustomerAdmissionsDataCreateOneWithoutCustomerInput {
+  create?: CustomerAdmissionsDataCreateWithoutCustomerInput | null;
+  connect?: CustomerAdmissionsDataWhereUniqueInput | null;
+}
+
+export interface CustomerAdmissionsDataCreateWithoutCustomerInput {
+  id?: string | null;
+  inServiceableZipcode: boolean;
+  admissable: boolean;
+  inAdmissableReason?: InAdmissableReason | null;
+  allAccessEnabled?: boolean | null;
+  authorizationsCount: number;
+}
+
+export interface CustomerAdmissionsDataUpdateOneWithoutCustomerInput {
+  create?: CustomerAdmissionsDataCreateWithoutCustomerInput | null;
+  connect?: CustomerAdmissionsDataWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: CustomerAdmissionsDataUpdateWithoutCustomerDataInput | null;
+  upsert?: CustomerAdmissionsDataUpsertWithoutCustomerInput | null;
+}
+
+export interface CustomerAdmissionsDataUpdateWithoutCustomerDataInput {
+  inServiceableZipcode?: boolean | null;
+  admissable?: boolean | null;
+  inAdmissableReason?: InAdmissableReason | null;
+  allAccessEnabled?: boolean | null;
+  authorizationsCount?: number | null;
+}
+
+export interface CustomerAdmissionsDataUpsertWithoutCustomerInput {
+  update: CustomerAdmissionsDataUpdateWithoutCustomerDataInput;
+  create: CustomerAdmissionsDataCreateWithoutCustomerInput;
+}
+
+export interface CustomerAdmissionsDataWhereUniqueInput {
+  id?: string | null;
+}
+
 export interface CustomerCreateOneWithoutReservationsInput {
   create?: CustomerCreateWithoutReservationsInput | null;
   connect?: CustomerWhereUniqueInput | null;
@@ -1276,6 +1326,7 @@ export interface CustomerCreateWithoutReservationsInput {
   membership?: CustomerMembershipCreateOneWithoutCustomerInput | null;
   bagItems?: BagItemCreateManyWithoutCustomerInput | null;
   emailedProducts?: ProductCreateManyInput | null;
+  admissions?: CustomerAdmissionsDataCreateOneWithoutCustomerInput | null;
 }
 
 export interface CustomerDetailCreateInput {
@@ -1429,6 +1480,7 @@ export interface CustomerUpdateWithoutReservationsDataInput {
   membership?: CustomerMembershipUpdateOneWithoutCustomerInput | null;
   bagItems?: BagItemUpdateManyWithoutCustomerInput | null;
   emailedProducts?: ProductUpdateManyInput | null;
+  admissions?: CustomerAdmissionsDataUpdateOneWithoutCustomerInput | null;
 }
 
 export interface CustomerUpsertWithoutReservationsInput {

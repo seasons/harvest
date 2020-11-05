@@ -75,6 +75,10 @@ export const GET_PLANS = gql`
             tier
           }
         }
+        admissions {
+          id
+          allAccessEnabled
+        }
       }
     }
     faq(sectionType: PaymentPlanPage) {

@@ -234,7 +234,7 @@ export enum ActionNames {
   ApplyPromoCodeTapped = "Promo Code Apply Button Tapped",
 
   Tier0PlanTabTapped = "Tier 0 Plan Tab Tapped",
-  Tier1PlanTabTapped = "Tier 0 Plan Tab Tapped",
+  Tier1PlanTabTapped = "Tier 1 Plan Tab Tapped",
 
   ApplePayTapped = "Apple Pay Tapped",
   AddCreditCardTapped = "Add Credit Card Tapped",
