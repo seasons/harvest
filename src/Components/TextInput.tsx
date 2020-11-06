@@ -1,10 +1,7 @@
 import { color } from "App/utils"
 import React, { MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react"
-import {
-  KeyboardType, TextInput as RNTextInput, TouchableWithoutFeedback, ViewStyle
-} from "react-native"
+import { KeyboardType, TextInput as RNTextInput, TouchableWithoutFeedback, ViewStyle } from "react-native"
 import { animated, useSpring } from "react-spring"
-
 import { Box, Spacer } from "./"
 import { themeProps } from "./Theme"
 import { fontFamily, Sans } from "./Typography"
@@ -121,6 +118,7 @@ export interface TextInputProps {
     | "username"
     | "password"
   variant?: TextInputVariant
+  hideBottomBar?: boolean
 }
 
 export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
@@ -142,6 +140,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       style,
       textContentType,
       variant = defaultVariant,
+      hideBottomBar = false,
     },
     ref
   ) => {
@@ -179,7 +178,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
         style={{
           flex: style?.flex,
           height,
-          borderBottomWidth: 1,
+          borderBottomWidth: hideBottomBar ? 0 : 1,
           borderTopWidth: 0,
           borderLeftWidth: 0,
           borderRightWidth: 0,

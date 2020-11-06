@@ -2669,6 +2669,11 @@
     sudo-prompt "^9.0.0"
     wcwidth "^1.0.1"
 
+"@react-native-community/clipboard@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.npmjs.org/@react-native-community/clipboard/-/clipboard-1.5.0.tgz#69a3858d28a60fabf503faed2fdc2e678d152ae3"
+  integrity sha512-XoujTQuXhPgQLVLn7HPt7615jBEGzJm1Nhos0COdreBIz3qWIi5noYZth8jBFctf8FG5tpe24XTZNDz5udgqQQ==
+
 "@react-native-community/masked-view@0.1.10":
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.10.tgz#5dda643e19e587793bc2034dd9bf7398ad43d401"
@@ -13809,6 +13814,11 @@ react-native-config@^0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.12.0.tgz#910e52226b60e0c9f2b648772eea2a93f8701751"
   integrity sha512-lC8QOZCGCXgFh74uWSVGMaChg+Qf2BScWzVd9C4yrFnfxrHSFyIekqOOq/sjE8Uu2ifgxZmSiK1Z8EEi78AmQA==
+
+react-native-contacts@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.npmjs.org/react-native-contacts/-/react-native-contacts-6.0.3.tgz#74066c53db88d865d4630d1539a6e8ca50607a93"
+  integrity sha512-JoiYBrJ2/sAgzhytwaa7ephmqXkxO0o2vk4eNyOb74WjZNIEiBdZdjxjB62Lt4zMDT/28NwRk82d5m5x92m3Kg==
 
 react-native-device-info@^5.6.1:
   version "5.6.1"
