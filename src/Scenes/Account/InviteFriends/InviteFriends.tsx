@@ -5,6 +5,7 @@ import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import React, { useState } from "react"
 import { Dimensions, Share, TouchableOpacity } from "react-native"
+import Contacts from "react-native-contacts"
 import { useSafeArea } from "react-native-safe-area-context"
 
 const windowDimensions = Dimensions.get("window")
@@ -40,7 +41,18 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
             Choose which friends to invite to Seasons by allowing us to view your contacts.
           </Sans>
           <Spacer mb={4} />
-          <Button block variant="primaryBlack">
+          <Button
+            block
+            variant="primaryBlack"
+            onPress={() => {
+              setOpenPopUp(false)
+              navigation.navigate("Modal", { screen: "InviteFromContactsModal" })
+              Contacts.getAll().then((contacts) => {
+                console.log(contacts)
+                // contacts returned
+              })
+            }}
+          >
             View Contacts
           </Button>
           <Spacer mb={1} />

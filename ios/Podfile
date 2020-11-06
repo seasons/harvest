@@ -8,6 +8,7 @@ target 'seasons' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
   pod 'Permission-Notifications', :path => "../node_modules/react-native-permissions/ios/Notifications.podspec"
 
