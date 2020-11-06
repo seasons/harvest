@@ -85,6 +85,7 @@ export interface TextInputProps {
   keyboardType?: KeyboardType
   multiline?: boolean
   onChangeText?: (inputKey: string, text: string) => void
+  onKeyPress?: (input: { nativeEvent: { key: "Enter" | "Backspace" } }) => void
   onFocus?: () => void
   placeholder?: string
   ref?: MutableRefObject<typeof TextInput>
@@ -134,6 +135,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       keyboardType,
       multiline = false,
       onChangeText,
+      onKeyPress,
       onFocus,
       placeholder,
       secureTextEntry,
@@ -204,6 +206,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
           keyboardType={keyboardType}
           multiline={multiline}
           onChangeText={handleOnChangeText}
+          onKeyPress={onKeyPress}
           onFocus={onFocus}
           placeholder={placeholder}
           placeholderTextColor={placeholderColor}

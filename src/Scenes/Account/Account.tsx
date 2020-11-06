@@ -109,7 +109,6 @@ export const Account = screenTrack()(({ navigation }) => {
   const onboardingSteps = customer?.onboardingSteps
   const status = customer?.status
   const referralLink = customer?.referralLink
-  console.log(referralLink)
 
   const user = customer?.user
   const email = user?.email
