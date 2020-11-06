@@ -18,7 +18,7 @@ import {
 } from "Assets/svgs"
 import gql from "graphql-tag"
 import { DateTime, Duration } from "luxon"
-import { default as React, default as React, useEffect } from "react"
+import { default as React, useEffect } from "react"
 import { useQuery } from "react-apollo"
 import { Linking, Platform, ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"

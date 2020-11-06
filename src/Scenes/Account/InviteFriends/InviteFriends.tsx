@@ -5,7 +5,6 @@ import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import React, { useState } from "react"
 import { Dimensions, Share, TouchableOpacity } from "react-native"
-import Contacts from "react-native-contacts"
 import { useSafeArea } from "react-native-safe-area-context"
 
 const windowDimensions = Dimensions.get("window")
@@ -46,11 +45,7 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
             variant="primaryBlack"
             onPress={() => {
               setOpenPopUp(false)
-              navigation.navigate("Modal", { screen: "InviteFromContactsModal" })
-              Contacts.getAll().then((contacts) => {
-                console.log(contacts)
-                // contacts returned
-              })
+              navigation.navigate("Modal", { screen: "InviteFromContactsModal", params: { referralLink } })
             }}
           >
             View Contacts
