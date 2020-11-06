@@ -18,6 +18,7 @@ export enum PageNames {
   ApplyPromoCode = "ApplyPromoCode",
   PromoCodeAppliedConfirmation = "PromoCodeAppliedConfirmation",
   SurpriseMe = "SurpriseMe",
+  InviteFromContactsModal = "InviteFromContactsModal",
 
   // Home
   Home = "Home",
@@ -49,6 +50,7 @@ export enum PageNames {
   FinishProductRequest = "FinishProductRequest",
   ProductRequestConfirmation = "ProductRequestConfirmation",
   ProductRequestGallery = "ProductRequestGallery",
+  InviteFriends = "InviteFriends",
 
   // Shared
   Product = "Product",

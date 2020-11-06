@@ -10,6 +10,7 @@ import {
   EditStylePreferences,
   PaymentAndShipping,
 } from "App/Scenes/Account"
+import { InviteFriends, InviteFromContacts } from "App/Scenes/Account/InviteFriends"
 import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
@@ -132,6 +133,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.PauseConfirmation} component={PauseConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ExtendPauseConfirmation} component={ExtendPauseConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ApplyPromoCode} component={ApplyPromoCode} />
+      <ModalStack.Screen name={Schema.PageNames.InviteFromContactsModal} component={InviteFromContacts} />
     </ModalStack.Navigator>
   )
 }
@@ -198,6 +200,7 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name={Schema.PageNames.ProductRequestConfirmation} component={ProductRequestConfirmation} />
       <AccountStack.Screen name={Schema.PageNames.ProductRequestGallery} component={ProductRequestGallery} />
       <AccountStack.Screen name={Schema.PageNames.Faq} component={Faq} />
+      <AccountStack.Screen name={Schema.PageNames.InviteFriends} component={InviteFriends} />
     </AccountStack.Navigator>
   )
 }
