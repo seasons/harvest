@@ -28,7 +28,16 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title }) => {
       return (
         <Flex flexDirection="row" key={brand.name}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Brand", { id: brand.id, slug: brand.slug, name: brand.name })}
+            onPress={() => {
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.BrandTapped,
+                actionType: Schema.ActionTypes.Tap,
+                brandID: brand?.id,
+                brandSlug: brand?.slug,
+                brandName: brand?.name,
+              })
+              navigation.navigate("Brand", { id: brand.id, slug: brand.slug, name: brand.name })
+            }}
           >
             <Sans size="2" style={{ textDecorationLine: "underline" }}>
               {brand.name}

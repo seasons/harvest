@@ -129,10 +129,11 @@ export const Brands = screenTrack()((props: any) => {
         <TouchableOpacity
           onPress={() => {
             tracking.trackEvent({
-              actionName: Schema.ActionNames.CategoryTapped,
+              actionName: Schema.ActionNames.BrandTapped,
               actionType: Schema.ActionTypes.Tap,
-              brandId: item?.id,
+              brandID: item?.id,
               brandSlug: item?.slug,
+              brandName: item?.name,
             })
             navigation.navigate("Brand", { id: item?.id, slug: item?.slug, name: item.name })
           }}
