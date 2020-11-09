@@ -152,7 +152,7 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
                     setSearchText(text)
                   }}
                   onKeyPress={({ nativeEvent }) => {
-                    if (nativeEvent.key === "Backspace") {
+                    if (nativeEvent.key === "Backspace" && searchText === "") {
                       setSelectedContact(null)
                     }
                   }}
