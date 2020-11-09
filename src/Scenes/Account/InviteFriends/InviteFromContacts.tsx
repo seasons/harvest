@@ -2,11 +2,11 @@ import { Box, Button, Container, FixedBackArrow, Flex, Radio, Sans, Separator, S
 import { defaultVariant, getColorsForVariant, TextInput } from "App/Components/TextInput"
 import { themeProps } from "App/Components/Theme"
 import { fontFamily } from "App/Components/Typography"
-import { color } from "App/utils"
+import { color, space } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { Check } from "Assets/svgs"
 import React, { useEffect, useRef, useState } from "react"
-import { FlatList, KeyboardAvoidingView, Linking, Text, TouchableWithoutFeedback } from "react-native"
+import { FlatList, KeyboardAvoidingView, Linking, Text, TouchableWithoutFeedback, Dimensions } from "react-native"
 import Contacts from "react-native-contacts"
 import { ScrollView } from "react-native-gesture-handler"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
@@ -26,6 +26,7 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
   const textInputRef = useRef(null)
   const insets = useSafeAreaInsets()
   const referralLink = route.params.referralLink
+  const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
 
   useEffect(() => {
     textInputRef.current?.focus?.()
@@ -33,7 +34,7 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
       const mappedContacts = contacts.map((contact) => {
         return {
           name: contact.givenName,
-          phoneNumbers: contact.phoneNumbers.map((phoneNumber) => formattedPhoneNumber(phoneNumber.number)),
+          phoneNumbers: contact.phoneNumbers.map(({ number }) => number),
           emails: contact.emailAddresses.map((email) => email.email),
         } as Contact
       })
@@ -41,11 +42,6 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
       setFilteredContacts(mappedContacts)
     })
   }, [])
-
-  const formattedPhoneNumber = (phoneNumber: string) => {
-    const onlyNums = phoneNumber.replace(/\D/g, "")
-    return `(${onlyNums.substring(0, 3)}) ${onlyNums.substring(3, 6)}-${onlyNums.substring(6)}`
-  }
 
   const searchContacts = (searchText: string) => {
     if (searchText == "") {
@@ -176,22 +172,37 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
           }}
           ListFooterComponent={() => <Spacer mb={60} />}
         />
-        {selectedContact && (
-          <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom - 8, 8)}>
-            <Box style={{ margin: 16, marginBottom: insets.bottom + 16 }}>
-              <Button
-                variant="primaryBlack"
-                onPress={() => {
-                  const body = `Here’s my referral link for Seasons. Get $50 off your first month when you sign-up: ${referralLink}`
-                  Linking.openURL(`sms://${selectedContact.phoneNumbers[0]}&body=${body}`)
-                }}
-                block
-              >
-                Send Invite
-              </Button>
-            </Box>
-          </KeyboardAvoidingView>
-        )}
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom - 8, 8)}>
+          <Flex
+            flexDirection="row"
+            justifyContent="space-between"
+            style={{ margin: 16, marginBottom: insets.bottom + 16 }}
+          >
+            <Button
+              width={twoButtonWidth}
+              variant="secondaryWhite"
+              disabled={selectedContact}
+              onPress={() => {
+                navigation.goBack()
+              }}
+              block
+            >
+              Cancel
+            </Button>
+            <Button
+              width={twoButtonWidth}
+              variant="primaryBlack"
+              disabled={!selectedContact}
+              onPress={() => {
+                const body = `Here’s my referral link for Seasons. Get $50 off your first month when you sign-up: ${referralLink}`
+                Linking.openURL(`sms://${selectedContact.phoneNumbers[0]}&body=${body}`)
+              }}
+              block
+            >
+              Send Invite
+            </Button>
+          </Flex>
+        </KeyboardAvoidingView>
       </Container>
     </>
   )
