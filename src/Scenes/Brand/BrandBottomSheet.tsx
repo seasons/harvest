@@ -28,7 +28,7 @@ const MetaDataCarousel = ({ data }) => {
       keyExtractor={(item, index) => item?.title + index}
       renderItem={({ item, index }) => (
         <Flex flexDirection="row" flexWrap="nowrap">
-          {index !== 0 && <Box style={{ height: "100%", width: 1, backgroundColor: color("black20") }} />}
+          {index !== 0 && <Box style={{ height: "100%", width: 1, backgroundColor: color("black10") }} />}
           {item?.title === "Website" ? (
             <TouchableOpacity
               onPress={() => {
