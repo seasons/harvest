@@ -13,7 +13,7 @@ import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "react-apollo"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Dimensions, Linking, ScrollView, TouchableOpacity, LayoutEvent } from "react-native"
+import { Dimensions, Linking, ScrollView, TouchableOpacity } from "react-native"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
 import { PlanButton } from "./PlanButton"
@@ -271,7 +271,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     navigation.navigate("Modal", { screen: "ApplyPromoCode", params: { source } })
   }
 
-  const onFaqSectionHeaderLayout = (event: LayoutEvent) => {
+  const onFaqSectionHeaderLayout = (event) => {
     if (onMountScrollToFaqSection && scrollViewRef.current) {
       const { x, y } = event.nativeEvent.layout
       // layout event y does not include section header top margin,

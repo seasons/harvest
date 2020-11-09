@@ -32,6 +32,7 @@ const GET_CUSTOMER = gql`
         lastName
         email
       }
+
       bag {
         id
         productVariant {
@@ -41,6 +42,10 @@ const GET_CUSTOMER = gql`
       }
       customer {
         id
+        admissions {
+          id
+          allAccessEnabled
+        }
         detail {
           id
           phoneNumber
@@ -128,6 +133,7 @@ export const Reservation = screenTrack()((props) => {
 
   const customer = data?.me?.customer
   const address = data?.me?.customer?.detail?.shippingAddress
+  const allAccessEnabled = data?.me?.customer?.admissions?.allAccessEnabled
 
   const phoneNumber = customer?.detail?.phoneNumber
   const items = data?.me?.bag
@@ -192,7 +198,18 @@ export const Reservation = screenTrack()((props) => {
                 will be processed the following business day.
               </Sans>
             </Box>
-            {shippingOptions?.length > 0 && (
+            {address && (
+              <Box mb={4}>
+                <SectionHeader title="Shipping address" />
+                <Sans size="1" color="black50" mt={1}>
+                  {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
+                </Sans>
+                <Sans size="1" color="black50">
+                  {`${address.city}, ${address.state} ${address.zipCode}`}
+                </Sans>
+              </Box>
+            )}
+            {shippingOptions?.length > 0 && !allAccessEnabled && (
               <Box mb={4}>
                 <SectionHeader title="Select shipping" />
                 {shippingOptions.map((option, index) => {
@@ -203,16 +220,10 @@ export const Reservation = screenTrack()((props) => {
                     </Box>
                   )
                 })}
-              </Box>
-            )}
-            {address && (
-              <Box mb={4}>
-                <SectionHeader title="Shipping address" />
-                <Sans size="1" color="black50" mt={1}>
-                  {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
-                </Sans>
-                <Sans size="1" color="black50">
-                  {`${address.city}, ${address.state} ${address.zipCode}`}
+                <Spacer mb={2} />
+                <Sans size="0.5" color="black50">
+                  UPS Ground shipping averages 1-2 days in the NY metro area, 3-4 days for the Midwest + Southeast, and
+                  5-7 days on the West coast.
                 </Sans>
               </Box>
             )}
