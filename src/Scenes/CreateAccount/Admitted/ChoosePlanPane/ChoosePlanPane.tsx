@@ -160,7 +160,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
         (plan) => tierToReadableText(plan.tier) === tiers?.[currentView] && plan.itemCount === selectedPlan?.itemCount
       ) || plans?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])?.[0]
     setSelectedPlan(newSelectedPlan?.[0])
-  }, [currentView])
+  }, [currentView, setSelectedPlan])
 
   useEffect(() => {
     if (plans && plans.length > 0) {

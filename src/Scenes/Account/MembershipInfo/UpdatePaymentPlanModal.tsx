@@ -4,11 +4,10 @@ import { ChoosePlanPane } from "App/Scenes/CreateAccount/Admitted"
 import { GET_PLANS } from "App/Scenes/CreateAccount/CreateAccount"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-apollo"
-import { Schema, useTracking, screenTrack } from "App/utils/track"
+import { screenTrack } from "App/utils/track"
 
 export const UpdatePaymentPlanModal = screenTrack()(({ navigation, route }) => {
   const [selectedPlan, setSelectedPlan] = useState(null)
-  const tracking = useTracking()
   const { data } = useQuery(GET_PLANS, {
     variables: {
       where: { status: "active" },
@@ -31,21 +30,12 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation, route }) => {
     )
   }
 
-  const onSelectPlan = (plan) => {
-    setSelectedPlan(plan)
-    console.log("plan", plan)
-    tracking.trackEvent({
-      actionName: Schema.ActionNames.PlanTapped,
-      actionType: Schema.ActionTypes.Tap,
-    })
-  }
-
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <CloseButton variant="light" />
       <ChoosePlanPane
         selectedPlan={selectedPlan}
-        setSelectedPlan={onSelectPlan}
+        setSelectedPlan={setSelectedPlan}
         data={data}
         onComplete={() => navigation.goBack()}
         headerText="Let's choose your plan"
