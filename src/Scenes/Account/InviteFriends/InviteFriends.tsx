@@ -67,10 +67,11 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
         <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <Box px={2}>
           <Spacer mb={156} />
-          <Sans size="3">Refer & earn</Sans>
+          <Sans size="3">Refer a friend & earn</Sans>
           <Spacer mb={1} />
           <Sans size="1" color="black50">
-            Give $50 off of a Seasons membership and get $50 off your next month for every sign-up.
+            Refer a friend and you’ll both get 50% off your next month when they successfully sign up. Offer limited to
+            one invite per month.
           </Sans>
           <Spacer mb={4} />
           <Box px={2} py={12} style={{ height: 48, backgroundColor: color("black04"), borderRadius: 24 }}>
@@ -107,7 +108,7 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
               onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })}
             >
               <Sans size="2" color="black50">
-                Terms & Conditions
+                Terms of Service
               </Sans>
             </TouchableOpacity>
           </Flex>
