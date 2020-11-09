@@ -7,7 +7,6 @@ import { onError } from "apollo-link-error"
 import { createUploadLink } from "apollo-upload-client"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { config, Env } from "App/utils/config"
-import { GraphQLError } from "graphql"
 import { Platform } from "react-native"
 import unfetch from "unfetch"
 

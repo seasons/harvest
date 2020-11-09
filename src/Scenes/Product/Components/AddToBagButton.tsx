@@ -50,7 +50,6 @@ export const AddToBagButton: React.FC<Props> = (props) => {
       },
     ],
     onCompleted: (res) => {
-      console.log(res)
       setIsMutating(false)
       setAdded(true)
       const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT

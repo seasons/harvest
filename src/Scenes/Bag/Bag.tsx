@@ -135,6 +135,13 @@ export const Bag = screenTrack()((props) => {
   const hasActiveReservation = !!me?.activeReservation
 
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
+
+  const isBagView = BagView.Bag == currentView
+  const isSavedView = BagView.Saved == currentView
+  const reservations = me?.customer?.reservations
+  const bagCount = items.length
+  const bagIsFull = itemCount && bagCount >= itemCount
+
   const handleReserve = async (navigation) => {
     setMutating(true)
     try {
@@ -149,6 +156,13 @@ export const Bag = screenTrack()((props) => {
               screen: "CreateAccountModal",
             })
           },
+        })
+      } else if (bagCount > itemCount) {
+        showPopUp({
+          title: "You must remove some items first",
+          note: `Your plan has ${itemCount} ${itemCount === 1 ? "slot" : "slots"} but your bag has ${bagCount} items.`,
+          buttonText: "Got it",
+          onClose: () => hidePopUp(),
         })
       } else {
         const hasShippingAddress =
@@ -217,12 +231,6 @@ export const Bag = screenTrack()((props) => {
       setMutating(false)
     }
   }
-
-  const isBagView = BagView.Bag == currentView
-  const isSavedView = BagView.Saved == currentView
-  const reservations = me?.customer?.reservations
-  const bagCount = items.length
-  const bagIsFull = itemCount && bagCount === itemCount
 
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
   const pausePending = pauseRequest?.pausePending
