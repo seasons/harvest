@@ -1,6 +1,8 @@
 import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { useNotificationsContext } from "App/Notifications/NotificationsContext"
 import { color } from "App/utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
@@ -8,9 +10,8 @@ import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { checkNotifications } from "react-native-permissions"
+
 import AsyncStorage from "@react-native-community/async-storage"
-import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { useNotificationsContext } from "App/Notifications/NotificationsContext"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -121,7 +122,7 @@ export const LogIn: React.FC<LogInProps> = (props) => {
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      <CloseButton />
+      <CloseButton variant="light" />
       <Flex style={{ flex: 1 }}>
         <Spacer mb={3} />
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
@@ -151,12 +152,12 @@ export const LogIn: React.FC<LogInProps> = (props) => {
             <Spacer mb={3} />
             <Flex flexDirection="row" justifyContent="center">
               <Text>
-                <Sans size="2" color="black50">
-                  Forget password?
+                <Sans size="1" color="black50">
+                  Forgot your password?
                 </Sans>{" "}
                 <TouchableWithoutFeedback onPress={handleResetPassword}>
-                  <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("black50")}>
-                    Reset
+                  <Sans style={{ textDecorationLine: "underline" }} size="1" color={color("black50")}>
+                    Reset it
                   </Sans>
                 </TouchableWithoutFeedback>
               </Text>
