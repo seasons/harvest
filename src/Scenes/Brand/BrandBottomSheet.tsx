@@ -1,12 +1,12 @@
-import { Handle, Box, Spacer, Sans, ProductGridItem, Flex } from "App/Components"
-import { color, space } from "App/utils"
-import React, { useState, useRef, useMemo } from "react"
-import { Dimensions, FlatList, Linking, TouchableOpacity } from "react-native"
-import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
-import { ReadMore } from "App/Components/ReadMore"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Box, Flex, Handle, ProductGridItem, Sans, Spacer } from "App/Components"
 import { CarouselPageDots } from "App/Components/CarouselPageDots"
+import { ReadMore } from "App/Components/ReadMore"
+import { color, space } from "App/utils"
 import { DateTime } from "luxon"
+import React, { useMemo, useRef, useState } from "react"
+import { Dimensions, FlatList, Linking, TouchableOpacity } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 
 const dimensions = Dimensions.get("window")
 
@@ -125,7 +125,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loadin
             {!!description && (
               <>
                 <Spacer mb={3} />
-                <Sans size="0.5">About</Sans>
+                <Sans size="1">About</Sans>
                 <Spacer mb={0.5} />
                 <ReadMore
                   readMoreExpanded={readMoreExpanded}
