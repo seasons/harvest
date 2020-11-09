@@ -421,7 +421,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
               <>
                 <Spacer mt={2} />
                 <TouchableOpacity onPress={onApplyPromoCode}>
-                  <Sans size="2" style={{ textDecorationLine: "underline" }}>
+                  <Sans size="1" style={{ textDecorationLine: "underline" }}>
                     Apply promo code
                   </Sans>
                 </TouchableOpacity>
