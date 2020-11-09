@@ -98,7 +98,6 @@ export enum ActionTypes {
  */
 export enum ActionNames {
   // CreateAccount
-  CreateAccountStepSessionEnded = "Create Account Step Session Ended",
 
   // Web view
   ShareButtonTapped = "Share button tapped",
@@ -228,6 +227,7 @@ export enum ActionNames {
   ChoosePlanTapped = "Choose Plan Tapped",
   LearnMoreTapped = "Learn More Tapped",
   SignupCompleted = "Signup Completed",
+  PlanTapped = "Plan Tapped",
 
   // Promo Code
   ApplyPromoCodeEntrypointTapped = "Apply Promo Code Entrypoint Tapped",

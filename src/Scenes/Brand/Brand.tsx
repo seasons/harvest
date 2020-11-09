@@ -38,7 +38,7 @@ export const Brand = screenTrack({
   if (!data) {
     return (
       <>
-        <FixedBackArrow navigation={navigation} />
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <Loader />
       </>
     )

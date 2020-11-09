@@ -5,6 +5,7 @@ import { Text, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 import { Coupon } from "../../CreateAccount"
 import { calcFinalPrice } from "./utils"
+import { Schema as TrackSchema, useTracking } from "App/utils/track"
 
 interface PlanButtonProps {
   shouldSelect: (plan: any) => void
@@ -15,6 +16,7 @@ interface PlanButtonProps {
 }
 
 export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor, coupon }) => {
+  const tracking = useTracking()
   const { price, itemCount } = plan
   const finalPrice = calcFinalPrice(price, coupon)
   const PriceText = ({ originalPrice, finalPrice }) => {
@@ -50,9 +52,19 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
     )
   }
 
+  const onPress = (plan) => {
+    shouldSelect(plan)
+    tracking.trackEvent({
+      actionName: TrackSchema.ActionNames.PlanTapped,
+      actionType: TrackSchema.ActionTypes.Tap,
+      planID: plan?.id,
+      planName: plan?.name,
+    })
+  }
+
   return (
     <PlanSelectionBorder width="100%" p={0.5} selected={selected} selectedColor={selectedColor}>
-      <TouchableOpacity onPress={() => shouldSelect(plan)}>
+      <TouchableOpacity onPress={() => onPress(plan)}>
         <StyledFlex
           alignItems="center"
           flexDirection="row"

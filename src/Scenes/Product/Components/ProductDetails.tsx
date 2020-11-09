@@ -53,6 +53,7 @@ export const ProductDetails: React.FC<{
                   actionType: Schema.ActionTypes.Tap,
                   brandSlug,
                   brandID,
+                  brandName,
                 })
                 navigation.navigate("Brand", { id: brandID, slug: brandSlug, name: brandName })
               }}

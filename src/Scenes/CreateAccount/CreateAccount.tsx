@@ -1,15 +1,14 @@
 import { Box } from "App/Components"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
+import { screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
 import { get } from "lodash"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { useQuery } from "react-apollo"
-import { AppState, Dimensions, FlatList, Modal } from "react-native"
+import { Dimensions, FlatList, Modal } from "react-native"
 import { ChoosePlanPane, WelcomePane } from "./Admitted"
 import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane } from "./Undetermined"
 import { WaitlistedPane } from "./Waitlisted"
-import { useIsFocused } from "@react-navigation/native"
 import { CreditCardFormPane } from "./Admitted/CreditCardFormPane"
 import { CouponType } from "App/generated/globalTypes"
 
@@ -123,19 +122,14 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       where: { status: "active" },
     },
   })
-  const isFocused = useIsFocused()
   const plans = data?.paymentPlans
   const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
-  const [timeStart, setTimeStart] = useState(Date.now())
-  const [appState, setAppState] = useState("active")
-  const [finishedFlow, setFinishedFlow] = useState(false)
   const [coupon, setCoupon] = useState({
     discountAmount: 0,
     discountPercentage: 0,
     couponType: null,
     couponCode: null,
   })
-  const tracking = useTracking()
   const { resetStore } = useAuthContext()
 
   useEffect(() => {
@@ -148,22 +142,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       })
     }
   }, [route, setCoupon])
-
-  useEffect(() => {
-    const unsubscribe = navigation?.addListener("focus", () => {
-      setTimeStart(Date.now())
-    })
-    return unsubscribe
-  }, [navigation])
-
-  useEffect(() => {
-    const unsubscribe = navigation?.addListener("blur", () => {
-      if (!finishedFlow) {
-        trackStepTimer("Blur")
-      }
-    })
-    return unsubscribe
-  }, [navigation, finishedFlow])
 
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
   const initialUserState: UserState = get(route?.params, "initialUserState", UserState.Undetermined)
@@ -188,36 +166,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   const setPrevState = () => setIndex(Math.max(0, index - 1))
   const setNextState = () => setIndex(index + 1)
 
-  const trackStepTimer = (nextStep) => {
-    const timeSpent = Date.now() - timeStart
-    tracking.trackEvent({
-      actionName: TrackSchema.ActionNames.CreateAccountStepSessionEnded,
-      actionType: TrackSchema.ActionTypes.Session,
-      step: currentState,
-      time: timeSpent,
-      nextStep,
-    })
-  }
-
-  useEffect(() => {
-    const onChange = (nextAppState) => {
-      if (nextAppState === "background" && appState !== "background" && isFocused) {
-        trackStepTimer("Background")
-      }
-      if (nextAppState === "active" && appState !== "active" && isFocused) {
-        setTimeStart(Date.now())
-      }
-      if ((nextAppState === "background" || nextAppState === "active") && nextAppState !== appState && !!appState) {
-        // We only care about changes from the background to active,
-        // If we record 'inactive' changes it can break due to apple pay causing inactive state, etc
-        setAppState(nextAppState)
-      }
-    }
-    // If user leaves the app to turn on notifications in the settings recheck status
-    AppState.addEventListener("change", (nextAppState) => onChange(nextAppState))
-    return () => AppState.removeEventListener("change", (nextAppState) => onChange(nextAppState))
-  }, [setAppState, trackStepTimer])
-
   const paneForState = (state: State) => {
     let pane
 
@@ -226,12 +174,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
         pane = (
           <CreateAccountPane
             onSignUp={() => {
-              // Track the time viewed
-              trackStepTimer(states[index + 1])
-
               setNextState()
-              // Restart the timer
-              setTimeStart(Date.now())
             }}
           />
         )
@@ -243,10 +186,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             onSendCode={(phoneNumber) => {
               setPhoneNumber(phoneNumber)
               setNextState()
-              // Track the time viewed
-              trackStepTimer(states[index + 1])
-              // Restart the timer
-              setTimeStart(Date.now())
             }}
           />
         )
@@ -257,17 +196,9 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             focus={currentState === State.VerifyCode}
             onRequestBack={() => {
               setPrevState()
-              // Track the time viewed
-              trackStepTimer(states[index - 1])
-              // Restart the timer
-              setTimeStart(Date.now())
             }}
             onVerifyPhone={() => {
               setNextState()
-              // Track the time viewed
-              trackStepTimer(states[index + 1])
-              // Restart the timer
-              setTimeStart(Date.now())
             }}
             phoneNumber={phoneNumber}
           />
@@ -278,10 +209,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
           <GetMeasurementsPane
             onGetMeasurements={() => {
               setNextState()
-              // Track the time viewed
-              trackStepTimer(states[index + 1])
-              // Restart the timer
-              setTimeStart(Date.now())
             }}
           />
         )
@@ -291,12 +218,8 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
           <TriagePane
             check={currentState === State.Triage}
             onTriageComplete={(userAdmitted) => {
-              // Track the time viewed
-              trackStepTimer(userAdmitted ? State.ChoosePlan : State.Waitlisted)
               setUserState(userAdmitted ? UserState.Admitted : UserState.Waitlisted)
               setNextState()
-              // Restart the timer
-              setTimeStart(Date.now())
             }}
           />
         )
@@ -309,10 +232,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             data={data}
             onComplete={(paymentMethod) => {
               paymentMethod === PaymentMethod.CreditCard ? setIndex(index + 1) : setIndex(index + 2)
-              // Track the time viewed
-              trackStepTimer(states[index + 1])
-              // Restart the timer
-              setTimeStart(Date.now())
             }}
             headerText={"You're in.\nLet's choose your plan"}
             source="CreateAccountModal"
@@ -327,19 +246,10 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             currentState={currentState}
             onRequestBack={() => {
               setPrevState()
-              // Track the time viewed
-              trackStepTimer(states[index - 1])
-              // Restart the timer
-              setTimeStart(Date.now())
             }}
             plan={selectedPlan}
             onSubmit={() => {
-              // Track the time viewed
-              trackStepTimer(states[index + 1])
-
               setNextState()
-              // Restart the timer
-              setTimeStart(Date.now())
             }}
             coupon={coupon}
           />
@@ -378,9 +288,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       <Modal visible={currentState === State.Welcome} animated>
         <WelcomePane
           onPressGetStarted={() => {
-            setFinishedFlow(true)
             resetStore()
-            trackStepTimer(null)
             navigation.goBack()
           }}
         />
@@ -389,9 +297,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       <Modal visible={currentState === State.Waitlisted} animated>
         <WaitlistedPane
           onPressFinish={() => {
-            setFinishedFlow(true)
             resetStore()
-            trackStepTimer(null)
             navigation.goBack()
           }}
         />

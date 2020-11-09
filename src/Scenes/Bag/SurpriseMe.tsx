@@ -141,7 +141,16 @@ const Content = ({ data, variant, product, onRestart, seenAllAvailableProducts }
             )}
             {!!brandName && (
               <TouchableWithoutFeedback
-                onPress={() => navigation.navigate("Brand", { id: brand?.id, slug: brand?.slug, name: brand?.name })}
+                onPress={() => {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.BrandTapped,
+                    actionType: Schema.ActionTypes.Tap,
+                    brandID: brand?.id,
+                    brandSlug: brand?.slug,
+                    brandName: brand?.name,
+                  })
+                  navigation.navigate("Brand", { id: brand?.id, slug: brand?.slug, name: brand?.name })
+                }}
               >
                 <Sans size="0.5" color="black50" style={{ maxWidth: itemWidth - 50, textDecorationLine: "underline" }}>
                   {brandName}
