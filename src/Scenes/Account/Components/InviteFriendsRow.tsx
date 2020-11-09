@@ -16,9 +16,9 @@ export const InvitedFriendsRow: React.FC<InvitedFriendsRowProps> = ({ referralLi
         <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" justifyContent="space-between">
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
             <Box style={{ maxWidth: 300 }}>
-              <Sans size="2">Invite Friends</Sans>
+              <Sans size="2">Refer a friend & Earn</Sans>
               <Sans size="1" color="black50">
-                Get a free 30-day slot for every sign-up
+                Get 50% off your next month
               </Sans>
             </Box>
           </Flex>
