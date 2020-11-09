@@ -78,6 +78,7 @@ export const GET_USER = gql`
         }
         authorizedAt
         admissions {
+          id
           authorizationWindowClosesAt
         }
       }
