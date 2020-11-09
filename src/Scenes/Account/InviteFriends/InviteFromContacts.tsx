@@ -21,7 +21,7 @@ export interface Contact {
 export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
   const [contacts, setContacts] = useState([])
   const [filteredContacts, setFilteredContacts] = useState([])
-  const [selectedContacts, setSelectedContacts] = useState([])
+  const [selectedContact, setSelectedContact] = useState(null)
   const [searchText, setSearchText] = useState("")
   const textInputRef = useRef(null)
   const insets = useSafeAreaInsets()
@@ -57,13 +57,15 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
   }
 
   const renderItem = ({ item }) => {
-    const isSelected = selectedContacts.includes(item)
+    const isSelected = selectedContact === item
 
     const handlePress = () => {
+      setSearchText("")
+      searchContacts(searchText)
       if (isSelected) {
-        setSelectedContacts(selectedContacts.filter((f) => f !== item))
+        setSelectedContact(null)
       } else {
-        setSelectedContacts([...selectedContacts, item])
+        setSelectedContact(item)
       }
     }
 
@@ -123,28 +125,26 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
               }}
             >
               <ScrollView horizontal showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-                {selectedContacts.map((contact) => {
-                  return (
-                    <>
-                      <Text
-                        style={{
-                          color: "white",
-                          fontFamily: fontFamily.sans.medium.toString(),
-                          fontSize: themeProps.typeSizes[1].fontSize,
-                          textAlignVertical: "center",
-                          backgroundColor: "black",
-                          paddingHorizontal: 8,
-                          paddingVertical: 4,
-                          borderRadius: 4,
-                          marginVertical: 8,
-                        }}
-                      >
-                        {contact.name}
-                      </Text>
-                      <Spacer mx={0.5} />
-                    </>
-                  )
-                })}
+                {selectedContact && (
+                  <>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontFamily: fontFamily.sans.medium.toString(),
+                        fontSize: themeProps.typeSizes[1].fontSize,
+                        textAlignVertical: "center",
+                        backgroundColor: "black",
+                        paddingHorizontal: 8,
+                        paddingVertical: 4,
+                        borderRadius: 4,
+                        marginVertical: 8,
+                      }}
+                    >
+                      {selectedContact.name}
+                    </Text>
+                    <Spacer mx={0.5} />
+                  </>
+                )}
                 <TextInput
                   autoCompleteType="postal-code"
                   currentValue={searchText}
@@ -154,6 +154,11 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
                   onChangeText={(input, text) => {
                     searchContacts(text)
                     setSearchText(text)
+                  }}
+                  onKeyPress={({ nativeEvent }) => {
+                    if (nativeEvent.key === "Backspace") {
+                      setSelectedContact(null)
+                    }
                   }}
                   style={{ flexGrow: 1 }}
                 />
@@ -171,14 +176,14 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
           }}
           ListFooterComponent={() => <Spacer mb={60} />}
         />
-        {selectedContacts.length > 0 && (
+        {selectedContact && (
           <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Math.max(insets.bottom - 8, 8)}>
             <Box style={{ margin: 16, marginBottom: insets.bottom + 16 }}>
               <Button
                 variant="primaryBlack"
                 onPress={() => {
                   const body = `Here’s my referral link for Seasons. Get $50 off your first month when you sign-up: ${referralLink}`
-                  Linking.openURL(`sms://${selectedContacts[0].phoneNumbers[0]}&body=${body}`)
+                  Linking.openURL(`sms://${selectedContact.phoneNumbers[0]}&body=${body}`)
                 }}
                 block
               >
