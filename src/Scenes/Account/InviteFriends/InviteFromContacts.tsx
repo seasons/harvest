@@ -33,7 +33,7 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
       const mappedContacts = contacts.map((contact) => {
         return {
           name: contact.givenName,
-          phoneNumbers: contact.phoneNumbers.map((phoneNumber) => formattedPhoneNumber(phoneNumber.number)),
+          phoneNumbers: contact.phoneNumbers.map(({ number }) => number),
           emails: contact.emailAddresses.map((email) => email.email),
         } as Contact
       })
@@ -41,11 +41,6 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
       setFilteredContacts(mappedContacts)
     })
   }, [])
-
-  const formattedPhoneNumber = (phoneNumber: string) => {
-    const onlyNums = phoneNumber.replace(/\D/g, "")
-    return `(${onlyNums.substring(0, 3)}) ${onlyNums.substring(3, 6)}-${onlyNums.substring(6)}`
-  }
 
   const searchContacts = (searchText: string) => {
     if (searchText == "") {
