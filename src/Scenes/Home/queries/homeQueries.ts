@@ -39,6 +39,12 @@ export const GET_HOMEPAGE = gql`
             name
             since
           }
+          ... on Category {
+            id
+            slug
+            name
+            image
+          }
           ... on Product {
             id
             slug

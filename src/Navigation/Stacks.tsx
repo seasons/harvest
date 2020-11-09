@@ -148,6 +148,11 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
       <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />
       <HomeStack.Screen
+        name={Schema.PageNames.Browse}
+        component={Browse}
+        initialParams={{ sizeFilters: [], categorySlug: "" }}
+      />
+      <HomeStack.Screen
         name={Schema.PageNames.FitPicDetail}
         component={FitPicDetail}
         sharedElements={(route, otherRoute) => {
@@ -164,7 +169,11 @@ const HomeStackScreen = () => {
 const BrowseStackScreen = () => {
   return (
     <BrowseStack.Navigator initialRouteName={Schema.PageNames.Browse} screenOptions={{ ...defaultOptions }}>
-      <BrowseStack.Screen name={Schema.PageNames.Browse} component={Browse} initialParams={{ sizeFilters: [] }} />
+      <BrowseStack.Screen
+        name={Schema.PageNames.Browse}
+        component={Browse}
+        initialParams={{ sizeFilters: [], categorySlug: "" }}
+      />
       <BrowseStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
       <BrowseStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
     </BrowseStack.Navigator>
