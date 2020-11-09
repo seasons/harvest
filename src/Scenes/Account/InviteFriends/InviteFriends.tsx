@@ -13,6 +13,7 @@ const windowWidth = windowDimensions.width
 export const InviteFriends = screenTrack()(({ route, navigation }) => {
   const insets = useSafeArea()
   const [openPopUp, setOpenPopUp] = useState(false)
+  const [copyText, setCopyText] = useState("Copy Link")
   const referralLink = route.params.referralLink
 
   const onShare = async () => {
@@ -80,10 +81,11 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
               <TouchableOpacity
                 onPress={() => {
                   Clipboard.setString(referralLink)
+                  setCopyText("Copied!")
                 }}
               >
                 <Sans size="1" color="black100">
-                  Copy Link
+                  {copyText}
                 </Sans>
               </TouchableOpacity>
             </Flex>
