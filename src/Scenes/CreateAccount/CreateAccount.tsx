@@ -73,6 +73,7 @@ export const GET_PLANS = gql`
             id
             description
             tier
+            itemCount
           }
         }
         admissions {
