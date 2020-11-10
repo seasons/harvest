@@ -54,7 +54,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
       setAdded(true)
       const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
       const bagItemCount = authState?.isSignedIn ? data?.me?.bag?.length : res.addOrRemoveFromLocalBag.length
-      if (itemCount && bagItemCount && bagItemCount >= itemCount) {
+      if (itemCount && bagItemCount && bagItemCount >= itemCount && isUserSignedIn) {
         showPopUp({
           icon: <CheckCircled />,
           title: "Added to bag",
