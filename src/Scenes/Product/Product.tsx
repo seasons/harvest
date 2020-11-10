@@ -8,7 +8,7 @@ import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
 import { find, head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
-import { Dimensions, FlatList } from "react-native"
+import { Dimensions, FlatList, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
@@ -72,6 +72,13 @@ export const Product = screenTrack({
       },
     ],
   })
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      StatusBar.setBarStyle("dark-content")
+    })
+    return unsubscribe
+  }, [navigation])
 
   useEffect(() => {
     if (userHasSession && product) {
