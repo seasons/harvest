@@ -178,8 +178,8 @@ export const Browse = screenTrack()((props: any) => {
 
   return (
     <Container insetsBottom={false}>
-      <Flex flexDirection="column" flex={1}>
-        <Box flex={1} flexGrow={1}>
+      <Flex flexDirection="column" style={{ flex: 1 }}>
+        <Box style={{ flex: 1, flexGrow: 1 }}>
           <FlatList
             contentContainerStyle={
               products?.length
@@ -293,7 +293,7 @@ export const Browse = screenTrack()((props: any) => {
   )
 })
 
-const CategoryPicker = styled.FlatList`
+const CategoryPicker = styled(FlatList)`
   position: absolute;
   height: 100%;
   width: 100%;
@@ -304,7 +304,7 @@ const CategoryPicker = styled.FlatList`
   border-top-width: 1px;
 `
 
-const Category = styled(Box)`
+const Category = styled(Box)<{ selected: boolean }>`
   ${(p) =>
     p.selected &&
     `
