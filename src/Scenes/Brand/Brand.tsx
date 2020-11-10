@@ -31,7 +31,7 @@ export const Brand = screenTrack({
       brandID,
       first: 10,
       skip: 0,
-      orderBy: "createdAt_DESC",
+      orderBy: "publishedAt_DESC",
     },
   })
 
