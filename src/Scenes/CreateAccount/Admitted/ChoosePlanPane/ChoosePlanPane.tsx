@@ -26,6 +26,7 @@ import { themeProps } from "App/Components/Theme"
 import { PaymentMethods } from "./PaymentMethods"
 import { calcFinalPrice } from "./utils"
 import { AllAccessDisabledPopup } from "./AllAccessDisabledPopup"
+import { GET_USER } from "App/Scenes/Account/Account"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout($planID: String!, $token: StripeToken!, $tokenType: String, $couponID: String) {
@@ -112,6 +113,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       {
         query: GET_BAG,
       },
+      { query: GET_USER },
     ],
   })
 
