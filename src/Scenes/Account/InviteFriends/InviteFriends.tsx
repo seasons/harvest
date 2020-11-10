@@ -7,9 +7,14 @@ import React, { useState } from "react"
 import { Dimensions, Share, TouchableOpacity } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
 import Contacts from "react-native-contacts"
+import styled from "styled-components/native"
 
 const windowDimensions = Dimensions.get("window")
 const windowWidth = windowDimensions.width
+
+const SansUnderline = styled(Sans)`
+  text-decoration: underline;
+`
 
 export const InviteFriends = screenTrack()(({ route, navigation }) => {
   const insets = useSafeArea()
@@ -45,7 +50,7 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
   const InviteContactsPopUp = () => {
     return (
       <PopUp show={openPopUp}>
-        <Box pb={insets.bottom} px={2} style={{ width: windowWidth }}>
+        <Box pb={insets.bottom} px={2} width={windowWidth}>
           <Spacer mb={4} />
           <Sans size="2">Invite friends, get a free slot</Sans>
           <Spacer mb={1} />
@@ -90,9 +95,9 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
                   setCopyText("Copied!")
                 }}
               >
-                <Sans size="1" color="black100">
+                <SansUnderline size="1" color="black100">
                   {copyText}
-                </Sans>
+                </SansUnderline>
               </TouchableOpacity>
             </Flex>
           </Box>
@@ -112,9 +117,9 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })}
             >
-              <Sans size="2" color="black50">
+              <SansUnderline size="1" color="black50">
                 Terms of Service
-              </Sans>
+              </SansUnderline>
             </TouchableOpacity>
           </Flex>
           <Spacer mb={2} />
