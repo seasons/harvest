@@ -16,6 +16,7 @@ import { CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_A
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 
 export enum BagView {
   Bag = 0,
@@ -165,7 +166,11 @@ export const Bag = screenTrack()((props) => {
           onClose: () => {
             hidePopUp()
             navigation.navigate("Modal", {
-              screen: "CreateAccountModal",
+              screen: NavigationSchema.PageNames.CreateAccountModal,
+              params: {
+                initialState: CreateAccountState.ChoosePlan,
+                initialUserState: CreateAccountUserState.Admitted,
+              },
             })
           },
         })
