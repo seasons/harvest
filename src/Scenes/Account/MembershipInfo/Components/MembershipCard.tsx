@@ -40,9 +40,9 @@ export const MembershipCard: React.FC<MembershipCardProps> = ({ memberName, plan
           <Spacer mt={104} />
           <Flex flexDirection="row" justifyContent="space-between">
             <Text style={{ letterSpacing: 2 }}>
-              <Sans color={planTierColor} size="1">
+              <UppercaseSans color={planTierColor} size="1">
                 {planName}
-              </Sans>
+              </UppercaseSans>
             </Text>
             <Sans color={color("black50")} size="1">
               {memberName}
@@ -63,4 +63,8 @@ const Card = styled(Box)`
   shadow-color: ${color("black100")};
   shadow-opacity: 0.1;
   shadow-radius: 12;
+`
+
+const UppercaseSans = styled(Sans)`
+  text-transform: uppercase;
 `
