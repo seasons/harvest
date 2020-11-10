@@ -157,6 +157,18 @@ export const Bag = screenTrack()((props) => {
             })
           },
         })
+      } else if (customerStatus === "Authorized") {
+        showPopUp({
+          title: "You need to choose a plan first",
+          note: "Sign up to a plan to continue reserving your items",
+          buttonText: "Got it",
+          onClose: () => {
+            hidePopUp()
+            navigation.navigate("Modal", {
+              screen: "CreateAccountModal",
+            })
+          },
+        })
       } else if (bagCount > itemCount) {
         showPopUp({
           title: "You must remove some items first",
