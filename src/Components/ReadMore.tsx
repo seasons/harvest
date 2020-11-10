@@ -98,7 +98,7 @@ function truncate({
           truncatedChildren.push(
             <Text>
               {"... "}
-              <Sans size="0.5" onPress={onExpand}>
+              <Sans size="1" onPress={onExpand}>
                 Read&nbsp;more
               </Sans>
             </Text>

@@ -36,18 +36,18 @@ const MetaDataCarousel = ({ data }) => {
               }}
             >
               <Box ml={index === 0 ? 0 : 3} mr={3}>
-                <Sans size="0.5" color="black50">
+                <Sans size="1" color="black50">
                   {item?.title}
                 </Sans>
-                <Sans size="0.5">{item?.text}</Sans>
+                <Sans size="1">{item?.text}</Sans>
               </Box>
             </TouchableOpacity>
           ) : (
             <Box ml={index === 0 ? 0 : 3} mr={3}>
-              <Sans size="0.5" color="black50">
+              <Sans size="1" color="black50">
                 {item?.title}
               </Sans>
-              <Sans size="0.5">{item?.text}</Sans>
+              <Sans size="1">{item?.text}</Sans>
             </Box>
           )}
         </Flex>
