@@ -42,7 +42,6 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
           shippingOption {
             id
             externalCost
-            averageDuration
             shippingMethod {
               id
               displayText
@@ -121,7 +120,6 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const formatedAddress2 = !!address?.city && `${address?.city}, ${address?.state} ${address?.zipCode}`
   const shippingOption = reservation?.shippingOption
   const shippingDisplayText = shippingOption?.shippingMethod?.displayText
-  const averageDuration = shippingOption?.averageDuration
   const externalCost = shippingOption?.externalCost
 
   return (
@@ -177,11 +175,6 @@ export const ReservationConfirmation = screenTrack()((props) => {
               title="Delivery"
               content={
                 <>
-                  {!!averageDuration && (
-                    <Sans size="1" color="black100" ml="auto" textAlign="right">
-                      {averageDuration}-day shipping
-                    </Sans>
-                  )}
                   {!!shippingDisplayText && (
                     <Sans size="1" color="black100" ml="auto" textAlign="right">
                       {shippingDisplayText}
