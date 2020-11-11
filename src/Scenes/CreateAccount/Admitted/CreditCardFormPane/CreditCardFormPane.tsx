@@ -1,5 +1,14 @@
 import {
-  Box, Button, CloseButton, Container, FakeTextInput, Flex, Sans, Separator, Spacer, TextInput
+  Box,
+  Button,
+  CloseButton,
+  Container,
+  FakeTextInput,
+  Flex,
+  Sans,
+  Separator,
+  Spacer,
+  TextInput,
 } from "App/Components"
 import { GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { isWholeNumber } from "App/helpers/validation"
@@ -10,10 +19,7 @@ import { color } from "App/utils/color"
 import { BackArrowIcon } from "Assets/icons"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import React, { useState } from "react"
-import {
-  Dimensions, Keyboard, KeyboardAvoidingView, ScrollView, TouchableOpacity
-} from "react-native"
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+import { Dimensions, Keyboard, KeyboardAvoidingView, ScrollView, TouchableOpacity } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe, { PaymentCardTextField } from "tipsi-stripe"
@@ -24,6 +30,7 @@ import * as Sentry from "@sentry/react-native"
 import { Coupon, State } from "../../CreateAccount"
 import { PAYMENT_CHECKOUT } from "../ChoosePlanPane/ChoosePlanPane"
 import { calcFinalPrice } from "../ChoosePlanPane/utils"
+import { GET_USER } from "App/Scenes/Account/Account"
 
 const windowDimensions = Dimensions.get("window")
 
@@ -90,6 +97,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
       {
         query: GET_BAG,
       },
+      { query: GET_USER },
     ],
   })
 
