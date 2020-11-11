@@ -16,6 +16,7 @@ import { CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_A
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 
 export enum BagView {
   Bag = 0,
@@ -154,6 +155,22 @@ export const Bag = screenTrack()((props) => {
             hidePopUp()
             navigation.navigate("Modal", {
               screen: "CreateAccountModal",
+            })
+          },
+        })
+      } else if (customerStatus === "Authorized") {
+        showPopUp({
+          title: "You need to choose a plan first",
+          note: "Sign up to a plan to continue reserving your items",
+          buttonText: "Got it",
+          onClose: () => {
+            hidePopUp()
+            navigation.navigate("Modal", {
+              screen: NavigationSchema.PageNames.CreateAccountModal,
+              params: {
+                initialState: CreateAccountState.ChoosePlan,
+                initialUserState: CreateAccountUserState.Admitted,
+              },
             })
           },
         })

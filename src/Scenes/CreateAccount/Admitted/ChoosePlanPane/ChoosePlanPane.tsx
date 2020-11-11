@@ -26,6 +26,8 @@ import { themeProps } from "App/Components/Theme"
 import { PaymentMethods } from "./PaymentMethods"
 import { calcFinalPrice } from "./utils"
 import { AllAccessDisabledPopup } from "./AllAccessDisabledPopup"
+import { GET_USER } from "App/Scenes/Account/Account"
+import { Spinner } from "App/Components/Spinner"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout($planID: String!, $token: StripeToken!, $tokenType: String, $couponID: String) {
@@ -71,6 +73,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
   const [openPopUp, setOpenPopUp] = useState(false)
+  const [showLoadingOverlay, setShowLoadingOverlay] = useState(false)
   const insets = useSafeAreaInsets()
   const tracking = useTracking()
   const navigation = useNavigation()
@@ -84,9 +87,11 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     onCompleted: () => {
       setIsMutating(false)
       setOpenPopUp(false)
+      setShowLoadingOverlay(false)
       onComplete?.(PaymentMethod.ApplePay)
     },
     onError: (err) => {
+      setShowLoadingOverlay(false)
       console.log("Error ChoosePlanPane.tsx", err)
       Sentry.captureException(err)
       let popUpData
@@ -112,6 +117,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       {
         query: GET_BAG,
       },
+      { query: GET_USER },
     ],
   })
 
@@ -200,6 +206,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       if (canMakeApplePayment) {
         // Customer has a payment card set up
         try {
+          setShowLoadingOverlay(true)
           const finalPrice = calcFinalPrice(selectedPlan.price, coupon)
           const token = await stripe.paymentRequestWithNativePay(
             {
@@ -212,6 +219,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
               },
             ]
           )
+          setOpenPopUp(false)
           applePayCheckout({
             variables: {
               planID: selectedPlan.planID,
@@ -224,6 +232,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
           // You should complete the operation by calling
           stripe.completeApplePayRequest()
         } catch (error) {
+          setShowLoadingOverlay(false)
           console.log("error", error)
           stripe.cancelApplePayRequest()
           setIsMutating(false)
@@ -410,7 +419,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
             <ColoredButton
               block
               disabled={!selectedPlan}
-              loading={isMutating}
               onPress={onChoosePlan}
               variant="primaryBlack"
               backgroundColor={currentColor}
@@ -439,10 +447,27 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
         show={showAllAccessDisabledMessage}
         onPress={() => setShowAllAccessDisabledMessage(false)}
       />
+      {showLoadingOverlay && (
+        <Overlay>
+          <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
+            <Spinner />
+          </Flex>
+        </Overlay>
+      )}
     </>
   )
 }
 
 const ColoredButton = styled(Button)`
   background-color: ${(p: any) => p.backgroundColor};
+`
+
+const Overlay = styled(Box)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 200;
 `

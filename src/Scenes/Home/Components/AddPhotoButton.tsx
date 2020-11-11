@@ -111,7 +111,11 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
   }
 
   return (
-    <FixedButtonContainer opacity={animation.opacity} style={{ transform: [{ translateY: animation.translateY }] }}>
+    <FixedButtonContainer
+      opacity={animation.opacity}
+      style={{ transform: [{ translateY: animation.translateY }] }}
+      pointerEvents={visible ? "auto" : "none"}
+    >
       <Button
         color="white100"
         onPress={onPress}

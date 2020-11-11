@@ -18,7 +18,7 @@ import {
   FixedBackArrow,
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { GetProduct_products } from "App/generated/GetProduct"
+import { GetProduct_products_largeImages } from "App/generated/GetProduct"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
@@ -26,6 +26,7 @@ import { sizeToName } from "./Components/VariantList"
 import { SAVE_ITEM } from "./Components/SaveProductButton"
 import { useNavigation } from "@react-navigation/native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+import { GetBrowseProducts_products_images } from "App/generated/GetBrowseProducts"
 
 const screenWidth = Dimensions.get("window").width
 
@@ -38,7 +39,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
   const tracking = useTracking()
   const [selectedVariantID, setSelectedVariantID] = useState(null)
   const navigation = useNavigation()
-  const product: GetProduct_products = route?.params?.product
+  const product = route?.params?.product
   const showPopUp = route?.params?.showPopUp
   const hidePopUp = route?.params?.hidePopUp
   const [saveItem] = useMutation(SAVE_ITEM, {
@@ -64,7 +65,10 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
     )
   }
 
-  const images = product?.largeImages
+  // largeImages come from product query and images come from browse query
+  const images =
+    (product?.largeImages as GetProduct_products_largeImages[]) ||
+    (product.images as GetBrowseProducts_products_images[])
 
   const { description, name, type, variants } = product
 
