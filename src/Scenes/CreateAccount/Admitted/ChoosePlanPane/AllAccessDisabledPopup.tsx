@@ -16,7 +16,7 @@ export const AllAccessDisabledPopup = ({ show, onPress }) => {
         </Sans>
         <Spacer mt={1} />
         <Sans size="1" color={color("black50")}>
-          We're currently in beta and All Access is disabled in your area due to shipping time.
+          All Access is disabled in your area due to shipping time.
         </Sans>
         <Spacer my={2} />
         <Button block variant="primaryWhite" onPress={onPress}>
