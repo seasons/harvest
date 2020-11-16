@@ -191,8 +191,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     onComplete(PaymentMethod.CreditCard)
   }
 
-  console.log("data", data)
-
   const onApplePay = async () => {
     if (isMutating) {
       return
