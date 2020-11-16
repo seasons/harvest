@@ -65,10 +65,12 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   data,
   setSelectedPlan,
   selectedPlan,
-  coupon,
+  coupon: appliedCoupon,
   source,
   onMountScrollToFaqSection,
 }) => {
+  const coupon = setCoupon(appliedCoupon, data?.me?.customer?.coupon)
+
   const allAccessEnabled = data?.me?.customer?.admissions?.allAccessEnabled
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
@@ -267,7 +269,16 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     if (source === "CreateAccountModal") {
       setOpenPopUp(true)
     } else {
-      onChoosePlanUpdate()
+      if (selectedPlan.id === data?.me?.customer?.membership?.plan?.id) {
+        showPopUp({
+          title: "Select a new plan",
+          note: "You're already subscribed to this plan. Select a new plan to update.",
+          buttonText: "Close",
+          onClose: hidePopUp,
+        })
+      } else {
+        onChoosePlanUpdate()
+      }
     }
   }
 
@@ -456,6 +467,23 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       )}
     </>
   )
+}
+
+const setCoupon = (appliedCoupon: Coupon, returnedCoupon): Coupon => {
+  let coupon
+  if (!!appliedCoupon?.couponCode) {
+    coupon = appliedCoupon
+  } else {
+    if (!!returnedCoupon?.id) {
+      coupon = {
+        discountAmount: returnedCoupon.amount,
+        discountPercentage: returnedCoupon.percentage,
+        couponCode: returnedCoupon.id,
+        couponType: returnedCoupon.type,
+      } as Coupon
+    }
+  }
+  return coupon
 }
 
 const ColoredButton = styled(Button)`

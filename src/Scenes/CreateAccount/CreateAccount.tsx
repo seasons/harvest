@@ -80,6 +80,12 @@ export const GET_PLANS = gql`
           id
           allAccessEnabled
         }
+        coupon {
+          id
+          type
+          amount
+          percentage
+        }
       }
     }
     faq(sectionType: PaymentPlanPage) {

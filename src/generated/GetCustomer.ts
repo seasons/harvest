@@ -70,6 +70,12 @@ export interface GetCustomer_me_bag {
   productVariant: GetCustomer_me_bag_productVariant;
 }
 
+export interface GetCustomer_me_customer_admissions {
+  __typename: "CustomerAdmissionsData";
+  id: string;
+  allAccessEnabled: boolean;
+}
+
 export interface GetCustomer_me_customer_detail_shippingAddress_shippingOptions_shippingMethod {
   __typename: "ShippingMethod";
   id: string;
@@ -112,6 +118,7 @@ export interface GetCustomer_me_customer_billingInfo {
 export interface GetCustomer_me_customer {
   __typename: "Customer";
   id: string;
+  admissions: GetCustomer_me_customer_admissions | null;
   detail: GetCustomer_me_customer_detail | null;
   billingInfo: GetCustomer_me_customer_billingInfo | null;
 }
