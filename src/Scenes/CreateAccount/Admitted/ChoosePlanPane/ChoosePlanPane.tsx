@@ -267,7 +267,16 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     if (source === "CreateAccountModal") {
       setOpenPopUp(true)
     } else {
-      onChoosePlanUpdate()
+      if (selectedPlan.id === data?.me?.customer?.membership?.plan?.id) {
+        showPopUp({
+          title: "Select a new plan",
+          note: "You're already subscribed to this plan. Select a new plan to update.",
+          buttonText: "Close",
+          onClose: hidePopUp,
+        })
+      } else {
+        onChoosePlanUpdate()
+      }
     }
   }
 
