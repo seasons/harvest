@@ -194,7 +194,7 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
               variant="primaryBlack"
               disabled={!selectedContact}
               onPress={() => {
-                const body = `Here’s my referral link for Seasons. Get $50 off your first month when you sign-up: ${referralLink}`
+                const body = `Here’s my referral link for Seasons. Get 50% off your first month when you sign-up: ${referralLink}`
                 Linking.openURL(`sms://${selectedContact.phoneNumbers[0]}&body=${body}`)
               }}
               block
