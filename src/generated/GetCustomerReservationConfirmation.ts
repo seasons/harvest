@@ -44,7 +44,6 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_shi
   __typename: "ShippingOption";
   id: string;
   externalCost: number | null;
-  averageDuration: number | null;
   shippingMethod: GetCustomerReservationConfirmation_me_customer_reservations_shippingOption_shippingMethod | null;
 }
 
