@@ -52,7 +52,7 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
       <PopUp show={openPopUp}>
         <Box pb={insets.bottom} px={2} width={windowWidth}>
           <Spacer mb={4} />
-          <Sans size="2">Invite friends, get a free slot</Sans>
+          <Sans size="2">Allow access to contacts</Sans>
           <Spacer mb={1} />
           <Sans size="1" color="black50">
             Choose which friends to invite to Seasons by allowing us to view your contacts.
