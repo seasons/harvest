@@ -236,7 +236,7 @@ export const EditPaymentAndShipping: React.FC<{
             },
             [
               {
-                label: `${paymentPlan.name} plan`,
+                label: "SZNS Inc.",
                 amount: `${paymentPlan.price / 100}.00`,
               },
             ]
