@@ -216,7 +216,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
             },
             [
               {
-                label: `${selectedPlan.name} plan`,
+                label: `SZNS, Inc.`,
                 amount: `${finalPrice / 100}.00`,
               },
             ]
