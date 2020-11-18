@@ -93,7 +93,7 @@ export function screenTrack<P>(trackingInfo?: TrackingInfo<Schema.PageViewEvent,
         console.log("[Event tracked]", JSON.stringify(newData, null, 2))
       }
       if (newData.actionName) {
-        return analytics.track(newData.page, newData)
+        return analytics.track(newData.actionName, newData)
       } else {
         return analytics.screen(newData.page, newData)
       }
