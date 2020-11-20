@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UserRole } from "./globalTypes";
+import { UserRole, CustomerStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: SignUp
@@ -19,9 +19,16 @@ export interface SignUp_signup_user {
   roles: UserRole[];
 }
 
+export interface SignUp_signup_customer {
+  __typename: "Customer";
+  id: string;
+  status: CustomerStatus | null;
+}
+
 export interface SignUp_signup {
   __typename: "SignupPayload";
   user: SignUp_signup_user;
+  customer: SignUp_signup_customer;
   token: string;
   refreshToken: string;
   expiresIn: number;

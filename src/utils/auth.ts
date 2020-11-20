@@ -22,6 +22,9 @@ export interface UserSession {
   customer?: {
     id: string
     status: CustomerStatus
+    admissions: {
+      admissable?: boolean
+    }
   }
 }
 
@@ -40,6 +43,15 @@ export const getAccessTokenFromSession = async () => {
   const userSession = await getUserSession()
   const accessToken = userSession ? userSession.token : ""
   return accessToken
+}
+
+export const userSessionToIdentifyPayload = (session) => {
+  const traits = {
+    ...session?.user,
+    status: session?.customer?.status,
+    admissable: session?.customer?.admissions?.admissable,
+  }
+  return traits
 }
 
 export const getAccessTokenOrRefresh = async () => {

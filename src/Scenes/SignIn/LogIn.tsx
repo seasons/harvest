@@ -19,6 +19,10 @@ const LOG_IN = gql`
       customer {
         id
         status
+        admissions {
+          id
+          admissable
+        }
       }
       user {
         id

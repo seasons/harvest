@@ -2,7 +2,7 @@ import { ErrorPopUp } from "App/Navigation/ErrorPopUp"
 import { PopUpProvider } from "App/Navigation/ErrorPopUp/PopUpProvider"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { NotificationsProvider } from "App/Notifications"
-import { getUserSession } from "App/utils/auth"
+import { getUserSession, userSessionToIdentifyPayload } from "App/utils/auth"
 import React, { useEffect, useImperativeHandle } from "react"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 
@@ -72,8 +72,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
           if (userSession && userSession.token) {
             const user = userSession?.user
             if (user) {
-              console.log({ ...userSession?.user, status: userSession?.customer?.status })
-              analytics.identify(user.id, { ...userSession?.user, status: userSession?.customer?.status })
+              analytics.identify(user.id, userSessionToIdentifyPayload(userSession))
             }
             dispatch({ type: "RESTORE_TOKEN", token: userSession.token })
           }
@@ -93,11 +92,10 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
     const authContext = {
       signIn: async (session) => {
         dispatch({ type: "SIGN_IN", token: session.token })
-        const traits = { ...session?.user, status: session?.customer?.status }
         const user = session?.user
         if (user) {
-          console.log({ ...session?.user, status: session?.customer?.status })
-          analytics.identify(user.id, traits)
+          console.log(userSessionToIdentifyPayload(session))
+          analytics.identify(user.id, userSessionToIdentifyPayload(session))
         }
         apolloClient.resetStore()
       },
