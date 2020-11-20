@@ -2,6 +2,7 @@ import { config, Env } from "App/utils/config"
 import Auth0 from "react-native-auth0"
 
 import AsyncStorage from "@react-native-community/async-storage"
+import { CustomerStatus } from "App/generated/globalTypes"
 
 const auth0Domain = config.get(Env.AUTH0_DOMAIN)
 const auth0ClientId = config.get(Env.AUTH0_CLIENT_ID)
@@ -17,6 +18,10 @@ export interface UserSession {
   user?: {
     email: string
     id: string
+  }
+  customer?: {
+    id: string
+    status: CustomerStatus
   }
 }
 

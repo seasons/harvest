@@ -72,7 +72,8 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
           if (userSession && userSession.token) {
             const user = userSession?.user
             if (user) {
-              analytics.identify(user.id, user)
+              console.log({ ...userSession?.user, status: userSession?.customer?.status })
+              analytics.identify(user.id, { ...userSession?.user, status: userSession?.customer?.status })
             }
             dispatch({ type: "RESTORE_TOKEN", token: userSession.token })
           }
@@ -92,9 +93,11 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
     const authContext = {
       signIn: async (session) => {
         dispatch({ type: "SIGN_IN", token: session.token })
+        const traits = { ...session?.user, status: session?.customer?.status }
         const user = session?.user
         if (user) {
-          analytics.identify(user.id, user)
+          console.log({ ...session?.user, status: session?.customer?.status })
+          analytics.identify(user.id, traits)
         }
         apolloClient.resetStore()
       },

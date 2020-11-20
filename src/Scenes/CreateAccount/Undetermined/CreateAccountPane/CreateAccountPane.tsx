@@ -34,6 +34,10 @@ const SIGN_UP = gql`
         beamsToken
         roles
       }
+      customer {
+        id
+        status
+      }
       token
       refreshToken
       expiresIn
