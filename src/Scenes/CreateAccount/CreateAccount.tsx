@@ -2,7 +2,7 @@ import { Box } from "App/Components"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
-import { get } from "lodash"
+import { get, pick } from "lodash"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { useQuery } from "react-apollo"
 import { Dimensions, FlatList, Modal } from "react-native"
@@ -11,6 +11,7 @@ import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, Verif
 import { WaitlistedPane } from "./Waitlisted"
 import { CreditCardFormPane } from "./Admitted/CreditCardFormPane"
 import { CouponType } from "App/generated/globalTypes"
+import analytics from "@segment/analytics-react-native"
 
 interface CreateAccountProps {
   navigation: any
@@ -67,6 +68,10 @@ export const GET_PLANS = gql`
     me {
       customer {
         id
+        status
+        user {
+          id
+        }
         membership {
           id
           plan {
@@ -79,6 +84,7 @@ export const GET_PLANS = gql`
         admissions {
           id
           allAccessEnabled
+          authorizationsCount
         }
         coupon {
           id
@@ -149,6 +155,16 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       })
     }
   }, [route, setCoupon])
+
+  useEffect(() => {
+    const cust = data?.me?.customer
+    if (!!cust) {
+      analytics.identify(cust?.user?.id, {
+        status: cust?.status,
+        ...pick(cust?.admissions, ["allAccessEnabled", "authorizationsCount"]),
+      })
+    }
+  }, [data?.me?.customer])
 
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
   const initialUserState: UserState = get(route?.params, "initialUserState", UserState.Undetermined)
@@ -227,6 +243,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             onTriageComplete={(userAdmitted) => {
               setUserState(userAdmitted ? UserState.Admitted : UserState.Waitlisted)
               setNextState()
+              // TODO: Run an identify here
             }}
           />
         )

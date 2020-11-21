@@ -46,10 +46,13 @@ export const getAccessTokenFromSession = async () => {
 }
 
 export const userSessionToIdentifyPayload = (session) => {
+  const cust = session?.customer
   const traits = {
     ...session?.user,
-    status: session?.customer?.status,
-    admissable: session?.customer?.admissions?.admissable,
+    status: cust?.status,
+    admissable: cust?.admissions?.admissable,
+    state: cust?.detail?.shippingAddress?.state,
+    bagItems: cust?.bagItems?.length,
   }
   return traits
 }

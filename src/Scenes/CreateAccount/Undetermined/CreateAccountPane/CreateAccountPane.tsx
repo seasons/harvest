@@ -37,6 +37,13 @@ const SIGN_UP = gql`
       customer {
         id
         status
+        detail {
+          id
+          shippingAddress {
+            id
+            state
+          }
+        }
       }
       token
       refreshToken

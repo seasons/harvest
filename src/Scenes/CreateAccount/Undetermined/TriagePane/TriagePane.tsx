@@ -53,6 +53,7 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
     refetchQueries: [
       {
         query: GET_PLANS,
+        variables: { status: "Active" },
       },
     ],
     awaitRefetchQueries: true,
