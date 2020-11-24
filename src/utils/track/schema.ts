@@ -108,6 +108,7 @@ export enum ActionNames {
   // Home page
   BrowseButtonTapped = "Browse Button Tapped",
   ViewAllBrandsTapped = "View All Brands Tapped",
+  ViewAllCategoriesTapped = "View All Categories Tapped",
 
   // Browse page
   FiltersButtonTapped = "Filters Button Tapped",
