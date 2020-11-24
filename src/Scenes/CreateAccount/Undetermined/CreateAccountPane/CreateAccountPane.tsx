@@ -33,6 +33,7 @@ const SIGN_UP = gql`
         lastName
         beamsToken
         roles
+        createdAt
       }
       customer {
         id
@@ -43,6 +44,9 @@ const SIGN_UP = gql`
             id
             state
           }
+        }
+        bagItems {
+          id
         }
       }
       token
