@@ -3,8 +3,7 @@ import React from "react"
 import { Schema } from "App/Navigation"
 import { chunk } from "lodash"
 import { Box, FadeInImage, Flex, Sans, Spacer } from "App/Components"
-import { themeProps } from "App/Components/Theme"
-import { TouchableOpacity, TouchableWithoutFeedback, Dimensions } from "react-native"
+import { TouchableOpacity, TouchableWithoutFeedback, ScrollView } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useTracking } from "react-tracking"
 import { useNavigation } from "@react-navigation/native"
@@ -21,13 +20,11 @@ interface CategoriesRailProps {
 }
 
 const tileAspectRatio = 120 / 169
+const tileWidth = 169
 
 export const CategoriesRail: React.FC<CategoriesRailProps> = ({ items, title }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
-
-  const windowWidth = Dimensions.get("window").width
-  const tileWidth = (windowWidth - themeProps.space[2] * 2) / 2
 
   return (
     <Box pl={2} mb={3}>
@@ -39,7 +36,10 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ items, title }) 
               actionName: EventSchema.ActionNames.ViewAllCategoriesTapped,
               actionType: EventSchema.ActionTypes.Tap,
             })
-            navigation.navigate(Schema.PageNames.Browse)
+            navigation.navigate(Schema.StackNames.BrowseStack, {
+              screen: Schema.PageNames.Browse,
+              params: { categorySlug: "all" },
+            })
           }}
         >
           <Sans size="1" style={{ textDecorationLine: "underline" }}>
@@ -49,37 +49,42 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ items, title }) 
       </Flex>
       <Spacer mb={1} />
       <Box>
-        {chunk(items, 2).map((rowGroup, index, arr) => (
-          <Box key={index}>
-            <Flex flexDirection="row">
-              {rowGroup.map((item) => {
-                const uri = item?.image?.[0]?.url || ""
-                return (
-                  <Animatable.View animation="fadeIn" duration={300} key={item.id}>
-                    <TouchableWithoutFeedback
-                      onPress={() => {
-                        navigation.navigate(Schema.PageNames.Browse, {
-                          categorySlug: item.slug,
-                        })
-                      }}
-                    >
-                      <Box mr={0.5} style={{ width: tileWidth }} position="relative">
-                        <FadeInImage
-                          source={{ uri }}
-                          style={{ width: tileWidth, height: tileWidth * tileAspectRatio }}
-                        />
-                        <Box position="absolute" bottom="1" left="1">
-                          <Sans size="0">{item.name}</Sans>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {chunk(items, 2).map((rowGroup, index, arr) => (
+            <Box key={index}>
+              <Flex flexDirection="column">
+                {rowGroup.map((item) => {
+                  const uri = item?.image?.[0]?.url || ""
+                  return (
+                    <Animatable.View animation="fadeIn" duration={300} key={item.id}>
+                      <TouchableWithoutFeedback
+                        onPress={() => {
+                          navigation.navigate(Schema.StackNames.BrowseStack, {
+                            screen: Schema.PageNames.Browse,
+                            params: {
+                              categorySlug: item.slug,
+                            },
+                          })
+                        }}
+                      >
+                        <Box mr={0.5} mb={0.5} style={{ width: tileWidth }} position="relative">
+                          <FadeInImage
+                            source={{ uri }}
+                            style={{ width: tileWidth, height: tileWidth * tileAspectRatio }}
+                          />
+                          <Box position="absolute" bottom="1" left="1">
+                            <Sans size="0">{item.name}</Sans>
+                          </Box>
                         </Box>
-                      </Box>
-                    </TouchableWithoutFeedback>
-                  </Animatable.View>
-                )
-              })}
-            </Flex>
-            <Spacer mb={index !== arr.length - 1 ? 0.5 : 0} />
-          </Box>
-        ))}
+                      </TouchableWithoutFeedback>
+                    </Animatable.View>
+                  )
+                })}
+              </Flex>
+              <Spacer mb={index !== arr.length - 1 ? 0.5 : 0} />
+            </Box>
+          ))}
+        </ScrollView>
       </Box>
     </Box>
   )

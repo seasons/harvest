@@ -14,20 +14,21 @@ export const CategoryPicker: React.FC<Props> = ({ items, onCategoryPress, curren
   const scrollViewRef = React.useRef(null)
   const [itemWidths, setItemWidths] = React.useState<Array<number | null>>(new Array(items.length).fill(null))
 
-  React.useEffect(() => {
-    if (initialScrollIndex && scrollViewRef.current) {
+  const handleScrollToInitialScrollIndex = () => {
+    if (Number.isInteger(initialScrollIndex) && scrollViewRef.current) {
       const offsetX = itemWidths
         .slice(0, initialScrollIndex)
         .reduce((agg, width) => (width && agg !== null ? agg + width : null), 0)
-      if (offsetX) {
+
+      if (offsetX !== null) {
         scrollViewRef.current.scrollTo({ x: offsetX, animated: false })
       }
     }
-  }, [itemWidths, initialScrollIndex])
+  }
 
   React.useEffect(() => {
-    setItemWidths(new Array(items.length).fill(null))
-  }, [items])
+    handleScrollToInitialScrollIndex()
+  }, [itemWidths, initialScrollIndex])
 
   const handleItemLayout = (idx: number) => ({
     nativeEvent: {
