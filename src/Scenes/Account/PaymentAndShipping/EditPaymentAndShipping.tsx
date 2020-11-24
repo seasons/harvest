@@ -148,8 +148,10 @@ export const EditPaymentAndShipping: React.FC<{
       console.log("Error EditView.tsx: ", error)
     },
     onCompleted: (data) => {
-      console.log("update payment and shipping completed!")
-      analytics.identify(data?.customer?.user?.id, { state: shippingState })
+      const userId = data?.customer?.user?.id
+      if (!!userId) {
+        analytics.identify(userId, { state: shippingState })
+      }
     },
   })
 

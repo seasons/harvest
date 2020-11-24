@@ -158,9 +158,10 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   }, [route, setCoupon])
 
   useEffect(() => {
+    const userId = data?.me?.customer?.user?.id
     const cust = data?.me?.customer
-    if (!!cust) {
-      analytics.identify(cust?.user?.id, {
+    if (!!userId) {
+      analytics.identify(userId, {
         status: cust?.status,
         ...pick(cust?.admissions, ["admissable", "authorizationsCount"]),
       })

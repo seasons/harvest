@@ -94,7 +94,6 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         dispatch({ type: "SIGN_IN", token: session.token })
         const user = session?.user
         if (user) {
-          console.log(userSessionToIdentifyPayload(session))
           analytics.identify(user.id, userSessionToIdentifyPayload(session))
         }
         apolloClient.resetStore()
