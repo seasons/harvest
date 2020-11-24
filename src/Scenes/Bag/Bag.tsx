@@ -61,7 +61,6 @@ export const Bag = screenTrack()((props) => {
         setItemCount(dataItemCount)
       }
       setIsLoading(false)
-      // TODO: Identify num bag items here.
       const userId = me.customer?.user?.id
       if (!!userId) {
         analytics.identify(userId, { bagItems: me?.bag?.length })
