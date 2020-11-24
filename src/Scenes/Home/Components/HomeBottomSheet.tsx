@@ -43,7 +43,7 @@ const sectionsFrom = (data: any) => {
                 ...section,
                 results: section.results.map((item) => ({
                   ...item,
-                  name: item.slug === "hoodies-and-sweatshirts" ? "Hoodies" : item.name,
+                  slug: item.slug === "hoodies" || item.slug === "sweatshirts" ? "hoodies-and-sweatshirts" : item.slug,
                 })),
               }
           }
