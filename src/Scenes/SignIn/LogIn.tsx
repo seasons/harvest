@@ -122,7 +122,6 @@ export const LogIn: React.FC<LogInProps> = (props) => {
         const {
           data: { login: userSession },
         } = result
-        console.log(userSession)
         signIn(userSession)
         const beamsToken = userSession?.user?.beamsToken
         const roles = userSession?.user?.roles
