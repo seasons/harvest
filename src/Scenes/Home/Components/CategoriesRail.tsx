@@ -3,7 +3,8 @@ import React from "react"
 import { Schema } from "App/Navigation"
 import { chunk } from "lodash"
 import { Box, FadeInImage, Flex, Sans, Spacer } from "App/Components"
-import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
+import { themeProps } from "App/Components/Theme"
+import { TouchableOpacity, TouchableWithoutFeedback, Dimensions } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useTracking } from "react-tracking"
 import { useNavigation } from "@react-navigation/native"
@@ -19,12 +20,15 @@ interface CategoriesRailProps {
   }>
 }
 
-const tileWidth = 169
 const tileAspectRatio = 120 / 169
 
 export const CategoriesRail: React.FC<CategoriesRailProps> = ({ items, title }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
+
+  const windowWidth = Dimensions.get("window").width
+  const tileWidth = (windowWidth - themeProps.space[2] * 2) / 2
+
   return (
     <Box pl={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between" pr={2}>
