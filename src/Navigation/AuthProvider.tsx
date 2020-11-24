@@ -2,7 +2,7 @@ import { ErrorPopUp } from "App/Navigation/ErrorPopUp"
 import { PopUpProvider } from "App/Navigation/ErrorPopUp/PopUpProvider"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { NotificationsProvider } from "App/Notifications"
-import { getUserSession } from "App/utils/auth"
+import { getUserSession, userSessionToIdentifyPayload } from "App/utils/auth"
 import React, { useEffect, useImperativeHandle } from "react"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 
@@ -72,7 +72,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
           if (userSession && userSession.token) {
             const user = userSession?.user
             if (user) {
-              analytics.identify(user.id, user)
+              analytics.identify(user.id, userSessionToIdentifyPayload(userSession))
             }
             dispatch({ type: "RESTORE_TOKEN", token: userSession.token })
           }
@@ -94,7 +94,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         dispatch({ type: "SIGN_IN", token: session.token })
         const user = session?.user
         if (user) {
-          analytics.identify(user.id, user)
+          analytics.identify(user.id, userSessionToIdentifyPayload(session))
         }
         apolloClient.resetStore()
       },

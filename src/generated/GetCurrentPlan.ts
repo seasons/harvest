@@ -7,6 +7,11 @@
 // GraphQL query operation: GetCurrentPlan
 // ====================================================
 
+export interface GetCurrentPlan_me_customer_user {
+  __typename: "User";
+  id: string;
+}
+
 export interface GetCurrentPlan_me_customer_paymentPlan {
   __typename: "PaymentPlan";
   id: string;
@@ -18,6 +23,7 @@ export interface GetCurrentPlan_me_customer_paymentPlan {
 export interface GetCurrentPlan_me_customer {
   __typename: "Customer";
   id: string;
+  user: GetCurrentPlan_me_customer_user;
   paymentPlan: GetCurrentPlan_me_customer_paymentPlan | null;
 }
 

@@ -17,6 +17,7 @@ import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
+import analytics from "@segment/analytics-react-native"
 
 export enum BagView {
   Bag = 0,
@@ -60,6 +61,10 @@ export const Bag = screenTrack()((props) => {
         setItemCount(dataItemCount)
       }
       setIsLoading(false)
+      const userId = me.customer?.user?.id
+      if (!!userId) {
+        analytics.identify(userId, { bagItems: me?.bag?.length })
+      }
     }
   }, [data, setIsLoading, setItemCount])
 
