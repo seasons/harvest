@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PaymentPlanWhereInput, PaymentPlanTier, CouponType } from "./globalTypes";
+import { PaymentPlanWhereInput, PaymentPlanTier, CustomerStatus, CouponType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetPlans
@@ -19,6 +19,11 @@ export interface GetPlans_paymentPlans {
   planID: string;
   tier: PaymentPlanTier | null;
   itemCount: number | null;
+}
+
+export interface GetPlans_me_customer_user {
+  __typename: "User";
+  id: string;
 }
 
 export interface GetPlans_me_customer_membership_plan {
@@ -38,7 +43,9 @@ export interface GetPlans_me_customer_membership {
 export interface GetPlans_me_customer_admissions {
   __typename: "CustomerAdmissionsData";
   id: string;
+  admissable: boolean;
   allAccessEnabled: boolean;
+  authorizationsCount: number;
 }
 
 export interface GetPlans_me_customer_coupon {
@@ -52,6 +59,8 @@ export interface GetPlans_me_customer_coupon {
 export interface GetPlans_me_customer {
   __typename: "Customer";
   id: string;
+  status: CustomerStatus | null;
+  user: GetPlans_me_customer_user;
   membership: GetPlans_me_customer_membership | null;
   admissions: GetPlans_me_customer_admissions | null;
   coupon: GetPlans_me_customer_coupon | null;

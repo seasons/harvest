@@ -11,7 +11,25 @@ import { CustomerStatus, UserRole } from "./globalTypes";
 
 export interface LogIn_login_customer_admissions {
   __typename: "CustomerAdmissionsData";
+  id: string;
   admissable: boolean;
+}
+
+export interface LogIn_login_customer_bagItems {
+  __typename: "BagItem";
+  id: string;
+}
+
+export interface LogIn_login_customer_detail_shippingAddress {
+  __typename: "Location";
+  id: string;
+  state: string | null;
+}
+
+export interface LogIn_login_customer_detail {
+  __typename: "CustomerDetail";
+  id: string;
+  shippingAddress: LogIn_login_customer_detail_shippingAddress | null;
 }
 
 export interface LogIn_login_customer {
@@ -19,10 +37,13 @@ export interface LogIn_login_customer {
   id: string;
   status: CustomerStatus | null;
   admissions: LogIn_login_customer_admissions | null;
+  bagItems: LogIn_login_customer_bagItems[] | null;
+  detail: LogIn_login_customer_detail | null;
 }
 
 export interface LogIn_login_user {
   __typename: "User";
+  createdAt: any;
   id: string;
   email: string;
   firstName: string;
