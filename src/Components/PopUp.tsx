@@ -2,7 +2,7 @@ import { Box, Theme } from "App/Components"
 import { color } from "App/utils"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import React, { useEffect, useState } from "react"
-import { Dimensions } from "react-native"
+import { Dimensions, Keyboard } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
@@ -59,7 +59,13 @@ export const PopUp: React.FC<{ show: boolean; theme?: "dark" | "light" }> = ({ c
           {children}
         </Box>
       </AnimatedPopUp>
-      <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor, display: show ? "flex" : "none" }} />
+      <AnimatedOverlay
+        onPress={() => {
+          console.log("click")
+          Keyboard.dismiss()
+        }}
+        style={{ backgroundColor: animation.backgroundColor, display: show ? "flex" : "none" }}
+      />
     </Theme>
   )
 }
