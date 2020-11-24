@@ -83,6 +83,7 @@ export const GET_PLANS = gql`
         }
         admissions {
           id
+          admissable
           allAccessEnabled
           authorizationsCount
         }
@@ -161,7 +162,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
     if (!!cust) {
       analytics.identify(cust?.user?.id, {
         status: cust?.status,
-        ...pick(cust?.admissions, ["allAccessEnabled", "authorizationsCount"]),
+        ...pick(cust?.admissions, ["admissable", "authorizationsCount"]),
       })
     }
   }, [data?.me?.customer])
