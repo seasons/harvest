@@ -9,7 +9,6 @@ import { String } from "aws-sdk/clients/augmentedairuntime"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { useMutation } from "react-apollo"
 import { Dimensions, FlatList } from "react-native"
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe, { PaymentCardTextField } from "tipsi-stripe"
@@ -43,6 +42,7 @@ export enum EditPaymentPopUpState {
 
 const windowDimensions = Dimensions.get("window")
 const windowWidth = windowDimensions.width
+const windowHeight = windowDimensions.height
 
 export const EditPaymentPopUp: React.FC<Props> = ({
   onAddCreditCard,
@@ -60,7 +60,7 @@ export const EditPaymentPopUp: React.FC<Props> = ({
   const [expYear, setExpYear] = useState("")
   const [cvc, setCvc] = useState("")
   const [index, setIndex] = useState(0)
-  const flatListRef: MutableRefObject<FlatList<EditPaymentPopUpState>> = useRef(null)
+  const flatListRef = useRef(null)
 
   useEffect(() => flatListRef?.current?.scrollToIndex?.({ index }), [index, flatListRef])
 
@@ -168,7 +168,7 @@ export const EditPaymentPopUp: React.FC<Props> = ({
     switch (state) {
       case EditPaymentPopUpState.ChoosePaymentType:
         pane = (
-          <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
+          <Flex style={{ flex: 1 }} flexDirection="row" justifyContent="center" alignItems="flex-start">
             <PaymentMethods
               onApplePay={onApplePay}
               setOpenPopUp={setOpenPopUp}
@@ -179,7 +179,7 @@ export const EditPaymentPopUp: React.FC<Props> = ({
         break
       case EditPaymentPopUpState.EditCreditCard:
         pane = (
-          <Box pb={insets.bottom} px={2} style={{ width: windowWidth }}>
+          <Box pb={insets.bottom} px={2} style={{ width: windowWidth, height: windowHeight }}>
             <Spacer mb={4} />
             <Sans size="1" style={{ textAlign: "center" }}>
               Update your card
@@ -226,15 +226,18 @@ export const EditPaymentPopUp: React.FC<Props> = ({
         break
       case EditPaymentPopUpState.Confirmation:
         pane = (
-          <Box pb={insets.bottom} px={2} style={{ width: windowWidth }}>
-            <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
-              <Flex flexDirection="row" alignItems="center">
+          <Flex style={{ flex: 1 }} flexDirection="row" justifyContent="center" alignItems="flex-start">
+            <Box pb={insets.bottom} px={2} style={{ width: windowWidth }}>
+              <Spacer mb={4} />
+              <Flex flexDirection="row" alignItems="center" justifyContent="center">
                 <CheckCircled backgroundColor={color("green100")} />
-                <Spacer mr={2} />
-                <Sans size="1" style={{ width: windowWidth - 100 }}>
-                  Your card has been successfully updated.
-                </Sans>
               </Flex>
+              <Spacer mb={2} />
+              <Separator />
+              <Spacer mb={2} />
+              <Sans size="1" style={{ width: windowWidth - 100 }}>
+                Your card has been successfully updated.
+              </Sans>
               <Spacer mb={4} />
               <Button
                 block
@@ -247,8 +250,8 @@ export const EditPaymentPopUp: React.FC<Props> = ({
               >
                 Close
               </Button>
-            </Flex>
-          </Box>
+            </Box>
+          </Flex>
         )
         break
     }
@@ -258,7 +261,7 @@ export const EditPaymentPopUp: React.FC<Props> = ({
 
   return (
     <PopUp show={openPopUp}>
-      <KeyboardAwareFlatList
+      <FlatList
         data={["ChoosePaymentType", "EditCreditCard", "Confirmation"] as EditPaymentPopUpState[]}
         horizontal
         initialScrollIndex={index}
