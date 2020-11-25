@@ -18,7 +18,7 @@ export const FixedButton: React.FC<Props> = (props) => {
         rightAligned={props.rightAligned}
         positionBottom={props.positionBottom ? props.positionBottom : space(2)}
         alignContent="center"
-        justiftContent="center"
+        justifyContent="center"
         flexDirection="row"
       >
         <Button {...props}>{props.children}</Button>
@@ -27,7 +27,7 @@ export const FixedButton: React.FC<Props> = (props) => {
   )
 }
 
-const FlexWrapper = styled(Flex)`
+const FlexWrapper = styled(Flex)<{ rightAligned: boolean; positionBottom: number }>`
   position: absolute;
   bottom: ${(p) => p.positionBottom};
   z-index: 100;

@@ -61,7 +61,6 @@ export const PopUp: React.FC<{ show: boolean; theme?: "dark" | "light" }> = ({ c
       </AnimatedPopUp>
       <AnimatedOverlay
         onPress={() => {
-          console.log("click")
           Keyboard.dismiss()
         }}
         style={{ backgroundColor: animation.backgroundColor, display: show ? "flex" : "none" }}
