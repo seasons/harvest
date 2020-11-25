@@ -119,6 +119,15 @@ export const Browse = screenTrack()((props: any) => {
     setSizeFilters(currentFilters)
   }, [currentFilters])
 
+  useEffect(() => {
+    if (routeCategorySlug !== currentCategory) {
+      setCurrentCategory(routeCategorySlug)
+    }
+    if (scrollViewEl) {
+      scrollViewEl.scrollToOffset({ offset: 0, animated: true })
+    }
+  }, [routeCategorySlug])
+
   const sizes =
     sizeFilters && sizeFilters.length > 0
       ? sizeFilters.map((s) => {

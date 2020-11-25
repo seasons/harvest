@@ -39,7 +39,13 @@ const sectionsFrom = (data: any) => {
         .map((section) => {
           switch (section.type) {
             case SectionType.Categories:
-              return section
+              return {
+                ...section,
+                results: section.results.map((item) => ({
+                  ...item,
+                  slug: item.slug === "hoodies" || item.slug === "sweatshirts" ? "hoodies-and-sweatshirts" : item.slug,
+                })),
+              }
           }
         })
         .filter(Boolean)
