@@ -53,6 +53,7 @@ export const userSessionToIdentifyPayload = (session) => {
     admissable: cust?.admissions?.admissable,
     state: cust?.detail?.shippingAddress?.state,
     bagItems: cust?.bagItems?.length,
+    customerID: cust?.id,
   }
   return traits
 }
