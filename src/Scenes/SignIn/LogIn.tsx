@@ -16,7 +16,26 @@ import AsyncStorage from "@react-native-community/async-storage"
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
     login(email: $email, password: $password) {
+      customer {
+        id
+        status
+        admissions {
+          id
+          admissable
+        }
+        bagItems {
+          id
+        }
+        detail {
+          id
+          shippingAddress {
+            id
+            state
+          }
+        }
+      }
       user {
+        createdAt
         id
         email
         firstName

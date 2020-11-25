@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/react-hooks"
 import { useFocusEffect } from "@react-navigation/native"
-import { Box, Button, Flex, ProductGridItem, Sans, Skeleton, Spacer } from "App/Components"
+import { Box, Button, Flex, ProductGridItem } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
 import { space } from "App/utils"
@@ -8,10 +8,11 @@ import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
-import { FlatList, StatusBar, TouchableOpacity } from "react-native"
+import { FlatList, StatusBar } from "react-native"
 import styled from "styled-components/native"
 import { color } from "styled-system"
 import { BrowseEmptyState } from "./BrowseEmptyState"
+import { CategoryPicker } from "./CategoryPicker"
 import { ProductGridItemSkeleton } from "../Product/Components"
 import { GetBrowseProducts } from "App/generated/GetBrowseProducts"
 
@@ -100,10 +101,12 @@ const PAGE_LENGTH = 10
 
 export const Browse = screenTrack()((props: any) => {
   const currentFilters = props?.route?.params?.sizeFilters || []
+  const routeCategorySlug = props?.route?.params?.categorySlug || "all"
   const [items, setItems] = useState(new Array(PAGE_LENGTH).fill({ id: "" }))
   const [categoryItems, setCategoryItems] = useState(new Array(PAGE_LENGTH).fill({ slug: "" }))
   const [sizeFilters, setSizeFilters] = useState(currentFilters)
-  const [currentCategory, setCurrentCategory] = useState("all")
+  const [currentCategory, setCurrentCategory] = useState(routeCategorySlug)
+  const routeCategoryIdx = categoryItems.findIndex(({ slug }) => slug === routeCategorySlug)
   const tracking = useTracking()
 
   useFocusEffect(
@@ -115,6 +118,15 @@ export const Browse = screenTrack()((props: any) => {
   useEffect(() => {
     setSizeFilters(currentFilters)
   }, [currentFilters])
+
+  useEffect(() => {
+    if (routeCategorySlug !== currentCategory) {
+      setCurrentCategory(routeCategorySlug)
+    }
+    if (scrollViewEl) {
+      scrollViewEl.scrollToOffset({ offset: 0, animated: true })
+    }
+  }, [routeCategorySlug])
 
   const sizes =
     sizeFilters && sizeFilters.length > 0
@@ -256,62 +268,16 @@ export const Browse = screenTrack()((props: any) => {
         </Box>
         <Box height={56}>
           <CategoryPicker
-            data={categoryItems}
-            renderItem={({ item }, index) => {
-              const selected = currentCategory == item.slug
-              return (
-                <Box key={index}>
-                  {!!item.name ? (
-                    <TouchableOpacity onPress={() => onCategoryPress(item)}>
-                      <Category mr={4} selected={selected}>
-                        <Sans size="1" style={{ opacity: selected ? 1.0 : 0.5 }}>
-                          {item.name}
-                        </Sans>
-                      </Category>
-                    </TouchableOpacity>
-                  ) : (
-                    <Box mr={4}>
-                      <Spacer mb="5px" />
-                      <Skeleton width={50} height={15} />
-                    </Box>
-                  )}
-                </Box>
-              )
-            }}
-            contentContainerStyle={{
-              padding: 10,
-              paddingLeft: 20,
-              paddingRight: 20,
-            }}
-            keyExtractor={(item, index) => item.slug + index}
-            showsHorizontalScrollIndicator={false}
-            horizontal
+            items={categoryItems}
+            onCategoryPress={onCategoryPress}
+            currentCategory={currentCategory}
+            initialScrollIndex={routeCategoryIdx}
           />
         </Box>
       </Flex>
     </Container>
   )
 })
-
-const CategoryPicker = styled(FlatList)`
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  bottom: 0;
-  left: 0;
-  border-top-color: black;
-  border-style: solid;
-  border-top-width: 1px;
-`
-
-const Category = styled(Box)<{ selected: boolean }>`
-  ${(p) =>
-    p.selected &&
-    `
-    border-bottom-color: black;
-    border-bottom-width: 3px;
-  `};
-`
 
 const FixedButtonContainer = styled(Box)`
   position: absolute;

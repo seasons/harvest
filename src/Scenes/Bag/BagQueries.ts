@@ -47,6 +47,9 @@ export const GET_BAG = gql`
           id
           subscriptionId
         }
+        user {
+          id
+        }
         detail {
           id
           shippingAddress {

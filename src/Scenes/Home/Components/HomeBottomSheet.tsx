@@ -7,7 +7,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react"
 import { Dimensions } from "react-native"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
-import { BrandsRail, FitPicCollection, HomeFooter, ProductsRail, TagsRail } from "./"
+import { BrandsRail, FitPicCollection, HomeFooter, ProductsRail, TagsRail, CategoriesRail } from "./"
 import { FitPicCollectionRef } from "./FitPicCollection"
 import { AddPhotoButton } from "./AddPhotoButton"
 import { Spinner } from "App/Components/Spinner"
@@ -22,6 +22,7 @@ enum SectionType {
   ArchivalProducts = "ArchivalProducts",
   SavedProducts = "SavedProducts",
   FitPics = "FitPics",
+  Categories = "Categories",
 }
 
 const sectionsFrom = (data: any) => {
@@ -32,6 +33,25 @@ const sectionsFrom = (data: any) => {
   if (data?.justAddedOuterwear?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedOuterwear, title: "Just added outerwear" })
   }
+  if (data?.homepage?.sections?.length) {
+    sections.push(
+      ...data?.homepage?.sections
+        .map((section) => {
+          switch (section.type) {
+            case SectionType.Categories:
+              return {
+                ...section,
+                results: section.results.map((item) => ({
+                  ...item,
+                  slug: item.slug === "hoodies" || item.slug === "sweatshirts" ? "hoodies-and-sweatshirts" : item.slug,
+                })),
+              }
+          }
+        })
+        .filter(Boolean)
+    )
+  }
+
   if (data?.homepage?.sections?.length) {
     sections.push(
       ...data?.homepage?.sections
@@ -119,6 +139,8 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
         return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
       case SectionType.Products:
         return <ProductsRail title={item.title} items={item.results} />
+      case SectionType.Categories:
+        return <CategoriesRail title={item.title} items={item.results} />
       case SectionType.SavedProducts:
         return (
           <ProductsRail
