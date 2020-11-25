@@ -163,6 +163,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
     if (!!userId) {
       analytics.identify(userId, {
         status: cust?.status,
+        customerID: cust?.id,
         ...pick(cust?.admissions, ["admissable", "authorizationsCount"]),
       })
     }
