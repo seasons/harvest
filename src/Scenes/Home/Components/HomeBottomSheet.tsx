@@ -1,17 +1,21 @@
-import { Handle, Flex, Box } from "App/Components"
+import { Box, Flex, Handle } from "App/Components"
+import { Spinner } from "App/Components/Spinner"
 import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
 import { space } from "App/utils"
-import React, { useState, useEffect, useRef, useMemo } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { Dimensions } from "react-native"
-import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
-import { useNavigation } from "@react-navigation/native"
-import { BrandsRail, FitPicCollection, HomeFooter, ProductsRail, TagsRail, CategoriesRail } from "./"
-import { FitPicCollectionRef } from "./FitPicCollection"
-import { AddPhotoButton } from "./AddPhotoButton"
-import { Spinner } from "App/Components/Spinner"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
+
+import { useNavigation } from "@react-navigation/native"
+
+import {
+  BrandsRail, CategoriesRail, FitPicCollection, HomeFooter, ProductsRail, TagsRail
+} from "./"
+import { AddPhotoButton } from "./AddPhotoButton"
+import { FitPicCollectionRef } from "./FitPicCollection"
 
 const dimensions = Dimensions.get("window")
 
@@ -38,6 +42,18 @@ const sectionsFrom = (data: any) => {
       ...data?.homepage?.sections
         .map((section) => {
           switch (section.type) {
+            case SectionType.Brands:
+              return section
+          }
+        })
+        .filter(Boolean)
+    )
+  }
+  if (data?.homepage?.sections?.length) {
+    sections.push(
+      ...data?.homepage?.sections
+        .map((section) => {
+          switch (section.type) {
             case SectionType.Categories:
               return {
                 ...section,
@@ -46,19 +62,6 @@ const sectionsFrom = (data: any) => {
                   slug: item.slug === "hoodies" || item.slug === "sweatshirts" ? "hoodies-and-sweatshirts" : item.slug,
                 })),
               }
-          }
-        })
-        .filter(Boolean)
-    )
-  }
-
-  if (data?.homepage?.sections?.length) {
-    sections.push(
-      ...data?.homepage?.sections
-        .map((section) => {
-          switch (section.type) {
-            case SectionType.Brands:
-              return section
           }
         })
         .filter(Boolean)
