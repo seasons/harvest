@@ -1,23 +1,29 @@
 import { Box, Button, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { PauseButtons, PauseStatus } from "App/Components/Pause/PauseButtons"
+import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, RefreshControl, StatusBar } from "react-native"
+
 import { useFocusEffect } from "@react-navigation/native"
-import { CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
-import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
-import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
-import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
-import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import analytics from "@segment/analytics-react-native"
+
+import {
+  State as CreateAccountState, UserState as CreateAccountUserState
+} from "../CreateAccount/CreateAccount"
+import {
+  CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM
+} from "./BagQueries"
+import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 
 export enum BagView {
   Bag = 0,
@@ -324,7 +330,7 @@ export const Bag = screenTrack()((props) => {
         activeTab={currentView}
         goToPage={(page: BagView) => {
           tracking.trackEvent({
-            actionName: () => {
+            actionName: (() => {
               if (page === 0) {
                 return TrackSchema.ActionNames.BagTabTapped
               } else if (page === 1) {
@@ -332,7 +338,7 @@ export const Bag = screenTrack()((props) => {
               } else {
                 return TrackSchema.ActionNames.ReservationHistoryTabTapped
               }
-            },
+            })(),
             actionType: TrackSchema.ActionTypes.Tap,
           })
           setCurrentView(page)
