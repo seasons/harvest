@@ -17,12 +17,8 @@ import { FlatList, RefreshControl, StatusBar } from "react-native"
 import { useFocusEffect } from "@react-navigation/native"
 import analytics from "@segment/analytics-react-native"
 
-import {
-  State as CreateAccountState, UserState as CreateAccountUserState
-} from "../CreateAccount/CreateAccount"
-import {
-  CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM
-} from "./BagQueries"
+import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
+import { CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 
 export enum BagView {
@@ -69,7 +65,9 @@ export const Bag = screenTrack()((props) => {
       setIsLoading(false)
       const userId = me.customer?.user?.id
       if (!!userId) {
-        analytics.identify(userId, { bagItems: me?.bag?.length })
+        const savedItems = me?.savedItems?.length || 0
+        const baggedItems = me?.bag?.length || 0
+        analytics.identify(userId, { bagItems: savedItems + baggedItems })
       }
     }
   }, [data, setIsLoading, setItemCount])

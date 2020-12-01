@@ -42,6 +42,9 @@ export const GET_PRODUCT = gql`
       customer {
         id
         status
+        user {
+          id
+        }
         membership {
           id
           plan {
@@ -51,6 +54,9 @@ export const GET_PRODUCT = gql`
         }
       }
       bag {
+        id
+      }
+      savedItems {
         id
       }
     }
