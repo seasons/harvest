@@ -24,6 +24,11 @@ export interface GetBagAndSavedItems_me_customer_invoices {
   subscriptionId: string | null;
 }
 
+export interface GetBagAndSavedItems_me_customer_user {
+  __typename: "User";
+  id: string;
+}
+
 export interface GetBagAndSavedItems_me_customer_detail_shippingAddress {
   __typename: "Location";
   id: string;
@@ -116,6 +121,7 @@ export interface GetBagAndSavedItems_me_customer {
   id: string;
   status: CustomerStatus | null;
   invoices: (GetBagAndSavedItems_me_customer_invoices | null)[] | null;
+  user: GetBagAndSavedItems_me_customer_user;
   detail: GetBagAndSavedItems_me_customer_detail | null;
   membership: GetBagAndSavedItems_me_customer_membership | null;
   reservations: GetBagAndSavedItems_me_customer_reservations[] | null;

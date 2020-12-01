@@ -9,6 +9,11 @@ import { ProductWhereInput, CustomerStatus, ProductType, LetterSize, BottomSizeT
 // GraphQL query operation: GetProduct
 // ====================================================
 
+export interface GetProduct_me_customer_user {
+  __typename: "User";
+  id: string;
+}
+
 export interface GetProduct_me_customer_membership_plan {
   __typename: "PaymentPlan";
   id: string;
@@ -25,6 +30,7 @@ export interface GetProduct_me_customer {
   __typename: "Customer";
   id: string;
   status: CustomerStatus | null;
+  user: GetProduct_me_customer_user;
   membership: GetProduct_me_customer_membership | null;
 }
 
@@ -33,10 +39,16 @@ export interface GetProduct_me_bag {
   id: string;
 }
 
+export interface GetProduct_me_savedItems {
+  __typename: "BagItem";
+  id: string;
+}
+
 export interface GetProduct_me {
   __typename: "Me";
   customer: GetProduct_me_customer | null;
   bag: GetProduct_me_bag[] | null;
+  savedItems: GetProduct_me_savedItems[] | null;
 }
 
 export interface GetProduct_products_modelSize {

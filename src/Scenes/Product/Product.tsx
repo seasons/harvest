@@ -1,5 +1,6 @@
 import { Box, Container, FixedBackArrow, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import analytics from "@segment/analytics-react-native"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -91,6 +92,11 @@ export const Product = screenTrack({
   }, [product])
 
   useEffect(() => {
+    if (data?.me) {
+      const baggedItems = data?.me?.bag?.length || 0
+      const savedItems = data?.me?.savedItems?.length || 0
+      analytics?.identify(data?.me?.customer?.user?.id, { bagItems: baggedItems + savedItems })
+    }
     if (data && !product) {
       showPopUp({
         title: "Oops!",
