@@ -6,5 +6,6 @@ module.exports = applyConfigForLinkedDependencies(
   },
   {
     /* Options to pass to applyConfigForLinkedDependencies, optional */
+    projectRoot: __dirname,
   }
 )
