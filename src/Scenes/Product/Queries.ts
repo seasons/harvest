@@ -9,7 +9,7 @@ const commonProductVariantFragment = gql`
     reserved
     isInBag
     isSaved
-    isWanted
+    hasRestockNotification
     manufacturerSizes {
       id
       display

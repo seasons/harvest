@@ -43,7 +43,7 @@ export interface ActiveReservation_me_activeReservation_products {
   seasonsUID: string;
   inventoryStatus: InventoryStatus;
   productStatus: PhysicalProductStatus;
-  productVariant: ActiveReservation_me_activeReservation_products_productVariant;
+  productVariant: ActiveReservation_me_activeReservation_products_productVariant | null;
 }
 
 export interface ActiveReservation_me_activeReservation {

@@ -104,7 +104,7 @@ export interface GetBagAndSavedItems_me_customer_reservations_products_productVa
 export interface GetBagAndSavedItems_me_customer_reservations_products {
   __typename: "PhysicalProduct";
   id: string;
-  productVariant: GetBagAndSavedItems_me_customer_reservations_products_productVariant;
+  productVariant: GetBagAndSavedItems_me_customer_reservations_products_productVariant | null;
 }
 
 export interface GetBagAndSavedItems_me_customer_reservations {

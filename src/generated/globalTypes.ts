@@ -3386,6 +3386,7 @@ export interface PhysicalProductCreateInput {
   dateOrdered?: any | null;
   dateReceived?: any | null;
   unitCost?: number | null;
+  sellable?: boolean | null;
   location?: LocationCreateOneWithoutPhysicalProductsInput | null;
   productVariant: ProductVariantCreateOneWithoutPhysicalProductsInput;
   warehouseLocation?: WarehouseLocationCreateOneWithoutPhysicalProductsInput | null;
@@ -3423,6 +3424,7 @@ export interface PhysicalProductCreateWithoutLocationInput {
   dateOrdered?: any | null;
   dateReceived?: any | null;
   unitCost?: number | null;
+  sellable?: boolean | null;
   productVariant: ProductVariantCreateOneWithoutPhysicalProductsInput;
   warehouseLocation?: WarehouseLocationCreateOneWithoutPhysicalProductsInput | null;
 }
@@ -3439,6 +3441,7 @@ export interface PhysicalProductCreateWithoutProductVariantInput {
   dateOrdered?: any | null;
   dateReceived?: any | null;
   unitCost?: number | null;
+  sellable?: boolean | null;
   location?: LocationCreateOneWithoutPhysicalProductsInput | null;
   warehouseLocation?: WarehouseLocationCreateOneWithoutPhysicalProductsInput | null;
 }
@@ -3535,6 +3538,8 @@ export interface PhysicalProductScalarWhereInput {
   unitCost_lte?: number | null;
   unitCost_gt?: number | null;
   unitCost_gte?: number | null;
+  sellable?: boolean | null;
+  sellable_not?: boolean | null;
   createdAt?: any | null;
   createdAt_not?: any | null;
   createdAt_in?: any[] | null;
@@ -3564,6 +3569,7 @@ export interface PhysicalProductUpdateDataInput {
   dateOrdered?: any | null;
   dateReceived?: any | null;
   unitCost?: number | null;
+  sellable?: boolean | null;
   location?: LocationUpdateOneWithoutPhysicalProductsInput | null;
   productVariant?: ProductVariantUpdateOneRequiredWithoutPhysicalProductsInput | null;
   warehouseLocation?: WarehouseLocationUpdateOneWithoutPhysicalProductsInput | null;
@@ -3580,6 +3586,7 @@ export interface PhysicalProductUpdateManyDataInput {
   dateOrdered?: any | null;
   dateReceived?: any | null;
   unitCost?: number | null;
+  sellable?: boolean | null;
 }
 
 export interface PhysicalProductUpdateManyInput {
@@ -3656,6 +3663,7 @@ export interface PhysicalProductUpdateWithoutLocationDataInput {
   dateOrdered?: any | null;
   dateReceived?: any | null;
   unitCost?: number | null;
+  sellable?: boolean | null;
   productVariant?: ProductVariantUpdateOneRequiredWithoutPhysicalProductsInput | null;
   warehouseLocation?: WarehouseLocationUpdateOneWithoutPhysicalProductsInput | null;
 }
@@ -3671,6 +3679,7 @@ export interface PhysicalProductUpdateWithoutProductVariantDataInput {
   dateOrdered?: any | null;
   dateReceived?: any | null;
   unitCost?: number | null;
+  sellable?: boolean | null;
   location?: LocationUpdateOneWithoutPhysicalProductsInput | null;
   warehouseLocation?: WarehouseLocationUpdateOneWithoutPhysicalProductsInput | null;
 }
@@ -3790,6 +3799,8 @@ export interface PhysicalProductWhereInput {
   unitCost_lte?: number | null;
   unitCost_gt?: number | null;
   unitCost_gte?: number | null;
+  sellable?: boolean | null;
+  sellable_not?: boolean | null;
   createdAt?: any | null;
   createdAt_not?: any | null;
   createdAt_in?: any[] | null;

@@ -331,7 +331,12 @@ export class Button extends Component<ButtonProps, ButtonState> {
                 {!loading && (
                   <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
                     {!!Icon && (
-                      <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" pb="4px">
+                      <Flex
+                        flexDirection="row"
+                        flexWrap="nowrap"
+                        alignItems="center"
+                        style={{ opacity: disabled ? 0.5 : 1 }}
+                      >
                         <Icon />
                         <Spacer mr={1} />
                       </Flex>
