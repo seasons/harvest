@@ -52,6 +52,7 @@ export interface GetCustomer_me_bag_productVariant_product_variants {
 export interface GetCustomer_me_bag_productVariant_product {
   __typename: "Product";
   id: string;
+  slug: string;
   name: string;
   modelSize: GetCustomer_me_bag_productVariant_product_modelSize | null;
   brand: GetCustomer_me_bag_productVariant_product_brand;

@@ -45,7 +45,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
 
   useEffect(() => {
     updateSizeData()
-  }, [])
+  }, [product])
 
   const updateSizeData = () => {
     const variantData = sizeDataForVariants(variants, type)

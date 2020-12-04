@@ -10,14 +10,15 @@ import React, { useState } from "react"
 import { useMutation } from "react-apollo"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-
 import * as Sentry from "@sentry/react-native"
-
 import { ADD_TO_BAG, GET_BAG } from "../BagQueries"
 import {
   GetBagAndSavedItems_me_bag_productVariant_product,
   GetBagAndSavedItems_me_bag_productVariant_product_variants,
 } from "App/generated/GetBagAndSavedItems"
+import { ListCheck } from "Assets/svgs/ListCheck"
+import { GET_PRODUCT } from "App/Scenes/Product/Queries"
+import { UPSERT_RESTOCK_NOTIF } from "App/Scenes/Product/Product"
 
 interface BagItemProps {
   bagIsFull: boolean
@@ -35,7 +36,6 @@ export const SavedItem: React.FC<BagItemProps> = ({
   hasActiveReservation,
 }) => {
   const [isMutating, setIsMutating] = useState(false)
-  const [addingToBag, setAddingToBag] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
 
@@ -43,6 +43,27 @@ export const SavedItem: React.FC<BagItemProps> = ({
   const variantSize = variantToUse?.internalSize?.display
   const reservable = variantToUse?.reservable > 0
   const hasRestockNotification = variantToUse?.hasRestockNotification
+
+  const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
+    variables: {
+      variantID: variantToUse.id,
+      shouldNotify: !hasRestockNotification,
+    },
+    refetchQueries: [
+      {
+        query: GET_PRODUCT,
+        variables: {
+          where: {
+            id: product.id,
+            slug: product.slug,
+          },
+        },
+      },
+    ],
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+  })
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
@@ -55,7 +76,6 @@ export const SavedItem: React.FC<BagItemProps> = ({
     ],
     onCompleted: () => {
       setIsMutating(false)
-      setAddingToBag(false)
       if (bagIsFull) {
         showPopUp({
           icon: <CheckCircled />,
@@ -68,7 +88,6 @@ export const SavedItem: React.FC<BagItemProps> = ({
     },
     onError: (err) => {
       setIsMutating(false)
-      setAddingToBag(false)
       if (err && err.graphQLErrors) {
         if (err.graphQLErrors?.[0]?.message?.includes("Bag is full")) {
           showPopUp({
@@ -92,8 +111,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
   })
 
   const onAddToBag = () => {
-    if (!addingToBag) {
-      setAddingToBag(true)
+    if (!isMutating) {
       addToBag()
       tracking.trackEvent({
         actionName: Schema.ActionNames.SavedItemAddedToBag,
@@ -105,7 +123,20 @@ export const SavedItem: React.FC<BagItemProps> = ({
     }
   }
 
-  const onNotify = () => {}
+  const onNotifyMe = () => {
+    if (!isMutating) {
+      setIsMutating(true)
+      upsertRestockNotification()
+      tracking.trackEvent({
+        actionName: Schema.ActionNames.NotifyMeTapped,
+        actionType: Schema.ActionTypes.Tap,
+        productSlug: product.slug,
+        productId: product.id,
+        variantId: variantToUse.id,
+        shouldNotify: !hasRestockNotification,
+      })
+    }
+  }
 
   return (
     <Box key={product.id} width="100%">
@@ -128,36 +159,26 @@ export const SavedItem: React.FC<BagItemProps> = ({
 
               <Flex flexDirection="row" alignItems="center">
                 <ColoredDot reservable={reservable} />
-                {!!reservable ? (
-                  <>
-                    {!hasActiveReservation ? (
-                      <>
-                        <Sans size="1" style={{ textDecorationLine: "underline" }} onPress={onAddToBag}>
-                          {"  "}Add to bag
-                        </Sans>
-                      </>
-                    ) : (
-                      <Sans size="1" color="black50">
-                        {"  "}Available
-                      </Sans>
-                    )}
-                  </>
-                ) : (
-                  <Sans size="1" color="black50" onPress={onNotify}>
-                    {"  "}Unavailable
-                  </Sans>
-                )}
+                <Spacer mr={1} />
+                <Sans size="1" color="black50">
+                  {reservable ? "Available" : "Unavailable"}
+                </Sans>
               </Flex>
             </Box>
-            <Button
-              onPress={() => {}}
-              variant="secondaryWhite"
-              size="small"
-              disabled={isMutating || addingToBag}
-              loading={isMutating}
-            >
-              Remove
-            </Button>
+            {(!hasActiveReservation || !reservable) && (
+              <Button
+                onPress={() => {
+                  reservable ? onAddToBag() : onNotifyMe()
+                }}
+                variant="secondaryWhite"
+                size="small"
+                Icon={!reservable && hasRestockNotification ? ListCheck : null}
+                disabled={isMutating || addingToBag}
+                loading={isMutating}
+              >
+                {reservable ? "Add to bag" : "Notify me"}
+              </Button>
+            )}
           </Flex>
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
             {!!imageURL && (

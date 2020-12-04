@@ -1,5 +1,5 @@
 import { Box, Flex, Sans, Separator } from "App/Components"
-import React, { useState } from "react"
+import React from "react"
 
 import { useNavigation } from "@react-navigation/native"
 
@@ -37,7 +37,7 @@ const ItemRow = ({ bagItem, navigation, deleteBagItem, bagIsFull, hasActiveReser
 
   const onRemove = () => {
     tracking.trackEvent({
-      actionName: Schema.ActionNames.BagItemRemoved,
+      actionName: Schema.ActionNames.SavedItemRemoved,
       actionType: Schema.ActionTypes.Tap,
       productSlug: product.slug,
       productId: product.id,

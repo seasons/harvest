@@ -35,9 +35,9 @@ const ADD_VIEWED_PRODUCT = gql`
   }
 `
 
-const CREATE_RESTOCK_NOTIF = gql`
-  mutation CreateRestockNotification($variantID: ID!) {
-    createRestockNotification(variantID: $variantID) {
+export const UPSERT_RESTOCK_NOTIF = gql`
+  mutation UpsertRestockNotification($variantID: ID!, $shouldNotify: Boolean!) {
+    upsertRestockNotification(variantID: $variantID, shouldNotify: $shouldNotify) {
       id
     }
   }
@@ -47,6 +47,7 @@ export const Product = screenTrack({
   entityType: Schema.EntityTypes.Product,
 })(({ route, navigation }) => {
   const { authState } = useAuthContext()
+  const [isMutatingNotify, setIsMutatingNotify] = useState(false)
   const insets = useSafeAreaInsets()
   const flatListRef = useRef(null)
   const userHasSession = !!authState?.userSession
@@ -95,9 +96,12 @@ export const Product = screenTrack({
     ],
   })
 
-  const [createRestockNotification] = useMutation(CREATE_RESTOCK_NOTIF, {
+  console.log("selectedVariant.hasRestockNotification", selectedVariant.hasRestockNotification)
+
+  const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
     variables: {
       variantID: selectedVariant.id,
+      shouldNotify: !selectedVariant.hasRestockNotification,
     },
     refetchQueries: [
       {
@@ -110,6 +114,13 @@ export const Product = screenTrack({
         },
       },
     ],
+    onCompleted: () => {
+      setIsMutatingNotify(false)
+    },
+    onError: (error) => {
+      console.log("error upsertRestockNotification Product.tsx", error)
+      setIsMutatingNotify(false)
+    },
   })
 
   useEffect(() => {
@@ -219,8 +230,11 @@ export const Product = screenTrack({
 
   const onNotifyMe = () => {
     if (userHasSession) {
-      setHasNotification(true)
-      createRestockNotification()
+      if (!isMutatingNotify) {
+        setIsMutatingNotify(true)
+        setHasNotification(!selectedVariant.hasRestockNotification)
+        upsertRestockNotification()
+      }
     } else {
       showPopUp({
         title: "Sign up to be notified",
@@ -268,6 +282,7 @@ export const Product = screenTrack({
         showVariantPicker={showVariantPicker}
         selectedVariant={selectedVariant}
         onNotifyMe={onNotifyMe}
+        isMutatingNotify={isMutatingNotify}
         hasNotification={hasNotification}
         data={data}
       />

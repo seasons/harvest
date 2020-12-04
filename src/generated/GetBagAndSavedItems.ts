@@ -197,6 +197,7 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_variants {
 export interface GetBagAndSavedItems_me_bag_productVariant_product {
   __typename: "Product";
   id: string;
+  slug: string;
   name: string;
   modelSize: GetBagAndSavedItems_me_bag_productVariant_product_modelSize | null;
   brand: GetBagAndSavedItems_me_bag_productVariant_product_brand;
@@ -254,6 +255,7 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_varian
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product {
   __typename: "Product";
   id: string;
+  slug: string;
   name: string;
   modelSize: GetBagAndSavedItems_me_savedItems_productVariant_product_modelSize | null;
   brand: GetBagAndSavedItems_me_savedItems_productVariant_product_brand;

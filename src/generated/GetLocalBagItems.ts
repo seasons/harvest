@@ -42,6 +42,7 @@ export interface GetLocalBagItems_products_variants_product_variants {
 export interface GetLocalBagItems_products_variants_product {
   __typename: "Product";
   id: string;
+  slug: string;
   name: string;
   modelSize: GetLocalBagItems_products_variants_product_modelSize | null;
   brand: GetLocalBagItems_products_variants_product_brand;

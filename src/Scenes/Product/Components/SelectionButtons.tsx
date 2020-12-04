@@ -7,7 +7,7 @@ import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { Schema, useTracking } from "App/utils/track"
 import { GetProduct } from "App/generated/GetProduct"
-import { ListCheck } from "Assets/svgs/ListCheck"
+import { WhiteListCheck } from "Assets/svgs/WhiteListCheck"
 
 interface Props {
   toggleShowVariantPicker: (show: boolean) => void
@@ -17,6 +17,7 @@ interface Props {
   data: GetProduct
   onNotifyMe: () => void
   hasNotification: boolean
+  isMutatingNotify: boolean
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
@@ -31,6 +32,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
     showVariantPicker,
     toggleShowVariantPicker,
     data,
+    isMutatingNotify,
     onNotifyMe,
   } = props
   const inStock = selectedVariant && selectedVariant.reservable > 0
@@ -78,14 +80,14 @@ export const SelectionButtons: React.FC<Props> = (props) => {
             data={data}
           />
         ) : (
-          <Button
-            Icon={hasNotification ? ListCheck : null}
+          <StyledButton
+            Icon={hasNotification ? WhiteListCheck : null}
             width={twoButtonWidth}
             onPress={onNotifyMe}
-            disabled={hasNotification}
+            loading={isMutatingNotify}
           >
             Notify me
-          </Button>
+          </StyledButton>
         )}
       </Flex>
     </Wrapper>
@@ -112,4 +114,12 @@ const Wrapper = styled.View`
   width: 100%;
   z-index: 1;
   margin-bottom: ${space(2)};
+`
+
+const StyledButton = styled(Button)`
+  & {
+    path {
+      stroke: ${color("white100")};
+    }
+  }
 `
