@@ -36,6 +36,7 @@ export const BagItemFragment = gql`
       }
       variants {
         id
+        hasRestockNotification
         reservable
         internalSize {
           id

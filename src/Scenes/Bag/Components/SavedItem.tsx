@@ -3,7 +3,6 @@ import { FadeInImage } from "App/Components/FadeInImage"
 import { Spinner } from "App/Components/Spinner"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { Variant } from "App/Scenes/Product/Components/VariantList"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
@@ -16,42 +15,35 @@ import styled from "styled-components/native"
 import * as Sentry from "@sentry/react-native"
 
 import { ADD_TO_BAG, GET_BAG } from "../BagQueries"
-import { GET_PRODUCT } from "App/Scenes/Product/Queries"
-import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/Browse"
+import {
+  GetBagAndSavedItems_me_bag_productVariant_product,
+  GetBagAndSavedItems_me_bag_productVariant_product_variants,
+} from "App/generated/GetBagAndSavedItems"
 
 interface BagItemProps {
   bagIsFull: boolean
   hasActiveReservation: boolean
-  bagItem: any
   navigation?: any
-  removeItemFromBag?: Function
+  product: GetBagAndSavedItems_me_bag_productVariant_product
+  variantToUse: GetBagAndSavedItems_me_bag_productVariant_product_variants
 }
 
 export const SavedItem: React.FC<BagItemProps> = ({
   bagIsFull,
-  bagItem,
+  variantToUse,
+  product,
   navigation,
-  removeItemFromBag,
   hasActiveReservation,
 }) => {
   const [isMutating, setIsMutating] = useState(false)
   const [addingToBag, setAddingToBag] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
-  if (!bagItem) {
-    return null
-  }
-  const variantToUse: Variant = head(
-    (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
-  )
-  const product = get(bagItem, "productVariant.product")
-  if (!product) {
-    return null
-  }
 
   const imageURL = product?.images?.[0]?.url || ""
   const variantSize = variantToUse?.internalSize?.display
-  const reservable = variantToUse?.reservable
+  const reservable = variantToUse?.reservable > 0
+  const hasRestockNotification = variantToUse?.hasRestockNotification
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
@@ -100,8 +92,24 @@ export const SavedItem: React.FC<BagItemProps> = ({
     },
   })
 
+  const onAddToBag = () => {
+    if (!addingToBag) {
+      setAddingToBag(true)
+      addToBag()
+      tracking.trackEvent({
+        actionName: Schema.ActionNames.SavedItemAddedToBag,
+        actionType: Schema.ActionTypes.Tap,
+        productSlug: product.slug,
+        productId: product.id,
+        variantId: variantToUse.id,
+      })
+    }
+  }
+
+  const onNotify = () => {}
+
   return (
-    <Box py={1} key={product.id}>
+    <Box key={product.id} width="100%">
       <TouchableWithoutFeedback
         onPress={() => {
           navigation ? navigation.navigate("Product", { id: product.id, slug: product.slug, name: product.name }) : null
@@ -125,23 +133,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
                   <>
                     {!hasActiveReservation ? (
                       <>
-                        <Sans
-                          size="1"
-                          style={{ textDecorationLine: "underline" }}
-                          onPress={() => {
-                            if (!addingToBag) {
-                              setAddingToBag(true)
-                              addToBag()
-                              tracking.trackEvent({
-                                actionName: Schema.ActionNames.SavedItemAddedToBag,
-                                actionType: Schema.ActionTypes.Tap,
-                                productSlug: product.slug,
-                                productId: product.id,
-                                variantId: variantToUse.id,
-                              })
-                            }
-                          }}
-                        >
+                        <Sans size="1" style={{ textDecorationLine: "underline" }} onPress={onAddToBag}>
                           {"  "}Add to bag
                         </Sans>
                       </>
@@ -152,52 +144,14 @@ export const SavedItem: React.FC<BagItemProps> = ({
                     )}
                   </>
                 ) : (
-                  <Sans size="1" color="black50">
+                  <Sans size="1" color="black50" onPress={onNotify}>
                     {"  "}Unavailable
                   </Sans>
                 )}
               </Flex>
             </Box>
             <Button
-              onPress={() => {
-                setIsMutating(true)
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.BagItemRemoved,
-                  actionType: Schema.ActionTypes.Tap,
-                  productSlug: product.slug,
-                  productId: product.id,
-                  variantId: variantToUse.id,
-                })
-                removeItemFromBag({
-                  variables: {
-                    id: variantToUse.id,
-                    saved: true,
-                  },
-                  refetchQueries: [
-                    {
-                      query: GET_BAG,
-                    },
-                    {
-                      query: GET_PRODUCT,
-                      variables: {
-                        where: {
-                          id: product.id,
-                        },
-                      },
-                    },
-                    {
-                      query: GET_BROWSE_PRODUCTS,
-                      variables: {
-                        name: "all",
-                        first: 10,
-                        skip: 0,
-                        orderBy: "publishedAt_DESC",
-                        sizes: [],
-                      },
-                    },
-                  ],
-                })
-              }}
+              onPress={() => {}}
               variant="secondaryWhite"
               size="small"
               disabled={isMutating || addingToBag}
@@ -218,9 +172,6 @@ export const SavedItem: React.FC<BagItemProps> = ({
         </BagItemContainer>
       </TouchableWithoutFeedback>
       <Spacer mb={2} />
-      <Box px={2}>
-        <Separator color={color("black10")} />
-      </Box>
       {addingToBag && (
         <Overlay>
           <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
