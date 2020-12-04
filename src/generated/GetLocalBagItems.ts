@@ -34,6 +34,7 @@ export interface GetLocalBagItems_products_variants_product_variants_internalSiz
 export interface GetLocalBagItems_products_variants_product_variants {
   __typename: "ProductVariant";
   id: string;
+  hasRestockNotification: boolean;
   reservable: number;
   internalSize: GetLocalBagItems_products_variants_product_variants_internalSize | null;
 }

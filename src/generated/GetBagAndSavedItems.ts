@@ -189,6 +189,7 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_variants_inte
 export interface GetBagAndSavedItems_me_bag_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
+  hasRestockNotification: boolean;
   reservable: number;
   internalSize: GetBagAndSavedItems_me_bag_productVariant_product_variants_internalSize | null;
 }
@@ -245,6 +246,7 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_varian
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
+  hasRestockNotification: boolean;
   reservable: number;
   internalSize: GetBagAndSavedItems_me_savedItems_productVariant_product_variants_internalSize | null;
 }
