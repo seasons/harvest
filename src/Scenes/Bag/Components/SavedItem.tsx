@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
+import { Box, Button, Flex, Sans, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { Spinner } from "App/Components/Spinner"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
@@ -36,6 +36,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
   hasActiveReservation,
 }) => {
   const [isMutating, setIsMutating] = useState(false)
+  const [addingToBag, setAddingToBag] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
 
@@ -76,6 +77,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
     ],
     onCompleted: () => {
       setIsMutating(false)
+      setAddingToBag(false)
       if (bagIsFull) {
         showPopUp({
           icon: <CheckCircled />,
@@ -88,6 +90,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
     },
     onError: (err) => {
       setIsMutating(false)
+      setAddingToBag(false)
       if (err && err.graphQLErrors) {
         if (err.graphQLErrors?.[0]?.message?.includes("Bag is full")) {
           showPopUp({
@@ -111,7 +114,8 @@ export const SavedItem: React.FC<BagItemProps> = ({
   })
 
   const onAddToBag = () => {
-    if (!isMutating) {
+    if (!isMutating || !addingToBag) {
+      setAddingToBag(true)
       addToBag()
       tracking.trackEvent({
         actionName: Schema.ActionNames.SavedItemAddedToBag,
@@ -174,7 +178,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
                 size="small"
                 Icon={!reservable && hasRestockNotification ? ListCheck : null}
                 disabled={isMutating || addingToBag}
-                loading={isMutating}
+                loading={addingToBag}
               >
                 {reservable ? "Add to bag" : "Notify me"}
               </Button>
