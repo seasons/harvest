@@ -1,12 +1,12 @@
 import { Box, Flex, Radio, Sans, Separator, Spacer } from "App/Components"
+import { GetProduct_products_variants } from "App/generated/GetProduct"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { find } from "lodash"
 import React, { useEffect, useState } from "react"
 import { TouchableOpacity } from "react-native"
-import { GetProduct_product_variants } from "App/generated/GetProduct"
 
-export interface Variant extends GetProduct_product_variants {
+export interface Variant extends GetProduct_products_variants {
   sizeDisplay?: string
 }
 
@@ -52,12 +52,16 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
     setSizeData(variantData)
 
     // Update size data
-    if (variantData?.length) {
+    if (variantData?.length && !selectedVariant.id) {
       const firstAvailableSize =
         find(variantData, (size: Variant) => size.isInBag) ||
         find(variantData, (size: Variant) => size.reservable > 0) ||
         variantData?.[0]
       setSelectedVariant(firstAvailableSize)
+    } else if (variantData?.length) {
+      const variant = find(variantData, (size: Variant) => size.id === selectedVariant.id)
+      // Refresh variant data
+      setSelectedVariant(variant)
     }
   }
 

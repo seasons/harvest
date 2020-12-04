@@ -47,6 +47,7 @@ export const Product = screenTrack({
   entityType: Schema.EntityTypes.Product,
 })(({ route, navigation }) => {
   const { authState } = useAuthContext()
+  const [viewed, setViewed] = useState(false)
   const [isMutatingNotify, setIsMutatingNotify] = useState(false)
   const insets = useSafeAreaInsets()
   const flatListRef = useRef(null)
@@ -96,8 +97,6 @@ export const Product = screenTrack({
     ],
   })
 
-  console.log("selectedVariant.hasRestockNotification", selectedVariant.hasRestockNotification)
-
   const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
     variables: {
       variantID: selectedVariant.id,
@@ -138,7 +137,8 @@ export const Product = screenTrack({
   }, [navigation])
 
   useEffect(() => {
-    if (userHasSession && product) {
+    if (userHasSession && product && !viewed) {
+      setViewed(true)
       addRecentlyViewedItem({
         variables: {
           item: product.id,
