@@ -7,6 +7,7 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema, screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
+import * as Sentry from "@sentry/react-native"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, StatusBar } from "react-native"
@@ -117,6 +118,7 @@ export const Product = screenTrack({
       setIsMutatingNotify(false)
     },
     onError: (error) => {
+      Sentry.captureException(JSON.stringify(error))
       console.log("error upsertRestockNotification Product.tsx", error)
       setIsMutatingNotify(false)
     },
