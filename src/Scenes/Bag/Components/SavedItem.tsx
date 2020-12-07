@@ -64,6 +64,11 @@ export const SavedItem: React.FC<BagItemProps> = ({
     onCompleted: () => {
       setIsMutating(false)
     },
+    onError: (e) => {
+      console.log("error", e)
+      Sentry.captureException(JSON.stringify(e))
+      setIsMutating(false)
+    },
   })
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
