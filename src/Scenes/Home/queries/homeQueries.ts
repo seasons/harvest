@@ -27,11 +27,40 @@ const HomePageProductFragment = gql`
   }
 `
 
+// Traits we pass to segment on homepage renders
+const CustomerTraitsFragment = gql`
+  fragment SegmentTraits on Customer {
+    bagItems {
+      id
+    }
+    admissions {
+      id
+      admissable
+      authorizationsCount
+    }
+    user {
+      id
+      createdAt
+    }
+    detail {
+      id
+      shippingAddress {
+        id
+        state
+      }
+    }
+  }
+`
+
 export const GET_HOMEPAGE = gql`
   query Homepage($firstFitPics: Int!, $skipFitPics: Int) {
     homepage {
       sections {
         title
+        tagData {
+          tagName
+          description
+        }
         type
         results {
           ... on Brand {
@@ -102,25 +131,7 @@ export const GET_HOMEPAGE = gql`
         id
         status
         shouldRequestFeedback
-        bagItems {
-          id
-        }
-        admissions {
-          id
-          admissable
-          authorizationsCount
-        }
-        user {
-          id
-          createdAt
-        }
-        detail {
-          id
-          shippingAddress {
-            id
-            state
-          }
-        }
+        ...SegmentTraits
       }
       savedItems {
         id
@@ -218,4 +229,5 @@ export const GET_HOMEPAGE = gql`
     }
   }
   ${HomePageProductFragment}
+  ${CustomerTraitsFragment}
 `
