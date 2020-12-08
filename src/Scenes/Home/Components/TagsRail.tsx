@@ -64,10 +64,6 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large
     })
   }
 
-  if (large) {
-    console.log("data", items)
-  }
-
   return (
     <Box pl={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between" pr={2}>
