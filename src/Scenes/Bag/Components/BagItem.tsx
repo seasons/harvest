@@ -21,6 +21,7 @@ export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
     product {
       id
+      slug
       name
       modelSize {
         id
@@ -36,6 +37,7 @@ export const BagItemFragment = gql`
       }
       variants {
         id
+        hasRestockNotification
         reservable
         internalSize {
           id

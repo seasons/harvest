@@ -123,7 +123,7 @@ export interface GetProduct_products_brand_products_variants {
   reserved: number;
   isInBag: boolean;
   isSaved: boolean;
-  isWanted: boolean;
+  hasRestockNotification: boolean;
   manufacturerSizes: GetProduct_products_brand_products_variants_manufacturerSizes[] | null;
   internalSize: GetProduct_products_brand_products_variants_internalSize | null;
 }
@@ -195,7 +195,7 @@ export interface GetProduct_products_variants {
   reserved: number;
   isInBag: boolean;
   isSaved: boolean;
-  isWanted: boolean;
+  hasRestockNotification: boolean;
   manufacturerSizes: GetProduct_products_variants_manufacturerSizes[] | null;
   internalSize: GetProduct_products_variants_internalSize | null;
 }

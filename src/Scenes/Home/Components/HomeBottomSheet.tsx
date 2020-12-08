@@ -11,9 +11,7 @@ import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 
 import { useNavigation } from "@react-navigation/native"
 
-import {
-  BrandsRail, CategoriesRail, FitPicCollection, HomeFooter, ProductsRail, TagsRail
-} from "./"
+import { BrandsRail, CategoriesRail, FitPicCollection, HomeFooter, ProductsRail, TagsRail } from "./"
 import { AddPhotoButton } from "./AddPhotoButton"
 import { FitPicCollectionRef } from "./FitPicCollection"
 
@@ -27,6 +25,7 @@ enum SectionType {
   SavedProducts = "SavedProducts",
   FitPics = "FitPics",
   Categories = "Categories",
+  ProductsByTag = "ProductsByTag",
 }
 
 const sectionsFrom = (data: any) => {
@@ -70,10 +69,23 @@ const sectionsFrom = (data: any) => {
   if (data?.justAddedTops?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
   }
+  if (data?.homepage?.sections?.length) {
+    sections.push(
+      ...data?.homepage?.sections
+        .map((section) => {
+          switch (section.type) {
+            case SectionType.ProductsByTag:
+              return {
+                ...section,
+              }
+          }
+        })
+        .filter(Boolean)
+    )
+  }
   if (data?.justAddedBottoms?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
   }
-
   if (data?.archivalProducts?.length) {
     sections.push({
       type: SectionType.ArchivalProducts,
@@ -140,6 +152,9 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
         return <BrandsRail title={item.title} items={item.results} />
       case SectionType.ArchivalProducts:
         return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
+      case SectionType.ProductsByTag:
+        const tagData = { title: item.title, tag: item.tagData?.tagName, description: item.tagData?.description }
+        return <TagsRail large title={item.title} items={item.results} tagData={tagData} />
       case SectionType.Products:
         return <ProductsRail title={item.title} items={item.results} />
       case SectionType.Categories:

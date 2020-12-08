@@ -1,4 +1,4 @@
-import { Flex, Sans, Spacer } from "App/Components"
+import { Button, Flex, Sans, Spacer } from "App/Components"
 import { AddToBagButton } from "App/Scenes/Product/Components"
 import { color, space } from "App/utils"
 import { DownChevronIcon } from "Assets/icons"
@@ -7,6 +7,7 @@ import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { Schema, useTracking } from "App/utils/track"
 import { GetProduct } from "App/generated/GetProduct"
+import { WhiteListCheck } from "Assets/svgs/WhiteListCheck"
 
 interface Props {
   toggleShowVariantPicker: (show: boolean) => void
@@ -14,6 +15,9 @@ interface Props {
   selectedVariant: any
   bottom?: number
   data: GetProduct
+  onNotifyMe: () => void
+  hasNotification: boolean
+  isMutatingNotify: boolean
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
@@ -21,7 +25,16 @@ const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5
 export const SelectionButtons: React.FC<Props> = (props) => {
   const tracking = useTracking()
   const [loaded, setLoaded] = useState(false)
-  const { bottom = 0, selectedVariant, showVariantPicker, toggleShowVariantPicker, data } = props
+  const {
+    hasNotification,
+    bottom = 0,
+    selectedVariant,
+    showVariantPicker,
+    toggleShowVariantPicker,
+    data,
+    isMutatingNotify,
+    onNotifyMe,
+  } = props
   const inStock = selectedVariant && selectedVariant.reservable > 0
 
   useEffect(() => {
@@ -47,13 +60,8 @@ export const SelectionButtons: React.FC<Props> = (props) => {
             toggleShowVariantPicker(!showVariantPicker)
           }}
         >
-          <VariantSelectionButton inStock={inStock}>
-            <Flex
-              px={2}
-              style={{ width: "100%" }}
-              flexDirection="row"
-              justifyContent={inStock ? "center" : "space-between"}
-            >
+          <VariantSelectionButton>
+            <Flex px={2} style={{ width: "100%" }} flexDirection="row" justifyContent="center">
               <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
                 <Sans size="1" color="black">
                   {selectedVariant.sizeDisplay}
@@ -61,34 +69,38 @@ export const SelectionButtons: React.FC<Props> = (props) => {
                 <Spacer mr={1} />
                 <DownChevronIcon color={color("black")} rotate={showVariantPicker} />
               </Flex>
-              {!inStock && (
-                <Sans size="1" color="black50">
-                  Unavailable
-                </Sans>
-              )}
             </Flex>
           </VariantSelectionButton>
         </TouchableWithoutFeedback>
-        {inStock && (
+        {inStock ? (
           <AddToBagButton
             variantInStock={inStock}
             width={twoButtonWidth}
             selectedVariant={selectedVariant}
             data={data}
           />
+        ) : (
+          <StyledButton
+            Icon={hasNotification ? WhiteListCheck : null}
+            width={twoButtonWidth}
+            onPress={onNotifyMe}
+            loading={isMutatingNotify}
+          >
+            Notify me
+          </StyledButton>
         )}
       </Flex>
     </Wrapper>
   )
 }
 
-const VariantSelectionButton = styled.View<{ inStock: boolean }>`
+const VariantSelectionButton = styled.View`
   height: 48;
   border: 1px solid ${color("black")};
   border-width: 1;
   border-radius: 28;
   background-color: white;
-  width: ${(p) => (p.inStock ? twoButtonWidth : "100%")};
+  width: ${twoButtonWidth};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -100,5 +112,14 @@ const Wrapper = styled.View`
   left: 0;
   height: 48;
   width: 100%;
+  z-index: 1;
   margin-bottom: ${space(2)};
+`
+
+const StyledButton = styled(Button)`
+  & {
+    path {
+      stroke: ${color("white100")};
+    }
+  }
 `

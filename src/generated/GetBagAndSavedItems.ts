@@ -104,7 +104,7 @@ export interface GetBagAndSavedItems_me_customer_reservations_products_productVa
 export interface GetBagAndSavedItems_me_customer_reservations_products {
   __typename: "PhysicalProduct";
   id: string;
-  productVariant: GetBagAndSavedItems_me_customer_reservations_products_productVariant;
+  productVariant: GetBagAndSavedItems_me_customer_reservations_products_productVariant | null;
 }
 
 export interface GetBagAndSavedItems_me_customer_reservations {
@@ -189,6 +189,7 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_variants_inte
 export interface GetBagAndSavedItems_me_bag_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
+  hasRestockNotification: boolean;
   reservable: number;
   internalSize: GetBagAndSavedItems_me_bag_productVariant_product_variants_internalSize | null;
 }
@@ -196,6 +197,7 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_variants {
 export interface GetBagAndSavedItems_me_bag_productVariant_product {
   __typename: "Product";
   id: string;
+  slug: string;
   name: string;
   modelSize: GetBagAndSavedItems_me_bag_productVariant_product_modelSize | null;
   brand: GetBagAndSavedItems_me_bag_productVariant_product_brand;
@@ -245,6 +247,7 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_varian
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
+  hasRestockNotification: boolean;
   reservable: number;
   internalSize: GetBagAndSavedItems_me_savedItems_productVariant_product_variants_internalSize | null;
 }
@@ -252,6 +255,7 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_varian
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product {
   __typename: "Product";
   id: string;
+  slug: string;
   name: string;
   modelSize: GetBagAndSavedItems_me_savedItems_productVariant_product_modelSize | null;
   brand: GetBagAndSavedItems_me_savedItems_productVariant_product_brand;

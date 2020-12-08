@@ -34,6 +34,7 @@ export interface BagItemProductVariant_product_variants_internalSize {
 export interface BagItemProductVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
+  hasRestockNotification: boolean;
   reservable: number;
   internalSize: BagItemProductVariant_product_variants_internalSize | null;
 }
@@ -41,6 +42,7 @@ export interface BagItemProductVariant_product_variants {
 export interface BagItemProductVariant_product {
   __typename: "Product";
   id: string;
+  slug: string;
   name: string;
   modelSize: BagItemProductVariant_product_modelSize | null;
   brand: BagItemProductVariant_product_brand;
