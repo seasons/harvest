@@ -2749,10 +2749,12 @@
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
 
-"@seasons/eclipse@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.1.0.tgz#e5041a2d924286fea909b63a0b11d1aa4ee539b5"
-  integrity sha512-ogZmRux+vK31KswTSGNDooajEBOUs29CgmMwWbPKq9Tz0bEZ1xNRgAntew7M5RjD8IExyAfKagigAoRFUbnIjA==
+"@seasons/eclipse@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.1.2.tgz#33ef9385014a756ea72930c969d921d49610b5ca"
+  integrity sha512-LM+8byZilSOU+wiIYeyJj8rBtrid9zoGwl6LOjlW/LzfeP+Jai8PRjTEUBTuJlLO4adH1emaMDPdctA4hM3mRg==
+  dependencies:
+    luxon "^1.25.0"
 
 "@segment/analytics-react-native-google-analytics@^1.1.0":
   version "1.1.0"
@@ -11510,6 +11512,11 @@ luxon@^1.21.1:
   version "1.23.0"
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.23.0.tgz#23b748ad0f2d5494dc4d2878c19278c1e651410c"
   integrity sha512-+6a/bXsCWrrR8vfbL41iM92es12zwV2Rum/KPkT+ubOZnnU3Sqbqok/FmD1xsWlWN2Y9Hu0fU/vNgU24ns7bpA==
+
+luxon@^1.25.0:
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.25.0.tgz#d86219e90bc0102c0eb299d65b2f5e95efe1fe72"
+  integrity sha512-hEgLurSH8kQRjY6i4YLey+mcKVAWXbDNlZRmM6AgWDJ1cY3atl8Ztf5wEY7VBReFbmGnwQPz7KYJblL8B2k0jQ==
 
 make-dir@^2.0.0, make-dir@^2.1.0:
   version "2.1.0"
