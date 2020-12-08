@@ -1,13 +1,14 @@
-import { Box, FadeInImage, Flex, Sans, Spacer } from "App/Components"
+import { Box, FadeInImage, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { Schema } from "App/utils/track"
 import { chunk } from "lodash"
 import React, { useEffect, useState } from "react"
-import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
+import { Dimensions, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { ScrollView } from "react-native-gesture-handler"
 import { useTracking } from "react-tracking"
 
 import { useNavigation } from "@react-navigation/native"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 interface TagData {
   title: string
@@ -19,15 +20,24 @@ interface TagsRailProps {
   items: any
   title?: string
   tagData: TagData
+  large?: boolean
 }
 
 const ARCHIVAL_PRODUCT_RATIO = 132 / 104
-const slideWidth = 104
 
-export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData }) => {
+const windowWidth = Dimensions.get("window").width
+
+export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large }) => {
   const [rowGroups, createRowGroups] = useState([])
   const navigation = useNavigation()
   const tracking = useTracking()
+
+  let slideWidth = 104
+
+  if (large) {
+    const maxWidth = windowWidth - 96
+    slideWidth = maxWidth < 280 ? maxWidth : 280
+  }
 
   useEffect(() => {
     const rows = chunk(items, 6)
@@ -54,6 +64,10 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData }) => 
     })
   }
 
+  if (large) {
+    console.log("data", items)
+  }
+
   return (
     <Box pl={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between" pr={2}>
@@ -77,14 +91,32 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData }) => 
       <Box>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Flex flexDirection="column">
-            {rowGroups.map((rowItem, index) => {
-              return (
-                <Box key={index}>
-                  <Flex flexDirection="row">{row(rowItem)}</Flex>
-                  <Spacer mb={index !== rowGroups.length - 1 ? 0.5 : 0} />
-                </Box>
-              )
-            })}
+            <>
+              {large
+                ? items.map((item) => {
+                    const brandName = item?.brand?.name
+                    const image = item?.images?.[0]?.url
+                    return (
+                      <Box mr={0.5} style={{ width: slideWidth }} key={image}>
+                        <FadeInImage
+                          source={{ uri: image }}
+                          style={{ width: slideWidth, height: slideWidth * PRODUCT_ASPECT_RATIO }}
+                        />
+                        <Spacer mb={0.5} />
+                        {!!brandName && <Sans size="0">{brandName}</Sans>}
+                        {item.variants && <VariantSizes size="0" variants={item.variants} />}
+                      </Box>
+                    )
+                  })
+                : rowGroups.map((rowItem, index) => {
+                    return (
+                      <Box key={index}>
+                        <Flex flexDirection="row">{row(rowItem)}</Flex>
+                        <Spacer mb={index !== rowGroups.length - 1 ? 0.5 : 0} />
+                      </Box>
+                    )
+                  })}
+            </>
           </Flex>
         </ScrollView>
       </Box>
