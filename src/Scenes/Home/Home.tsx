@@ -16,6 +16,8 @@ import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../Reserv
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
 import { Homepage_fitPics } from "App/generated/Homepage"
 import { GET_HOMEPAGE } from "./queries/homeQueries"
+import analytics from "@segment/analytics-react-native"
+import { userSessionToIdentifyPayload } from "App/utils/auth"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
@@ -62,6 +64,14 @@ export const Home = screenTrack()(({ navigation, route }) => {
       navigation?.navigate("AccountStack", { screen: "Account" })
     }
   }, [data, navigation])
+
+  useEffect(() => {
+    if (!!data) {
+      // do the identify call
+      const userId = data?.me?.customer?.user?.id
+      analytics.identify(userId, userSessionToIdentifyPayload(data?.me?.customer))
+    }
+  }, [data])
 
   const NoInternetComponent = (
     <ErrorScreen

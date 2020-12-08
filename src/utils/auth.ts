@@ -51,6 +51,7 @@ export const userSessionToIdentifyPayload = (session) => {
     ...session?.user,
     status: cust?.status,
     admissable: cust?.admissions?.admissable,
+    authorizations: cust?.admissions?.authorizationsCount,
     state: cust?.detail?.shippingAddress?.state,
     bagItems: cust?.bagItems?.length,
     customerID: cust?.id,
