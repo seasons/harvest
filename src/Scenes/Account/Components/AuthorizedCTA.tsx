@@ -3,7 +3,7 @@ import { Button, Sans, Box, Spacer, Flex } from "App/Components"
 import { space } from "App/utils"
 import { DateTime, Duration } from "luxon"
 import { Dimensions } from "react-native"
-import { HourMinuteSecondCountdown } from "./HourMinuteSecondCountdown"
+import { Countdown } from "@seasons/eclipse"
 import styled from "styled-components/native"
 
 const SansUnderline = styled(Sans)`
@@ -28,7 +28,7 @@ export const AuthorizedCTA: React.FC<{
   return (
     <Box pb={1}>
       <Flex alignItems="center" pb={3}>
-        <HourMinuteSecondCountdown targetDate={targetAuthorizationDate} />
+        <Countdown targetDate={targetAuthorizationDate} />
       </Flex>
       <Sans size="2" color="black100" textAlign="center">
         You're in. Let's choose your plan
