@@ -44,6 +44,7 @@
           { "name": "CustomerMembership" },
           { "name": "PauseRequest" },
           { "name": "CustomerAdmissionsData" },
+          { "name": "UTMData" },
           { "name": "Collection" },
           { "name": "ProductRequest" },
           { "name": "HomepageProductRail" },
@@ -56,14 +57,19 @@
           { "name": "ActiveAdminUser" },
           { "name": "CollectionGroup" },
           { "name": "SmsReceipt" },
-          { "name": "SyncTiming" },
-          { "name": "UTMData" }
+          { "name": "SyncTiming" }
         ]
       },
       {
         "kind": "UNION",
         "name": "HomepageResult",
-        "possibleTypes": [{ "name": "Product" }, { "name": "Collection" }, { "name": "Brand" }]
+        "possibleTypes": [
+          { "name": "Product" },
+          { "name": "Collection" },
+          { "name": "Brand" },
+          { "name": "Category" },
+          { "name": "HomepageProductRail" }
+        ]
       }
     ]
   }
