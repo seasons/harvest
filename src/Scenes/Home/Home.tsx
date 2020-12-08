@@ -69,7 +69,9 @@ export const Home = screenTrack()(({ navigation, route }) => {
     if (!!data) {
       // do the identify call
       const userId = data?.me?.customer?.user?.id
-      analytics.identify(userId, userSessionToIdentifyPayload(data?.me?.customer))
+      if (!!userId) {
+        analytics.identify(userId, userSessionToIdentifyPayload(data?.me?.customer))
+      }
     }
   }, [data])
 
