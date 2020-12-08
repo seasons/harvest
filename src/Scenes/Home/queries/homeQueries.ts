@@ -57,6 +57,10 @@ export const GET_HOMEPAGE = gql`
     homepage {
       sections {
         title
+        tagData {
+          tagName
+          description
+        }
         type
         results {
           ... on Brand {
