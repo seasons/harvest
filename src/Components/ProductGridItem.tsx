@@ -31,6 +31,7 @@ const ProductGridItemComponent: React.FC<{
           actionType: Schema.ActionTypes.Tap,
           productSlug: product.slug,
           productId: product.id,
+          productName,
         })
         navigation.navigate("Product", { id: product.id, slug: product.slug, name: product.name })
         if (!!flatListRef?.current) {

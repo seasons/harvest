@@ -114,6 +114,7 @@ export enum FitPicStatus {
 
 export enum HomePageSectionType {
   Brands = "Brands",
+  Categories = "Categories",
   CollectionGroups = "CollectionGroups",
   HomepageProductRails = "HomepageProductRails",
   Products = "Products",

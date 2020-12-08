@@ -36,6 +36,7 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
             actionType: Schema.ActionTypes.Tap,
             productSlug: product.slug,
             productId: product.id,
+            productName: product.name,
           })
           navigation?.navigate("Product", { id: product.id, slug: product.slug })
         }}

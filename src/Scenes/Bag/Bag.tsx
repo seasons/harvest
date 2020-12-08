@@ -65,7 +65,9 @@ export const Bag = screenTrack()((props) => {
       setIsLoading(false)
       const userId = me.customer?.user?.id
       if (!!userId) {
-        analytics.identify(userId, { bagItems: me?.bag?.length })
+        const savedItems = me?.savedItems?.length || 0
+        const baggedItems = me?.bag?.length || 0
+        analytics.identify(userId, { bagItems: savedItems + baggedItems })
       }
     }
   }, [data, setIsLoading, setItemCount])

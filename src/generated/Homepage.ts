@@ -10,7 +10,7 @@ import { HomePageSectionType, Rating, QuestionType, CustomerStatus } from "./glo
 // ====================================================
 
 export interface Homepage_homepage_sections_results_Collection {
-  __typename: "Collection";
+  __typename: "Collection" | "HomepageProductRail";
 }
 
 export interface Homepage_homepage_sections_results_Brand {
@@ -18,6 +18,14 @@ export interface Homepage_homepage_sections_results_Brand {
   id: string;
   name: string;
   since: any | null;
+}
+
+export interface Homepage_homepage_sections_results_Category {
+  __typename: "Category";
+  id: string;
+  slug: string;
+  name: string;
+  image: any | null;
 }
 
 export interface Homepage_homepage_sections_results_Product_images {
@@ -55,7 +63,7 @@ export interface Homepage_homepage_sections_results_Product {
   variants: Homepage_homepage_sections_results_Product_variants[] | null;
 }
 
-export type Homepage_homepage_sections_results = Homepage_homepage_sections_results_Collection | Homepage_homepage_sections_results_Brand | Homepage_homepage_sections_results_Product;
+export type Homepage_homepage_sections_results = Homepage_homepage_sections_results_Collection | Homepage_homepage_sections_results_Brand | Homepage_homepage_sections_results_Category | Homepage_homepage_sections_results_Product;
 
 export interface Homepage_homepage_sections {
   __typename: "HomepageSection";

@@ -102,6 +102,25 @@ export const GET_HOMEPAGE = gql`
         id
         status
         shouldRequestFeedback
+        bagItems {
+          id
+        }
+        admissions {
+          id
+          admissable
+          authorizationsCount
+        }
+        user {
+          id
+          createdAt
+        }
+        detail {
+          id
+          shippingAddress {
+            id
+            state
+          }
+        }
       }
       savedItems {
         id
