@@ -44,6 +44,7 @@ export interface GetCustomer_me_bag_productVariant_product_variants_internalSize
 export interface GetCustomer_me_bag_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
+  hasRestockNotification: boolean;
   reservable: number;
   internalSize: GetCustomer_me_bag_productVariant_product_variants_internalSize | null;
 }
@@ -51,6 +52,7 @@ export interface GetCustomer_me_bag_productVariant_product_variants {
 export interface GetCustomer_me_bag_productVariant_product {
   __typename: "Product";
   id: string;
+  slug: string;
   name: string;
   modelSize: GetCustomer_me_bag_productVariant_product_modelSize | null;
   brand: GetCustomer_me_bag_productVariant_product_brand;

@@ -120,6 +120,7 @@ export enum ActionNames {
   BrowsePagePaginated = "Browse Page Paginated",
 
   // Bag
+  SavedItemRemoved = "Saved Item Removed",
   BagItemRemoved = "Bag Item Removed",
   BagSavedItemRemoved = "Bag Saved Item Removed",
   BagItemSaved = "Bag Item Saved",
@@ -129,6 +130,7 @@ export enum ActionNames {
   ReserveButtonTapped = "Reserve Button Tapped",
   ReservationHistoryTabTapped = "Reservation History Tab Tapped",
   SavedItemAddedToBag = "Saved Item Added To Bag",
+  NotifyMeTapped = "Notify Me Tapped",
 
   // Brand view
   ReadMoreTapped = "Read More Tapped",

@@ -1,3 +1,4 @@
+import { color } from "App/utils/color"
 import React, { Component, ComponentType, ReactNode } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
@@ -241,7 +242,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   get spinnerColor() {
-    return this.props.variant === "primaryWhite" ? "black100" : "white100"
+    return this.props.variant === "primaryWhite" || this.props.variant === "secondaryWhite" ? "black100" : "white100"
   }
 
   getSize(): { height: number | string; size: "0" | "1" | "2"; px: number } {
@@ -328,26 +329,42 @@ export class Button extends Component<ButtonProps, ButtonState> {
                 style={{ ...props, ...overridenBg, borderRadius, height: buttonHeight }}
                 px={px}
               >
-                {!loading && (
-                  <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
-                    {!!Icon && (
-                      <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" pb="4px">
-                        <Icon />
-                        <Spacer mr={1} />
-                      </Flex>
-                    )}
-                    <Sans color={to.color} size={size}>
-                      {children}
-                    </Sans>
-                    {showCheckMark && (
-                      <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
-                        <Spacer mr={0.5} />
-                        <TextCheckSVG color={to.color} />
-                      </Flex>
-                    )}
-                  </Flex>
-                )}
-                {loading && <Spinner size={this.props.size} color={this.spinnerColor as any} />}
+                <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ position: "relative" }}>
+                  {!!Icon && (
+                    <Flex
+                      flexDirection="row"
+                      flexWrap="nowrap"
+                      alignItems="center"
+                      style={{ opacity: disabled ? 0.5 : 1 }}
+                    >
+                      <Icon />
+                      <Spacer mr={1} />
+                    </Flex>
+                  )}
+                  <Sans color={to.color} size={size}>
+                    {children}
+                  </Sans>
+                  {showCheckMark && (
+                    <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
+                      <Spacer mr={0.5} />
+                      <TextCheckSVG color={to.color} />
+                    </Flex>
+                  )}
+                  {loading && (
+                    <Flex
+                      alignItems="center"
+                      justifyContent="center"
+                      width="100%"
+                      height="100%"
+                      style={{
+                        position: "absolute",
+                        backgroundColor: this.spinnerColor === "white100" ? color("black100") : color("white100"),
+                      }}
+                    >
+                      <Spinner size={this.props.size} color={this.spinnerColor as any} />
+                    </Flex>
+                  )}
+                </Flex>
               </AnimatedContainer>
             </Flex>
           </TouchableWithoutFeedback>

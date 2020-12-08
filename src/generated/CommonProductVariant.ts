@@ -51,7 +51,7 @@ export interface CommonProductVariant {
   reserved: number;
   isInBag: boolean;
   isSaved: boolean;
-  isWanted: boolean;
+  hasRestockNotification: boolean;
   manufacturerSizes: CommonProductVariant_manufacturerSizes[] | null;
   internalSize: CommonProductVariant_internalSize | null;
 }

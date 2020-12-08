@@ -90,7 +90,7 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_pro
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products {
   __typename: "PhysicalProduct";
   id: string;
-  productVariant: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant;
+  productVariant: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant | null;
 }
 
 export interface GetCustomerReservationConfirmation_me_customer_reservations {
