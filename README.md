@@ -57,3 +57,34 @@ Enable storybooks by updating the `STORYBOOK_START` value to `true` in the main 
 ### Finding the latest production build
 
 Check the git logs for a commit message of the form X => Y, e.g 101 => 102. That's how we annotate version changes. Whichever is the latest commit with a message that fits that format is the latest commit to go to production.
+
+### Working on components in @seasons/eclipse
+
+Follow the instructions in order to get the best development experience with live reload.
+First and foremost, we need to register `eclipse` to the yarn local registry
+
+`cd eclipse && yarn link`
+
+you run the following command in the root of harvest
+
+`yarn link @seasons/eclipse`
+
+the last step is to run `yarn start-packager --reset-cache` in order to reset Metro's internal cache.
+You should now see the following warning message in the console
+
+```
+$ yarn start-packager --reset-cache
+
+Warning: you have symlinked dependencies in node_modules!
+
+The following directories are symlink destinations of one or more node_modules
+(i.e. `yarn link` or `npm link` was used to link in a dependency locally). Metro
+bundler doesn't support symlinks so instead we'll manually watch the symlink
+destination. Note that if you get errors about name collisions, you need to inform
+`@carimus/metro-symlinked-deps` of the colliding module(s) in metro.config.js via the
+`blacklistLinkedModules` option passed to `applyConfigForLinkedDependencies`.
+
+-   /Users/luc/Projects/eclipse
+```
+
+You're all set to start making changes in eclipse and
