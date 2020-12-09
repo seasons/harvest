@@ -41,6 +41,10 @@ export const ProductsRail: React.FC<{
     }
   }
 
+  if (!items.length) {
+    return null
+  }
+
   return (
     <Box mb={3} pl={2}>
       <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
