@@ -245,7 +245,9 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             check={currentState === State.Triage}
             onTriageComplete={(userAdmitted) => {
               setUserState(userAdmitted ? UserState.Admitted : UserState.Waitlisted)
-              setNextState()
+              setTimeout(() => {
+                setNextState()
+              }, 100)
             }}
           />
         )
