@@ -9,6 +9,12 @@ import { HomePageSectionType, Rating, QuestionType, CustomerStatus } from "./glo
 // GraphQL query operation: Homepage
 // ====================================================
 
+export interface Homepage_homepage_sections_tagData {
+  __typename: "ProductsByTagTagData";
+  tagName: string | null;
+  description: string | null;
+}
+
 export interface Homepage_homepage_sections_results_Collection {
   __typename: "Collection" | "HomepageProductRail";
 }
@@ -68,6 +74,7 @@ export type Homepage_homepage_sections_results = Homepage_homepage_sections_resu
 export interface Homepage_homepage_sections {
   __typename: "HomepageSection";
   title: string | null;
+  tagData: Homepage_homepage_sections_tagData | null;
   type: HomePageSectionType;
   results: Homepage_homepage_sections_results[];
 }
@@ -122,11 +129,45 @@ export interface Homepage_reservationFeedback {
   feedbacks: Homepage_reservationFeedback_feedbacks[] | null;
 }
 
+export interface Homepage_me_customer_bagItems {
+  __typename: "BagItem";
+  id: string;
+}
+
+export interface Homepage_me_customer_admissions {
+  __typename: "CustomerAdmissionsData";
+  id: string;
+  admissable: boolean;
+  authorizationsCount: number;
+}
+
+export interface Homepage_me_customer_user {
+  __typename: "User";
+  id: string;
+  createdAt: any;
+}
+
+export interface Homepage_me_customer_detail_shippingAddress {
+  __typename: "Location";
+  id: string;
+  state: string | null;
+}
+
+export interface Homepage_me_customer_detail {
+  __typename: "CustomerDetail";
+  id: string;
+  shippingAddress: Homepage_me_customer_detail_shippingAddress | null;
+}
+
 export interface Homepage_me_customer {
   __typename: "Customer";
   id: string;
   status: CustomerStatus | null;
   shouldRequestFeedback: boolean | null;
+  bagItems: Homepage_me_customer_bagItems[] | null;
+  admissions: Homepage_me_customer_admissions | null;
+  user: Homepage_me_customer_user;
+  detail: Homepage_me_customer_detail | null;
 }
 
 export interface Homepage_me_savedItems_productVariant_product_modelSize {
