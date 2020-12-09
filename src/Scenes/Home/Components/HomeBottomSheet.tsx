@@ -48,6 +48,9 @@ const sectionsFrom = (data: any) => {
         .filter(Boolean)
     )
   }
+  if (data?.justAddedTops?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
+  }
   if (data?.homepage?.sections?.length) {
     sections.push(
       ...data?.homepage?.sections
@@ -66,8 +69,8 @@ const sectionsFrom = (data: any) => {
         .filter(Boolean)
     )
   }
-  if (data?.justAddedTops?.length) {
-    sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
+  if (data?.justAddedBottoms?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
   }
   if (data?.homepage?.sections?.length) {
     sections.push(
@@ -83,9 +86,20 @@ const sectionsFrom = (data: any) => {
         .filter(Boolean)
     )
   }
-  if (data?.justAddedBottoms?.length) {
-    sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
+
+  if (data?.homepage?.sections?.length) {
+    sections.push(
+      ...data?.homepage?.sections
+        .map((section) => {
+          switch (section.type) {
+            case SectionType.Products:
+              return section
+          }
+        })
+        .filter(Boolean)
+    )
   }
+
   if (data?.archivalProducts?.length) {
     sections.push({
       type: SectionType.ArchivalProducts,
@@ -105,18 +119,7 @@ const sectionsFrom = (data: any) => {
     sections.push({ type: SectionType.SavedProducts, title: "Saved for later", results })
   }
 
-  if (data?.homepage?.sections?.length) {
-    sections.push(
-      ...data?.homepage?.sections
-        .map((section) => {
-          switch (section.type) {
-            case SectionType.Products:
-              return section
-          }
-        })
-        .filter(Boolean)
-    )
-  }
+  console.log("data?.homepage?.sections", data)
 
   if (data?.fitPics?.length) {
     sections.push({ type: SectionType.FitPics, results: data?.fitPics })
