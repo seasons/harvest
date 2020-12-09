@@ -34,6 +34,10 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large
 
   let slideWidth = 104
 
+  if (!items.length) {
+    return null
+  }
+
   if (large) {
     const maxWidth = windowWidth - 96
     slideWidth = maxWidth < 280 ? maxWidth : 280

@@ -122,9 +122,10 @@ export const SavedItemsTab: React.FC<{ items; deleteBagItem; hasActiveReservatio
   return (
     <Box>
       {items?.length ? (
-        items.map((bagItem) => {
+        items.map((bagItem, index) => {
           return (
             <ItemRow
+              key={index}
               bagItem={bagItem}
               navigation={navigation}
               deleteBagItem={deleteBagItem}
