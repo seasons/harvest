@@ -34,6 +34,11 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large
 
   let slideWidth = 104
 
+  useEffect(() => {
+    const rows = chunk(items, 6)
+    createRowGroups(rows)
+  }, [])
+
   if (!items.length) {
     return null
   }
@@ -42,11 +47,6 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large
     const maxWidth = windowWidth - 96
     slideWidth = maxWidth < 280 ? maxWidth : 280
   }
-
-  useEffect(() => {
-    const rows = chunk(items, 6)
-    createRowGroups(rows)
-  }, [])
 
   const row = (rowGroup) => {
     return rowGroup.map((item) => {
@@ -90,34 +90,36 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large
       <Spacer mb={1} />
       <Box>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Flex flexDirection="column">
-            <>
-              {large
-                ? items.map((item) => {
-                    const brandName = item?.brand?.name
-                    const image = item?.images?.[0]?.url
-                    return (
-                      <Box mr={0.5} style={{ width: slideWidth }} key={image}>
-                        <FadeInImage
-                          source={{ uri: image }}
-                          style={{ width: slideWidth, height: slideWidth * PRODUCT_ASPECT_RATIO }}
-                        />
-                        <Spacer mb={0.5} />
-                        {!!brandName && <Sans size="0">{brandName}</Sans>}
-                        {item.variants && <VariantSizes size="0" variants={item.variants} />}
-                      </Box>
-                    )
-                  })
-                : rowGroups.map((rowItem, index) => {
-                    return (
-                      <Box key={index}>
-                        <Flex flexDirection="row">{row(rowItem)}</Flex>
-                        <Spacer mb={index !== rowGroups.length - 1 ? 0.5 : 0} />
-                      </Box>
-                    )
-                  })}
-            </>
-          </Flex>
+          <>
+            {large ? (
+              items.map((item) => {
+                const brandName = item?.brand?.name
+                const image = item?.images?.[0]?.url
+                return (
+                  <Box mr={0.5} style={{ width: slideWidth }} key={image}>
+                    <FadeInImage
+                      source={{ uri: image }}
+                      style={{ width: slideWidth, height: slideWidth * PRODUCT_ASPECT_RATIO }}
+                    />
+                    <Spacer mb={0.5} />
+                    {!!brandName && <Sans size="0">{brandName}</Sans>}
+                    {item.variants && <VariantSizes size="0" variants={item.variants} />}
+                  </Box>
+                )
+              })
+            ) : (
+              <Flex flexDirection="column">
+                {rowGroups.map((rowItem, index) => {
+                  return (
+                    <Box key={index}>
+                      <Flex flexDirection="row">{row(rowItem)}</Flex>
+                      <Spacer mb={index !== rowGroups.length - 1 ? 0.5 : 0} />
+                    </Box>
+                  )
+                })}
+              </Flex>
+            )}
+          </>
         </ScrollView>
       </Box>
     </Box>
