@@ -358,7 +358,6 @@ export class Button extends Component<ButtonProps, ButtonState> {
                       height="100%"
                       style={{
                         position: "absolute",
-                        backgroundColor: this.spinnerColor === "white100" ? color("black100") : color("white100"),
                       }}
                     >
                       <Spinner size={this.props.size} color={this.spinnerColor as any} />
