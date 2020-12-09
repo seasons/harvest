@@ -28,6 +28,7 @@ import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { AuthorizedCTA } from "./Components/AuthorizedCTA"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
+import { RewaitlistedCTA } from "@seasons/eclipse"
 
 export const GET_USER = gql`
   query GetUser {
@@ -75,6 +76,7 @@ export const GET_USER = gql`
         admissions {
           id
           authorizationWindowClosesAt
+          authorizationsCount
         }
       }
     }
@@ -265,6 +267,16 @@ export const Account = screenTrack()(({ navigation }) => {
     switch (status) {
       case CustomerStatus.Created:
       case CustomerStatus.Waitlisted:
+        // Allow rewaitlisted users to requst access
+        if (status === CustomerStatus.Waitlisted && customer?.admissions?.authorizationsCount > 0) {
+          return (
+            <RewaitlistedCTA
+              authorizedAt={DateTime.fromISO(customer?.authorizedAt)}
+              authorizationWindowClosesAt={DateTime.fromISO(customer?.admissions?.authorizationWindowClosesAt)}
+            />
+          )
+        }
+
         const userState = status == CustomerStatus.Created ? UserState.Undetermined : UserState.Waitlisted
         return (
           <OnboardingChecklist
