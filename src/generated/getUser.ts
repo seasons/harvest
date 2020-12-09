@@ -60,6 +60,7 @@ export interface GetUser_me_customer_admissions {
   __typename: "CustomerAdmissionsData";
   id: string;
   authorizationWindowClosesAt: any | null;
+  authorizationsCount: number;
 }
 
 export interface GetUser_me_customer {
