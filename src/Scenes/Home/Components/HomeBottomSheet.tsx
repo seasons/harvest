@@ -119,8 +119,6 @@ const sectionsFrom = (data: any) => {
     sections.push({ type: SectionType.SavedProducts, title: "Saved for later", results })
   }
 
-  console.log("data?.homepage?.sections", data)
-
   if (data?.fitPics?.length) {
     sections.push({ type: SectionType.FitPics, results: data?.fitPics })
   }
