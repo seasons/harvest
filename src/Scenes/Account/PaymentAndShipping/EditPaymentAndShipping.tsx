@@ -17,7 +17,6 @@ import { space } from "App/utils"
 import { Schema as TrackSchema, useTracking, screenTrack } from "App/utils/track"
 import * as Sentry from "@sentry/react-native"
 import { EditPaymentPopUp } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane/EditPaymentPopUp"
-import { Analytics } from "@segment/analytics-react-native"
 import analytics from "@segment/analytics-react-native"
 
 export const GET_CURRENT_PLAN = gql`
