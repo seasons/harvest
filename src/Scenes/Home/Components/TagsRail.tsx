@@ -96,15 +96,21 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large
                 const brandName = item?.brand?.name
                 const image = item?.images?.[0]?.url
                 return (
-                  <Box mr={0.5} style={{ width: slideWidth }} key={image}>
-                    <FadeInImage
-                      source={{ uri: image }}
-                      style={{ width: slideWidth, height: slideWidth * PRODUCT_ASPECT_RATIO }}
-                    />
-                    <Spacer mb={0.5} />
-                    {!!brandName && <Sans size="0">{brandName}</Sans>}
-                    {item.variants && <VariantSizes size="0" variants={item.variants} />}
-                  </Box>
+                  <Animatable.View animation="fadeIn" duration={300} key={item.id}>
+                    <TouchableWithoutFeedback
+                      onPress={() => navigation.navigate("Product", { id: item.id, slug: item.slug, name: item.name })}
+                    >
+                      <Box mr={0.5} style={{ width: slideWidth }} key={image}>
+                        <FadeInImage
+                          source={{ uri: image }}
+                          style={{ width: slideWidth, height: slideWidth * PRODUCT_ASPECT_RATIO }}
+                        />
+                        <Spacer mb={0.5} />
+                        {!!brandName && <Sans size="0">{brandName}</Sans>}
+                        {item.variants && <VariantSizes size="0" variants={item.variants} />}
+                      </Box>
+                    </TouchableWithoutFeedback>
+                  </Animatable.View>
                 )
               })
             ) : (
