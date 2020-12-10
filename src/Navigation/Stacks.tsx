@@ -42,6 +42,7 @@ import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 import { NavBar } from "./NavBar"
 import { SurpriseMe } from "App/Scenes/Bag/SurpriseMe"
 import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ApplyPromoCode/ApplyPromoCode"
+import { EditPaymentModal } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane/EditPaymentModal"
 
 const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
@@ -111,6 +112,7 @@ const ModalStackScreen = () => {
       }}
     >
       <ModalStack.Screen name={Schema.PageNames.FiltersModal} component={Filters} />
+      <ModalStack.Screen name={Schema.PageNames.EditPaymentModal} component={EditPaymentModal} />
       <ModalStack.Screen name={Schema.PageNames.UpdatePaymentPlanModal} component={UpdatePaymentPlanModal} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordModal} component={ResetPassword} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
