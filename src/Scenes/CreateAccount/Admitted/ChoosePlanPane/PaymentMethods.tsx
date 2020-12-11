@@ -3,18 +3,17 @@ import { AppleLogo } from "Assets/svgs/AppleLogo"
 import { Dimensions } from "react-native"
 import React from "react"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { useNavigation } from "@react-navigation/native"
 
 const windowDimensions = Dimensions.get("window")
 const windowWidth = windowDimensions.width
 
-export const PaymentMethods = ({ onApplePay, setOpenPopUp, onCreditCard }) => {
+export const PaymentMethods = ({ onApplePay, onCreditCard }) => {
   const insets = useSafeAreaInsets()
   return (
     <Box pb={insets.bottom} px={2} style={{ width: windowWidth }}>
       <Spacer mb={4} />
-      <Sans size="1" style={{ textAlign: "center" }}>
-        Select payment type
-      </Sans>
+      <Sans size="1">Select a payment type</Sans>
       <Spacer mb={2} />
       <Separator />
       <Spacer mb={3} />
@@ -25,15 +24,6 @@ export const PaymentMethods = ({ onApplePay, setOpenPopUp, onCreditCard }) => {
       <Button block Icon={AppleLogo} onPress={onApplePay}>
         Apple Pay
       </Button>
-      <Spacer mb={3} />
-      <Sans
-        size="1"
-        style={{ textAlign: "center", textDecorationLine: "underline" }}
-        onPress={() => setOpenPopUp(false)}
-      >
-        Cancel
-      </Sans>
-      <Spacer mb={4} />
     </Box>
   )
 }

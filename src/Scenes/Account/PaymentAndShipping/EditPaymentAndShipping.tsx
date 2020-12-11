@@ -1,7 +1,6 @@
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import stripe from "tipsi-stripe"
 import { Dimensions, Keyboard, KeyboardAvoidingView } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
@@ -14,10 +13,10 @@ import {
 } from "src/generated/getUserPaymentData"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { space } from "App/utils"
-import { Schema as TrackSchema, useTracking, screenTrack } from "App/utils/track"
+import { screenTrack } from "App/utils/track"
 import * as Sentry from "@sentry/react-native"
-import { EditPaymentPopUp } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane/EditPaymentPopUp"
 import analytics from "@segment/analytics-react-native"
+import { Schema as NavigationSchema } from "App/Navigation"
 
 export const GET_CURRENT_PLAN = gql`
   query GetCurrentPlan {
@@ -67,10 +66,8 @@ export const EditPaymentAndShipping: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ navigation, route }) => {
-  const tracking = useTracking()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { data } = useQuery(GET_CURRENT_PLAN)
-  const [openPaymentPopUp, setOpenPaymentPopUp] = useState(false)
   const billingInfo: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
   const currentPhoneNumber = route?.params?.phoneNumber
@@ -92,31 +89,6 @@ export const EditPaymentAndShipping: React.FC<{
   })
   const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState(currentPhoneNumber)
-
-  const [applePayUpdatePayment] = useMutation(PAYMENT_UPDATE, {
-    onCompleted: () => {
-      setIsMutating(false)
-      setOpenPaymentPopUp(false)
-    },
-    refetchQueries: [
-      {
-        query: GET_PAYMENT_DATA,
-      },
-    ],
-    onError: (err) => {
-      console.log("Error ChoosePlanPane.tsx", err)
-      Sentry.captureException(JSON.stringify(err))
-      const popUpData = {
-        title: "Oops! Try again!",
-        note: "There was an issue updating your payment method. Please retry or contact us.",
-        buttonText: "Close",
-        onClose: hidePopUp,
-      }
-      Keyboard.dismiss()
-      showPopUp(popUpData)
-      setIsMutating(false)
-    },
-  })
 
   const [updatePaymentAndShipping] = useMutation(UPDATE_PAYMENT_AND_SHIPPING, {
     onError: (error) => {
@@ -222,55 +194,6 @@ export const EditPaymentAndShipping: React.FC<{
     setIsMutating(false)
     if (result) {
       navigation.goBack()
-    }
-  }
-
-  const onApplePay = async () => {
-    if (isMutating) {
-      return
-    }
-    setIsMutating(true)
-    tracking.trackEvent({
-      actionName: TrackSchema.ActionNames.ApplePayTapped,
-      actionType: TrackSchema.ActionTypes.Tap,
-    })
-    const applePaySupportedOnDevice = await stripe.deviceSupportsApplePay()
-    if (applePaySupportedOnDevice) {
-      const canMakeApplePayment = await stripe.canMakeApplePayPayments()
-      if (canMakeApplePayment) {
-        // Customer has a payment card set up
-        try {
-          const token = await stripe.paymentRequestWithNativePay(
-            {
-              requiredBillingAddressFields: ["all"],
-            },
-            [
-              {
-                label: "SZNS Inc.",
-                amount: `${paymentPlan.price / 100}.00`,
-              },
-            ]
-          )
-          applePayUpdatePayment({
-            variables: {
-              planID: paymentPlan.planID,
-              token,
-              tokenType: "apple_pay",
-            },
-            awaitRefetchQueries: true,
-          })
-          // You should complete the operation by calling
-          stripe.completeApplePayRequest()
-        } catch (error) {
-          console.log("error", error)
-          stripe.cancelApplePayRequest()
-          setIsMutating(false)
-        }
-      } else {
-        // Customer hasn't set up apple pay on this device so we request payment setup
-        stripe.openApplePaySetup()
-        setIsMutating(false)
-      }
     }
   }
 
@@ -398,7 +321,17 @@ export const EditPaymentAndShipping: React.FC<{
         return (
           <Flex flexDirection="row" justifyContent="space-between">
             {paymentPlan && (
-              <Button variant="primaryWhite" size="large" width="100%" onPress={() => setOpenPaymentPopUp(true)}>
+              <Button
+                variant="primaryWhite"
+                size="large"
+                width="100%"
+                onPress={() =>
+                  navigation.navigate("Modal", {
+                    screen: NavigationSchema.PageNames.EditPaymentModal,
+                    params: { billingAddress, paymentPlan },
+                  })
+                }
+              >
                 Edit payment method
               </Button>
             )}
@@ -407,13 +340,6 @@ export const EditPaymentAndShipping: React.FC<{
       default:
         return null
     }
-  }
-
-  const onAddCreditCard = () => {
-    tracking.trackEvent({
-      actionName: TrackSchema.ActionNames.AddCreditCardTapped,
-      actionType: TrackSchema.ActionTypes.Tap,
-    })
   }
 
   return (
@@ -460,15 +386,6 @@ export const EditPaymentAndShipping: React.FC<{
           </Flex>
         </FixedKeyboardAvoidingView>
       </Container>
-
-      <EditPaymentPopUp
-        planID={paymentPlan?.planID}
-        billingAddress={billingAddress}
-        setOpenPopUp={setOpenPaymentPopUp}
-        openPopUp={openPaymentPopUp}
-        onApplePay={onApplePay}
-        onAddCreditCard={onAddCreditCard}
-      />
     </>
   )
 })

@@ -303,6 +303,12 @@ export class Button extends Component<ButtonProps, ButtonState> {
     const from = disabled ? variantColors[DisplayState.Disabled] : variantColors[previous]
     const to = disabled ? variantColors[DisplayState.Disabled] : variantColors[current]
     const overridenBg = backgroundColor ? { backgroundColor, borderColor: backgroundColor } : {}
+    let iconOpacity = 1
+    if (loading) {
+      iconOpacity = 0
+    } else if (disabled) {
+      iconOpacity = 0.5
+    }
     return (
       <Spring native from={from} to={to}>
         {(props) => (
@@ -331,21 +337,21 @@ export class Button extends Component<ButtonProps, ButtonState> {
               >
                 <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ position: "relative" }}>
                   {!!Icon && (
-                    <Flex
-                      flexDirection="row"
-                      flexWrap="nowrap"
-                      alignItems="center"
-                      style={{ opacity: disabled ? 0.5 : 1 }}
-                    >
+                    <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ opacity: iconOpacity }}>
                       <Icon />
                       <Spacer mr={1} />
                     </Flex>
                   )}
-                  <Sans color={to.color} size={size}>
+                  <Sans color={to.color} size={size} style={{ opacity: loading ? 0 : 1 }}>
                     {children}
                   </Sans>
                   {showCheckMark && (
-                    <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
+                    <Flex
+                      flexDirection="row"
+                      flexWrap="nowrap"
+                      alignItems="center"
+                      style={{ opacity: loading ? 0 : 1 }}
+                    >
                       <Spacer mr={0.5} />
                       <TextCheckSVG color={to.color} />
                     </Flex>
