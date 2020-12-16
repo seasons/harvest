@@ -94,7 +94,7 @@ export const EditPaymentAndShipping: React.FC<{
     onError: (error) => {
       let popUpData = {
         buttonText: "Got it",
-        note: "Make sure your shipping and billing address are valid.",
+        note: "Make sure your shipping and billing address are both valid.",
         title: "Something went wrong!",
         onClose: () => hidePopUp(),
       }

@@ -11,10 +11,10 @@ const windowDimensions = Dimensions.get("window")
 const windowHeight = windowDimensions.height
 
 export interface CustomPopUpProps {
-  buttonText: string
+  buttonText?: string
+  onRequestClose?: () => void
+  title?: string
   children: any
-  onRequestClose: () => void
-  title: string
   visible: boolean
 }
 
@@ -50,15 +50,19 @@ export const CustomPopUp: React.FC<CustomPopUpProps> = ({ buttonText, children, 
     <Modal transparent visible={showModal}>
       <AnimatedPopUp style={{ transform: [{ translateY: animation.translateY }] }} color={color("white100")}>
         <Box p={2} pt={4} pb={insets.bottom + 16} onLayout={onLayout}>
-          <Sans color={color("black100")} size="3">
-            {title}
-          </Sans>
+          {title && (
+            <Sans color={color("black100")} size="3">
+              {title}
+            </Sans>
+          )}
           <Spacer mb={1} />
           {children}
           <Spacer mb={1} />
-          <Button block variant="primaryBlack" onPress={onRequestClose}>
-            {buttonText}
-          </Button>
+          {!!buttonText && (
+            <Button block variant="primaryBlack" onPress={onRequestClose}>
+              {buttonText}
+            </Button>
+          )}
         </Box>
       </AnimatedPopUp>
       <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor }} />

@@ -23,6 +23,7 @@ import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 import { GET_PRODUCT } from "./Queries"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import { SizeWarning } from "./Components/SizeWarning"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -54,6 +55,7 @@ export const Product = screenTrack({
   const flatListRef = useRef(null)
   const userHasSession = !!authState?.userSession
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
+  const [showSizeWarning, setShowSizeWarning] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
 
   // If the slug is present, ignore the id. This would happen if a product is passed through a deep link.
@@ -176,6 +178,8 @@ export const Product = screenTrack({
   const images = product?.largeImages
   const imageWidth = viewWidth
 
+  console.log("selected here", selectedVariant)
+
   const inStock = selectedVariant && selectedVariant.reservable > 0
   let showNotifyMeMessage = false
   if (!inStock) {
@@ -256,8 +260,10 @@ export const Product = screenTrack({
     }
   }
 
+  console.log("data", data)
+
   return (
-    <Container insetsTop={false}>
+    <Container insetsTop={false} insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "productBackground"} />
       <ShareButtonWrapper>
         <ShareButton
@@ -287,6 +293,7 @@ export const Product = screenTrack({
         isMutatingNotify={isMutatingNotify}
         hasNotification={hasNotification}
         data={data}
+        setShowSizeWarning={setShowSizeWarning}
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
@@ -309,6 +316,13 @@ export const Product = screenTrack({
           toggleShowVariantPicker={toggleShowVariantPicker}
         />
       </AnimatedVariantPicker>
+      <SizeWarning
+        show={showSizeWarning}
+        data={data}
+        selectedVariant={selectedVariant}
+        setShowSizeWarning={setShowSizeWarning}
+        setSelectedVariant={setSelectedVariant}
+      />
     </Container>
   )
 })
