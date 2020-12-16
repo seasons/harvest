@@ -26,9 +26,8 @@ import Share from "react-native-share"
 import { State, UserState } from "../CreateAccount/CreateAccount"
 import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
-import { AuthorizedCTA } from "./Components/AuthorizedCTA"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
-import { RewaitlistedCTA } from "@seasons/eclipse"
+import { RewaitlistedCTA, AuthorizedCTA } from "@seasons/eclipse"
 
 export const GET_USER = gql`
   query GetUser {
