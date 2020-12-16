@@ -28,6 +28,7 @@ export const BagItemFragment = gql`
       brand {
         id
         name
+        websiteUrl
       }
       images(size: Thumb) {
         id
@@ -41,6 +42,12 @@ export const BagItemFragment = gql`
         displayLong
       }
     }
+    sellable {
+      new
+      used
+      usedPrice
+      newPrice
+    }
   }
 `
 
@@ -50,6 +57,7 @@ interface BagItemProps {
   navigation?: any
   removeItemFromBag?: Function
   removeFromBagAndSaveItem?: Function
+  onShowBuyBottomSheet: () => void
 }
 
 export const BagItem: React.FC<BagItemProps> = ({
@@ -58,6 +66,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   navigation,
   removeItemFromBag,
   removeFromBagAndSaveItem,
+  onShowBuyBottomSheet,
 }) => {
   const { authState } = useAuthContext()
   const [isMutating, setIsMutating] = useState(false)
@@ -75,6 +84,10 @@ export const BagItem: React.FC<BagItemProps> = ({
 
   const isReserved = bagItem.status !== "Added"
   const imageURL = product?.images?.[0]?.url || ""
+
+  // Show buy CTA whenever a sellable status is enabled, regardless of
+  // underlying availability
+  const isBuyable = bagItem?.productVariant?.sellable?.new || bagItem?.productVariant?.sellable.used
 
   const variantSize = variantToUse?.displayLong?.toLowerCase()
   const variantId = bagItem.variantID
@@ -147,7 +160,7 @@ export const BagItem: React.FC<BagItemProps> = ({
         }}
         flexWrap="nowrap"
         flexDirection="column"
-        justifyContent="flex-end"
+        justifyContent="space-between"
       >
         <Box style={{ width: "100%" }} p={2}>
           <Sans size="4">{`${index + 1}.`}</Sans>
@@ -160,6 +173,11 @@ export const BagItem: React.FC<BagItemProps> = ({
             Size {variantSize}
           </Sans>
         </Box>
+        {isBuyable && (
+          <Button size="small" variant="secondaryWhite" onPress={onShowBuyBottomSheet}>
+            Buy
+          </Button>
+        )}
       </Flex>
     )
   }

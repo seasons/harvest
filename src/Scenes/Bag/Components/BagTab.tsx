@@ -6,20 +6,22 @@ import { GetBagAndSavedItems } from "App/generated/GetBagAndSavedItems"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { State as CreateAccountState, UserState } from "App/Scenes/CreateAccount/CreateAccount"
+import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
-import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
 import React, { useEffect, useState } from "react"
 import { useLazyQuery, useMutation } from "react-apollo"
-import { Linking } from "react-native"
 import { GET_BAG, GET_LOCAL_BAG_ITEMS } from "../BagQueries"
-import { BagCardButton } from "./BagCardButton"
 import { BagItem } from "./BagItem"
 import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
+import { BagCardButton } from "./BagCardButton"
+import { BuyBottomSheet, height as bottomSheetHeight, TabType as BuyTabType, Tab as BuyTab } from "./BuyBottomSheet"
+import { AddSlot, Stylist, SurpriseMe } from "Assets/svgs"
+import { Linking } from "react-native"
+import { UserState, State as CreateAccountState } from "App/Scenes/CreateAccount/CreateAccount"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
@@ -33,6 +35,7 @@ export const BagTab: React.FC<{
   const [isMutating, setIsMutating] = useState(false)
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
+  const { bottomSheetSetProps, bottomSheetSnapToIndex } = useBottomSheetContext()
   const navigation = useNavigation()
   const tracking = useTracking()
 
@@ -111,6 +114,29 @@ export const BagTab: React.FC<{
       // If user isn't signed in or isnt active or authorized
       setItemCount(itemCount + 1)
     }
+  }
+
+  const onShowBuyBottomSheet = (bagItem) => {
+    const sellable = bagItem?.productVariant?.sellable || { new: false, used: false }
+    const { name: brandName, websiteUrl: brandHref } = bagItem?.productVariant?.product?.brand
+
+    // TODO: ensure brand has available stock
+    const newTab: BuyTab = sellable.new
+      ? { type: BuyTabType.NEW, price: sellable.newPrice, brandHref, brandName }
+      : { type: BuyTabType.NEW_UNAVAILABLE, brandHref, brandName }
+
+    // TODO: do we internally have a notion of stock? decrement physical count when a buy occurs, check that here?
+    const usedTab: BuyTab = sellable.used
+      ? { type: BuyTabType.USED, price: sellable.usedPrice, brandHref, brandName }
+      : { type: BuyTabType.USED_UNAVAILABLE }
+
+    bottomSheetSetProps({
+      renderContent: () => <BuyBottomSheet onDismiss={() => bottomSheetSnapToIndex(1)} tabs={[newTab, usedTab]} />,
+      snapPoints: [bottomSheetHeight, 0],
+      initialSnap: 1,
+      enabledInnerScrolling: false,
+    })
+    bottomSheetSnapToIndex(0)
   }
 
   let returnReminder
@@ -204,6 +230,7 @@ export const BagTab: React.FC<{
               index={index}
               bagItem={bagItem}
               navigation={navigation}
+              onShowBuyBottomSheet={() => onShowBuyBottomSheet(bagItem)}
             />
           </Box>
         ) : (
@@ -248,7 +275,6 @@ export const BagTab: React.FC<{
           <Spacer mb={3} />
         </>
       )}
-
       {isSignedIn && (
         <>
           <BagCardButton
