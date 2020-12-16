@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ProductWhereInput, CustomerStatus, ProductType, LetterSize, BottomSizeType } from "./globalTypes";
+import { ProductWhereInput, CustomerStatus, ProductFit, ProductType, LetterSize, BottomSizeType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetProduct
@@ -49,6 +49,12 @@ export interface GetProduct_me {
   customer: GetProduct_me_customer | null;
   bag: GetProduct_me_bag[] | null;
   savedItems: GetProduct_me_savedItems[] | null;
+}
+
+export interface GetProduct_products_category {
+  __typename: "Category";
+  id: string;
+  name: string;
 }
 
 export interface GetProduct_products_modelSize {
@@ -117,6 +123,7 @@ export interface GetProduct_products_brand_products_variants_internalSize {
 export interface GetProduct_products_brand_products_variants {
   __typename: "ProductVariant";
   id: string;
+  display: string | null;
   total: number;
   reservable: number;
   nonReservable: number;
@@ -189,6 +196,7 @@ export interface GetProduct_products_variants_internalSize {
 export interface GetProduct_products_variants {
   __typename: "ProductVariant";
   id: string;
+  display: string | null;
   total: number;
   reservable: number;
   nonReservable: number;
@@ -205,6 +213,8 @@ export interface GetProduct_products {
   id: string;
   slug: string;
   name: string;
+  productFit: ProductFit | null;
+  category: GetProduct_products_category;
   description: string | null;
   retailPrice: number | null;
   modelSize: GetProduct_products_modelSize | null;

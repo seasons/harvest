@@ -45,6 +45,7 @@ export interface CommonProductVariant_internalSize {
 export interface CommonProductVariant {
   __typename: "ProductVariant";
   id: string;
+  display: string | null;
   total: number;
   reservable: number;
   nonReservable: number;
