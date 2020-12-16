@@ -22,7 +22,6 @@ import { GetProduct_products_largeImages } from "App/generated/GetProduct"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { sizeToName } from "./Components/VariantList"
 import { SAVE_ITEM } from "./Components/SaveProductButton"
 import { useNavigation } from "@react-navigation/native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
@@ -127,20 +126,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
         )
       case "Sizes":
         const renderSizeRow = (item) => {
-          const {
-            id,
-            internalSize: { bottom, top },
-            isSaved,
-          } = item
-          let sizeName
-          switch (type) {
-            case "Top":
-              sizeName = sizeToName(top?.letter)
-              break
-            case "Bottom":
-              sizeName = bottom?.value
-              break
-          }
+          const { id, display, isSaved } = item
           return (
             <TouchableWithoutFeedback onPress={() => onSelectSize(id)}>
               <Box>
@@ -149,7 +135,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
                   <Flex flexDirection="row">
                     <Radio selected={id === selectedVariantID} onSelect={() => onSelectSize(id)} />
                     <Sans color={color("black100")} ml={1} size="1" weight="medium">
-                      {sizeName}
+                      {display}
                     </Sans>
                   </Flex>
                   {isSaved && (
