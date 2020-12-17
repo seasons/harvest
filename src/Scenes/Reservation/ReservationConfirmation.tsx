@@ -51,6 +51,10 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
             id
             productVariant {
               id
+              display {
+                short
+                long
+              }
               product {
                 id
                 name
@@ -206,7 +210,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
               {items?.map((item, i) => {
                 return (
                   <Box key={item.id}>
-                    <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
+                    <ReservationItem index={i} bagItem={item} navigation={props.navigation} />
                     <Spacer mb={1} />
                     {i !== items.length - 1 && <Separator />}
                     <Spacer mb={1} />

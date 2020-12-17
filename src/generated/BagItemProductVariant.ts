@@ -25,10 +25,10 @@ export interface BagItemProductVariant_product_images {
   url: string | null;
 }
 
-export interface BagItemProductVariant_product_variants_internalSize {
-  __typename: "Size";
-  id: string;
-  display: string;
+export interface BagItemProductVariant_product_variants_display {
+  __typename: "ProductVariantDisplay";
+  short: string | null;
+  long: string | null;
 }
 
 export interface BagItemProductVariant_product_variants {
@@ -36,7 +36,7 @@ export interface BagItemProductVariant_product_variants {
   id: string;
   hasRestockNotification: boolean;
   reservable: number;
-  internalSize: BagItemProductVariant_product_variants_internalSize | null;
+  display: BagItemProductVariant_product_variants_display | null;
 }
 
 export interface BagItemProductVariant_product {

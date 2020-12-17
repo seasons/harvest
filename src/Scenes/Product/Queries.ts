@@ -17,6 +17,24 @@ const commonProductVariantFragment = gql`
     manufacturerSizes {
       id
       display
+      top {
+        id
+        letter
+        sleeve
+        shoulder
+        chest
+        neck
+        length
+      }
+      bottom {
+        id
+        type
+        value
+        waist
+        rise
+        hem
+        inseam
+      }
     }
     internalSize {
       id
@@ -35,6 +53,10 @@ const commonProductVariantFragment = gql`
         id
         type
         value
+        waist
+        rise
+        hem
+        inseam
       }
     }
   }

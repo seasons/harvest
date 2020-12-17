@@ -32,8 +32,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
 
   const rows = sizeData.map((size, i) => {
     const displaySize = size?.display?.long
-    const manufacturerSize = size?.manufacturerSizes?.length > 0 && size?.manufacturerSizes?.[0]?.display
-    const manufacturerSizeDisplay = (!!manufacturerSize && manufacturerSize !== displaySize) || ""
+    const manufacturerSizeDisplay = size?.manufacturerSizes?.length > 0 && size?.manufacturerSizes?.[0]?.display
     return (
       <Box key={size.id || i}>
         <TouchableOpacity

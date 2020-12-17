@@ -35,10 +35,10 @@ export interface GetCustomer_me_bag_productVariant_product_images {
   url: string | null;
 }
 
-export interface GetCustomer_me_bag_productVariant_product_variants_internalSize {
-  __typename: "Size";
-  id: string;
-  display: string;
+export interface GetCustomer_me_bag_productVariant_product_variants_display {
+  __typename: "ProductVariantDisplay";
+  short: string | null;
+  long: string | null;
 }
 
 export interface GetCustomer_me_bag_productVariant_product_variants {
@@ -46,7 +46,7 @@ export interface GetCustomer_me_bag_productVariant_product_variants {
   id: string;
   hasRestockNotification: boolean;
   reservable: number;
-  internalSize: GetCustomer_me_bag_productVariant_product_variants_internalSize | null;
+  display: GetCustomer_me_bag_productVariant_product_variants_display | null;
 }
 
 export interface GetCustomer_me_bag_productVariant_product {

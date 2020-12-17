@@ -25,25 +25,14 @@ const GET_TAG = gql`
       }
       variants {
         id
-        internalSize {
-          id
-          top {
-            id
-            letter
-          }
-          bottom {
-            id
-            type
-            value
-          }
-          productType
-          display
-        }
         total
         reservable
         nonReservable
         reserved
         isSaved
+        display {
+          short
+        }
       }
     }
   }

@@ -14,9 +14,7 @@ import { Dimensions, FlatList, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-
 import { useMutation, useQuery } from "@apollo/react-hooks"
-
 import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
 import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
@@ -177,6 +175,8 @@ export const Product = screenTrack({
   }, [data, product])
 
   const brandProducts = product?.brand?.products
+
+  console.log("data", data)
 
   const viewWidth = Dimensions.get("window").width
   const images = product?.largeImages
