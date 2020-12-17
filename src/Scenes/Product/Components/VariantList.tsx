@@ -31,7 +31,9 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
   }
 
   const rows = sizeData.map((size, i) => {
-    const manufacturerSize = (size?.manufacturerSizes?.length > 0 && size?.manufacturerSizes?.[0]?.display) || ""
+    const displaySize = size?.display?.long
+    const manufacturerSize = size?.manufacturerSizes?.length > 0 && size?.manufacturerSizes?.[0]?.display
+    const manufacturerSizeDisplay = (!!manufacturerSize && manufacturerSize !== displaySize) || ""
     return (
       <Box key={size.id || i}>
         <TouchableOpacity
@@ -39,7 +41,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
             tracking.trackEvent({
               actionName: Schema.ActionNames.ProductVariantSelected,
               actionType: Schema.ActionTypes.Tap,
-              size: size?.internalSize?.display,
+              size: displaySize,
               variantID: size?.id,
             })
             setSelectedVariant(size)
@@ -50,14 +52,14 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
             <Flex flexDirection="row" alignItems="center">
               <Radio selected={!!selectedVariant.id && selectedVariant.id === size.id} pointerEventsNone />
               <Spacer mr={1} />
-              {size?.display && (
+              {displaySize && (
                 <Sans color={size?.reservable > 0 ? color("white100") : color("black50")} size="1">
-                  {size.display}
+                  {displaySize}
                 </Sans>
               )}
             </Flex>
             <Sans color="black50" size="1">
-              {size?.reservable > 0 ? manufacturerSize : "Unavailable"}
+              {size?.reservable > 0 ? manufacturerSizeDisplay : "Unavailable"}
             </Sans>
           </Flex>
         </TouchableOpacity>

@@ -135,7 +135,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
                   <Flex flexDirection="row">
                     <Radio selected={id === selectedVariantID} onSelect={() => onSelectSize(id)} />
                     <Sans color={color("black100")} ml={1} size="1" weight="medium">
-                      {display}
+                      {display?.long}
                     </Sans>
                   </Flex>
                   {isSaved && (

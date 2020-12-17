@@ -83,6 +83,10 @@ export const Product = screenTrack({
       id: "",
       reservable: 0,
       size: "",
+      display: {
+        short: "",
+        long: "",
+      },
       stock: 0,
       isInBag: false,
       hasRestockNotification: null,
@@ -178,8 +182,6 @@ export const Product = screenTrack({
   const images = product?.largeImages
   const imageWidth = viewWidth
 
-  console.log("selected here", selectedVariant)
-
   const inStock = selectedVariant && selectedVariant.reservable > 0
   let showNotifyMeMessage = false
   if (!inStock) {
@@ -259,8 +261,6 @@ export const Product = screenTrack({
       })
     }
   }
-
-  console.log("data", data)
 
   return (
     <Container insetsTop={false} insetsBottom={false}>

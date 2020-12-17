@@ -66,7 +66,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
             <Flex px={2} style={{ width: "100%" }} flexDirection="row" justifyContent="center">
               <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
                 <Sans size="1" color="black">
-                  {selectedVariant.display}
+                  {selectedVariant?.display?.long}
                 </Sans>
                 <Spacer mr={1} />
                 <DownChevronIcon color={color("black")} rotate={showVariantPicker} />

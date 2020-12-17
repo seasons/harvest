@@ -9,6 +9,12 @@ import { ProductType, LetterSize, BottomSizeType } from "./globalTypes";
 // GraphQL fragment: CommonProductVariant
 // ====================================================
 
+export interface CommonProductVariant_display {
+  __typename: "ProductVariantDisplay";
+  short: string | null;
+  long: string | null;
+}
+
 export interface CommonProductVariant_manufacturerSizes {
   __typename: "Size";
   id: string;
@@ -45,7 +51,7 @@ export interface CommonProductVariant_internalSize {
 export interface CommonProductVariant {
   __typename: "ProductVariant";
   id: string;
-  display: string | null;
+  display: CommonProductVariant_display | null;
   total: number;
   reservable: number;
   nonReservable: number;

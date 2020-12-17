@@ -3,7 +3,10 @@ import gql from "graphql-tag"
 const commonProductVariantFragment = gql`
   fragment CommonProductVariant on ProductVariant {
     id
-    display
+    display {
+      short
+      long
+    }
     total
     reservable
     nonReservable

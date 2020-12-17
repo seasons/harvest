@@ -87,6 +87,12 @@ export interface GetProduct_products_brand_products_brand {
   name: string;
 }
 
+export interface GetProduct_products_brand_products_variants_display {
+  __typename: "ProductVariantDisplay";
+  short: string | null;
+  long: string | null;
+}
+
 export interface GetProduct_products_brand_products_variants_manufacturerSizes {
   __typename: "Size";
   id: string;
@@ -123,7 +129,7 @@ export interface GetProduct_products_brand_products_variants_internalSize {
 export interface GetProduct_products_brand_products_variants {
   __typename: "ProductVariant";
   id: string;
-  display: string | null;
+  display: GetProduct_products_brand_products_variants_display | null;
   total: number;
   reservable: number;
   nonReservable: number;
@@ -158,6 +164,12 @@ export interface GetProduct_products_largeImages {
   __typename: "Image";
   imageId: string;
   url: string | null;
+}
+
+export interface GetProduct_products_variants_display {
+  __typename: "ProductVariantDisplay";
+  short: string | null;
+  long: string | null;
 }
 
 export interface GetProduct_products_variants_manufacturerSizes {
@@ -196,7 +208,7 @@ export interface GetProduct_products_variants_internalSize {
 export interface GetProduct_products_variants {
   __typename: "ProductVariant";
   id: string;
-  display: string | null;
+  display: GetProduct_products_variants_display | null;
   total: number;
   reservable: number;
   nonReservable: number;

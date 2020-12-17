@@ -19,9 +19,8 @@ const HomePageProductFragment = gql`
     variants {
       id
       reservable
-      internalSize {
-        id
-        display
+      display {
+        short
       }
     }
   }
@@ -155,9 +154,8 @@ export const GET_HOMEPAGE = gql`
             variants {
               id
               reservable
-              internalSize {
-                id
-                display
+              display {
+                short
               }
             }
           }
