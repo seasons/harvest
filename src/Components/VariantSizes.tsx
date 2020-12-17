@@ -8,7 +8,6 @@ export const VariantSizes: React.FC<{
   variants: Homepage_homepage_sections_results_Product_variants[]
   size: "0" | "1"
 }> = ({ variants, size }) => {
-  console.log("variants", variants)
   const availableVariants = variants.filter((a) => !!a?.display?.short)
 
   return (

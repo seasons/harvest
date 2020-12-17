@@ -119,7 +119,6 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
       variantID: suggestedVariant?.id,
     },
     onCompleted: (res) => {
-      console.log("selected here 2", suggestedVariant)
       setSelectedVariant(suggestedVariant)
       sharedOnComplete(res)
     },

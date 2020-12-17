@@ -13,8 +13,6 @@ export const ProductMeasurements: React.FC<{
     return null
   }
 
-  console.log("selectedVariant", selectedVariant)
-
   const topSizes: GetProduct_products_brand_products_variants_internalSize_top = selectedVariant?.internalSize?.top
 
   if (!topSizes?.letter && !topSizes?.length && !topSizes?.sleeve && !topSizes?.shoulder && !topSizes?.chest) {

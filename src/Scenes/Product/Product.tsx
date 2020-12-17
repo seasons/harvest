@@ -176,8 +176,6 @@ export const Product = screenTrack({
 
   const brandProducts = product?.brand?.products
 
-  console.log("data", data)
-
   const viewWidth = Dimensions.get("window").width
   const images = product?.largeImages
   const imageWidth = viewWidth
