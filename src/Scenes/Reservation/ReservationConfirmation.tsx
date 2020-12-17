@@ -51,10 +51,6 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
             id
             productVariant {
               id
-              display {
-                short
-                long
-              }
               product {
                 id
                 name
@@ -73,6 +69,10 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
                 variants {
                   id
                   size
+                  display {
+                    short
+                    long
+                  }
                 }
               }
             }
