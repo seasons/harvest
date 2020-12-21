@@ -6,10 +6,15 @@ import { CheckCircled } from "Assets/svgs"
 import gql from "graphql-tag"
 import React from "react"
 import { useQuery } from "react-apollo"
-import { ScrollView } from "react-native"
+import { Image, ScrollView, TouchableWithoutFeedback } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
-
+import RNStoryShare from "react-native-story-share"
 import { ReservationItem } from "./Components/ReservationItem"
+
+enum Option {
+  ShareToIG = "Share to IG",
+  ReferAndEarn = "Refer and Earn",
+}
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -122,6 +127,103 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const shippingDisplayText = shippingOption?.shippingMethod?.displayText
   const externalCost = shippingOption?.externalCost
 
+  const shareToIG = () => {
+    RNStoryShare.isInstagramAvailable()
+      .then((isAvailable) => {
+        if (isAvailable) {
+          RNStoryShare.shareToInstagram({
+            type: RNStoryShare.BASE64,
+            backgroundAsset:
+              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAQAAAAHUWYVAAABKUlEQVR42u3RMQEAAAjDMOZf9DDBwZFKaNKOHhUgQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQICYAERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABAQIECACAkRAgAgIEAEBIiACAkRAgAgIEAEBIiACAkRAgOiyBdIBj0hI3a/GAAAAAElFTkSuQmCC",
+          })
+        } else {
+          console.log("tf")
+        }
+      })
+      .catch((e) => console.log(e))
+  }
+
+  const SectionWrapper = ({ isFirst = false, isLast = false, onPress, children }) => {
+    const defaultBorderWidth = 1
+    const cornerRadius = 4
+    return (
+      <TouchableWithoutFeedback onPress={onPress}>
+        <Box
+          style={{
+            borderWidth: defaultBorderWidth,
+            flexGrow: 1,
+            borderColor: color("black10"),
+            borderRightWidth: isFirst ? defaultBorderWidth / 2.0 : defaultBorderWidth,
+            borderLeftWidth: isLast ? defaultBorderWidth / 2.0 : defaultBorderWidth,
+            borderTopLeftRadius: isFirst ? cornerRadius : 0,
+            borderBottomLeftRadius: isFirst ? cornerRadius : 0,
+            borderTopRightRadius: isLast ? cornerRadius : 0,
+            borderBottomRightRadius: isLast ? cornerRadius : 0,
+          }}
+        >
+          {children}
+        </Box>
+      </TouchableWithoutFeedback>
+    )
+  }
+
+  const OptionSections = ({ options }) => {
+    return (
+      <Flex flexDirection={"row"} flexGrow={1}>
+        {options.map((option, index) => {
+          const isFirst = index === 0
+          const isLast = index === options.length
+
+          switch (option) {
+            case Option.ShareToIG:
+              return (
+                <SectionWrapper isFirst={isFirst} isLast={isLast} onPress={() => shareToIG()}>
+                  <Flex py={2} alignItems="center">
+                    <Image
+                      source={require("../../../assets/images/instagramCopy.png")}
+                      style={{ paddingBottom: 4, opacity: 1.0, height: 24, width: 24 }}
+                    />
+                    <Sans pt={0.5} size="1" color="black50">
+                      Share to IG Stories
+                    </Sans>
+                  </Flex>
+                </SectionWrapper>
+              )
+            case Option.ReferAndEarn:
+              return (
+                <SectionWrapper
+                  isFirst={isFirst}
+                  isLast={isLast}
+                  onPress={() => props.navigation.navigate("InviteFriends")}
+                >
+                  <Flex py={2} alignItems="center">
+                    <Box
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: 12,
+                        height: 24,
+                        width: 24,
+                        borderColor: color("black100"),
+                        borderWidth: 1.5,
+                      }}
+                    >
+                      <Sans size="1" color="black100" fontFamily="Apercu-Mono">
+                        $
+                      </Sans>
+                    </Box>
+                    <Sans pt={0.5} size="1" color="black50">
+                      Refer & earn 50% off
+                    </Sans>
+                  </Flex>
+                </SectionWrapper>
+              )
+          }
+        })}
+      </Flex>
+    )
+  }
+
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
       <Flex style={{ flex: 1 }} px={2}>
@@ -136,6 +238,8 @@ export const ReservationConfirmation = screenTrack()((props) => {
               We've emailed you a confirmation and we'll notify you when its out for delivery.
             </Sans>
           </Box>
+          <OptionSections options={[Option.ShareToIG, Option.ReferAndEarn]} />
+          <Spacer pb={4} />
           <Box>
             <SectionHeader
               title="Order number"

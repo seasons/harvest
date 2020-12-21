@@ -11,7 +11,7 @@ interface InvitedFriendsRowProps {
 export const InvitedFriendsRow: React.FC<InvitedFriendsRowProps> = ({ referralLink }) => {
   const navigation = useNavigation()
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("InviteFriends", { referralLink })}>
+    <TouchableOpacity onPress={() => navigation.navigate("InviteFriends")}>
       <Box my={4} mx={2}>
         <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" justifyContent="space-between">
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
