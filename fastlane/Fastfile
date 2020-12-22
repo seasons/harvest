@@ -2,15 +2,28 @@ platform :ios do
     before_all do
         setup_circle_ci
     end  
+
     desc 'Fetch certificates and provisioning profiles'
     lane :certificates do
         match(app_identifier: 'com.seasons.Seasons', username: 'dev@seasons.nyc', type: "appstore")
     end
 
+    desc 'iOS: Increment build number and set the version to package.json version.'
+    private_lane :inc_ver_ios do
+    package = load_json(json_path: "./package.json")
+      increment_build_number(
+        xcodeproj: './ios/seasons.xcodeproj'
+      )
+      increment_version_number(
+        xcodeproj: './ios/seasons.xcodeproj',
+        version_number: package['version']
+      )
+    end
+
     desc 'Fetch certificates. Build the iOS application.'
     lane :build do
         certificates
-        # increment_build_number(xcodeproj: './ios/seasons.xcodeproj')
+        inc_ver_ios
         gym(scheme: 'seasons', 
             workspace: './ios/seasons.xcworkspace', export_method: 'app-store')
     end

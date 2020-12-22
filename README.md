@@ -88,3 +88,9 @@ destination. Note that if you get errors about name collisions, you need to info
 ```
 
 You're all set to start making changes in eclipse and
+
+### Creating a fastlane release
+
+1. Add the required fastlane plugins `fastlane add_plugin increment_version_name increment_version_code load_json` from the root directory
+1. Make sure you `.env` is pointed to production environmental variables
+1. Run `yarn version` to bump the version number, this command will also kickoff a fastlane build.
