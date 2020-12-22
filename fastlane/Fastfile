@@ -10,7 +10,7 @@ platform :ios do
     desc 'Fetch certificates. Build the iOS application.'
     lane :build do
         certificates
-        increment_build_number(xcodeproj: './ios/seasons.xcodeproj')
+        # increment_build_number(xcodeproj: './ios/seasons.xcodeproj')
         gym(scheme: 'seasons', 
             workspace: './ios/seasons.xcworkspace', export_method: 'app-store')
     end
