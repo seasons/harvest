@@ -1,6 +1,6 @@
 {
   "name": "harvest",
-  "version": "1.0.0",
+  "version": "1.10.0",
   "engines": {
     "node": ">=12.x.x"
   },
@@ -17,7 +17,9 @@
     "postinstall": "bash ./scripts/fix-androidx.sh",
     "apollo": "apollo service:push && rm -rf generated && apollo codegen:generate --excludes=node_modules/* --target typescript --tagName gql --outputFlat src/generated",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "postversion": "react-native-version && yarn build:fastlane",
+    "build:fastlane": "fastlane ios beta"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.1",
@@ -127,6 +129,7 @@
     "jetifier": "^1.6.4",
     "react-is": "^16.13.1",
     "react-native-unimodules": "^0.11.0",
+    "react-native-version": "^4.0.0",
     "react-test-renderer": "^16.9.0",
     "redux-devtools-extension": "^2.13.8",
     "remote-redux-devtools": "^0.5.16",
