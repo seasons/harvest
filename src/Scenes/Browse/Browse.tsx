@@ -3,18 +3,18 @@ import { useFocusEffect } from "@react-navigation/native"
 import { Box, Button, Flex, ProductGridItem } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
 import { ABBREVIATED_SIZES } from "App/helpers/constants"
-import { space } from "App/utils"
+import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
-import { FlatList, StatusBar } from "react-native"
+import { FlatList, StatusBar, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
-import { color } from "styled-system"
 import { BrowseEmptyState } from "./BrowseEmptyState"
 import { CategoryPicker } from "./CategoryPicker"
 import { ProductGridItemSkeleton } from "../Product/Components"
 import { GetBrowseProducts } from "App/generated/GetBrowseProducts"
+import { Sans, Spacer } from "@seasons/eclipse"
 
 export const GET_BROWSE_PRODUCTS = gql`
   query GetBrowseProducts(
@@ -162,9 +162,7 @@ export const Browse = screenTrack()((props: any) => {
   const numFiltersSelected = sizeFilters?.length
   const numColumns = 2
 
-  const filtersButtonVariant = numFiltersSelected > 0 ? "primaryBlack" : "primaryWhite"
   const filtersButtonText = numFiltersSelected > 0 ? `Filters +${numFiltersSelected}` : "Filters"
-  const filtersButtonTextColor = numFiltersSelected > 0 ? "white100" : "black100"
 
   const onCategoryPress = (item) => {
     tracking.trackEvent({
@@ -192,6 +190,20 @@ export const Browse = screenTrack()((props: any) => {
     <Container insetsBottom={false}>
       <Flex flexDirection="column" style={{ flex: 1 }}>
         <Box style={{ flex: 1, flexGrow: 1 }}>
+          <Flex justifyContent="space-between" width="100%" flexWrap="nowrap" flexDirection="row" alignItems="center">
+            <Flex flexWrap="nowrap" flexDirection="row" alignItems="center" px="12px" py="6px">
+              <SelectBox active={false} />
+              <Spacer mr={1} />
+              <Sans size="4">Available now</Sans>
+            </Flex>
+            <TouchableOpacity onPress={onFilterBtnPress}>
+              <Flex px="12px" py="6px">
+                <Sans size="4" style={{ textDecorationLine: "underline" }}>
+                  {filtersButtonText}
+                </Sans>
+              </Flex>
+            </TouchableOpacity>
+          </Flex>
           <FlatList
             contentContainerStyle={
               products?.length
@@ -255,16 +267,6 @@ export const Browse = screenTrack()((props: any) => {
               }
             }}
           />
-          <FixedButtonContainer bottom={space(2)}>
-            <Button
-              color={color(filtersButtonTextColor)}
-              size="small"
-              variant={filtersButtonVariant}
-              onPress={onFilterBtnPress}
-            >
-              {filtersButtonText}
-            </Button>
-          </FixedButtonContainer>
         </Box>
         <Box height={56}>
           <CategoryPicker
@@ -278,6 +280,14 @@ export const Browse = screenTrack()((props: any) => {
     </Container>
   )
 })
+
+const SelectBox = styled(Box)<{ active: boolean }>`
+  height: 16;
+  width: 16;
+  background-color: ${(p) => (p.active ? color("black100") : color("white100"))};
+  border-width: 1;
+  border-color: ${color("black100")};
+`
 
 const FixedButtonContainer = styled(Box)`
   position: absolute;
