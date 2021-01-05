@@ -8,7 +8,7 @@ import React from "react"
 import { useQuery } from "react-apollo"
 import { Image, ScrollView, TouchableWithoutFeedback } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
-import RNStoryShare from "react-native-story-share"
+import Share from "react-native-share"
 import { ReservationItem } from "./Components/ReservationItem"
 
 enum Option {
@@ -127,20 +127,21 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const shippingDisplayText = shippingOption?.shippingMethod?.displayText
   const externalCost = shippingOption?.externalCost
 
-  const shareToIG = () => {
-    RNStoryShare.isInstagramAvailable()
-      .then((isAvailable) => {
-        if (isAvailable) {
-          RNStoryShare.shareToInstagram({
-            type: RNStoryShare.BASE64,
-            backgroundAsset:
-              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAQAAAAHUWYVAAABKUlEQVR42u3RMQEAAAjDMOZf9DDBwZFKaNKOHhUgQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQICYAERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABAQIECACAkRAgAgIEAEBIiACAkRAgAgIEAEBIiACAkRAgOiyBdIBj0hI3a/GAAAAAElFTkSuQmCC",
-          })
-        } else {
-          console.log("tf")
-        }
-      })
-      .catch((e) => console.log(e))
+  const shareToIG = async () => {
+    const shareOptions = {
+      title: "Share image to instastory",
+      method: Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
+      backgroundImage:
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAQAAAAHUWYVAAABKUlEQVR42u3RMQEAAAjDMOZf9DDBwZFKaNKOHhUgQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQICYAERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABAQIECACAkRAgAgIEAEBIiACAkRAgAgIEAEBIiACAkRAgOiyBdIBj0hI3a/GAAAAAElFTkSuQmCC",
+      social: Share.Social.INSTAGRAM_STORIES,
+    }
+
+    try {
+      const ShareResponse = await Share.shareSingle(shareOptions)
+      console.log(JSON.stringify(ShareResponse, null, 2))
+    } catch (error) {
+      console.log("Error =>", error)
+    }
   }
 
   const SectionWrapper = ({ isFirst = false, isLast = false, onPress, children }) => {
