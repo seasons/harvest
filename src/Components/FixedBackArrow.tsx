@@ -65,7 +65,6 @@ export const FixedBackArrow: React.FC<{
 
 const Arrow = styled(BackArrowIcon)`
   left: 4;
-  border-color: #000000;
 `
 
 const Wrapper = styled(Box)`

@@ -18,8 +18,6 @@ export const CloseButton: React.FC<{
   const backgroundColor = variant === "light" ? color("white100") : color("black85")
   const borderWidth = variant === "light" ? 1 : 0
 
-  console.log(borderColor, backgroundColor)
-
   return (
     <Wrapper style={{ right: overrides.right ?? 20 }}>
       <TouchableOpacity onPress={() => navigation.goBack()}>

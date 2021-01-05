@@ -9,7 +9,7 @@ export const Container: React.FC<{
   style?: any
   insetsBottom?: boolean
   insetsTop?: boolean
-  backgroundColor?: "black100" | "black85" | "white100"
+  backgroundColor?: "black100" | "white100"
 }> = ({ children, backgroundColor = "white100", insetsBottom = true, insetsTop = true, style }) => {
   const insets = useSafeAreaInsets()
 

@@ -6,7 +6,7 @@ import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { DarkInstagram } from "Assets/svgs"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { useQuery } from "react-apollo"
-import { FlatList } from "react-native"
+import { Dimensions, FlatList } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import Share from "react-native-share"
 import ViewShot, { captureRef } from "react-native-view-shot"
@@ -69,11 +69,11 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
 
   let onScrollEnd = (e) => {
     let pageNumber = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / 310 + 0.5), 0), products.length)
-    console.log(pageNumber)
     setCurrentPageNumber(pageNumber)
   }
 
-  const convertSpacing = (pixels) => pixels * 0.83
+  const slideWidth = 310
+  const convertSpacing = (pixels) => (pixels * slideWidth) / Dimensions.get("window").width
 
   const onDownload = async () => {
     captureRef(viewShotRefs[currentPageNumber], {
@@ -123,11 +123,10 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     const imageUrl = product?.images?.[0]?.url
     const brandName = product?.brand?.name
     const productName = product?.name
-    const imageWidth = 310
     const imageHeight = convertSpacing(470)
 
     // Based on recommended dimensions (1920 x 1080)
-    const instagramShareHeight = (imageWidth * 16) / 9
+    const instagramShareHeight = (slideWidth * 16) / 9
     return (
       <ViewShot ref={viewShotRefs[index]} style={{ borderRadius: 6, overflow: "hidden", height: instagramShareHeight }}>
         <Flex style={{ height: instagramShareHeight, backgroundColor: color("white100") }}>
@@ -149,7 +148,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
             </Sans>
           </Flex>
 
-          <FadeInImage source={{ uri: imageUrl || "" }} style={{ width: imageWidth, height: imageHeight }} />
+          <FadeInImage source={{ uri: imageUrl || "" }} style={{ width: slideWidth, height: imageHeight }} />
           <Flex mt={convertSpacing(4)} mx={convertSpacing(8)} flexDirection="row" justifyContent="space-between">
             <Sans size="0.5" color="black100" fontFamily="Apercu-Mono">
               {index + 1 + "/" + products.length}
