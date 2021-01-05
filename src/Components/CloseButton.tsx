@@ -1,22 +1,39 @@
-import React from "react"
-import styled from "styled-components/native"
-import { Box } from "./Box"
-import { CloseXSVG } from "../../assets/svgs"
-import { TouchableOpacity } from "react-native"
-import { color } from "App/utils"
 import { useNavigation } from "@react-navigation/native"
+import { color } from "App/utils"
+import React from "react"
+import { TouchableOpacity } from "react-native"
+import styled from "styled-components/native"
+import { CloseXSVG } from "../../assets/svgs"
+import { Box } from "./Box"
 
 export type CloseButtonVariant = "light" | "dark"
 
 export const CloseButton: React.FC<{
   variant?: CloseButtonVariant
-}> = ({ variant }) => {
+  overrides?: any
+}> = ({ variant, overrides }) => {
   const navigation = useNavigation()
 
+  const borderColor = variant === "light" ? color("black10") : color("black100")
+  const backgroundColor = variant === "light" ? color("white100") : color("black85")
+  const borderWidth = variant === "light" ? 1 : 0
+
+  console.log(borderColor, backgroundColor)
+
   return (
-    <Wrapper>
+    <Wrapper style={{ right: overrides.right ?? 20 }}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Circle variant={variant}>
+        <Circle
+          variant={variant}
+          style={{
+            borderColor: overrides.borderColor ?? borderColor,
+            backgroundColor: overrides.backgroundColor ?? backgroundColor,
+            borderWidth: overrides.borderWidth ?? borderWidth,
+          }}
+          borderColor={borderColor}
+          backgroundColor={backgroundColor}
+          borderWidth={borderWidth}
+        >
           <CloseXSVG variant={variant} />
         </Circle>
       </TouchableOpacity>
@@ -31,10 +48,10 @@ const Wrapper = styled(Box)`
   z-index: 100;
 `
 
-const Circle = styled(Box)<{ variant: string }>`
-  background-color: ${(p) => (p?.variant === "light" ? color("white100") : color("black85"))};
-  border-width: ${(p) => (p?.variant === "light" ? 1 : 0)};
-  border-color: ${(p) => (p?.variant === "light" ? color("black10") : color("black100"))};
+const Circle = styled(Box)<{ variant: string; borderColor: string; borderWidth: number; backgroundColor: string }>`
+  background-color: #1b1b1b;
+  border-width: ${(p) => p.borderWidth};
+  border-color: ${(p) => p.borderColor};
   border-radius: 100;
   height: 40;
   width: 40;

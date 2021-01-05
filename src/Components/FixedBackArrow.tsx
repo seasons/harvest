@@ -14,7 +14,8 @@ export const FixedBackArrow: React.FC<{
   variant?: FixedBackArrowVariant
   onPress?: () => void
   rotationDegree?: RotationDegree
-}> = ({ navigation, variant, onPress, rotationDegree }) => {
+  overrides?: any
+}> = ({ navigation, variant, onPress, rotationDegree, overrides }) => {
   const getColorsForVariant = (variant: FixedBackArrowVariant) => {
     const {
       colors: { black100, white100, black10, productBackgroundColor },
@@ -52,9 +53,9 @@ export const FixedBackArrow: React.FC<{
   const variantColors = getColorsForVariant(variant)
 
   return (
-    <Wrapper style={{ transform: [{ rotate: rotationDegree }] }}>
+    <Wrapper style={{ left: overrides.left ?? 7, top: overrides.top ?? 50, transform: [{ rotate: rotationDegree }] }}>
       <TouchableOpacity onPress={!!onPress ? onPress : () => navigation.goBack()}>
-        <ArrowWrapper backgroundColor={variantColors.backgroundColor}>
+        <ArrowWrapper backgroundColor={variantColors.backgroundColor} borderColor={overrides.borderColor}>
           <Arrow color={variantColors.arrowColor} />
         </ArrowWrapper>
       </TouchableOpacity>
@@ -64,19 +65,20 @@ export const FixedBackArrow: React.FC<{
 
 const Arrow = styled(BackArrowIcon)`
   left: 4;
+  border-color: #000000;
 `
 
 const Wrapper = styled(Box)`
   position: absolute;
-  top: 50;
-  left: 7;
   z-index: 2000;
 `
 
-const ArrowWrapper = styled(Flex)<{ backgroundColor: string }>`
+const ArrowWrapper = styled(Flex)<{ backgroundColor: string; borderColor?: string }>`
   flex-direction: row;
   background-color: ${(p) => p.backgroundColor};
   border-radius: 100;
+  border-width: ${(p) => (p.borderColor ? 1 : 0)};
+  border-color: ${(p) => p.borderColor ?? "#FFFFFF"};
   height: 40;
   width: 40;
   align-items: center;

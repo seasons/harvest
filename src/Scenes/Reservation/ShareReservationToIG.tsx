@@ -1,10 +1,13 @@
+import CameraRoll from "@react-native-community/cameraroll"
 import { gql } from "apollo-boost"
-import { CloseButton, Container, FadeInImage, FixedBackArrow, FixedButton, Flex, Sans, Spacer } from "App/Components"
+import { Button, CloseButton, FadeInImage, FixedBackArrow, Flex, Sans, Spacer } from "App/Components"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
+import { DarkInstagram } from "Assets/svgs"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { useQuery } from "react-apollo"
-import { FlatList, Image } from "react-native"
+import { FlatList } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import Share from "react-native-share"
 import ViewShot, { captureRef } from "react-native-view-shot"
 
@@ -26,7 +29,7 @@ const GET_CUSTOMER_RESERVATION_ITEMS = gql`
                   id
                   name
                 }
-                images {
+                images(size: Large) {
                   id
                   url
                 }
@@ -44,6 +47,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
   const reservationID = route?.params?.reservationID
   const flatListRef: MutableRefObject<FlatList<any>> = useRef(null)
   const [currentPageNumber, setCurrentPageNumber] = useState(0)
+  const insets = useSafeAreaInsets()
 
   const { data, error } = useQuery(GET_CUSTOMER_RESERVATION_ITEMS, {
     variables: {
@@ -60,38 +64,6 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     reservation?.products?.map((product) => {
       return product?.images?.[0]
     }) ?? []
-  products = [
-    {
-      name: "Camo Puffer Jacket",
-      brand: { name: "Rhude" },
-      images: [{ url: "https://seasons-images.s3.amazonaws.com/prda/prada-suede-coat/prada-suede-coat-1.png" }],
-    },
-    {
-      name: "Camo Puffer Jacket",
-      brand: { name: "Rhude" },
-      images: [{ url: "https://seasons-images.s3.amazonaws.com/prda/prada-suede-coat/prada-suede-coat-1.png" }],
-    },
-    {
-      name: "Camo Puffer Jacket",
-      brand: { name: "Rhude" },
-      images: [{ url: "https://seasons-images.s3.amazonaws.com/prda/prada-suede-coat/prada-suede-coat-1.png" }],
-    },
-    {
-      name: "Camo Puffer Jacket",
-      brand: { name: "Rhude" },
-      images: [{ url: "https://seasons-images.s3.amazonaws.com/prda/prada-suede-coat/prada-suede-coat-1.png" }],
-    },
-    {
-      name: "Camo Puffer Jacket",
-      brand: { name: "Rhude" },
-      images: [{ url: "https://seasons-images.s3.amazonaws.com/prda/prada-suede-coat/prada-suede-coat-1.png" }],
-    },
-    {
-      name: "Camo Puffer Jacket",
-      brand: { name: "Rhude" },
-      images: [{ url: "https://seasons-images.s3.amazonaws.com/prda/prada-suede-coat/prada-suede-coat-1.png" }],
-    },
-  ]
 
   const viewShotRefs = [...Array(products.length)].map((_arr, index) => useRef(null))
 
@@ -103,8 +75,19 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
 
   const convertSpacing = (pixels) => pixels * 0.83
 
-  const onDownload = () => {
-    // Download image to camera roll
+  const onDownload = async () => {
+    captureRef(viewShotRefs[currentPageNumber], {
+      result: "tmpfile",
+    }).then(
+      async (url) => {
+        tracking.trackEvent({
+          actionName: Schema.ActionNames.DownloadReservationShareImageTapped,
+          actionType: Schema.ActionTypes.Tap,
+        })
+        CameraRoll.save(url)
+      },
+      (error) => console.error("Failed to create image", error)
+    )
   }
 
   const onShareToIG = async () => {
@@ -114,6 +97,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     })
     captureRef(viewShotRefs[currentPageNumber], {
       result: "base64",
+      // Recommended Instagram story dimension
       width: 1080,
       height: 1920,
     }).then(
@@ -125,15 +109,13 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
           attributionURL: "@seasons.ny",
           social: Share.Social.INSTAGRAM_STORIES,
         }
-
         try {
-          const ShareResponse = await Share.shareSingle(shareOptions)
-          console.log(JSON.stringify(ShareResponse, null, 2))
+          await Share.shareSingle(shareOptions)
         } catch (error) {
-          console.log("Error =>", error)
+          console.log("Failed to post to instagram stories", error)
         }
       },
-      (error) => console.error("Oops, snapshot failed", error)
+      (error) => console.error("Failed to create image", error)
     )
   }
 
@@ -142,47 +124,39 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     const brandName = product?.brand?.name
     const productName = product?.name
     const imageWidth = 310
-    const imageHeight = 400
+    const imageHeight = convertSpacing(470)
+
+    // Based on recommended dimensions (1920 x 1080)
+    const instagramShareHeight = (imageWidth * 16) / 9
     return (
-      <ViewShot ref={viewShotRefs[index]} style={{ flexShrink: 1, height: 597 }}>
-        <Flex style={{ borderRadius: 6, backgroundColor: color("white100") }}>
-          <Sans mt={convertSpacing(64)} ml={convertSpacing(8)} size="3" color="black100" fontFamily="Apercu-Mono">
-            NEW ROTATION
-          </Sans>
-          <Sans
-            mt={convertSpacing(16)}
-            ml={convertSpacing(8)}
-            size="1"
-            color="black100"
-            fontFamily="Apercu-Mono"
-            style={{ textDecorationLine: "underline" }}
-          >
-            {brandName}
-          </Sans>
-          <Sans
-            mb={convertSpacing(8)}
-            ml={convertSpacing(8)}
-            size="1"
-            color="black100"
-            fontFamily="Apercu-Mono"
-            style={{ opacity: 0.5 }}
-          >
-            {productName}
-          </Sans>
+      <ViewShot ref={viewShotRefs[index]} style={{ borderRadius: 6, overflow: "hidden", height: instagramShareHeight }}>
+        <Flex style={{ height: instagramShareHeight, backgroundColor: color("white100") }}>
+          <Flex mx={convertSpacing(8)}>
+            <Sans mt={convertSpacing(48)} size="2" color="black100" fontFamily="Apercu-Mono">
+              NEW ROTATION
+            </Sans>
+            <Sans
+              mt={convertSpacing(16)}
+              size="0.5"
+              color="black100"
+              fontFamily="Apercu-Mono"
+              style={{ textDecorationLine: "underline" }}
+            >
+              {brandName}
+            </Sans>
+            <Sans mb={convertSpacing(8)} size="0.5" color="black100" fontFamily="Apercu-Mono" style={{ opacity: 0.5 }}>
+              {productName}
+            </Sans>
+          </Flex>
+
           <FadeInImage source={{ uri: imageUrl || "" }} style={{ width: imageWidth, height: imageHeight }} />
-          <Flex
-            mt={convertSpacing(4)}
-            mb={convertSpacing(20)}
-            mx={convertSpacing(8)}
-            flexDirection="row"
-            justifyContent="space-between"
-          >
-            <Sans size="1" color="black100" fontFamily="Apercu-Mono" style={{ opacity: 0.5 }}>
+          <Flex mt={convertSpacing(4)} mx={convertSpacing(8)} flexDirection="row" justifyContent="space-between">
+            <Sans size="0.5" color="black100" fontFamily="Apercu-Mono">
               {index + 1 + "/" + products.length}
             </Sans>
-            <Sans size="1" color="black100" fontFamily="Apercu-Mono">
+            <Sans size="0.5" color="black100" fontFamily="Apercu-Mono">
               @
-              <Sans size="1" color="black100" fontFamily="Apercy-Mono" style={{ textDecorationLine: "underline" }}>
+              <Sans size="0.5" color="black100" fontFamily="Apercy-Mono" style={{ textDecorationLine: "underline" }}>
                 seasons.ny
               </Sans>
             </Sans>
@@ -193,18 +167,26 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
   }
 
   return (
-    <Container insetsBottom={false} backgroundColor="black85">
-      <CloseButton />
-      <FixedBackArrow variant="whiteTransparent" rotationDegree="270deg" navigation={navigation} onPress={onDownload} />
+    <Flex pt={insets.top} style={{ flex: 1, backgroundColor: "#1B1B1B" }}>
+      <CloseButton overrides={{ borderColor: "#333333", backgroundColor: "#1B1B1B", borderWidth: 1 }} />
+      <FixedBackArrow
+        overrides={{
+          borderColor: "#333333",
+          top: 40,
+          left: 16,
+        }}
+        variant="whiteTransparent"
+        rotationDegree="270deg"
+        navigation={navigation}
+        onPress={onDownload}
+      />
       <Spacer mt={64} />
       <FlatList
         onMomentumScrollEnd={onScrollEnd}
         ref={flatListRef}
         horizontal
         data={products}
-        ItemSeparatorComponent={() => <Spacer ml={1.5} />}
-        keyboardDismissMode="interactive"
-        keyboardShouldPersistTaps="handled"
+        ItemSeparatorComponent={() => <Spacer ml={3} />}
         keyExtractor={(item, index) => item + String(index)}
         renderItem={({ item, index }) => renderItem(item, index)}
         showsVerticalScrollIndicator={false}
@@ -219,17 +201,20 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
         snapToInterval={322}
         snapToAlignment={"center"}
       />
-      <FixedButton positionBottom={space(5)} onPress={onShareToIG} block>
-        <Flex py={2} justifyContent="center" flexDirection="row">
-          <Image
-            source={require("../../../assets/images/instagramCopy.png")}
-            style={{ opacity: 1.0, height: 24, width: 24 }}
-          />
-          <Sans pt={0.5} size="1" color="white100">
-            Share to IG Stories
-          </Sans>
-        </Flex>
-      </FixedButton>
-    </Container>
+      <Flex p={2} style={{ width: "100%" }}>
+        <Button
+          Icon={DarkInstagram}
+          onPress={onShareToIG}
+          variant="primaryBlack"
+          backgroundColor="#1B1B1B"
+          overrideBorderColor="#333333"
+          bottom={space(5)}
+          mr={4}
+          block
+        >
+          Share to IG Stories
+        </Button>
+      </Flex>
+    </Flex>
   )
 })

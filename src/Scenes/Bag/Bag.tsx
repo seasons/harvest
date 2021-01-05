@@ -70,13 +70,6 @@ export const Bag = screenTrack()((props) => {
     }
   }, [data, setIsLoading, setItemCount])
 
-  useEffect(() => {
-    props.navigation.navigate("BagStack", {
-      screen: "ReservationConfirmation",
-      params: { reservationID: "ckjjubhyp007s0713vgxqv1ga" },
-    })
-  }, [])
-
   const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
     update(cache, { data }) {
       // Note: This mutation is being called in BagItem.tsx and has it's variables and refetchQueries listed there

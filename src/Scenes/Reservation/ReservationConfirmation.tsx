@@ -2,11 +2,11 @@ import { Box, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/
 import { Loader } from "App/Components/Loader"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { CheckCircled } from "Assets/svgs"
+import { CheckCircled, Instagram } from "Assets/svgs"
 import gql from "graphql-tag"
 import React from "react"
 import { useQuery } from "react-apollo"
-import { Image, ScrollView, TouchableWithoutFeedback } from "react-native"
+import { ScrollView, TouchableWithoutFeedback } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
 import { ReservationItem } from "./Components/ReservationItem"
 
@@ -166,10 +166,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
               return (
                 <SectionWrapper key={option} isFirst={isFirst} isLast={isLast} onPress={() => shareToIG()}>
                   <Flex py={2} alignItems="center">
-                    <Image
-                      source={require("../../../assets/images/instagramCopy.png")}
-                      style={{ paddingBottom: 4, opacity: 1.0, height: 24, width: 24 }}
-                    />
+                    <Instagram />
                     <Sans pt={0.5} size="1" color="black50">
                       Share to IG Stories
                     </Sans>
