@@ -1,19 +1,20 @@
 import React from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
-
 import { BackArrowIcon } from "../../assets/icons"
 import { Box } from "./Box"
 import { Flex } from "./Flex"
 import { themeProps } from "./Theme"
 
 type FixedBackArrowVariant = "blackBackground" | "whiteBackground" | "productBackground" | "whiteTransparent"
+type RotationDegree = "0deg" | "90deg" | "180deg" | "270deg"
 
 export const FixedBackArrow: React.FC<{
   navigation: any
   variant?: FixedBackArrowVariant
   onPress?: () => void
-}> = ({ navigation, variant, onPress }) => {
+  rotationDegree?: RotationDegree
+}> = ({ navigation, variant, onPress, rotationDegree }) => {
   const getColorsForVariant = (variant: FixedBackArrowVariant) => {
     const {
       colors: { black100, white100, black10, productBackgroundColor },
@@ -51,7 +52,7 @@ export const FixedBackArrow: React.FC<{
   const variantColors = getColorsForVariant(variant)
 
   return (
-    <Wrapper>
+    <Wrapper style={{ transform: [{ rotate: rotationDegree }] }}>
       <TouchableOpacity onPress={!!onPress ? onPress : () => navigation.goBack()}>
         <ArrowWrapper backgroundColor={variantColors.backgroundColor}>
           <Arrow color={variantColors.arrowColor} />

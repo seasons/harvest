@@ -241,6 +241,9 @@ export enum ActionNames {
 
   ApplePayTapped = "Apple Pay Tapped",
   AddCreditCardTapped = "Add Credit Card Tapped",
+
+  // IG Sharing
+  ShareToIGButtonTapped = "ShareToIGButtonTapped",
 }
 
 /**

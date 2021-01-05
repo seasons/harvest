@@ -28,7 +28,7 @@ import { FitPicDetail } from "App/Scenes/Home/Components/FitPicDetail"
 import { Product, SaveProduct } from "App/Scenes/Product"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
-import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
+import { Reservation, ReservationConfirmation, ShareReservationToIG } from "App/Scenes/Reservation"
 import {
   ReservationFeedback,
   ReservationFeedbackConfirmation,
@@ -136,6 +136,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ExtendPauseConfirmation} component={ExtendPauseConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ApplyPromoCode} component={ApplyPromoCode} />
       <ModalStack.Screen name={Schema.PageNames.InviteFromContactsModal} component={InviteFromContacts} />
+      <ModalStack.Screen name={Schema.PageNames.ShareReservationToIGModal} component={ShareReservationToIG} />
     </ModalStack.Navigator>
   )
 }

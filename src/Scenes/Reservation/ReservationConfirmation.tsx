@@ -8,7 +8,6 @@ import React from "react"
 import { useQuery } from "react-apollo"
 import { Image, ScrollView, TouchableWithoutFeedback } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
-import Share from "react-native-share"
 import { ReservationItem } from "./Components/ReservationItem"
 
 enum Option {
@@ -128,27 +127,14 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const externalCost = shippingOption?.externalCost
 
   const shareToIG = async () => {
-    const shareOptions = {
-      title: "Share image to instastory",
-      method: Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
-      backgroundImage:
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAQAAAAHUWYVAAABKUlEQVR42u3RMQEAAAjDMOZf9DDBwZFKaNKOHhUgQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQAQEiIAAERAgAgJEQICYAERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABERAgAgIEAEBIiBABAQIECACAkRAgAgIEAEBIiACAkRAgAgIEAEBIiACAkRAgOiyBdIBj0hI3a/GAAAAAElFTkSuQmCC",
-      social: Share.Social.INSTAGRAM_STORIES,
-    }
-
-    try {
-      const ShareResponse = await Share.shareSingle(shareOptions)
-      console.log(JSON.stringify(ShareResponse, null, 2))
-    } catch (error) {
-      console.log("Error =>", error)
-    }
+    props.navigation.navigate("Modal", { screen: "ShareReservationToIGModal", params: { reservationID } })
   }
 
-  const SectionWrapper = ({ isFirst = false, isLast = false, onPress, children }) => {
+  const SectionWrapper = ({ isFirst = false, isLast = false, onPress, children, key }) => {
     const defaultBorderWidth = 1
     const cornerRadius = 4
     return (
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableWithoutFeedback onPress={onPress} key={key}>
         <Box
           style={{
             borderWidth: defaultBorderWidth,
@@ -178,7 +164,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
           switch (option) {
             case Option.ShareToIG:
               return (
-                <SectionWrapper isFirst={isFirst} isLast={isLast} onPress={() => shareToIG()}>
+                <SectionWrapper key={option} isFirst={isFirst} isLast={isLast} onPress={() => shareToIG()}>
                   <Flex py={2} alignItems="center">
                     <Image
                       source={require("../../../assets/images/instagramCopy.png")}
@@ -193,6 +179,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
             case Option.ReferAndEarn:
               return (
                 <SectionWrapper
+                  key={option}
                   isFirst={isFirst}
                   isLast={isLast}
                   onPress={() => props.navigation.navigate("InviteFriends")}

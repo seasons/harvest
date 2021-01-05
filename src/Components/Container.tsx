@@ -1,7 +1,6 @@
 import { color } from "App/utils"
 import React from "react"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-
 import { Flex } from "./Flex"
 import { Theme } from "./Theme"
 
@@ -10,7 +9,7 @@ export const Container: React.FC<{
   style?: any
   insetsBottom?: boolean
   insetsTop?: boolean
-  backgroundColor?: "black100" | "white100"
+  backgroundColor?: "black100" | "black85" | "white100"
 }> = ({ children, backgroundColor = "white100", insetsBottom = true, insetsTop = true, style }) => {
   const insets = useSafeAreaInsets()
 
