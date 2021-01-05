@@ -28,9 +28,6 @@ export const CloseButton: React.FC<{
             backgroundColor: overrides.backgroundColor ?? backgroundColor,
             borderWidth: overrides.borderWidth ?? borderWidth,
           }}
-          borderColor={borderColor}
-          backgroundColor={backgroundColor}
-          borderWidth={borderWidth}
         >
           <CloseXSVG variant={variant} />
         </Circle>
@@ -42,14 +39,10 @@ export const CloseButton: React.FC<{
 const Wrapper = styled(Box)`
   position: absolute;
   top: 40;
-  right: 20;
   z-index: 100;
 `
 
 const Circle = styled(Box)<{ variant: string; borderColor: string; borderWidth: number; backgroundColor: string }>`
-  background-color: #1b1b1b;
-  border-width: ${(p) => p.borderWidth};
-  border-color: ${(p) => p.borderColor};
   border-radius: 100;
   height: 40;
   width: 40;

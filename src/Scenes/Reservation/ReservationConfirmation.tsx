@@ -130,11 +130,11 @@ export const ReservationConfirmation = screenTrack()((props) => {
     props.navigation.navigate("Modal", { screen: "ShareReservationToIGModal", params: { reservationID } })
   }
 
-  const SectionWrapper = ({ isFirst = false, isLast = false, onPress, children, key }) => {
+  const SectionWrapper = ({ isFirst = false, isLast = false, onPress, children }) => {
     const defaultBorderWidth = 1
     const cornerRadius = 4
     return (
-      <TouchableWithoutFeedback onPress={onPress} key={key}>
+      <TouchableWithoutFeedback onPress={onPress}>
         <Box
           style={{
             borderWidth: defaultBorderWidth,
@@ -164,7 +164,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
           switch (option) {
             case Option.ShareToIG:
               return (
-                <SectionWrapper key={option} isFirst={isFirst} isLast={isLast} onPress={() => shareToIG()}>
+                <SectionWrapper isFirst={isFirst} isLast={isLast} onPress={() => shareToIG()}>
                   <Flex py={2} alignItems="center">
                     <Instagram />
                     <Sans pt={0.5} size="1" color="black50">
@@ -176,7 +176,6 @@ export const ReservationConfirmation = screenTrack()((props) => {
             case Option.ReferAndEarn:
               return (
                 <SectionWrapper
-                  key={option}
                   isFirst={isFirst}
                   isLast={isLast}
                   onPress={() => props.navigation.navigate("InviteFriends")}

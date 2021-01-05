@@ -106,7 +106,6 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
           title: "Share image to instastory",
           method: Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
           backgroundImage: "data:image/png;base64," + base64,
-          attributionURL: "@seasons.ny",
           social: Share.Social.INSTAGRAM_STORIES,
         }
         try {
