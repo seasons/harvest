@@ -101,6 +101,8 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     setCurrentPageNumber(pageNumber)
   }
 
+  const convertSpacing = (pixels) => pixels * 0.83
+
   const onDownload = () => {
     // Download image to camera roll
   }
@@ -116,11 +118,11 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
       height: 1920,
     }).then(
       async (base64) => {
-        console.log("Image saved to", base64)
         const shareOptions = {
           title: "Share image to instastory",
           method: Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
           backgroundImage: "data:image/png;base64," + base64,
+          attributionURL: "@seasons.ny",
           social: Share.Social.INSTAGRAM_STORIES,
         }
 
@@ -142,14 +144,14 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     const imageWidth = 310
     const imageHeight = 400
     return (
-      <ViewShot ref={viewShotRefs[index]} style={{ flex: 1, overflow: "hidden" }}>
-        <Flex style={{ overflow: "hidden", borderRadius: 6, backgroundColor: color("white100") }}>
-          <Sans mt={64} ml={1} size="3" color="black100" fontFamily="Apercu-Mono">
+      <ViewShot ref={viewShotRefs[index]} style={{ flexShrink: 1, height: 597 }}>
+        <Flex style={{ borderRadius: 6, backgroundColor: color("white100") }}>
+          <Sans mt={convertSpacing(64)} ml={convertSpacing(8)} size="3" color="black100" fontFamily="Apercu-Mono">
             NEW ROTATION
           </Sans>
           <Sans
-            mt={2}
-            ml={1}
+            mt={convertSpacing(16)}
+            ml={convertSpacing(8)}
             size="1"
             color="black100"
             fontFamily="Apercu-Mono"
@@ -157,11 +159,24 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
           >
             {brandName}
           </Sans>
-          <Sans mb={1} ml={1} size="1" color="black100" fontFamily="Apercu-Mono" style={{ opacity: 0.5 }}>
+          <Sans
+            mb={convertSpacing(8)}
+            ml={convertSpacing(8)}
+            size="1"
+            color="black100"
+            fontFamily="Apercu-Mono"
+            style={{ opacity: 0.5 }}
+          >
             {productName}
           </Sans>
           <FadeInImage source={{ uri: imageUrl || "" }} style={{ width: imageWidth, height: imageHeight }} />
-          <Flex mt={0.5} mx={1} flexDirection="row" justifyContent="space-between">
+          <Flex
+            mt={convertSpacing(4)}
+            mb={convertSpacing(20)}
+            mx={convertSpacing(8)}
+            flexDirection="row"
+            justifyContent="space-between"
+          >
             <Sans size="1" color="black100" fontFamily="Apercu-Mono" style={{ opacity: 0.5 }}>
               {index + 1 + "/" + products.length}
             </Sans>
@@ -178,7 +193,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
   }
 
   return (
-    <Container insetsTop insetsBottom={false} backgroundColor="black85">
+    <Container insetsBottom={false} backgroundColor="black85">
       <CloseButton />
       <FixedBackArrow variant="whiteTransparent" rotationDegree="270deg" navigation={navigation} onPress={onDownload} />
       <Spacer mt={64} />
