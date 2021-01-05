@@ -11,7 +11,7 @@ export type CloseButtonVariant = "light" | "dark"
 export const CloseButton: React.FC<{
   variant?: CloseButtonVariant
   overrides?: any
-}> = ({ variant, overrides }) => {
+}> = ({ variant, overrides = {} }) => {
   const navigation = useNavigation()
 
   const borderColor = variant === "light" ? color("black10") : color("black100")

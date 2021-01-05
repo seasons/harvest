@@ -73,6 +73,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
   }
 
   const slideWidth = 310
+  const slideSpacing = 24
   const convertSpacing = (pixels) => (pixels * slideWidth) / Dimensions.get("window").width
 
   const onDownload = async () => {
@@ -122,7 +123,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     const imageUrl = product?.images?.[0]?.url
     const brandName = product?.brand?.name
     const productName = product?.name
-    const imageHeight = convertSpacing(470)
+    const imageHeight = convertSpacing(480)
 
     // Based on recommended dimensions (1920 x 1080)
     const instagramShareHeight = (slideWidth * 16) / 9
@@ -130,31 +131,31 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
       <ViewShot ref={viewShotRefs[index]} style={{ borderRadius: 6, overflow: "hidden", height: instagramShareHeight }}>
         <Flex style={{ height: instagramShareHeight, backgroundColor: color("white100") }}>
           <Flex mx={convertSpacing(8)}>
-            <Sans mt={convertSpacing(48)} size="2" color="black100" fontFamily="Apercu-Mono">
+            <Sans mt={convertSpacing(64)} size="3" color="black100" fontFamily="Apercu-Mono">
               NEW ROTATION
             </Sans>
             <Sans
               mt={convertSpacing(16)}
-              size="0.5"
+              size="1"
               color="black100"
               fontFamily="Apercu-Mono"
               style={{ textDecorationLine: "underline" }}
             >
               {brandName}
             </Sans>
-            <Sans mb={convertSpacing(8)} size="0.5" color="black100" fontFamily="Apercu-Mono" style={{ opacity: 0.5 }}>
+            <Sans mb={convertSpacing(8)} size="1" color="black100" fontFamily="Apercu-Mono" style={{ opacity: 0.5 }}>
               {productName}
             </Sans>
           </Flex>
 
           <FadeInImage source={{ uri: imageUrl || "" }} style={{ width: slideWidth, height: imageHeight }} />
           <Flex mt={convertSpacing(4)} mx={convertSpacing(8)} flexDirection="row" justifyContent="space-between">
-            <Sans size="0.5" color="black100" fontFamily="Apercu-Mono">
+            <Sans size="1" color="black100" fontFamily="Apercu-Mono">
               {index + 1 + "/" + products.length}
             </Sans>
-            <Sans size="0.5" color="black100" fontFamily="Apercu-Mono">
+            <Sans size="1" color="black100" fontFamily="Apercu-Mono">
               @
-              <Sans size="0.5" color="black100" fontFamily="Apercy-Mono" style={{ textDecorationLine: "underline" }}>
+              <Sans size="1" color="black100" fontFamily="Apercy-Mono" style={{ textDecorationLine: "underline" }}>
                 seasons.ny
               </Sans>
             </Sans>
@@ -184,7 +185,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
         ref={flatListRef}
         horizontal
         data={products}
-        ItemSeparatorComponent={() => <Spacer ml={3} />}
+        ItemSeparatorComponent={() => <Spacer ml={12} />}
         keyExtractor={(item, index) => item + String(index)}
         renderItem={({ item, index }) => renderItem(item, index)}
         showsVerticalScrollIndicator={false}
@@ -196,7 +197,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
           right: 32,
         }}
         decelerationRate={0}
-        snapToInterval={322}
+        snapToInterval={slideWidth + slideSpacing / 2}
         snapToAlignment={"center"}
       />
       <Flex p={2} style={{ width: "100%" }}>

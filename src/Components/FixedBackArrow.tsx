@@ -15,7 +15,7 @@ export const FixedBackArrow: React.FC<{
   onPress?: () => void
   rotationDegree?: RotationDegree
   overrides?: any
-}> = ({ navigation, variant, onPress, rotationDegree, overrides }) => {
+}> = ({ navigation, variant, onPress, rotationDegree = "0deg", overrides = {} }) => {
   const getColorsForVariant = (variant: FixedBackArrowVariant) => {
     const {
       colors: { black100, white100, black10, productBackgroundColor },
