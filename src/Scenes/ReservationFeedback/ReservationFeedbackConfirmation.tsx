@@ -76,7 +76,7 @@ export const ReservationFeedbackConfirmation: React.FC<{
   return (
     <Container>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      <Box px={2}>
+      <Flex px={2} style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center">
             <Spacer mb={68} />
@@ -95,16 +95,16 @@ export const ReservationFeedbackConfirmation: React.FC<{
               autoFocus
               blurOnSubmit={false}
               currentValue={comment}
-              style={{ height: 200, paddingLeft: 0, paddingTop: 0, borderWidth: 0 }}
+              style={{ height: 250, paddingLeft: 0, paddingTop: 0, borderWidth: 0 }}
               placeholder="Tell us anything else on your mind"
               multiline={true}
               onChangeText={(_, val) => setComment(val)}
             />
           </Flex>
         </TouchableWithoutFeedback>
-      </Box>
-      <FixedKeyboardAvoidingView behavior="padding" keyboardVerticalOffset={64} style={{ bottom: insets.bottom + 32 }}>
-        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" pb={1}>
+      </Flex>
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={16 + insets.bottom}>
+        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" mb={2}>
           <Button
             block
             variant="primaryWhite"
@@ -139,12 +139,7 @@ export const ReservationFeedbackConfirmation: React.FC<{
             Submit
           </Button>
         </Flex>
-      </FixedKeyboardAvoidingView>
+      </KeyboardAvoidingView>
     </Container>
   )
 })
-
-const FixedKeyboardAvoidingView = styled(KeyboardAvoidingView)`
-  position: absolute;
-  left: ${space(2)};
-`
