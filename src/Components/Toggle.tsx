@@ -1,8 +1,9 @@
 import debounce from "lodash/debounce"
-import React, { useState } from "react"
+import React from "react"
 import { FlexProps } from "./Flex"
 import { Switch } from "react-native"
 import { BorderProps, SizeProps, SpaceProps } from "styled-system"
+import { color } from "App/utils/color"
 
 export interface ToggleProps extends FlexProps, BorderProps, SizeProps, SpaceProps {
   /** Disable interactions */
@@ -16,9 +17,16 @@ export interface ToggleProps extends FlexProps, BorderProps, SizeProps, SpacePro
  * A Toggle button
  */
 export const Toggle: React.SFC<ToggleProps> = ({ disabled, onChange, selected }) => {
-  const toggleSwitch = newValue => {
+  const toggleSwitch = (newValue) => {
     onChange(newValue)
   }
 
-  return <Switch disabled={disabled} onValueChange={debounce(toggleSwitch, 250)} value={selected} />
+  return (
+    <Switch
+      trackColor={{ true: color("black100"), false: color("black25") }}
+      disabled={disabled}
+      onValueChange={debounce(toggleSwitch, 250)}
+      value={selected}
+    />
+  )
 }

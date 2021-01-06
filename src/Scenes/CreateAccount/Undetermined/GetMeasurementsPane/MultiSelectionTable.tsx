@@ -10,7 +10,7 @@ interface MultiSelectionTableProps {
   disabled?: boolean
   items: Item[]
   onTap?: (item: Item, index: number) => void
-  selectedItemIndices: number[]
+  selectedItems: string[]
   style?: ViewStyle
 }
 
@@ -20,7 +20,7 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({
   disabled = false,
   items,
   onTap,
-  selectedItemIndices,
+  selectedItems,
 }) => {
   const [width, setWidth] = useState(windowWidth)
 
@@ -28,8 +28,8 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({
   const itemCornerRadius = 4
   const minimumInterItemSpacing = 8
 
-  const data = items.map((item, index) => ({
-    isSelected: selectedItemIndices.includes(index),
+  const data = items.map((item) => ({
+    isSelected: selectedItems.includes(item.value),
     item,
   }))
 

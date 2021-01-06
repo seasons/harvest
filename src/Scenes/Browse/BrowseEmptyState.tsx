@@ -3,9 +3,10 @@ import { Schema, useTracking } from "App/utils/track"
 import { color } from "App/utils"
 import React from "react"
 import styled from "styled-components/native"
+import { EMPTY_BROWSE_FILTERS } from "./Filters"
 
-export const BrowseEmptyState: React.FC<{ setSizeFilters: (size) => void; setCurrentCategory: (cat) => void }> = ({
-  setSizeFilters,
+export const BrowseEmptyState: React.FC<{ setFilters: (size) => void; setCurrentCategory: (cat) => void }> = ({
+  setFilters,
   setCurrentCategory,
 }) => {
   const tracking = useTracking()
@@ -28,7 +29,7 @@ export const BrowseEmptyState: React.FC<{ setSizeFilters: (size) => void; setCur
               actionName: Schema.ActionNames.FiltersCleared,
               actionType: Schema.ActionTypes.Tap,
             })
-            setSizeFilters([])
+            setFilters(EMPTY_BROWSE_FILTERS)
             setCurrentCategory("all")
           }}
         >

@@ -1,12 +1,10 @@
 import { useQuery } from "@apollo/react-hooks"
 import { useFocusEffect } from "@react-navigation/native"
-import { Box, Button, Flex, ProductGridItem } from "App/Components"
+import { Box, Flex, ProductGridItem } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
-import { ABBREVIATED_SIZES } from "App/helpers/constants"
-import { color, space } from "App/utils"
+import { color } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
-import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { FlatList, StatusBar, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
@@ -15,101 +13,17 @@ import { CategoryPicker } from "./CategoryPicker"
 import { ProductGridItemSkeleton } from "../Product/Components"
 import { GetBrowseProducts } from "App/generated/GetBrowseProducts"
 import { Sans, Spacer } from "@seasons/eclipse"
-
-export const GET_BROWSE_PRODUCTS = gql`
-  query GetBrowseProducts(
-    $name: String!
-    $first: Int!
-    $skip: Int!
-    $orderBy: ProductOrderByInput!
-    $sizes: [String!]
-  ) {
-    categories(where: { visible: true }, orderBy: updatedAt_ASC) {
-      id
-      slug
-      name
-      children {
-        id
-        slug
-      }
-    }
-    brands(orderBy: name_ASC, where: { products_some: { id_not: null }, name_not: null }) {
-      id
-      slug
-      name
-    }
-    productsCount: productsConnection(
-      category: $name
-      sizes: $sizes
-      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }] }
-    ) {
-      aggregate {
-        count
-      }
-    }
-    products(
-      category: $name
-      first: $first
-      skip: $skip
-      sizes: $sizes
-      orderBy: $orderBy
-      where: { status: Available }
-    ) {
-      id
-      slug
-      name
-      description
-      images(size: Thumb) {
-        id
-        url
-      }
-      modelSize {
-        id
-        display
-      }
-      modelHeight
-      externalURL
-      retailPrice
-      status
-      type
-      createdAt
-      updatedAt
-      brand {
-        id
-        name
-      }
-      variants {
-        id
-        total
-        reservable
-        nonReservable
-        reserved
-        isSaved
-        internalSize {
-          id
-          display
-          top {
-            id
-            letter
-          }
-          bottom {
-            id
-            value
-          }
-        }
-      }
-    }
-  }
-`
+import { BrowseFilters, EMPTY_BROWSE_FILTERS } from "./Filters"
+import { GET_BROWSE_PRODUCTS } from "./queries/browseQueries"
 
 const PAGE_LENGTH = 10
 
 export const Browse = screenTrack()((props: any) => {
-  const currentFilters = props?.route?.params?.sizeFilters || []
+  const currentFilters = props?.route?.params?.filters || EMPTY_BROWSE_FILTERS
   const routeCategorySlug = props?.route?.params?.categorySlug || "all"
-  const [items, setItems] = useState(new Array(PAGE_LENGTH).fill({ id: "" }))
+  const [edges, setEdges] = useState(new Array(PAGE_LENGTH).fill({ node: { id: "" } }))
   const [categoryItems, setCategoryItems] = useState(new Array(PAGE_LENGTH).fill({ slug: "" }))
-  const [sizeFilters, setSizeFilters] = useState(currentFilters)
+  const [filters, setFilters] = useState<BrowseFilters>(currentFilters)
   const [currentCategory, setCurrentCategory] = useState(routeCategorySlug)
   const routeCategoryIdx = categoryItems.findIndex(({ slug }) => slug === routeCategorySlug)
   const tracking = useTracking()
@@ -121,8 +35,10 @@ export const Browse = screenTrack()((props: any) => {
   )
 
   useEffect(() => {
-    setSizeFilters(currentFilters)
+    setFilters(currentFilters)
   }, [currentFilters])
+
+  console.log("filters", filters)
 
   useEffect(() => {
     if (routeCategorySlug !== currentCategory) {
@@ -133,30 +49,26 @@ export const Browse = screenTrack()((props: any) => {
     }
   }, [routeCategorySlug])
 
-  const sizes =
-    sizeFilters && sizeFilters.length > 0
-      ? sizeFilters.map((s) => {
-          return ABBREVIATED_SIZES[s] ? ABBREVIATED_SIZES[s] : s
-        })
-      : []
-
   const { data, loading, fetchMore } = useQuery<GetBrowseProducts>(GET_BROWSE_PRODUCTS, {
     variables: {
-      name: currentCategory,
+      tops: filters.topSizeFilters,
+      bottoms: filters.bottomSizeFilters,
+      available: filters.availableOnly,
+      brandNames: filters.designerFilters,
+      categoryName: currentCategory,
       first: PAGE_LENGTH,
       skip: 0,
       orderBy: "publishedAt_DESC",
-      sizes,
     },
   })
 
-  const products = data?.products
+  const products = data?.productsConnection?.edges
   const designers = data?.brands
   const categories = data && data.categories
 
   useEffect(() => {
     if (products) {
-      setItems(products)
+      setEdges(products)
     }
     if (categories) {
       setCategoryItems([{ slug: "all", name: "All" }, ...categories])
@@ -165,7 +77,8 @@ export const Browse = screenTrack()((props: any) => {
 
   let scrollViewEl = null
   const filtersButtonHeight = 36
-  const numFiltersSelected = sizeFilters?.length
+  const numFiltersSelected = [...filters.topSizeFilters, ...filters.bottomSizeFilters, ...filters.designerFilters]
+    .length
   const numColumns = 2
 
   const filtersButtonText = numFiltersSelected > 0 ? `Filters +${numFiltersSelected}` : "Filters"
@@ -187,7 +100,7 @@ export const Browse = screenTrack()((props: any) => {
       actionName: Schema.ActionNames.FiltersButtonTapped,
       actionType: Schema.ActionTypes.Tap,
     })
-    props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters, designers } })
+    props.navigation.navigate("Modal", { screen: "FiltersModal", params: { filters, designers } })
   }
 
   const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
@@ -197,11 +110,20 @@ export const Browse = screenTrack()((props: any) => {
       <Flex flexDirection="column" style={{ flex: 1 }}>
         <Box style={{ flex: 1, flexGrow: 1 }}>
           <Flex justifyContent="space-between" width="100%" flexWrap="nowrap" flexDirection="row" alignItems="center">
-            <Flex flexWrap="nowrap" flexDirection="row" alignItems="center" px="12px" py="6px">
-              <SelectBox active={false} />
-              <Spacer mr={1} />
-              <Sans size="4">Available now</Sans>
-            </Flex>
+            <TouchableOpacity
+              onPress={() => {
+                setFilters({
+                  ...filters,
+                  availableOnly: !filters.availableOnly,
+                })
+              }}
+            >
+              <Flex flexWrap="nowrap" flexDirection="row" alignItems="center" px="12px" py="6px">
+                <SelectBox active={filters.availableOnly} />
+                <Spacer mr={1} />
+                <Sans size="4">Available now</Sans>
+              </Flex>
+            </TouchableOpacity>
             <TouchableOpacity onPress={onFilterBtnPress}>
               <Flex px="12px" py="6px">
                 <Sans size="4" style={{ textDecorationLine: "underline" }}>
@@ -219,16 +141,17 @@ export const Browse = screenTrack()((props: any) => {
                 : { flex: 1 }
             }
             ListEmptyComponent={() => (
-              <BrowseEmptyState setCurrentCategory={setCurrentCategory} setSizeFilters={setSizeFilters} />
+              <BrowseEmptyState setCurrentCategory={setCurrentCategory} setFilters={setFilters} />
             )}
-            data={items}
+            data={edges}
             ref={(ref) => (scrollViewEl = ref)}
-            keyExtractor={(item, index) => item.id + index}
+            keyExtractor={(item, index) => item?.node?.id + index}
             renderItem={({ item }, index) => {
+              const node = item?.node
               return (
-                <Box key={item?.id || index}>
-                  {item.id ? (
-                    <ProductGridItem showBrandName product={item} addLeftSpacing={index % numColumns !== 0} />
+                <Box key={node?.id + index}>
+                  {node?.id ? (
+                    <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0} />
                   ) : (
                     <ProductGridItemSkeleton addLeftSpacing={index % numColumns !== 0} />
                   )}
@@ -266,7 +189,10 @@ export const Browse = screenTrack()((props: any) => {
                       return prev
                     }
                     return Object.assign({}, prev, {
-                      products: [...prev.products, ...fetchMoreResult.products],
+                      productsConnection: {
+                        __typename: "ProductConnection",
+                        edges: [...prev.productsConnection?.edges, ...fetchMoreResult.productsConnection?.edges],
+                      },
                     })
                   },
                 })
@@ -293,9 +219,4 @@ const SelectBox = styled(Box)<{ active: boolean }>`
   background-color: ${(p) => (p.active ? color("black100") : color("white100"))};
   border-width: 1;
   border-color: ${color("black100")};
-`
-
-const FixedButtonContainer = styled(Box)`
-  position: absolute;
-  align-self: center;
 `

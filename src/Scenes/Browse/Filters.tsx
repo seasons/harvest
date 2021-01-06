@@ -15,18 +15,25 @@ enum FilterView {
   Designers = 1,
 }
 
+export interface BrowseFilters {
+  bottomSizeFilters: any[]
+  topSizeFilters: any[]
+  designerFilters: any[]
+  availableOnly: boolean
+}
+
 const DESIGNER_ITEM_HEIGHT = 60
+export const EMPTY_BROWSE_FILTERS = {
+  bottomSizeFilters: [],
+  topSizeFilters: [],
+  designerFilters: [],
+  availableOnly: false,
+}
 
 export const Filters = screenTrack()((props: any) => {
-  const emptyFilters = {
-    bottomSizeFilters: [],
-    topSizeFilters: [],
-    designerFilters: [],
-    availableOnly: false,
-  }
-  const currentFilters = get(props, "route.params.filters", emptyFilters)
+  const currentFilters = get(props, "route.params.filters", EMPTY_BROWSE_FILTERS)
   const designers = props?.route?.params?.designers
-  const [filters, setFilters] = useState(currentFilters)
+  const [filters, setFilters] = useState<BrowseFilters>(currentFilters)
   const [isMutatingToggle, setIsMutatingToggle] = useState(false)
   const [alphabet, setAlphabet] = useState([])
   const listRef = useRef(null)
@@ -144,7 +151,7 @@ export const Filters = screenTrack()((props: any) => {
             <Sans size="1">Top sizes</Sans>
             <MultiSelectionTable
               items={item.data?.tops}
-              onTap={(_, index) => {
+              onTap={(item) => {
                 tracking.trackEvent({
                   actionName: Schema.ActionNames.FilterTapped,
                   actionType: Schema.ActionTypes.Tap,
@@ -154,36 +161,37 @@ export const Filters = screenTrack()((props: any) => {
                 setFilters({
                   ...filters,
                   topSizeFilters: [
-                    ...(filters.topSizeFilters.includes(index)
-                      ? filters.topSizeFilters.filter((i) => i !== index)
-                      : filters.topSizeFilters.concat([index])),
+                    ...(filters.topSizeFilters.includes(item.value)
+                      ? filters.topSizeFilters.filter((i) => i !== item.value)
+                      : filters.topSizeFilters.concat([item.value])),
                   ],
                 })
               }}
-              selectedItemIndices={filters.topSizeFilters}
+              selectedItems={filters.topSizeFilters}
             />
           </Flex>
           <Flex pt={4}>
             <Sans size="1">Bottom sizes</Sans>
             <MultiSelectionTable
               items={item.data?.bottoms}
-              onTap={(_, index) => {
+              onTap={(item) => {
                 tracking.trackEvent({
                   actionName: Schema.ActionNames.FilterTapped,
                   actionType: Schema.ActionTypes.Tap,
                   filterValue: item.value,
                 })
+                console.log("item", item)
                 // Recreate a new array reference so that the component reloads
                 setFilters({
                   ...filters,
                   bottomSizeFilters: [
-                    ...(filters.bottomSizeFilters.includes(index)
-                      ? filters.bottomSizeFilters.filter((i) => i !== index)
-                      : filters.bottomSizeFilters.concat([index])),
+                    ...(filters.bottomSizeFilters.includes(item.value)
+                      ? filters.bottomSizeFilters.filter((i) => i !== item.value)
+                      : filters.bottomSizeFilters.concat([item.value])),
                   ],
                 })
               }}
-              selectedItemIndices={filters.bottomSizeFilters}
+              selectedItems={filters.bottomSizeFilters}
             />
           </Flex>
           <Spacer mb={4} />
@@ -193,7 +201,7 @@ export const Filters = screenTrack()((props: any) => {
       return (
         <>
           {item.data.map((designer) => {
-            const selected = filters.designerFilters.includes(designer)
+            const selected = filters.designerFilters.includes(designer.slug)
             return (
               <Flex pl={2} pr={6} flexDirection="column" key={designer.id}>
                 <TouchableOpacity
@@ -209,15 +217,15 @@ export const Filters = screenTrack()((props: any) => {
                       ...filters,
                       designerFilters: [
                         ...(selected
-                          ? filters.designerFilters.filter((d) => d !== designer)
-                          : filters.designerFilters.concat([designer])),
+                          ? filters.designerFilters.filter((d) => d !== designer.slug)
+                          : filters.designerFilters.concat([designer.slug])),
                       ],
                     })
                   }}
                 >
                   <Spacer mb={2} />
                   <Flex justifyContent="flex-start" flexWrap="nowrap" flexDirection="row">
-                    <Radio selected={selected} />
+                    <Radio selected={selected} pointerEvents="none" />
                     <Spacer mr={1} />
                     <Sans size="2" style={{ textDecorationLine: "underline" }}>
                       {designer.name}
@@ -248,7 +256,7 @@ export const Filters = screenTrack()((props: any) => {
                 actionName: Schema.ActionNames.FiltersCleared,
                 actionType: Schema.ActionTypes.Tap,
               })
-              setFilters(emptyFilters)
+              setFilters(EMPTY_BROWSE_FILTERS)
             }}
           >
             <Sans size="1" color={color("black50")} ml="auto">

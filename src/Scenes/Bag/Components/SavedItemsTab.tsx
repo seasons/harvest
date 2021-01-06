@@ -12,10 +12,10 @@ import styled from "styled-components/native"
 import { color } from "App/utils"
 import { GET_BAG } from "../BagQueries"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
-import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/Browse"
 import { useTracking, Schema } from "App/utils/track"
 import { GetBagAndSavedItems_me_bag_productVariant_product_variants } from "App/generated/GetBagAndSavedItems"
 import { get, head } from "lodash"
+import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
 
 const dimensions = Dimensions.get("window")
 const windowWidth = dimensions.width
