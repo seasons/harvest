@@ -38,7 +38,7 @@ export interface ButtonProps extends BoxProps {
   loading?: boolean
   Icon?: ComponentType
   block?: boolean
-  overrideBorderColor?: string
+  borderColor?: string
 }
 
 export type ButtonVariant =
@@ -293,7 +293,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
       loading,
       Icon,
       selected = false,
-      overrideBorderColor,
+      borderColor,
       ...rest
     } = this.props
     const { px, size, height } = this.getSize()
@@ -303,7 +303,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
     const from = disabled ? variantColors[DisplayState.Disabled] : variantColors[previous]
     const to = disabled ? variantColors[DisplayState.Disabled] : variantColors[current]
     const overridenBg = backgroundColor ? { backgroundColor, borderColor: backgroundColor } : {}
-    const overridenBorderColor = overrideBorderColor ? { backgroundColor, borderColor: overrideBorderColor } : {}
+    const overridenBorderColor = borderColor ? { backgroundColor, borderColor } : {}
     let iconOpacity = 1
     if (loading) {
       iconOpacity = 0

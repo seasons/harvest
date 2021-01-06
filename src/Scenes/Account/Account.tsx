@@ -201,7 +201,7 @@ export const Account = screenTrack()(({ navigation }) => {
   const middleList = [
     {
       title: "Follow us on Instagram",
-      icon: <Instagram opacity={0.3} />,
+      icon: <Instagram opacity={0.5} />,
       onPress: () => Linking.openURL("https://www.instagram.com/seasons.ny"),
       tracking: Schema.ActionNames.FollowUsTapped,
     },

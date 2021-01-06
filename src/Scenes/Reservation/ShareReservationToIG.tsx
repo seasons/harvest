@@ -85,7 +85,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
           actionName: Schema.ActionNames.DownloadReservationShareImageTapped,
           actionType: Schema.ActionTypes.Tap,
         })
-        CameraRoll.save(url)
+        await CameraRoll.save(url)
       },
       (error) => console.error("Failed to create image", error)
     )
@@ -96,27 +96,29 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
       actionName: Schema.ActionNames.ShareToIGButtonTapped,
       actionType: Schema.ActionTypes.Tap,
     })
-    captureRef(viewShotRefs[currentPageNumber], {
-      result: "base64",
-      // Recommended Instagram story dimension
-      width: 1080,
-      height: 1920,
-    }).then(
-      async (base64) => {
-        const shareOptions = {
-          title: "Share image to instastory",
-          method: Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
-          backgroundImage: "data:image/png;base64," + base64,
-          social: Share.Social.INSTAGRAM_STORIES,
-        }
-        try {
-          await Share.shareSingle(shareOptions)
-        } catch (error) {
-          console.log("Failed to post to instagram stories", error)
-        }
-      },
-      (error) => console.error("Failed to create image", error)
-    )
+    if (currentPageNumber < viewShotRefs?.length) {
+      captureRef(viewShotRefs[currentPageNumber], {
+        result: "base64",
+        // Recommended Instagram story dimension
+        width: 1080,
+        height: 1920,
+      }).then(
+        async (base64) => {
+          const shareOptions = {
+            title: "Share image to instastory",
+            method: Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
+            backgroundImage: "data:image/png;base64," + base64,
+            social: Share.Social.INSTAGRAM_STORIES,
+          }
+          try {
+            await Share.shareSingle(shareOptions)
+          } catch (error) {
+            console.log("Failed to post to instagram stories", error)
+          }
+        },
+        (error) => console.error("Failed to create image", error)
+      )
+    }
   }
 
   const renderItem = (product, index) => {
@@ -132,7 +134,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
         <Flex style={{ height: instagramShareHeight, backgroundColor: color("white100") }}>
           <Flex mx={convertSpacing(8)}>
             <Sans mt={convertSpacing(64)} size="3" color="black100" fontFamily="Apercu-Mono">
-              NEW ROTATION
+              MY ROTATION
             </Sans>
             <Sans
               mt={convertSpacing(16)}
@@ -206,7 +208,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
           onPress={onShareToIG}
           variant="primaryBlack"
           backgroundColor="#1B1B1B"
-          overrideBorderColor="#333333"
+          borderColor="#333333"
           bottom={space(5)}
           mr={4}
           block
