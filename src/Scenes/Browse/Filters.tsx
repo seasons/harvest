@@ -1,74 +1,245 @@
+import { AlphabetScrubber } from "App/Components/AlphabetScrubber"
 import { TabBar } from "App/Components/TabBar"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { Check } from "Assets/svgs"
 import get from "lodash/get"
-import React, { useState } from "react"
-import { Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
+import React, { useEffect, useRef, useState } from "react"
+import { Dimensions, FlatList, TouchableOpacity } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Box, Button, Flex, Handle, Radio, Sans, Separator, Spacer, Container } from "../../Components"
+import { groupBy, map, sortBy, toPairs } from "lodash"
+import { Box, Button, Flex, Handle, Radio, Sans, Separator, Spacer, Container, Toggle } from "../../Components"
+import { MultiSelectionTable } from "../CreateAccount/Undetermined/GetMeasurementsPane/MultiSelectionTable"
 
 enum FilterView {
-  Tops = 0,
-  Bottoms = 1,
+  Sizes = 0,
+  Designers = 1,
 }
 
+const DESIGNER_ITEM_HEIGHT = 60
+
 export const Filters = screenTrack()((props: any) => {
-  const currentFilters = get(props, "route.params.sizeFilters", [])
-  const [sizeFilters, setSizeFilters] = useState(currentFilters)
-  const [currentView, setCurrentView] = useState<FilterView>(FilterView.Tops)
+  const emptyFilters = {
+    bottomSizeFilters: [],
+    topSizeFilters: [],
+    designerFilters: [],
+    availableOnly: false,
+  }
+  const currentFilters = get(props, "route.params.filters", emptyFilters)
+  const designers = props?.route?.params?.designers
+  const [filters, setFilters] = useState(currentFilters)
+  const [isMutatingToggle, setIsMutatingToggle] = useState(false)
+  const [alphabet, setAlphabet] = useState([])
+  const listRef = useRef(null)
+  const [currentView, setCurrentView] = useState<FilterView>(FilterView.Sizes)
   const tracking = useTracking()
   const insets = useSafeAreaInsets()
 
   const filterData = {
-    tops: ["X-Small", "Small", "Medium", "Large", "X-Large", "XX-Large"],
-    bottoms: ["26", "27", "28", "29", "30", "31", "32", "33", "34"],
+    tops: [
+      { label: "XS", value: "XS" },
+      { label: "S", value: "S" },
+      { label: "M", value: "M" },
+      { label: "L", value: "L" },
+      { label: "XL", value: "XL" },
+      { label: "XXL", value: "XXL" },
+    ],
+    bottoms: [
+      { label: "26", value: "26" },
+      { label: "27", value: "27" },
+      { label: "28", value: "28" },
+      { label: "29", value: "29" },
+      { label: "30", value: "30" },
+      { label: "31", value: "31" },
+      { label: "32", value: "32" },
+      { label: "33", value: "33" },
+      { label: "34", value: "34" },
+      { label: "35", value: "35" },
+      { label: "36", value: "36" },
+    ],
   }
   const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 39) / 2
   const buttonHeight = 48
 
-  const renderItem = ({ item }) => {
-    const isSelected = sizeFilters.includes(item)
+  const sections = currentView === FilterView.Sizes ? [{ data: filterData }] : [{ data: designers }]
 
-    const handlePress = () => {
-      tracking.trackEvent({
-        actionName: Schema.ActionNames.FilterTapped,
-        actionType: Schema.ActionTypes.Tap,
-        filterValue: item,
+  const groupBrands = (brands) => {
+    const brandPairs = toPairs(
+      groupBy(brands, ({ name }) => {
+        const char = name.charAt(0)
+        if (char.match(/[a-z]/i)) {
+          return char
+        } else {
+          return "#"
+        }
       })
-      if (sizeFilters.includes(item)) {
-        setSizeFilters(sizeFilters.filter((f) => f !== item))
-      } else {
-        setSizeFilters([...sizeFilters, item])
+    )
+    const groupedBrands: any = sortBy(
+      map(brandPairs, ([letter, brandsForLetter], index) => ({
+        data: brandsForLetter,
+        letter: letter.toUpperCase(),
+        index,
+      })),
+      ({ letter }) => letter
+    )
+    setAlphabet(groupedBrands.map((brand) => brand.letter))
+  }
+
+  useEffect(() => {
+    if (designers) {
+      groupBrands(designers)
+    }
+  }, [designers])
+
+  const onChangeToggle = async (newValue) => {
+    if (isMutatingToggle) {
+      return
+    }
+    setFilters({
+      ...filters,
+      availableOnly: newValue,
+    })
+    setIsMutatingToggle(true)
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.AvailableFilterToggled,
+      actionType: Schema.ActionTypes.Tap,
+      newValue,
+    })
+
+    setIsMutatingToggle(false)
+  }
+
+  const scrollTo = (touchedLetter) => {
+    let index
+    if (touchedLetter === "#") {
+      index = 0
+      listRef?.current?.scrollToOffset?.({ animated: false, offset: index })
+    } else {
+      index = designers.findIndex((item) => item["name"].charAt(0).toUpperCase().localeCompare(touchedLetter) === 0)
+      if (index > -1) {
+        listRef?.current?.scrollToOffset?.({ animated: false, offset: index * DESIGNER_ITEM_HEIGHT })
       }
     }
+  }
 
-    return (
-      <TouchableWithoutFeedback onPress={handlePress}>
-        <Box px={2}>
-          <Spacer mt={20} />
-          <Flex flexDirection="row">
-            <Radio borderRadius={4} selected={isSelected} onSelect={handlePress}>
-              <Check color={color("black100")} />
-            </Radio>
-            <Sans color={color("black100")} ml={2} size="1" weight="medium">
-              {item}
-            </Sans>
+  const renderItem = ({ item }) => {
+    if (currentView === FilterView.Sizes) {
+      return (
+        <Flex px={2}>
+          <Flex flexDirection="row" justifyContent="space-between" alignItems="center" py={4}>
+            <Box>
+              <Sans size="1">Available now</Sans>
+              <Sans size="1" color="black50">
+                Styles currently in-stock
+              </Sans>
+            </Box>
+            <Toggle
+              disabled={false}
+              onChange={(newValue) => onChangeToggle(newValue)}
+              selected={filters.availableOnly}
+            />
           </Flex>
-          <Spacer mt={20} />
-          <Separator color={color("black10")} />
-        </Box>
-      </TouchableWithoutFeedback>
-    )
+          <Separator />
+          <Flex pt={4}>
+            <Sans size="1">Top sizes</Sans>
+            <MultiSelectionTable
+              items={item.data?.tops}
+              onTap={(_, index) => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.FilterTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                  filterValue: item.value,
+                })
+                // Recreate a new array reference so that the component reloads
+                setFilters({
+                  ...filters,
+                  topSizeFilters: [
+                    ...(filters.topSizeFilters.includes(index)
+                      ? filters.topSizeFilters.filter((i) => i !== index)
+                      : filters.topSizeFilters.concat([index])),
+                  ],
+                })
+              }}
+              selectedItemIndices={filters.topSizeFilters}
+            />
+          </Flex>
+          <Flex pt={4}>
+            <Sans size="1">Bottom sizes</Sans>
+            <MultiSelectionTable
+              items={item.data?.bottoms}
+              onTap={(_, index) => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.FilterTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                  filterValue: item.value,
+                })
+                // Recreate a new array reference so that the component reloads
+                setFilters({
+                  ...filters,
+                  bottomSizeFilters: [
+                    ...(filters.bottomSizeFilters.includes(index)
+                      ? filters.bottomSizeFilters.filter((i) => i !== index)
+                      : filters.bottomSizeFilters.concat([index])),
+                  ],
+                })
+              }}
+              selectedItemIndices={filters.bottomSizeFilters}
+            />
+          </Flex>
+          <Spacer mb={4} />
+        </Flex>
+      )
+    } else {
+      return (
+        <>
+          {item.data.map((designer) => {
+            const selected = filters.designerFilters.includes(designer)
+            return (
+              <Flex pl={2} pr={6} flexDirection="column" key={designer.id}>
+                <TouchableOpacity
+                  onPress={() => {
+                    tracking.trackEvent({
+                      actionName: Schema.ActionNames.BrandTapped,
+                      actionType: Schema.ActionTypes.Tap,
+                      brandID: designer?.id,
+                      brandSlug: designer?.slug,
+                      brandName: designer?.name,
+                    })
+                    setFilters({
+                      ...filters,
+                      designerFilters: [
+                        ...(selected
+                          ? filters.designerFilters.filter((d) => d !== designer)
+                          : filters.designerFilters.concat([designer])),
+                      ],
+                    })
+                  }}
+                >
+                  <Spacer mb={2} />
+                  <Flex justifyContent="flex-start" flexWrap="nowrap" flexDirection="row">
+                    <Radio selected={selected} />
+                    <Spacer mr={1} />
+                    <Sans size="2" style={{ textDecorationLine: "underline" }}>
+                      {designer.name}
+                    </Sans>
+                  </Flex>
+                  <Spacer mb={2} />
+                </TouchableOpacity>
+                <Separator />
+              </Flex>
+            )
+          })}
+        </>
+      )
+    }
   }
 
   return (
     <Container insetsTop={false}>
       <Handle style={{ marginTop: space(2) }} />
       <Flex flexDirection="row" alignItems="center" px={2}>
-        <Sans size="3" color={color("black100")} weight="medium" py={2}>
-          Filter by size
+        <Sans size="2" color={color("black100")} weight="medium" py={2}>
+          Filters
         </Sans>
         <Box ml="auto">
           <TouchableOpacity
@@ -77,7 +248,7 @@ export const Filters = screenTrack()((props: any) => {
                 actionName: Schema.ActionNames.FiltersCleared,
                 actionType: Schema.ActionTypes.Tap,
               })
-              setSizeFilters([])
+              setFilters(emptyFilters)
             }}
           >
             <Sans size="1" color={color("black50")} ml="auto">
@@ -88,7 +259,7 @@ export const Filters = screenTrack()((props: any) => {
       </Flex>
       <TabBar
         spaceEvenly
-        tabs={["Tops", "Bottoms"]}
+        tabs={["Sizes", "Designers"]}
         activeTab={currentView}
         goToPage={(page: FilterView) => {
           tracking.trackEvent({
@@ -98,14 +269,18 @@ export const Filters = screenTrack()((props: any) => {
           setCurrentView(page)
         }}
       />
-      <FlatList
-        data={currentView === FilterView.Tops ? filterData.tops : filterData.bottoms}
-        keyExtractor={(_item, index) => String(index)}
-        renderItem={(item) => {
-          return renderItem(item)
-        }}
-        ListFooterComponent={() => <Spacer mb={buttonHeight + space(4)} />}
-      />
+      <Flex style={{ flex: 1, position: "relative" }}>
+        {currentView === FilterView.Designers && <AlphabetScrubber alphabet={alphabet} scrollTo={scrollTo} />}
+        <FlatList
+          data={sections}
+          ref={listRef}
+          keyExtractor={(_item, index) => String(index)}
+          renderItem={(item) => {
+            return renderItem(item)
+          }}
+          ListFooterComponent={() => <Spacer mb={buttonHeight + space(4)} />}
+        />
+      </Flex>
       <Box style={{ position: "absolute", left: space(2), bottom: space(2) + insets.bottom }}>
         <Button
           variant="primaryWhite"
@@ -129,9 +304,9 @@ export const Filters = screenTrack()((props: any) => {
             tracking.trackEvent({
               actionName: Schema.ActionNames.FiltersApplied,
               actionType: Schema.ActionTypes.Tap,
-              filters: sizeFilters,
+              filters,
             })
-            props.navigation.navigate("Browse", { sizeFilters })
+            props.navigation.navigate("Browse", { filters })
           }}
         >
           Apply

@@ -50,10 +50,10 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({
 
     return (
       <TouchableOpacity disabled={disabled} onPress={() => onTap?.(item, index)} key={index}>
-        <Flex height={itemHeight + interItemSpacing} width={itemHeight} justifyContent="center" verticalAlign="center">
+        <Flex height={itemHeight + interItemSpacing} width={itemHeight} justifyContent="center" alignItems="center">
           <Flex
             justifyContent="center"
-            verticalAlign="center"
+            alignItems="center"
             height={itemHeight}
             width={itemHeight}
             style={[

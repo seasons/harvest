@@ -33,6 +33,11 @@ export const GET_BROWSE_PRODUCTS = gql`
         slug
       }
     }
+    brands(orderBy: name_ASC, where: { products_some: { id_not: null }, name_not: null }) {
+      id
+      slug
+      name
+    }
     productsCount: productsConnection(
       category: $name
       sizes: $sizes
@@ -146,6 +151,7 @@ export const Browse = screenTrack()((props: any) => {
   })
 
   const products = data?.products
+  const designers = data?.brands
   const categories = data && data.categories
 
   useEffect(() => {
@@ -181,7 +187,7 @@ export const Browse = screenTrack()((props: any) => {
       actionName: Schema.ActionNames.FiltersButtonTapped,
       actionType: Schema.ActionTypes.Tap,
     })
-    props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters } })
+    props.navigation.navigate("Modal", { screen: "FiltersModal", params: { sizeFilters, designers } })
   }
 
   const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count

@@ -243,8 +243,9 @@ export enum ActionNames {
   AddCreditCardTapped = "Add Credit Card Tapped",
 
   // Reservation Sharing
-  ShareToIGButtonTapped = "ShareToIGButtonTapped",
-  DownloadReservationShareImageTapped = "DownloadReservationShareImageTapped",
+  ShareToIGButtonTapped = "Share To IG Button Tapped",
+  DownloadReservationShareImageTapped = "Download Reservation Share Image Tapped",
+  AvailableFilterToggled = "Available Filter Toggled",
 }
 
 /**
