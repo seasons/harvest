@@ -1,6 +1,6 @@
 import CameraRoll from "@react-native-community/cameraroll"
 import { gql } from "apollo-boost"
-import { Button, CloseButton, FadeInImage, FixedBackArrow, Flex, Sans, Spacer } from "App/Components"
+import { Button, CloseButton, Display, FadeInImage, FixedBackArrow, Flex, Spacer } from "App/Components"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { DarkInstagram, SeasonsCircleSVG } from "Assets/svgs"
@@ -125,7 +125,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     const imageUrl = product?.images?.[0]?.url
     const brandName = product?.brand?.name
     const productName = product?.name
-    const imageHeight = convertSpacing(480)
+    const imageHeight = convertSpacing(500)
 
     // Based on recommended dimensions (1920 x 1080)
     const instagramShareHeight = (slideWidth * 16) / 9
@@ -133,43 +133,50 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
       <ViewShot ref={viewShotRefs[index]} style={{ borderRadius: 6, overflow: "hidden", height: instagramShareHeight }}>
         <Flex style={{ height: instagramShareHeight, backgroundColor: color("white100") }}>
           <Flex
-            mt={convertSpacing(64)}
+            mt={convertSpacing(68)}
             mx={convertSpacing(8)}
             flexDirection="row"
             alignItems="center"
             justifyContent="space-between"
           >
             <Flex>
-              <Sans size="3" color="black100" fontFamily="Apercu-Mono">
+              <Display size="3" color="black100" fontFamily="Apercu-Mono">
                 MY ROTATION
-              </Sans>
-              <Sans
+              </Display>
+              <Display
+                mb={convertSpacing(4)}
                 mt={convertSpacing(16)}
-                size="1"
+                size="0"
                 color="black100"
                 fontFamily="Apercu-Mono"
                 style={{ textDecorationLine: "underline" }}
               >
                 {brandName}
-              </Sans>
-              <Sans mb={convertSpacing(8)} size="1" color="black100" fontFamily="Apercu-Mono" style={{ opacity: 0.5 }}>
+              </Display>
+              <Display
+                mb={convertSpacing(8)}
+                size="0"
+                color="black100"
+                fontFamily="Apercu-Mono"
+                style={{ opacity: 0.5 }}
+              >
                 {productName}
-              </Sans>
+              </Display>
             </Flex>
             <SeasonsCircleSVG />
           </Flex>
 
           <FadeInImage source={{ uri: imageUrl || "" }} style={{ width: slideWidth, height: imageHeight }} />
           <Flex mt={convertSpacing(4)} mx={convertSpacing(8)} flexDirection="row" justifyContent="space-between">
-            <Sans size="1" color="black100" fontFamily="Apercu-Mono">
+            <Display size="0" color="black100" fontFamily="Apercu-Mono">
               {index + 1 + "/" + products.length}
-            </Sans>
-            <Sans size="1" color="black100" fontFamily="Apercu-Mono">
+            </Display>
+            <Display size="0" color="black100" fontFamily="Apercu-Mono">
               @
-              <Sans size="1" color="black100" fontFamily="Apercy-Mono" style={{ textDecorationLine: "underline" }}>
+              <Display size="0" color="black100" fontFamily="Apercy-Mono" style={{ textDecorationLine: "underline" }}>
                 seasons.ny
-              </Sans>
-            </Sans>
+              </Display>
+            </Display>
           </Flex>
         </Flex>
       </ViewShot>
