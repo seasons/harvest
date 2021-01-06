@@ -3,7 +3,7 @@ import { gql } from "apollo-boost"
 import { Button, CloseButton, FadeInImage, FixedBackArrow, Flex, Sans, Spacer } from "App/Components"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { DarkInstagram } from "Assets/svgs"
+import { DarkInstagram, SeasonsCircleSVG } from "Assets/svgs"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { useQuery } from "react-apollo"
 import { Dimensions, FlatList } from "react-native"
@@ -132,22 +132,31 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     return (
       <ViewShot ref={viewShotRefs[index]} style={{ borderRadius: 6, overflow: "hidden", height: instagramShareHeight }}>
         <Flex style={{ height: instagramShareHeight, backgroundColor: color("white100") }}>
-          <Flex mx={convertSpacing(8)}>
-            <Sans mt={convertSpacing(64)} size="3" color="black100" fontFamily="Apercu-Mono">
-              MY ROTATION
-            </Sans>
-            <Sans
-              mt={convertSpacing(16)}
-              size="1"
-              color="black100"
-              fontFamily="Apercu-Mono"
-              style={{ textDecorationLine: "underline" }}
-            >
-              {brandName}
-            </Sans>
-            <Sans mb={convertSpacing(8)} size="1" color="black100" fontFamily="Apercu-Mono" style={{ opacity: 0.5 }}>
-              {productName}
-            </Sans>
+          <Flex
+            mt={convertSpacing(64)}
+            mx={convertSpacing(8)}
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Flex>
+              <Sans size="3" color="black100" fontFamily="Apercu-Mono">
+                MY ROTATION
+              </Sans>
+              <Sans
+                mt={convertSpacing(16)}
+                size="1"
+                color="black100"
+                fontFamily="Apercu-Mono"
+                style={{ textDecorationLine: "underline" }}
+              >
+                {brandName}
+              </Sans>
+              <Sans mb={convertSpacing(8)} size="1" color="black100" fontFamily="Apercu-Mono" style={{ opacity: 0.5 }}>
+                {productName}
+              </Sans>
+            </Flex>
+            <SeasonsCircleSVG />
           </Flex>
 
           <FadeInImage source={{ uri: imageUrl || "" }} style={{ width: slideWidth, height: imageHeight }} />
