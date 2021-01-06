@@ -122,7 +122,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
   }
 
   const renderItem = (product, index) => {
-    const imageUrl = product?.images?.[0]?.url
+    const imageUrl = product?.images?.[2]?.url
     const brandName = product?.brand?.name
     const productName = product?.name
     const imageHeight = convertSpacing(500)
