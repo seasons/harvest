@@ -6,8 +6,8 @@ export const SeasonsCircleSVG = (props) => {
   return (
     <Svg
       {...props}
-      width={72}
-      height={72}
+      width={props.width || 72}
+      height={props.height || 72}
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"

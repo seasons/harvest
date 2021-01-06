@@ -1,9 +1,9 @@
 import CameraRoll from "@react-native-community/cameraroll"
 import { gql } from "apollo-boost"
-import { Button, CloseButton, Display, FadeInImage, FixedBackArrow, Flex, Spacer } from "App/Components"
+import { Box, Button, CloseButton, Display, FadeInImage, FixedBackArrow, Flex, Spacer } from "App/Components"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { DarkInstagram, SeasonsCircleSVG } from "Assets/svgs"
+import { SeasonsCircleSVG } from "Assets/svgs"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import { useQuery } from "react-apollo"
 import { Dimensions, FlatList } from "react-native"
@@ -75,7 +75,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
 
   const slideWidth = 310
   const slideSpacing = 24
-  const convertSpacing = (pixels) => (pixels * slideWidth) / Dimensions.get("window").width
+  const convertSizing = (pixels) => (pixels * slideWidth) / Dimensions.get("window").width
 
   const onDownload = async () => {
     if (currentPageNumber < viewShotRefs?.length) {
@@ -128,53 +128,73 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     const imageUrl = product?.images?.[2]?.url
     const brandName = product?.brand?.name
     const productName = product?.name
-    const imageHeight = convertSpacing(500)
+    const maxCharacters = 50
+    const truncateProductName = productName.length > maxCharacters
+    const displayProductName = truncateProductName ? productName.substring(0, maxCharacters) + " ..." : productName
 
     // Based on recommended dimensions (1920 x 1080)
     const instagramShareHeight = (slideWidth * 16) / 9
     return (
-      <ViewShot ref={viewShotRefs[index]} style={{ borderRadius: 6, overflow: "hidden", height: instagramShareHeight }}>
-        <Flex style={{ height: instagramShareHeight, backgroundColor: color("white100") }}>
+      <ViewShot
+        ref={viewShotRefs[index]}
+        style={{ borderRadius: 6, overflow: "hidden", height: instagramShareHeight, width: slideWidth }}
+      >
+        <Box style={{ height: "100%", width: "100%", backgroundColor: color("white100") }}>
           <Flex
-            mt={convertSpacing(68)}
-            mx={convertSpacing(8)}
+            mt={convertSizing(68)}
+            mx={convertSizing(8)}
             flexDirection="row"
             alignItems="center"
             justifyContent="space-between"
           >
-            <Flex>
-              <Display size="3" color="black100">
+            <Flex style={{ flexShrink: 1 }}>
+              <Display size={convertSizing(24)} color="black100">
                 MY ROTATION
               </Display>
               <Display
-                mb={convertSpacing(4)}
-                mt={convertSpacing(16)}
-                size="0"
+                mb={convertSizing(4)}
+                mt={convertSizing(16)}
+                size={convertSizing(12)}
                 color="black100"
                 style={{ textDecorationLine: "underline" }}
               >
                 {brandName}
               </Display>
-              <Display mb={convertSpacing(8)} size="0" color="black100" style={{ opacity: 0.5, width: 200 }}>
-                {productName}
+              <Display
+                numberOfLines={1}
+                mb={convertSizing(8)}
+                color="black100"
+                lineHeight={convertSizing(20)}
+                size={convertSizing(12)}
+                style={{ opacity: 0.5 }}
+              >
+                {displayProductName}
               </Display>
             </Flex>
-            <SeasonsCircleSVG />
+            <Spacer ml={1} />
+            <SeasonsCircleSVG width={convertSizing(72)} height={convertSizing(72)} />
           </Flex>
-
-          <FadeInImage source={{ uri: imageUrl || "" }} style={{ width: slideWidth, height: imageHeight }} />
-          <Flex mt={convertSpacing(4)} mx={convertSpacing(8)} flexDirection="row" justifyContent="space-between">
-            <Display size="0" color="black100">
+          <Box style={{ flex: 1, backgroundColor: "#000000" }}>
+            <FadeInImage source={{ uri: imageUrl || "" }} style={{ width: slideWidth, height: "100%" }} />
+          </Box>
+          <Flex
+            mt={convertSizing(4)}
+            mb={convertSizing(20)}
+            mx={convertSizing(8)}
+            flexDirection="row"
+            justifyContent="space-between"
+          >
+            <Display size={convertSizing(12)} color="black100">
               {index + 1 + "/" + products.length}
             </Display>
-            <Display size="0" color="black100">
+            <Display size={convertSizing(12)} color="black100">
               @
-              <Display size="0" color="black100" style={{ textDecorationLine: "underline" }}>
+              <Display size={convertSizing(12)} color="black100" style={{ textDecorationLine: "underline" }}>
                 seasons.ny
               </Display>
             </Display>
           </Flex>
-        </Flex>
+        </Box>
       </ViewShot>
     )
   }
@@ -216,7 +236,6 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
       />
       <Flex p={2} style={{ width: "100%" }}>
         <Button
-          Icon={DarkInstagram}
           onPress={onShareToIG}
           variant="primaryBlack"
           backgroundColor="#1B1B1B"
