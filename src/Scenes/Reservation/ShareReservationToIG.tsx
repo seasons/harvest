@@ -60,9 +60,10 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
   }, [])
 
   const reservation = data?.me?.customer?.reservations?.[0]
+  // console.log(reservation)
   let products =
     reservation?.products?.map((product) => {
-      return product?.images?.[0]
+      return product?.productVariant?.product
     }) ?? []
 
   const viewShotRefs = [...Array(products.length)].map((_arr, index) => useRef(null))
@@ -140,7 +141,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
             justifyContent="space-between"
           >
             <Flex>
-              <Display size="3" color="black100" fontFamily="Apercu-Mono">
+              <Display size="3" color="black100">
                 MY ROTATION
               </Display>
               <Display
@@ -148,18 +149,11 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
                 mt={convertSpacing(16)}
                 size="0"
                 color="black100"
-                fontFamily="Apercu-Mono"
                 style={{ textDecorationLine: "underline" }}
               >
                 {brandName}
               </Display>
-              <Display
-                mb={convertSpacing(8)}
-                size="0"
-                color="black100"
-                fontFamily="Apercu-Mono"
-                style={{ opacity: 0.5 }}
-              >
+              <Display mb={convertSpacing(8)} size="0" color="black100" style={{ opacity: 0.5, width: 200 }}>
                 {productName}
               </Display>
             </Flex>
@@ -168,12 +162,12 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
 
           <FadeInImage source={{ uri: imageUrl || "" }} style={{ width: slideWidth, height: imageHeight }} />
           <Flex mt={convertSpacing(4)} mx={convertSpacing(8)} flexDirection="row" justifyContent="space-between">
-            <Display size="0" color="black100" fontFamily="Apercu-Mono">
+            <Display size="0" color="black100">
               {index + 1 + "/" + products.length}
             </Display>
-            <Display size="0" color="black100" fontFamily="Apercu-Mono">
+            <Display size="0" color="black100">
               @
-              <Display size="0" color="black100" fontFamily="Apercy-Mono" style={{ textDecorationLine: "underline" }}>
+              <Display size="0" color="black100" style={{ textDecorationLine: "underline" }}>
                 seasons.ny
               </Display>
             </Display>

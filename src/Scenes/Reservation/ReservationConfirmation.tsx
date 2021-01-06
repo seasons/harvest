@@ -1,4 +1,4 @@
-import { Box, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
+import { Box, Container, Display, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
@@ -192,9 +192,9 @@ export const ReservationConfirmation = screenTrack()((props) => {
                         borderWidth: 1.5,
                       }}
                     >
-                      <Sans size="1" color="black100" fontFamily="Apercu-Mono">
+                      <Display size="1" color="black100">
                         $
-                      </Sans>
+                      </Display>
                     </Box>
                     <Sans pt={0.5} size="1" color="black50">
                       Refer & earn 50% off
