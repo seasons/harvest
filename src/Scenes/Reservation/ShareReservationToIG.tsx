@@ -49,7 +49,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
   const [currentPageNumber, setCurrentPageNumber] = useState(0)
   const insets = useSafeAreaInsets()
 
-  const { data, error } = useQuery(GET_CUSTOMER_RESERVATION_ITEMS, {
+  const { data } = useQuery(GET_CUSTOMER_RESERVATION_ITEMS, {
     variables: {
       reservationID,
     },
@@ -78,18 +78,20 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
   const convertSpacing = (pixels) => (pixels * slideWidth) / Dimensions.get("window").width
 
   const onDownload = async () => {
-    captureRef(viewShotRefs[currentPageNumber], {
-      result: "tmpfile",
-    }).then(
-      async (url) => {
-        tracking.trackEvent({
-          actionName: Schema.ActionNames.DownloadReservationShareImageTapped,
-          actionType: Schema.ActionTypes.Tap,
-        })
-        await CameraRoll.save(url)
-      },
-      (error) => console.error("Failed to create image", error)
-    )
+    if (currentPageNumber < viewShotRefs?.length) {
+      captureRef(viewShotRefs[currentPageNumber], {
+        result: "tmpfile",
+      }).then(
+        async (url) => {
+          tracking.trackEvent({
+            actionName: Schema.ActionNames.DownloadReservationShareImageTapped,
+            actionType: Schema.ActionTypes.Tap,
+          })
+          await CameraRoll.save(url)
+        },
+        (error) => console.error("Failed to create image", error)
+      )
+    }
   }
 
   const onShareToIG = async () => {
