@@ -180,7 +180,6 @@ export const Filters = screenTrack()((props: any) => {
                   actionType: Schema.ActionTypes.Tap,
                   filterValue: item.value,
                 })
-                console.log("item", item)
                 // Recreate a new array reference so that the component reloads
                 setFilters({
                   ...filters,

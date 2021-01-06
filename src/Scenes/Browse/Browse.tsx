@@ -38,8 +38,6 @@ export const Browse = screenTrack()((props: any) => {
     setFilters(currentFilters)
   }, [currentFilters])
 
-  console.log("filters", filters)
-
   useEffect(() => {
     if (routeCategorySlug !== currentCategory) {
       setCurrentCategory(routeCategorySlug)
