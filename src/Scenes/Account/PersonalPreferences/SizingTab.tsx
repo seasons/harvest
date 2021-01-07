@@ -17,9 +17,6 @@ enum Section {
 const parseMeasurements = (rawMeasurements: InitialMeasurements) => {
   const height = rawMeasurements?.height
   const weightRange = rawMeasurements?.weight
-
-  console.log("rawMeasurements", rawMeasurements)
-
   const measurements = { height: null, weight: null, topSizeIndices: null, waistSizeIndices: null }
 
   if (height) {
