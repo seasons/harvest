@@ -7,7 +7,11 @@ import { Box } from "./Box"
 import { Flex } from "./Flex"
 import { Sans } from "./Typography"
 
-export const AlphabetScrubber = ({ alphabet, scrollTo }) => {
+export const AlphabetScrubber: React.FC<{
+  alphabet: string[]
+  scrollTo: (touchedLetter: string) => void
+  style?: any
+}> = ({ alphabet, scrollTo, style }) => {
   const tracking = useTracking()
   const alphabetContainer = useRef(null)
   const [containerSize, setContainerSize] = useState({ containerTop: null, containerHeight: null })
@@ -54,7 +58,7 @@ export const AlphabetScrubber = ({ alphabet, scrollTo }) => {
   })
 
   return (
-    <Scrubber>
+    <Scrubber style={style}>
       <Flex flexDirection="column" style={{ flex: 1 }} justifyContent="center">
         <Box py={2} pr={2} pl={3} {...panResponder?.panHandlers} onLayout={handleOnLayout} ref={alphabetContainer}>
           {alphabet.map((letter) => (
