@@ -8,7 +8,7 @@ import { Dimensions, FlatList, TouchableOpacity } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { groupBy, map, sortBy, toPairs } from "lodash"
 import { Box, Button, Flex, Handle, Radio, Sans, Separator, Spacer, Container, Toggle } from "../../Components"
-import { MultiSelectionTable } from "../CreateAccount/Undetermined/GetMeasurementsPane/MultiSelectionTable"
+import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
 
 enum FilterView {
   Sizes = 0,
@@ -132,8 +132,8 @@ export const Filters = screenTrack()((props: any) => {
   const renderItem = ({ item }) => {
     if (currentView === FilterView.Sizes) {
       return (
-        <Flex px={2}>
-          <Flex flexDirection="row" justifyContent="space-between" alignItems="center" py={4}>
+        <>
+          <Flex flexDirection="row" justifyContent="space-between" alignItems="center" py={4} px={2}>
             <Box>
               <Sans size="1">Available now</Sans>
               <Sans size="1" color="black50">
@@ -146,55 +146,65 @@ export const Filters = screenTrack()((props: any) => {
               selected={filters.availableOnly}
             />
           </Flex>
-          <Separator />
+          <Box px={2}>
+            <Separator />
+          </Box>
           <Flex pt={4}>
-            <Sans size="1">Top sizes</Sans>
-            <MultiSelectionTable
-              items={item.data?.tops}
-              onTap={(item) => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.FilterTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                  filterValue: item.value,
-                })
-                // Recreate a new array reference so that the component reloads
-                setFilters({
-                  ...filters,
-                  topSizeFilters: [
-                    ...(filters.topSizeFilters.includes(item.value)
-                      ? filters.topSizeFilters.filter((i) => i !== item.value)
-                      : filters.topSizeFilters.concat([item.value])),
-                  ],
-                })
-              }}
-              selectedItems={filters.topSizeFilters}
-            />
+            <Box px={2}>
+              <Sans size="1">Top sizes</Sans>
+            </Box>
+            <Box px="14px">
+              <MultiSelectionTable
+                items={item.data?.tops}
+                onTap={(item) => {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.FilterTapped,
+                    actionType: Schema.ActionTypes.Tap,
+                    filterValue: item.value,
+                  })
+                  // Recreate a new array reference so that the component reloads
+                  setFilters({
+                    ...filters,
+                    topSizeFilters: [
+                      ...(filters.topSizeFilters.includes(item.value)
+                        ? filters.topSizeFilters.filter((i) => i !== item.value)
+                        : filters.topSizeFilters.concat([item.value])),
+                    ],
+                  })
+                }}
+                selectedItems={filters.topSizeFilters}
+              />
+            </Box>
           </Flex>
           <Flex pt={4}>
-            <Sans size="1">Bottom sizes</Sans>
-            <MultiSelectionTable
-              items={item.data?.bottoms}
-              onTap={(item) => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.FilterTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                  filterValue: item.value,
-                })
-                // Recreate a new array reference so that the component reloads
-                setFilters({
-                  ...filters,
-                  bottomSizeFilters: [
-                    ...(filters.bottomSizeFilters.includes(item.value)
-                      ? filters.bottomSizeFilters.filter((i) => i !== item.value)
-                      : filters.bottomSizeFilters.concat([item.value])),
-                  ],
-                })
-              }}
-              selectedItems={filters.bottomSizeFilters}
-            />
+            <Box px={2}>
+              <Sans size="1">Bottom sizes</Sans>
+            </Box>
+            <Box px="14px">
+              <MultiSelectionTable
+                items={item.data?.bottoms}
+                onTap={(item) => {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.FilterTapped,
+                    actionType: Schema.ActionTypes.Tap,
+                    filterValue: item.value,
+                  })
+                  // Recreate a new array reference so that the component reloads
+                  setFilters({
+                    ...filters,
+                    bottomSizeFilters: [
+                      ...(filters.bottomSizeFilters.includes(item.value)
+                        ? filters.bottomSizeFilters.filter((i) => i !== item.value)
+                        : filters.bottomSizeFilters.concat([item.value])),
+                    ],
+                  })
+                }}
+                selectedItems={filters.bottomSizeFilters}
+              />
+            </Box>
           </Flex>
           <Spacer mb={4} />
-        </Flex>
+        </>
       )
     } else {
       return (

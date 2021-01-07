@@ -4,8 +4,8 @@ import { Box, Container, Sans, Flex, Spacer, Button } from "App/Components"
 import { FlatList } from "react-native"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { color } from "App/utils/color"
-import { MultiSelectionTable } from "App/Scenes/CreateAccount/Undetermined/GetMeasurementsPane/MultiSelectionTable"
 import { Measurements } from "App/Scenes/CreateAccount/Undetermined"
+import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
 
 enum Section {
   Height_Weight,
@@ -19,6 +19,8 @@ const parseMeasurements = (rawMeasurements: InitialMeasurements) => {
   const topSizes = rawMeasurements?.topSizes
   const waistSizes = rawMeasurements?.waistSizes
 
+  console.log("rawMeasurements", rawMeasurements)
+
   const measurements = { height: null, weight: null, topSizeIndices: null, waistSizeIndices: null }
 
   if (height) {
@@ -31,19 +33,19 @@ const parseMeasurements = (rawMeasurements: InitialMeasurements) => {
     )
   }
 
-  if (topSizes) {
-    measurements.topSizeIndices = Measurements.topSizes.reduce(
-      (accumulator, item, index) => (topSizes.includes(item.value) ? [...accumulator, index] : accumulator),
-      [] as number[]
-    )
-  }
+  // if (topSizes) {
+  //   measurements.topSizeIndices = Measurements.topSizes.reduce(
+  //     (accumulator, item, index) => (topSizes.includes(item.value) ? [...accumulator, index] : accumulator),
+  //     [] as number[]
+  //   )
+  // }
 
-  if (waistSizes) {
-    measurements.waistSizeIndices = Measurements.waistSizes.reduce(
-      (accumulator, item, index) => (waistSizes.includes(item.value) ? [...accumulator, index] : accumulator),
-      [] as number[]
-    )
-  }
+  // if (waistSizes) {
+  //   measurements.waistSizeIndices = Measurements.waistSizes.reduce(
+  //     (accumulator, item, index) => (waistSizes.includes(item.value) ? [...accumulator, index] : accumulator),
+  //     [] as number[]
+  //   )
+  // }
   return measurements
 }
 
@@ -82,11 +84,7 @@ export const SizingTab: React.FC<{ navigation: any; rawMeasurements: InitialMeas
               What are your preferred top sizes?
             </Sans>
             <Spacer mb={1} />
-            <MultiSelectionTable
-              disabled
-              items={Measurements.topSizes}
-              selectedItemIndices={measurements.topSizeIndices}
-            />
+            <MultiSelectionTable disabled items={Measurements.topSizes} selectedItems={measurements.topSizeIndices} />
           </>
         )
       case Section.WaistSizes:
@@ -99,7 +97,7 @@ export const SizingTab: React.FC<{ navigation: any; rawMeasurements: InitialMeas
             <MultiSelectionTable
               disabled
               items={Measurements.waistSizes}
-              selectedItemIndices={measurements.waistSizeIndices}
+              selectedItems={measurements.waistSizeIndices}
             />
           </>
         )
