@@ -3,7 +3,6 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { BoxPicker } from "./BoxPicker"
 import Item from "./Item"
 import Measurements from "./Measurements"
-import { MultiSelectionTable } from "./MultiSelectionTable"
 import React, { useState } from "react"
 import { ScrollView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
@@ -12,6 +11,7 @@ import gql from "graphql-tag"
 import { useMutation } from "react-apollo"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useTracking, Schema } from "App/utils/track"
+import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
 
 const ADD_MEASUREMENTS = gql`
   mutation addMeasurements(
@@ -33,8 +33,8 @@ interface GetMeasurementsPaneProps {
   initialMeasurements?: {
     height?: Item
     weight?: Item
-    topSizeIndices?: number[]
-    waistSizeIndices?: number[]
+    topSizes?: string[]
+    waistSizes?: string[]
   }
   onGetMeasurements: () => void
   onRequestBack?: () => void
@@ -52,8 +52,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
 
   const [height, setHeight] = useState(initialMeasurements?.height)
   const [weight, setWeight] = useState(initialMeasurements?.weight)
-  const [topSizeIndices, setTopSizeIndices] = useState(initialMeasurements?.topSizeIndices || Array<number>())
-  const [waistSizeIndices, setWaistSizeIndices] = useState(initialMeasurements?.waistSizeIndices || Array<number>())
+  const [topSizes, setTopSizes] = useState(initialMeasurements?.topSizes || [])
+  const [waistSizes, setWaistSizes] = useState(initialMeasurements?.waistSizes || [])
 
   const [footerBoxHeight, setFooterBoxHeight] = useState(0)
   const insets = useSafeAreaInsets()
@@ -96,8 +96,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
       variables: {
         height: height.value,
         weight: { set: weight.value },
-        topSizes: { set: topSizeIndices.map((i) => Measurements.topSizes[i].value) },
-        waistSizes: { set: waistSizeIndices.map((i) => Measurements.waistSizes[i].value) },
+        topSizes: { set: topSizes },
+        waistSizes: { set: waistSizes },
       },
     })
   }
@@ -156,15 +156,15 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
           <Spacer mb={1} />
           <MultiSelectionTable
             items={Measurements.topSizes}
-            onTap={(_, index) =>
+            onTap={(item) =>
               // Recreate a new array reference so that the component reloads
-              setTopSizeIndices([
-                ...(topSizeIndices.includes(index)
-                  ? topSizeIndices.filter((i) => i !== index)
-                  : topSizeIndices.concat([index])),
+              setTopSizes([
+                ...(topSizes.includes(item.value)
+                  ? topSizes.filter((i) => i !== item.value)
+                  : topSizes.concat([item.value])),
               ])
             }
-            selectedItemIndices={topSizeIndices}
+            selectedItems={topSizes}
           />
 
           <Spacer mb={5} />
@@ -175,15 +175,15 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
           <Spacer mb={1} />
           <MultiSelectionTable
             items={Measurements.waistSizes}
-            onTap={(_, index) =>
+            onTap={(item) =>
               // Recreate a new array reference so that the component reloads
-              setWaistSizeIndices([
-                ...(waistSizeIndices.includes(index)
-                  ? waistSizeIndices.filter((i) => i !== index)
-                  : waistSizeIndices.concat([index])),
+              setWaistSizes([
+                ...(waistSizes.includes(item.value)
+                  ? waistSizes.filter((i) => i !== item.value)
+                  : waistSizes.concat([item.value])),
               ])
             }
-            selectedItemIndices={waistSizeIndices}
+            selectedItems={waistSizes}
           />
         </Box>
         <Box height={footerBoxHeight} />
@@ -197,7 +197,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
         >
           {useEditingLayout && (
             <>
-              <Box flex={1}>
+              <Box style={{ flex: 1 }}>
                 <Button block onPress={onRequestBack} variant="primaryWhite">
                   Cancel
                 </Button>
@@ -205,10 +205,10 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
               <Spacer mr={1} />
             </>
           )}
-          <Box flex={1}>
+          <Box style={{ flex: 1 }}>
             <Button
               block
-              disabled={!(height && weight && topSizeIndices.length && waistSizeIndices.length)}
+              disabled={!(height && weight && topSizes.length && waistSizes.length)}
               loading={isMutating}
               onPress={submitMeasurements}
               variant="primaryBlack"
