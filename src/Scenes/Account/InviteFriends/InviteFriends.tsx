@@ -1,12 +1,14 @@
 import Clipboard from "@react-native-community/clipboard"
+import { gql } from "apollo-boost"
 import { Box, Button, Container, FixedBackArrow, Flex, Sans, Separator, Spacer } from "App/Components"
 import { PopUp } from "App/Components/PopUp"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import React, { useState } from "react"
+import { useQuery } from "react-apollo"
 import { Dimensions, Share, TouchableOpacity } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
 import Contacts from "react-native-contacts"
+import { useSafeArea } from "react-native-safe-area-context"
 import styled from "styled-components/native"
 
 const windowDimensions = Dimensions.get("window")
@@ -16,11 +18,23 @@ const SansUnderline = styled(Sans)`
   text-decoration: underline;
 `
 
+export const GET_REFERRAL_LINK = gql`
+  query GetReferralLink {
+    me {
+      customer {
+        id
+        referralLink
+      }
+    }
+  }
+`
+
 export const InviteFriends = screenTrack()(({ route, navigation }) => {
   const insets = useSafeArea()
   const [openPopUp, setOpenPopUp] = useState(false)
   const [copyText, setCopyText] = useState("Copy link")
-  const referralLink = route.params.referralLink
+  const { data } = useQuery(GET_REFERRAL_LINK)
+  const referralLink = data?.me?.customer?.referralLink
 
   const onShare = async () => {
     try {

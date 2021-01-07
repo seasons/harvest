@@ -1,6 +1,7 @@
+import { AuthorizedCTA, RewaitlistedCTA } from "@seasons/eclipse"
 import { Box, Container, Flex, GuestView, Sans, Separator, Skeleton, Spacer } from "App/Components"
-import { useAuthContext } from "App/Navigation/AuthContext"
 import { Schema as NavigationSchema } from "App/Navigation"
+import { useAuthContext } from "App/Navigation/AuthContext"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
 import {
@@ -27,7 +28,6 @@ import { State, UserState } from "../CreateAccount/CreateAccount"
 import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
-import { RewaitlistedCTA, AuthorizedCTA } from "@seasons/eclipse"
 
 export const GET_USER = gql`
   query GetUser {
@@ -201,7 +201,7 @@ export const Account = screenTrack()(({ navigation }) => {
   const middleList = [
     {
       title: "Follow us on Instagram",
-      icon: <Instagram />,
+      icon: <Instagram opacity={0.5} />,
       onPress: () => Linking.openURL("https://www.instagram.com/seasons.ny"),
       tracking: Schema.ActionNames.FollowUsTapped,
     },

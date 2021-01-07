@@ -1,8 +1,6 @@
+import { color as colorHelper } from "App/utils/color"
 import React, { CSSProperties } from "react"
 import styled from "styled-components/native"
-import { Color } from "./Theme"
-import { color as colorHelper } from "App/utils/color"
-import { SansSize, DisplaySize, themeProps } from "./Theme"
 import {
   color,
   ColorProps,
@@ -20,6 +18,7 @@ import {
   textAlign,
   TextAlignProps,
 } from "styled-system"
+import { Color, DisplaySize, SansSize, themeProps } from "./Theme"
 
 /**
  * Type definition for font objects
@@ -129,9 +128,16 @@ export type FontFamily = typeof themeProps["fontFamily"]
 /**
  * Determines which font sizes/line heights to use for typography.
  */
-export function determineFontSizes(size: string | string[]) {
+export function determineFontSizes(size: string | string[] | number) {
+  if (typeof size == "number") {
+    return { fontSize: size }
+  }
+
   if (!Array.isArray(size)) {
     const match = themeProps.typeSizes[size]
+    if (!match) {
+      return {}
+    }
     return {
       fontSize: match.fontSize,
       lineHeight: match.lineHeight,
@@ -190,7 +196,7 @@ Sans.displayName = "Sans"
 
 export interface DisplayProps extends Partial<TextProps> {
   role?: string
-  size: DisplaySize
+  size: DisplaySize | number
   color?: Color | string
   /**
    * Explicitly specify `null` to inherit weight from parent, otherwise default

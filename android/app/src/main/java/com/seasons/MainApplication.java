@@ -3,6 +3,7 @@ package com.seasons;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.cameraroll.CameraRollPackage;
 import com.gettipsi.stripe.StripeReactPackage;
 import com.ijzerenhein.sharedelement.RNSharedElementPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -60,6 +61,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new CameraRollPackage(),
             new StripeReactPackage(),
             new RNSharedElementPackage(),
             new RNDeviceInfo(),
