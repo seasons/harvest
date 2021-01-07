@@ -5,7 +5,7 @@
     "name": "seasons",
     "slug": "expo-template-bare",
     "privacy": "unlisted",
-    "version": "1.10.0",
+    "version": "1.10.1",
     "entryPoint": "node_modules/expo/AppEntry.js",
     "platforms": [
       "ios",
@@ -17,11 +17,11 @@
         "applinks:www.seasons.nyc"
       ],
       "bundleIdentifier": "com.seasons.Seasons",
-      "buildNumber": "1"
+      "buildNumber": "2"
     },
     "android": {
       "package": "com.seasons.seasons",
-      "versionCode": 1
+      "versionCode": 2
     }
   }
 }
