@@ -100,7 +100,7 @@ export const Brands = screenTrack()((props: any) => {
             navigation.navigate("Brand", { id: item?.id, slug: item?.slug, name: item.name })
           }}
         >
-          <Sans size="2" style={{ textDecorationLine: "underline" }}>
+          <Sans size="5" style={{ textDecorationLine: "underline" }}>
             {item.name}
           </Sans>
         </TouchableOpacity>
@@ -115,7 +115,7 @@ export const Brands = screenTrack()((props: any) => {
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Box pl={2} pr={6}>
         <Spacer mb={80} />
-        <Sans size="3">All designers</Sans>
+        <Sans size="7">All designers</Sans>
         <Spacer mb={3} />
         <Separator />
       </Box>

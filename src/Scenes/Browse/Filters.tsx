@@ -135,8 +135,8 @@ export const Filters = screenTrack()((props: any) => {
         <>
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center" py={4} px={2}>
             <Box>
-              <Sans size="1">Available now</Sans>
-              <Sans size="1" color="black50">
+              <Sans size="4">Available now</Sans>
+              <Sans size="4" color="black50">
                 Styles currently in-stock
               </Sans>
             </Box>
@@ -151,7 +151,7 @@ export const Filters = screenTrack()((props: any) => {
           </Box>
           <Flex pt={4}>
             <Box px={2}>
-              <Sans size="1">Top sizes</Sans>
+              <Sans size="4">Top sizes</Sans>
             </Box>
             <Box px="14px">
               <MultiSelectionTable
@@ -178,7 +178,7 @@ export const Filters = screenTrack()((props: any) => {
           </Flex>
           <Flex pt={4}>
             <Box px={2}>
-              <Sans size="1">Bottom sizes</Sans>
+              <Sans size="4">Bottom sizes</Sans>
             </Box>
             <Box px="14px">
               <MultiSelectionTable
@@ -236,7 +236,7 @@ export const Filters = screenTrack()((props: any) => {
                   <Flex justifyContent="flex-start" flexWrap="nowrap" flexDirection="row">
                     <Radio selected={selected} pointerEvents="none" />
                     <Spacer mr={1} />
-                    <Sans size="2" style={{ textDecorationLine: "underline" }}>
+                    <Sans size="5" style={{ textDecorationLine: "underline" }}>
                       {designer.name}
                     </Sans>
                   </Flex>
@@ -255,7 +255,7 @@ export const Filters = screenTrack()((props: any) => {
     <Container insetsTop={false}>
       <Handle style={{ marginTop: space(2) }} />
       <Flex flexDirection="row" alignItems="center" px={2}>
-        <Sans size="2" color={color("black100")} weight="medium" py={2}>
+        <Sans size="5" color={color("black100")} weight="medium" py={2}>
           Filters
         </Sans>
         <Box ml="auto">
@@ -268,7 +268,7 @@ export const Filters = screenTrack()((props: any) => {
               setFilters(EMPTY_BROWSE_FILTERS)
             }}
           >
-            <Sans size="1" color={color("black50")} ml="auto">
+            <Sans size="4" color={color("black50")} ml="auto">
               Clear
             </Sans>
           </TouchableOpacity>

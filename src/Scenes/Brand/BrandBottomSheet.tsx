@@ -36,18 +36,18 @@ const MetaDataCarousel = ({ data }) => {
               }}
             >
               <Box ml={index === 0 ? 0 : 3} mr={3}>
-                <Sans size="1" color="black50">
+                <Sans size="4" color="black50">
                   {item?.title}
                 </Sans>
-                <Sans size="1">{item?.text}</Sans>
+                <Sans size="4">{item?.text}</Sans>
               </Box>
             </TouchableOpacity>
           ) : (
             <Box ml={index === 0 ? 0 : 3} mr={3}>
-              <Sans size="1" color="black50">
+              <Sans size="4" color="black50">
                 {item?.title}
               </Sans>
-              <Sans size="1">{item?.text}</Sans>
+              <Sans size="4">{item?.text}</Sans>
             </Box>
           )}
         </Flex>
@@ -113,7 +113,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loadin
               flexWrap="nowrap"
               justifyContent={!!hasImages ? "space-between" : "flex-start"}
             >
-              <Sans size="3" style={{ textDecorationLine: "underline" }}>
+              <Sans size="7" style={{ textDecorationLine: "underline" }}>
                 {brand?.name}
               </Sans>
               {!!hasImages && (
@@ -125,7 +125,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loadin
             {!!description && (
               <>
                 <Spacer mb={3} />
-                <Sans size="1">About</Sans>
+                <Sans size="4">About</Sans>
                 <Spacer mb={0.5} />
                 <ReadMore
                   readMoreExpanded={readMoreExpanded}

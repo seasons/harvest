@@ -48,11 +48,11 @@ export const ProductsRail: React.FC<{
   return (
     <Box mb={3} pl={2}>
       <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-        <Sans size="1">{title}</Sans>
+        <Sans size="4">{title}</Sans>
         {onViewAll && (
           <TouchableOpacity onPress={onViewAll}>
             <Box px={2}>
-              <Sans size="1" style={{ textDecorationLine: "underline" }}>
+              <Sans size="4" style={{ textDecorationLine: "underline" }}>
                 View all
               </Sans>
             </Box>
@@ -76,8 +76,8 @@ export const ProductsRail: React.FC<{
                     style={{ width: slideWidth, height: slideWidth * PRODUCT_ASPECT_RATIO }}
                   />
                   <Spacer mb={0.5} />
-                  {!!brandName && <Sans size="0">{brandName}</Sans>}
-                  {item.variants && <VariantSizes size="0" variants={item.variants} />}
+                  {!!brandName && <Sans size="2">{brandName}</Sans>}
+                  {item.variants && <VariantSizes size="2" variants={item.variants} />}
                 </Box>
               </TouchableWithoutFeedback>
             </Animatable.View>

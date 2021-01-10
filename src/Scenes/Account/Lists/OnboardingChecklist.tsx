@@ -133,7 +133,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
             <Flex flexDirection="row" alignItems="center">
               {isComplete ? <CheckCircled width={24} height={24} /> : <EmptyCircle />}
               <Spacer mr={2} />
-              <Sans size="1">{title}</Sans>
+              <Sans size="4">{title}</Sans>
             </Flex>
             {isTappable && <ChevronIcon color={color("black10")} />}
           </Flex>
@@ -146,15 +146,15 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
 
   return (
     <Box pb={2}>
-      <Sans size="2">{header}</Sans>
+      <Sans size="5">{header}</Sans>
       <Spacer mb={0.5} />
-      <Sans size="1" color="black50">
+      <Sans size="4" color="black50">
         {detail}
       </Sans>
       <Spacer mb={5} />
       <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
-        <Sans size="1">Complete your profile</Sans>
-        <Sans size="1" color="black50">
+        <Sans size="4">Complete your profile</Sans>
+        <Sans size="4" color="black50">
           {stepsCompleted} of {items.length} completed
         </Sans>
       </Flex>

@@ -33,7 +33,7 @@ export const ProductRequestConfirmation = screenTrack()(({ navigation, route }) 
       <ScrollView>
         <Box px={2}>
           <Spacer mb={80} />
-          <Sans size="3" color="black">
+          <Sans size="7" color="black">
             Review Your Link
           </Sans>
           <Spacer mb={2} />
@@ -43,10 +43,10 @@ export const ProductRequestConfirmation = screenTrack()(({ navigation, route }) 
           <Spacer mb={3} />
           {primarySections.map((section, index) => (
             <Box key={index}>
-              <Sans size="1" color="black">
+              <Sans size="4" color="black">
                 {section[0]}
               </Sans>
-              <Sans size="1" color="black50">
+              <Sans size="4" color="black50">
                 {section[1]}
               </Sans>
               <Spacer mb={2} />
@@ -58,10 +58,10 @@ export const ProductRequestConfirmation = screenTrack()(({ navigation, route }) 
             <Box key={index}>
               <Spacer mb={3} />
               <Box style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
-                <Sans size="1" color="black">
+                <Sans size="4" color="black">
                   {section[0]}
                 </Sans>
-                <Sans size="1" color="black50">
+                <Sans size="4" color="black50">
                   {section[1]}
                 </Sans>
               </Box>

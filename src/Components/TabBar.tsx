@@ -82,7 +82,7 @@ export class TabBar extends React.Component<TabBarProps, null> {
           <Sans
             numberOfLines={1}
             weight="medium"
-            size="2"
+            size="5"
             color={tabTextColor}
             style={withStrikeThrough ? { textDecorationLine: "line-through", textDecorationStyle: "solid" } : {}}
           >

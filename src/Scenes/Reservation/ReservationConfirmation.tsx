@@ -108,7 +108,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
     return (
       <>
         <Flex flexDirection="row" style={{ flex: 1 }} width="100%">
-          <Sans size="1" color="black100">
+          <Sans size="4" color="black100">
             {title}
           </Sans>
           {content && <Box ml="auto">{content}</Box>}
@@ -167,7 +167,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
                 <SectionWrapper isFirst={isFirst} isLast={isLast} onPress={() => shareToIG()}>
                   <Flex py={2} alignItems="center">
                     <Instagram />
-                    <Sans pt={0.5} size="1" color="black50">
+                    <Sans pt={0.5} size="4" color="black50">
                       Share to IG Stories
                     </Sans>
                   </Flex>
@@ -192,11 +192,11 @@ export const ReservationConfirmation = screenTrack()((props) => {
                         borderWidth: 1.5,
                       }}
                     >
-                      <Display size="1" color="black100">
+                      <Display size="4" color="black100">
                         $
                       </Display>
                     </Box>
-                    <Sans pt={0.5} size="1" color="black50">
+                    <Sans pt={0.5} size="4" color="black50">
                       Refer & earn 50% off
                     </Sans>
                   </Flex>
@@ -215,10 +215,10 @@ export const ReservationConfirmation = screenTrack()((props) => {
           <Spacer mb={52} />
           <CheckCircled />
           <Box my={4}>
-            <Sans size="3" color="black100">
+            <Sans size="7" color="black100">
               We've got your order!
             </Sans>
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               We've emailed you a confirmation and we'll notify you when its out for delivery.
             </Sans>
           </Box>
@@ -230,7 +230,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
               content={
                 <>
                   {!!reservation.reservationNumber && (
-                    <Sans size="1" color="black100" textAlign="right" ml="auto">
+                    <Sans size="4" color="black100" textAlign="right" ml="auto">
                       {reservation.reservationNumber}
                     </Sans>
                   )}
@@ -244,12 +244,12 @@ export const ReservationConfirmation = screenTrack()((props) => {
               content={
                 <>
                   {!!formatedAddress1 && (
-                    <Sans size="1" color="black100" textAlign="right">
+                    <Sans size="4" color="black100" textAlign="right">
                       {formatedAddress1}
                     </Sans>
                   )}
                   {!!formatedAddress2 && (
-                    <Sans size="1" color="black100" textAlign="right">
+                    <Sans size="4" color="black100" textAlign="right">
                       {formatedAddress2}
                     </Sans>
                   )}
@@ -264,7 +264,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
               content={
                 <>
                   {!!shippingDisplayText && (
-                    <Sans size="1" color="black100" ml="auto" textAlign="right">
+                    <Sans size="4" color="black100" ml="auto" textAlign="right">
                       {shippingDisplayText}
                     </Sans>
                   )}
@@ -279,7 +279,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
               <SectionHeader
                 title="Order total"
                 content={
-                  <Sans size="1" color="black100" ml="auto" textAlign="right">
+                  <Sans size="4" color="black100" ml="auto" textAlign="right">
                     ${externalCost / 100}
                   </Sans>
                 }

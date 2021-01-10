@@ -19,10 +19,10 @@ export const AllowNotifications = ({ navigation }) => {
         <NotificationGraphic />
       </Flex>
       <Flex px={2}>
-        <Sans color={color("black100")} size="3">
+        <Sans color={color("black100")} size="7">
           Allow notifications
         </Sans>
-        <Sans color={color("black50")} size="1">
+        <Sans color={color("black50")} size="4">
           Get notified about your order status, new products, and restocks. Never miss an update.
         </Sans>
         <Spacer mb={3} />

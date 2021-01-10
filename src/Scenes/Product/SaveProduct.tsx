@@ -104,9 +104,9 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
             <Spacer mt={68} />
             <Flex flexDirection="row" justifyContent="space-between">
               <Flex flexDirection="column" justifyContent="flex-end" width={screenWidth - (90 + space(6))}>
-                <Sans size="1">{name}</Sans>
+                <Sans size="4">{name}</Sans>
                 {!!brandName && (
-                  <Sans size="1" color={color("black50")}>
+                  <Sans size="4" color={color("black50")}>
                     {brandName}
                   </Sans>
                 )}
@@ -118,7 +118,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
               />
             </Flex>
             <Spacer mt={20} />
-            <Sans size="1" color={color("black50")}>
+            <Sans size="4" color={color("black50")}>
               {description}
             </Sans>
             <Spacer mt={3} />
@@ -148,12 +148,12 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
                 <Flex flexDirection="row" justifyContent="space-between">
                   <Flex flexDirection="row">
                     <Radio selected={id === selectedVariantID} onSelect={() => onSelectSize(id)} />
-                    <Sans color={color("black100")} ml={1} size="1" weight="medium">
+                    <Sans color={color("black100")} ml={1} size="4" weight="medium">
                       {sizeName}
                     </Sans>
                   </Flex>
                   {isSaved && (
-                    <Sans color={color("black50")} size="1" weight="medium">
+                    <Sans color={color("black50")} size="4" weight="medium">
                       (Saved)
                     </Sans>
                   )}

@@ -72,17 +72,17 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
       <ScrollView>
         <Box px={2} pb={insets.bottom}>
           <Spacer mb={80} />
-          <Sans size="3">Membership info</Sans>
+          <Sans size="7">Membership info</Sans>
           <Spacer mb={3} />
           <MembershipCard memberName={`${firstName} ${lastName}`} planTier={plan?.tier} />
           <Spacer mb={4} />
           {!!plan?.price && (
             <>
-              <Sans size="1">What you pay</Sans>
+              <Sans size="4">What you pay</Sans>
               <Spacer mb={12} />
               <Separator />
               <Spacer mb={1} />
-              <Sans size="1" color={color("black50")}>
+              <Sans size="4" color={color("black50")}>
                 {`$${plan.price / 100}`} / per month
               </Sans>
             </>
@@ -90,13 +90,13 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           {!!whatsIncluded && (
             <>
               <Spacer mb={4} />
-              <Sans size="1">Whats included</Sans>
+              <Sans size="4">Whats included</Sans>
               <Spacer mb={12} />
               <Separator />
               {whatsIncluded.map((text) => (
                 <Box key={text}>
                   <Spacer mb={1} />
-                  <Sans size="1" color={color("black50")}>
+                  <Sans size="4" color={color("black50")}>
                     {text.trim()}
                   </Sans>
                 </Box>
@@ -104,7 +104,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
             </>
           )}
           <Spacer mb={4} />
-          <Sans size="1">Change your plan</Sans>
+          <Sans size="4">Change your plan</Sans>
           <Spacer mb={2} />
           <Button
             variant="secondaryWhite"
@@ -114,7 +114,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
             View membership options
           </Button>
           <Spacer mb={4} />
-          <Sans size="1">Pause or cancel</Sans>
+          <Sans size="4">Pause or cancel</Sans>
           <Spacer mb={2} />
           <PauseButtons customer={customer} />
         </Box>

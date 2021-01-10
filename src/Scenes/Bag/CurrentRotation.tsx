@@ -84,10 +84,10 @@ export const CurrentRotation = (props) => {
             data={activeReservation ? activeReservation.products : []}
             ListHeaderComponent={() => (
               <Box p={2}>
-                <Sans size="3" color="black">
+                <Sans size="7" color="black">
                   Current Rotation
                 </Sans>
-                <Sans size="2" color="black50">
+                <Sans size="5" color="black50">
                   Return By {returnDate}
                 </Sans>
               </Box>

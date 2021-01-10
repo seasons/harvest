@@ -18,16 +18,16 @@ export const WaitlistedPane: React.FC<WaitlistedPaneProps> = ({ onPressFinish })
         <Spacer height="90" />
         <CheckCircled backgroundColor="black100" width={42} height={42} />
         <Spacer mb="3" />
-        <Sans color="black100" size="3">
+        <Sans color="black100" size="7">
           You're on the waitlist
         </Sans>
         <Spacer height="12" />
-        <Sans color="black50" size="1">
+        <Sans color="black50" size="4">
           We’ll send you a notification when your account is ready and you’re able to choose your plan.
         </Sans>
       </Box>
       <Box p="2" pb={insets.bottom} style={{ position: "absolute", bottom: 0 }}>
-        <Sans color="black50" size="0.5">
+        <Sans color="black50" size="3">
           In the meantime, you can finish completing your profile to help us prioritize your membership.
         </Sans>
         <Spacer mb="3" />

@@ -74,7 +74,7 @@ export const WebviewComponent = screenTrack()(({ navigation, route }) => {
       >
         <TouchableOpacity onPress={share}>
           <Box px={2}>
-            <Sans size="1">Share</Sans>
+            <Sans size="4">Share</Sans>
           </Box>
         </TouchableOpacity>
         <AnimatedLoadBar opacity={loadProgressAnimation.opacity} width={loadProgressAnimation.width} />

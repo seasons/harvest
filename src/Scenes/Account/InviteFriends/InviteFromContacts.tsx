@@ -74,10 +74,10 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
               <Check color={color("black100")} />
             </Radio>
             <Flex flexDirection="column">
-              <Sans color={color("black100")} ml={2} size="1" weight="medium">
+              <Sans color={color("black100")} ml={2} size="4" weight="medium">
                 {item.name}
               </Sans>
-              <Sans color={color("black50")} ml={2} size="1" weight="medium">
+              <Sans color={color("black50")} ml={2} size="4" weight="medium">
                 {item.phoneNumbers[0]}
               </Sans>
             </Flex>
@@ -100,7 +100,7 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
         <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <Flex alignItems="center">
           <Spacer mb={1} />
-          <Sans size="2">Invite Contacts</Sans>
+          <Sans size="5">Invite Contacts</Sans>
           <Spacer mb={2} />
           <Separator />
           <Spacer mb={2} />

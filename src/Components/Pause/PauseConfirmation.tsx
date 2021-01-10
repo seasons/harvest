@@ -18,14 +18,14 @@ export const PauseConfirmation: React.FC<{ route: any }> = ({ route }) => {
             <Spacer mb={100} />
             <CheckCircled backgroundColor={color("black100")} />
             <Spacer mb={3} />
-            <Sans size="3">You’ve successfully paused your membership</Sans>
+            <Sans size="7">You’ve successfully paused your membership</Sans>
             <Spacer mb={1} />
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               {`If you have an active reservation, please remember to return your items before ${dueDate}.`}
             </Sans>
           </Box>
           <Box>
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               If we do not receive your items back on or before this date, your membership will automatically resume and
               you will be billed. If you have any questions, contact us below at membership@seasons.nyc
             </Sans>

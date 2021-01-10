@@ -62,33 +62,28 @@ export const themeProps = {
   },
 
   typeSizes: {
-    /** Equivalent to 12px size / 16px line-height  */
-    "0": {
+    // These sizes are shared between Flare, Eclipse and Harvest
+    "2": {
       fontSize: 12,
       lineHeight: 16,
     },
-    /** Equivalent to 14px size / 20px line-height  */
-    "0.5": {
+    "3": {
       fontSize: 14,
       lineHeight: 20,
     },
-    /** Equivalent to 16px size / 24px line-height  */
-    "1": {
+    "4": {
       fontSize: 16,
       lineHeight: 24,
     },
-    /** Equivalent to 18px size / 26px line-height  */
-    "2": {
+    "5": {
       fontSize: 18,
       lineHeight: 26,
     },
-    /** Equivalent to 24px size / 32px line-height  */
-    "3": {
+    "7": {
       fontSize: 24,
       lineHeight: 32,
     },
-    /** Equivalent to 32px size / 40px line-height  */
-    "4": {
+    "9": {
       fontSize: 32,
       lineHeight: 40,
     },

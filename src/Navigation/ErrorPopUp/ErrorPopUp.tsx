@@ -68,13 +68,13 @@ export const ErrorPopUp: React.FC = () => {
           {!!data?.icon && <Box mt={2}>{data?.icon}</Box>}
           <Spacer mt={2} />
           <Box>
-            <Sans size="2" color={colors?.primaryText}>
+            <Sans size="5" color={colors?.primaryText}>
               {data?.title}
             </Sans>
             {data?.note && (
               <>
                 <Spacer mb={0.5} />
-                <Sans size="1" color={colors?.secondaryText}>
+                <Sans size="4" color={colors?.secondaryText}>
                   {data?.note}
                 </Sans>
               </>

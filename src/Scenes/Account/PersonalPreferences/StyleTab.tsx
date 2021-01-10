@@ -19,7 +19,7 @@ export const StyleTab: React.FC<{ navigation: any; rawStylePreferences: any }> =
     return (
       <Flex width="100%" key={sectionIndex.toString()}>
         <Spacer mb={4} />
-        <Sans size="0.5">{title}</Sans>
+        <Sans size="3">{title}</Sans>
         <Spacer mb={2} />
         <Spacer mb={0.5} />
         <Flex flexWrap="wrap" flexDirection="row" width="100%" justifyContent="space-between">
@@ -69,7 +69,7 @@ export const StyleTab: React.FC<{ navigation: any; rawStylePreferences: any }> =
               <Spacer mr={1} />
             </>
           )}
-          <Sans size="0.5">{item.title}</Sans>
+          <Sans size="3">{item.title}</Sans>
         </Flex>
       </Flex>
     )

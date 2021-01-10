@@ -86,12 +86,12 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
               <Radio selected={!!selectedVariant.id && selectedVariant.id === size.id} pointerEventsNone />
               <Spacer mr={1} />
               {size?.sizeDisplay && (
-                <Sans color={size?.reservable > 0 ? color("white100") : color("black50")} size="1">
+                <Sans color={size?.reservable > 0 ? color("white100") : color("black50")} size="4">
                   {size.sizeDisplay}
                 </Sans>
               )}
             </Flex>
-            <Sans color="black50" size="1">
+            <Sans color="black50" size="4">
               {size?.reservable > 0 ? manufacturerSize : "Unavailable"}
             </Sans>
           </Flex>

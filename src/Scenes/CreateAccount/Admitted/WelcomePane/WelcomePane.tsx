@@ -16,16 +16,16 @@ export const WelcomePane: React.FC<WelcomePaneProps> = ({ onPressGetStarted }) =
         <Spacer height="90" />
         <CheckCircled width={42} height={42} />
         <Spacer mb="3" />
-        <Sans color="black100" size="3">
+        <Sans color="black100" size="7">
           Welcome to Seasons
         </Sans>
         <Spacer height="12" />
-        <Sans color="black50" size="1">
+        <Sans color="black50" size="4">
           Your membership is active and you're ready to start reserving. Tap below to get started
         </Sans>
       </Box>
       <Box p="2" pb={insets.bottom} style={{ position: "absolute", bottom: 0 }}>
-        <Sans color="black50" size="0">
+        <Sans color="black50" size="2">
           Your credit card has been succesfully billed and your membership will automatically renew.
         </Sans>
         <Spacer mb="3" />

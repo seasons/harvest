@@ -129,9 +129,9 @@ export const BagTab: React.FC<{
     <Box>
       <Box px={2} pt={4}>
         <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
-          <Sans size="1">{hasActiveReservation ? "Current rotation" : "My bag"}</Sans>
+          <Sans size="4">{hasActiveReservation ? "Current rotation" : "My bag"}</Sans>
           <Sans
-            size="1"
+            size="4"
             style={{ textDecorationLine: "underline" }}
             onPress={() => {
               tracking.trackEvent({
@@ -145,7 +145,7 @@ export const BagTab: React.FC<{
           </Sans>
         </Flex>
         {((hasActiveReservation && !!returnReminder) || !hasActiveReservation) && (
-          <Sans size="1" color="black50">
+          <Sans size="4" color="black50">
             {hasActiveReservation && !!returnReminder ? returnReminder : "Reserve your order below"}
           </Sans>
         )}
@@ -157,12 +157,12 @@ export const BagTab: React.FC<{
             <Separator color={color("black10")} />
           </Box>
           <Box px={2} py={3}>
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               {`Your membership is scheduled to be paused on ${DateTime.fromISO(pauseRequest.pauseDate).toFormat(
                 "EEEE LLLL dd"
               )}. To continue it tap `}
               <Sans
-                size="1"
+                size="4"
                 style={{ textDecorationLine: "underline" }}
                 onPress={async () => {
                   if (isMutating) {

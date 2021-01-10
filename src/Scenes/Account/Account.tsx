@@ -333,7 +333,7 @@ export const Account = screenTrack()(({ navigation }) => {
         <ScrollView>
           <Box px={2} py={4}>
             {!!firstName && !!lastName ? (
-              <Sans size="3" color="black100">
+              <Sans size="7" color="black100">
                 {`${firstName} ${lastName}`}
               </Sans>
             ) : (
@@ -342,7 +342,7 @@ export const Account = screenTrack()(({ navigation }) => {
               </Box>
             )}
             {!!email ? (
-              <Sans size="2" color="black50">
+              <Sans size="5" color="black50">
                 {email}
               </Sans>
             ) : (
