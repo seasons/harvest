@@ -147,7 +147,7 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
   const CancelButton = () => {
     return (
       <TouchableWithoutFeedback onPress={() => setShowSizeWarning(false)}>
-        <Sans size="1" style={{ textAlign: "center", textDecorationLine: "underline", width: "100%" }}>
+        <Sans size="4" style={{ textAlign: "center", textDecorationLine: "underline", width: "100%" }}>
           Cancel
         </Sans>
       </TouchableWithoutFeedback>
@@ -173,7 +173,7 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
   return (
     <PopUp show={show}>
       <Spacer mb={4} />
-      <Sans size="1" style={{ textAlign: "center" }}>
+      <Sans size="4" style={{ textAlign: "center" }}>
         {`Heads up, this ${category} `}
         <Text style={{ textDecorationLine: "underline" }}>{runsSmall ? "runs small" : "runs big"}</Text>
       </Sans>
@@ -190,7 +190,7 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
           {buttonText}
         </Button>
         <Spacer mb={2} />
-        <Sans size="0.5" style={{ textAlign: "center" }} color="black50">
+        <Sans size="3" style={{ textAlign: "center" }} color="black50">
           {text}
         </Sans>
         <Spacer mb={3} />
@@ -202,7 +202,7 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
             <MiddleSeperator />
             <Box style={{ width: "49%" }}>
               <TouchableWithoutFeedback onPress={onSecondaryPress}>
-                <Sans size="1" style={{ textAlign: "center", textDecorationLine: "underline", width: "100%" }}>
+                <Sans size="4" style={{ textAlign: "center", textDecorationLine: "underline", width: "100%" }}>
                   {`Add ${selectedSize}`}
                 </Sans>
               </TouchableWithoutFeedback>

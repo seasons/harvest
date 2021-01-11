@@ -51,7 +51,7 @@ export const CustomPopUp: React.FC<CustomPopUpProps> = ({ buttonText, children, 
       <AnimatedPopUp style={{ transform: [{ translateY: animation.translateY }] }} color={color("white100")}>
         <Box p={2} pt={4} pb={insets.bottom + 16} onLayout={onLayout}>
           {title && (
-            <Sans color={color("black100")} size="3">
+            <Sans color={color("black100")} size="7">
               {title}
             </Sans>
           )}
