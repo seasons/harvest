@@ -323,12 +323,12 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       </Modal>
 
       <Modal visible={currentState === State.Waitlisted} animated>
-        <WaitlistedPane
+        {/* <WaitlistedPane
           onPressFinish={() => {
             resetStore()
             navigation.goBack()
           }}
-        />
+        /> */}
       </Modal>
     </>
   )

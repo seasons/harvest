@@ -10,8 +10,6 @@ interface WaitlistedPaneProps {
 export const WaitlistedPane: React.FC<WaitlistedPaneProps> = ({ onPressFinish }) => {
   const insets = useSafeAreaInsets()
 
-  // fix bottom, button text; check color to black100
-
   return (
     <Container insetsBottom={false} insetsTop={false}>
       <Box p="2" pt={insets.top}>

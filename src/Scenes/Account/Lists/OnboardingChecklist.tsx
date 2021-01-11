@@ -44,11 +44,9 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
   stylePreferences,
   userState,
 }) => {
-  const header = userState == UserState.Undetermined ? "Finish creating your account" : "You're on the waitlist"
+  const header = "Finish creating your account"
   const detail =
-    userState == UserState.Undetermined
-      ? "To set your sizing & measurements, you must first verify your phone number. Complete those two steps to finish creating your account."
-      : "We’ll send you a notification when your account is ready and you’re able to choose your plan. In the meantime, complete your profile below."
+    "To set your sizing & measurements, you must first verify your phone number. Complete those two steps to finish creating your account."
 
   const items = [
     {
@@ -146,11 +144,15 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
 
   return (
     <Box pb={2}>
-      <Sans size="2">{header}</Sans>
-      <Spacer mb={0.5} />
-      <Sans size="1" color="black50">
-        {detail}
-      </Sans>
+      {userState === UserState.Undetermined ? (
+        <>
+          <Sans size="2">{header}</Sans>
+          <Spacer mb={0.5} />
+          <Sans size="1" color="black50">
+            {detail}
+          </Sans>
+        </>
+      ) : null}
       <Spacer mb={5} />
       <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
         <Sans size="1">Complete your profile</Sans>
