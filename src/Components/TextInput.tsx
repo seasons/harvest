@@ -215,7 +215,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
           style={{
             color: variantColors.active.color,
             fontFamily: fontFamily.sans.medium.toString(),
-            fontSize: themeProps.typeSizes[1].fontSize,
+            fontSize: themeProps.typeSizes[4].fontSize,
             ...style,
             textAlignVertical: "center",
           }}
