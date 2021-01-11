@@ -64,7 +64,7 @@ export const AlphabetScrubber: React.FC<{
           {alphabet.map((letter) => (
             <Box key={letter}>
               <Box>
-                <Sans color={color("black50")} size="0">
+                <Sans color={color("black50")} size="2">
                   {letter}
                 </Sans>
               </Box>

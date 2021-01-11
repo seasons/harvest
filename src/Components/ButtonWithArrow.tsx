@@ -10,7 +10,7 @@ export const ButtonWithArrow = ({ onPress, children }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <Wrapper px={2} justifyContent="space-between" flexDirection="row" flexWrap="nowrap" alignItems="center">
-        <Sans size="1" color="white100">
+        <Sans size="4" color="white100">
           {children}
         </Sans>
         <Arrow />

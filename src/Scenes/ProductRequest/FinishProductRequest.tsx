@@ -10,11 +10,11 @@ export const FinishProductRequest = screenTrack()((props: any) => {
     <Container insetsBottom={false}>
       <Box px={2} style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}>
         <Box>
-          <Sans size="3" color={color("black100")} textAlign="center">
+          <Sans size="7" color={color("black100")} textAlign="center">
             Thank you!
           </Sans>
           <Spacer mb={14} />
-          <Sans size="2" color={color("black50")} textAlign="center">
+          <Sans size="5" color={color("black50")} textAlign="center">
             We'll review your submission and reach back out to you if we can carry it.
           </Sans>
         </Box>

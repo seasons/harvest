@@ -14,11 +14,11 @@ export const BrowseEmptyState: React.FC<{ setFilters: (size) => void; setCurrent
     <Wrapper>
       <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center" flexDirection="column">
         <Box>
-          <Sans size="3" style={{ textAlign: "center" }}>
+          <Sans size="7" style={{ textAlign: "center" }}>
             No matches
           </Sans>
           <Spacer mb={1} />
-          <Sans size="2" color={color("black50")} style={{ textAlign: "center" }}>
+          <Sans size="5" color={color("black50")} style={{ textAlign: "center" }}>
             There are no products that match your filters.
           </Sans>
         </Box>

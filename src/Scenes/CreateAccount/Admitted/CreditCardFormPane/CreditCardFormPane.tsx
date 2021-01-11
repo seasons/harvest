@@ -194,47 +194,47 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
           <ScrollView showsVerticalScrollIndicator={false}>
             <Spacer mb="100px" />
             <Box p={2}>
-              <Sans color="black100" size="3">
+              <Sans color="black100" size="7">
                 Pay with credit card
               </Sans>
               <Spacer mb={1} />
-              <Sans color="black50" size="1">
+              <Sans color="black50" size="4">
                 Enter payment details to complete checkout
               </Sans>
               <Spacer mb={3} />
               <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
                 <Box>
-                  <Sans color="black100" size="1">
+                  <Sans color="black100" size="4">
                     {plan?.name}
                   </Sans>
-                  <Sans color="black50" size="1">
+                  <Sans color="black50" size="4">
                     {description}
                   </Sans>
                 </Box>
                 <Box>
                   {isDiscounted ? (
                     <>
-                      <Sans color="black100" size="1" textAlign="right">
+                      <Sans color="black100" size="4" textAlign="right">
                         This month ${finalPrice / 100}
                       </Sans>
-                      <Sans color="black50" size="1" textAlign="right">
+                      <Sans color="black50" size="4" textAlign="right">
                         Next month ${originalPrice / 100}
                       </Sans>
                     </>
                   ) : (
-                    <Sans color="black100" size="1" textAlign="right">
+                    <Sans color="black100" size="4" textAlign="right">
                       ${originalPrice / 100}
                     </Sans>
                   )}
                 </Box>
               </Flex>
               <Spacer mb={4} />
-              <Sans color="black100" size="1">
+              <Sans color="black100" size="4">
                 Payment information
               </Sans>
               <Spacer mb={2} />
               <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start">
-                <Sans color="black50" size="0.5">
+                <Sans color="black50" size="3">
                   Card number, Expiration date & CIV
                 </Sans>
               </Flex>
@@ -250,7 +250,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
               />
               <Separator />
               <Spacer mb={4} />
-              <Sans color="black100" size="1">
+              <Sans color="black100" size="4">
                 Billing address
               </Sans>
               <Spacer mb={2} />

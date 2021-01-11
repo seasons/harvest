@@ -14,12 +14,12 @@ export const GuestView = ({ navigation }) => {
           <Spacer mb={64} />
           <SeasonsLogoSVG width={40} height={40} />
           <Spacer mb={64} />
-          <Sans color={color("black100")} size="3">
+          <Sans color={color("black100")} size="7">
             Join the community
           </Sans>
           <Spacer mb={0.5} />
           <Box pr={3}>
-            <Sans size="1" color={color("black50")}>
+            <Sans size="4" color={color("black50")}>
               Sign in to start reserving or create an account to get access. Currently available in select cities.
             </Sans>
           </Box>
@@ -50,7 +50,7 @@ export const GuestView = ({ navigation }) => {
           <Spacer mb={3} />
           <Flex flexDirection="row" justifyContent="center">
             <TouchableOpacity onPress={() => Linking.openURL(`mailto:membership@seasons.nyc`)}>
-              <Sans size="1" color={color("black50")} style={{ textDecorationLine: "underline" }}>
+              <Sans size="4" color={color("black50")} style={{ textDecorationLine: "underline" }}>
                 Contact us
               </Sans>
             </TouchableOpacity>
@@ -58,7 +58,7 @@ export const GuestView = ({ navigation }) => {
             <Box backgroundColor="black10" style={{ width: 1 }} />
             <Spacer mr={4} />
             <TouchableOpacity onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc" })}>
-              <Sans size="1" color={color("black50")} style={{ textDecorationLine: "underline" }}>
+              <Sans size="4" color={color("black50")} style={{ textDecorationLine: "underline" }}>
                 Learn more
               </Sans>
             </TouchableOpacity>

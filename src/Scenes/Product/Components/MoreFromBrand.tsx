@@ -21,7 +21,7 @@ export const MoreFromBrand: React.FC<{
     <>
       {brandName && (
         <Box pl={2} py={1}>
-          <Sans color="black" size="2">
+          <Sans color="black" size="5">
             More from {brandName}
           </Sans>
         </Box>

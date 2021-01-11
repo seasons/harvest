@@ -99,7 +99,7 @@ const ItemRow = ({ bagItem, navigation, deleteBagItem, bagIsFull, hasActiveReser
         <RemoveWrapper alignItems="center" justifyContent="center">
           <TouchableOpacity onPress={onRemove}>
             <Box py={4}>
-              <Sans size="1" style={{ textDecorationLine: "underline" }} color="white100">
+              <Sans size="4" style={{ textDecorationLine: "underline" }} color="white100">
                 Remove
               </Sans>
             </Box>

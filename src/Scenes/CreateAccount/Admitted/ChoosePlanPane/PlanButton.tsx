@@ -25,26 +25,26 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
     const isDiscounted = originalPrice !== finalPrice && !!finalPrice
     return isDiscounted ? (
       <Text>
-        <Sans color="black100" size="0.5">
+        <Sans color="black100" size="3">
           This month
         </Sans>
-        <Sans color="black100" size="1">
+        <Sans color="black100" size="4">
           {" "}
           ${finalPrice}
         </Sans>
-        <Sans color="black100" size="1">
+        <Sans color="black100" size="4">
           {" "}
         </Sans>
-        <Sans color="black50" size="1" style={{ textDecorationLine: "line-through", textDecorationStyle: "solid" }}>
+        <Sans color="black50" size="4" style={{ textDecorationLine: "line-through", textDecorationStyle: "solid" }}>
           ${originalPrice}
         </Sans>
       </Text>
     ) : (
       <Text>
-        <Sans color="black50" size="0.5">
+        <Sans color="black50" size="3">
           Per month
         </Sans>
-        <Sans color="black100" size="1">
+        <Sans color="black100" size="4">
           {" "}
           ${originalPrice}
         </Sans>
@@ -73,7 +73,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
           px={2}
           justifyContent="space-between"
         >
-          <Sans color="black100" size="1">
+          <Sans color="black100" size="4">
             {itemCount} items
           </Sans>
           <PriceText originalPrice={price} finalPrice={finalPrice} />

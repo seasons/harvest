@@ -66,9 +66,9 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
       <PopUp show={openPopUp}>
         <Box pb={insets.bottom} px={2} width={windowWidth}>
           <Spacer mb={4} />
-          <Sans size="2">Allow access to contacts</Sans>
+          <Sans size="5">Allow access to contacts</Sans>
           <Spacer mb={1} />
-          <Sans size="1" color="black50">
+          <Sans size="4" color="black50">
             Choose which friends to invite to Seasons by allowing us to view your contacts.
           </Sans>
           <Spacer mb={4} />
@@ -91,16 +91,16 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
         <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <Box px={2}>
           <Spacer mb={156} />
-          <Sans size="3">Refer a friend & earn</Sans>
+          <Sans size="7">Refer a friend & earn</Sans>
           <Spacer mb={1} />
-          <Sans size="1" color="black50">
+          <Sans size="4" color="black50">
             Refer a friend and you’ll both get 50% off your next month when they successfully sign up. Offer limited to
             one invite per month.
           </Sans>
           <Spacer mb={4} />
           <Box px={2} py={12} style={{ height: 48, backgroundColor: color("black04"), borderRadius: 24 }}>
             <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-              <Sans size="1" color="black50">
+              <Sans size="4" color="black50">
                 {referralLink}
               </Sans>
               <TouchableOpacity
@@ -109,7 +109,7 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
                   setCopyText("Copied!")
                 }}
               >
-                <SansUnderline size="1" color="black100">
+                <SansUnderline size="4" color="black100">
                   {copyText}
                 </SansUnderline>
               </TouchableOpacity>
@@ -131,7 +131,7 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc/terms-of-service" })}
             >
-              <SansUnderline size="1" color="black50">
+              <SansUnderline size="4" color="black50">
                 Terms of Service
               </SansUnderline>
             </TouchableOpacity>

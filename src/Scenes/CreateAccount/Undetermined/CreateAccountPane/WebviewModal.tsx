@@ -54,7 +54,7 @@ export const WebviewModal: React.FC<WebviewModalProps> = ({ onRequestBack, url, 
       <Flex height={50} flexDirection="row" alignItems="center" justifyContent="space-between">
         <Spacer width={16 + 12 + 16} />
         <AnimatedBox opacity={titleAnimation.opacity}>
-          <Sans size="2" color="black100">
+          <Sans size="5" color="black100">
             {title}
           </Sans>
         </AnimatedBox>

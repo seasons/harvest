@@ -45,14 +45,14 @@ export const SizingTab: React.FC<{ navigation: any; rawMeasurements: InitialMeas
         return (
           <Flex flexDirection="row">
             <Box style={{ flex: 0.5, marginRight: 6 }}>
-              <Sans color="black100" size="1">
+              <Sans color="black100" size="4">
                 Height
               </Sans>
               <Spacer mb={1} />
               <UninteractableBoxPicker text={measurements.height?.label} />
             </Box>
             <Box style={{ flex: 0.5, marginLeft: 6 }}>
-              <Sans color="black100" size="1">
+              <Sans color="black100" size="4">
                 Weight
               </Sans>
               <Spacer mb={1} />
@@ -63,7 +63,7 @@ export const SizingTab: React.FC<{ navigation: any; rawMeasurements: InitialMeas
       case Section.TopSizes:
         return (
           <>
-            <Sans color="black100" size="1">
+            <Sans color="black100" size="4">
               What are your preferred top sizes?
             </Sans>
             <Spacer mb={1} />
@@ -73,7 +73,7 @@ export const SizingTab: React.FC<{ navigation: any; rawMeasurements: InitialMeas
       case Section.WaistSizes:
         return (
           <>
-            <Sans color="black100" size="1">
+            <Sans color="black100" size="4">
               Your preferred waist size?
             </Sans>
             <Spacer mb={1} />
@@ -129,7 +129,7 @@ const UninteractableBoxPicker: React.FC<{ text: string }> = ({ text }) => (
     }}
   >
     <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-      <Sans size="1">{text}</Sans>
+      <Sans size="4">{text}</Sans>
     </Flex>
   </Flex>
 )

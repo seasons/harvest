@@ -81,7 +81,7 @@ const Content = ({ data, variant, product, onRestart, seenAllAvailableProducts }
     return (
       <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignItems="center">
         <Box px={2}>
-          <Sans color="black100" size="2" style={{ textAlign: "center", maxWidth: 300 }}>
+          <Sans color="black100" size="5" style={{ textAlign: "center", maxWidth: 300 }}>
             We can't find any products in your size. Check you've added your measurements in Personal Preferences in
             account settings.
           </Sans>
@@ -95,13 +95,13 @@ const Content = ({ data, variant, product, onRestart, seenAllAvailableProducts }
     return (
       <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="center" alignItems="center">
         <Box px={2} pt={2}>
-          <Sans color="black50" size="2" style={{ textAlign: "center", maxWidth: 300 }}>
+          <Sans color="black50" size="5" style={{ textAlign: "center", maxWidth: 300 }}>
             You've seen all of the available products in your size.
           </Sans>
           <Spacer mb={3} />
           <Sans
             color="black100"
-            size="2"
+            size="5"
             style={{ textAlign: "center", textDecorationLine: "underline" }}
             onPress={onRestart}
           >
@@ -135,7 +135,7 @@ const Content = ({ data, variant, product, onRestart, seenAllAvailableProducts }
         <Flex flexDirection="row" justifyContent="space-between" alignItems="flex-start" pl={2}>
           <Box my={1}>
             {!!productName && (
-              <Sans size="0.5" style={{ maxWidth: itemWidth - 50 }}>
+              <Sans size="3" style={{ maxWidth: itemWidth - 50 }}>
                 {productName}
               </Sans>
             )}
@@ -152,7 +152,7 @@ const Content = ({ data, variant, product, onRestart, seenAllAvailableProducts }
                   navigation.navigate("Brand", { id: brand?.id, slug: brand?.slug, name: brand?.name })
                 }}
               >
-                <Sans size="0.5" color="black50" style={{ maxWidth: itemWidth - 50, textDecorationLine: "underline" }}>
+                <Sans size="3" color="black50" style={{ maxWidth: itemWidth - 50, textDecorationLine: "underline" }}>
                   {brandName}
                 </Sans>
               </TouchableWithoutFeedback>
@@ -319,10 +319,10 @@ export const SurpriseMe = screenTrack()(() => {
             <Spacer mb={5} />
             <Spacer mb={4} />
             <Box px={2} pt={2}>
-              <Sans color="black100" size="3">
+              <Sans color="black100" size="7">
                 Styles for you
               </Sans>
-              <Sans color="black50" size="1">
+              <Sans color="black50" size="4">
                 Available now and in your size
               </Sans>
               <Spacer mb={2} />

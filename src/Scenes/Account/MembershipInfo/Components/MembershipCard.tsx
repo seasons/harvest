@@ -40,11 +40,11 @@ export const MembershipCard: React.FC<MembershipCardProps> = ({ memberName, plan
           <Spacer mt={104} />
           <Flex flexDirection="row" justifyContent="space-between">
             <Text style={{ letterSpacing: 2 }}>
-              <UppercaseSans color={planTierColor} size="1">
+              <UppercaseSans color={planTierColor} size="4">
                 {planName}
               </UppercaseSans>
             </Text>
-            <Sans color={color("black50")} size="1">
+            <Sans color={color("black50")} size="4">
               {memberName}
             </Sans>
           </Flex>

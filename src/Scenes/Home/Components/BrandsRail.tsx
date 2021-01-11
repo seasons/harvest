@@ -39,7 +39,7 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title }) => {
               navigation.navigate("Brand", { id: brand.id, slug: brand.slug, name: brand.name })
             }}
           >
-            <Sans size="2" style={{ textDecorationLine: "underline" }}>
+            <Sans size="5" style={{ textDecorationLine: "underline" }}>
               {brand.name}
             </Sans>
           </TouchableOpacity>
@@ -52,7 +52,7 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title }) => {
   return (
     <Box pl={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between" pr={2}>
-        <Sans size="1">{title}</Sans>
+        <Sans size="4">{title}</Sans>
         <TouchableOpacity
           onPress={() => {
             tracking.trackEvent({
@@ -62,7 +62,7 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title }) => {
             navigation.navigate("Brands")
           }}
         >
-          <Sans size="1" style={{ textDecorationLine: "underline" }}>
+          <Sans size="4" style={{ textDecorationLine: "underline" }}>
             View all
           </Sans>
         </TouchableOpacity>

@@ -40,7 +40,7 @@ export const ProductDetails: React.FC<{
     <Box pt={2} px={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between" alignItems="flex-start">
         <Box width={screenWidth - space(6) - 30}>
-          <Sans size="1" color={color("black100")}>
+          <Sans size="4" color={color("black100")}>
             {name}
           </Sans>
           {!!brandName && (
@@ -58,7 +58,7 @@ export const ProductDetails: React.FC<{
                 navigation.navigate("Brand", { id: brandID, slug: brandSlug, name: brandName })
               }}
             >
-              <Sans size="1" color={color("black50")} style={{ textDecorationLine: "underline" }}>
+              <Sans size="4" color={color("black50")} style={{ textDecorationLine: "underline" }}>
                 {brandName}
               </Sans>
             </TouchableOpacity>
@@ -83,7 +83,7 @@ export const ProductDetails: React.FC<{
       </Flex>
       <Spacer mb={1} />
       {!!description && (
-        <Sans size="1" color={color("black50")} lineHeight={26}>
+        <Sans size="4" color={color("black50")} lineHeight={26}>
           {description.trim()}
         </Sans>
       )}

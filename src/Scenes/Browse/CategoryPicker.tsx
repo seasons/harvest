@@ -60,7 +60,7 @@ export const CategoryPicker: React.FC<Props> = ({ items, onCategoryPress, curren
             {!!item.name ? (
               <TouchableOpacity onPress={() => onCategoryPress(item)}>
                 <Category mr={4} selected={selected}>
-                  <Sans size="1" style={{ opacity: selected ? 1.0 : 0.5 }}>
+                  <Sans size="4" style={{ opacity: selected ? 1.0 : 0.5 }}>
                     {item.name}
                   </Sans>
                 </Category>

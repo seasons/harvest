@@ -63,7 +63,7 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({
               ]}
             >
               <Sans
-                size="1"
+                size="4"
                 color="black100"
                 style={{
                   textAlign: "center",

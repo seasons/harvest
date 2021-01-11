@@ -152,13 +152,13 @@ export const BagItem: React.FC<BagItemProps> = ({
         justifyContent="flex-end"
       >
         <Box style={{ width: "100%" }} p={2}>
-          <Sans size="1">{`${index + 1}.`}</Sans>
+          <Sans size="4">{`${index + 1}.`}</Sans>
           <Spacer mb={1} />
-          <Sans size="1">{product?.brand?.name}</Sans>
-          <Sans size="1" color="black50">
+          <Sans size="4">{product?.brand?.name}</Sans>
+          <Sans size="4" color="black50">
             {product.name}
           </Sans>
-          <Sans size="1" color="black50">
+          <Sans size="4" color="black50">
             Size {variantSize}
           </Sans>
         </Box>
@@ -171,17 +171,17 @@ export const BagItem: React.FC<BagItemProps> = ({
       <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
         <Box>
           <Box style={{ width: "100%" }}>
-            <Sans size="1">{`${index + 1}. ${product?.brand?.name}`}</Sans>
-            <Sans size="1" color="black50">
+            <Sans size="4">{`${index + 1}. ${product?.brand?.name}`}</Sans>
+            <Sans size="4" color="black50">
               {product.name}
             </Sans>
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               Size {variantSize}
             </Sans>
             <Spacer mb={3} />
             {authState.isSignedIn && (
               <TouchableOpacity onPress={onSaveForLater}>
-                <Sans size="1" style={{ textDecorationLine: "underline" }}>
+                <Sans size="4" style={{ textDecorationLine: "underline" }}>
                   Save for later
                 </Sans>
               </TouchableOpacity>

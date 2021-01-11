@@ -118,7 +118,7 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
   const TextContent = () => {
     if (deviceStatus === "blocked") {
       return (
-        <Sans size="1" color={color("black50")}>
+        <Sans size="4" color={color("black50")}>
           Enable push notifications in your{" "}
           <Text
             onPress={() => Linking.openSettings()}
@@ -131,7 +131,7 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
       )
     } else {
       return (
-        <Sans size="1" color={color("black50")}>
+        <Sans size="4" color={color("black50")}>
           Send me push notifications
         </Sans>
       )
@@ -146,7 +146,7 @@ export const NotificationToggle: React.FC<{ pushNotification: GetUser_me_custome
       <Spacer m={2} />
       <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
         <Box style={{ maxWidth: 300 }}>
-          <Sans size="2">Order updates</Sans>
+          <Sans size="5">Order updates</Sans>
           <TextContent />
         </Box>
         <Toggle disabled={disabled} onChange={(newValue) => onChange(newValue)} selected={selected} />

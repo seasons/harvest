@@ -220,11 +220,11 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             style={{ paddingTop: 85, paddingHorizontal: 16, overflow: "visible" }}
             ref={scrollViewRef}
           >
-            <Sans color="black100" size="3">
+            <Sans color="black100" size="7">
               Let's create your account
             </Sans>
             <Spacer mb={1} />
-            <Sans color="black50" size="1">
+            <Sans color="black50" size="4">
               You'll use this to sign into the app, choose your plan, and manage your membership.
             </Sans>
             <Spacer mb={5} />
@@ -274,7 +274,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               variant="light"
             />
             <Spacer mb={1} />
-            <Sans size="0" color="black50">
+            <Sans size="2" color="black50">
               Your password must be at least 8 characters long, include at least one uppercase letter, one lowercase
               letter, & one number.
             </Sans>
@@ -318,21 +318,21 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
         <Box px={2} style={{ paddingBottom: insets.bottom + 16, backgroundColor: "white" }}>
           <Flex flexDirection="column" alignItems="center">
             <Text>
-              <Sans size="0" color="black50">
+              <Sans size="2" color="black50">
                 By creating an account, you agree to our
               </Sans>{" "}
             </Text>
             <Text>
               <TouchableWithoutFeedback onPress={() => showWebview("https://www.seasons.nyc/privacy-policy")}>
-                <Sans style={{ textDecorationLine: "underline" }} size="0" color="black50">
+                <Sans style={{ textDecorationLine: "underline" }} size="2" color="black50">
                   Privacy Policy
                 </Sans>
               </TouchableWithoutFeedback>
-              <Sans size="0" color="black50">
+              <Sans size="2" color="black50">
                 {" & "}
               </Sans>
               <TouchableWithoutFeedback onPress={() => showWebview("https://www.seasons.nyc/terms-of-service")}>
-                <Sans style={{ textDecorationLine: "underline" }} size="0" color="black50">
+                <Sans style={{ textDecorationLine: "underline" }} size="2" color="black50">
                   Terms of Service
                 </Sans>
               </TouchableWithoutFeedback>

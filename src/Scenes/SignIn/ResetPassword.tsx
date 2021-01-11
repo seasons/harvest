@@ -64,11 +64,11 @@ export const ResetPassword = (props: any) => {
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
           <Box px={2}>
             <Spacer mb={5} />
-            <Sans size="3" color="white" weight="medium">
+            <Sans size="7" color="white" weight="medium">
               Reset Password
             </Sans>
             <Spacer mb={14} />
-            <Sans size="2" color="rgba(255, 255, 255, 0.5)" weight="medium">
+            <Sans size="5" color="rgba(255, 255, 255, 0.5)" weight="medium">
               Enter your email and we'll promptly send you a link to reset your password.
             </Sans>
             <Spacer mb={32} />

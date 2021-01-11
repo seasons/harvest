@@ -146,7 +146,7 @@ export const LogIn: React.FC<LogInProps> = (props) => {
         <Spacer mb={3} />
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
           <Box p={2} mt={5}>
-            <Sans color={color("black100")} size="3">
+            <Sans color={color("black100")} size="7">
               Welcome
             </Sans>
             <Spacer mb={3} />
@@ -171,11 +171,11 @@ export const LogIn: React.FC<LogInProps> = (props) => {
             <Spacer mb={3} />
             <Flex flexDirection="row" justifyContent="center">
               <Text>
-                <Sans size="1" color="black50">
+                <Sans size="4" color="black50">
                   Forgot your password?
                 </Sans>{" "}
                 <TouchableWithoutFeedback onPress={handleResetPassword}>
-                  <Sans style={{ textDecorationLine: "underline" }} size="1" color={color("black50")}>
+                  <Sans style={{ textDecorationLine: "underline" }} size="4" color={color("black50")}>
                     Reset it
                   </Sans>
                 </TouchableWithoutFeedback>
@@ -184,7 +184,7 @@ export const LogIn: React.FC<LogInProps> = (props) => {
           </Box>
           <Box p={4} pb={5}>
             <Text style={{ textAlign: "center" }}>
-              <Sans size="2" color="black50">
+              <Sans size="5" color="black50">
                 Sign in using the same email and password you used for the waitlist.
               </Sans>
             </Text>

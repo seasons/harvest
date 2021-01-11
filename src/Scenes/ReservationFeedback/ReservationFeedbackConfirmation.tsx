@@ -80,11 +80,11 @@ export const ReservationFeedbackConfirmation: React.FC<{
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center">
             <Spacer mb={68} />
-            <Sans size="1" color="black50" weight="medium">
+            <Sans size="4" color="black50" weight="medium">
               Finish
             </Sans>
             <Spacer mb={1} />
-            <Sans size="3" color="black100" weight="medium">
+            <Sans size="7" color="black100" weight="medium">
               Any other thoughts?
             </Sans>
             <Spacer mb={2} />

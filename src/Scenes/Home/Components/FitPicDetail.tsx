@@ -122,9 +122,9 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = ({ navigation, route })
         <Spacer height={spacing + imageHeight + spacing} />
 
         <Box pl={2} pr={2}>
-          <Sans size="0.5">{item.author}</Sans>
+          <Sans size="3">{item.author}</Sans>
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-            <Sans size="0.5" color="black50">
+            <Sans size="3" color="black50">
               {item.location
                 ? `${item.location.city}, ${item.location.state}`
                 : ((date: DateTime) => `${date.monthLong} ${date.day}, ${date.year}`)(DateTime.fromISO(item.createdAt))}

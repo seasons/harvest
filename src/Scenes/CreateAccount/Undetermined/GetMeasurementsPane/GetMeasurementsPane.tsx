@@ -107,13 +107,13 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
       <CloseButton variant="light" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Box p={2} pt={useEditingLayout ? "80px" : "85px"}>
-          <Sans color="black100" size="3">
+          <Sans color="black100" size="7">
             {useEditingLayout ? "Measurements" : "One last step"}
           </Sans>
           {!useEditingLayout && (
             <>
               <Spacer mb={1} />
-              <Sans color="black50" size="1">
+              <Sans color="black50" size="4">
                 Let's get your measurements and sizing info so we can make sure we have enough inventory for you.
               </Sans>
             </>
@@ -123,7 +123,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
 
           <Flex flexDirection="row">
             <Box style={{ flex: 0.5, marginRight: 6 }}>
-              <Sans color="black100" size="1">
+              <Sans color="black100" size="4">
                 Height
               </Sans>
               <Spacer mb={1} />
@@ -135,7 +135,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
               />
             </Box>
             <Box style={{ flex: 0.5, marginLeft: 6 }}>
-              <Sans color="black100" size="1">
+              <Sans color="black100" size="4">
                 Weight
               </Sans>
               <Spacer mb={1} />
@@ -150,7 +150,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
 
           <Spacer mb={5} />
 
-          <Sans color="black100" size="1">
+          <Sans color="black100" size="4">
             What are your preferred top sizes?
           </Sans>
           <Spacer mb={1} />
@@ -169,7 +169,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
 
           <Spacer mb={5} />
 
-          <Sans color="black100" size="1">
+          <Sans color="black100" size="4">
             Your preferred waist size?
           </Sans>
           <Spacer mb={1} />

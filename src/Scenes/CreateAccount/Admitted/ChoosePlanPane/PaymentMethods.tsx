@@ -13,7 +13,7 @@ export const PaymentMethods = ({ onApplePay, onCreditCard }) => {
   return (
     <Box pb={insets.bottom + space(4)} px={2} style={{ width: windowWidth }}>
       <Spacer mb={4} />
-      <Sans size="1">Select a payment type</Sans>
+      <Sans size="4">Select a payment type</Sans>
       <Spacer mb={2} />
       <Separator />
       <Spacer mb={3} />

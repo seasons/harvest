@@ -6,7 +6,7 @@ import styled from "styled-components/native"
 
 export const VariantSizes: React.FC<{
   variants: Homepage_homepage_sections_results_Product_variants[]
-  size: "0" | "1"
+  size: "2" | "4"
 }> = ({ variants, size }) => {
   const availableVariants = variants.filter((a) => !!a?.internalSize?.display)
 
@@ -27,11 +27,11 @@ export const VariantSizes: React.FC<{
   )
 }
 
-const Strikethrough = styled.View`
+const Strikethrough = styled.View<{ size: "2" | "4" }>`
   background-color: ${color("black25")};
   height: 2;
   width: 100%;
   position: absolute;
-  top: ${(p) => (p.size === "0" ? 7 : 11)};
+  top: ${(p) => (p.size === "2" ? 7 : 11)};
   left: 0;
 `
