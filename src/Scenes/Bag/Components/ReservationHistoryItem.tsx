@@ -17,11 +17,11 @@ export const ReservationHistoryItem = ({ item }) => {
       <Spacer mb={2} />
       <Box px={2}>
         <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
-          {item?.reservationNumber && <Sans size="1">{`Order #${item.reservationNumber}`}</Sans>}
-          {item?.status && <Sans size="1">{item.status}</Sans>}
+          {item?.reservationNumber && <Sans size="4">{`Order #${item.reservationNumber}`}</Sans>}
+          {item?.status && <Sans size="4">{item.status}</Sans>}
         </Flex>
         {!!date && (
-          <Sans size="1" color="black50">
+          <Sans size="4" color="black50">
             {date}
           </Sans>
         )}
@@ -50,9 +50,9 @@ export const ReservationHistoryItem = ({ item }) => {
                     source={{ uri: imageURL }}
                   />
                   <Spacer mb={0.5} />
-                  {!!brandName && <Sans size="0">{brandName}</Sans>}
+                  {!!brandName && <Sans size="2">{brandName}</Sans>}
                   {!!variantSizeDisplay && (
-                    <Sans size="0" color="black50">
+                    <Sans size="2" color="black50">
                       {`Size ${variantSizeDisplay}`}
                     </Sans>
                   )}

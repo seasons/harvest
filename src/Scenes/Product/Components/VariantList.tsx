@@ -51,13 +51,13 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
             <Flex flexDirection="row" alignItems="center">
               <Radio selected={!!selectedVariant.id && selectedVariant.id === size.id} pointerEventsNone />
               <Spacer mr={1} />
-              {displaySize && (
-                <Sans color={size?.reservable > 0 ? color("white100") : color("black50")} size="1">
-                  {displaySize}
+              {size?.sizeDisplay && (
+                <Sans color={size?.reservable > 0 ? color("white100") : color("black50")} size="4">
+                  {size.sizeDisplay}
                 </Sans>
               )}
             </Flex>
-            <Sans color="black50" size="1">
+            <Sans color="black50" size="4">
               {size?.reservable > 0 ? manufacturerSizeDisplay : "Unavailable"}
             </Sans>
           </Flex>

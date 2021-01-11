@@ -208,7 +208,7 @@ export const Product = screenTrack({
             images={images}
             showPageDots
             imageWidth={imageWidth}
-            TextComponent={() => <VariantSizes size="1" variants={product?.variants ?? []} />}
+            TextComponent={() => <VariantSizes size="4" variants={product?.variants ?? []} />}
           />
         )
       case "productMeasurements":
@@ -297,7 +297,7 @@ export const Product = screenTrack({
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
           <Spacer pb={2} />
           <Flex p={2} flexDirection="row" flexWrap="nowrap" justifyContent="center">
-            <Sans size="1">{notifyButtonText}</Sans>
+            <Sans size="4">{notifyButtonText}</Sans>
           </Flex>
           <Spacer pb={1} />
         </FadeBottom2>

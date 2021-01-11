@@ -1,25 +1,25 @@
+import { useNavigation } from "@react-navigation/native"
+import * as Sentry from "@sentry/react-native"
 import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
 import { PauseStatus, REMOVE_SCHEDULED_PAUSE } from "App/Components/Pause/PauseButtons"
 import { GetBagAndSavedItems } from "App/generated/GetBagAndSavedItems"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { State as CreateAccountState, UserState } from "App/Scenes/CreateAccount/CreateAccount"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
+import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
 import React, { useEffect, useState } from "react"
 import { useLazyQuery, useMutation } from "react-apollo"
-import { Schema as NavigationSchema } from "App/Navigation"
-import { useNavigation } from "@react-navigation/native"
-import * as Sentry from "@sentry/react-native"
+import { Linking } from "react-native"
 import { GET_BAG, GET_LOCAL_BAG_ITEMS } from "../BagQueries"
+import { BagCardButton } from "./BagCardButton"
 import { BagItem } from "./BagItem"
 import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
-import { BagCardButton } from "./BagCardButton"
-import { AddSlot, Stylist, SurpriseMe } from "Assets/svgs"
-import { Linking } from "react-native"
-import { UserState, State as CreateAccountState } from "App/Scenes/CreateAccount/CreateAccount"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
@@ -129,9 +129,9 @@ export const BagTab: React.FC<{
     <Box>
       <Box px={2} pt={4}>
         <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
-          <Sans size="1">{hasActiveReservation ? "Current rotation" : "My bag"}</Sans>
+          <Sans size="4">{hasActiveReservation ? "Current rotation" : "My bag"}</Sans>
           <Sans
-            size="1"
+            size="4"
             style={{ textDecorationLine: "underline" }}
             onPress={() => {
               tracking.trackEvent({
@@ -145,7 +145,7 @@ export const BagTab: React.FC<{
           </Sans>
         </Flex>
         {((hasActiveReservation && !!returnReminder) || !hasActiveReservation) && (
-          <Sans size="1" color="black50">
+          <Sans size="4" color="black50">
             {hasActiveReservation && !!returnReminder ? returnReminder : "Reserve your order below"}
           </Sans>
         )}
@@ -157,12 +157,12 @@ export const BagTab: React.FC<{
             <Separator color={color("black10")} />
           </Box>
           <Box px={2} py={3}>
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               {`Your membership is scheduled to be paused on ${DateTime.fromISO(pauseRequest.pauseDate).toFormat(
                 "EEEE LLLL dd"
               )}. To continue it tap `}
               <Sans
-                size="1"
+                size="4"
                 style={{ textDecorationLine: "underline" }}
                 onPress={async () => {
                   if (isMutating) {
@@ -225,6 +225,24 @@ export const BagTab: React.FC<{
       {!hasActiveReservation && itemCount && itemCount < 3 && (
         <>
           <BagCardButton Icon={AddSlot} title="Add a slot" caption="Reserve another item" onPress={onAddSlot} />
+          <Spacer mb={3} />
+          <Separator />
+          <Spacer mb={3} />
+        </>
+      )}
+      {hasActiveReservation && (
+        <>
+          <BagCardButton
+            Icon={DarkInstagram}
+            title="Share to IG Stories"
+            caption="Post your new styles to Instagram"
+            onPress={() =>
+              navigation.navigate("Modal", {
+                screen: "ShareReservationToIGModal",
+                params: { reservationID: activeReservation?.id },
+              })
+            }
+          />
           <Spacer mb={3} />
           <Separator />
           <Spacer mb={3} />

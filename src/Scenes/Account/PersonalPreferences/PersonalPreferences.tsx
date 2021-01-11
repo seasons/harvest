@@ -125,7 +125,7 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
     <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Box mt={80} mb={3} mx={2}>
-        <Sans size="3">Sizing & Preferences</Sans>
+        <Sans size="7">Sizing & Preferences</Sans>
       </Box>
       <TabBar
         spaceEvenly

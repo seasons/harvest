@@ -9,7 +9,7 @@ export const AboutTheBrand = ({ product }) => {
 
   return (
     <Box p={2}>
-      <Sans color="black" size="2">
+      <Sans color="black" size="5">
         About the brand
       </Sans>
       <Spacer mb={2} />

@@ -9,11 +9,11 @@ export const ResetPasswordConfirmation = (props: any) => {
       <Flex flexDirection="column" style={{ flex: 1 }}>
         <Box px={2} pt={2}>
           <Spacer mb={3} />
-          <Sans size="3" color={color("white100")} weight="medium">
+          <Sans size="7" color={color("white100")} weight="medium">
             Reset Password Link Sent
           </Sans>
           <Spacer mb={1} />
-          <Sans size="2" color={color("black25")} weight="medium">
+          <Sans size="5" color={color("black25")} weight="medium">
             Check your email for a link to reset your password.
           </Sans>
           <Spacer mb={3} />

@@ -209,10 +209,10 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
 
   const SubText = () => {
     return pauseStatus === "paused" ? (
-      <Sans size="1" color={color("black50")} style={{ textAlign: "center" }}>
+      <Sans size="4" color={color("black50")} style={{ textAlign: "center" }}>
         Have a question?{" "}
         <Sans
-          size="1"
+          size="4"
           style={{ textDecorationLine: "underline" }}
           onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
         >
@@ -220,7 +220,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
         </Sans>
       </Sans>
     ) : (
-      <Sans size="1" color={color("black50")}>
+      <Sans size="4" color={color("black50")}>
         If you’d like to cancel your membership, contact us using the button above. We’re happy to help with this.
       </Sans>
     )
@@ -232,7 +232,7 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
         {fullScreen && <Spacer mb={100} />}
         {pauseStatus === "pending" && (
           <>
-            <Sans size="1">{`Your membership is scheduled to be paused on ${DateTime.fromISO(
+            <Sans size="4">{`Your membership is scheduled to be paused on ${DateTime.fromISO(
               pauseRequest.pauseDate
             ).toFormat("EEEE LLLL d")}.`}</Sans>
             <Spacer mb={2} />
@@ -249,12 +249,12 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
             </Sans>
             <Spacer mb={1} />
             {fullScreen && (
-              <Sans color="black50" size="1">
+              <Sans color="black50" size="4">
                 It will automatically resume at this date.
               </Sans>
             )}
             {!pauseDateCanExtend && (
-              <Sans size="1" color="black50">{`You can extend this again after ${DateTime.fromISO(resumeDate)
+              <Sans size="4" color="black50">{`You can extend this again after ${DateTime.fromISO(resumeDate)
                 .minus({ months: 1 })
                 .toFormat("EEEE LLLL d")}.`}</Sans>
             )}

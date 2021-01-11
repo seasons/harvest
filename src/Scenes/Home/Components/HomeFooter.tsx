@@ -21,11 +21,11 @@ export const HomeFooter: React.FC<HomeFooterProps> = ({ bottom = 0, navigation }
       <Box style={{ backgroundColor: color("black100"), height: 280 + bottom, overflow: "visible" }}>
         <Spacer mb={60} />
         <Flex justifyContent="center" flexDirection="column">
-          <Sans size="2" color={color("white100")} style={{ textAlign: "center" }}>
+          <Sans size="5" color={color("white100")} style={{ textAlign: "center" }}>
             Browse our entire collection
           </Sans>
           <Spacer mb={0.5} />
-          <Sans size="2" color={color("black50")} style={{ textAlign: "center" }}>
+          <Sans size="5" color={color("black50")} style={{ textAlign: "center" }}>
             See all categories, brands and sizes.
           </Sans>
           <Spacer mb={3} />

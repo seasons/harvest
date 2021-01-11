@@ -117,7 +117,7 @@ const Container = styled(Flex)<ContainerProps>`
 const InnerCircle = styled(Box)`
   width: 14;
   height: 14;
-  background-color: ${color("blue")};
+  background-color: ${color("black100")};
 `
 
 const RadioButton = styled(Box)<RadioToggleProps>`

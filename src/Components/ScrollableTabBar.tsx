@@ -35,7 +35,7 @@ const TabButton = styled(View)<{ active: boolean }>`
   padding-left: 20px;
   padding-right: 20px;
   flex-grow: 1;
-  ${p =>
+  ${(p) =>
     p.active &&
     `
     border-color: black;
@@ -48,7 +48,7 @@ interface ScrollableTabProps {
 }
 
 const TabLabel = styled(Sans)<{ isActive: boolean }>`
-  color: ${p => (p.isActive ? color("black100") : color("black30"))};
+  color: ${(p) => (p.isActive ? color("black100") : color("black30"))};
 `
 
 export const ScrollableTab: React.SFC<ScrollableTabProps> = ({ children }) => (
@@ -80,7 +80,7 @@ export default class ScrollableTabBar extends React.Component<ScrollableTabBarPr
         accessible={true}
         accessibilityLabel={name}
         accessibilityTraits="button"
-        onLayout={e => {
+        onLayout={(e) => {
           const layout = e.nativeEvent.layout
           this.els[page] = layout
         }}
@@ -96,7 +96,7 @@ export default class ScrollableTabBar extends React.Component<ScrollableTabBarPr
         }}
       >
         <TabButton active={isTabActive}>
-          <TabLabel size="3" isActive={isTabActive}>
+          <TabLabel size="7" isActive={isTabActive}>
             {name}
           </TabLabel>
         </TabButton>
@@ -140,7 +140,7 @@ export default class ScrollableTabBar extends React.Component<ScrollableTabBarPr
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexDirection: "row", justifyContent: "space-between" }}
-        onContentSizeChange={width => (this.scrollViewWidth = width)}
+        onContentSizeChange={(width) => (this.scrollViewWidth = width)}
         horizontal
       >
         {this.props.tabs.map((name, page) => {

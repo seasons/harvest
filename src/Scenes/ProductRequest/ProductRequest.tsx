@@ -103,11 +103,11 @@ export const ProductRequest = screenTrack()((props: any) => {
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
           <Box px={2}>
             <Spacer mb={80} />
-            <Sans size="3" color="white" weight="medium">
+            <Sans size="7" color="white" weight="medium">
               Submit an item
             </Sans>
             <Spacer mb={14} />
-            <Sans size="2" color={color("black25")} weight="medium">
+            <Sans size="5" color={color("black25")} weight="medium">
               Recommend something for us to carry by pasting the link to the item below.
             </Sans>
             <Spacer mb={4} />

@@ -1,19 +1,21 @@
 import React from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
-
 import { BackArrowIcon } from "../../assets/icons"
 import { Box } from "./Box"
 import { Flex } from "./Flex"
 import { themeProps } from "./Theme"
 
 type FixedBackArrowVariant = "blackBackground" | "whiteBackground" | "productBackground" | "whiteTransparent"
+type RotationDegree = "0deg" | "90deg" | "180deg" | "270deg"
 
 export const FixedBackArrow: React.FC<{
   navigation: any
   variant?: FixedBackArrowVariant
   onPress?: () => void
-}> = ({ navigation, variant, onPress }) => {
+  rotationDegree?: RotationDegree
+  overrides?: any
+}> = ({ navigation, variant, onPress, rotationDegree = "0deg", overrides = {} }) => {
   const getColorsForVariant = (variant: FixedBackArrowVariant) => {
     const {
       colors: { black100, white100, black10, productBackgroundColor },
@@ -51,9 +53,9 @@ export const FixedBackArrow: React.FC<{
   const variantColors = getColorsForVariant(variant)
 
   return (
-    <Wrapper>
+    <Wrapper style={{ left: overrides.left ?? 7, top: overrides.top ?? 50, transform: [{ rotate: rotationDegree }] }}>
       <TouchableOpacity onPress={!!onPress ? onPress : () => navigation.goBack()}>
-        <ArrowWrapper backgroundColor={variantColors.backgroundColor}>
+        <ArrowWrapper backgroundColor={variantColors.backgroundColor} borderColor={overrides.borderColor}>
           <Arrow color={variantColors.arrowColor} />
         </ArrowWrapper>
       </TouchableOpacity>
@@ -67,15 +69,15 @@ const Arrow = styled(BackArrowIcon)`
 
 const Wrapper = styled(Box)`
   position: absolute;
-  top: 50;
-  left: 7;
   z-index: 2000;
 `
 
-const ArrowWrapper = styled(Flex)<{ backgroundColor: string }>`
+const ArrowWrapper = styled(Flex)<{ backgroundColor: string; borderColor?: string }>`
   flex-direction: row;
   background-color: ${(p) => p.backgroundColor};
   border-radius: 100;
+  border-width: ${(p) => (p.borderColor ? 1 : 0)};
+  border-color: ${(p) => p.borderColor ?? "#FFFFFF"};
   height: 40;
   width: 40;
   align-items: center;

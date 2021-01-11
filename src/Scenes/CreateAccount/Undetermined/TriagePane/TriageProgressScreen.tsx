@@ -55,13 +55,13 @@ export const TriageProgressScreen: React.FC<TriageProgressScreenProps> = ({ star
           <Spinner />
         </Box>
         <Box mb={4} width="100%">
-          <Sans size="2" textAlign="center">
+          <Sans size="5" textAlign="center">
             {steps[currentStep]}...
           </Sans>
         </Box>
       </Flex>
       <TriageProgressFooter px={3}>
-        <Sans size="1" textAlign="center" color={color("black50")}>
+        <Sans size="4" textAlign="center" color={color("black50")}>
           Give us a few seconds while we process your account and confirm membership availability
         </Sans>
       </TriageProgressFooter>

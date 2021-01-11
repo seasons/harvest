@@ -17,14 +17,14 @@ export const ExtendPauseConfirmation: React.FC<{ route: any }> = ({ route }) => 
             <Spacer mb={100} />
             <CheckCircled backgroundColor={color("black100")} />
             <Spacer mb={3} />
-            <Sans size="3">Your membership is paused for another month</Sans>
+            <Sans size="7">Your membership is paused for another month</Sans>
             <Spacer mb={1} />
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               {`It will automatically resume on ${dueDate}.`}
             </Sans>
           </Box>
           <Box>
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               If you change your mind, you can still resume your membership before this date.
             </Sans>
             <Spacer mb={2} />

@@ -322,11 +322,11 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
             <Spacer mb={5} />
             <Spacer mb={4} />
             <Box p={2}>
-              <Sans color="black100" size="3">
+              <Sans color="black100" size="7">
                 {headerText}
               </Sans>
               <Spacer mb={1} />
-              <Sans color="black50" size="1">
+              <Sans color="black50" size="4">
                 Here's what's included in your selected plan:
               </Sans>
               <Spacer mb={1} />
@@ -338,7 +338,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                     <Box mx={1} mr={1.5}>
                       <ListCheck />
                     </Box>
-                    <Sans color="black50" size="1" style={{ width: viewWidth - 75 }}>
+                    <Sans color="black50" size="4" style={{ width: viewWidth - 75 }}>
                       {line}
                     </Sans>
                   </Flex>
@@ -391,18 +391,18 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
               faqSections.map((section, index) => (
                 <Box mt={4} key={index} px={2} onLayout={onFaqSectionHeaderLayout}>
                   <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-                    <Sans size="1">{section.title}</Sans>
+                    <Sans size="4">{section.title}</Sans>
                     <ChevronIcon rotateDeg="90deg" color={color("black100")} />
                   </Flex>
                   <Spacer mb={4} />
                   {section.subsections.map((subSection) => {
                     return (
                       <Box key={subSection.title}>
-                        <Sans size="1">{subSection.title}</Sans>
+                        <Sans size="4">{subSection.title}</Sans>
                         <Spacer mb={1} />
                         <Separator />
                         <Spacer mb={1} />
-                        <Sans size="1" color="black50">
+                        <Sans size="4" color="black50">
                           {subSection.text}
                         </Sans>
                         <Spacer mb={4} />
@@ -440,7 +440,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
               <>
                 <Spacer mt={2} />
                 <TouchableOpacity onPress={onApplyPromoCode}>
-                  <Sans size="1" style={{ textDecorationLine: "underline" }}>
+                  <Sans size="4" style={{ textDecorationLine: "underline" }}>
                     Apply promo code
                   </Sans>
                 </TouchableOpacity>

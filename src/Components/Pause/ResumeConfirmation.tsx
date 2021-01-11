@@ -17,14 +17,14 @@ export const ResumeConfirmation: React.FC = () => {
             <Spacer mb={100} />
             <CheckCircled />
             <Spacer mb={3} />
-            <Sans size="3">Welcome back</Sans>
+            <Sans size="7">Welcome back</Sans>
             <Spacer mb={1} />
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               Your membership has been reactivated and you’re ready to reserve your next order.
             </Sans>
           </Box>
           <Box>
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               Your credit card has been succesfully billed and your membership will automatically renew.
             </Sans>
             <Spacer mb={3} />

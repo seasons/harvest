@@ -1,15 +1,19 @@
-import { Box, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
+import { Box, Container, Display, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { CheckCircled } from "Assets/svgs"
+import { CheckCircled, Instagram } from "Assets/svgs"
 import gql from "graphql-tag"
 import React from "react"
 import { useQuery } from "react-apollo"
-import { ScrollView } from "react-native"
+import { ScrollView, TouchableWithoutFeedback } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
-
 import { ReservationItem } from "./Components/ReservationItem"
+
+enum Option {
+  ShareToIG = "Share to IG",
+  ReferAndEarn = "Refer and Earn",
+}
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -108,7 +112,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
     return (
       <>
         <Flex flexDirection="row" style={{ flex: 1 }} width="100%">
-          <Sans size="1" color="black100">
+          <Sans size="4" color="black100">
             {title}
           </Sans>
           {content && <Box ml="auto">{content}</Box>}
@@ -126,6 +130,88 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const shippingDisplayText = shippingOption?.shippingMethod?.displayText
   const externalCost = shippingOption?.externalCost
 
+  const shareToIG = async () => {
+    props.navigation.navigate("Modal", { screen: "ShareReservationToIGModal", params: { reservationID } })
+  }
+
+  const SectionWrapper = ({ isFirst = false, isLast = false, onPress, children }) => {
+    const defaultBorderWidth = 1
+    const cornerRadius = 4
+    return (
+      <TouchableWithoutFeedback onPress={onPress}>
+        <Box
+          style={{
+            borderWidth: defaultBorderWidth,
+            flexGrow: 1,
+            borderColor: color("black10"),
+            borderRightWidth: isFirst ? defaultBorderWidth / 2.0 : defaultBorderWidth,
+            borderLeftWidth: isLast ? defaultBorderWidth / 2.0 : defaultBorderWidth,
+            borderTopLeftRadius: isFirst ? cornerRadius : 0,
+            borderBottomLeftRadius: isFirst ? cornerRadius : 0,
+            borderTopRightRadius: isLast ? cornerRadius : 0,
+            borderBottomRightRadius: isLast ? cornerRadius : 0,
+          }}
+        >
+          {children}
+        </Box>
+      </TouchableWithoutFeedback>
+    )
+  }
+
+  const OptionSections = ({ options }) => {
+    return (
+      <Flex flexDirection={"row"} flexGrow={1}>
+        {options.map((option, index) => {
+          const isFirst = index === 0
+          const isLast = index === options.length
+
+          switch (option) {
+            case Option.ShareToIG:
+              return (
+                <SectionWrapper isFirst={isFirst} isLast={isLast} onPress={() => shareToIG()}>
+                  <Flex py={2} alignItems="center">
+                    <Instagram />
+                    <Sans pt={0.5} size="4" color="black50">
+                      Share to IG Stories
+                    </Sans>
+                  </Flex>
+                </SectionWrapper>
+              )
+            case Option.ReferAndEarn:
+              return (
+                <SectionWrapper
+                  isFirst={isFirst}
+                  isLast={isLast}
+                  onPress={() => props.navigation.navigate("InviteFriends")}
+                >
+                  <Flex py={2} alignItems="center">
+                    <Box
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: 12,
+                        height: 24,
+                        width: 24,
+                        borderColor: color("black100"),
+                        borderWidth: 1.5,
+                      }}
+                    >
+                      <Display size="4" color="black100">
+                        $
+                      </Display>
+                    </Box>
+                    <Sans pt={0.5} size="4" color="black50">
+                      Refer & earn 50% off
+                    </Sans>
+                  </Flex>
+                </SectionWrapper>
+              )
+          }
+        })}
+      </Flex>
+    )
+  }
+
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
       <Flex style={{ flex: 1 }} px={2}>
@@ -133,20 +219,22 @@ export const ReservationConfirmation = screenTrack()((props) => {
           <Spacer mb={52} />
           <CheckCircled />
           <Box my={4}>
-            <Sans size="3" color="black100">
+            <Sans size="7" color="black100">
               We've got your order!
             </Sans>
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               We've emailed you a confirmation and we'll notify you when its out for delivery.
             </Sans>
           </Box>
+          <OptionSections options={[Option.ShareToIG, Option.ReferAndEarn]} />
+          <Spacer pb={4} />
           <Box>
             <SectionHeader
               title="Order number"
               content={
                 <>
                   {!!reservation.reservationNumber && (
-                    <Sans size="1" color="black100" textAlign="right" ml="auto">
+                    <Sans size="4" color="black100" textAlign="right" ml="auto">
                       {reservation.reservationNumber}
                     </Sans>
                   )}
@@ -160,12 +248,12 @@ export const ReservationConfirmation = screenTrack()((props) => {
               content={
                 <>
                   {!!formatedAddress1 && (
-                    <Sans size="1" color="black100" textAlign="right">
+                    <Sans size="4" color="black100" textAlign="right">
                       {formatedAddress1}
                     </Sans>
                   )}
                   {!!formatedAddress2 && (
-                    <Sans size="1" color="black100" textAlign="right">
+                    <Sans size="4" color="black100" textAlign="right">
                       {formatedAddress2}
                     </Sans>
                   )}
@@ -180,7 +268,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
               content={
                 <>
                   {!!shippingDisplayText && (
-                    <Sans size="1" color="black100" ml="auto" textAlign="right">
+                    <Sans size="4" color="black100" ml="auto" textAlign="right">
                       {shippingDisplayText}
                     </Sans>
                   )}
@@ -195,7 +283,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
               <SectionHeader
                 title="Order total"
                 content={
-                  <Sans size="1" color="black100" ml="auto" textAlign="right">
+                  <Sans size="4" color="black100" ml="auto" textAlign="right">
                     ${externalCost / 100}
                   </Sans>
                 }

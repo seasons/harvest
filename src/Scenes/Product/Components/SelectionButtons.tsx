@@ -65,7 +65,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
           <VariantSelectionButton>
             <Flex px={2} style={{ width: "100%" }} flexDirection="row" justifyContent="center">
               <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
-                <Sans size="1" color="black">
+                <Sans size="4" color="black">
                   {selectedVariant?.display?.long}
                 </Sans>
                 <Spacer mr={1} />

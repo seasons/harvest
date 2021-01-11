@@ -157,11 +157,11 @@ export const SavedItem: React.FC<BagItemProps> = ({
         <BagItemContainer flexDirection="row" px={2}>
           <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
             <Box>
-              <Sans size="1">{product.brand.name}</Sans>
-              <Sans size="1" color={color("black50")}>
+              <Sans size="4">{product.brand.name}</Sans>
+              <Sans size="4" color={color("black50")}>
                 {product.name}
               </Sans>
-              <Sans size="1" color={color("black50")}>
+              <Sans size="4" color={color("black50")}>
                 Size {variantSize}
               </Sans>
               <Spacer mb={3} />
@@ -169,7 +169,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
               <Flex flexDirection="row" alignItems="center">
                 <ColoredDot reservable={reservable} />
                 <Spacer mr={1} />
-                <Sans size="1" color="black50">
+                <Sans size="4" color="black50">
                   {reservable ? "Available" : "Unavailable"}
                 </Sans>
               </Flex>

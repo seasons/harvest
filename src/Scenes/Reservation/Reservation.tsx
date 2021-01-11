@@ -82,7 +82,7 @@ const SectionHeader = ({ title }) => {
   return (
     <>
       <Flex flexDirection="row" style={{ flex: 1 }} width="100%">
-        <Sans size="1" color="black">
+        <Sans size="4" color="black">
           {title}
         </Sans>
       </Flex>
@@ -162,11 +162,11 @@ export const Reservation = screenTrack()((props) => {
     return (
       <TouchableWithoutFeedback onPress={() => setShippingOptionIndex(index)}>
         <Flex flexDirection="row" justifyContent="space-between" alignItems="center" py={2}>
-          <Sans size="1" color="black100">
+          <Sans size="4" color="black100">
             {method?.displayText}
           </Sans>
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-            <Sans size="1" color="black100">
+            <Sans size="4" color="black100">
               {price}
             </Sans>
             <Spacer mr={1} />
@@ -185,14 +185,14 @@ export const Reservation = screenTrack()((props) => {
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <Spacer mb={80} />
             <Box pb={1}>
-              <Sans size="3" color="black100">
+              <Sans size="7" color="black100">
                 Review your order
               </Sans>
             </Box>
             <Box mb={4}>
-              <Sans size="1" color="black50">
+              <Sans size="4" color="black50">
                 As a reminder, orders placed{" "}
-                <Sans size="1" color="black100" style={{ textDecorationLine: "underline" }}>
+                <Sans size="4" color="black100" style={{ textDecorationLine: "underline" }}>
                   after 4:00pm
                 </Sans>{" "}
                 will be processed the following business day.
@@ -201,10 +201,10 @@ export const Reservation = screenTrack()((props) => {
             {address && (
               <Box mb={4}>
                 <SectionHeader title="Shipping address" />
-                <Sans size="1" color="black50" mt={1}>
+                <Sans size="4" color="black50" mt={1}>
                   {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
                 </Sans>
-                <Sans size="1" color="black50">
+                <Sans size="4" color="black50">
                   {`${address.city}, ${address.state} ${address.zipCode}`}
                 </Sans>
               </Box>
@@ -221,7 +221,7 @@ export const Reservation = screenTrack()((props) => {
                   )
                 })}
                 <Spacer mb={2} />
-                <Sans size="0.5" color="black50">
+                <Sans size="3" color="black50">
                   UPS Ground shipping averages 1-2 days in the NY metro area, 3-4 days for the Midwest + Southeast, and
                   5-7 days on the West coast.
                 </Sans>
@@ -230,7 +230,7 @@ export const Reservation = screenTrack()((props) => {
             {!!phoneNumber && (
               <Box mb={4}>
                 <SectionHeader title="Phone number" />
-                <Sans size="1" color="black50" mt={1}>
+                <Sans size="4" color="black50" mt={1}>
                   {phoneNumber}
                 </Sans>
               </Box>

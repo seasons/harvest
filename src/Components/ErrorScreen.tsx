@@ -14,14 +14,14 @@ export const ErrorScreen: React.FC<ErrorScreenProps> = ({ variant = "No Internet
   const { titleText, subtitleText } = getTextForVariant(variant)
   return (
     <Container>
-      <Sans size="3">{titleText}</Sans>
+      <Sans size="7">{titleText}</Sans>
       <Spacer mb={2} />
-      <Sans size="2" px={5} textAlign="center" color="black50">
+      <Sans size="5" px={5} textAlign="center" color="black50">
         {subtitleText}
       </Sans>
       <Spacer mb={4} />
       <Button size="large" variant="primaryWhite" onPress={refreshAction}>
-        <Sans size="1">Refresh</Sans>
+        <Sans size="4">Refresh</Sans>
       </Button>
     </Container>
   )

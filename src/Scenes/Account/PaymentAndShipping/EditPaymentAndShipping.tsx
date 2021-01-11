@@ -208,7 +208,7 @@ export const EditPaymentAndShipping: React.FC<{
       case SHIPPING_ADDRESS:
         return (
           <>
-            <Sans size="1">{SHIPPING_ADDRESS}</Sans>
+            <Sans size="4">{SHIPPING_ADDRESS}</Sans>
             <Spacer mb={2} />
             <TextInput
               currentValue={shippingAddress1}
@@ -256,14 +256,14 @@ export const EditPaymentAndShipping: React.FC<{
       case BILLING_ADDRESS:
         return (
           <>
-            <Sans size="1">{BILLING_ADDRESS}</Sans>
+            <Sans size="4">{BILLING_ADDRESS}</Sans>
             <Spacer mb={2} />
             <Radio
               borderRadius={4}
               selected={sameAsDeliveryRadioSelected}
               onSelect={handleSameAsDeliveryAddress}
               label="Same as delivery address"
-              labelSize="1"
+              labelsize="4"
             />
             <Spacer mb={2} />
             <TextInput
@@ -308,7 +308,7 @@ export const EditPaymentAndShipping: React.FC<{
       case PHONE_NUMBER:
         return (
           <>
-            <Sans size="1">{PHONE_NUMBER}</Sans>
+            <Sans size="4">{PHONE_NUMBER}</Sans>
             <Spacer mb={2} />
             <TextInput
               currentValue={phoneNumber}
@@ -352,7 +352,7 @@ export const EditPaymentAndShipping: React.FC<{
             ListHeaderComponent={() => (
               <Box mt={insets.top}>
                 <Spacer mb={2} />
-                <Sans size="3">Payment & Shipping</Sans>
+                <Sans size="7">Payment & Shipping</Sans>
                 <Spacer mb={4} />
               </Box>
             )}

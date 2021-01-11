@@ -238,7 +238,7 @@ export const EditPaymentModal: React.FC<{
           <Spacer mb={2} />
           <Separator />
           <Spacer mb={2} />
-          <Sans size="1" style={{ width: windowWidth - 100 }}>
+          <Sans size="4" style={{ width: windowWidth - 100 }}>
             Your card has been successfully updated.
           </Sans>
           <Spacer mb={4} />
@@ -270,12 +270,12 @@ export const EditPaymentModal: React.FC<{
         pane = (
           <Box pb={insets.bottom} px={2} style={{ width: windowWidth, height: windowHeight }}>
             <Spacer mb={4} />
-            <Sans size="1">Card information</Sans>
+            <Sans size="4">Card information</Sans>
             <Spacer mb={2} />
             <Separator />
             <Spacer mb={3} />
             <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start">
-              <Sans color="black50" size="0.5">
+              <Sans color="black50" size="3">
                 Card number, Expiration date & CIV
               </Sans>
             </Flex>
@@ -296,7 +296,7 @@ export const EditPaymentModal: React.FC<{
             </Button>
             <Spacer mb={3} />
             <Sans
-              size="1"
+              size="4"
               style={{ textAlign: "center", textDecorationLine: "underline" }}
               onPress={() => {
                 setIndex(0)
@@ -321,7 +321,7 @@ export const EditPaymentModal: React.FC<{
       <CloseButton variant="light" />
       <Spacer mt={100} />
       <Box px={2}>
-        <Sans size="3">Update your payment method</Sans>
+        <Sans size="7">Update your payment method</Sans>
       </Box>
       {applePaySuccess ? (
         <CardSuccess />

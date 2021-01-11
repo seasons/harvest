@@ -2507,6 +2507,11 @@
   dependencies:
     deep-assign "^3.0.0"
 
+"@react-native-community/cameraroll@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/@react-native-community/cameraroll/-/cameraroll-4.0.1.tgz#8466f99a476e6b833ecd5efff045f74a4224459b"
+  integrity sha512-KLKh5rAg511KUoGKHrbRhBLvkHhOz6kZ2sx8dPhndZ5ZFVYfVpTadSN1x3cfQbOAlkyGZql07p1hk7lEb3sa8g==
+
 "@react-native-community/cli-debugger-ui@^4.13.1", "@react-native-community/cli-debugger-ui@^4.9.0":
   version "4.13.1"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-4.13.1.tgz#07de6d4dab80ec49231de1f1fbf658b4ad39b32c"
@@ -2749,10 +2754,10 @@
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
 
-"@seasons/eclipse@^1.1.3":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.1.3.tgz#f6b3d119d51c2dfdd7fca0ac6eb518092f49d1d0"
-  integrity sha512-7SlQVOsaMfvtOCpN7Vw3mfvZ4Xp/brBCQUV8iW0eWBELL8cQGYfUAx0sj7D8UkRyT5Emkd3Mqss7Qxww7Dtm6A==
+"@seasons/eclipse@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.1.4.tgz#ea3abba0075d07c36f8e65746c255b5e4341908a"
+  integrity sha512-LAhQDUdQn34fn+fjX9/hU6uHYZu6xNJ0jqWM+KAUqtqOOOXPXmw+sQtldPsMAu6zicCF1zhC+oB1gvK3Fz0fHA==
   dependencies:
     luxon "^1.25.0"
 
@@ -14163,6 +14168,11 @@ react-native-unimodules@^0.11.0:
     unimodules-permissions-interface "~5.3.0"
     unimodules-sensors-interface "~5.3.0"
     unimodules-task-manager-interface "~5.3.0"
+
+react-native-view-shot@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.npmjs.org/react-native-view-shot/-/react-native-view-shot-3.1.2.tgz#8c8e84c67a4bc8b603e697dbbd59dbc9b4f84825"
+  integrity sha512-9u9fPtp6a52UMoZ/UCPrCjKZk8tnkI9To0Eh6yYnLKFEGkRZ7Chm6DqwDJbYJHeZrheCCopaD5oEOnRqhF4L2Q==
 
 react-native-web@~0.13.7:
   version "0.13.14"

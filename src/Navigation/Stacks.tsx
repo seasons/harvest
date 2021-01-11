@@ -14,10 +14,13 @@ import { InviteFriends, InviteFromContacts } from "App/Scenes/Account/InviteFrie
 import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
+import { SurpriseMe } from "App/Scenes/Bag/SurpriseMe"
 import { Brand } from "App/Scenes/Brand"
 import { Brands } from "App/Scenes/Brands"
 import { Browse, Filters } from "App/Scenes/Browse"
 import { CreateAccount } from "App/Scenes/CreateAccount"
+import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ApplyPromoCode/ApplyPromoCode"
+import { EditPaymentModal } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane/EditPaymentModal"
 import { DebugMenu } from "App/Scenes/DebugMenu"
 import { Faq } from "App/Scenes/Faq"
 import { Home } from "App/Scenes/Home"
@@ -25,7 +28,7 @@ import { FitPicDetail } from "App/Scenes/Home/Components/FitPicDetail"
 import { Product, SaveProduct } from "App/Scenes/Product"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
-import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
+import { Reservation, ReservationConfirmation, ShareReservationToIG } from "App/Scenes/Reservation"
 import {
   ReservationFeedback,
   ReservationFeedbackConfirmation,
@@ -40,9 +43,6 @@ import { createSharedElementStackNavigator } from "react-navigation-shared-eleme
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 import { NavBar } from "./NavBar"
-import { SurpriseMe } from "App/Scenes/Bag/SurpriseMe"
-import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ApplyPromoCode/ApplyPromoCode"
-import { EditPaymentModal } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane/EditPaymentModal"
 
 const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
@@ -136,6 +136,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ExtendPauseConfirmation} component={ExtendPauseConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.ApplyPromoCode} component={ApplyPromoCode} />
       <ModalStack.Screen name={Schema.PageNames.InviteFromContactsModal} component={InviteFromContacts} />
+      <ModalStack.Screen name={Schema.PageNames.ShareReservationToIGModal} component={ShareReservationToIG} />
     </ModalStack.Navigator>
   )
 }
@@ -188,6 +189,7 @@ const BagStackScreen = () => {
       <BagStack.Screen name={Schema.PageNames.Faq} component={Faq} />
       <BagStack.Screen name={Schema.PageNames.Reservation} component={Reservation} />
       <BagStack.Screen name={Schema.PageNames.ReservationConfirmation} component={ReservationConfirmation} />
+      <BagStack.Screen name={Schema.PageNames.InviteFriends} component={InviteFriends} />
     </BagStack.Navigator>
   )
 }
