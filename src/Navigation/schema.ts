@@ -20,6 +20,7 @@ export enum PageNames {
   PromoCodeAppliedConfirmation = "PromoCodeAppliedConfirmation",
   SurpriseMe = "SurpriseMe",
   InviteFromContactsModal = "InviteFromContactsModal",
+  ShareReservationToIGModal = "ShareReservationToIGModal",
 
   // Home
   Home = "Home",

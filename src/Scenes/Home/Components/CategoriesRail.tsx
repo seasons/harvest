@@ -29,7 +29,7 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ items, title }) 
   return (
     <Box pl={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between" pr={2}>
-        <Sans size="1">{title}</Sans>
+        <Sans size="4">{title}</Sans>
         <TouchableOpacity
           onPress={() => {
             tracking.trackEvent({
@@ -42,7 +42,7 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ items, title }) 
             })
           }}
         >
-          <Sans size="1" style={{ textDecorationLine: "underline" }}>
+          <Sans size="4" style={{ textDecorationLine: "underline" }}>
             View all
           </Sans>
         </TouchableOpacity>
@@ -73,7 +73,7 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ items, title }) 
                             style={{ width: tileWidth, height: tileWidth * tileAspectRatio }}
                           />
                           <Box position="absolute" bottom="1" left="1">
-                            <Sans size="0">{item.name}</Sans>
+                            <Sans size="2">{item.name}</Sans>
                           </Box>
                         </Box>
                       </TouchableWithoutFeedback>

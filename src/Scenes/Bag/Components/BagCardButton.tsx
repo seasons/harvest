@@ -26,10 +26,10 @@ export const BagCardButton: React.FC<{
             <Icon />
             <Spacer mr={2} />
             <Box>
-              <Sans size="1" color="black100">
+              <Sans size="4" color="black100">
                 {title}
               </Sans>
-              <Sans size="1" color="black50">
+              <Sans size="4" color="black50">
                 {caption}
               </Sans>
             </Box>

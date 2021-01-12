@@ -1,6 +1,6 @@
 import { Box, Container, Flex, GuestView, Sans, Separator, Skeleton, Spacer } from "App/Components"
-import { useAuthContext } from "App/Navigation/AuthContext"
 import { Schema as NavigationSchema } from "App/Navigation"
+import { useAuthContext } from "App/Navigation/AuthContext"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
 import {
@@ -28,7 +28,6 @@ import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
 import { WaitlistedCTA, AuthorizedCTA } from "@seasons/eclipse"
-import { WaitlistedPane } from "../CreateAccount/Waitlisted/WaitlistedPane"
 
 export const GET_USER = gql`
   query GetUser {
@@ -202,7 +201,7 @@ export const Account = screenTrack()(({ navigation }) => {
   const middleList = [
     {
       title: "Follow us on Instagram",
-      icon: <Instagram />,
+      icon: <Instagram opacity={0.5} />,
       onPress: () => Linking.openURL("https://www.instagram.com/seasons.ny"),
       tracking: Schema.ActionNames.FollowUsTapped,
     },
@@ -334,7 +333,7 @@ export const Account = screenTrack()(({ navigation }) => {
         <ScrollView>
           <Box px={2} py={4}>
             {!!firstName && !!lastName ? (
-              <Sans size="3" color="black100">
+              <Sans size="7" color="black100">
                 {`${firstName} ${lastName}`}
               </Sans>
             ) : (
@@ -343,7 +342,7 @@ export const Account = screenTrack()(({ navigation }) => {
               </Box>
             )}
             {!!email ? (
-              <Sans size="2" color="black50">
+              <Sans size="5" color="black50">
                 {email}
               </Sans>
             ) : (

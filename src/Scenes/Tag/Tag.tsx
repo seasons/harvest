@@ -84,13 +84,13 @@ export const Tag = screenTrack({
         ListHeaderComponent={() => (
           <Box px={2}>
             <Spacer mb={80} />
-            <Sans size="3" style={{ textDecorationLine: "underline" }}>
+            <Sans size="7" style={{ textDecorationLine: "underline" }}>
               {title}
             </Sans>
             {description && (
               <>
                 <Spacer mb={3} />
-                <Sans size="2">About</Sans>
+                <Sans size="5">About</Sans>
                 <Spacer mb={0.5} />
                 <ReadMore
                   readMoreExpanded={readMoreExpanded}

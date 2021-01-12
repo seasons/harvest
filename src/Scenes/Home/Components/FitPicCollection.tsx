@@ -63,8 +63,8 @@ export const FitPicCollection = React.forwardRef<FitPicCollectionRef, FitPicColl
 
     return (
       <Box mb={3} pl={2} pr={2} ref={boxRef} onLayout={() => measureLayout()}>
-        <Sans size="1">Seasons Fit Check</Sans>
-        <Sans size="1" color="black50">
+        <Sans size="4">Seasons Fit Check</Sans>
+        <Sans size="4" color="black50">
           Add a photo below to be featured
         </Sans>
         <Spacer mb={2} />

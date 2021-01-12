@@ -114,11 +114,11 @@ export const ReservationFeedbackPopUp: React.FC<ReservationFeedbackPopUpProps> =
         <Box p={2} onLayout={onLayout}>
           <Spacer mt={4} />
           <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center">
-            <Sans size="2" color={color("black100")}>
+            <Sans size="5" color={color("black100")}>
               What'd you think?
             </Sans>
             <Spacer mb={1} />
-            <Sans size="1" color={color("black50")}>
+            <Sans size="4" color={color("black50")}>
               Help us improve your experience by sharing what you thought of your last order
             </Sans>
             <Spacer mb={3} />

@@ -4,8 +4,9 @@ import { Box, Container, Sans, Flex, Spacer, Button } from "App/Components"
 import { FlatList } from "react-native"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { color } from "App/utils/color"
-import { MultiSelectionTable } from "App/Scenes/CreateAccount/Undetermined/GetMeasurementsPane/MultiSelectionTable"
 import { Measurements } from "App/Scenes/CreateAccount/Undetermined"
+import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
+import { space } from "App/utils/space"
 
 enum Section {
   Height_Weight,
@@ -16,9 +17,6 @@ enum Section {
 const parseMeasurements = (rawMeasurements: InitialMeasurements) => {
   const height = rawMeasurements?.height
   const weightRange = rawMeasurements?.weight
-  const topSizes = rawMeasurements?.topSizes
-  const waistSizes = rawMeasurements?.waistSizes
-
   const measurements = { height: null, weight: null, topSizeIndices: null, waistSizeIndices: null }
 
   if (height) {
@@ -31,19 +29,6 @@ const parseMeasurements = (rawMeasurements: InitialMeasurements) => {
     )
   }
 
-  if (topSizes) {
-    measurements.topSizeIndices = Measurements.topSizes.reduce(
-      (accumulator, item, index) => (topSizes.includes(item.value) ? [...accumulator, index] : accumulator),
-      [] as number[]
-    )
-  }
-
-  if (waistSizes) {
-    measurements.waistSizeIndices = Measurements.waistSizes.reduce(
-      (accumulator, item, index) => (waistSizes.includes(item.value) ? [...accumulator, index] : accumulator),
-      [] as number[]
-    )
-  }
   return measurements
 }
 
@@ -60,14 +45,14 @@ export const SizingTab: React.FC<{ navigation: any; rawMeasurements: InitialMeas
         return (
           <Flex flexDirection="row">
             <Box style={{ flex: 0.5, marginRight: 6 }}>
-              <Sans color="black100" size="1">
+              <Sans color="black100" size="4">
                 Height
               </Sans>
               <Spacer mb={1} />
               <UninteractableBoxPicker text={measurements.height?.label} />
             </Box>
             <Box style={{ flex: 0.5, marginLeft: 6 }}>
-              <Sans color="black100" size="1">
+              <Sans color="black100" size="4">
                 Weight
               </Sans>
               <Spacer mb={1} />
@@ -78,29 +63,21 @@ export const SizingTab: React.FC<{ navigation: any; rawMeasurements: InitialMeas
       case Section.TopSizes:
         return (
           <>
-            <Sans color="black100" size="1">
+            <Sans color="black100" size="4">
               What are your preferred top sizes?
             </Sans>
             <Spacer mb={1} />
-            <MultiSelectionTable
-              disabled
-              items={Measurements.topSizes}
-              selectedItemIndices={measurements.topSizeIndices}
-            />
+            <MultiSelectionTable disabled items={Measurements.topSizes} selectedItems={rawMeasurements.topSizes} />
           </>
         )
       case Section.WaistSizes:
         return (
           <>
-            <Sans color="black100" size="1">
+            <Sans color="black100" size="4">
               Your preferred waist size?
             </Sans>
             <Spacer mb={1} />
-            <MultiSelectionTable
-              disabled
-              items={Measurements.waistSizes}
-              selectedItemIndices={measurements.waistSizeIndices}
-            />
+            <MultiSelectionTable disabled items={Measurements.waistSizes} selectedItems={rawMeasurements.waistSizes} />
           </>
         )
     }
@@ -115,7 +92,7 @@ export const SizingTab: React.FC<{ navigation: any; rawMeasurements: InitialMeas
         keyboardShouldPersistTaps="handled"
         keyExtractor={(item) => item.toString()}
         ListHeaderComponent={() => <Spacer mb={4} />}
-        ListFooterComponent={() => <Spacer height={footerBoxHeight + 16} />}
+        ListFooterComponent={() => <Spacer height={footerBoxHeight + space(4)} />}
         renderItem={({ item }) => renderSection(item)}
         showsVerticalScrollIndicator={false}
         style={{ paddingHorizontal: 16, flex: 1 }}
@@ -152,7 +129,7 @@ const UninteractableBoxPicker: React.FC<{ text: string }> = ({ text }) => (
     }}
   >
     <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-      <Sans size="1">{text}</Sans>
+      <Sans size="4">{text}</Sans>
     </Flex>
   </Flex>
 )

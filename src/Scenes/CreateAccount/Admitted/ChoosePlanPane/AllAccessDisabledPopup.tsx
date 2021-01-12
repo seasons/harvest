@@ -11,11 +11,11 @@ export const AllAccessDisabledPopup = ({ show, onPress }) => {
     <PopUp show={show}>
       <Box pb={insets.bottom} px={2} style={{ width: Dimensions.get("window").width }}>
         <Spacer my={20} />
-        <Sans size="2" color={color("black")}>
+        <Sans size="5" color={color("black")}>
           Not available in your city yet
         </Sans>
         <Spacer mt={1} />
-        <Sans size="1" color={color("black50")}>
+        <Sans size="4" color={color("black50")}>
           All Access is disabled in your area due to shipping time.
         </Sans>
         <Spacer my={2} />

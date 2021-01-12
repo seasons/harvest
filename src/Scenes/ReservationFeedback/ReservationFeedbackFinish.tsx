@@ -12,12 +12,12 @@ export const ReservationFeedbackFinish: React.FC<{
     <Container>
       <Box px={2} style={{ flex: 1, flexDirection: "column" }}>
         <Flex flexDirection="column" justifyContent="center" alignItems="center" style={{ flex: 1 }}>
-          <Sans size="3" color={"black100"}>
+          <Sans size="7" color={"black100"}>
             Thank you
           </Sans>
           <Spacer mb={1} />
           <Text style={{ textAlign: "center" }}>
-            <Sans size="1" color={"black50"}>
+            <Sans size="4" color={"black50"}>
               Thank you for helping us improve your experience with this feedback.
             </Sans>
           </Text>

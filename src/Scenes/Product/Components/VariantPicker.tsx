@@ -32,7 +32,7 @@ export const VariantPicker = (props) => {
       </FixedButtonWrapper>
       <Box style={{ backgroundColor: color("black100"), top: 28 }}>
         <Flex justifyContent="center" flexDirection="row" p={2}>
-          <Sans size="1" color={color("white100")}>
+          <Sans size="4" color={color("white100")}>
             Select size
           </Sans>
         </Flex>

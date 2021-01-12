@@ -1,3 +1,6 @@
+import { useFocusEffect } from "@react-navigation/native"
+import { Box, Button, Spacer } from "@seasons/eclipse"
+import analytics from "@segment/analytics-react-native"
 import { Loader } from "App/Components/Loader"
 import { PauseButtons, PauseStatus } from "App/Components/Pause/PauseButtons"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
@@ -12,11 +15,6 @@ import { assign, fill } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import { FlatList, RefreshControl, StatusBar } from "react-native"
-
-import { useFocusEffect } from "@react-navigation/native"
-import { Box, Button, Spacer } from "@seasons/eclipse"
-import analytics from "@segment/analytics-react-native"
-
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import { CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"

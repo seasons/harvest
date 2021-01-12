@@ -80,11 +80,11 @@ export const ApplyPromoCodePane: React.FC<ApplyPromoCodePaneProps> = ({ onApplyP
     <Container insetsBottom={false} insetsTop={false}>
       <CloseButton variant="light" />
       <Box style={{ paddingTop: 85, paddingHorizontal: 16, flex: 1 }}>
-        <Sans color="black100" size="3">
+        <Sans color="black100" size="7">
           Enter promo code
         </Sans>
         <Spacer mb={1} />
-        <Sans color="black50" size="1">
+        <Sans color="black50" size="4">
           Funds will be sent back to the card on file
         </Sans>
         <Spacer mb={4} />

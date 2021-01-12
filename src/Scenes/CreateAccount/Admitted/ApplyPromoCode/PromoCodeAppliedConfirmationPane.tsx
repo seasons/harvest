@@ -15,9 +15,9 @@ export const PromoCodeAppliedConfirmationPane: React.FC<PromoCodeAppliedConfirma
             <Spacer mb={50} />
             <CheckCircled />
             <Spacer mb={3} />
-            <Sans size="3">You're all set</Sans>
+            <Sans size="7">You're all set</Sans>
             <Spacer mb={1} />
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               Your promo code has been successfully applied.
             </Sans>
           </Box>

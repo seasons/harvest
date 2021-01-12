@@ -109,7 +109,7 @@ export const EditStylePreferences: React.FC<{
     return (
       <Flex width="100%" key={sectionIndex.toString()}>
         <Spacer mb={4} />
-        <Sans size="0.5">{title}</Sans>
+        <Sans size="3">{title}</Sans>
         <Spacer mb={2} />
         <Spacer mb={0.5} />
         <Flex flexWrap="wrap" flexDirection="row" width="100%" justifyContent="space-between">
@@ -167,7 +167,7 @@ export const EditStylePreferences: React.FC<{
                 <Spacer mr={1} />
               </>
             )}
-            <Sans size="0.5">{item.title}</Sans>
+            <Sans size="3">{item.title}</Sans>
           </Flex>
         </Flex>
       </TouchableOpacity>
@@ -186,7 +186,7 @@ export const EditStylePreferences: React.FC<{
         ListHeaderComponent={() => (
           <Box mt={5}>
             <Spacer mb={5} />
-            <Sans size="3">Style preferences</Sans>
+            <Sans size="7">Style preferences</Sans>
           </Box>
         )}
         ListFooterComponent={() => <Spacer height={100 + insets.bottom - 8} />}

@@ -71,7 +71,7 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large
   return (
     <Box pl={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between" pr={2}>
-        <Sans size="1">{title}</Sans>
+        <Sans size="4">{title}</Sans>
         <TouchableOpacity
           onPress={() => {
             tracking.trackEvent({
@@ -82,7 +82,7 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large
             navigation.navigate("Tag", { tagData })
           }}
         >
-          <Sans size="1" style={{ textDecorationLine: "underline" }}>
+          <Sans size="4" style={{ textDecorationLine: "underline" }}>
             View all
           </Sans>
         </TouchableOpacity>
@@ -106,8 +106,8 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large
                           style={{ width: slideWidth, height: slideWidth * PRODUCT_ASPECT_RATIO }}
                         />
                         <Spacer mb={0.5} />
-                        {!!brandName && <Sans size="0">{brandName}</Sans>}
-                        {item.variants && <VariantSizes size="0" variants={item.variants} />}
+                        {!!brandName && <Sans size="2">{brandName}</Sans>}
+                        {item.variants && <VariantSizes size="2" variants={item.variants} />}
                       </Box>
                     </TouchableWithoutFeedback>
                   </Animatable.View>

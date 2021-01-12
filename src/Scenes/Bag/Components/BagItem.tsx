@@ -3,7 +3,6 @@ import { FadeInImage } from "App/Components/FadeInImage"
 import { Spinner } from "App/Components/Spinner"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/Browse"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
@@ -12,10 +11,9 @@ import { get, head } from "lodash"
 import React, { useState } from "react"
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-
 import { useMutation } from "@apollo/react-hooks"
-
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
+import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -154,13 +152,13 @@ export const BagItem: React.FC<BagItemProps> = ({
         justifyContent="flex-end"
       >
         <Box style={{ width: "100%" }} p={2}>
-          <Sans size="1">{`${index + 1}.`}</Sans>
+          <Sans size="4">{`${index + 1}.`}</Sans>
           <Spacer mb={1} />
-          <Sans size="1">{product?.brand?.name}</Sans>
-          <Sans size="1" color="black50">
+          <Sans size="4">{product?.brand?.name}</Sans>
+          <Sans size="4" color="black50">
             {product.name}
           </Sans>
-          <Sans size="1" color="black50">
+          <Sans size="4" color="black50">
             Size {variantSize}
           </Sans>
         </Box>
@@ -173,17 +171,17 @@ export const BagItem: React.FC<BagItemProps> = ({
       <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
         <Box>
           <Box style={{ width: "100%" }}>
-            <Sans size="1">{`${index + 1}. ${product?.brand?.name}`}</Sans>
-            <Sans size="1" color="black50">
+            <Sans size="4">{`${index + 1}. ${product?.brand?.name}`}</Sans>
+            <Sans size="4" color="black50">
               {product.name}
             </Sans>
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               Size {variantSize}
             </Sans>
             <Spacer mb={3} />
             {authState.isSignedIn && (
               <TouchableOpacity onPress={onSaveForLater}>
-                <Sans size="1" style={{ textDecorationLine: "underline" }}>
+                <Sans size="4" style={{ textDecorationLine: "underline" }}>
                   Save for later
                 </Sans>
               </TouchableOpacity>

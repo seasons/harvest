@@ -12,10 +12,10 @@ import styled from "styled-components/native"
 import { color } from "App/utils"
 import { GET_BAG } from "../BagQueries"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
-import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/Browse"
 import { useTracking, Schema } from "App/utils/track"
 import { GetBagAndSavedItems_me_bag_productVariant_product_variants } from "App/generated/GetBagAndSavedItems"
 import { get, head } from "lodash"
+import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
 
 const dimensions = Dimensions.get("window")
 const windowWidth = dimensions.width
@@ -99,7 +99,7 @@ const ItemRow = ({ bagItem, navigation, deleteBagItem, bagIsFull, hasActiveReser
         <RemoveWrapper alignItems="center" justifyContent="center">
           <TouchableOpacity onPress={onRemove}>
             <Box py={4}>
-              <Sans size="1" style={{ textDecorationLine: "underline" }} color="white100">
+              <Sans size="4" style={{ textDecorationLine: "underline" }} color="white100">
                 Remove
               </Sans>
             </Box>

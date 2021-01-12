@@ -16,11 +16,11 @@ export const BagEmptyState: React.FC<{ currentView: BagView }> = ({ currentView 
     <Box p={2} style={{ height: rowHeight }}>
       <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center" flexDirection="column">
         <Box>
-          <Sans size="1" style={{ textAlign: "center" }}>
+          <Sans size="4" style={{ textAlign: "center" }}>
             {title}
           </Sans>
           <Spacer mb={1} />
-          <Sans size="1" color={color("black50")} style={{ textAlign: "center" }}>
+          <Sans size="4" color={color("black50")} style={{ textAlign: "center" }}>
             {text}
           </Sans>
         </Box>
