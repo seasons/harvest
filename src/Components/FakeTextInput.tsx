@@ -61,7 +61,7 @@ export const FakeTextInput: React.FC<FakeTextInputProps> = ({
           style={{
             color: currentValue.length ? variantColors.active.color : placeholderColor,
             fontFamily: fontFamily.sans.medium.toString(),
-            fontSize: themeProps.typeSizes[1].fontSize,
+            fontSize: themeProps.typeSizes[4].fontSize,
             ...style,
             textAlignVertical: "center",
           }}
