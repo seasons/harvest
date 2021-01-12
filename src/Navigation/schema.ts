@@ -27,6 +27,7 @@ export enum PageNames {
   Brand = "Brand",
   Brands = "Brands",
   FitPicDetail = "FitPicDetail",
+  FitPicConfirmation = "FitPicConfirmation",
 
   // Browse
   Browse = "Browse",

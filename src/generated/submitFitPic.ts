@@ -13,4 +13,5 @@ export interface SubmitFitPic {
 
 export interface SubmitFitPicVariables {
   image: any;
+  instagramHandle?: string | null;
 }
