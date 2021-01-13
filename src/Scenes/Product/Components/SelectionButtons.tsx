@@ -1,13 +1,13 @@
 import { Button, Flex, Sans, Spacer } from "App/Components"
+import { GetProduct } from "App/generated/GetProduct"
 import { AddToBagButton } from "App/Scenes/Product/Components"
 import { color, space } from "App/utils"
+import { Schema, useTracking } from "App/utils/track"
 import { DownChevronIcon } from "Assets/icons"
+import { WhiteListCheck } from "Assets/svgs/WhiteListCheck"
 import React, { useEffect, useState } from "react"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { Schema, useTracking } from "App/utils/track"
-import { GetProduct } from "App/generated/GetProduct"
-import { WhiteListCheck } from "Assets/svgs/WhiteListCheck"
 
 interface Props {
   toggleShowVariantPicker: (show: boolean) => void
