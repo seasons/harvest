@@ -30,9 +30,7 @@ const GET_TAG = gql`
         nonReservable
         reserved
         isSaved
-        display {
-          short
-        }
+        displayShort
       }
     }
   }

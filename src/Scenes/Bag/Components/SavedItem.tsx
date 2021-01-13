@@ -41,7 +41,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
   const tracking = useTracking()
 
   const imageURL = product?.images?.[0]?.url || ""
-  const variantSize = variantToUse?.display?.long?.toLowerCase()
+  const variantSize = variantToUse?.displayLong?.toLowerCase()
   const reservable = variantToUse?.reservable > 0
   const hasRestockNotification = variantToUse?.hasRestockNotification
 

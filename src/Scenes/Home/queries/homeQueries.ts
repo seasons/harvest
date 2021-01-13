@@ -19,9 +19,7 @@ const HomePageProductFragment = gql`
     variants {
       id
       reservable
-      display {
-        short
-      }
+      displayShort
     }
   }
 `
@@ -154,9 +152,7 @@ export const GET_HOMEPAGE = gql`
             variants {
               id
               reservable
-              display {
-                short
-              }
+              displayShort
             }
           }
         }

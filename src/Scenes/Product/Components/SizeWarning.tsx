@@ -34,9 +34,9 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
   const productFit = product.productFit
   const runsSmall = !!productFit && productFit === "RunsSmall"
   const category = product?.category?.name?.toLowerCase()
-  const selectedSize = selectedVariant?.display?.long
+  const selectedSize = selectedVariant?.displayLong
   const suggestedVariant = getSuggestedVariant(selectedVariant, product.variants, productFit)
-  const suggestSizeDisplay = suggestedVariant?.display?.long
+  const suggestSizeDisplay = suggestedVariant?.displayLong
 
   const mutationSettings = {
     awaitRefetchQueries: true,

@@ -31,7 +31,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
   }
 
   const rows = sizeData.map((size, i) => {
-    const displaySize = size?.display?.long
+    const displaySize = size?.displayLong
     const manufacturerSizeDisplay = size?.manufacturerSizes?.length > 0 && size?.manufacturerSizes?.[0]?.display
     return (
       <Box key={size.id || i}>
@@ -51,9 +51,9 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
             <Flex flexDirection="row" alignItems="center">
               <Radio selected={!!selectedVariant?.id && selectedVariant.id === size.id} pointerEventsNone />
               <Spacer mr={1} />
-              {size?.sizeDisplay && (
+              {displaySize && (
                 <Sans color={size?.reservable > 0 ? color("white100") : color("black50")} size="4">
-                  {size.sizeDisplay}
+                  {displaySize}
                 </Sans>
               )}
             </Flex>

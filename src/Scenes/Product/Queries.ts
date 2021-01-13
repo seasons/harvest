@@ -3,10 +3,8 @@ import gql from "graphql-tag"
 const commonProductVariantFragment = gql`
   fragment CommonProductVariant on ProductVariant {
     id
-    display {
-      short
-      long
-    }
+    displayLong
+    displayShort
     total
     reservable
     nonReservable
@@ -152,8 +150,6 @@ export const GET_COLLECTION = gql`
     collection(where: { id: $collectionID }) {
       id
       slug
-      descriptionTop
-      descriptionBottom
       images
       title
       subTitle

@@ -8,7 +8,7 @@ export const VariantSizes: React.FC<{
   variants: Homepage_homepage_sections_results_Product_variants[]
   size: "2" | "4"
 }> = ({ variants, size }) => {
-  const availableVariants = variants.filter((a) => !!a?.display?.short)
+  const availableVariants = variants.filter((a) => !!a?.displayShort)
 
   return (
     <Flex flexDirection="row">
@@ -17,7 +17,7 @@ export const VariantSizes: React.FC<{
         return (
           <Box key={variant.id} mr={0.5} style={{ position: "relative" }}>
             <Sans size={size} color={reservable ? "black100" : "black25"}>
-              {variant?.display?.short}
+              {variant?.displayShort}
             </Sans>
             {!reservable && <Strikethrough size={size} />}
           </Box>
