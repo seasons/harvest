@@ -12,8 +12,8 @@ import { Dimensions, Image, KeyboardAvoidingView, ScrollView, View } from "react
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 const SUBMIT_FIT_PIC = gql`
-  mutation SubmitFitPic($image: Upload!, $instagramHandle: String) {
-    submitFitPic(image: $image, instagramHandle: $instagramHandle)
+  mutation SubmitFitPic($image: Upload!, $instagramHandle: String, $includeInstagramHandle: Boolean) {
+    submitFitPic(image: $image, instagramHandle: $instagramHandle, includeInstagramHandle: $includeInstagramHandle)
   }
 `
 const GET_INSTAGRAM_HANDLE = gql`
@@ -34,6 +34,7 @@ export const FitPicConfirmation = screenTrack()(({ route, navigation }) => {
   const insets = useSafeAreaInsets()
 
   const { data, loading } = useQuery(GET_INSTAGRAM_HANDLE, { fetchPolicy: "no-cache" })
+
   const [instagramHandle, setInstagramHandle] = useState("")
   const [includeInstagramHandle, setIncludeInstagramHandle] = useState(true)
   const [isMutating, setIsMutating] = useState(false)
@@ -66,7 +67,6 @@ export const FitPicConfirmation = screenTrack()(({ route, navigation }) => {
     },
   })
 
-  console.log(data?.me?.customer?.detail)
   const uri = route?.params?.uri
   const type = route?.params?.imageType
   const hasPreloadedInstagramHandle = !!data?.me?.customer?.detail?.instagramHandle
@@ -86,15 +86,13 @@ export const FitPicConfirmation = screenTrack()(({ route, navigation }) => {
       actionType: Schema.ActionTypes.Tap,
     })
     const file = new ReactNativeFile({ uri, type, name: "" })
-    let uploadedInstagramHandle
-    if (hasPreloadedInstagramHandle && includeInstagramHandle) {
-      uploadedInstagramHandle = data?.me?.customer?.detail?.instagramHandle
-    } else if (instagramHandle !== "") {
-      uploadedInstagramHandle = instagramHandle
-    }
     await submitFitPic({
       variables: {
-        instagramHandle: uploadedInstagramHandle,
+        // Either user already has and wants to include, or doesnt have and filled out text field
+        includeInstagramHandle:
+          (hasPreloadedInstagramHandle && includeInstagramHandle) ||
+          (!hasPreloadedInstagramHandle && !!instagramHandle),
+        instagramHandle: instagramHandle,
         image: file,
       },
     })
