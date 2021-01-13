@@ -1,13 +1,12 @@
 import { Box, Container, FixedBackArrow, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import analytics from "@segment/analytics-react-native"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema, screenTrack } from "App/utils/track"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
-import * as Sentry from "@sentry/react-native"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, StatusBar } from "react-native"
@@ -16,13 +15,14 @@ import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 
 import { useMutation, useQuery } from "@apollo/react-hooks"
+import analytics from "@segment/analytics-react-native"
+import * as Sentry from "@sentry/react-native"
 
 import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
 import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 import { GET_PRODUCT } from "./Queries"
-import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -100,8 +100,8 @@ export const Product = screenTrack({
 
   const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
     variables: {
-      variantID: selectedVariant.id,
-      shouldNotify: !selectedVariant.hasRestockNotification,
+      variantID: selectedVariant?.id,
+      shouldNotify: !selectedVariant?.hasRestockNotification,
     },
     refetchQueries: [
       {
