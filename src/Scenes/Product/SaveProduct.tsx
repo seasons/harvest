@@ -74,18 +74,9 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
     (product?.largeImages as GetProduct_products_largeImages[]) ||
     (product.images as GetBrowseProducts_products_images[])
 
-  const { description, name, type, variants } = product
+  const { description, name, variants } = product
 
   const brandName = product?.brand?.name
-
-  if (!type) {
-    return (
-      <>
-        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-        <Loader />
-      </>
-    )
-  }
 
   const onSelectSize = (variantID) => {
     tracking.trackEvent({
@@ -126,7 +117,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
         )
       case "Sizes":
         const renderSizeRow = (item) => {
-          const { id, display, isSaved } = item
+          const { id, displayLong, isSaved } = item
           return (
             <TouchableWithoutFeedback onPress={() => onSelectSize(id)}>
               <Box>
@@ -135,7 +126,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
                   <Flex flexDirection="row">
                     <Radio selected={id === selectedVariantID} onSelect={() => onSelectSize(id)} />
                     <Sans color={color("black100")} ml={1} size="4" weight="medium">
-                      {display?.long}
+                      {displayLong}
                     </Sans>
                   </Flex>
                   {isSaved && (

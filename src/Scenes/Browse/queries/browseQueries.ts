@@ -81,18 +81,8 @@ export const GET_BROWSE_PRODUCTS = gql`
             nonReservable
             reserved
             isSaved
-            internalSize {
-              id
-              display
-              top {
-                id
-                letter
-              }
-              bottom {
-                id
-                value
-              }
-            }
+            displayLong
+            displayShort
           }
         }
       }
