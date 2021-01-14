@@ -1,7 +1,7 @@
 import { Box, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { Schema, useTracking } from "App/utils/track"
-import { get, head } from "lodash"
+import { head } from "lodash"
 import React from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
@@ -10,11 +10,10 @@ import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 interface ReservationItemProps {
   bagItem: any
   index?: number
-  sectionHeight: number
   navigation?: any
 }
 
-export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index, sectionHeight, navigation }) => {
+export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index, navigation }) => {
   const tracking = useTracking()
   const product = bagItem?.productVariant?.product
   const variantToUse = head(
@@ -25,7 +24,7 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
   }
 
   const imageURL = product?.images?.[0]?.url
-  const variantSize = get(variantToUse, "internalSize.display")
+  const variantSize = variantToUse?.displayLong?.toLowerCase()
 
   return (
     <Box key={product.id}>

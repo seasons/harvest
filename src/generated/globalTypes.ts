@@ -244,6 +244,12 @@ export enum ProductArchitecture {
   Staple = "Staple",
 }
 
+export enum ProductFit {
+  RunsBig = "RunsBig",
+  RunsSmall = "RunsSmall",
+  TrueToSize = "TrueToSize",
+}
+
 export enum ProductOrderByInput {
   architecture_ASC = "architecture_ASC",
   architecture_DESC = "architecture_DESC",
@@ -261,6 +267,8 @@ export enum ProductOrderByInput {
   name_DESC = "name_DESC",
   photographyStatus_ASC = "photographyStatus_ASC",
   photographyStatus_DESC = "photographyStatus_DESC",
+  productFit_ASC = "productFit_ASC",
+  productFit_DESC = "productFit_DESC",
   publishedAt_ASC = "publishedAt_ASC",
   publishedAt_DESC = "publishedAt_DESC",
   retailPrice_ASC = "retailPrice_ASC",
@@ -3848,6 +3856,7 @@ export interface ProductCreateInput {
   id?: string | null;
   slug: string;
   name: string;
+  productFit?: ProductFit | null;
   type?: ProductType | null;
   description?: string | null;
   externalURL?: string | null;
@@ -3892,6 +3901,7 @@ export interface ProductCreateWithoutCategoryInput {
   id?: string | null;
   slug: string;
   name: string;
+  productFit?: ProductFit | null;
   type?: ProductType | null;
   description?: string | null;
   externalURL?: string | null;
@@ -3920,6 +3930,7 @@ export interface ProductCreateWithoutVariantsInput {
   id?: string | null;
   slug: string;
   name: string;
+  productFit?: ProductFit | null;
   type?: ProductType | null;
   description?: string | null;
   externalURL?: string | null;
@@ -4280,6 +4291,10 @@ export interface ProductScalarWhereInput {
   name_not_starts_with?: string | null;
   name_ends_with?: string | null;
   name_not_ends_with?: string | null;
+  productFit?: ProductFit | null;
+  productFit_not?: ProductFit | null;
+  productFit_in?: ProductFit[] | null;
+  productFit_not_in?: ProductFit[] | null;
   type?: ProductType | null;
   type_not?: ProductType | null;
   type_in?: ProductType[] | null;
@@ -4435,6 +4450,7 @@ export interface ProductSeasonWhereUniqueInput {
 export interface ProductUpdateDataInput {
   slug?: string | null;
   name?: string | null;
+  productFit?: ProductFit | null;
   type?: ProductType | null;
   description?: string | null;
   externalURL?: string | null;
@@ -4463,6 +4479,7 @@ export interface ProductUpdateDataInput {
 export interface ProductUpdateManyDataInput {
   slug?: string | null;
   name?: string | null;
+  productFit?: ProductFit | null;
   type?: ProductType | null;
   description?: string | null;
   externalURL?: string | null;
@@ -4525,6 +4542,7 @@ export interface ProductUpdateWithWhereUniqueWithoutCategoryInput {
 export interface ProductUpdateWithoutCategoryDataInput {
   slug?: string | null;
   name?: string | null;
+  productFit?: ProductFit | null;
   type?: ProductType | null;
   description?: string | null;
   externalURL?: string | null;
@@ -4552,6 +4570,7 @@ export interface ProductUpdateWithoutCategoryDataInput {
 export interface ProductUpdateWithoutVariantsDataInput {
   slug?: string | null;
   name?: string | null;
+  productFit?: ProductFit | null;
   type?: ProductType | null;
   description?: string | null;
   externalURL?: string | null;
@@ -5376,6 +5395,10 @@ export interface ProductWhereInput {
   name_not_starts_with?: string | null;
   name_ends_with?: string | null;
   name_not_ends_with?: string | null;
+  productFit?: ProductFit | null;
+  productFit_not?: ProductFit | null;
+  productFit_in?: ProductFit[] | null;
+  productFit_not_in?: ProductFit[] | null;
   type?: ProductType | null;
   type_not?: ProductType | null;
   type_in?: ProductType[] | null;

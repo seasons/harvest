@@ -5,7 +5,6 @@ import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema, screenTrack } from "App/utils/track"
-import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
@@ -13,16 +12,16 @@ import { Dimensions, FlatList, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
-
 import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
 import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 import { GET_PRODUCT } from "./Queries"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import { SizeWarning } from "./Components/SizeWarning"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
@@ -54,6 +53,7 @@ export const Product = screenTrack({
   const flatListRef = useRef(null)
   const userHasSession = !!authState?.userSession
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
+  const [showSizeWarning, setShowSizeWarning] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
 
   // If the slug is present, ignore the id. This would happen if a product is passed through a deep link.
@@ -81,6 +81,10 @@ export const Product = screenTrack({
       id: "",
       reservable: 0,
       size: "",
+      display: {
+        short: "",
+        long: "",
+      },
       stock: 0,
       isInBag: false,
       hasRestockNotification: null,
@@ -257,7 +261,7 @@ export const Product = screenTrack({
   }
 
   return (
-    <Container insetsTop={false}>
+    <Container insetsTop={false} insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "productBackground"} />
       <ShareButtonWrapper>
         <ShareButton
@@ -287,6 +291,7 @@ export const Product = screenTrack({
         isMutatingNotify={isMutatingNotify}
         hasNotification={hasNotification}
         data={data}
+        setShowSizeWarning={setShowSizeWarning}
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
@@ -309,6 +314,13 @@ export const Product = screenTrack({
           toggleShowVariantPicker={toggleShowVariantPicker}
         />
       </AnimatedVariantPicker>
+      <SizeWarning
+        show={showSizeWarning}
+        data={data}
+        selectedVariant={selectedVariant}
+        setShowSizeWarning={setShowSizeWarning}
+        setSelectedVariant={setSelectedVariant}
+      />
     </Container>
   )
 })

@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ProductOrderByInput, ProductStatus, ProductType, LetterSize } from "./globalTypes";
+import { ProductOrderByInput, ProductStatus, ProductType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBrowseProducts
@@ -51,24 +51,9 @@ export interface GetBrowseProducts_products_brand {
   name: string;
 }
 
-export interface GetBrowseProducts_products_variants_internalSize_top {
-  __typename: "TopSize";
-  id: string;
-  letter: LetterSize | null;
-}
-
-export interface GetBrowseProducts_products_variants_internalSize_bottom {
-  __typename: "BottomSize";
-  id: string;
-  value: string | null;
-}
-
-export interface GetBrowseProducts_products_variants_internalSize {
-  __typename: "Size";
-  id: string;
-  display: string;
-  top: GetBrowseProducts_products_variants_internalSize_top | null;
-  bottom: GetBrowseProducts_products_variants_internalSize_bottom | null;
+export interface GetBrowseProducts_products_variants_display {
+  __typename: "ProductVariantDisplay";
+  short: string | null;
 }
 
 export interface GetBrowseProducts_products_variants {
@@ -79,7 +64,7 @@ export interface GetBrowseProducts_products_variants {
   nonReservable: number;
   reserved: number;
   isSaved: boolean;
-  internalSize: GetBrowseProducts_products_variants_internalSize | null;
+  display: GetBrowseProducts_products_variants_display | null;
 }
 
 export interface GetBrowseProducts_products {

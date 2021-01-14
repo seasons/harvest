@@ -6,40 +6,8 @@ import { find } from "lodash"
 import React, { useEffect, useState } from "react"
 import { TouchableOpacity } from "react-native"
 
-export interface Variant extends GetProduct_products_variants {
-  sizeDisplay?: string
-}
-
-export const sizeToName = (size) => {
-  switch (size) {
-    case "XS":
-      return "X-Small"
-    case "S":
-      return "Small"
-    case "M":
-      return "Medium"
-    case "L":
-      return "Large"
-    case "XL":
-      return "X-Large"
-  }
-}
-
-const sizeDataForVariants = (variants = [], type) => {
-  if (type === "Top") {
-    return variants?.map((variant) => {
-      return { ...variant, sizeDisplay: sizeToName(variant?.internalSize?.display) }
-    })
-  } else if (type === "Bottom") {
-    return variants?.map((variant) => {
-      return { ...variant, sizeDisplay: variant?.internalSize?.bottom?.value }
-    })
-  }
-}
-
 export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelected, product, variantPickerHeight }) => {
-  const variants = product?.variants
-  const type = product?.type
+  const variants: GetProduct_products_variants[] = product?.variants
   const [sizeData, setSizeData] = useState([])
   const tracking = useTracking()
 
@@ -48,25 +16,23 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
   }, [product])
 
   const updateSizeData = () => {
-    const variantData = sizeDataForVariants(variants, type)
-    setSizeData(variantData)
+    setSizeData(variants)
 
     // Update size data
-    if (variantData?.length && !selectedVariant.id) {
+    if (variants?.length && !selectedVariant.id) {
       const firstAvailableSize =
-        find(variantData, (size: Variant) => size.isInBag) ||
-        find(variantData, (size: Variant) => size.reservable > 0) ||
-        variantData?.[0]
+        find(variants, (size) => size.isInBag) || find(variants, (size) => size.reservable > 0) || variants?.[0]
       setSelectedVariant(firstAvailableSize)
-    } else if (variantData?.length) {
-      const variant = find(variantData, (size: Variant) => size.id === selectedVariant.id)
+    } else if (variants?.length) {
+      const variant = find(variants, (size) => size.id === selectedVariant.id)
       // Refresh variant data
       setSelectedVariant(variant)
     }
   }
 
-  const rows = sizeData.map((size: Variant, i) => {
-    const manufacturerSize = (size?.manufacturerSizes?.length > 0 && size?.manufacturerSizes?.[0]?.display) || ""
+  const rows = sizeData.map((size, i) => {
+    const displaySize = size?.displayLong
+    const manufacturerSizeDisplay = size?.manufacturerSizes?.length > 0 && size?.manufacturerSizes?.[0]?.display
     return (
       <Box key={size.id || i}>
         <TouchableOpacity
@@ -74,7 +40,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
             tracking.trackEvent({
               actionName: Schema.ActionNames.ProductVariantSelected,
               actionType: Schema.ActionTypes.Tap,
-              size: size?.internalSize?.display,
+              size: displaySize,
               variantID: size?.id,
             })
             setSelectedVariant(size)
@@ -85,14 +51,14 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
             <Flex flexDirection="row" alignItems="center">
               <Radio selected={!!selectedVariant?.id && selectedVariant.id === size.id} pointerEventsNone />
               <Spacer mr={1} />
-              {size?.sizeDisplay && (
+              {displaySize && (
                 <Sans color={size?.reservable > 0 ? color("white100") : color("black50")} size="4">
-                  {size.sizeDisplay}
+                  {displaySize}
                 </Sans>
               )}
             </Flex>
             <Sans color="black50" size="4">
-              {size?.reservable > 0 ? manufacturerSize : "Unavailable"}
+              {size?.reservable > 0 ? manufacturerSizeDisplay : "Unavailable"}
             </Sans>
           </Flex>
         </TouchableOpacity>
