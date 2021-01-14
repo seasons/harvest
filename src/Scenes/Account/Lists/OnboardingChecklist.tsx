@@ -148,7 +148,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
         <>
           <Sans size="5">{header}</Sans>
           <Spacer mb={0.5} />
-          <Sans size="1" color="black50">
+          <Sans size="4" color="black50">
             {detail}
           </Sans>
         </>
