@@ -146,7 +146,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
     <Box pb={2}>
       {userState === UserState.Undetermined ? (
         <>
-          <Sans size="2">{header}</Sans>
+          <Sans size="5">{header}</Sans>
           <Spacer mb={0.5} />
           <Sans size="1" color="black50">
             {detail}
