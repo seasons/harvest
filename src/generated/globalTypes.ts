@@ -3990,9 +3990,7 @@ export interface ProductCreateInput {
   id?: string | null;
   slug: string;
   name: string;
-  brand: BrandCreateOneWithoutProductsInput;
   productFit?: ProductFit | null;
-  category: CategoryCreateOneWithoutProductsInput;
   type?: ProductType | null;
   description?: string | null;
   externalURL?: string | null;
@@ -4035,7 +4033,6 @@ export interface ProductCreateWithoutCategoryInput {
   id?: string | null;
   slug: string;
   name: string;
-  brand: BrandCreateOneWithoutProductsInput;
   productFit?: ProductFit | null;
   type?: ProductType | null;
   description?: string | null;
@@ -4064,9 +4061,7 @@ export interface ProductCreateWithoutVariantsInput {
   id?: string | null;
   slug: string;
   name: string;
-  brand: BrandCreateOneWithoutProductsInput;
   productFit?: ProductFit | null;
-  category: CategoryCreateOneWithoutProductsInput;
   type?: ProductType | null;
   description?: string | null;
   externalURL?: string | null;
@@ -4584,9 +4579,7 @@ export interface ProductSeasonWhereUniqueInput {
 export interface ProductUpdateDataInput {
   slug?: string | null;
   name?: string | null;
-  brand?: BrandUpdateOneRequiredWithoutProductsInput | null;
   productFit?: ProductFit | null;
-  category?: CategoryUpdateOneRequiredWithoutProductsInput | null;
   type?: ProductType | null;
   description?: string | null;
   externalURL?: string | null;
@@ -4676,7 +4669,6 @@ export interface ProductUpdateWithWhereUniqueWithoutCategoryInput {
 export interface ProductUpdateWithoutCategoryDataInput {
   slug?: string | null;
   name?: string | null;
-  brand?: BrandUpdateOneRequiredWithoutProductsInput | null;
   productFit?: ProductFit | null;
   type?: ProductType | null;
   description?: string | null;
@@ -4704,9 +4696,7 @@ export interface ProductUpdateWithoutCategoryDataInput {
 export interface ProductUpdateWithoutVariantsDataInput {
   slug?: string | null;
   name?: string | null;
-  brand?: BrandUpdateOneRequiredWithoutProductsInput | null;
   productFit?: ProductFit | null;
-  category?: CategoryUpdateOneRequiredWithoutProductsInput | null;
   type?: ProductType | null;
   description?: string | null;
   externalURL?: string | null;
@@ -5563,12 +5553,10 @@ export interface ProductWhereInput {
   name_not_starts_with?: string | null;
   name_ends_with?: string | null;
   name_not_ends_with?: string | null;
-  brand?: BrandWhereInput | null;
   productFit?: ProductFit | null;
   productFit_not?: ProductFit | null;
   productFit_in?: ProductFit[] | null;
   productFit_not_in?: ProductFit[] | null;
-  category?: CategoryWhereInput | null;
   type?: ProductType | null;
   type_not?: ProductType | null;
   type_in?: ProductType[] | null;

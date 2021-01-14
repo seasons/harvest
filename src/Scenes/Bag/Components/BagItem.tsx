@@ -37,10 +37,8 @@ export const BagItemFragment = gql`
         id
         hasRestockNotification
         reservable
-        internalSize {
-          id
-          display
-        }
+        displayShort
+        displayLong
       }
     }
   }
@@ -78,7 +76,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   const isReserved = bagItem.status !== "Added"
   const imageURL = product?.images?.[0]?.url || ""
 
-  const variantSize = get(variantToUse, "internalSize.display")
+  const variantSize = variantToUse?.displayLong?.toLowerCase()
   const variantId = bagItem.variantID
 
   const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {

@@ -30,7 +30,7 @@ export const ReservationHistoryItem = ({ item }) => {
       <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start" px="14px">
         {item.products?.map((physicalProduct) => {
           const variant = physicalProduct?.productVariant
-          const variantSizeDisplay = variant?.internalSize?.display
+          const variantSizeDisplay = variant?.display
           const product = variant?.product
           const brandName = product?.brand?.name
           const image = product?.images?.[0]

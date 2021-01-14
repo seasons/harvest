@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ProductOrderByInput, LetterSize, BottomSizeType, ProductType } from "./globalTypes";
+import { ProductOrderByInput } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetProductsByTag
@@ -15,37 +15,20 @@ export interface GetProductsByTag_products_images {
   url: string | null;
 }
 
-export interface GetProductsByTag_products_variants_internalSize_top {
-  __typename: "TopSize";
-  id: string;
-  letter: LetterSize | null;
-}
-
-export interface GetProductsByTag_products_variants_internalSize_bottom {
-  __typename: "BottomSize";
-  id: string;
-  type: BottomSizeType | null;
-  value: string | null;
-}
-
-export interface GetProductsByTag_products_variants_internalSize {
-  __typename: "Size";
-  id: string;
-  top: GetProductsByTag_products_variants_internalSize_top | null;
-  bottom: GetProductsByTag_products_variants_internalSize_bottom | null;
-  productType: ProductType | null;
-  display: string;
+export interface GetProductsByTag_products_variants_display {
+  __typename: "ProductVariantDisplay";
+  short: string | null;
 }
 
 export interface GetProductsByTag_products_variants {
   __typename: "ProductVariant";
   id: string;
-  internalSize: GetProductsByTag_products_variants_internalSize | null;
   total: number;
   reservable: number;
   nonReservable: number;
   reserved: number;
   isSaved: boolean;
+  display: GetProductsByTag_products_variants_display | null;
 }
 
 export interface GetProductsByTag_products {
