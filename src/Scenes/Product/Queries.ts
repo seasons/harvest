@@ -34,29 +34,6 @@ const commonProductVariantFragment = gql`
         inseam
       }
     }
-    internalSize {
-      id
-      productType
-      display
-      top {
-        id
-        letter
-        sleeve
-        shoulder
-        chest
-        neck
-        length
-      }
-      bottom {
-        id
-        type
-        value
-        waist
-        rise
-        hem
-        inseam
-      }
-    }
   }
 `
 

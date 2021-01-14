@@ -49,7 +49,11 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
         >
           <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap" my={2}>
             <Flex flexDirection="row" alignItems="center">
-              <Radio selected={!!selectedVariant?.id && selectedVariant.id === size.id} pointerEventsNone />
+              <Radio
+                selected={!!selectedVariant?.id && selectedVariant.id === size.id}
+                pointerEventsNone
+                activeColor={color("white100")}
+              />
               <Spacer mr={1} />
               {displaySize && (
                 <Sans color={size?.reservable > 0 ? color("white100") : color("black50")} size="4">

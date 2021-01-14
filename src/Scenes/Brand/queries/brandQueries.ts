@@ -30,20 +30,8 @@ export const GET_BRAND = gql`
         updatedAt
         variants {
           id
-          internalSize {
-            id
-            top {
-              id
-              letter
-            }
-            bottom {
-              id
-              type
-              value
-            }
-            productType
-            display
-          }
+          displayShort
+          displayLong
           total
           reservable
           nonReservable

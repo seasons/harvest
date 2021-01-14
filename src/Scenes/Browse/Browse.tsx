@@ -119,12 +119,12 @@ export const Browse = screenTrack()((props: any) => {
               <Flex flexWrap="nowrap" flexDirection="row" alignItems="center" px="12px" py="6px">
                 <SelectBox active={filters.availableOnly} />
                 <Spacer mr={1} />
-                <Sans size="9">Available now</Sans>
+                <Sans size="4">Available now</Sans>
               </Flex>
             </TouchableOpacity>
             <TouchableOpacity onPress={onFilterBtnPress}>
               <Flex px="12px" py="6px">
-                <Sans size="9" style={{ textDecorationLine: "underline" }}>
+                <Sans size="4" style={{ textDecorationLine: "underline" }}>
                   {filtersButtonText}
                 </Sans>
               </Flex>

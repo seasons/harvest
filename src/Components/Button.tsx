@@ -244,12 +244,12 @@ export class Button extends Component<ButtonProps, ButtonState> {
     return this.props.variant === "primaryWhite" || this.props.variant === "secondaryWhite" ? "black100" : "white100"
   }
 
-  getSize(): { height: number | string; size: "0" | "1" | "2"; px: number } {
+  getSize(): { height: number | string; size: "4"; px: number } {
     switch (this.props.size) {
       case "small":
-        return { height: 36, size: "1", px: 21 }
+        return { height: 36, size: "4", px: 21 }
       default:
-        return { height: 48, size: "1", px: 30 }
+        return { height: 48, size: "4", px: 30 }
     }
   }
 
