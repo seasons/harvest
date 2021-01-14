@@ -25,18 +25,13 @@ export interface BagItemProductVariant_product_images {
   url: string | null;
 }
 
-export interface BagItemProductVariant_product_variants_display {
-  __typename: "ProductVariantDisplay";
-  short: string | null;
-  long: string | null;
-}
-
 export interface BagItemProductVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
   hasRestockNotification: boolean;
   reservable: number;
-  display: BagItemProductVariant_product_variants_display | null;
+  displayShort: string | null;
+  displayLong: string | null;
 }
 
 export interface BagItemProductVariant_product {

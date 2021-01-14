@@ -15,11 +15,6 @@ export interface GetProductsByTag_products_images {
   url: string | null;
 }
 
-export interface GetProductsByTag_products_variants_display {
-  __typename: "ProductVariantDisplay";
-  short: string | null;
-}
-
 export interface GetProductsByTag_products_variants {
   __typename: "ProductVariant";
   id: string;
@@ -28,7 +23,7 @@ export interface GetProductsByTag_products_variants {
   nonReservable: number;
   reserved: number;
   isSaved: boolean;
-  display: GetProductsByTag_products_variants_display | null;
+  displayShort: string | null;
 }
 
 export interface GetProductsByTag_products {

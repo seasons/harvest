@@ -25,16 +25,11 @@ export interface HomePageProduct_images {
   url: string | null;
 }
 
-export interface HomePageProduct_variants_display {
-  __typename: "ProductVariantDisplay";
-  short: string | null;
-}
-
 export interface HomePageProduct_variants {
   __typename: "ProductVariant";
   id: string;
   reservable: number;
-  display: HomePageProduct_variants_display | null;
+  displayShort: string | null;
 }
 
 export interface HomePageProduct {

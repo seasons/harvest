@@ -188,16 +188,11 @@ export interface Homepage_me_savedItems_productVariant_product_images {
   url: string | null;
 }
 
-export interface Homepage_me_savedItems_productVariant_product_variants_display {
-  __typename: "ProductVariantDisplay";
-  short: string | null;
-}
-
 export interface Homepage_me_savedItems_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
   reservable: number;
-  display: Homepage_me_savedItems_productVariant_product_variants_display | null;
+  displayShort: string | null;
 }
 
 export interface Homepage_me_savedItems_productVariant_product {
@@ -269,16 +264,11 @@ export interface Homepage_justAddedOuterwear_images {
   url: string | null;
 }
 
-export interface Homepage_justAddedOuterwear_variants_display {
-  __typename: "ProductVariantDisplay";
-  short: string | null;
-}
-
 export interface Homepage_justAddedOuterwear_variants {
   __typename: "ProductVariant";
   id: string;
   reservable: number;
-  display: Homepage_justAddedOuterwear_variants_display | null;
+  displayShort: string | null;
 }
 
 export interface Homepage_justAddedOuterwear {
@@ -309,16 +299,11 @@ export interface Homepage_justAddedTops_images {
   url: string | null;
 }
 
-export interface Homepage_justAddedTops_variants_display {
-  __typename: "ProductVariantDisplay";
-  short: string | null;
-}
-
 export interface Homepage_justAddedTops_variants {
   __typename: "ProductVariant";
   id: string;
   reservable: number;
-  display: Homepage_justAddedTops_variants_display | null;
+  displayShort: string | null;
 }
 
 export interface Homepage_justAddedTops {
@@ -349,16 +334,11 @@ export interface Homepage_justAddedBottoms_images {
   url: string | null;
 }
 
-export interface Homepage_justAddedBottoms_variants_display {
-  __typename: "ProductVariantDisplay";
-  short: string | null;
-}
-
 export interface Homepage_justAddedBottoms_variants {
   __typename: "ProductVariant";
   id: string;
   reservable: number;
-  display: Homepage_justAddedBottoms_variants_display | null;
+  displayShort: string | null;
 }
 
 export interface Homepage_justAddedBottoms {

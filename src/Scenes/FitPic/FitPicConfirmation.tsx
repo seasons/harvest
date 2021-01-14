@@ -17,7 +17,7 @@ const SUBMIT_FIT_PIC = gql`
   }
 `
 const GET_INSTAGRAM_HANDLE = gql`
-  query {
+  query GetInstagramHandle {
     me {
       customer {
         id

@@ -47,12 +47,6 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_shi
   shippingMethod: GetCustomerReservationConfirmation_me_customer_reservations_shippingOption_shippingMethod | null;
 }
 
-export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_display {
-  __typename: "ProductVariantDisplay";
-  short: string | null;
-  long: string | null;
-}
-
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_modelSize {
   __typename: "Size";
   id: string;
@@ -75,6 +69,8 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_pro
   __typename: "ProductVariant";
   id: string;
   size: string | null;
+  displayShort: string | null;
+  displayLong: string | null;
 }
 
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product {
@@ -90,7 +86,6 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_pro
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant {
   __typename: "ProductVariant";
   id: string;
-  display: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_display | null;
   product: GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product;
 }
 
