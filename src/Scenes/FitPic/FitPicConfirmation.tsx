@@ -111,13 +111,13 @@ export const FitPicConfirmation = screenTrack()(({ route, navigation }) => {
         <ScrollView>
           <Spacer mt={64} />
           <Sans px={2} size="7">
-            Confirm Photo
+            Confirm photo
           </Sans>
           <Image style={{ width: "100%", height: 450 }} source={{ uri }} />
           <Flex px={2} pt={3}>
             {!loading && hasPreloadedInstagramHandle && (
               <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-                <Sans size="4">Add an Instagram Handle</Sans>
+                <Sans size="4">Add an Instagram handle</Sans>
                 <Toggle
                   onChange={(newValue) => setIncludeInstagramHandle(newValue)}
                   selected={includeInstagramHandle}
@@ -127,7 +127,7 @@ export const FitPicConfirmation = screenTrack()(({ route, navigation }) => {
             {!loading && !hasPreloadedInstagramHandle && (
               <>
                 <Sans size="4" pb={1}>
-                  Add an Instagram Handle
+                  Add an Instagram handle
                 </Sans>
                 <TextInput
                   placeholder="@username"
@@ -182,7 +182,7 @@ export const FitPicConfirmation = screenTrack()(({ route, navigation }) => {
               disabled={isMutating}
               onPress={onUsePhoto}
             >
-              Use Photo
+              Use photo
             </Button>
           </Flex>
         </FadeBottom2>
