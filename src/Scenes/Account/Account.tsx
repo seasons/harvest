@@ -1,4 +1,3 @@
-import { AuthorizedCTA, RewaitlistedCTA } from "@seasons/eclipse"
 import { Box, Container, Flex, GuestView, Sans, Separator, Skeleton, Spacer } from "App/Components"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -28,6 +27,7 @@ import { State, UserState } from "../CreateAccount/CreateAccount"
 import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
+import { WaitlistedCTA, AuthorizedCTA } from "@seasons/eclipse"
 
 export const GET_USER = gql`
   query GetUser {
@@ -266,26 +266,26 @@ export const Account = screenTrack()(({ navigation }) => {
     switch (status) {
       case CustomerStatus.Created:
       case CustomerStatus.Waitlisted:
-        // Allow rewaitlisted users to requst access
-        if (status === CustomerStatus.Waitlisted && customer?.admissions?.authorizationsCount > 0) {
-          return (
-            <RewaitlistedCTA
-              authorizedAt={DateTime.fromISO(customer?.authorizedAt)}
-              authorizationWindowClosesAt={DateTime.fromISO(customer?.admissions?.authorizationWindowClosesAt)}
-            />
-          )
-        }
-
         const userState = status == CustomerStatus.Created ? UserState.Undetermined : UserState.Waitlisted
+        const rewaitlisted = status === CustomerStatus.Waitlisted && customer?.admissions?.authorizationsCount > 0
         return (
-          <OnboardingChecklist
-            rawMeasurements={rawMeasurements}
-            navigation={navigation}
-            onboardingSteps={onboardingSteps}
-            shippingAddress={shippingAddress}
-            stylePreferences={stylePreferences}
-            userState={userState}
-          />
+          <>
+            <WaitlistedCTA
+              authorizedAt={!!customer?.authorizedAt ? DateTime.fromISO(customer?.authorizedAt) : null}
+              authorizationWindowClosesAt={DateTime.fromISO(customer?.admissions?.authorizationWindowClosesAt)}
+              version={"mobile"}
+            />
+            {!rewaitlisted && (
+              <OnboardingChecklist
+                rawMeasurements={rawMeasurements}
+                navigation={navigation}
+                onboardingSteps={onboardingSteps}
+                shippingAddress={shippingAddress}
+                stylePreferences={stylePreferences}
+                userState={userState}
+              />
+            )}
+          </>
         )
       case CustomerStatus.Authorized:
         return (
