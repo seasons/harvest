@@ -1,16 +1,17 @@
 import { Button, Flex, Sans, Spacer } from "App/Components"
+import { GetProduct } from "App/generated/GetProduct"
 import { AddToBagButton } from "App/Scenes/Product/Components"
 import { color, space } from "App/utils"
+import { Schema, useTracking } from "App/utils/track"
 import { DownChevronIcon } from "Assets/icons"
+import { WhiteListCheck } from "Assets/svgs/WhiteListCheck"
 import React, { useEffect, useState } from "react"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { Schema, useTracking } from "App/utils/track"
-import { GetProduct } from "App/generated/GetProduct"
-import { WhiteListCheck } from "Assets/svgs/WhiteListCheck"
 
 interface Props {
   toggleShowVariantPicker: (show: boolean) => void
+  setShowSizeWarning: (show: boolean) => void
   showVariantPicker: boolean
   selectedVariant: any
   bottom?: number
@@ -34,6 +35,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
     data,
     isMutatingNotify,
     onNotifyMe,
+    setShowSizeWarning,
   } = props
   const inStock = selectedVariant && selectedVariant.reservable > 0
 
@@ -64,7 +66,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
             <Flex px={2} style={{ width: "100%" }} flexDirection="row" justifyContent="center">
               <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
                 <Sans size="4" color="black">
-                  {selectedVariant.sizeDisplay}
+                  {selectedVariant?.displayLong}
                 </Sans>
                 <Spacer mr={1} />
                 <DownChevronIcon color={color("black")} rotate={showVariantPicker} />
@@ -74,6 +76,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
         </TouchableWithoutFeedback>
         {inStock ? (
           <AddToBagButton
+            setShowSizeWarning={setShowSizeWarning}
             variantInStock={inStock}
             width={twoButtonWidth}
             selectedVariant={selectedVariant}

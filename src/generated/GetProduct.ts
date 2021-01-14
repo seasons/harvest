@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ProductWhereInput, CustomerStatus, ProductType, LetterSize, BottomSizeType } from "./globalTypes";
+import { ProductWhereInput, CustomerStatus, ProductFit, ProductType, LetterSize, BottomSizeType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetProduct
@@ -51,6 +51,12 @@ export interface GetProduct_me {
   savedItems: GetProduct_me_savedItems[] | null;
 }
 
+export interface GetProduct_products_category {
+  __typename: "Category";
+  id: string;
+  name: string;
+}
+
 export interface GetProduct_products_modelSize {
   __typename: "Size";
   id: string;
@@ -81,10 +87,40 @@ export interface GetProduct_products_brand_products_brand {
   name: string;
 }
 
+export interface GetProduct_products_brand_products_variants_display {
+  __typename: "ProductVariantDisplay";
+  short: string | null;
+  long: string | null;
+}
+
+export interface GetProduct_products_brand_products_variants_manufacturerSizes_top {
+  __typename: "TopSize";
+  id: string;
+  letter: LetterSize | null;
+  sleeve: number | null;
+  shoulder: number | null;
+  chest: number | null;
+  neck: number | null;
+  length: number | null;
+}
+
+export interface GetProduct_products_brand_products_variants_manufacturerSizes_bottom {
+  __typename: "BottomSize";
+  id: string;
+  type: BottomSizeType | null;
+  value: string | null;
+  waist: number | null;
+  rise: number | null;
+  hem: number | null;
+  inseam: number | null;
+}
+
 export interface GetProduct_products_brand_products_variants_manufacturerSizes {
   __typename: "Size";
   id: string;
   display: string;
+  top: GetProduct_products_brand_products_variants_manufacturerSizes_top | null;
+  bottom: GetProduct_products_brand_products_variants_manufacturerSizes_bottom | null;
 }
 
 export interface GetProduct_products_brand_products_variants_internalSize_top {
@@ -103,6 +139,10 @@ export interface GetProduct_products_brand_products_variants_internalSize_bottom
   id: string;
   type: BottomSizeType | null;
   value: string | null;
+  waist: number | null;
+  rise: number | null;
+  hem: number | null;
+  inseam: number | null;
 }
 
 export interface GetProduct_products_brand_products_variants_internalSize {
@@ -117,6 +157,7 @@ export interface GetProduct_products_brand_products_variants_internalSize {
 export interface GetProduct_products_brand_products_variants {
   __typename: "ProductVariant";
   id: string;
+  display: GetProduct_products_brand_products_variants_display | null;
   total: number;
   reservable: number;
   nonReservable: number;
@@ -153,10 +194,40 @@ export interface GetProduct_products_largeImages {
   url: string | null;
 }
 
+export interface GetProduct_products_variants_display {
+  __typename: "ProductVariantDisplay";
+  short: string | null;
+  long: string | null;
+}
+
+export interface GetProduct_products_variants_manufacturerSizes_top {
+  __typename: "TopSize";
+  id: string;
+  letter: LetterSize | null;
+  sleeve: number | null;
+  shoulder: number | null;
+  chest: number | null;
+  neck: number | null;
+  length: number | null;
+}
+
+export interface GetProduct_products_variants_manufacturerSizes_bottom {
+  __typename: "BottomSize";
+  id: string;
+  type: BottomSizeType | null;
+  value: string | null;
+  waist: number | null;
+  rise: number | null;
+  hem: number | null;
+  inseam: number | null;
+}
+
 export interface GetProduct_products_variants_manufacturerSizes {
   __typename: "Size";
   id: string;
   display: string;
+  top: GetProduct_products_variants_manufacturerSizes_top | null;
+  bottom: GetProduct_products_variants_manufacturerSizes_bottom | null;
 }
 
 export interface GetProduct_products_variants_internalSize_top {
@@ -175,6 +246,10 @@ export interface GetProduct_products_variants_internalSize_bottom {
   id: string;
   type: BottomSizeType | null;
   value: string | null;
+  waist: number | null;
+  rise: number | null;
+  hem: number | null;
+  inseam: number | null;
 }
 
 export interface GetProduct_products_variants_internalSize {
@@ -189,6 +264,7 @@ export interface GetProduct_products_variants_internalSize {
 export interface GetProduct_products_variants {
   __typename: "ProductVariant";
   id: string;
+  display: GetProduct_products_variants_display | null;
   total: number;
   reservable: number;
   nonReservable: number;
@@ -205,6 +281,8 @@ export interface GetProduct_products {
   id: string;
   slug: string;
   name: string;
+  productFit: ProductFit | null;
+  category: GetProduct_products_category;
   description: string | null;
   retailPrice: number | null;
   modelSize: GetProduct_products_modelSize | null;

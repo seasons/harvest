@@ -15,6 +15,7 @@ import { GET_PRODUCT } from "../Queries"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 
 interface Props {
+  setShowSizeWarning: (show: boolean) => void
   disabled?: Boolean
   variantInStock: Boolean
   width: number
@@ -25,7 +26,7 @@ interface Props {
 export const AddToBagButton: React.FC<Props> = (props) => {
   const [isMutating, setIsMutating] = useState(false)
   const [added, setAdded] = useState(false)
-  const { variantInStock, width, selectedVariant, data } = props
+  const { variantInStock, width, selectedVariant, data, setShowSizeWarning } = props
   const tracking = useTracking()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
@@ -62,7 +63,6 @@ export const AddToBagButton: React.FC<Props> = (props) => {
           buttonText: "Got It",
           secondaryButtonText: "Go to bag",
           secondaryButtonOnPress: () => {
-            navigation.popToTop()
             navigation.navigate("BagStack")
             hidePopUp()
           },
@@ -73,13 +73,29 @@ export const AddToBagButton: React.FC<Props> = (props) => {
     onError: (err) => {
       setIsMutating(false)
       if (err && err.graphQLErrors) {
-        console.log("error AddToBagButton.tsx ", err)
-        showPopUp({
-          title: "Your bag is full",
-          note: "Remove one or more items from your bag to continue adding this item.",
-          buttonText: "Got It",
-          onClose: () => hidePopUp(),
-        })
+        console.log("error SizeWarning.tsx ", err)
+        if (err.toString().includes("already in bag")) {
+          showPopUp({
+            title: "Item is already in your bag",
+            note: "Looks like you've already added it!",
+            buttonText: "Got It",
+            onClose: () => hidePopUp(),
+          })
+        } else if (err.toString().includes("Bag is full")) {
+          showPopUp({
+            title: "Your bag is full",
+            note: "Remove one or more items from your bag to continue adding this item.",
+            buttonText: "Got It",
+            onClose: () => hidePopUp(),
+          })
+        } else {
+          showPopUp({
+            title: "Oops, sorry!",
+            note: "An unexpected error occurred, please try again.",
+            buttonText: "Got It",
+            onClose: () => hidePopUp(),
+          })
+        }
       }
     },
   })
@@ -87,7 +103,17 @@ export const AddToBagButton: React.FC<Props> = (props) => {
   const handleReserve = () => {
     if (!isMutating) {
       setIsMutating(true)
-      addToBag()
+
+      const productFit = data?.products?.[0].productFit
+      const runsBig = !!productFit && productFit === "RunsBig"
+      const runsSmall = !!productFit && productFit === "RunsSmall"
+
+      if (!runsBig && !runsSmall) {
+        addToBag()
+      } else {
+        setShowSizeWarning(true)
+        setIsMutating(false)
+      }
     }
   }
 

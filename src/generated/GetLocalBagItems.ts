@@ -25,10 +25,10 @@ export interface GetLocalBagItems_products_variants_product_images {
   url: string | null;
 }
 
-export interface GetLocalBagItems_products_variants_product_variants_internalSize {
-  __typename: "Size";
-  id: string;
-  display: string;
+export interface GetLocalBagItems_products_variants_product_variants_display {
+  __typename: "ProductVariantDisplay";
+  short: string | null;
+  long: string | null;
 }
 
 export interface GetLocalBagItems_products_variants_product_variants {
@@ -36,7 +36,7 @@ export interface GetLocalBagItems_products_variants_product_variants {
   id: string;
   hasRestockNotification: boolean;
   reservable: number;
-  internalSize: GetLocalBagItems_products_variants_product_variants_internalSize | null;
+  display: GetLocalBagItems_products_variants_product_variants_display | null;
 }
 
 export interface GetLocalBagItems_products_variants_product {

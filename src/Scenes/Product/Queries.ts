@@ -3,6 +3,8 @@ import gql from "graphql-tag"
 const commonProductVariantFragment = gql`
   fragment CommonProductVariant on ProductVariant {
     id
+    displayLong
+    displayShort
     total
     reservable
     nonReservable
@@ -13,6 +15,24 @@ const commonProductVariantFragment = gql`
     manufacturerSizes {
       id
       display
+      top {
+        id
+        letter
+        sleeve
+        shoulder
+        chest
+        neck
+        length
+      }
+      bottom {
+        id
+        type
+        value
+        waist
+        rise
+        hem
+        inseam
+      }
     }
     internalSize {
       id
@@ -31,6 +51,10 @@ const commonProductVariantFragment = gql`
         id
         type
         value
+        waist
+        rise
+        hem
+        inseam
       }
     }
   }
@@ -64,6 +88,11 @@ export const GET_PRODUCT = gql`
       id
       slug
       name
+      productFit
+      category {
+        id
+        name
+      }
       description
       retailPrice
       modelSize {
@@ -121,8 +150,6 @@ export const GET_COLLECTION = gql`
     collection(where: { id: $collectionID }) {
       id
       slug
-      descriptionTop
-      descriptionBottom
       images
       title
       subTitle
