@@ -30,6 +30,7 @@ export interface RadioProps extends FlexProps {
   label?: React.ReactNode
   labelSize?: SansSize
   pointerEventsNone?: boolean
+  activeColor?: string
 }
 
 export interface RadioToggleProps extends RadioProps, BorderProps, SizeProps, SpaceProps {}
@@ -39,7 +40,7 @@ export interface RadioToggleProps extends RadioProps, BorderProps, SizeProps, Sp
  *
  * Spec: zpl.io/bAvnwlB
  */
-export const Radio: React.SFC<RadioProps> = (props) => {
+export const Radio: React.FC<RadioProps> = (props) => {
   const {
     borderRadius = 100,
     children,
@@ -51,6 +52,7 @@ export const Radio: React.SFC<RadioProps> = (props) => {
     value,
     label,
     labelSize = "2",
+    activeColor,
     ...others
   } = props
 
@@ -58,7 +60,9 @@ export const Radio: React.SFC<RadioProps> = (props) => {
   // user clicks the radio element or the label.
   const onSelect = _onSelect && debounce(_onSelect, 0)
 
-  const innerComponent = children || <InnerCircle style={{ borderRadius }} />
+  const innerComponent = children || (
+    <InnerCircle style={{ borderRadius }} activeColor={activeColor ?? color("black100")} />
+  )
 
   return (
     <Flex flexDirection="row" alignItems="center" pointerEvents={pointerEventsNone ? "none" : "auto"}>
@@ -114,16 +118,16 @@ const Container = styled(Flex)<ContainerProps>`
   align-items: flex-start;
 `
 
-const InnerCircle = styled(Box)`
+const InnerCircle = styled(Box)<{ activeColor: string }>`
   width: 14;
   height: 14;
-  background-color: ${color("black100")};
+  background-color: ${(p) => p.activeColor};
 `
 
 const RadioButton = styled(Box)<RadioToggleProps>`
   ${borders};
   ${styledSpace};
-  border-color: ${color("black50")};
+  border-color: ${color("black10")};
   border-width: 1;
   width: 24;
   height: 24;
