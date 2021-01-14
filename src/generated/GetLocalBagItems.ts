@@ -25,18 +25,13 @@ export interface GetLocalBagItems_products_variants_product_images {
   url: string | null;
 }
 
-export interface GetLocalBagItems_products_variants_product_variants_display {
-  __typename: "ProductVariantDisplay";
-  short: string | null;
-  long: string | null;
-}
-
 export interface GetLocalBagItems_products_variants_product_variants {
   __typename: "ProductVariant";
   id: string;
   hasRestockNotification: boolean;
   reservable: number;
-  display: GetLocalBagItems_products_variants_product_variants_display | null;
+  displayShort: string | null;
+  displayLong: string | null;
 }
 
 export interface GetLocalBagItems_products_variants_product {

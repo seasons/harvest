@@ -23,6 +23,7 @@ import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ApplyPromoCode
 import { EditPaymentModal } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane/EditPaymentModal"
 import { DebugMenu } from "App/Scenes/DebugMenu"
 import { Faq } from "App/Scenes/Faq"
+import { FitPicConfirmation } from "App/Scenes/FitPic"
 import { Home } from "App/Scenes/Home"
 import { FitPicDetail } from "App/Scenes/Home/Components/FitPicDetail"
 import { Product, SaveProduct } from "App/Scenes/Product"
@@ -150,6 +151,7 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name={Schema.PageNames.Tag} component={Tag} />
       <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
       <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />
+      <HomeStack.Screen name={Schema.PageNames.FitPicConfirmation} component={FitPicConfirmation} />
       <HomeStack.Screen
         name={Schema.PageNames.FitPicDetail}
         component={FitPicDetail}

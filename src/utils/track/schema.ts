@@ -246,6 +246,10 @@ export enum ActionNames {
   ShareToIGButtonTapped = "Share To IG Button Tapped",
   DownloadReservationShareImageTapped = "Download Reservation Share Image Tapped",
   AvailableFilterToggled = "Available Filter Toggled",
+
+  // FitPic
+  FitPicConfirmationCancelButtonTapped = "FitPic Confirmation Cancel Button Tapped",
+  FitPicConfirmationUsePhotoButtonTapped = "FitPic Confirmation Use Photo Button Tapped",
 }
 
 /**

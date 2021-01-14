@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { FitPicSubmissionOptionsInput } from "./globalTypes";
+
 // ====================================================
 // GraphQL mutation operation: SubmitFitPic
 // ====================================================
@@ -13,4 +15,5 @@ export interface SubmitFitPic {
 
 export interface SubmitFitPicVariables {
   image: any;
+  options?: FitPicSubmissionOptionsInput | null;
 }

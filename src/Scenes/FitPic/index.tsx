@@ -1,0 +1,1 @@
+export { FitPicConfirmation } from "./FitPicConfirmation"

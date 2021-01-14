@@ -127,7 +127,10 @@ export const GET_COLLECTION = gql`
     collection(where: { id: $collectionID }) {
       id
       slug
-      images
+      images {
+        id
+        url
+      }
       title
       subTitle
       products {

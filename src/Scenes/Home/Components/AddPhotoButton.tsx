@@ -1,22 +1,13 @@
-import { Box, Button } from "App/Components"
-import React, { useState } from "react"
-import { useSpring, animated } from "react-spring"
-import styled from "styled-components/native"
-import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import * as Sentry from "@sentry/react-native"
-import ImagePicker from "react-native-image-picker"
-import { useMutation } from "react-apollo"
-import gql from "graphql-tag"
-import { useAuthContext } from "App/Navigation/AuthContext"
-import { ReactNativeFile } from "apollo-upload-client"
 import { useNavigation } from "@react-navigation/native"
+import * as Sentry from "@sentry/react-native"
+import { Box, Button } from "App/Components"
 import { Schema as NavSchema } from "App/Navigation"
-
-const SUBMIT_FIT_PIC = gql`
-  mutation SubmitFitPic($image: Upload!) {
-    submitFitPic(image: $image)
-  }
-`
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import React, { useState } from "react"
+import ImagePicker from "react-native-image-picker"
+import { animated, useSpring } from "react-spring"
+import styled from "styled-components/native"
 
 export interface AddPhotoButtonProps {
   visible: boolean
@@ -29,29 +20,6 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
   const {
     authState: { isSignedIn },
   } = useAuthContext()
-  const [submitFitPic] = useMutation(SUBMIT_FIT_PIC, {
-    onCompleted: () => {
-      setIsMutating(false)
-      showPopUp({
-        title: "Thanks for your submission",
-        note: "We’ll let you know if your photo gets chosen to be featured on our community board.",
-        buttonText: "Done",
-        onClose: hidePopUp,
-      })
-    },
-    onError: (err) => {
-      console.log("[Error AddPhotoButton.tsx]", err)
-      setIsMutating(false)
-      showPopUp({
-        title: "Uh Oh. Something went wrong",
-        note:
-          "It looks like we're having trouble processing your request. Please " +
-          "try again, and contact us at membership@seasons.nyc if this persists.",
-        buttonText: "Close",
-        onClose: hidePopUp,
-      })
-    },
-  })
 
   const animation = useSpring({
     opacity: visible ? 1 : 0,
@@ -59,18 +27,7 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
   })
 
   const selectedImage = async (uri: string, type?: string) => {
-    if (isMutating) {
-      return
-    }
-
-    setIsMutating(true)
-
-    const file = new ReactNativeFile({ uri, type, name: "" })
-    await submitFitPic({
-      variables: {
-        image: file,
-      },
-    })
+    navigation.navigate("FitPicConfirmation", { uri })
   }
 
   const onPress = async () => {
