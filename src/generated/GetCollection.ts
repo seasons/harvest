@@ -7,12 +7,6 @@
 // GraphQL query operation: GetCollection
 // ====================================================
 
-export interface GetCollection_collection_images {
-  __typename: "Image";
-  id: string;
-  url: string | null;
-}
-
 export interface GetCollection_collection_products_modelSize {
   __typename: "Size";
   display: string;
@@ -46,7 +40,9 @@ export interface GetCollection_collection {
   __typename: "Collection";
   id: string;
   slug: string;
-  images: GetCollection_collection_images[] | null;
+  descriptionTop: string | null;
+  descriptionBottom: string | null;
+  images: any;
   title: string | null;
   subTitle: string | null;
   products: GetCollection_collection_products[] | null;
