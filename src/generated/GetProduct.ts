@@ -117,37 +117,6 @@ export interface GetProduct_products_brand_products_variants_manufacturerSizes {
   bottom: GetProduct_products_brand_products_variants_manufacturerSizes_bottom | null;
 }
 
-export interface GetProduct_products_brand_products_variants_internalSize_top {
-  __typename: "TopSize";
-  id: string;
-  letter: LetterSize | null;
-  sleeve: number | null;
-  shoulder: number | null;
-  chest: number | null;
-  neck: number | null;
-  length: number | null;
-}
-
-export interface GetProduct_products_brand_products_variants_internalSize_bottom {
-  __typename: "BottomSize";
-  id: string;
-  type: BottomSizeType | null;
-  value: string | null;
-  waist: number | null;
-  rise: number | null;
-  hem: number | null;
-  inseam: number | null;
-}
-
-export interface GetProduct_products_brand_products_variants_internalSize {
-  __typename: "Size";
-  id: string;
-  productType: ProductType | null;
-  display: string;
-  top: GetProduct_products_brand_products_variants_internalSize_top | null;
-  bottom: GetProduct_products_brand_products_variants_internalSize_bottom | null;
-}
-
 export interface GetProduct_products_brand_products_variants {
   __typename: "ProductVariant";
   id: string;
@@ -161,7 +130,6 @@ export interface GetProduct_products_brand_products_variants {
   isSaved: boolean;
   hasRestockNotification: boolean;
   manufacturerSizes: GetProduct_products_brand_products_variants_manufacturerSizes[] | null;
-  internalSize: GetProduct_products_brand_products_variants_internalSize | null;
 }
 
 export interface GetProduct_products_brand_products {
@@ -219,37 +187,6 @@ export interface GetProduct_products_variants_manufacturerSizes {
   bottom: GetProduct_products_variants_manufacturerSizes_bottom | null;
 }
 
-export interface GetProduct_products_variants_internalSize_top {
-  __typename: "TopSize";
-  id: string;
-  letter: LetterSize | null;
-  sleeve: number | null;
-  shoulder: number | null;
-  chest: number | null;
-  neck: number | null;
-  length: number | null;
-}
-
-export interface GetProduct_products_variants_internalSize_bottom {
-  __typename: "BottomSize";
-  id: string;
-  type: BottomSizeType | null;
-  value: string | null;
-  waist: number | null;
-  rise: number | null;
-  hem: number | null;
-  inseam: number | null;
-}
-
-export interface GetProduct_products_variants_internalSize {
-  __typename: "Size";
-  id: string;
-  productType: ProductType | null;
-  display: string;
-  top: GetProduct_products_variants_internalSize_top | null;
-  bottom: GetProduct_products_variants_internalSize_bottom | null;
-}
-
 export interface GetProduct_products_variants {
   __typename: "ProductVariant";
   id: string;
@@ -263,7 +200,6 @@ export interface GetProduct_products_variants {
   isSaved: boolean;
   hasRestockNotification: boolean;
   manufacturerSizes: GetProduct_products_variants_manufacturerSizes[] | null;
-  internalSize: GetProduct_products_variants_internalSize | null;
 }
 
 export interface GetProduct_products {
