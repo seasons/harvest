@@ -48,7 +48,6 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
   }
 
   const onSaveForLater = (product) => {
-    console.log(item)
     if (!isMutating) {
       setIsMutating(true)
       const variantId = product.variants[0].id
