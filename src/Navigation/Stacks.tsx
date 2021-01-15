@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
+import { Collection } from "@seasons/eclipse"
 import { ExtendPauseConfirmation, PauseConfirmation, ResumeConfirmation } from "App/Components/Pause"
 import { Schema } from "App/Navigation"
 import {
@@ -147,6 +148,7 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name={Schema.PageNames.Home} component={Home} />
       <HomeStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
       <HomeStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
+      <HomeStack.Screen name={Schema.PageNames.Collection} component={Collection} initialParams={{ id: "" }} />
       <HomeStack.Screen name={Schema.PageNames.Tag} component={Tag} />
       <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
       <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />

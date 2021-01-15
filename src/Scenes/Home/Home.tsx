@@ -15,9 +15,9 @@ import styled from "styled-components/native"
 import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
 import { Homepage_fitPics } from "App/generated/Homepage"
-import { GET_HOMEPAGE } from "./queries/homeQueries"
 import analytics from "@segment/analytics-react-native"
 import { userSessionToIdentifyPayload } from "App/utils/auth"
+import { GET_HOMEPAGE } from "@seasons/eclipse"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
@@ -28,6 +28,8 @@ export const Home = screenTrack()(({ navigation, route }) => {
   })
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
+
+  console.log("data", data)
 
   const totalFitPics = data?.fitPicsCount?.aggregate?.count ?? 0
   const fitPicsReceived = data?.fitPics?.length ?? 0
