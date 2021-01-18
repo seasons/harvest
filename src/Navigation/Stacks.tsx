@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
-import { Collection } from "@seasons/eclipse"
 import { ExtendPauseConfirmation, PauseConfirmation, ResumeConfirmation } from "App/Components/Pause"
 import { Schema } from "App/Navigation"
 import {
@@ -19,6 +18,7 @@ import { SurpriseMe } from "App/Scenes/Bag/SurpriseMe"
 import { Brand } from "App/Scenes/Brand"
 import { Brands } from "App/Scenes/Brands"
 import { Browse, Filters } from "App/Scenes/Browse"
+import { CollectionScene } from "App/Scenes/Collection"
 import { CreateAccount } from "App/Scenes/CreateAccount"
 import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ApplyPromoCode/ApplyPromoCode"
 import { EditPaymentModal } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane/EditPaymentModal"
@@ -148,7 +148,11 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name={Schema.PageNames.Home} component={Home} />
       <HomeStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
       <HomeStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
-      <HomeStack.Screen name={Schema.PageNames.Collection} component={Collection} initialParams={{ id: "" }} />
+      <HomeStack.Screen
+        name={Schema.PageNames.Collection}
+        component={CollectionScene}
+        initialParams={{ collectionID: "" }}
+      />
       <HomeStack.Screen name={Schema.PageNames.Tag} component={Tag} />
       <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
       <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />

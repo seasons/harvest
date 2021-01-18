@@ -72,6 +72,7 @@ export enum PageNames {
 }
 
 export enum EntityTypes {
+  Collection = "Collection",
   Brand = "Brand",
   Product = "Product",
   Reservation = "Reservation",
