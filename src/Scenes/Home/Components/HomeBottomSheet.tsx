@@ -75,7 +75,6 @@ const sectionsFrom = (data: any) => {
     sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
   }
   if (data?.collections?.length > 0) {
-    console.log("true")
     sections.push(
       ...data?.collections
         .map((section) => {
@@ -125,7 +124,6 @@ const sectionsFrom = (data: any) => {
   if (data?.fitPics?.length) {
     sections.push({ type: SectionType.FitPics, results: data?.fitPics })
   }
-  console.log("sections", sections)
   return sections
 }
 
@@ -158,7 +156,6 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
       case SectionType.ArchivalProducts:
         return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
       case SectionType.Collection:
-        console.log("item", item)
         return (
           <ProductsRail
             large
