@@ -8,7 +8,6 @@ export const typeDefs = gql`
     variantID: ID!
   }
   extend type Query {
-    isLoggedIn: Boolean!
     localBagItems: [LocalProduct!]!
     isInBag(productID: ID!): Boolean!
   }

@@ -14,7 +14,6 @@ import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
 import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { Homepage_fitPics } from "App/generated/Homepage"
 import analytics from "@segment/analytics-react-native"
 import { userSessionToIdentifyPayload } from "App/utils/auth"
 import { GET_HOMEPAGE } from "@seasons/eclipse"
@@ -23,13 +22,12 @@ export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
   const [navigatedToAccount, setNavigatedToAccount] = useState(false)
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
+  const [fitPicsFetch, setFitPicsFetch] = useState(8)
   const { loading, error, data, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
-    variables: { firstFitPics: 8, skipFitPics: 0 },
+    variables: { firstFitPics: fitPicsFetch, skipFitPics: 0 },
   })
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
-
-  console.log("data", data)
 
   const totalFitPics = data?.fitPicsCount?.aggregate?.count ?? 0
   const fitPicsReceived = data?.fitPics?.length ?? 0
@@ -131,18 +129,8 @@ export const Home = screenTrack()(({ navigation, route }) => {
           if (!isFetchingMoreFitPics && fitPicsReceived > 0) {
             fetchMore({
               variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
-              updateQuery: (prev: { fitPics: Homepage_fitPics[]; fitPicsCount: any }, { fetchMoreResult }) => {
-                if (!prev) {
-                  return []
-                } else if (!fetchMoreResult) {
-                  return prev
-                } else {
-                  return Object.assign({}, prev, {
-                    fitPics: [...prev.fitPics, ...fetchMoreResult.fitPics],
-                    fitPicsCount: fetchMoreResult.fitPicsCount,
-                  })
-                }
-              },
+            }).then((fetchMoreResult) => {
+              setFitPicsFetch(data?.fitPics?.length + fetchMoreResult?.data?.fitPics.length)
             })
           }
         }}

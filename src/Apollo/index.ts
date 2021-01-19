@@ -1,32 +1,27 @@
-// import { IntrospectionFragmentMatcher } from "apollo-cache-inmemory"
-// import { persistCache } from "apollo-cache-persist"
 import { ApolloLink, Observable, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client"
 import { setContext } from "apollo-link-context"
 import { onError } from "apollo-link-error"
-import { createUploadLink } from "apollo-upload-client"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
-import { config, Env } from "App/utils/config"
 import { Platform } from "react-native"
-// import unfetch from "unfetch"
-
-import AsyncStorage from "@react-native-community/async-storage"
+import { offsetLimitPagination } from "@apollo/client/utilities"
 import * as Sentry from "@sentry/react-native"
-
-import introspectionQueryResultData from "../fragmentTypes.json"
 import { resolvers, typeDefs } from "./resolvers"
 
 export const setupApolloClient = async () => {
-  // const fragmentMatcher = new IntrospectionFragmentMatcher({
-  //   introspectionQueryResultData,
-  // })
-
-  const cache = new InMemoryCache()
-
-  // const link = createUploadLink({
-  //   uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/",
-  //   // FIXME: unfetch here is being used for this fix https://github.com/jhen0409/react-native-debugger/issues/432
-  //   fetch: unfetch,
-  // })
+  const cache = new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          fitPicsCount: {
+            read(newCount) {
+              return newCount
+            },
+          },
+          fitPics: offsetLimitPagination(),
+        },
+      },
+    },
+  })
 
   const httpLink = new HttpLink({
     uri: process.env.MONSOON_ENDPOINT || "http://localhost:4000/", // Server URL (must be absolute)
@@ -115,19 +110,6 @@ export const setupApolloClient = async () => {
       }
     }
   })
-
-  // const accessToken = await getAccessTokenFromSession()
-  // cache.writeData({
-  //   data: {
-  //     isLoggedIn: !!accessToken,
-  //     localBagItems: [],
-  //   },
-  // })
-
-  // await persistCache({
-  //   cache,
-  //   storage: AsyncStorage,
-  // })
 
   return new ApolloClient({
     // Provide required constructor fields

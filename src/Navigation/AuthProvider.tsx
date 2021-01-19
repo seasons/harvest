@@ -104,12 +104,6 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         RNPusherPushNotifications.clearAllState()
         apolloClient.resetStore()
         analytics.reset()
-        apolloClient.writeData({
-          data: {
-            isLoggedIn: false,
-            localBagItems: [],
-          },
-        })
         dispatch({ type: "SIGN_OUT" })
       },
       resetStore: () => {

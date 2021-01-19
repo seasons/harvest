@@ -12,7 +12,5 @@ export const CollectionScene = screenTrack({
   const { showPopUp, hidePopUp } = usePopUpContext()
 
   const collectionID = route?.params?.collectionID
-  return <></>
+  return <Collection collectionID={collectionID} hidePopUp={hidePopUp} showPopUp={showPopUp} authState={authState} />
 })
-
-// return <Collection collectionID={collectionID} hidePopUp={hidePopUp} showPopUp={showPopUp} authState={authState} />

@@ -20,6 +20,7 @@ export const App = () => {
     async function loadClient() {
       await config.start()
       const client = await setupApolloClient()
+
       setApolloClient(client)
 
       if (!__DEV__) {
