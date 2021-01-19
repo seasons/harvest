@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ProductOrderByInput, ProductStatus, ProductType } from "./globalTypes";
+import { ProductOrderByInput, ProductStatus, ProductType, LetterSize } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBrowseProducts
@@ -23,6 +23,13 @@ export interface GetBrowseProducts_categories {
   children: GetBrowseProducts_categories_children[] | null;
 }
 
+export interface GetBrowseProducts_brands {
+  __typename: "Brand";
+  id: string;
+  slug: string;
+  name: string;
+}
+
 export interface GetBrowseProducts_productsCount_aggregate {
   __typename: "AggregateProduct";
   count: number;
@@ -33,30 +40,45 @@ export interface GetBrowseProducts_productsCount {
   aggregate: GetBrowseProducts_productsCount_aggregate;
 }
 
-export interface GetBrowseProducts_products_images {
+export interface GetBrowseProducts_productsConnection_edges_node_images {
   __typename: "Image";
   id: string;
   url: string | null;
 }
 
-export interface GetBrowseProducts_products_modelSize {
+export interface GetBrowseProducts_productsConnection_edges_node_modelSize {
   __typename: "Size";
   id: string;
   display: string;
 }
 
-export interface GetBrowseProducts_products_brand {
+export interface GetBrowseProducts_productsConnection_edges_node_brand {
   __typename: "Brand";
   id: string;
   name: string;
 }
 
-export interface GetBrowseProducts_products_variants_display {
-  __typename: "ProductVariantDisplay";
-  short: string | null;
+export interface GetBrowseProducts_productsConnection_edges_node_variants_internalSize_top {
+  __typename: "TopSize";
+  id: string;
+  letter: LetterSize | null;
 }
 
-export interface GetBrowseProducts_products_variants {
+export interface GetBrowseProducts_productsConnection_edges_node_variants_internalSize_bottom {
+  __typename: "BottomSize";
+  id: string;
+  value: string | null;
+}
+
+export interface GetBrowseProducts_productsConnection_edges_node_variants_internalSize {
+  __typename: "Size";
+  id: string;
+  display: string;
+  top: GetBrowseProducts_productsConnection_edges_node_variants_internalSize_top | null;
+  bottom: GetBrowseProducts_productsConnection_edges_node_variants_internalSize_bottom | null;
+}
+
+export interface GetBrowseProducts_productsConnection_edges_node_variants {
   __typename: "ProductVariant";
   id: string;
   total: number;
@@ -64,17 +86,17 @@ export interface GetBrowseProducts_products_variants {
   nonReservable: number;
   reserved: number;
   isSaved: boolean;
-  display: GetBrowseProducts_products_variants_display | null;
+  internalSize: GetBrowseProducts_productsConnection_edges_node_variants_internalSize | null;
 }
 
-export interface GetBrowseProducts_products {
+export interface GetBrowseProducts_productsConnection_edges_node {
   __typename: "Product";
   id: string;
   slug: string;
   name: string;
   description: string | null;
-  images: GetBrowseProducts_products_images[];
-  modelSize: GetBrowseProducts_products_modelSize | null;
+  images: GetBrowseProducts_productsConnection_edges_node_images[];
+  modelSize: GetBrowseProducts_productsConnection_edges_node_modelSize | null;
   modelHeight: number | null;
   externalURL: string | null;
   retailPrice: number | null;
@@ -82,20 +104,40 @@ export interface GetBrowseProducts_products {
   type: ProductType | null;
   createdAt: any;
   updatedAt: any;
-  brand: GetBrowseProducts_products_brand;
-  variants: GetBrowseProducts_products_variants[] | null;
+  brand: GetBrowseProducts_productsConnection_edges_node_brand;
+  variants: GetBrowseProducts_productsConnection_edges_node_variants[] | null;
+}
+
+export interface GetBrowseProducts_productsConnection_edges {
+  __typename: "ProductEdge";
+  /**
+   * The item at the end of the edge.
+   */
+  node: GetBrowseProducts_productsConnection_edges_node;
+}
+
+export interface GetBrowseProducts_productsConnection {
+  __typename: "ProductConnection";
+  /**
+   * A list of edges.
+   */
+  edges: (GetBrowseProducts_productsConnection_edges | null)[];
 }
 
 export interface GetBrowseProducts {
   categories: (GetBrowseProducts_categories | null)[];
+  brands: (GetBrowseProducts_brands | null)[];
   productsCount: GetBrowseProducts_productsCount;
-  products: (GetBrowseProducts_products | null)[];
+  productsConnection: GetBrowseProducts_productsConnection;
 }
 
 export interface GetBrowseProductsVariables {
-  name: string;
+  categoryName: string;
+  brandNames?: (string | null)[] | null;
   first: number;
   skip: number;
   orderBy: ProductOrderByInput;
-  sizes?: string[] | null;
+  tops?: (string | null)[] | null;
+  bottoms?: (string | null)[] | null;
+  available?: boolean | null;
 }

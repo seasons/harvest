@@ -1,6 +1,13 @@
 import { color } from "App/utils"
 import React, { MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react"
-import { KeyboardType, TextInput as RNTextInput, TouchableWithoutFeedback, ViewStyle } from "react-native"
+import {
+  KeyboardType,
+  NativeSyntheticEvent,
+  TextInput as RNTextInput,
+  TextInputKeyPressEventData,
+  TouchableWithoutFeedback,
+  ViewStyle,
+} from "react-native"
 import { animated, useSpring } from "react-spring"
 import { Box, Spacer } from "./"
 import { themeProps } from "./Theme"
@@ -54,6 +61,7 @@ export function getColorsForVariant(variant: TextInputVariant) {
 export interface TextInputRef {
   blur: () => void
   focus: () => void
+  isFocused: () => boolean
 }
 
 /////////////////////////////////////////////////////////
@@ -85,8 +93,9 @@ export interface TextInputProps {
   keyboardType?: KeyboardType
   multiline?: boolean
   onChangeText?: (inputKey: string, text: string) => void
-  onKeyPress?: (input: { nativeEvent: { key: "Enter" | "Backspace" } }) => void
+  onKeyPress?: (input: NativeSyntheticEvent<TextInputKeyPressEventData>) => void
   onFocus?: () => void
+  onBlur?: () => void
   placeholder?: string
   ref?: MutableRefObject<typeof TextInput>
   secureTextEntry?: boolean
@@ -137,6 +146,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       onChangeText,
       onKeyPress,
       onFocus,
+      onBlur,
       placeholder,
       secureTextEntry,
       style,
@@ -155,6 +165,9 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       }
     })
     useImperativeHandle(ref, () => ({
+      isFocused: (): boolean => {
+        return textInputRef?.current?.isFocused()
+      },
       blur: () => {
         textInputRef?.current?.blur()
       },
@@ -208,6 +221,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
           onChangeText={handleOnChangeText}
           onKeyPress={onKeyPress}
           onFocus={onFocus}
+          onBlur={onBlur}
           placeholder={placeholder}
           placeholderTextColor={placeholderColor}
           ref={textInputRef}
