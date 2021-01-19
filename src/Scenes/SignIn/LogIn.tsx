@@ -7,7 +7,7 @@ import { color } from "App/utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
-import { useMutation } from "react-apollo"
+import { useMutation } from "@apollo/client"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { checkNotifications } from "react-native-permissions"
 

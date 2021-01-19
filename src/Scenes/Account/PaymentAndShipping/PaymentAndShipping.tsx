@@ -2,7 +2,7 @@ import { Box, Container, FixedBackArrow, FixedButton, Sans, Spacer, Separator } 
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { FlatList } from "react-native"
 import { screenTrack } from "App/utils/track"
 import { color } from "App/utils"

@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/react-hooks"
+import { useQuery } from "@apollo/client"
 import { Box, Container, FixedBackArrow, ProductGridItem, Sans, Spacer } from "App/Components"
 import { ReadMore } from "App/Components/ReadMore"
 import { space } from "App/utils"

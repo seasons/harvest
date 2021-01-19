@@ -1,6 +1,6 @@
 import gql from "graphql-tag"
 import React, { useState, useEffect } from "react"
-import { useMutation } from "react-apollo"
+import { useMutation } from "@apollo/client"
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
 import { Box, FixedButton, Flex, Sans, Spacer, TextInput, FixedBackArrow, Container } from "App/Components"
 import { color, space } from "App/utils"

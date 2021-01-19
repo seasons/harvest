@@ -19,7 +19,7 @@ import {
 import gql from "graphql-tag"
 import { DateTime } from "luxon"
 import { default as React, useEffect } from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { Linking, Platform, ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
 import Share from "react-native-share"

@@ -1,14 +1,13 @@
-import { InMemoryCache, IntrospectionFragmentMatcher } from "apollo-cache-inmemory"
-import { persistCache } from "apollo-cache-persist"
-import { ApolloClient } from "apollo-client"
-import { ApolloLink, Observable } from "apollo-link"
+// import { IntrospectionFragmentMatcher } from "apollo-cache-inmemory"
+// import { persistCache } from "apollo-cache-persist"
+import { ApolloLink, Observable, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client"
 import { setContext } from "apollo-link-context"
 import { onError } from "apollo-link-error"
 import { createUploadLink } from "apollo-upload-client"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { config, Env } from "App/utils/config"
 import { Platform } from "react-native"
-import unfetch from "unfetch"
+// import unfetch from "unfetch"
 
 import AsyncStorage from "@react-native-community/async-storage"
 import * as Sentry from "@sentry/react-native"
@@ -17,17 +16,21 @@ import introspectionQueryResultData from "../fragmentTypes.json"
 import { resolvers, typeDefs } from "./resolvers"
 
 export const setupApolloClient = async () => {
-  const fragmentMatcher = new IntrospectionFragmentMatcher({
-    introspectionQueryResultData,
-  })
+  // const fragmentMatcher = new IntrospectionFragmentMatcher({
+  //   introspectionQueryResultData,
+  // })
 
-  const cache = new InMemoryCache({ fragmentMatcher })
+  const cache = new InMemoryCache()
 
-  const link = createUploadLink({
-    uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/",
-    // FIXME: unfetch here is being used for this fix https://github.com/jhen0409/react-native-debugger/issues/432
-    fetch: unfetch,
-  })
+  // const link = createUploadLink({
+  //   uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/",
+  //   // FIXME: unfetch here is being used for this fix https://github.com/jhen0409/react-native-debugger/issues/432
+  //   fetch: unfetch,
+  // })
+
+  const httpLink = new HttpLink({
+    uri: process.env.MONSOON_ENDPOINT || "http://localhost:4000/", // Server URL (must be absolute)
+  }) as any
 
   const authLink = setContext(async (_, { headers: oldHeaders }) => {
     const headers = { ...oldHeaders, application: "harvest", platform: Platform.OS }
@@ -49,6 +52,7 @@ export const setupApolloClient = async () => {
     // return the headers to the context so createUploadLink can read them
   })
 
+  // @ts-ignore
   const errorLink = onError(({ graphQLErrors, networkError, operation, forward, response }) => {
     if (graphQLErrors) {
       console.log("graphQLErrors", graphQLErrors)
@@ -78,7 +82,7 @@ export const setupApolloClient = async () => {
     if (networkError) {
       console.log("networkError", JSON.stringify(networkError))
       // User access token has expired
-      if (networkError.statusCode === 401) {
+      if ((networkError as any).statusCode === 401) {
         // We assume we have both tokens needed to run the async request
         // Let's refresh token through async request
         return new Observable((observer) => {
@@ -112,25 +116,25 @@ export const setupApolloClient = async () => {
     }
   })
 
-  const accessToken = await getAccessTokenFromSession()
-  cache.writeData({
-    data: {
-      isLoggedIn: !!accessToken,
-      localBagItems: [],
-    },
-  })
+  // const accessToken = await getAccessTokenFromSession()
+  // cache.writeData({
+  //   data: {
+  //     isLoggedIn: !!accessToken,
+  //     localBagItems: [],
+  //   },
+  // })
 
-  await persistCache({
-    cache,
-    storage: AsyncStorage,
-  })
+  // await persistCache({
+  //   cache,
+  //   storage: AsyncStorage,
+  // })
 
   return new ApolloClient({
     // Provide required constructor fields
-    cache,
-    link: ApolloLink.from([authLink, errorLink, link]),
+    link: ApolloLink.from([authLink, errorLink, httpLink]) as any,
     typeDefs,
     resolvers,
+    cache,
     // Provide some optional constructor fields
     name: "react-web-client",
     version: "1.3",

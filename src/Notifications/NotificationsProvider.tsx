@@ -6,7 +6,7 @@ import { Platform } from "react-native"
 import gql from "graphql-tag"
 import NotificationsContext from "./NotificationsContext"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { getUserSession } from "App/utils/auth"
 

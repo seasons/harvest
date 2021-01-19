@@ -1,6 +1,6 @@
 import gql from "graphql-tag"
 import React from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { ScrollView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"

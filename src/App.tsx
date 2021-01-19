@@ -5,11 +5,9 @@ import DeviceInfo from "react-native-device-info"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { enableScreens } from "react-native-screens"
 import stripe from "tipsi-stripe"
-
-import { ApolloProvider } from "@apollo/react-hooks"
+import { ApolloProvider } from "@apollo/client"
 import AsyncStorage from "@react-native-community/async-storage"
 import * as Sentry from "@sentry/react-native"
-
 import { setupApolloClient } from "./Apollo"
 import { NetworkProvider } from "./NetworkProvider"
 import { config, Env } from "./utils/config"

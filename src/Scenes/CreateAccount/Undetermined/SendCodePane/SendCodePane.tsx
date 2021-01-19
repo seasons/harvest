@@ -4,7 +4,7 @@ import { KeyboardAvoidingView, Keyboard } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import gql from "graphql-tag"
-import { useMutation } from "react-apollo"
+import { useMutation } from "@apollo/client"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { TextInputRef } from "App/Components/TextInput"
 import { useTracking, Schema } from "App/utils/track"

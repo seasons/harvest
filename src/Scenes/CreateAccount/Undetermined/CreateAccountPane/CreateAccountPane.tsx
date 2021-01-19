@@ -9,7 +9,7 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
-import { useLazyQuery, useMutation, useQuery } from "react-apollo"
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
