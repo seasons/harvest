@@ -12,6 +12,7 @@ import analytics from "@segment/analytics-react-native"
 
 import AuthContext from "./AuthContext"
 import { ModalAndMainScreens } from "./Stacks"
+import { gql } from "@apollo/client"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -103,6 +104,16 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         await AsyncStorage.removeItem("beamsData")
         RNPusherPushNotifications.clearAllState()
         apolloClient.resetStore()
+        apolloClient.writeQuery({
+          query: gql`
+            query GetLocalCache {
+              localBagItems
+            }
+          `,
+          data: {
+            localBagItems: [],
+          },
+        })
         analytics.reset()
         dispatch({ type: "SIGN_OUT" })
       },
