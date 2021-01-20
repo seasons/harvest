@@ -12,6 +12,13 @@ const commonProductVariantFragment = gql`
     isInBag
     isSaved
     hasRestockNotification
+    price {
+      buyNewPrice
+      buyNewAvailableForSale
+      buyNewEnabled
+      buyUsedEnabled
+      buyUsedPrice
+    }
     manufacturerSizes {
       id
       display
@@ -91,6 +98,7 @@ export const GET_PRODUCT = gql`
         name
         logo
         since
+        websiteUrl
         products(first: 5, orderBy: createdAt_DESC, where: { AND: [{ NOT: [$where] }, { status: Available }] }) {
           id
           type

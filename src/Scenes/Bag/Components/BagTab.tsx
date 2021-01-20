@@ -117,17 +117,20 @@ export const BagTab: React.FC<{
   }
 
   const onShowBuyBottomSheet = (bagItem) => {
-    const sellable = bagItem?.productVariant?.sellable || { new: false, used: false }
+    const price = bagItem?.productVariant?.price || {
+      buyNewEnabled: false,
+      buNewAvailableForSale: false,
+      buyUsedEnabled: false,
+    }
     const { name: brandName, websiteUrl: brandHref } = bagItem?.productVariant?.product?.brand
 
-    // TODO: ensure brand has available stock
-    const newTab: BuyTab = sellable.new
-      ? { type: BuyTabType.NEW, price: sellable.newPrice, brandHref, brandName }
+    const newTab: BuyTab = price.buyNewEnabled
+      ? { type: BuyTabType.NEW, price: price.buyNewPrice, brandHref, brandName }
       : { type: BuyTabType.NEW_UNAVAILABLE, brandHref, brandName }
 
-    // TODO: do we internally have a notion of stock? decrement physical count when a buy occurs, check that here?
-    const usedTab: BuyTab = sellable.used
-      ? { type: BuyTabType.USED, price: sellable.usedPrice, brandHref, brandName }
+    // FIXME: need to check product inventory status somewhere (maybe expose buyUsedAvailabeForSale) as a proxy for stock
+    const usedTab: BuyTab = price.buyUsedEnabled
+      ? { type: BuyTabType.USED, price: price.buyUsedPrice, brandHref, brandName }
       : { type: BuyTabType.USED_UNAVAILABLE }
 
     bottomSheetSetProps({

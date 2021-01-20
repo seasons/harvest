@@ -42,11 +42,12 @@ export const BagItemFragment = gql`
         displayLong
       }
     }
-    sellable {
-      new
-      used
-      usedPrice
-      newPrice
+    price {
+      buyNewPrice
+      buyNewEnabled
+      buyNewAvailableForSale
+      buyUsedPrice
+      buyUsedEnabled
     }
   }
 `

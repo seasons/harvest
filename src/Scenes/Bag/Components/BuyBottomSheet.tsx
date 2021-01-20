@@ -53,15 +53,15 @@ export const BuyBottomSheet: React.FC<Props> = ({ onDismiss, tabs }) => {
               })}
             </Button>
             <Spacer mb={3} />
-            <Sans size="0.5" opacity={0.5} color="black100" textAlign="center">
+            <Sans size="3" opacity={0.5} color="black100" textAlign="center">
               Orders fulfilled by{" "}
-              <UnderlinedSans size="0.5" onPress={() => onNavigateToPartner(tab.brandHref)}>
+              <UnderlinedSans size="3" onPress={() => onNavigateToPartner(tab.brandHref)}>
                 {tab.brandName}
               </UnderlinedSans>
               . Payment & shipping information on file will be used for checkout.
             </Sans>
             <Spacer mb={4} />
-            <UnderlinedSans size="1" onPress={onDismiss}>
+            <UnderlinedSans size="4" onPress={onDismiss}>
               Cancel
             </UnderlinedSans>
           </Flex>
@@ -73,15 +73,15 @@ export const BuyBottomSheet: React.FC<Props> = ({ onDismiss, tabs }) => {
               Sold Out
             </Button>
             <Spacer mb={3} />
-            <Sans size="0.5" opacity={0.5} color="black100" textAlign="center">
+            <Sans size="3" opacity={0.5} color="black100" textAlign="center">
               Orders fulfilled by{" "}
-              <UnderlinedSans size="0.5" onPress={() => onNavigateToPartner(tab.brandHref)}>
+              <UnderlinedSans size="3" onPress={() => onNavigateToPartner(tab.brandHref)}>
                 {tab.brandName}
               </UnderlinedSans>
               . Payment & shipping information on file will be used for checkout.
             </Sans>
             <Spacer mb={4} />
-            <UnderlinedSans size="1" onPress={onDismiss}>
+            <UnderlinedSans size="4" onPress={onDismiss}>
               Cancel
             </UnderlinedSans>
           </Flex>
@@ -97,11 +97,11 @@ export const BuyBottomSheet: React.FC<Props> = ({ onDismiss, tabs }) => {
               })}
             </Button>
             <Spacer mb={3} />
-            <Sans size="0.5" opacity={0.5} color="black100" textAlign="center">
+            <Sans size="3" opacity={0.5} color="black100" textAlign="center">
               Orders fulfilled by Seasons. Payment & shipping information on file will be used for checkout.
             </Sans>
             <Spacer mb={4} />
-            <UnderlinedSans size="1" onPress={onDismiss}>
+            <UnderlinedSans size="4" onPress={onDismiss}>
               Cancel
             </UnderlinedSans>
           </Flex>
@@ -113,11 +113,11 @@ export const BuyBottomSheet: React.FC<Props> = ({ onDismiss, tabs }) => {
               Notify Me
             </Button>
             <Spacer mb={3} />
-            <Sans size="0.5" opacity={0.5} color="black100" textAlign="center">
+            <Sans size="3" opacity={0.5} color="black100" textAlign="center">
               This used item isn't available for purchase. Tap Notify Me to get updated when it becomes available.
             </Sans>
             <Spacer mb={4} />
-            <UnderlinedSans size="1" onPress={onDismiss}>
+            <UnderlinedSans size="4" onPress={onDismiss}>
               Cancel
             </UnderlinedSans>
           </Flex>
