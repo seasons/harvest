@@ -10,6 +10,7 @@ import React, { useRef, useState } from "react"
 import { useMutation, useQuery } from "@apollo/client"
 import { Dimensions, Image, KeyboardAvoidingView, ScrollView, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Box } from "@seasons/eclipse"
 
 const SUBMIT_FIT_PIC = gql`
   mutation SubmitFitPic($image: Upload!, $options: FitPicSubmissionOptionsInput) {
@@ -114,7 +115,10 @@ export const FitPicConfirmation = screenTrack()(({ route, navigation }) => {
           <Sans px={2} size="7">
             Confirm photo
           </Sans>
-          <Image style={{ width: "100%", height: 450 }} source={{ uri }} />
+          <Spacer mb={2} />
+          <Box px={2}>
+            <Image style={{ width: "100%", height: 450 }} source={{ uri }} />
+          </Box>
           <Flex px={2} pt={3}>
             {!loading && hasPreloadedInstagramHandle && (
               <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
@@ -160,7 +164,7 @@ export const FitPicConfirmation = screenTrack()(({ route, navigation }) => {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <View style={{ position: "absolute", width: "100%", bottom: space(1) + insets.bottom }}>
+      <View style={{ position: "absolute", width: "100%", bottom: space(2) }}>
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
           <Flex flexDirection="row" justifyContent="space-between" px={buttonHorizontalPadding}>
             <Button
