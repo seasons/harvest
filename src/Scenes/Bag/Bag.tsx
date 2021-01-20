@@ -48,7 +48,7 @@ export const Bag = screenTrack()((props) => {
     }, [])
   )
 
-  const { data, refetch } = useQuery(GET_BAG)
+  const { previousData, data = previousData, refetch } = useQuery(GET_BAG)
   const { data: localItems } = useQuery(GET_LOCAL_BAG)
 
   const me = data?.me

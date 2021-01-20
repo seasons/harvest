@@ -8,7 +8,7 @@ import { screenTrack } from "App/utils/track"
 
 export const UpdatePaymentPlanModal = screenTrack()(({ navigation, route }) => {
   const [selectedPlan, setSelectedPlan] = useState(null)
-  const { data } = useQuery(GET_PLANS, {
+  const { previousData, data = previousData } = useQuery(GET_PLANS, {
     variables: {
       where: { status: "active" },
     },

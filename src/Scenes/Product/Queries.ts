@@ -40,6 +40,7 @@ const commonProductVariantFragment = gql`
 export const GET_PRODUCT = gql`
   query GetProduct($where: ProductWhereInput!) {
     me {
+      id
       customer {
         id
         status

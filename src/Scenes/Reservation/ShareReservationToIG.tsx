@@ -14,6 +14,7 @@ import ViewShot, { captureRef } from "react-native-view-shot"
 const GET_CUSTOMER_RESERVATION_ITEMS = gql`
   query GetCustomerReservationItems($reservationID: ID!) {
     me {
+      id
       customer {
         id
         reservations(where: { id: $reservationID }) {
@@ -49,7 +50,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
   const [currentPageNumber, setCurrentPageNumber] = useState(0)
   const insets = useSafeAreaInsets()
 
-  const { data } = useQuery(GET_CUSTOMER_RESERVATION_ITEMS, {
+  const { previousData, data = previousData } = useQuery(GET_CUSTOMER_RESERVATION_ITEMS, {
     variables: {
       reservationID,
     },

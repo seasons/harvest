@@ -26,6 +26,7 @@ const RESERVE_ITEMS = gql`
 const GET_CUSTOMER = gql`
   query GetCustomer {
     me {
+      id
       user {
         id
         firstName
@@ -96,7 +97,7 @@ export const Reservation = screenTrack()((props) => {
   const [isMutating, setIsMutating] = useState(false)
   const tracking = useTracking()
   const navigation = useNavigation()
-  const { data } = useQuery(GET_CUSTOMER)
+  const { previousData, data = previousData } = useQuery(GET_CUSTOMER)
   const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [reserveItems] = useMutation(RESERVE_ITEMS, {

@@ -43,7 +43,7 @@ export const Tag = screenTrack({
   const { navigation, route } = props
   const { tag, title, description } = route?.params?.tagData
 
-  const { data, loading, fetchMore } = useQuery(GET_TAG, {
+  const { previousData, data = previousData, loading, fetchMore } = useQuery(GET_TAG, {
     variables: {
       tag,
       first: 10,

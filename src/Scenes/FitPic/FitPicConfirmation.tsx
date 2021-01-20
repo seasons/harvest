@@ -19,6 +19,7 @@ const SUBMIT_FIT_PIC = gql`
 const GET_INSTAGRAM_HANDLE = gql`
   query GetInstagramHandle {
     me {
+      id
       customer {
         id
         detail {
@@ -33,7 +34,7 @@ export const FitPicConfirmation = screenTrack()(({ route, navigation }) => {
   const tracking = useTracking()
   const insets = useSafeAreaInsets()
 
-  const { data, loading } = useQuery(GET_INSTAGRAM_HANDLE, { fetchPolicy: "no-cache" })
+  const { previousData, data = previousData, loading } = useQuery(GET_INSTAGRAM_HANDLE, { fetchPolicy: "no-cache" })
 
   const [instagramHandle, setInstagramHandle] = useState("")
   const [includeInstagramHandle, setIncludeInstagramHandle] = useState(true)

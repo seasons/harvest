@@ -13,6 +13,7 @@ import { StatusBar } from "react-native"
 const GET_PREFERENCES = gql`
   query GetUserPreferences {
     me {
+      id
       customer {
         id
         user {

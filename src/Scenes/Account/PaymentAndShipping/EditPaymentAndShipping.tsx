@@ -21,6 +21,7 @@ import { Schema as NavigationSchema } from "App/Navigation"
 export const GET_CURRENT_PLAN = gql`
   query GetCurrentPlan {
     me {
+      id
       customer {
         id
         user {
@@ -67,7 +68,7 @@ export const EditPaymentAndShipping: React.FC<{
   route: any
 }> = screenTrack()(({ navigation, route }) => {
   const { showPopUp, hidePopUp } = usePopUpContext()
-  const { data } = useQuery(GET_CURRENT_PLAN)
+  const { previousData, data = previousData } = useQuery(GET_CURRENT_PLAN)
   const billingInfo: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
   const currentPhoneNumber = route?.params?.phoneNumber

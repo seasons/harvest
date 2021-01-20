@@ -66,6 +66,7 @@ export const GET_PLANS = gql`
       itemCount
     }
     me {
+      id
       customer {
         id
         status
@@ -131,7 +132,7 @@ const statesFor = (userState: UserState): State[] => {
 }
 
 export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navigation, route }) => {
-  const { data } = useQuery(GET_PLANS, {
+  const { previousData, data = previousData } = useQuery(GET_PLANS, {
     variables: {
       where: { status: "active" },
     },

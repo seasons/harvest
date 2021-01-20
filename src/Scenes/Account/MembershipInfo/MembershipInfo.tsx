@@ -14,6 +14,7 @@ import { Schema } from "App/Navigation"
 export const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
     me {
+      id
       customer {
         id
         status
@@ -49,7 +50,7 @@ export const GET_MEMBERSHIP_INFO = gql`
 
 export const MembershipInfo = screenTrack()(({ navigation }) => {
   const insets = useSafeAreaInsets()
-  const { data } = useQuery(GET_MEMBERSHIP_INFO)
+  const { previousData, data = previousData } = useQuery(GET_MEMBERSHIP_INFO)
   const customer = data?.me?.customer
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName

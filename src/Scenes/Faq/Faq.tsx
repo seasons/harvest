@@ -21,7 +21,7 @@ export const GET_FAQ = gql`
 `
 
 export const Faq = ({ navigation }) => {
-  const { loading, data } = useQuery(GET_FAQ, {})
+  const { loading, previousData, data = previousData } = useQuery(GET_FAQ, {})
 
   if (loading) {
     return <Loader />

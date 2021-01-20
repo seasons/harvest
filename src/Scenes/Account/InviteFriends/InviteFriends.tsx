@@ -21,6 +21,7 @@ const SansUnderline = styled(Sans)`
 export const GET_REFERRAL_LINK = gql`
   query GetReferralLink {
     me {
+      id
       customer {
         id
         referralLink
@@ -33,7 +34,7 @@ export const InviteFriends = screenTrack()(({ route, navigation }) => {
   const insets = useSafeArea()
   const [openPopUp, setOpenPopUp] = useState(false)
   const [copyText, setCopyText] = useState("Copy link")
-  const { data } = useQuery(GET_REFERRAL_LINK)
+  const { previousData, data = previousData } = useQuery(GET_REFERRAL_LINK)
   const referralLink = data?.me?.customer?.referralLink
 
   const onShare = async () => {

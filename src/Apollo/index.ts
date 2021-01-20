@@ -3,7 +3,6 @@ import { setContext } from "apollo-link-context"
 import { onError } from "apollo-link-error"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { Platform } from "react-native"
-import { offsetLimitPagination } from "@apollo/client/utilities"
 import * as Sentry from "@sentry/react-native"
 import { resolvers, typeDefs } from "./resolvers"
 
@@ -17,7 +16,16 @@ export const setupApolloClient = async () => {
               return newCount
             },
           },
-          fitPics: offsetLimitPagination(),
+          fitPics: {
+            merge(existing = [], incoming = [], { args: { skipFitPics = 0 } }) {
+              const merged = existing ? existing.slice(0) : []
+              for (let i = 0; i < incoming.length; ++i) {
+                merged[skipFitPics + i] = incoming[i]
+              }
+              existing = merged
+              return existing
+            },
+          },
         },
       },
     },

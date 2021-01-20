@@ -16,6 +16,7 @@ export const seasonsNotifInterest = "seasons-general-notifications"
 export const GET_BEAMS_DATA = gql`
   query BeamsData {
     me {
+      id
       user {
         email
         beamsToken

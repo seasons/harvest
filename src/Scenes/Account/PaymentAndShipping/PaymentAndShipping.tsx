@@ -11,6 +11,7 @@ import { Schema as NavigationSchema } from "App/Navigation"
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
     me {
+      id
       customer {
         id
         detail {
@@ -112,7 +113,7 @@ const AccountSection: React.FC<{ title: string; value: string | [string] }> = ({
 }
 
 export const PaymentAndShipping = screenTrack()(({ navigation }) => {
-  const { error, data, startPolling, stopPolling } = useQuery(GET_PAYMENT_DATA)
+  const { error, previousData, data = previousData, startPolling, stopPolling } = useQuery(GET_PAYMENT_DATA)
   useEffect(() => {
     // The Chargebee address update takes multiple seconds to update
     // therefore we must check and refetch data if the user leaves this view
