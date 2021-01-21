@@ -164,7 +164,7 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
             onViewAll={() => {
               navigation.navigate(Schema.StackNames.HomeStack, {
                 screen: Schema.PageNames.Collection,
-                params: { collectionID: item.id },
+                params: { collectionSlug: item.slug },
               })
             }}
           />

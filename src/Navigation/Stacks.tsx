@@ -152,7 +152,7 @@ const HomeStackScreen = () => {
       <HomeStack.Screen
         name={Schema.PageNames.Collection}
         component={CollectionScene}
-        initialParams={{ collectionID: "" }}
+        initialParams={{ collectionSlug: "" }}
       />
       <HomeStack.Screen name={Schema.PageNames.Tag} component={Tag} />
       <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
