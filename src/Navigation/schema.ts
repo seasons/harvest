@@ -21,6 +21,7 @@ export enum PageNames {
   SurpriseMe = "SurpriseMe",
   InviteFromContactsModal = "InviteFromContactsModal",
   ShareReservationToIGModal = "ShareReservationToIGModal",
+  ShareFitPicToIGModal = "ShareFitPicToIGModal",
 
   // Home
   Home = "Home",
