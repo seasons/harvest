@@ -193,10 +193,17 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
       <FixedBackArrow variant={"blackTransparent"} navigation={navigation} />
       <ShareButtonWrapper>
         <ShareButton
+          onPress={() => {
+            navigation.navigate("Modal", {
+              screen: "ShareFitPicToIGModal",
+              params: { fitPicID: item.id },
+            })
+          }}
           variant={"blackTransparent"}
+          // Not used sicne we have onPress
           options={{
-            title: "test",
-            message: "testing",
+            title: "",
+            message: "",
           }}
         />
       </ShareButtonWrapper>
