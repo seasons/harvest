@@ -23,9 +23,8 @@ import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ApplyPromoCode
 import { EditPaymentModal } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane/EditPaymentModal"
 import { DebugMenu } from "App/Scenes/DebugMenu"
 import { Faq } from "App/Scenes/Faq"
-import { FitPicConfirmation } from "App/Scenes/FitPic"
+import { FitPicConfirmation, FitPicDetail, ShareFitPicToIG } from "App/Scenes/FitPic"
 import { Home } from "App/Scenes/Home"
-import { FitPicDetail } from "App/Scenes/Home/Components/FitPicDetail"
 import { Product, SaveProduct } from "App/Scenes/Product"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
@@ -138,6 +137,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.ApplyPromoCode} component={ApplyPromoCode} />
       <ModalStack.Screen name={Schema.PageNames.InviteFromContactsModal} component={InviteFromContacts} />
       <ModalStack.Screen name={Schema.PageNames.ShareReservationToIGModal} component={ShareReservationToIG} />
+      <ModalStack.Screen name={Schema.PageNames.ShareFitPicToIGModal} component={ShareFitPicToIG} />
     </ModalStack.Navigator>
   )
 }

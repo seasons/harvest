@@ -3,11 +3,10 @@ import React from "react"
 import { TouchableOpacity } from "react-native"
 import Share from "react-native-share"
 import styled from "styled-components/native"
-
 import { Flex } from "./"
 import { themeProps } from "./Theme"
 
-type ShareIconVariant = "blackBackground" | "whiteBackground" | "productBackground"
+type ShareIconVariant = "blackBackground" | "whiteBackground" | "productBackground" | "blackTransparent"
 
 export const ShareButton: React.FC<{
   onPress?: () => void
@@ -61,6 +60,11 @@ export const ShareButton: React.FC<{
       case "productBackground":
         return {
           backgroundColor: productBackgroundColor,
+          arrowColor: black100,
+        }
+      case "blackTransparent":
+        return {
+          backgroundColor: "rgba(0,0,0,0)",
           arrowColor: black100,
         }
       default:
