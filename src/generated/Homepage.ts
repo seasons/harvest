@@ -374,12 +374,59 @@ export interface Homepage_fitPics_image {
   url: string | null;
 }
 
+export interface Homepage_fitPics_user_customer_detail {
+  __typename: "CustomerDetail";
+  instagramHandle: string | null;
+}
+
+export interface Homepage_fitPics_user_customer {
+  __typename: "Customer";
+  detail: Homepage_fitPics_user_customer_detail | null;
+}
+
+export interface Homepage_fitPics_user {
+  __typename: "User";
+  id: string;
+  customer: Homepage_fitPics_user_customer | null;
+}
+
+export interface Homepage_fitPics_products_brand {
+  __typename: "Brand";
+  id: string;
+  name: string;
+}
+
+export interface Homepage_fitPics_products_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
+export interface Homepage_fitPics_products_variants {
+  __typename: "ProductVariant";
+  id: string;
+}
+
+export interface Homepage_fitPics_products {
+  __typename: "Product";
+  id: string;
+  slug: string;
+  name: string;
+  isSaved: boolean | null;
+  brand: Homepage_fitPics_products_brand;
+  images: Homepage_fitPics_products_images[];
+  variants: Homepage_fitPics_products_variants[] | null;
+}
+
 export interface Homepage_fitPics {
   __typename: "FitPic";
   id: string;
   author: string;
   location: Homepage_fitPics_location | null;
   image: Homepage_fitPics_image;
+  includeInstagramHandle: boolean;
+  user: Homepage_fitPics_user;
+  products: Homepage_fitPics_products[] | null;
   createdAt: any;
 }
 

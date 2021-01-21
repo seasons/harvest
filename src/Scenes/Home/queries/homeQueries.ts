@@ -219,6 +219,32 @@ export const GET_HOMEPAGE = gql`
         id
         url
       }
+      includeInstagramHandle
+      user {
+        id
+        customer {
+          detail {
+            instagramHandle
+          }
+        }
+      }
+      products {
+        id
+        slug
+        name
+        isSaved
+        brand {
+          id
+          name
+        }
+        images {
+          id
+          url
+        }
+        variants(first: 1) {
+          id
+        }
+      }
       createdAt
     }
   }
