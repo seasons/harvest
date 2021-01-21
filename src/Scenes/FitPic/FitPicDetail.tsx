@@ -200,9 +200,10 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
             })
           }}
           variant={"blackTransparent"}
+          // Not used sicne we have onPress
           options={{
-            title: "test",
-            message: "testing",
+            title: "",
+            message: "",
           }}
         />
       </ShareButtonWrapper>
