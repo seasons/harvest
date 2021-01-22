@@ -1,15 +1,16 @@
-import CameraRoll from "@react-native-community/cameraroll"
 import { gql } from "apollo-boost"
 import { Box, Button, CloseButton, Display, FixedBackArrow, Flex, Spacer } from "App/Components"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { SeasonsCircleSVG } from "Assets/svgs"
-import React, { MutableRefObject, useEffect, useRef, useState } from "react"
+import React, { createRef, MutableRefObject, useEffect, useRef, useState } from "react"
 import { useQuery } from "react-apollo"
 import { Dimensions, FlatList, Image } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import Share from "react-native-share"
 import ViewShot, { captureRef } from "react-native-view-shot"
+
+import CameraRoll from "@react-native-community/cameraroll"
 
 const GET_CUSTOMER_FITPIC_ITEMS = gql`
   query GetCustomerFitPicItems($fitPicID: ID!) {
@@ -53,10 +54,10 @@ export const ShareFitPicToIG = screenTrack()(({ route, navigation }) => {
   }, [])
 
   const fitPicImage = data?.fitPic?.image
-  const products = data?.fitPic?.products
+  const products = data?.fitPic?.products || [{}]
   console.log(data)
 
-  const viewShotRefs = [...Array(products.length)].map((_arr, index) => useRef(null))
+  const viewShotRefs = [...Array(products.length)].map((_arr, index) => createRef())
 
   let onScrollEnd = (e) => {
     let pageNumber = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / 310 + 0.5), 0), products.length)
@@ -117,7 +118,7 @@ export const ShareFitPicToIG = screenTrack()(({ route, navigation }) => {
   const renderItem = (product, index) => {
     const imageUrl = product?.images?.[2]?.url
     const brandName = product?.brand?.name
-    const productName = product?.name
+    const productName = product?.name ?? ""
     const maxCharacters = 50
     const truncateProductName = productName.length > maxCharacters
     const displayProductName = truncateProductName ? productName.substring(0, maxCharacters) + " ..." : productName

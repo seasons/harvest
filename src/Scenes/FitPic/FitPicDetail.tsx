@@ -1,4 +1,6 @@
-import { Box, Button, Container, FadeInImage, FixedBackArrow, Flex, Sans, Separator, Spacer } from "App/Components"
+import {
+  Box, Button, Container, FadeInImage, FixedBackArrow, Flex, Sans, Separator, Spacer
+} from "App/Components"
 import { ShareButton } from "App/Components/ShareButton"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -13,10 +15,12 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
 import { SharedElement } from "react-navigation-shared-element"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 import styled from "styled-components"
+
 import { GET_BAG } from "../Bag/BagQueries"
 import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
 import { SAVE_ITEM } from "../Product/Components/SaveProductButton"
 import { GET_PRODUCT } from "../Product/Queries"
+
 interface FitPicDetailProps {
   navigation: any
   route: any
@@ -191,22 +195,24 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
       </ScrollView>
 
       <FixedBackArrow variant={"blackTransparent"} navigation={navigation} />
-      <ShareButtonWrapper>
-        <ShareButton
-          onPress={() => {
-            navigation.navigate("Modal", {
-              screen: "ShareFitPicToIGModal",
-              params: { fitPicID: item.id },
-            })
-          }}
-          variant={"blackTransparent"}
-          // Not used sicne we have onPress
-          options={{
-            title: "",
-            message: "",
-          }}
-        />
-      </ShareButtonWrapper>
+      {item.products.length > 0 && (
+        <ShareButtonWrapper>
+          <ShareButton
+            onPress={() => {
+              navigation.navigate("Modal", {
+                screen: "ShareFitPicToIGModal",
+                params: { fitPicID: item.id },
+              })
+            }}
+            variant={"blackTransparent"}
+            // Not used sicne we have onPress
+            options={{
+              title: "",
+              message: "",
+            }}
+          />
+        </ShareButtonWrapper>
+      )}
     </Container>
   )
 })
