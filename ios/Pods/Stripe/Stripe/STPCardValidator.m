@@ -18,6 +18,16 @@
     return stringByRemovingCharactersFromSet(string, [NSCharacterSet stp_invertedAsciiDigitCharacterSet]);
 }
 
++ (NSString *)sanitizedPostalStringForString:(NSString *)string {
+    NSString *sanitizedString = stringByRemovingCharactersFromSet(string, [NSCharacterSet stp_invertedPostalCodeCharacterSet]);
+    NSString *sanitizedStringWithoutPunctuation = stringByRemovingCharactersFromSet(sanitizedString, [NSCharacterSet characterSetWithCharactersInString:@" -"]);
+    if ([sanitizedStringWithoutPunctuation isEqualToString:@""]) {
+        // No postal codes begin with a space or -. If the user has only entered these characters, it was probably a typo.
+        return @"";
+    }
+    return sanitizedString;
+}
+
 + (NSString *)stringByRemovingSpacesFromString:(NSString *)string {
     NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
     return stringByRemovingCharactersFromSet(string, set);
@@ -124,11 +134,9 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
     NSUInteger maxLength = [self maxCVCLengthForCardBrand:brand];
     if (sanitizedCvc.length < minLength) {
         return STPCardValidationStateIncomplete;
-    }
-    else if (sanitizedCvc.length > maxLength) {
+    } else if (sanitizedCvc.length > maxLength) {
         return STPCardValidationStateInvalid;
-    }
-    else {
+    } else {
         return STPCardValidationStateValid;
     }
 }
@@ -178,8 +186,7 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
         STPCardValidationState state = [boxedState integerValue];
         if (state == STPCardValidationStateInvalid) {
             return state;
-        }
-        else if (state == STPCardValidationStateIncomplete) {
+        } else if (state == STPCardValidationStateIncomplete) {
             incomplete = YES;
         }
     }

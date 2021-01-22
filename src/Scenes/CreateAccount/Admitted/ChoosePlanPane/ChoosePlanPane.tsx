@@ -23,11 +23,11 @@ import { ChevronIcon } from "Assets/icons"
 import { Coupon, PaymentMethod } from "../../CreateAccount"
 import { PopUp } from "App/Components/PopUp"
 import { themeProps } from "App/Components/Theme"
-import { PaymentMethods } from "./PaymentMethods"
 import { calcFinalPrice } from "./utils"
 import { AllAccessDisabledPopup } from "./AllAccessDisabledPopup"
 import { GET_USER } from "App/Scenes/Account/Account"
 import { Spinner } from "App/Components/Spinner"
+import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMethods"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout($planID: String!, $token: StripeToken!, $tokenType: String, $couponID: String) {
@@ -452,7 +452,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       </Container>
 
       <PopUp show={openPopUp}>
-        <PaymentMethods onApplePay={onApplePay} setOpenPopUp={setOpenPopUp} onCreditCard={onAddCreditCard} />
+        <PaymentMethods onApplePay={onApplePay} onCreditCard={onAddCreditCard} />
       </PopUp>
       <AllAccessDisabledPopup
         show={showAllAccessDisabledMessage}

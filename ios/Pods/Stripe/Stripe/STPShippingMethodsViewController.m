@@ -42,8 +42,7 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
         _shippingMethods = methods;
         if (selectedMethod != nil && [methods indexOfObject:selectedMethod] != NSNotFound) {
             _selectedShippingMethod = selectedMethod;
-        }
-        else {
+        } else {
             _selectedShippingMethod = [methods stp_boundSafeObjectAtIndex:0];
         }
 
@@ -61,6 +60,7 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
     self.doneItem = doneItem;
     self.stp_navigationItemProxy.rightBarButtonItem = doneItem;
+    self.stp_navigationItemProxy.rightBarButtonItem.accessibilityIdentifier = @"ShippingMethodsViewControllerDoneButtonIdentifier";
 
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeShippingImage]];
     imageView.contentMode = UIViewContentModeCenter;
@@ -70,6 +70,7 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
     self.tableView.tableHeaderView = imageView;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    [self.tableView reloadData];
 
     STPSectionHeaderView *headerView = [STPSectionHeaderView new];
     headerView.theme = self.theme;
@@ -84,7 +85,6 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
 
     STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
     [self.doneItem stp_setTheme:navBarTheme];
-    self.tableView.allowsSelection = YES;
 
     self.imageView.tintColor = self.theme.accentColor;
     for (UITableViewCell *cell in [self.tableView visibleCells]) {

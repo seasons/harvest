@@ -1,14 +1,14 @@
 {
   "name": "tipsi-stripe",
-  "version": "7.5.0",
-  "summary": "React Native Stripe binding for iOS/Andriod platforms",
-  "description": "React Native Stripe binding for iOS/Andriod platforms",
+  "version": "8.0.2",
+  "summary": "React Native Stripe binding for iOS/Android platforms",
+  "description": "React Native Stripe binding for iOS/Android platforms",
   "license": "MIT",
   "authors": "Tipsi",
   "homepage": "https://github.com/tipsi/tipsi-stripe#readme",
   "source": {
-    "git": "https://github.com/ashfurrow/tipsi-stripe",
-    "branch": "fix-infinite-loop"
+    "git": "https://github.com/tipsi/tipsi-stripe",
+    "tag": "8.0.2"
   },
   "requires_arc": true,
   "platforms": {
@@ -24,7 +24,7 @@
 
     ],
     "Stripe": [
-      "~> 14.0.0"
+      ">= 19.0.1"
     ]
   }
 }
