@@ -1,6 +1,4 @@
-import {
-  Box, Button, Container, FadeInImage, FixedBackArrow, Flex, Sans, Separator, Spacer
-} from "App/Components"
+import { Box, Button, Container, FadeInImage, FixedBackArrow, Flex, Sans, Separator, Spacer } from "App/Components"
 import { ShareButton } from "App/Components/ShareButton"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -152,8 +150,9 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
   // console.log("~~", JSON.stringify(DateTime.fromISO(item.createdAt).DATE_MED))
   // Position the shared image target absolutely so that the transitioner knows the final layout after the tab bar disappears.
   return (
-    <Container insetsTop={false} insetsBottom={false}>
+    <Container insetsBottom={false}>
       <ScrollView>
+        <Spacer mb={50} />
         <SharedImageTarget id={`fitpic.photo.${item.id}`} uri={item.image?.url} height={imageHeight} />
         <Flex flexGrow={1}>
           <Spacer height={imageHeight + spacing} />
