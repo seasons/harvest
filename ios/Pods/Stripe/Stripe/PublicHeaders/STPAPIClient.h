@@ -18,10 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The current version of this library.
  */
-static NSString *const STPSDKVersion = @"14.0.1";
+static NSString *const STPSDKVersion = @"19.4.0";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPConnectAccountParams;
-@class STPPaymentConfiguration, STPPaymentIntentParams, STPSourceParams, STPToken;
+@class STPPaymentConfiguration, STPPaymentIntentParams, STPSourceParams, STPToken, STPPaymentMethodParams;
+@class STPAppInfo, STPSetupIntentConfirmParams;
 
 /**
  A top-level class that imports the rest of the Stripe SDK.
@@ -31,8 +32,8 @@ static NSString *const STPSDKVersion = @"14.0.1";
 /**
  Set your Stripe API key with this method. New instances of STPAPIClient will be initialized with this value. You should call this method as early as
  possible in your application's lifecycle, preferably in your AppDelegate.
-
- @param   publishableKey Your publishable key, obtained from https://stripe.com/account/apikeys
+ 
+ @param   publishableKey Your publishable key, obtained from https://dashboard.stripe.com/apikeys
  @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
  */
 + (void)setDefaultPublishableKey:(NSString *)publishableKey;
@@ -42,6 +43,24 @@ static NSString *const STPSDKVersion = @"14.0.1";
  */
 + (nullable NSString *)defaultPublishableKey;
 
+/**
+ A Boolean value that determines whether additional device data is sent to Stripe for fraud prevention.
+ 
+ Returns YES if the Stripe SDK is collecting additional device data for fraud prevention.
+ For more details on the information we collect, visit https://stripe.com/docs/disputes/prevention/advanced-fraud-detection
+ The default value is YES.
+ */
++ (BOOL)advancedFraudSignalsEnabled;
+
+/**
+ Set whether additional device data is sent to Stripe for fraud prevention.
+ 
+ @param   enabled If YES, additional device signals will be sent to Stripe.
+ For more details on the information we collect, visit https://stripe.com/docs/disputes/prevention/advanced-fraud-detection
+ Disabling this setting will reduce Stripe's ability to protect your business from fraudulent payments.
+ */
++ (void)setAdvancedFraudSignalsEnabled:(BOOL)enabled;
+
 @end
 
 /**
@@ -50,19 +69,12 @@ static NSString *const STPSDKVersion = @"14.0.1";
 @interface STPAPIClient : NSObject
 
 /**
- A shared singleton API client. Its API key will be initially equal to [Stripe defaultPublishableKey].
+ A shared singleton API client.
+ 
+ By default, the SDK uses this instance to make API requests
+ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.
  */
 + (instancetype)sharedClient;
-
-
-/**
- Initializes an API client with the given configuration. Its API key will be
- set to the configuration's publishable key.
-
- @param configuration The configuration to use.
- @return An instance of STPAPIClient.
- */
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
 
 /**
  Initializes an API client with the given publishable key.
@@ -74,23 +86,34 @@ static NSString *const STPSDKVersion = @"14.0.1";
 
 /**
  The client's publishable key.
+ 
+ The default value is [Stripe defaultPublishableKey].
  */
 @property (nonatomic, copy, nullable) NSString *publishableKey;
 
 /**
  The client's configuration.
+ 
+ Defaults to [STPPaymentConfiguration sharedConfiguration].
  */
 @property (nonatomic, copy) STPPaymentConfiguration *configuration;
 
 
 /**
  In order to perform API requests on behalf of a connected account, e.g. to
- create a source on a connected account, set this property to the ID of the
+ create a Source or Payment Method on a connected account, set this property to the ID of the
  account for which this request is being made.
 
  @see https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header
  */
 @property (nonatomic, copy, nullable) NSString *stripeAccount;
+
+/**
+ Libraries wrapping the Stripe SDK should set this, so that Stripe can contact you about future issues or critical updates.
+
+ @see https://stripe.com/docs/building-plugins#setappinfo
+ */
+@property (nonatomic, nullable) STPAppInfo *appInfo;
 
 @end
 
@@ -125,6 +148,14 @@ static NSString *const STPSDKVersion = @"14.0.1";
  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
 - (void)createTokenWithPersonalIDNumber:(NSString *)pii completion:(__nullable STPTokenCompletionBlock)completion;
+
+/**
+Converts the last 4 SSN digits into a Stripe token using the Stripe API.
+
+@param ssnLast4 The last 4 digits of the user's SSN. Cannot be nil.
+@param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
+*/
+- (void)createTokenWithSSNLast4:(NSString *)ssnLast4 completion:(STPTokenCompletionBlock)completion;
 
 @end
 
@@ -192,6 +223,14 @@ static NSString *const STPSDKVersion = @"14.0.1";
  */
 - (void)createTokenWithCard:(STPCardParams *)card completion:(nullable STPTokenCompletionBlock)completion;
 
+/**
+ Converts a CVC string into a Stripe token using the Stripe API.
+
+ @param cvc         The CVC/CVV number used to create the token. Cannot be nil.
+ @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
+ */
+- (void)createTokenForCVCUpdate:(NSString *)cvc completion:(nullable STPTokenCompletionBlock)completion;
+
 @end
 
 /**
@@ -218,6 +257,9 @@ static NSString *const STPSDKVersion = @"14.0.1";
 
  The Stripe supported Apple Pay card networks are:
  American Express, Visa, Mastercard, Discover.
+
+ Japanese users can enable JCB by setting `JCBPaymentNetworkSupported` to YES,
+ after they have been approved by JCB.
 
  @return YES if the device is currently able to make Apple Pay payments via one
  of the supported networks. NO if the user does not have a saved card of a
@@ -262,6 +304,22 @@ static NSString *const STPSDKVersion = @"14.0.1";
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier
                                                    country:(NSString *)countryCode
                                                   currency:(NSString *)currencyCode;
+
+/**
+ Japanese users can enable JCB for Apple Pay by setting this to `YES`, after they have been approved by JCB.
+
+ The default value is NO.
+ @note JCB is only supported on iOS 10.1+
+ */
+@property (class, nonatomic, getter=isJCBPaymentNetworkSupported) BOOL JCBPaymentNetworkSupported __attribute__((deprecated("Set additionalApplePayNetworks = @[PKPaymentNetworkJCB] instead")));
+
+/**
+ The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.
+ Set this property to enable other card networks in addition to these.
+
+ For example, `additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];` enables JCB (note this requires onboarding from JCB and Stripe).
+ */
+@property (class, nonatomic, copy, nonnull) NSArray<PKPaymentNetwork> *additionalEnabledApplePayNetworks;
 
 @end
 
@@ -344,11 +402,67 @@ static NSString *const STPSDKVersion = @"14.0.1";
 
  @see https://stripe.com/docs/api#confirm_payment_intent
 
+ @note Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+ of calling this method directly. It handles any authentication necessary for you. @see https://stripe.com/docs/mobile/ios/authentication
  @param paymentIntentParams  The `STPPaymentIntentParams` to pass to `/confirm`
  @param completion           The callback to run with the returned PaymentIntent object, or an error.
  */
 - (void)confirmPaymentIntentWithParams:(STPPaymentIntentParams *)paymentIntentParams
                             completion:(STPPaymentIntentCompletionBlock)completion;
+
+@end
+
+#pragma mark Setup Intents
+
+/**
+ STPAPIClient extensions for working with SetupIntent objects.
+ */
+@interface STPAPIClient (SetupIntents)
+
+/**
+ Retrieves the SetupIntent object using the given secret. @see https://stripe.com/docs/api/setup_intents/retrieve
+
+ @param secret      The client secret of the SetupIntent to be retrieved. Cannot be nil.
+ @param completion  The callback to run with the returned SetupIntent object, or an error.
+ */
+- (void)retrieveSetupIntentWithClientSecret:(NSString *)secret
+                                 completion:(STPSetupIntentCompletionBlock)completion;
+
+/**
+ Confirms the SetupIntent object with the provided params object.
+
+ At a minimum, the params object must include the `clientSecret`.
+
+ @see https://stripe.com/docs/api/setup_intents/confirm
+
+ @note Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+ of calling this method directly. It handles any authentication necessary for you. @see https://stripe.com/docs/mobile/ios/authentication
+ @param setupIntentParams    The `STPSetupIntentConfirmParams` to pass to `/confirm`
+ @param completion           The callback to run with the returned PaymentIntent object, or an error.
+ */
+- (void)confirmSetupIntentWithParams:(STPSetupIntentConfirmParams *)setupIntentParams
+                          completion:(STPSetupIntentCompletionBlock)completion;
+
+@end
+
+
+#pragma mark Payment Methods
+
+/**
+ STPAPIClient extensions for working with PaymentMethod objects.
+ */
+@interface STPAPIClient (PaymentMethods)
+
+/**
+ Creates a PaymentMethod object with the provided params object.
+
+ @see https://stripe.com/docs/api/payment_methods/create
+
+ @param paymentMethodParams  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
+ @param completion           The callback to run with the returned PaymentMethod object, or an error.
+ */
+- (void)createPaymentMethodWithParams:(STPPaymentMethodParams *)paymentMethodParams
+                           completion:(STPPaymentMethodCompletionBlock)completion;
 
 @end
 
@@ -379,6 +493,23 @@ static NSString *const STPSDKVersion = @"14.0.1";
  @return YES if the URL is expected and will be handled by Stripe. NO otherwise.
  */
 + (BOOL)handleStripeURLCallbackWithURL:(NSURL *)url;
+
+@end
+
+#pragma mark - Deprecated
+
+/**
+ Deprecated STPAPIClient methods
+ */
+@interface STPAPIClient (Deprecated)
+
+/**
+ Initializes an API client with the given configuration.
+
+ @param configuration The configuration to use.
+ @return An instance of STPAPIClient.
+ */
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration DEPRECATED_MSG_ATTRIBUTE("This initializer previously configured publishableKey and stripeAccount via the STPPaymentConfiguration instance. This behavior is deprecated; set the STPAPIClient configuration, publishableKey, and stripeAccount properties directly on the STPAPIClient instead.");
 
 @end
 

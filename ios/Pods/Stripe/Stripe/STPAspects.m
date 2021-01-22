@@ -9,10 +9,24 @@
 #import <libkern/OSAtomic.h>
 #import <objc/runtime.h>
 #import <objc/message.h>
+#import <os/lock.h>
 
-#define STPAspectLog(...)
-//#define STPAspectLog(...) do { NSLog(__VA_ARGS__); }while(0)
-#define STPAspectLogError(...) do { NSLog(__VA_ARGS__); }while(0)
+NS_INLINE void STPAspectLog(__unused NSString *format, ...) {
+    // intentionally commented out as a no-op. Can be uncommented for additional debugging
+    /*
+    va_list args;
+    va_start(args, format);
+    NSLog(format, args);
+    va_end(args);
+     */
+}
+
+NS_INLINE void STPAspectLogError(NSString *format, ...) {
+    va_list args;
+    va_start(args, format);
+    NSLog(format, args);
+    va_end(args);
+}
 
 // Block internals.
 typedef NS_OPTIONS(int, STPAspectBlockFlags) {
@@ -81,11 +95,14 @@ typedef struct _STPAspectBlock {
 - (NSArray *)stp_aspects_arguments;
 @end
 
-#define STPAspectPositionFilter 0x07
+static NSUInteger const STPAspectPositionFilter = 0x07;
 
-#define STPAspectError(errorCode, errorDescription) do { \
-STPAspectLogError(@"STPAspects: %@", errorDescription); \
-if (error) { *error = [NSError errorWithDomain:STPAspectErrorDomain code:errorCode userInfo:@{NSLocalizedDescriptionKey: errorDescription}]; }}while(0)
+NS_INLINE void STPAspectError(STPAspectErrorCode errorCode, NSString *errorDescription, NSError * __autoreleasing *error) {
+    STPAspectLogError(@"STPAspects: %@", errorDescription);
+    if (error != nil) {
+        *error = [NSError errorWithDomain:STPAspectErrorDomain code:errorCode userInfo:@{NSLocalizedDescriptionKey: errorDescription}];
+    }
+}
 
 NSString *const STPAspectErrorDomain = @"STPAspectErrorDomain";
 static NSString *const STPAspectsSubclassSuffix = @"_STPAspects_";
@@ -152,17 +169,17 @@ static BOOL stp_aspect_remove(STPAspectIdentifier *aspect, NSError * __autorelea
             aspect.selector = NULL;
         }else {
             NSString *errrorDesc = [NSString stringWithFormat:@"Unable to deregister hook. Object already deallocated: %@", aspect];
-            STPAspectError(STPAspectErrorRemoveObjectAlreadyDeallocated, errrorDesc);
+            STPAspectError(STPAspectErrorRemoveObjectAlreadyDeallocated, errrorDesc, error);
         }
     });
     return success;
 }
 
 static void stp_aspect_performLocked(dispatch_block_t block) {
-    static OSSpinLock aspect_lock = OS_SPINLOCK_INIT;
-    OSSpinLockLock(&aspect_lock);
+    static os_unfair_lock aspect_lock = OS_UNFAIR_LOCK_INIT;
+    os_unfair_lock_lock(&aspect_lock);
     block();
-    OSSpinLockUnlock(&aspect_lock);
+    os_unfair_lock_unlock(&aspect_lock);
 }
 
 static SEL stp_aspect_aliasForSelector(SEL selector) {
@@ -174,7 +191,7 @@ static NSMethodSignature *stp_aspect_blockMethodSignature(id block, NSError **er
     STPAspectBlockRef layout = (__bridge void *)block;
 	if (!(layout->flags & STPAspectBlockFlagsHasSignature)) {
         NSString *description = [NSString stringWithFormat:@"The block %@ doesn't contain a type signature.", block];
-        STPAspectError(STPAspectErrorMissingBlockSignature, description);
+        STPAspectError(STPAspectErrorMissingBlockSignature, description, error);
         return nil;
     }
 	void *desc = layout->descriptor;
@@ -184,7 +201,7 @@ static NSMethodSignature *stp_aspect_blockMethodSignature(id block, NSError **er
     }
 	if (!desc) {
         NSString *description = [NSString stringWithFormat:@"The block %@ doesn't has a type signature.", block];
-        STPAspectError(STPAspectErrorMissingBlockSignature, description);
+        STPAspectError(STPAspectErrorMissingBlockSignature, description, error);
         return nil;
     }
 	const char *signature = (*(const char **)desc);
@@ -223,7 +240,7 @@ static BOOL stp_aspect_isCompatibleBlockSignature(NSMethodSignature *blockSignat
 
     if (!signaturesMatch) {
         NSString *description = [NSString stringWithFormat:@"Block signature %@ doesn't match %@.", blockSignature, methodSignature];
-        STPAspectError(STPAspectErrorIncompatibleBlockSignature, description);
+        STPAspectError(STPAspectErrorIncompatibleBlockSignature, description, error);
         return NO;
     }
     return YES;
@@ -373,7 +390,7 @@ static Class stp_aspect_hookClass(NSObject *self, NSError **error) {
 		subclass = objc_allocateClassPair(baseClass, subclassName, 0);
 		if (subclass == nil) {
             NSString *errrorDesc = [NSString stringWithFormat:@"objc_allocateClassPair failed to allocate class %s.", subclassName];
-            STPAspectError(STPAspectErrorFailedToAllocateClassPair, errrorDesc);
+            STPAspectError(STPAspectErrorFailedToAllocateClassPair, errrorDesc, error);
             return nil;
         }
 
@@ -461,13 +478,15 @@ static void stp_aspect_undoSwizzleClassInPlace(Class klass) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Aspect Invoke Point
 
-// This is a macro so we get a cleaner stack trace.
-#define stp_aspect_invoke(aspects, info) \
-for (STPAspectIdentifier *aspect in aspects) {\
-    [aspect invokeWithInfo:info];\
-    if (aspect.options & STPAspectOptionAutomaticRemoval) { \
-        aspectsToRemove = [aspectsToRemove?:@[] arrayByAddingObject:aspect]; \
-    } \
+NS_INLINE void STPAspectInvoke(NSArray<STPAspectIdentifier *> *aspects, id<STPAspectInfo> info, NSArray **aspectsToRemove) {
+    for (STPAspectIdentifier *aspect in aspects) {
+        [aspect invokeWithInfo:info];
+        if (aspect.options & STPAspectOptionAutomaticRemoval) {
+            if (aspectsToRemove != nil) {
+                *aspectsToRemove = [*aspectsToRemove ?: @[] arrayByAddingObject:aspect];
+            }
+        }
+    }
 }
 
 // This is the swizzled forwardInvocation: method.
@@ -483,14 +502,14 @@ static void __STP_ASPECTS_ARE_BEING_CALLED__(__unsafe_unretained NSObject *self,
     NSArray *aspectsToRemove = nil;
 
     // Before hooks.
-    stp_aspect_invoke(classContainer.beforeAspects, info);
-    stp_aspect_invoke(objectContainer.beforeAspects, info);
+    STPAspectInvoke(classContainer.beforeAspects, info, &aspectsToRemove);
+    STPAspectInvoke(objectContainer.beforeAspects, info, &aspectsToRemove);
 
     // Instead hooks.
     BOOL respondsToAlias = YES;
     if (objectContainer.insteadAspects.count || classContainer.insteadAspects.count) {
-        stp_aspect_invoke(classContainer.insteadAspects, info);
-        stp_aspect_invoke(objectContainer.insteadAspects, info);
+        STPAspectInvoke(classContainer.insteadAspects, info, &aspectsToRemove);
+        STPAspectInvoke(objectContainer.insteadAspects, info, &aspectsToRemove);
     }else {
         Class klass = object_getClass(invocation.target);
         do {
@@ -502,8 +521,8 @@ static void __STP_ASPECTS_ARE_BEING_CALLED__(__unsafe_unretained NSObject *self,
     }
 
     // After hooks.
-    stp_aspect_invoke(classContainer.afterAspects, info);
-    stp_aspect_invoke(objectContainer.afterAspects, info);
+    STPAspectInvoke(classContainer.afterAspects, info, &aspectsToRemove);
+    STPAspectInvoke(objectContainer.afterAspects, info, &aspectsToRemove);
 
     // If no hooks are installed, call original implementation (usually to throw an exception)
     if (!respondsToAlias) {
@@ -519,7 +538,6 @@ static void __STP_ASPECTS_ARE_BEING_CALLED__(__unsafe_unretained NSObject *self,
     // Remove any hooks that are queued for deregistration.
     [aspectsToRemove makeObjectsPerformSelector:@selector(remove)];
 }
-#undef stp_aspect_invoke
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Aspect Container Management
@@ -554,7 +572,7 @@ static void stp_aspect_destroyContainerForObject(id<NSObject> self, SEL selector
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - Selector Blacklist Checking
+#pragma mark - Selector Disallowed Checking
 
 static NSMutableDictionary *stp_aspect_getSwizzledClassesDict() {
     static NSMutableDictionary *swizzledClassesDict;
@@ -572,11 +590,11 @@ static BOOL stp_aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, S
         disallowedSelectorList = [NSSet setWithObjects:@"retain", @"release", @"autorelease", @"forwardInvocation:", nil];
     });
 
-    // Check against the blacklist.
+    // Check against the disallowed list.
     NSString *selectorName = NSStringFromSelector(selector);
     if ([disallowedSelectorList containsObject:selectorName]) {
-        NSString *errorDescription = [NSString stringWithFormat:@"Selector %@ is blacklisted.", selectorName];
-        STPAspectError(STPAspectErrorSelectorBlacklisted, errorDescription);
+        NSString *errorDescription = [NSString stringWithFormat:@"Selector %@ is disallowed.", selectorName];
+        STPAspectError(STPAspectErrorSelectorDisallowed, errorDescription, error);
         return NO;
     }
 
@@ -584,13 +602,13 @@ static BOOL stp_aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, S
     STPAspectOptions position = options&STPAspectPositionFilter;
     if ([selectorName isEqualToString:@"dealloc"] && position != STPAspectPositionBefore) {
         NSString *errorDesc = @"AspectPositionBefore is the only valid position when hooking dealloc.";
-        STPAspectError(STPAspectErrorSelectorDeallocPosition, errorDesc);
+        STPAspectError(STPAspectErrorSelectorDeallocPosition, errorDesc, error);
         return NO;
     }
 
     if (![self respondsToSelector:selector] && ![self.class instancesRespondToSelector:selector]) {
         NSString *errorDesc = [NSString stringWithFormat:@"Unable to find selector -[%@ %@].", NSStringFromClass(self.class), selectorName];
-        STPAspectError(STPAspectErrorDoesNotRespondToSelector, errorDesc);
+        STPAspectError(STPAspectErrorDoesNotRespondToSelector, errorDesc, error);
         return NO;
     }
 
@@ -605,7 +623,7 @@ static BOOL stp_aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, S
             NSSet *subclassTracker = [tracker subclassTrackersHookingSelectorName:selectorName];
             NSSet *subclassNames = [subclassTracker valueForKey:@"trackedClassName"];
             NSString *errorDescription = [NSString stringWithFormat:@"Error: %@ already hooked subclasses: %@. A method can only be hooked once per class hierarchy.", selectorName, subclassNames];
-            STPAspectError(STPAspectErrorSelectorAlreadyHookedInClassHierarchy, errorDescription);
+            STPAspectError(STPAspectErrorSelectorAlreadyHookedInClassHierarchy, errorDescription, error);
             return NO;
         }
 
@@ -617,7 +635,7 @@ static BOOL stp_aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, S
                     return YES;
                 }
                 NSString *errorDescription = [NSString stringWithFormat:@"Error: %@ already hooked in %@. A method can only be hooked once per class hierarchy.", selectorName, NSStringFromClass(currentClass)];
-                STPAspectError(STPAspectErrorSelectorAlreadyHookedInClassHierarchy, errorDescription);
+                STPAspectError(STPAspectErrorSelectorAlreadyHookedInClassHierarchy, errorDescription, error);
                 return NO;
             }
         } while ((currentClass = class_getSuperclass(currentClass)));
@@ -648,7 +666,9 @@ static BOOL stp_aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, S
 }
 
 static void stp_aspect_deregisterTrackedSelector(id self, SEL selector) {
-    if (!class_isMetaClass(object_getClass(self))) return;
+    if (!class_isMetaClass(object_getClass(self))) {
+        return;
+    }
 
     NSMutableDictionary *swizzledClassesDict = stp_aspect_getSwizzledClassesDict();
     NSString *selectorName = NSStringFromSelector(selector);
@@ -731,7 +751,6 @@ static void stp_aspect_deregisterTrackedSelector(id self, SEL selector) {
 	// Skip const type qualifier.
 	if (argType[0] == _C_CONST) argType++;
 
-#define WRAP_AND_RETURN(type) do { type val = 0; [self getArgument:&val atIndex:(NSInteger)index]; return @(val); } while (0)
 	if (strcmp(argType, @encode(id)) == 0 || strcmp(argType, @encode(Class)) == 0) {
 		__autoreleasing id returnObj;
 		[self getArgument:&returnObj atIndex:(NSInteger)index];
@@ -746,35 +765,65 @@ static void stp_aspect_deregisterTrackedSelector(id self, SEL selector) {
         return theClass;
         // Using this list will box the number with the appropriate constructor, instead of the generic NSValue.
 	} else if (strcmp(argType, @encode(char)) == 0) {
-		WRAP_AND_RETURN(char);
+        char val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(int)) == 0) {
-		WRAP_AND_RETURN(int);
+        int val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(short)) == 0) {
-		WRAP_AND_RETURN(short);
+        short val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(long)) == 0) {
-		WRAP_AND_RETURN(long);
+        long val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(long long)) == 0) {
-		WRAP_AND_RETURN(long long);
+        long long val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(unsigned char)) == 0) {
-		WRAP_AND_RETURN(unsigned char);
+        unsigned char val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(unsigned int)) == 0) {
-		WRAP_AND_RETURN(unsigned int);
+        unsigned int val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(unsigned short)) == 0) {
-		WRAP_AND_RETURN(unsigned short);
+        unsigned short val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(unsigned long)) == 0) {
-		WRAP_AND_RETURN(unsigned long);
+        unsigned long val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(unsigned long long)) == 0) {
-		WRAP_AND_RETURN(unsigned long long);
+        unsigned long long val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(float)) == 0) {
-		WRAP_AND_RETURN(float);
+        float val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(double)) == 0) {
-		WRAP_AND_RETURN(double);
+        double val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(BOOL)) == 0) {
-		WRAP_AND_RETURN(BOOL);
+        BOOL val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(bool)) == 0) {
-		WRAP_AND_RETURN(BOOL);
+        BOOL val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(char *)) == 0) {
-		WRAP_AND_RETURN(const char *);
+        const char * val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(void (^)(void))) == 0) {
 		__unsafe_unretained id block = nil;
 		[self getArgument:&block atIndex:(NSInteger)index];
@@ -789,7 +838,6 @@ static void stp_aspect_deregisterTrackedSelector(id self, SEL selector) {
 		return [NSValue valueWithBytes:valueBytes objCType:argType];
 	}
 	return nil;
-#undef WRAP_AND_RETURN
 }
 
 - (NSArray *)stp_aspects_arguments {

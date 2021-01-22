@@ -12,28 +12,49 @@
 #import "STPBlocks.h"
 #import "STPDispatchFunctions.h"
 #import "STPPaymentIntent.h"
-#import "STPPaymentIntentSourceAction.h"
-#import "STPPaymentIntentSourceActionAuthorizeWithURL.h"
+#import "STPPaymentIntentAction.h"
+#import "STPPaymentIntentActionRedirectToURL.h"
 #import "STPSource.h"
+#import "STPSourceWeChatPayDetails.h"
 #import "STPURLCallbackHandler.h"
-#import "STPWeakStrongMacros.h"
 #import "NSError+Stripe.h"
 
-#import <SafariServices/SafariServices.h>
+NSString *const STPRedirectContextErrorDomain = @"STPRedirectContextErrorDomain";
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^STPBoolCompletionBlock)(BOOL success);
 
-@interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener>
+/*
+ SFSafariViewController sometimes manages its own dismissal and does not currently provide
+ any easier API hooks to detect when the dismissal has completed. This machinery exists to
+ insert ourselves into the View Controller transitioning process and detect when a dismissal
+ transition has completed.
+*/
+
+@interface STPSafariViewControllerPresentationController : UIPresentationController
+@property (nonatomic, weak, nullable) id<STPSafariViewControllerDismissalDelegate> dismissalDelegate;
+@end
+
+@implementation STPSafariViewControllerPresentationController
+- (void)dismissalTransitionDidEnd:(BOOL)completed {
+    if ([self.presentedViewController isKindOfClass:[SFSafariViewController class]]) {
+        [self.dismissalDelegate safariViewControllerDidCompleteDismissal:(SFSafariViewController *)self.presentedViewController];
+    }
+    return [super dismissalTransitionDidEnd:completed];
+}
+@end
+
+@interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
 @property (nonatomic, assign, readwrite) STPRedirectContextState state;
 /// If we're on iOS 11+ and in the SafariVC flow, this tracks the latest URL loaded/redirected to during the initial load
 @property (nonatomic, strong, readwrite, nullable) NSURL *lastKnownSafariVCURL;
+@property (nonatomic, strong, readwrite, nullable) STPSource *source;
 
 @property (nonatomic, assign) BOOL subscribedToURLNotifications;
-@property (nonatomic, assign) BOOL subscribedToForegroundNotifications;
+@property (nonatomic, assign) BOOL subscribedToAppActiveNotifications;
 @end
 
 @implementation STPRedirectContext
@@ -41,15 +62,27 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 - (nullable instancetype)initWithSource:(STPSource *)source
                              completion:(STPRedirectContextSourceCompletionBlock)completion {
 
-    if (source.flow != STPSourceFlowRedirect
+    if ((source.flow != STPSourceFlowRedirect && source.type != STPSourceTypeWeChatPay)
         || !(source.status == STPSourceStatusPending ||
              source.status == STPSourceStatusChargeable)) {
         return nil;
     }
-
-    self = [self initWithNativeRedirectURL:[[self class] nativeRedirectURLForSource:source]
+    _source = source;
+    
+    NSURL *nativeRedirectURL = [[self class] nativeRedirectURLForSource:source];
+    NSURL *returnURL = source.redirect.returnURL;
+    
+    if (source.type == STPSourceTypeWeChatPay) {
+        // Construct the returnURL for WeChat Pay:
+        //   - nativeRedirectURL looks like "weixin://app/MERCHANT_APP_ID/pay/?..."
+        //   - the WeChat app will redirect back using a URL like "MERCHANT_APP_ID://pay/?..."
+        NSString *merchantAppID = nativeRedirectURL.pathComponents[1];
+        returnURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://pay/", merchantAppID]];
+    }
+    
+    self = [self initWithNativeRedirectURL:nativeRedirectURL
                                redirectURL:source.redirect.url
-                                 returnURL:source.redirect.returnURL
+                                 returnURL:returnURL
                                 completion:^(NSError * _Nullable error) {
                                     completion(source.stripeID, source.clientSecret, error);
                                 }];
@@ -58,11 +91,11 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (nullable instancetype)initWithPaymentIntent:(STPPaymentIntent *)paymentIntent
                                     completion:(STPRedirectContextPaymentIntentCompletionBlock)completion {
-    NSURL *redirectURL = paymentIntent.nextSourceAction.authorizeWithURL.url;
-    NSURL *returnURL = paymentIntent.nextSourceAction.authorizeWithURL.returnURL;
+    NSURL *redirectURL = paymentIntent.nextAction.redirectToURL.url;
+    NSURL *returnURL = paymentIntent.nextAction.redirectToURL.returnURL;
 
-    if (paymentIntent.status != STPPaymentIntentStatusRequiresSourceAction
-        || paymentIntent.nextSourceAction.type != STPPaymentIntentSourceActionTypeAuthorizeWithURL
+    if (paymentIntent.status != STPPaymentIntentStatusRequiresAction
+        || paymentIntent.nextAction.type != STPIntentActionTypeRedirectToURL
         || !redirectURL
         || !returnURL) {
         return nil;
@@ -96,7 +129,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         _completion = completion;
 
         _subscribedToURLNotifications = NO;
-        _subscribedToForegroundNotifications = NO;
+        _subscribedToAppActiveNotifications = NO;
     }
     return self;
 }
@@ -105,62 +138,46 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     [self unsubscribeFromNotificationsAndDismissPresentedViewControllers];
 }
 
-- (void)performAppRedirectIfPossibleWithCompletion:(STPBoolCompletionBlock)onCompletion {
-
-    if (self.state == STPRedirectContextStateNotStarted) {
-        NSURL *nativeURL = self.nativeRedirectURL;
-        if (!nativeURL) {
-            onCompletion(NO);
-            return;
-        }
-
-        // Optimistically start listening in case we get app switched away.
-        // If the app switch fails we'll undo this later
-        self.state = STPRedirectContextStateInProgress;
-        [self subscribeToURLAndForegroundNotifications];
-
-        UIApplication *application = [UIApplication sharedApplication];
-        if (@available(iOS 10, *)) {
-
-            WEAK(self);
-            [application openURL:nativeURL options:@{} completionHandler:^(BOOL success) {
-                if (!success) {
-                    STRONG(self);
-                    self.state = STPRedirectContextStateNotStarted;
-                    [self unsubscribeFromNotifications];
-                }
-                onCompletion(success);
-            }];
-        }
-        else {
-            _state = STPRedirectContextStateInProgress;
-            BOOL opened = [application openURL:nativeURL];
-            if (!opened) {
-                self.state = STPRedirectContextStateNotStarted;
-                [self unsubscribeFromNotifications];
-            }
-            onCompletion(opened);
-        }
-    }
-    else {
-        onCompletion(NO);
-    }
-}
-
 - (void)startRedirectFlowFromViewController:(UIViewController *)presentingViewController {
 
-    WEAK(self)
-    [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
-        if (!success) {
-            STRONG(self)
-            if ([SFSafariViewController class] != nil) {
-                [self startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
+    if (self.state == STPRedirectContextStateNotStarted) {
+        self.state = STPRedirectContextStateInProgress;
+        [self subscribeToURLAndAppActiveNotifications];
+
+        __weak typeof(self) weakSelf = self;
+        [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
+            if (success) {
+                return;
             }
-            else {
-                [self startSafariAppRedirectFlow];
+            
+            __strong typeof(self) strongSelf = weakSelf;
+            if (strongSelf == nil) {
+                return;
             }
-        }
-    }];
+            // Redirect failed...
+            if (strongSelf.source.type == STPSourceTypeWeChatPay) {
+                // ...and this Source doesn't support web-based redirect — finish with an error.
+                NSError *error = [[NSError alloc] initWithDomain:STPRedirectContextErrorDomain
+                                                            code:STPRedirectContextAppRedirectError
+                                                        userInfo:@{
+                                                                   NSLocalizedDescriptionKey: [NSError stp_unexpectedErrorMessage],
+                                                                   STPErrorMessageKey: @"Redirecting to WeChat failed. Only offer WeChat Pay if the WeChat app is installed.",
+                                                                   }];
+                stpDispatchToMainThreadIfNecessary(^{
+                    [strongSelf handleRedirectCompletionWithError:error shouldDismissViewController:NO];
+                });
+            } else {
+                // ...reset our state and try a web redirect
+                strongSelf.state = STPRedirectContextStateNotStarted;
+                [strongSelf unsubscribeFromNotifications];
+                if ([SFSafariViewController class] != nil) {
+                    [strongSelf startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
+                } else {
+                    [strongSelf startSafariAppRedirectFlow];
+                }
+            }
+        }];
+    }
 }
 
 - (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController {
@@ -171,6 +188,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         self.lastKnownSafariVCURL = self.redirectURL;
         self.safariVC = [[SFSafariViewController alloc] initWithURL:self.lastKnownSafariVCURL];
         self.safariVC.delegate = self;
+        self.safariVC.transitioningDelegate = self;
+        self.safariVC.modalPresentationStyle = UIModalPresentationCustom;
         [presentingViewController presentViewController:self.safariVC
                                                animated:YES
                                              completion:nil];
@@ -180,8 +199,9 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 - (void)startSafariAppRedirectFlow {
     if (self.state == STPRedirectContextStateNotStarted) {
         self.state = STPRedirectContextStateInProgress;
-        [self subscribeToURLAndForegroundNotifications];
-        [[UIApplication sharedApplication] openURL:self.redirectURL];
+        [self subscribeToURLAndAppActiveNotifications];
+        
+        [[UIApplication sharedApplication] openURL:self.redirectURL options:@{} completionHandler:nil];
     }
 }
 
@@ -235,10 +255,43 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     });
 }
 
+#pragma mark - STPSafariViewControllerDismissalDelegate -
+
+- (void)safariViewControllerDidCompleteDismissal:(__unused SFSafariViewController *)controller {
+    self.completion(self.completionError);
+    self.completionError = nil;
+}
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (nullable UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented
+                                                               presentingViewController:(nullable UIViewController *)presenting
+                                                                   sourceViewController:(__unused UIViewController *)source {
+    STPSafariViewControllerPresentationController *controller = [[STPSafariViewControllerPresentationController alloc] initWithPresentedViewController:presented
+                                                                                                                              presentingViewController:presenting];
+    controller.dismissalDelegate = self;
+    return controller;
+}
+
 #pragma mark - Private methods -
 
-- (void)handleWillForegroundNotification {
-    // Always `dispatch_async` the `handleWillForegroundNotification` function
+- (void)performAppRedirectIfPossibleWithCompletion:(STPBoolCompletionBlock)onCompletion {
+    
+    NSURL *nativeURL = self.nativeRedirectURL;
+    if (!nativeURL) {
+        onCompletion(NO);
+        return;
+    }
+    
+    UIApplication *application = [UIApplication sharedApplication];
+    [application openURL:nativeURL options:@{} completionHandler:^(BOOL success) {
+        onCompletion(success);
+    }];
+}
+
+
+- (void)handleDidBecomeActiveNotification {
+    // Always `dispatch_async` the `handleDidBecomeActiveNotification` function
     // call to re-queue the task at the end of the run loop. This is so that the
     // `handleURLCallback` gets handled first.
     //
@@ -246,14 +299,14 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     // but not completely sure why :)
     //
     // When returning from a `startSafariAppRedirectFlow` call, the
-    // `UIApplicationWillEnterForegroundNotification` handler and
+    // `UIApplicationDidBecomeActiveNotification` handler and
     // `STPURLCallbackHandler` compete. The problem is the
-    // `UIApplicationWillEnterForegroundNotification` handler is always queued
+    // `UIApplicationDidBecomeActiveNotification` handler is always queued
     // first causing the `STPURLCallbackHandler` to always fail because the
     // registered callback was already unregistered by the
-    // `UIApplicationWillEnterForegroundNotification` handler. We are patching
+    // `UIApplicationDidBecomeActiveNotification` handler. We are patching
     // this so that the`STPURLCallbackHandler` can succeed and the
-    // `UIApplicationWillEnterForegroundNotification` handler can silently fail.
+    // `UIApplicationDidBecomeActiveNotification` handler can silently fail.
     dispatch_async(dispatch_get_main_queue(), ^{
         [self handleRedirectCompletionWithError:nil
                     shouldDismissViewController:YES];
@@ -278,12 +331,17 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     self.state = STPRedirectContextStateCompleted;
 
     [self unsubscribeFromNotifications];
-
+    
+    if ([self isSafariVCPresented]) {
+        // SafariVC dismissal delegate will manage calling completion handler
+        self.completionError = error;
+    } else {
+        self.completion(error);
+    }
+    
     if (shouldDismissViewController) {
         [self dismissPresentedViewController];
     }
-
-    self.completion(error);
 }
 
 - (void)subscribeToURLNotifications {
@@ -294,13 +352,13 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     }
 }
 
-- (void)subscribeToURLAndForegroundNotifications {
+- (void)subscribeToURLAndAppActiveNotifications {
     [self subscribeToURLNotifications];
-    if (!self.subscribedToForegroundNotifications) {
-        self.subscribedToForegroundNotifications = YES;
+    if (!self.subscribedToAppActiveNotifications) {
+        self.subscribedToAppActiveNotifications = YES;
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(handleWillForegroundNotification)
-                                                     name:UIApplicationWillEnterForegroundNotification
+                                                 selector:@selector(handleDidBecomeActiveNotification)
+                                                     name:UIApplicationDidBecomeActiveNotification
                                                    object:nil];
     }
 }
@@ -312,18 +370,23 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (void)unsubscribeFromNotifications {
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIApplicationWillEnterForegroundNotification
+                                                    name:UIApplicationDidBecomeActiveNotification
                                                   object:nil];
     [[STPURLCallbackHandler shared] unregisterListener:self];
     self.subscribedToURLNotifications = NO;
-    self.subscribedToForegroundNotifications = NO;
+    self.subscribedToAppActiveNotifications = NO;
 }
 
 - (void)dismissPresentedViewController {
-    if (self.safariVC) {
+    if ([self isSafariVCPresented]) {
         [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
                                                                    completion:nil];
+        self.safariVC = nil;
     }
+}
+
+- (BOOL)isSafariVCPresented {
+    return self.safariVC != nil;
 }
 
 + (nullable NSURL *)nativeRedirectURLForSource:(STPSource *)source {
@@ -332,6 +395,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         case STPSourceTypeAlipay:
             nativeURLString = source.details[@"native_url"];
             break;
+        case STPSourceTypeWeChatPay:
+            nativeURLString = source.weChatPayDetails.weChatAppURL;
         default:
             // All other sources currently have no native url support
             break;
