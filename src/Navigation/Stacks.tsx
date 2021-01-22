@@ -12,6 +12,8 @@ import {
 } from "App/Scenes/Account"
 import { InviteFriends, InviteFromContacts } from "App/Scenes/Account/InviteFriends"
 import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
+import { EditCreditCard } from "App/Scenes/Account/PaymentAndShipping/EditCreditCard"
+import { EditPaymentMethod } from "App/Scenes/Account/PaymentAndShipping/EditPaymentMethod"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
 import { SurpriseMe } from "App/Scenes/Bag/SurpriseMe"
@@ -20,7 +22,6 @@ import { Brands } from "App/Scenes/Brands"
 import { Browse, Filters } from "App/Scenes/Browse"
 import { CreateAccount } from "App/Scenes/CreateAccount"
 import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ApplyPromoCode/ApplyPromoCode"
-import { EditPaymentModal } from "App/Scenes/CreateAccount/Admitted/ChoosePlanPane/EditPaymentModal"
 import { DebugMenu } from "App/Scenes/DebugMenu"
 import { Faq } from "App/Scenes/Faq"
 import { FitPicConfirmation, FitPicDetail, ShareFitPicToIG } from "App/Scenes/FitPic"
@@ -112,7 +113,6 @@ const ModalStackScreen = () => {
       }}
     >
       <ModalStack.Screen name={Schema.PageNames.FiltersModal} component={Filters} />
-      <ModalStack.Screen name={Schema.PageNames.EditPaymentModal} component={EditPaymentModal} />
       <ModalStack.Screen name={Schema.PageNames.UpdatePaymentPlanModal} component={UpdatePaymentPlanModal} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordModal} component={ResetPassword} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
@@ -211,6 +211,8 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name={Schema.PageNames.ProductRequestGallery} component={ProductRequestGallery} />
       <AccountStack.Screen name={Schema.PageNames.Faq} component={Faq} />
       <AccountStack.Screen name={Schema.PageNames.InviteFriends} component={InviteFriends} />
+      <AccountStack.Screen name={Schema.PageNames.EditPaymentMethod} component={EditPaymentMethod} />
+      <AccountStack.Screen name={Schema.PageNames.EditCreditCard} component={EditCreditCard} />
     </AccountStack.Navigator>
   )
 }

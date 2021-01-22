@@ -1,6 +1,5 @@
 export enum PageNames {
   // Modals
-  EditPaymentModal = "EditPaymentModal",
   UpdatePaymentPlanModal = "UpdatePaymentPlanModal",
   FiltersModal = "FiltersModal",
   ResetPasswordModal = "ResetPasswordModal",
@@ -55,6 +54,8 @@ export enum PageNames {
   ProductRequestConfirmation = "ProductRequestConfirmation",
   ProductRequestGallery = "ProductRequestGallery",
   InviteFriends = "InviteFriends",
+  EditPaymentMethod = "EditPaymentMethod",
+  EditCreditCard = "EditCreditCard",
 
   // Shared
   Product = "Product",
