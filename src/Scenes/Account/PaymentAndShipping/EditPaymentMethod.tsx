@@ -139,7 +139,9 @@ export const EditPaymentMethod: React.FC<{
           <Button
             block
             onPress={() => {
-              navigation.goBack()
+              navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+                screen: NavigationSchema.PageNames.PaymentAndShipping,
+              })
             }}
           >
             Close
