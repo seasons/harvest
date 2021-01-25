@@ -106,8 +106,11 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         apolloClient.resetStore()
         apolloClient.writeQuery({
           query: gql`
-            query GetLocalCache {
-              localBagItems
+            query ResetLocalCache {
+              localBagItems {
+                productID
+                variantID
+              }
             }
           `,
           data: {

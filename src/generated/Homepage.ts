@@ -16,7 +16,7 @@ export interface Homepage_homepage_sections_tagData {
 }
 
 export interface Homepage_homepage_sections_results_Collection {
-  __typename: "Collection" | "HomepageProductRail";
+  __typename: "Collection";
 }
 
 export interface Homepage_homepage_sections_results_Brand {
@@ -219,6 +219,7 @@ export interface Homepage_me_savedItems {
 
 export interface Homepage_me {
   __typename: "Me";
+  id: string;
   customer: Homepage_me_customer | null;
   savedItems: Homepage_me_savedItems[] | null;
 }

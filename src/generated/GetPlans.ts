@@ -68,6 +68,7 @@ export interface GetPlans_me_customer {
 
 export interface GetPlans_me {
   __typename: "Me";
+  id: string;
   customer: GetPlans_me_customer | null;
 }
 

@@ -78,6 +78,7 @@ export interface SurpriseProductVariants_me_customer {
 
 export interface SurpriseProductVariants_me {
   __typename: "Me";
+  id: string;
   bag: SurpriseProductVariants_me_bag[] | null;
   customer: SurpriseProductVariants_me_customer | null;
 }

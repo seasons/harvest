@@ -23,8 +23,11 @@ export const App = () => {
 
       client.writeQuery({
         query: gql`
-          query GetLocalCache {
-            localBagItems
+          query InitializeLocalCache {
+            localBagItems {
+              productID
+              variantID
+            }
           }
         `,
         data: {

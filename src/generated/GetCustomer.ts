@@ -122,6 +122,7 @@ export interface GetCustomer_me_customer {
 
 export interface GetCustomer_me {
   __typename: "Me";
+  id: string;
   user: GetCustomer_me_user | null;
   bag: GetCustomer_me_bag[] | null;
   customer: GetCustomer_me_customer | null;
