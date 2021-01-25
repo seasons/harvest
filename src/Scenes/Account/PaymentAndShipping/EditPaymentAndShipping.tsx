@@ -4,8 +4,7 @@ import { useMutation, useQuery } from "@apollo/client"
 import { Dimensions, Keyboard, KeyboardAvoidingView } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Box, Button, Container, Flex, FixedBackArrow, Radio, Sans, Spacer, TextInput } from "App/Components"
-import styled from "styled-components/native"
+import { Box, Button, Container, Flex, FixedBackArrow, Sans, Spacer, TextInput } from "App/Components"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
 import {
   GetUserPaymentData_me_customer_billingInfo,
@@ -45,16 +44,8 @@ export const PAYMENT_UPDATE = gql`
 `
 
 const UPDATE_PAYMENT_AND_SHIPPING = gql`
-  mutation updatePaymentAndShipping(
-    $billingAddress: AddressInput!
-    $shippingAddress: AddressInput!
-    $phoneNumber: String!
-  ) {
-    updatePaymentAndShipping(
-      billingAddress: $billingAddress
-      shippingAddress: $shippingAddress
-      phoneNumber: $phoneNumber
-    )
+  mutation updatePaymentAndShipping($shippingAddress: AddressInput!, $phoneNumber: String!) {
+    updatePaymentAndShipping(shippingAddress: $shippingAddress, phoneNumber: $phoneNumber)
   }
 `
 
@@ -69,7 +60,7 @@ export const EditPaymentAndShipping: React.FC<{
 }> = screenTrack()(({ navigation, route }) => {
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { previousData, data = previousData } = useQuery(GET_CURRENT_PLAN)
-  const billingInfo: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
+  const billingAddress: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
   const currentPhoneNumber = route?.params?.phoneNumber
   const insets = useSafeAreaInsets()
@@ -81,15 +72,9 @@ export const EditPaymentAndShipping: React.FC<{
     state: currentShippingAddress?.state || "",
     zipCode: currentShippingAddress?.zipCode || "",
   })
-  const [billingAddress, setBillingAddress] = useState({
-    address1: billingInfo?.street1 || "",
-    address2: billingInfo?.street2 || "",
-    city: billingInfo?.city || "",
-    state: billingInfo?.state || "",
-    zipCode: billingInfo?.postal_code || "",
-  })
-  const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState(currentPhoneNumber)
+
+  console.log("billingAddress 1212", billingAddress)
 
   const [updatePaymentAndShipping] = useMutation(UPDATE_PAYMENT_AND_SHIPPING, {
     onError: (error) => {
@@ -135,48 +120,12 @@ export const EditPaymentAndShipping: React.FC<{
     zipCode: shippingZipCode,
   } = shippingAddress
 
-  const {
-    address1: billingAddress1,
-    address2: billingAddress2,
-    city: billingCity,
-    state: billingState,
-    zipCode: billingZipCode,
-  } = billingAddress
-
   const paymentPlan = data?.me?.customer?.paymentPlan
-
-  const handleSameAsDeliveryAddress = () => {
-    if (sameAsDeliveryRadioSelected) {
-      setBillingAddress({
-        address1: "",
-        address2: "",
-        city: "",
-        state: "",
-        zipCode: "",
-      })
-    } else {
-      setBillingAddress({
-        address1: shippingAddress1,
-        address2: shippingAddress2,
-        city: shippingCity,
-        state: shippingState,
-        zipCode: shippingZipCode,
-      })
-    }
-    setSameAsDeliveryRadioSelected(!sameAsDeliveryRadioSelected)
-  }
 
   const handleSaveBtnPressed = async () => {
     setIsMutating(true)
     const result = await updatePaymentAndShipping({
       variables: {
-        billingAddress: {
-          city: billingCity,
-          postalCode: billingZipCode,
-          state: billingState,
-          street1: billingAddress1,
-          street2: billingAddress2,
-        },
         phoneNumber,
         shippingAddress: {
           city: shippingCity,
@@ -254,58 +203,6 @@ export const EditPaymentAndShipping: React.FC<{
             </Flex>
           </>
         )
-      case BILLING_ADDRESS:
-        return (
-          <>
-            <Sans size="4">{BILLING_ADDRESS}</Sans>
-            <Spacer mb={2} />
-            <Radio
-              borderRadius={4}
-              selected={sameAsDeliveryRadioSelected}
-              onSelect={handleSameAsDeliveryAddress}
-              label="Same as delivery address"
-              labelsize="4"
-            />
-            <Spacer mb={2} />
-            <TextInput
-              currentValue={billingAddress1}
-              placeholder="Address 1"
-              onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, address1: text })}
-            />
-            <Spacer mb={2} />
-            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput
-                currentValue={billingAddress2}
-                placeholder="Address 2"
-                style={{ flex: 1 }}
-                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, address2: text })}
-              />
-              <Spacer ml={1} />
-              <TextInput
-                currentValue={billingZipCode}
-                placeholder="Zipcode"
-                style={{ flex: 1 }}
-                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, zipCode: text })}
-              />
-            </Flex>
-            <Spacer mb={2} />
-            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput
-                currentValue={billingCity}
-                placeholder="City"
-                style={{ flex: 1 }}
-                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, city: text })}
-              />
-              <Spacer ml={1} />
-              <TextInput
-                currentValue={billingState}
-                placeholder="State"
-                style={{ flex: 1 }}
-                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, state: text })}
-              />
-            </Flex>
-          </>
-        )
       case PHONE_NUMBER:
         return (
           <>
@@ -320,15 +217,15 @@ export const EditPaymentAndShipping: React.FC<{
         )
       case EDIT_BILLING_INFO:
         return (
-          <Flex flexDirection="row" justifyContent="space-between">
+          <Flex flexDirection="row" justifyContent="space-between" pt={3}>
             {paymentPlan && (
               <Button
                 variant="primaryWhite"
                 size="large"
                 width="100%"
                 onPress={() =>
-                  navigation.navigate("Modal", {
-                    screen: NavigationSchema.PageNames.EditPaymentModal,
+                  navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+                    screen: NavigationSchema.PageNames.EditPaymentMethod,
                     params: { billingAddress, paymentPlan },
                   })
                 }
@@ -339,59 +236,48 @@ export const EditPaymentAndShipping: React.FC<{
           </Flex>
         )
       default:
-        return null
+        return <></>
     }
   }
 
   return (
-    <>
-      <Container insetsBottom={false}>
-        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-        <Box px={2}>
-          <KeyboardAwareFlatList
-            data={sections}
-            ListHeaderComponent={() => (
-              <Box mt={insets.top}>
-                <Spacer mb={2} />
-                <Sans size="7">Payment & Shipping</Sans>
-                <Spacer mb={4} />
-              </Box>
-            )}
-            ItemSeparatorComponent={() => <Spacer mb={6} />}
-            keyExtractor={(item, index) => item + String(index)}
-            renderItem={renderItem}
-            ListFooterComponent={() => <Spacer mb={space(1) * 8 + 50} />}
-            showsVerticalScrollIndicator={false}
-          />
-        </Box>
-        <FixedKeyboardAvoidingView
-          behavior="padding"
-          keyboardVerticalOffset={space(2)}
-          style={{ bottom: insets.bottom }}
-        >
-          <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
-            <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
-              Cancel
-            </Button>
-            <Spacer ml={1} />
-            <Button
-              loading={isMutating}
-              disabled={isMutating}
-              variant="secondaryBlack"
-              size="large"
-              width={buttonWidth}
-              onPress={handleSaveBtnPressed}
-            >
-              Save
-            </Button>
-          </Flex>
-        </FixedKeyboardAvoidingView>
-      </Container>
-    </>
+    <Container insetsBottom={false}>
+      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+      <Box px={2} style={{ flex: 1 }}>
+        <KeyboardAwareFlatList
+          data={sections}
+          ListHeaderComponent={() => (
+            <Box mt={insets.top}>
+              <Spacer mb={2} />
+              <Sans size="7">Payment & Shipping</Sans>
+              <Spacer mb={4} />
+            </Box>
+          )}
+          ItemSeparatorComponent={() => <Spacer mb={3} />}
+          keyExtractor={(item, index) => item + String(index)}
+          renderItem={renderItem}
+          ListFooterComponent={() => <Spacer mb={space(1) * 8 + 50} />}
+          showsVerticalScrollIndicator={false}
+        />
+      </Box>
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={space(2)} style={{ bottom: space(2) }}>
+        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
+          <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
+            Cancel
+          </Button>
+          <Spacer ml={1} />
+          <Button
+            loading={isMutating}
+            disabled={isMutating}
+            variant="secondaryBlack"
+            size="large"
+            width={buttonWidth}
+            onPress={handleSaveBtnPressed}
+          >
+            Save
+          </Button>
+        </Flex>
+      </KeyboardAvoidingView>
+    </Container>
   )
 })
-
-const FixedKeyboardAvoidingView = styled(KeyboardAvoidingView)`
-  position: absolute;
-  left: ${space(2)};
-`

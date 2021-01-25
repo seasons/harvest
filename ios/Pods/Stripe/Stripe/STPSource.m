@@ -13,9 +13,11 @@
 #import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
 #import "STPSourceOwner.h"
+#import "STPSourceKlarnaDetails.h"
 #import "STPSourceReceiver.h"
 #import "STPSourceRedirect.h"
 #import "STPSourceVerification.h"
+#import "STPSourceWeChatPayDetails.h"
 
 #import "NSDictionary+Stripe.h"
 
@@ -38,7 +40,9 @@
 @property (nonatomic, nullable) STPSourceVerification *verification;
 @property (nonatomic, nullable) NSDictionary *details;
 @property (nonatomic, nullable) STPSourceCardDetails *cardDetails;
+@property (nonatomic, nullable) STPSourceKlarnaDetails *klarnaDetails;
 @property (nonatomic, nullable) STPSourceSEPADebitDetails *sepaDebitDetails;
+@property (nonatomic, nullable) STPSourceWeChatPayDetails *weChatPayDetails;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 // See STPSource+Private.h
@@ -62,6 +66,8 @@
              @"p24": @(STPSourceTypeP24),
              @"eps": @(STPSourceTypeEPS),
              @"multibanco": @(STPSourceTypeMultibanco),
+             @"wechat": @(STPSourceTypeWeChatPay),
+             @"klarna": @(STPSourceTypeKlarna),
              };
 }
 
@@ -258,21 +264,23 @@
 
     if (source.type == STPSourceTypeCard) {
         source.cardDetails = [STPSourceCardDetails decodedObjectFromAPIResponse:source.details];
-    }
-    else if (source.type == STPSourceTypeSEPADebit) {
+    } else if (source.type == STPSourceTypeSEPADebit) {
         source.sepaDebitDetails = [STPSourceSEPADebitDetails decodedObjectFromAPIResponse:source.details];
+    } else if (source.type == STPSourceTypeWeChatPay) {
+        source.weChatPayDetails = [STPSourceWeChatPayDetails decodedObjectFromAPIResponse:source.details];
+    } else if (source.type == STPSourceTypeKlarna) {
+        source.klarnaDetails = [STPSourceKlarnaDetails decodedObjectFromAPIResponse:source.details];
     }
 
     return source;
 }
 
-#pragma mark - STPPaymentMethod
+#pragma mark - STPPaymentOption
 
 - (UIImage *)image {
     if (self.type == STPSourceTypeCard && self.cardDetails != nil) {
         return [STPImageLibrary brandImageForCardBrand:self.cardDetails.brand];
-    }
-    else {
+    } else {
         return [STPImageLibrary brandImageForCardBrand:STPCardBrandUnknown];
     }
 }
@@ -280,8 +288,7 @@
 - (UIImage *)templateImage {
     if (self.type == STPSourceTypeCard && self.cardDetails != nil) {
         return [STPImageLibrary templatedBrandImageForCardBrand:self.cardDetails.brand];
-    }
-    else {
+    } else {
         return [STPImageLibrary templatedBrandImageForCardBrand:STPCardBrandUnknown];
     }
 }
@@ -294,8 +301,7 @@
             if (self.cardDetails != nil) {
                 NSString *brand = [STPCard stringFromBrand:self.cardDetails.brand];
                 return [NSString stringWithFormat:@"%@ %@", brand, self.cardDetails.last4];
-            }
-            else {
+            } else {
                 return [STPCard stringFromBrand:STPCardBrandUnknown];
             }
         case STPSourceTypeGiropay:
@@ -316,9 +322,17 @@
             return STPLocalizedString(@"EPS", @"Source type brand name");
         case STPSourceTypeMultibanco:
             return STPLocalizedString(@"Multibanco", @"Source type brand name");
+        case STPSourceTypeWeChatPay:
+            return STPLocalizedString(@"WeChat Pay", @"Source type brand name");
+        case STPSourceTypeKlarna:
+            return STPLocalizedString(@"Klarna", @"Source type brand name");
         case STPSourceTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
     }
+}
+
+- (BOOL)isReusable {
+    return (self.usage != STPSourceUsageSingleUse);
 }
 
 @end

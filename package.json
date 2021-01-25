@@ -1,6 +1,6 @@
 {
   "name": "harvest",
-  "version": "1.11.0",
+  "version": "1.11.3",
   "engines": {
     "node": ">=12.x.x"
   },
@@ -94,7 +94,7 @@
     "reanimated-bottom-sheet": "^1.0.0-alpha.20",
     "styled-components": "^4.3.2",
     "styled-system": "^5.1.1",
-    "tipsi-stripe": "https://github.com/ashfurrow/tipsi-stripe.git#fix-infinite-loop",
+    "tipsi-stripe": "8.0.2",
     "unfetch": "^4.1.0"
   },
   "devDependencies": {

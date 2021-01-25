@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { LetterSize, BottomSizeType, ProductType } from "./globalTypes";
+import { LetterSize, BottomSizeType } from "./globalTypes";
 
 // ====================================================
 // GraphQL fragment: CommonProductVariant
@@ -39,37 +39,6 @@ export interface CommonProductVariant_manufacturerSizes {
   bottom: CommonProductVariant_manufacturerSizes_bottom | null;
 }
 
-export interface CommonProductVariant_internalSize_top {
-  __typename: "TopSize";
-  id: string;
-  letter: LetterSize | null;
-  sleeve: number | null;
-  shoulder: number | null;
-  chest: number | null;
-  neck: number | null;
-  length: number | null;
-}
-
-export interface CommonProductVariant_internalSize_bottom {
-  __typename: "BottomSize";
-  id: string;
-  type: BottomSizeType | null;
-  value: string | null;
-  waist: number | null;
-  rise: number | null;
-  hem: number | null;
-  inseam: number | null;
-}
-
-export interface CommonProductVariant_internalSize {
-  __typename: "Size";
-  id: string;
-  productType: ProductType | null;
-  display: string;
-  top: CommonProductVariant_internalSize_top | null;
-  bottom: CommonProductVariant_internalSize_bottom | null;
-}
-
 export interface CommonProductVariant {
   __typename: "ProductVariant";
   id: string;
@@ -83,5 +52,4 @@ export interface CommonProductVariant {
   isSaved: boolean;
   hasRestockNotification: boolean;
   manufacturerSizes: CommonProductVariant_manufacturerSizes[] | null;
-  internalSize: CommonProductVariant_internalSize | null;
 }

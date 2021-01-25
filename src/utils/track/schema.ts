@@ -251,6 +251,7 @@ export enum ActionNames {
   // FitPic
   FitPicConfirmationCancelButtonTapped = "FitPic Confirmation Cancel Button Tapped",
   FitPicConfirmationUsePhotoButtonTapped = "FitPic Confirmation Use Photo Button Tapped",
+  DownloadFitPicShareImageTapped = "Download FitPic Share Image Tapped",
 }
 
 /**

@@ -1,8 +1,8 @@
-import React, { useImperativeHandle, useState, useRef, useEffect } from "react"
-import { Sans, Box, Spacer, Flex, FadeInImage } from "App/Components"
+import { Box, FadeInImage, Flex, Sans, Spacer } from "App/Components"
+import React, { useEffect, useImperativeHandle, useRef, useState } from "react"
 import { Dimensions, findNodeHandle, TouchableWithoutFeedback, View } from "react-native"
-import { Homepage_fitPics as FitPics } from "src/generated/Homepage"
 import { SharedElement } from "react-navigation-shared-element"
+import { Homepage_fitPics as FitPics } from "src/generated/Homepage"
 
 export interface FitPicCollectionProps {
   items: FitPics[]
