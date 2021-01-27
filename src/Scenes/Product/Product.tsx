@@ -20,12 +20,16 @@ import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements, ProductB
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { VariantPicker } from "./Components/VariantPicker"
 import { GET_PRODUCT } from "./Queries"
-import { PRODUCT_VARIANT_BUY_NEW_MUTATION, PRODUCT_VARIANT_BUY_USED_MUTATION } from "./Mutations"
+import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { SizeWarning } from "./Components/SizeWarning"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
+enum orderType {
+  BUY_USED = "BUY_USED",
+  BUY_NEW = "BUY_NEW
+}
 
 const ADD_VIEWED_PRODUCT = gql`
   mutation AddViewedProduct($item: ID!) {
@@ -128,23 +132,20 @@ export const Product = screenTrack({
     },
   })
 
-  const [handleBuyNew] = useMutation(PRODUCT_VARIANT_BUY_NEW_MUTATION, {
-    variables: {
-      variantID: selectedVariant?.id,
-    },
+  const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
     onCompleted: () => {
       // TODO: navigate to receipt screen
     },
   })
 
-  const [handleBuyUsed] = useMutation(PRODUCT_VARIANT_BUY_USED_MUTATION, {
-    variables: {
-      variantID: selectedVariant?.id,
-    },
-    onCompleted: () => {
-      // TODO: navigate to receipt screen
-    },
-  })
+  const handleCreateDraftOrder = (orderType: "BUY_USED" | "BUY_NEW") => {
+    return createDraftOrder({ 
+      variables: {
+        productVariantId: selectedVariant?.id,
+        orderType
+      }
+    })
+  }
 
   useEffect(() => {
     const hasRestockNotif = selectedVariant?.hasRestockNotification
@@ -240,8 +241,8 @@ export const Product = screenTrack({
           <ProductBuy
             product={product}
             selectedVariant={selectedVariant}
-            onBuyNew={handleBuyNew}
-            onBuyUsed={handleBuyUsed}
+            onBuyNew={() => handleCreateDraftOrder(orderType.BUY_NEW)}
+            onBuyUsed={() => handleCreateDraftOrder(orderType.BUY_USED)}
           />
         )
       default:
