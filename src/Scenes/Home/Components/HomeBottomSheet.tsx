@@ -83,6 +83,7 @@ const sectionsFrom = (data: any) => {
             title: section.title,
             results: section.products,
             id: section.id,
+            slug: section.slug,
           }
         })
         .filter(Boolean)

@@ -5,6 +5,7 @@ import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { Platform } from "react-native"
 import * as Sentry from "@sentry/react-native"
 import { resolvers, typeDefs } from "./resolvers"
+import { isEmpty } from "lodash"
 
 export const setupApolloClient = async () => {
   const cache = new InMemoryCache({
@@ -24,6 +25,17 @@ export const setupApolloClient = async () => {
               }
               existing = merged
               return existing
+            },
+          },
+          productsConnection: {
+            merge(existing = {}, incoming = {}, { args: { skip = 0 } }) {
+              let mergedEdges = !isEmpty(existing) ? existing?.edges?.slice(0) : []
+              if (incoming?.edges?.length > 0) {
+                for (let i = 0; i < incoming?.edges?.length; ++i) {
+                  mergedEdges[skip + i] = incoming?.edges?.[i]
+                }
+              }
+              return { ...existing, ...incoming, edges: mergedEdges }
             },
           },
         },
