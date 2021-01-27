@@ -70,7 +70,7 @@ export const ProductBuy: React.FC<{
   onBuyUsed: () => Promise<any>
   onBuyNew: () => Promise<any>
 }> = ({ selectedVariant, onBuyUsed, onBuyNew, product }) => {
-  if (selectedVariant?.price?.buyUsedEnabled && selectedVariant?.price?.buyUsedPrice && product?.reserved) {
+  if (selectedVariant?.price?.buyUsedEnabled && selectedVariant?.price?.buyUsedPrice) {
     const price = selectedVariant?.price?.buyUsedPrice.toLocaleString("en-US", {
       style: "currency",
       currency: "USD",

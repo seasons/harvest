@@ -1,10 +1,13 @@
 import gql from "graphql-tag"
 
 export const PRODUCT_VARIANT_CREATE_ORDER = gql`
-  mutation ProductVariantCreateOrder(input: ProductVariantCreateOrderInput!) {
-    productVariantCreateOrder(input: $input) {
+  mutation ProductVariantCreateOrder($input: CreateProductVariantDraftOrderInput!) {
+    createProductVariantOrder(input: $input) {
       total
-      lineItems
+      lineItems {
+        amount
+        description
+      }
       shippingAddress {
         address1
         address2
@@ -17,10 +20,13 @@ export const PRODUCT_VARIANT_CREATE_ORDER = gql`
 `
 
 export const PRODUCT_VARIANT_CREATE_DRAFT_ORDER = gql`
-  mutation ProductVariantCreateDraftOrder(input: ProductVariantCreateDraftOrderInput!) {
-    productVariantCreateDraftOrder(input: $input) {
+  mutation ProductVariantCreateDraftOrder($input: CreateProductVariantDraftOrderInput!) {
+    createProductVariantDraftOrder(input: $input) {
       total
-      lineItems
+      lineItems {
+        amount
+        description
+      }
       shippingAddress {
         address1
         address2

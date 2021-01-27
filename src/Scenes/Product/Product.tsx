@@ -28,7 +28,7 @@ const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
 enum orderType {
   BUY_USED = "BUY_USED",
-  BUY_NEW = "BUY_NEW
+  BUY_NEW = "BUY_NEW",
 }
 
 const ADD_VIEWED_PRODUCT = gql`
@@ -133,17 +133,20 @@ export const Product = screenTrack({
   })
 
   const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
-    onCompleted: () => {
+    onCompleted: (res) => {
+      console.log("res", res)
       // TODO: navigate to receipt screen
     },
   })
 
   const handleCreateDraftOrder = (orderType: "BUY_USED" | "BUY_NEW") => {
-    return createDraftOrder({ 
+    return createDraftOrder({
       variables: {
-        productVariantId: selectedVariant?.id,
-        orderType
-      }
+        input: {
+          productVariantId: selectedVariant?.id,
+          orderType,
+        },
+      },
     })
   }
 
