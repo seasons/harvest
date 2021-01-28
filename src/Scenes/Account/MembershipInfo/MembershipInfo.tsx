@@ -34,7 +34,6 @@ export const GET_MEMBERSHIP_INFO = gql`
             id
             price
             description
-            tier
           }
         }
       }
@@ -74,7 +73,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={80} />
           <Sans size="7">Membership info</Sans>
           <Spacer mb={3} />
-          <MembershipCard memberName={`${firstName} ${lastName}`} planTier={plan?.tier} />
+          <MembershipCard memberName={`${firstName} ${lastName}`} />
           <Spacer mb={4} />
           {!!plan?.price && (
             <>

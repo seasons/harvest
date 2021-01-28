@@ -1,6 +1,6 @@
 import { Box, Button, Sans, Spacer, Separator } from "App/Components"
 import { AppleLogo } from "Assets/svgs/AppleLogo"
-import { Dimensions } from "react-native"
+import { Dimensions, TouchableWithoutFeedback } from "react-native"
 import React from "react"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { space } from "App/utils"
@@ -8,7 +8,7 @@ import { space } from "App/utils"
 const windowDimensions = Dimensions.get("window")
 const windowWidth = windowDimensions.width
 
-export const PaymentMethods = ({ onApplePay, onCreditCard }) => {
+export const PaymentMethods = ({ onApplePay, onCreditCard, setOpenPopUp }) => {
   const insets = useSafeAreaInsets()
   return (
     <Box pb={insets.bottom + space(4)} px={2} style={{ width: windowWidth }}>
@@ -24,6 +24,17 @@ export const PaymentMethods = ({ onApplePay, onCreditCard }) => {
       <Button block Icon={AppleLogo} onPress={onApplePay}>
         Apple Pay
       </Button>
+      <Spacer mb={3} />
+      {!!setOpenPopUp && (
+        <>
+          <TouchableWithoutFeedback onPress={() => setOpenPopUp(false)}>
+            <Sans size="4" style={{ textAlign: "center", textDecorationLine: "underline", width: "100%" }}>
+              Cancel
+            </Sans>
+          </TouchableWithoutFeedback>
+          <Spacer mb={1} />
+        </>
+      )}
     </Box>
   )
 }
