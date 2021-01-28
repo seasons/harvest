@@ -24,7 +24,6 @@ import { Coupon, PaymentMethod } from "../../CreateAccount"
 import { PopUp } from "App/Components/PopUp"
 import { themeProps } from "App/Components/Theme"
 import { calcFinalPrice } from "./utils"
-import { AllAccessDisabledPopup } from "./AllAccessDisabledPopup"
 import { GET_USER } from "App/Scenes/Account/Account"
 import { Spinner } from "App/Components/Spinner"
 import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMethods"
@@ -71,7 +70,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
 }) => {
   const coupon = setCoupon(appliedCoupon, data?.me?.customer?.coupon)
 
-  const allAccessEnabled = data?.me?.customer?.admissions?.allAccessEnabled
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
   const [openPopUp, setOpenPopUp] = useState(false)
@@ -82,7 +80,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   const [currentView, setCurrentView] = useState(0)
   const [tiers, setTiers] = useState([])
   const [isMutating, setIsMutating] = useState(false)
-  const [showAllAccessDisabledMessage, setShowAllAccessDisabledMessage] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const scrollViewRef = React.useRef(null)
   const [applePayCheckout] = useMutation(PAYMENT_CHECKOUT, {
@@ -357,11 +354,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                           : TrackSchema.ActionNames.Tier1PlanTabTapped,
                       actionType: TrackSchema.ActionTypes.Tap,
                     })
-                    if (page === 1 && !allAccessEnabled) {
-                      setShowAllAccessDisabledMessage(true)
-                    } else {
-                      setCurrentView(page as number)
-                    }
+                    setCurrentView(page as number)
                   }}
                 />
               </>
@@ -454,10 +447,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       <PopUp show={openPopUp}>
         <PaymentMethods onApplePay={onApplePay} onCreditCard={onAddCreditCard} setOpenPopUp={setOpenPopUp} />
       </PopUp>
-      <AllAccessDisabledPopup
-        show={showAllAccessDisabledMessage}
-        onPress={() => setShowAllAccessDisabledMessage(false)}
-      />
       {showLoadingOverlay && (
         <Overlay>
           <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
