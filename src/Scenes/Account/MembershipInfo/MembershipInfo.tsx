@@ -34,6 +34,7 @@ export const GET_MEMBERSHIP_INFO = gql`
             id
             price
             description
+            itemCount
           }
         }
       }
@@ -53,6 +54,8 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
   const plan = customer?.membership?.plan
+
+  const itemCount = plan?.itemCount
 
   if (!plan) {
     return (
@@ -82,7 +85,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
               <Separator />
               <Spacer mb={1} />
               <Sans size="4" color={color("black50")}>
-                {`$${plan.price / 100}`} / per month
+                {`${itemCount} items, $${plan.price / 100}`} / per month
               </Sans>
             </>
           )}
