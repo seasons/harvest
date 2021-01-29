@@ -1,19 +1,19 @@
-import { Box, Flex, Handle } from "App/Components"
+import { Box, Flex, Handle, Sans } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
 import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
 import { space } from "App/utils"
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { Dimensions } from "react-native"
+import { Dimensions, Text } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
-
 import { useNavigation } from "@react-navigation/native"
-
 import { BrandsRail, CategoriesRail, FitPicCollection, HomeFooter, ProductsRail, TagsRail } from "./"
 import { AddPhotoButton } from "./AddPhotoButton"
 import { FitPicCollectionRef } from "./FitPicCollection"
+import { InviteSVG } from "Assets/svgs/Invite"
+import { HomepageBanner } from "App/Components/HomepageBanner"
 
 const dimensions = Dimensions.get("window")
 
@@ -26,6 +26,7 @@ enum SectionType {
   FitPics = "FitPics",
   Categories = "Categories",
   ProductsByTag = "ProductsByTag",
+  Banner = "Banner",
 }
 
 const sectionsFrom = (data: any) => {
@@ -33,6 +34,17 @@ const sectionsFrom = (data: any) => {
   if (data?.blogPosts) {
     sections.push({ type: SectionType.BlogPosts, results: data?.blogPosts })
   }
+  sections.push({
+    type: SectionType.Banner,
+    Icon: <InviteSVG />,
+    text: "Refer a friend. Get a free month.",
+    subText: (
+      <Sans size="4" color="black50">
+        You have 1 invite left. <Text style={{ textDecorationLine: "underline" }}>Get your link</Text>
+      </Sans>
+    ),
+    onPress: () => {},
+  })
   if (data?.justAddedOuterwear?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedOuterwear, title: "Just added outerwear" })
   }
@@ -149,6 +161,8 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
 
   const renderItem = (item) => {
     switch (item.type) {
+      case SectionType.Banner:
+        return <HomepageBanner text={item.text} subText={item.subText} onPress={item.onPress} Icon={item.Icon} />
       case SectionType.Brands:
         return <BrandsRail title={item.title} items={item.results} />
       case SectionType.ArchivalProducts:
