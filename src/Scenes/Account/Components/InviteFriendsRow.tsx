@@ -11,14 +11,14 @@ interface InvitedFriendsRowProps {
 export const InvitedFriendsRow: React.FC<InvitedFriendsRowProps> = ({ referralLink }) => {
   const navigation = useNavigation()
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("InviteFriends")}>
+    <TouchableOpacity onPress={() => navigation.navigate("ReferralView")}>
       <Box my={4} mx={2}>
         <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" justifyContent="space-between">
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
             <Box style={{ maxWidth: 300 }}>
-              <Sans size="5">Refer a friend & Earn</Sans>
+              <Sans size="5">Refer a friend & earn</Sans>
               <Sans size="4" color="black50">
-                Get 50% off your next month
+                You have a new invite. Get your link
               </Sans>
             </Box>
           </Flex>
