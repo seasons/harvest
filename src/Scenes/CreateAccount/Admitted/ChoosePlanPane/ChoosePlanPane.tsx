@@ -256,8 +256,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     })
   }
 
-  console.log("selectedPlan", selectedPlan)
-
   const onChoosePlan = () => {
     tracking.trackEvent({
       actionName: TrackSchema.ActionNames.ChoosePlanTapped,
