@@ -84,7 +84,6 @@ export const GET_PLANS = gql`
         admissions {
           id
           admissable
-          allAccessEnabled
           authorizationsCount
         }
         coupon {

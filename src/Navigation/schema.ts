@@ -28,6 +28,7 @@ export enum PageNames {
   Brands = "Brands",
   FitPicDetail = "FitPicDetail",
   FitPicConfirmation = "FitPicConfirmation",
+  ReferralView = "ReferralView",
 
   // Browse
   Browse = "Browse",
@@ -53,7 +54,6 @@ export enum PageNames {
   FinishProductRequest = "FinishProductRequest",
   ProductRequestConfirmation = "ProductRequestConfirmation",
   ProductRequestGallery = "ProductRequestGallery",
-  InviteFriends = "InviteFriends",
   EditPaymentMethod = "EditPaymentMethod",
   EditCreditCard = "EditCreditCard",
 
