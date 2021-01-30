@@ -1,7 +1,5 @@
 import { Box, Button, Container, FixedBackArrow, Flex, Radio, Sans, Separator, Spacer } from "App/Components"
 import { defaultVariant, getColorsForVariant, TextInput } from "App/Components/TextInput"
-import { themeProps } from "App/Components/Theme"
-import { fontFamily } from "App/Components/Typography"
 import { color, space } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { Check } from "Assets/svgs"
@@ -26,6 +24,7 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
   const textInputRef = useRef(null)
   const insets = useSafeAreaInsets()
   const referralLink = route.params.referralLink
+  const shareMessage = route.params.shareMessage
   const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
 
   useEffect(() => {
@@ -122,24 +121,9 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
             >
               <ScrollView horizontal showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                 {selectedContact && (
-                  <>
-                    <Text
-                      style={{
-                        color: "white",
-                        fontFamily: fontFamily.sans.medium.toString(),
-                        fontSize: themeProps.typeSizes[1].fontSize,
-                        textAlignVertical: "center",
-                        backgroundColor: "black",
-                        paddingHorizontal: 8,
-                        paddingVertical: 4,
-                        borderRadius: 4,
-                        marginVertical: 8,
-                      }}
-                    >
-                      {selectedContact.name}
-                    </Text>
-                    <Spacer mx={0.5} />
-                  </>
+                  <Flex style={{ flex: 1 }} alignItems="center" flexDirection="row">
+                    <Sans size="3">{selectedContact.name}</Sans>
+                  </Flex>
                 )}
                 <TextInput
                   autoCompleteType="postal-code"
@@ -194,7 +178,7 @@ export const InviteFromContacts = screenTrack()(({ route, navigation }) => {
               variant="primaryBlack"
               disabled={!selectedContact}
               onPress={() => {
-                const body = `Here’s my referral link for Seasons. Get 50% off your first month when you sign-up: ${referralLink}`
+                const body = `${shareMessage} ${referralLink}`
                 Linking.openURL(`sms://${selectedContact.phoneNumbers[0]}&body=${body}`)
               }}
               block

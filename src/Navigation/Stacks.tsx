@@ -10,7 +10,7 @@ import {
   EditStylePreferences,
   PaymentAndShipping,
 } from "App/Scenes/Account"
-import { InviteFriends, InviteFromContacts } from "App/Scenes/Account/InviteFriends"
+import { InviteFromContacts } from "App/Scenes/Account/InviteFriends"
 import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
 import { EditCreditCard } from "App/Scenes/Account/PaymentAndShipping/EditCreditCard"
 import { EditPaymentMethod } from "App/Scenes/Account/PaymentAndShipping/EditPaymentMethod"
@@ -29,6 +29,7 @@ import { Home } from "App/Scenes/Home"
 import { Product, SaveProduct } from "App/Scenes/Product"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
+import { ReferralView } from "App/Scenes/ReferralView"
 import { Reservation, ReservationConfirmation, ShareReservationToIG } from "App/Scenes/Reservation"
 import {
   ReservationFeedback,
@@ -151,6 +152,7 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name={Schema.PageNames.Tag} component={Tag} />
       <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
       <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />
+      <HomeStack.Screen name={Schema.PageNames.ReferralView} component={ReferralView} />
       <HomeStack.Screen name={Schema.PageNames.FitPicConfirmation} component={FitPicConfirmation} />
       <HomeStack.Screen
         name={Schema.PageNames.FitPicDetail}
@@ -189,9 +191,9 @@ const BagStackScreen = () => {
       <BagStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
       <BagStack.Screen name={Schema.PageNames.CurrentRotation} component={CurrentRotation} />
       <BagStack.Screen name={Schema.PageNames.Faq} component={Faq} />
+      <BagStack.Screen name={Schema.PageNames.ReferralView} component={ReferralView} />
       <BagStack.Screen name={Schema.PageNames.Reservation} component={Reservation} />
       <BagStack.Screen name={Schema.PageNames.ReservationConfirmation} component={ReservationConfirmation} />
-      <BagStack.Screen name={Schema.PageNames.InviteFriends} component={InviteFriends} />
     </BagStack.Navigator>
   )
 }
@@ -210,7 +212,7 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name={Schema.PageNames.ProductRequestConfirmation} component={ProductRequestConfirmation} />
       <AccountStack.Screen name={Schema.PageNames.ProductRequestGallery} component={ProductRequestGallery} />
       <AccountStack.Screen name={Schema.PageNames.Faq} component={Faq} />
-      <AccountStack.Screen name={Schema.PageNames.InviteFriends} component={InviteFriends} />
+      <AccountStack.Screen name={Schema.PageNames.ReferralView} component={ReferralView} />
       <AccountStack.Screen name={Schema.PageNames.EditPaymentMethod} component={EditPaymentMethod} />
       <AccountStack.Screen name={Schema.PageNames.EditCreditCard} component={EditCreditCard} />
     </AccountStack.Navigator>

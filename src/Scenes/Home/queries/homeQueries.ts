@@ -51,6 +51,13 @@ const CustomerTraitsFragment = gql`
 
 export const GET_HOMEPAGE = gql`
   query Homepage($firstFitPics: Int!, $skipFitPics: Int) {
+    banner: view(viewID: "Banner") {
+      id
+      title
+      caption
+      type
+      properties
+    }
     homepage {
       sections {
         title
