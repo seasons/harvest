@@ -14,7 +14,7 @@ interface TabBarProps {
   tabs: string[]
   disabledTabs?: string[]
   /** Auto:  A callback for usage in the tab buttons */
-  goToPage?: (page: Number) => null | void
+  goToPage?: (page: number) => null | void
   /** Auto: The index of the currently active tab */
   activeTab?: number
   /** Auto: How much horiztonal space do you have */

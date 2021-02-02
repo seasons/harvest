@@ -14,10 +14,11 @@ import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
-import { FlatList, RefreshControl, StatusBar } from "react-native"
+import { FlatList, RefreshControl, StatusBar, View } from "react-native"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import { CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
+import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 
 export enum BagView {
   Bag = 0,
@@ -32,6 +33,7 @@ export const Bag = screenTrack()((props) => {
   const [itemCount, setItemCount] = useState(DEFAULT_ITEM_COUNT)
   const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
+  const { bottomSheetBackdropIsVisible } = useBottomSheetContext()
   const tracking = useTracking()
 
   const { navigation, route } = props
@@ -320,59 +322,66 @@ export const Bag = screenTrack()((props) => {
 
   return (
     <Container insetsBottom={false}>
-      <TabBar
-        spaceEvenly
-        tabs={["Bag", "Saved", "History"]}
-        activeTab={currentView}
-        goToPage={(page: BagView) => {
-          tracking.trackEvent({
-            actionName: (() => {
-              if (page === 0) {
-                return TrackSchema.ActionNames.BagTabTapped
-              } else if (page === 1) {
-                return TrackSchema.ActionNames.SavedTabTapped
-              } else {
-                return TrackSchema.ActionNames.ReservationHistoryTabTapped
-              }
-            })(),
-            actionType: TrackSchema.ActionTypes.Tap,
-          })
-          setCurrentView(page)
-        }}
-      />
-      <FlatList
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        data={sections}
-        contentContainerStyle={pauseStatus === "paused" ? { height: "100%", width: "100%", position: "relative" } : {}}
-        keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
-        renderItem={(item) => {
-          return renderItem(item)
-        }}
-        ListFooterComponent={() => <Spacer pb={160} />}
-      />
-      {isBagView && pauseStatus !== "paused" && !hasActiveReservation && (
-        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-          <Spacer mb={2} />
-          <Box px={2}>
-            <Button
-              block
-              onPress={() => {
-                tracking.trackEvent({
-                  actionName: TrackSchema.ActionNames.ReserveButtonTapped,
-                  actionType: TrackSchema.ActionTypes.Tap,
-                  bagIsFull,
-                })
-                handleReserve(navigation)
-              }}
-              disabled={!bagIsFull || isMutating}
-              loading={isMutating}
-            >
-              Reserve
-            </Button>
-          </Box>
-          <Spacer mb={2} />
-        </FadeBottom2>
-      )}
+      <View
+        pointerEvents={bottomSheetBackdropIsVisible ? "none" : "auto"}
+        style={{ flexDirection: "column", flex: 1 }}
+      >
+        <TabBar
+          spaceEvenly
+          tabs={["Bag", "Saved", "History"]}
+          activeTab={currentView}
+          goToPage={(page: BagView) => {
+            tracking.trackEvent({
+              actionName: (() => {
+                if (page === 0) {
+                  return TrackSchema.ActionNames.BagTabTapped
+                } else if (page === 1) {
+                  return TrackSchema.ActionNames.SavedTabTapped
+                } else {
+                  return TrackSchema.ActionNames.ReservationHistoryTabTapped
+                }
+              })(),
+              actionType: TrackSchema.ActionTypes.Tap,
+            })
+            setCurrentView(page)
+          }}
+        />
+        <FlatList
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          data={sections}
+          contentContainerStyle={
+            pauseStatus === "paused" ? { height: "100%", width: "100%", position: "relative" } : {}
+          }
+          keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
+          renderItem={(item) => {
+            return renderItem(item)
+          }}
+          ListFooterComponent={() => <Spacer pb={160} />}
+        />
+        {isBagView && pauseStatus !== "paused" && !hasActiveReservation && (
+          <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
+            <Spacer mb={2} />
+            <Box px={2}>
+              <Button
+                block
+                onPress={() => {
+                  tracking.trackEvent({
+                    actionName: TrackSchema.ActionNames.ReserveButtonTapped,
+                    actionType: TrackSchema.ActionTypes.Tap,
+                    bagIsFull,
+                  })
+                  handleReserve(navigation)
+                }}
+                disabled={!bagIsFull || isMutating}
+                loading={isMutating}
+              >
+                Reserve
+              </Button>
+            </Box>
+            <Spacer mb={2} />
+          </FadeBottom2>
+        )}
+      </View>
     </Container>
   )
 })
