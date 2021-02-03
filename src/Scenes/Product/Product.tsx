@@ -5,6 +5,7 @@ import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema, screenTrack } from "App/utils/track"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
@@ -12,19 +13,27 @@ import { Dimensions, FlatList, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
+
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
+
 import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
-import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
+import {
+  ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements
+} from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
-import { VariantPicker } from "./Components/VariantPicker"
-import { GET_PRODUCT } from "./Queries"
-import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { SizeWarning } from "./Components/SizeWarning"
+import { VariantPicker } from "./Components/VariantPicker"
+import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
+import { GET_PRODUCT } from "./Queries"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
+enum orderType {
+  BUY_USED = "Used",
+  BUY_NEW = "New",
+}
 
 const ADD_VIEWED_PRODUCT = gql`
   mutation AddViewedProduct($item: ID!) {
@@ -42,7 +51,6 @@ export const UPSERT_RESTOCK_NOTIF = gql`
     }
   }
 `
-
 export const Product = screenTrack({
   entityType: Schema.EntityTypes.Product,
 })(({ route, navigation }) => {
@@ -127,6 +135,24 @@ export const Product = screenTrack({
       setIsMutatingNotify(false)
     },
   })
+
+  const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
+    onCompleted: (res) => {
+      console.log("res", res)
+      // TODO: navigate to receipt screen
+    },
+  })
+
+  const handleCreateDraftOrder = (orderType: "Used" | "New") => {
+    return createDraftOrder({
+      variables: {
+        input: {
+          productVariantId: selectedVariant?.id,
+          orderType,
+        },
+      },
+    })
+  }
 
   useEffect(() => {
     const hasRestockNotif = selectedVariant?.hasRestockNotification
@@ -217,6 +243,15 @@ export const Product = screenTrack({
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
       case "moreLikeThis":
         return <MoreFromBrand flatListRef={flatListRef} products={brandProducts} brandName={product.brand.name} />
+      case "buy":
+        return (
+          <ProductBuy
+            product={product}
+            selectedVariant={selectedVariant}
+            onBuyNew={() => handleCreateDraftOrder(orderType.BUY_NEW)}
+            onBuyUsed={() => handleCreateDraftOrder(orderType.BUY_USED)}
+          />
+        )
       default:
         return null
     }
@@ -224,7 +259,7 @@ export const Product = screenTrack({
 
   const selectionButtonsBottom = showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0
   const listFooterSpacing = selectionButtonsBottom + 58
-  const sections = ["imageRail", "productDetails", "productMeasurements", "aboutTheBrand", "moreLikeThis"]
+  const sections = ["imageRail", "productDetails", "buy", "productMeasurements", "aboutTheBrand", "moreLikeThis"]
   const url = `https://www.wearseasons.com/product/${product.slug}`
   const title = product.name
   const message = `Check out ${product.name} on Seasons!`
