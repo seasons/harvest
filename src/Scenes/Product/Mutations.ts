@@ -9,6 +9,8 @@ export const PRODUCT_VARIANT_CREATE_DRAFT_ORDER = gql`
       total
       type
       status
+      createdAt
+      updatedAt
       items {
         id
         recordID
@@ -19,8 +21,6 @@ export const PRODUCT_VARIANT_CREATE_DRAFT_ORDER = gql`
         taxPercentage
         taxPrice
       }
-      createdAt
-      updatedAt
     }
   }
 `

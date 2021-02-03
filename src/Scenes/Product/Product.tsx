@@ -7,6 +7,7 @@ import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema, screenTrack } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, StatusBar } from "react-native"
@@ -19,9 +20,7 @@ import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
 
 import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
-import {
-  ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements
-} from "./Components"
+import { ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
@@ -110,6 +109,8 @@ export const Product = screenTrack({
     ],
   })
 
+  console.log("data", data)
+
   const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
     variables: {
       variantID: selectedVariant?.id,
@@ -144,14 +145,15 @@ export const Product = screenTrack({
   })
 
   const handleCreateDraftOrder = (orderType: "Used" | "New") => {
-    return createDraftOrder({
-      variables: {
-        input: {
-          productVariantId: selectedVariant?.id,
-          orderType,
-        },
-      },
-    })
+    navigation.navigate(NavigationSchema.PageNames.Order)
+    // return createDraftOrder({
+    //   variables: {
+    //     input: {
+    //       productVariantId: selectedVariant?.id,
+    //       orderType,
+    //     },
+    //   },
+    // })
   }
 
   useEffect(() => {

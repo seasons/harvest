@@ -60,6 +60,10 @@ export enum PageNames {
   // Shared
   Product = "Product",
   Webview = "Webview",
+
+  // Order
+  Order = "Order",
+  OrderConfirmation = "OrderConfirmation",
 }
 
 export enum StackNames {

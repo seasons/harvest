@@ -1,6 +1,4 @@
-import {
-  GetProduct_products, GetProduct_products_brand_products_variants
-} from "App/generated/GetProduct"
+import { GetProduct_products, GetProduct_products_brand_products_variants } from "App/generated/GetProduct"
 import React from "react"
 import { Linking } from "react-native"
 import styled from "styled-components/native"
@@ -56,7 +54,7 @@ const ProductBuyUsed: React.FC<{
         Buy used for {price}
       </Button>
     ) : (
-      <Button variant="primaryGray" block disabled>
+      <Button variant="primaryBlack" block disabled>
         Sold Out
       </Button>
     )}
@@ -74,14 +72,16 @@ export const ProductBuy: React.FC<{
   onBuyNew: () => Promise<any>
 }> = ({ selectedVariant, onBuyUsed, onBuyNew, product }) => {
   if (selectedVariant?.price?.buyUsedEnabled && selectedVariant?.price?.buyUsedPrice) {
-    const price = selectedVariant?.price?.buyUsedPrice.toLocaleString("en-US", {
+    const priceInDollars = selectedVariant?.price?.buyUsedPrice / 100
+    const price = priceInDollars?.toLocaleString("en-US", {
       style: "currency",
       currency: "USD",
     })
 
     return <ProductBuyUsed price={price} onBuyUsed={onBuyUsed} availableForSale={true} />
   } else if (selectedVariant?.price?.buyNewEnabled && selectedVariant?.price?.buyNewPrice) {
-    const price = selectedVariant?.price?.buyNewPrice.toLocaleString("en-US", {
+    const priceInDollars = selectedVariant?.price?.buyNewPrice / 100
+    const price = priceInDollars?.toLocaleString("en-US", {
       style: "currency",
       currency: "USD",
     })
