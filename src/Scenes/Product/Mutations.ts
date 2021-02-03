@@ -20,20 +20,14 @@ export const PRODUCT_VARIANT_CREATE_ORDER = gql`
 `
 
 export const PRODUCT_VARIANT_CREATE_DRAFT_ORDER = gql`
-  mutation ProductVariantCreateDraftOrder($input: CreateProductVariantDraftOrderInput!) {
-    createProductVariantDraftOrder(input: $input) {
-      total
-      lineItems {
-        amount
-        description
-      }
-      shippingAddress {
-        address1
-        address2
-        city
-        state
-        zipCode
-      }
+  mutation ProductVariantCreateDraftOrder($input: CreateDraftedOrderInput!) {
+    createDraftedOrder(input: $input) {
+      id
+      orderNumber
+      type
+      status
+      createdAt
+      updatedAt
     }
   }
 `

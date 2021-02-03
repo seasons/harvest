@@ -5,6 +5,7 @@ import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema, screenTrack } from "App/utils/track"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
@@ -12,23 +13,26 @@ import { Dimensions, FlatList, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
+
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
+
 import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
-import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements, ProductBuy } from "./Components"
+import {
+  ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements
+} from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
-import { VariantPicker } from "./Components/VariantPicker"
-import { GET_PRODUCT } from "./Queries"
-import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
-import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { SizeWarning } from "./Components/SizeWarning"
+import { VariantPicker } from "./Components/VariantPicker"
+import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
+import { GET_PRODUCT } from "./Queries"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
 const VARIANT_WANT_HEIGHT = 52
 enum orderType {
-  BUY_USED = "BUY_USED",
-  BUY_NEW = "BUY_NEW",
+  BUY_USED = "Used",
+  BUY_NEW = "New",
 }
 
 const ADD_VIEWED_PRODUCT = gql`
@@ -139,7 +143,7 @@ export const Product = screenTrack({
     },
   })
 
-  const handleCreateDraftOrder = (orderType: "BUY_USED" | "BUY_NEW") => {
+  const handleCreateDraftOrder = (orderType: "Used" | "New") => {
     return createDraftOrder({
       variables: {
         input: {

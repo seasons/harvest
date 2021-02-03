@@ -1,8 +1,11 @@
+import {
+  GetProduct_products, GetProduct_products_brand_products_variants
+} from "App/generated/GetProduct"
 import React from "react"
 import { Linking } from "react-native"
-import { Flex, Button, Sans, Spacer } from "@seasons/eclipse"
-import { GetProduct_products_brand_products_variants, GetProduct_products } from "App/generated/GetProduct"
 import styled from "styled-components/native"
+
+import { Button, Flex, Sans, Spacer } from "@seasons/eclipse"
 
 const ProductBuyNew: React.FC<{
   price: string
@@ -50,7 +53,7 @@ const ProductBuyUsed: React.FC<{
     <Spacer mb={2} />
     {availableForSale ? (
       <Button variant="primaryBlack" block onPress={onBuyUsed}>
-        Buy new for {price}
+        Buy used for {price}
       </Button>
     ) : (
       <Button variant="primaryGray" block disabled>
