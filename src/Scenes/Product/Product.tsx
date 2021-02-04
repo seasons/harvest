@@ -109,8 +109,6 @@ export const Product = screenTrack({
     ],
   })
 
-  console.log("data", data)
-
   const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
     variables: {
       variantID: selectedVariant?.id,
@@ -152,14 +150,34 @@ export const Product = screenTrack({
   })
 
   const handleCreateDraftOrder = (orderType: "Used" | "New") => {
-    return createDraftOrder({
-      variables: {
-        input: {
-          productVariantId: selectedVariant?.id,
-          orderType,
+    if (userHasSession) {
+      return createDraftOrder({
+        variables: {
+          input: {
+            productVariantId: selectedVariant?.id,
+            orderType,
+          },
         },
-      },
-    })
+      })
+    } else {
+      showPopUp({
+        title: "Sign up to buy this item",
+        note: "You need to sign in or create an account before you can order items",
+        secondaryButtonText: "Got it",
+        secondaryButtonOnPress: () => {
+          setBuyButtonMutating(false)
+          hidePopUp()
+        },
+        buttonText: "Sign up",
+        onClose: () => {
+          hidePopUp()
+          setBuyButtonMutating(false)
+          navigation.navigate("Modal", {
+            screen: "CreateAccountModal",
+          })
+        },
+      })
+    }
   }
 
   useEffect(() => {

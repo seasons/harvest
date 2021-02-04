@@ -22,6 +22,7 @@ export const PRODUCT_VARIANT_CREATE_DRAFT_ORDER = gql`
         taxPrice
         productVariant {
           id
+          displayLong
           product {
             id
             slug

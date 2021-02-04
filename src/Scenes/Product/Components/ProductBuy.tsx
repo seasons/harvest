@@ -56,9 +56,8 @@ const ProductBuyUsed: React.FC<{
       variant="primaryBlack"
       block
       onPress={onBuyUsed}
-      disabled={!availableForSale}
       loading={buyButtonMutating}
-      disabled={buyButtonMutating}
+      disabled={buyButtonMutating || !availableForSale}
     >
       {availableForSale ? `Buy used for ${price}` : "Sold Out"}
     </Button>

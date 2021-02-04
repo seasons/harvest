@@ -4,8 +4,7 @@ import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { ScrollView } from "react-native"
-import { useQuery } from "react-apollo"
-import { ReservationItem } from "../Reservation/Components/ReservationItem"
+import { useQuery } from "@apollo/client"
 import { space } from "App/utils"
 import { SectionHeader } from "./Components/SectionHeader"
 import { ShippingOption } from "./Components"
@@ -52,6 +51,7 @@ const GET_CUSTOMER = gql`
         }
         billingInfo {
           id
+          brand
           last_digits
         }
       }
@@ -70,8 +70,8 @@ export const Order = screenTrack()(({ route, navigation }) => {
   const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
 
   const phoneNumber = customer?.detail?.phoneNumber
-  const paymentMethod = ""
-  const items = []
+  const paymentMethod = customer?.billingInfo?.last_digits
+  const paymentBrand = customer?.billingInfo?.brand
 
   console.log("order", order)
 
@@ -131,7 +131,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
             <Box mb={4}>
               <SectionHeader title="Payment method" />
               <Sans size="4" color="black50" mt={1}>
-                {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
+                {`${paymentBrand} ending in ${paymentMethod}`}
               </Sans>
             </Box>
           )}
@@ -178,14 +178,14 @@ export const Order = screenTrack()(({ route, navigation }) => {
             </Box>
           )}
           <Box mb={5}>
-            <SectionHeader title="Items" />
+            <SectionHeader title={productVariantItems?.length === 1 ? "Item" : "Items"} />
             <Box mt={1} mb={4}>
               {productVariantItems?.map((item, i) => {
                 return (
                   <Box key={item.productVariant?.id}>
                     <OrderItem index={i} productVariant={item.productVariant} navigation={navigation} />
                     <Spacer mb={1} />
-                    {i !== items.length - 1 && <Separator />}
+                    {i !== productVariantItems.length - 1 && <Separator />}
                     <Spacer mb={1} />
                   </Box>
                 )
@@ -207,7 +207,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
             actionType: Schema.ActionTypes.Tap,
           })
           setIsMutating(true)
-          const itemIDs = items?.map((item) => item?.productVariant?.id)
+          // const itemIDs = items?.map((item) => item?.productVariant?.id)
           // const { data } = await reserveItems({
           //   variables: {
           //     items: itemIDs,
