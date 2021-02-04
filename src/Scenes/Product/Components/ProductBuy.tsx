@@ -19,7 +19,14 @@ const ProductBuyNew: React.FC<{
         Available from Judy Turner
       </Sans>
       <Spacer mb={2} />
-      <Button variant="primaryBlack" block onPress={onBuyNew} disabled={!availableForSale} loading={buyButtonMutating}>
+      <Button
+        variant="primaryBlack"
+        block
+        onPress={onBuyNew}
+        disabled={!availableForSale}
+        loading={buyButtonMutating}
+        disabled={buyButtonMutating}
+      >
         {availableForSale ? `Buy new for ${price}` : "Sold Out"}
       </Button>
       <Spacer mb={2} />
@@ -45,7 +52,14 @@ const ProductBuyUsed: React.FC<{
       Available from Seasons
     </Sans>
     <Spacer mb={2} />
-    <Button variant="primaryBlack" block onPress={onBuyUsed} disabled={!availableForSale} loading={buyButtonMutating}>
+    <Button
+      variant="primaryBlack"
+      block
+      onPress={onBuyUsed}
+      disabled={!availableForSale}
+      loading={buyButtonMutating}
+      disabled={buyButtonMutating}
+    >
       {availableForSale ? `Buy used for ${price}` : "Sold Out"}
     </Button>
     <Spacer mb={2} />
