@@ -1,30 +1,27 @@
 import { Box, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { Schema, useTracking } from "App/utils/track"
-import { head } from "lodash"
 import React from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
-interface ReservationItemProps {
-  bagItem: any
+interface OrderItemProps {
+  productVariant: any
   index?: number
   navigation?: any
 }
 
-export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index, navigation }) => {
+export const OrderItem: React.FC<OrderItemProps> = ({ productVariant, index, navigation }) => {
+  const product = productVariant?.product
   const tracking = useTracking()
-  const product = bagItem?.productVariant?.product
-  const variantToUse = head(
-    (bagItem?.productVariant?.product?.variants || []).filter((a) => a.id === bagItem?.productVariant?.id)
-  )
-  if (!product || !variantToUse) {
+
+  if (!product) {
     return null
   }
 
   const imageURL = product?.images?.[0]?.url
-  const variantSize = variantToUse?.displayLong?.toLowerCase()
+  const variantSize = productVariant?.displayLong?.toLowerCase()
 
   return (
     <Box key={product.id}>

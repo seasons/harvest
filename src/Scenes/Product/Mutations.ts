@@ -20,17 +20,20 @@ export const PRODUCT_VARIANT_CREATE_DRAFT_ORDER = gql`
         taxName
         taxPercentage
         taxPrice
-        product {
+        productVariant {
           id
-          slug
-          name
-          brand {
+          product {
             id
+            slug
             name
-          }
-          images(size: Thumb) {
-            id
-            url
+            brand {
+              id
+              name
+            }
+            images(size: Thumb) {
+              id
+              url
+            }
           }
         }
       }

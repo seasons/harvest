@@ -10,6 +10,7 @@ import { space } from "App/utils"
 import { SectionHeader } from "./Components/SectionHeader"
 import { ShippingOption } from "./Components"
 import { LineItem } from "./Components/LineItem"
+import { OrderItem } from "./Components/OrderItem"
 
 const GET_CUSTOMER = gql`
   query GetCustomer {
@@ -75,11 +76,11 @@ export const Order = screenTrack()(({ route, navigation }) => {
   console.log("order", order)
 
   const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
-  const productItems = order?.items?.filter((i) => !!i.product)
+  const productVariantItems = order?.items?.filter((i) => !!i.productVariant)
 
   const totalInDollars = order?.total / 100
 
-  console.log("products", productItems)
+  console.log("products", productVariantItems)
 
   if (!customer || !address) {
     return (
@@ -109,8 +110,8 @@ export const Order = screenTrack()(({ route, navigation }) => {
           {!!order && (
             <Box mb={4}>
               <SectionHeader title="Purchase summary" />
-              {productItems.map((item) => {
-                return <LineItem leftText={item?.product?.name} rightText="" />
+              {productVariantItems.map((item) => {
+                return <LineItem leftText={item?.productVariant?.product?.name} rightText="" />
               })}
               <LineItem leftText="Subtotal" rightText={order?.subTotal || ""} />
               <LineItem leftText="Sales tax" rightText={order?.subTotal || ""} />
@@ -179,17 +180,16 @@ export const Order = screenTrack()(({ route, navigation }) => {
           <Box mb={5}>
             <SectionHeader title="Items" />
             <Box mt={1} mb={4}>
-              {!!items &&
-                items.map((item, i) => {
-                  return (
-                    <Box key={item.id}>
-                      <ReservationItem index={i} bagItem={item} navigation={navigation} />
-                      <Spacer mb={1} />
-                      {i !== items.length - 1 && <Separator />}
-                      <Spacer mb={1} />
-                    </Box>
-                  )
-                })}
+              {productVariantItems?.map((item, i) => {
+                return (
+                  <Box key={item.productVariant?.id}>
+                    <OrderItem index={i} productVariant={item.productVariant} navigation={navigation} />
+                    <Spacer mb={1} />
+                    {i !== items.length - 1 && <Separator />}
+                    <Spacer mb={1} />
+                  </Box>
+                )
+              })}
             </Box>
           </Box>
         </ScrollView>
