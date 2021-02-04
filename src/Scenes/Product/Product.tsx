@@ -54,6 +54,7 @@ export const Product = screenTrack({
   entityType: Schema.EntityTypes.Product,
 })(({ route, navigation }) => {
   const { authState } = useAuthContext()
+  const [buyButtonMutating, setBuyButtonMutating] = useState(false)
   const [viewed, setViewed] = useState(false)
   const [isMutatingNotify, setIsMutatingNotify] = useState(false)
   const insets = useSafeAreaInsets()
@@ -140,20 +141,26 @@ export const Product = screenTrack({
   const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
     onCompleted: (res) => {
       console.log("res", res)
-      // TODO: navigate to receipt screen
+      setBuyButtonMutating(false)
+      if (res?.createDraftedOrder) {
+        navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
+      }
+    },
+    onError: (error) => {
+      console.log("error createDraftOrder ", error)
+      setBuyButtonMutating(false)
     },
   })
 
   const handleCreateDraftOrder = (orderType: "Used" | "New") => {
-    navigation.navigate(NavigationSchema.PageNames.Order)
-    // return createDraftOrder({
-    //   variables: {
-    //     input: {
-    //       productVariantId: selectedVariant?.id,
-    //       orderType,
-    //     },
-    //   },
-    // })
+    return createDraftOrder({
+      variables: {
+        input: {
+          productVariantId: selectedVariant?.id,
+          orderType,
+        },
+      },
+    })
   }
 
   useEffect(() => {
@@ -249,9 +256,16 @@ export const Product = screenTrack({
         return (
           <ProductBuy
             product={product}
+            buyButtonMutating={buyButtonMutating}
             selectedVariant={selectedVariant}
-            onBuyNew={() => handleCreateDraftOrder(orderType.BUY_NEW)}
-            onBuyUsed={() => handleCreateDraftOrder(orderType.BUY_USED)}
+            onBuyNew={() => {
+              setBuyButtonMutating(true)
+              handleCreateDraftOrder(orderType.BUY_NEW)
+            }}
+            onBuyUsed={() => {
+              setBuyButtonMutating(true)
+              handleCreateDraftOrder(orderType.BUY_USED)
+            }}
           />
         )
       default:

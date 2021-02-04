@@ -2,18 +2,18 @@ import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spa
 import { Loader } from "App/Components/Loader"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { color, space } from "App/utils"
+import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "react-apollo"
 import * as Sentry from "@sentry/react-native"
-import { ScrollView, TouchableWithoutFeedback } from "react-native"
+import { ScrollView } from "react-native"
 import { BagItemFragment } from "../Bag/Components/BagItem"
 import { ReservationItem } from "./Components/ReservationItem"
 import { useNavigation } from "@react-navigation/native"
-import styled from "styled-components"
-import { SmallCheckCircled } from "Assets/svgs"
+import { SectionHeader } from "../Order/Components/SectionHeader"
+import { ShippingOption } from "../Order/Components"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions, $shippingCode: ShippingCode) {
@@ -78,20 +78,6 @@ const GET_CUSTOMER = gql`
   ${BagItemFragment}
 `
 
-const SectionHeader = ({ title }) => {
-  return (
-    <>
-      <Flex flexDirection="row" style={{ flex: 1 }} width="100%">
-        <Sans size="4" color="black">
-          {title}
-        </Sans>
-      </Flex>
-      <Spacer mb={1} />
-      <Separator />
-    </>
-  )
-}
-
 export const Reservation = screenTrack()((props) => {
   const [isMutating, setIsMutating] = useState(false)
   const tracking = useTracking()
@@ -149,34 +135,6 @@ export const Reservation = screenTrack()((props) => {
 
   const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
 
-  const ShippingOption = ({ option, index }) => {
-    const method = option?.shippingMethod
-    let price
-    if (option?.externalCost === 0) {
-      price = "Free"
-    } else {
-      price = "$" + option?.externalCost / 100
-    }
-    const selected = index === shippingOptionIndex
-
-    return (
-      <TouchableWithoutFeedback onPress={() => setShippingOptionIndex(index)}>
-        <Flex flexDirection="row" justifyContent="space-between" alignItems="center" py={2}>
-          <Sans size="4" color="black100">
-            {method?.displayText}
-          </Sans>
-          <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-            <Sans size="4" color="black100">
-              {price}
-            </Sans>
-            <Spacer mr={1} />
-            {selected ? <SmallCheckCircled /> : <EmptyCircle />}
-          </Flex>
-        </Flex>
-      </TouchableWithoutFeedback>
-    )
-  }
-
   return (
     <>
       <Container insetsTop insetsBottom={false} backgroundColor="white100">
@@ -215,7 +173,12 @@ export const Reservation = screenTrack()((props) => {
                 {shippingOptions.map((option, index) => {
                   return (
                     <Box key={option?.id || index}>
-                      <ShippingOption option={option} index={index} />
+                      <ShippingOption
+                        option={option}
+                        index={index}
+                        setShippingOptionIndex={setShippingOptionIndex}
+                        shippingOptionIndex={shippingOptionIndex}
+                      />
                       <Separator />
                     </Box>
                   )
@@ -288,11 +251,3 @@ export const Reservation = screenTrack()((props) => {
     </>
   )
 })
-
-const EmptyCircle = styled(Box)`
-  height: 24;
-  width: 24;
-  border-radius: 12;
-  border-color: ${color("black10")};
-  border-width: 1;
-`
