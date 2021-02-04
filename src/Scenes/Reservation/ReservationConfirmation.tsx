@@ -141,7 +141,8 @@ export const ReservationConfirmation = screenTrack()((props) => {
         <Box
           style={{
             borderWidth: defaultBorderWidth,
-            flexGrow: 1,
+            flex: 2,
+            display: "flex",
             borderColor: color("black10"),
             borderRightWidth: isFirst ? defaultBorderWidth / 2.0 : defaultBorderWidth,
             borderLeftWidth: isLast ? defaultBorderWidth / 2.0 : defaultBorderWidth,
@@ -181,7 +182,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
                 <SectionWrapper
                   isFirst={isFirst}
                   isLast={isLast}
-                  onPress={() => props.navigation.navigate("InviteFriends")}
+                  onPress={() => props.navigation.navigate("ReferralView")}
                 >
                   <Flex py={2} alignItems="center">
                     <Box
@@ -200,7 +201,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
                       </Display>
                     </Box>
                     <Sans pt={0.5} size="4" color="black50">
-                      Refer & earn 50% off
+                      Refer & earn
                     </Sans>
                   </Flex>
                 </SectionWrapper>

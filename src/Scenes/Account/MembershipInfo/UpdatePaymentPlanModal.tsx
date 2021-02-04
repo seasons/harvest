@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react"
 import { useQuery } from "@apollo/client"
 import { screenTrack } from "App/utils/track"
 
-export const UpdatePaymentPlanModal = screenTrack()(({ navigation, route }) => {
+export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
   const [selectedPlan, setSelectedPlan] = useState(null)
   const { previousData, data = previousData } = useQuery(GET_PLANS, {
     variables: {

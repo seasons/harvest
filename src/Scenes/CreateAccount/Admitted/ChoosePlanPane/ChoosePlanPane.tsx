@@ -24,7 +24,6 @@ import { Coupon, PaymentMethod } from "../../CreateAccount"
 import { PopUp } from "App/Components/PopUp"
 import { themeProps } from "App/Components/Theme"
 import { calcFinalPrice } from "./utils"
-import { AllAccessDisabledPopup } from "./AllAccessDisabledPopup"
 import { GET_USER } from "App/Scenes/Account/Account"
 import { Spinner } from "App/Components/Spinner"
 import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMethods"
@@ -71,7 +70,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
 }) => {
   const coupon = setCoupon(appliedCoupon, data?.me?.customer?.coupon)
 
-  const allAccessEnabled = data?.me?.customer?.admissions?.allAccessEnabled
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
   const [openPopUp, setOpenPopUp] = useState(false)
@@ -82,7 +80,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   const [currentView, setCurrentView] = useState(0)
   const [tiers, setTiers] = useState([])
   const [isMutating, setIsMutating] = useState(false)
-  const [showAllAccessDisabledMessage, setShowAllAccessDisabledMessage] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const scrollViewRef = React.useRef(null)
   const [applePayCheckout] = useMutation(PAYMENT_CHECKOUT, {
@@ -164,22 +161,21 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   useEffect(() => {
     // Update the selected plan if you switch tabs
     const newSelectedPlan =
-      plans?.filter(
-        (plan) => tierToReadableText(plan.tier) === tiers?.[currentView] && plan.itemCount === selectedPlan?.itemCount
-      ) || plans?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])?.[0]
+      plans?.filter((plan) => plan.tier === tiers?.[currentView] && plan.itemCount === selectedPlan?.itemCount) ||
+      plans?.filter((plan) => plan.tier === tiers?.[currentView])?.[0]
     setSelectedPlan(newSelectedPlan?.[0])
   }, [currentView, setSelectedPlan])
 
   useEffect(() => {
     if (plans && plans.length > 0) {
       setSelectedPlan(plans?.[0])
-      const planTiers = uniq(plans?.map((plan) => tierToReadableText(plan.tier)))
+      const planTiers = uniq(plans?.map((plan) => plan.tier))
       setTiers(planTiers)
     }
 
     const customerPlan = data?.me?.customer?.membership?.plan
     const initialPlan = customerPlan ? plans?.find((plan) => plan.id === customerPlan.id) : plans?.[0]
-    const initialTab = customerPlan?.tier === "AllAccess" ? 1 : 0
+    const initialTab = 0
 
     setCurrentView(initialTab)
     setSelectedPlan(initialPlan)
@@ -305,13 +301,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   const planColors = ["#000", "#e6b759"]
   const currentColor = planColors[currentView] || "black"
 
-  const tierToReadableText = (tier) => {
-    if (tier === "AllAccess") {
-      return "All Access"
-    } else {
-      return tier
-    }
-  }
+  const tabs = tiers.map((t) => (t === "Essential" ? "Monthly" : t))
 
   return (
     <>
@@ -327,7 +317,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
               </Sans>
               <Spacer mb={1} />
               <Sans color="black50" size="4">
-                Here's what's included in your selected plan:
+                What's included in your membership
               </Sans>
               <Spacer mb={1} />
             </Box>
@@ -346,30 +336,30 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
               })}
             </Flex>
             <Spacer mb={1} />
-            <TabBar
-              tabColor={currentColor}
-              spaceEvenly
-              tabs={tiers}
-              strikethroughTabs={allAccessEnabled ? [] : ["All Access"]}
-              activeTab={currentView}
-              goToPage={(page) => {
-                tracking.trackEvent({
-                  actionName:
-                    page === 0
-                      ? TrackSchema.ActionNames.Tier0PlanTabTapped
-                      : TrackSchema.ActionNames.Tier1PlanTabTapped,
-                  actionType: TrackSchema.ActionTypes.Tap,
-                })
-                if (page === 1 && !allAccessEnabled) {
-                  setShowAllAccessDisabledMessage(true)
-                } else {
-                  setCurrentView(page as number)
-                }
-              }}
-            />
+            {tabs.length > 1 && (
+              <>
+                <TabBar
+                  tabColor={currentColor}
+                  spaceEvenly
+                  tabs={tabs}
+                  strikethroughTabs={[]}
+                  activeTab={currentView}
+                  goToPage={(page) => {
+                    tracking.trackEvent({
+                      actionName:
+                        page === 0
+                          ? TrackSchema.ActionNames.Tier0PlanTabTapped
+                          : TrackSchema.ActionNames.Tier1PlanTabTapped,
+                      actionType: TrackSchema.ActionTypes.Tap,
+                    })
+                    setCurrentView(page as number)
+                  }}
+                />
+              </>
+            )}
             <Spacer mb={2} />
             {plans
-              ?.filter((plan) => tierToReadableText(plan.tier) === tiers?.[currentView])
+              ?.filter((plan) => plan.tier === tiers?.[currentView])
               ?.sort((a, b) => b.itemCount - a.itemCount)
               ?.map((plan) => {
                 return (
@@ -430,6 +420,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
             <ColoredButton
               block
               disabled={!selectedPlan}
+              loading={isMutating}
               onPress={onChoosePlan}
               variant="primaryBlack"
               backgroundColor={currentColor}
@@ -452,12 +443,8 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       </Container>
 
       <PopUp show={openPopUp}>
-        <PaymentMethods onApplePay={onApplePay} onCreditCard={onAddCreditCard} />
+        <PaymentMethods onApplePay={onApplePay} onCreditCard={onAddCreditCard} setOpenPopUp={setOpenPopUp} />
       </PopUp>
-      <AllAccessDisabledPopup
-        show={showAllAccessDisabledMessage}
-        onPress={() => setShowAllAccessDisabledMessage(false)}
-      />
       {showLoadingOverlay && (
         <Overlay>
           <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">

@@ -1,5 +1,6 @@
 import { ErrorPopUp } from "App/Navigation/ErrorPopUp"
 import { PopUpProvider } from "App/Navigation/ErrorPopUp/PopUpProvider"
+import { BottomSheetProvider } from "App/Navigation/BottomSheetContext"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { NotificationsProvider } from "App/Notifications"
 import { getUserSession, userSessionToIdentifyPayload } from "App/utils/auth"
@@ -129,20 +130,22 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
 
     return (
       <AuthContext.Provider value={authContext}>
-        <ActionSheetProvider>
-          <PopUpProvider>
-            <RootStack.Navigator>
-              <RootStack.Screen name="Root" options={{ headerShown: false }}>
-                {() => (
-                  <NotificationsProvider>
-                    <ModalAndMainScreens currentScreen={currentScreen} />
-                  </NotificationsProvider>
-                )}
-              </RootStack.Screen>
-            </RootStack.Navigator>
-            <ErrorPopUp />
-          </PopUpProvider>
-        </ActionSheetProvider>
+        <BottomSheetProvider>
+          <ActionSheetProvider>
+            <PopUpProvider>
+              <RootStack.Navigator>
+                <RootStack.Screen name="Root" options={{ headerShown: false }}>
+                  {() => (
+                    <NotificationsProvider>
+                      <ModalAndMainScreens currentScreen={currentScreen} />
+                    </NotificationsProvider>
+                  )}
+                </RootStack.Screen>
+              </RootStack.Navigator>
+              <ErrorPopUp />
+            </PopUpProvider>
+          </ActionSheetProvider>
+        </BottomSheetProvider>
       </AuthContext.Provider>
     )
   }
