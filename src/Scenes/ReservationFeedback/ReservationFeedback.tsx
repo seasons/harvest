@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/react-hooks"
+import { useMutation } from "@apollo/client"
 import React, { useState } from "react"
 import { Dimensions, FlatList, Text, TouchableWithoutFeedback } from "react-native"
 

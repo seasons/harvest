@@ -13,7 +13,7 @@ import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
 import React, { useEffect, useState } from "react"
-import { useMutation, useQuery } from "react-apollo"
+import { useMutation, useQuery } from "@apollo/client"
 import { FlatList, RefreshControl, StatusBar, View } from "react-native"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import { CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
@@ -50,7 +50,7 @@ export const Bag = screenTrack()((props) => {
     }, [])
   )
 
-  const { data, refetch } = useQuery(GET_BAG)
+  const { previousData, data = previousData, refetch } = useQuery(GET_BAG)
   const { data: localItems } = useQuery(GET_LOCAL_BAG)
 
   const me = data?.me
@@ -322,10 +322,7 @@ export const Bag = screenTrack()((props) => {
 
   return (
     <Container insetsBottom={false}>
-      <View
-        pointerEvents={bottomSheetBackdropIsVisible ? "none" : "auto"}
-        style={{ flexDirection: "column", flex: 1 }}
-      >
+      <View pointerEvents={bottomSheetBackdropIsVisible ? "none" : "auto"} style={{ flexDirection: "column", flex: 1 }}>
         <TabBar
           spaceEvenly
           tabs={["Bag", "Saved", "History"]}

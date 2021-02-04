@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { areIndicesEqual, Index, Item, Section, sections } from "./Sections"
 
 import gql from "graphql-tag"
-import { useMutation } from "react-apollo"
+import { useMutation } from "@apollo/client"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 
 const UPDATE_STYLE_PREFERENCES = gql`

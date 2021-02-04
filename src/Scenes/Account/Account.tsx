@@ -19,7 +19,7 @@ import {
 import gql from "graphql-tag"
 import { DateTime } from "luxon"
 import { default as React, useEffect } from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { Linking, Platform, ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
 import Share from "react-native-share"
@@ -32,6 +32,7 @@ import { WaitlistedCTA, AuthorizedCTA } from "@seasons/eclipse"
 export const GET_USER = gql`
   query GetUser {
     me {
+      id
       customer {
         id
         status
@@ -84,7 +85,7 @@ export const GET_USER = gql`
 
 export const Account = screenTrack()(({ navigation }) => {
   const { authState, signOut } = useAuthContext()
-  const { data, refetch } = useQuery(GET_USER)
+  const { previousData, data = previousData, refetch } = useQuery(GET_USER)
 
   const tracking = useTracking()
 

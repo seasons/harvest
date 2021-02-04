@@ -56,6 +56,7 @@ export interface ActiveReservation_me_activeReservation {
 
 export interface ActiveReservation_me {
   __typename: "Me";
+  id: string;
   activeReservation: ActiveReservation_me_activeReservation | null;
 }
 

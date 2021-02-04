@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/react-hooks"
+import { useQuery } from "@apollo/client"
 import { Container, FixedBackArrow } from "App/Components"
 import { GetBrand } from "App/generated/GetBrand"
 import { Schema, screenTrack } from "App/utils/track"

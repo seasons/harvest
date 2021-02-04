@@ -1,8 +1,8 @@
-import { gql } from "apollo-boost"
+import gql from "graphql-tag"
 import { Button, CloseButton, Container, FadeInImage, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Box } from "App/Components/Box"
 import React, { useEffect, useState } from "react"
-import { useMutation, useQuery } from "react-apollo"
+import { useMutation, useQuery } from "@apollo/client"
 import { shuffle, clone } from "lodash"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { Dimensions, ScrollView } from "react-native"
@@ -39,6 +39,7 @@ export const GET_SURPRISE_PRODUCT_VARIANTS = gql`
       }
     }
     me {
+      id
       bag {
         id
         productVariant {
@@ -181,7 +182,7 @@ const Content = ({ data, variant, product, onRestart, seenAllAvailableProducts }
 
 export const SurpriseMe = screenTrack()(() => {
   const [variants, setVariants] = useState(null)
-  const { data } = useQuery(GET_SURPRISE_PRODUCT_VARIANTS)
+  const { previousData, data = previousData } = useQuery(GET_SURPRISE_PRODUCT_VARIANTS)
   const insets = useSafeAreaInsets()
   const [isAddingToBag, setIsAddingToBag] = useState(false)
   const [loadingNext, setLoadingNext] = useState(false)

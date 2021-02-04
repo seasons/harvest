@@ -14,7 +14,6 @@ export interface updatePaymentAndShipping {
 }
 
 export interface updatePaymentAndShippingVariables {
-  billingAddress: AddressInput;
   shippingAddress: AddressInput;
   phoneNumber: string;
 }

@@ -5,7 +5,7 @@ import { Sans } from "Components/Typography"
 import { get } from "lodash"
 import { DateTime } from "luxon"
 import React, { useEffect } from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { Bag } from "./Bag"
@@ -15,6 +15,7 @@ import { CurrentRotationItem } from "./Components/CurrentRotationItem"
 const ACTIVE_RESERVATION = gql`
   query ActiveReservation {
     me {
+      id
       activeReservation {
         id
         shipped
@@ -48,7 +49,7 @@ const ACTIVE_RESERVATION = gql`
 `
 
 export const CurrentRotation = (props) => {
-  const { data, loading, refetch } = useQuery(ACTIVE_RESERVATION)
+  const { previousData, data = previousData, loading, refetch } = useQuery(ACTIVE_RESERVATION)
 
   useEffect(() => {
     refetch()

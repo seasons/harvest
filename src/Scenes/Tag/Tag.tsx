@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/react-hooks"
+import { useQuery } from "@apollo/client"
 import { Box, Container, FixedBackArrow, ProductGridItem, Sans, Spacer } from "App/Components"
 import { ReadMore } from "App/Components/ReadMore"
 import { space } from "App/utils"
@@ -43,7 +43,7 @@ export const Tag = screenTrack({
   const { navigation, route } = props
   const { tag, title, description } = route?.params?.tagData
 
-  const { data, loading, fetchMore } = useQuery(GET_TAG, {
+  const { previousData, data = previousData, loading, fetchMore } = useQuery(GET_TAG, {
     variables: {
       tag,
       first: 10,

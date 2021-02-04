@@ -53,6 +53,7 @@ export interface GetCustomerReservationItems_me_customer {
 
 export interface GetCustomerReservationItems_me {
   __typename: "Me";
+  id: string;
   customer: GetCustomerReservationItems_me_customer | null;
 }
 

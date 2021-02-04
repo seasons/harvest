@@ -11,7 +11,7 @@ import { get, head } from "lodash"
 import React, { useState } from "react"
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { useMutation } from "@apollo/react-hooks"
+import { useMutation } from "@apollo/client"
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
 import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
 

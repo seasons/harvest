@@ -48,6 +48,7 @@ const commonProductVariantFragment = gql`
 export const GET_PRODUCT = gql`
   query GetProduct($where: ProductWhereInput!) {
     me {
+      id
       customer {
         id
         status
@@ -129,37 +130,4 @@ export const GET_PRODUCT = gql`
     }
   }
   ${commonProductVariantFragment}
-`
-
-export const GET_COLLECTION = gql`
-  query GetCollection($collectionID: ID!) {
-    collection(where: { id: $collectionID }) {
-      id
-      slug
-      images {
-        id
-        url
-      }
-      title
-      subTitle
-      products {
-        id
-        slug
-        name
-        description
-        retailPrice
-        modelSize {
-          display
-        }
-        modelHeight
-        brand {
-          name
-        }
-        images {
-          id
-          url
-        }
-      }
-    }
-  }
 `

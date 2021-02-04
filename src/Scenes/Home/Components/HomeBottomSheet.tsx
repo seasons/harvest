@@ -9,8 +9,9 @@ import { Dimensions } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
-import { BrandsRail, CategoriesRail, FitPicCollection, HomeFooter, ProductsRail, TagsRail } from "./"
 import { AddPhotoButton } from "./AddPhotoButton"
+import { ProductsRail } from "@seasons/eclipse"
+import { BrandsRail, CategoriesRail, FitPicCollection, HomeFooter, TagsRail } from "./"
 import { FitPicCollectionRef } from "./FitPicCollection"
 import { HomepageBanner } from "App/Components/HomepageBanner"
 
@@ -25,6 +26,7 @@ enum SectionType {
   FitPics = "FitPics",
   Categories = "Categories",
   ProductsByTag = "ProductsByTag",
+  Collection = "Collection",
   Banner = "Banner",
 }
 
@@ -85,15 +87,16 @@ const sectionsFrom = (data: any, navigation) => {
   if (data?.justAddedBottoms?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
   }
-  if (data?.homepage?.sections?.length) {
+  if (data?.collections?.length > 0) {
     sections.push(
-      ...data?.homepage?.sections
+      ...data?.collections
         .map((section) => {
-          switch (section.type) {
-            case SectionType.ProductsByTag:
-              return {
-                ...section,
-              }
+          return {
+            type: SectionType.Collection,
+            title: section.title,
+            results: section.products,
+            id: section.id,
+            slug: section.slug,
           }
         })
         .filter(Boolean)
@@ -168,9 +171,20 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
         return <BrandsRail title={item.title} items={item.results} />
       case SectionType.ArchivalProducts:
         return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
-      case SectionType.ProductsByTag:
-        const tagData = { title: item.title, tag: item.tagData?.tagName, description: item.tagData?.description }
-        return <TagsRail large title={item.title} items={item.results} tagData={tagData} />
+      case SectionType.Collection:
+        return (
+          <ProductsRail
+            large
+            title={item.title}
+            items={item.results}
+            onViewAll={() => {
+              navigation.navigate(Schema.StackNames.HomeStack, {
+                screen: Schema.PageNames.Collection,
+                params: { collectionSlug: item.slug },
+              })
+            }}
+          />
+        )
       case SectionType.Products:
         return <ProductsRail title={item.title} items={item.results} />
       case SectionType.Categories:

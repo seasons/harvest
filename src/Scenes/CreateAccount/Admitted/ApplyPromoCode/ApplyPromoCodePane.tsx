@@ -1,11 +1,11 @@
 import * as Sentry from "@sentry/react-native"
-import { gql } from "apollo-boost"
+import gql from "graphql-tag"
 import { Box, Button, CloseButton, Container, Sans, Spacer, TextInput } from "App/Components"
 import { TextInputRef } from "App/Components/TextInput"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import React, { useEffect, useRef, useState } from "react"
-import { useMutation } from "react-apollo"
+import { useMutation } from "@apollo/client"
 import { Keyboard, KeyboardAvoidingView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 

@@ -2,7 +2,7 @@ import { Box, Container, FixedBackArrow, Sans, Flex } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { screenTrack } from "App/utils/track"
 import { TabBar } from "App/Components/TabBar"
 import { PersonalTab } from "./PersonalTab"
@@ -13,6 +13,7 @@ import { StatusBar } from "react-native"
 const GET_PREFERENCES = gql`
   query GetUserPreferences {
     me {
+      id
       customer {
         id
         user {

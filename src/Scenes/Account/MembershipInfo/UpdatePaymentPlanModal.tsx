@@ -3,12 +3,12 @@ import { Loader } from "App/Components/Loader"
 import { ChoosePlanPane } from "App/Scenes/CreateAccount/Admitted"
 import { GET_PLANS } from "App/Scenes/CreateAccount/CreateAccount"
 import React, { useEffect, useState } from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { screenTrack } from "App/utils/track"
 
 export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
   const [selectedPlan, setSelectedPlan] = useState(null)
-  const { data } = useQuery(GET_PLANS, {
+  const { previousData, data = previousData } = useQuery(GET_PLANS, {
     variables: {
       where: { status: "active" },
     },

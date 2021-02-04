@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/react-hooks"
+import { useQuery } from "@apollo/client"
 import { useFocusEffect } from "@react-navigation/native"
 import { Box, Flex, ProductGridItem } from "App/Components"
 import { Spinner } from "App/Components/Spinner"

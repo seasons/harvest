@@ -1,11 +1,10 @@
 import gql from "graphql-tag"
 import React, { useState } from "react"
-import { useMutation, useQuery } from "react-apollo"
+import { useMutation, useQuery } from "@apollo/client"
 import { Dimensions, Keyboard, KeyboardAvoidingView } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, Sans, Spacer, TextInput } from "App/Components"
-import styled from "styled-components/native"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
 import {
   GetUserPaymentData_me_customer_billingInfo,
@@ -21,6 +20,7 @@ import { Schema as NavigationSchema } from "App/Navigation"
 export const GET_CURRENT_PLAN = gql`
   query GetCurrentPlan {
     me {
+      id
       customer {
         id
         user {
@@ -59,7 +59,7 @@ export const EditPaymentAndShipping: React.FC<{
   route: any
 }> = screenTrack()(({ navigation, route }) => {
   const { showPopUp, hidePopUp } = usePopUpContext()
-  const { data } = useQuery(GET_CURRENT_PLAN)
+  const { previousData, data = previousData } = useQuery(GET_CURRENT_PLAN)
   const billingAddress: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
   const currentPhoneNumber = route?.params?.phoneNumber

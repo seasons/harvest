@@ -8,7 +8,7 @@ import { CheckCircled } from "Assets/svgs"
 import { head } from "lodash"
 import React, { useState } from "react"
 
-import { useMutation, useQuery } from "@apollo/react-hooks"
+import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 
 import { GET_PRODUCT } from "../Queries"

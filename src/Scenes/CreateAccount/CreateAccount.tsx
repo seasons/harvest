@@ -4,7 +4,7 @@ import { screenTrack } from "App/utils/track"
 import gql from "graphql-tag"
 import { get, pick } from "lodash"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { Dimensions, FlatList, Modal } from "react-native"
 import { ChoosePlanPane, WelcomePane } from "./Admitted"
 import { CreateAccountPane, GetMeasurementsPane, SendCodePane, TriagePane, VerifyCodePane } from "./Undetermined"
@@ -66,6 +66,7 @@ export const GET_PLANS = gql`
       itemCount
     }
     me {
+      id
       customer {
         id
         status
@@ -130,7 +131,7 @@ const statesFor = (userState: UserState): State[] => {
 }
 
 export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navigation, route }) => {
-  const { data } = useQuery(GET_PLANS, {
+  const { previousData, data = previousData } = useQuery(GET_PLANS, {
     variables: {
       where: { status: "active" },
     },

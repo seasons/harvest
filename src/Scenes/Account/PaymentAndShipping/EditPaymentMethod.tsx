@@ -1,15 +1,4 @@
-import {
-  Box,
-  Button,
-  CloseButton,
-  Container,
-  FixedBackArrow,
-  Flex,
-  Sans,
-  Separator,
-  Spacer,
-  TextInput,
-} from "App/Components"
+import { Box, Button, Container, FixedBackArrow, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Schema as TrackSchema, useTracking, screenTrack } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { PAYMENT_UPDATE } from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
@@ -18,10 +7,10 @@ import { color } from "App/utils/color"
 import { CheckCircled } from "Assets/svgs/CheckCircled"
 import { String } from "aws-sdk/clients/augmentedairuntime"
 import React, { useState } from "react"
-import { useMutation } from "react-apollo"
-import { Dimensions, Keyboard, KeyboardAvoidingView } from "react-native"
+import { useMutation } from "@apollo/client"
+import { Dimensions, Keyboard } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import stripe, { PaymentCardTextField } from "tipsi-stripe"
+import stripe from "tipsi-stripe"
 import * as Sentry from "@sentry/react-native"
 import { PaymentMethods } from "./PaymentMethods"
 import { Schema as NavigationSchema } from "App/Navigation"

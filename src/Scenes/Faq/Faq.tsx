@@ -1,7 +1,7 @@
 import React from "react"
 import { ContactUsButton, Container, Spacer, FixedBackArrow, Flex } from "App/Components"
 import gql from "graphql-tag"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { Loader } from "App/Components/Loader"
 import { FlatList } from "react-native"
 import { FaqSection } from "./Components/FaqSection"
@@ -21,7 +21,7 @@ export const GET_FAQ = gql`
 `
 
 export const Faq = ({ navigation }) => {
-  const { loading, data } = useQuery(GET_FAQ, {})
+  const { loading, previousData, data = previousData } = useQuery(GET_FAQ, {})
 
   if (loading) {
     return <Loader />
