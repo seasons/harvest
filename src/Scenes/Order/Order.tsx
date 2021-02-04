@@ -2,14 +2,16 @@ import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
+import { Schema as NavigationSchema } from "App/Navigation"
 import React, { useState } from "react"
 import { ScrollView } from "react-native"
-import { useQuery } from "@apollo/client"
+import { useMutation, useQuery } from "@apollo/client"
 import { space } from "App/utils"
 import { SectionHeader } from "./Components/SectionHeader"
 import { ShippingOption } from "./Components"
 import { LineItem } from "./Components/LineItem"
 import { OrderItem } from "./Components/OrderItem"
+import { SUBMIT_ORDER } from "../Product/Mutations"
 
 const GET_CUSTOMER = gql`
   query GetCustomer {
@@ -69,6 +71,22 @@ export const Order = screenTrack()(({ route, navigation }) => {
   const allAccessEnabled = data?.me?.customer?.admissions?.allAccessEnabled
   const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
 
+  const [submitOrder] = useMutation(SUBMIT_ORDER, {
+    onCompleted: (res) => {
+      console.log("res", res)
+      setIsMutating(false)
+      if (res?.submitOrder) {
+        navigation.navigate(NavigationSchema.PageNames.OrderConfirmation, {
+          order: res.submitOrder,
+        })
+      }
+    },
+    onError: (error) => {
+      console.log("error createDraftOrder ", error)
+      setIsMutating(false)
+    },
+  })
+
   const phoneNumber = customer?.detail?.phoneNumber
   const paymentMethod = customer?.billingInfo?.last_digits
   const paymentBrand = customer?.billingInfo?.brand
@@ -79,8 +97,6 @@ export const Order = screenTrack()(({ route, navigation }) => {
   const productVariantItems = order?.items?.filter((i) => !!i.productVariant)
 
   const totalInDollars = order?.total / 100
-
-  console.log("products", productVariantItems)
 
   if (!customer || !address) {
     return (
@@ -207,19 +223,13 @@ export const Order = screenTrack()(({ route, navigation }) => {
             actionType: Schema.ActionTypes.Tap,
           })
           setIsMutating(true)
-          // const itemIDs = items?.map((item) => item?.productVariant?.id)
-          // const { data } = await reserveItems({
-          //   variables: {
-          //     items: itemIDs,
-          //     shippingCode: shippingOptions?.[shippingOptionIndex]?.shippingMethod?.code,
-          //   },
-          // })
-          if (data?.reserveItems) {
-            navigation.navigate("BagStack", {
-              screen: "ReservationConfirmation",
-              params: { reservationID: data.reserveItems.id },
-            })
-          }
+          await submitOrder({
+            variables: {
+              input: {
+                orderID: order.id,
+              },
+            },
+          })
         }}
         block
       >
