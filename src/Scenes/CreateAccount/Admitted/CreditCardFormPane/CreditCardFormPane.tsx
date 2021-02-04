@@ -24,7 +24,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe, { PaymentCardTextField } from "tipsi-stripe"
 
-import { useMutation } from "@apollo/react-hooks"
+import { useMutation } from "@apollo/client"
 import * as Sentry from "@sentry/react-native"
 
 import { Coupon, State } from "../../CreateAccount"

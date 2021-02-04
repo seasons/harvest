@@ -1,11 +1,11 @@
 import CameraRoll from "@react-native-community/cameraroll"
-import { gql } from "apollo-boost"
+import gql from "graphql-tag"
 import { Box, Button, CloseButton, Display, FadeInImage, FixedBackArrow, Flex, Spacer } from "App/Components"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { SeasonsCircleSVG } from "Assets/svgs"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { Dimensions, FlatList } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import Share from "react-native-share"
@@ -14,6 +14,7 @@ import ViewShot, { captureRef } from "react-native-view-shot"
 const GET_CUSTOMER_RESERVATION_ITEMS = gql`
   query GetCustomerReservationItems($reservationID: ID!) {
     me {
+      id
       customer {
         id
         reservations(where: { id: $reservationID }) {
@@ -49,7 +50,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
   const [currentPageNumber, setCurrentPageNumber] = useState(0)
   const insets = useSafeAreaInsets()
 
-  const { data } = useQuery(GET_CUSTOMER_RESERVATION_ITEMS, {
+  const { previousData, data = previousData } = useQuery(GET_CUSTOMER_RESERVATION_ITEMS, {
     variables: {
       reservationID,
     },

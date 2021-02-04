@@ -5,7 +5,7 @@ import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { CheckCircled, Instagram } from "Assets/svgs"
 import gql from "graphql-tag"
 import React from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { ScrollView, TouchableWithoutFeedback } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
 import { ReservationItem } from "./Components/ReservationItem"
@@ -18,6 +18,7 @@ enum Option {
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
     me {
+      id
       user {
         id
         firstName
@@ -88,7 +89,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
 export const ReservationConfirmation = screenTrack()((props) => {
   const tracking = useTracking()
   const reservationID = props?.route?.params?.reservationID
-  const { data, error } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
+  const { previousData, data = previousData, error } = useQuery(GET_CUSTOMER_RESERVATION_CONFIRMATION, {
     variables: {
       reservationID,
     },

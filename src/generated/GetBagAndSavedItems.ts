@@ -268,6 +268,7 @@ export interface GetBagAndSavedItems_me_savedItems {
 
 export interface GetBagAndSavedItems_me {
   __typename: "Me";
+  id: string;
   customer: GetBagAndSavedItems_me_customer | null;
   activeReservation: GetBagAndSavedItems_me_activeReservation | null;
   bag: GetBagAndSavedItems_me_bag[] | null;

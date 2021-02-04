@@ -5,11 +5,9 @@ import DeviceInfo from "react-native-device-info"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { enableScreens } from "react-native-screens"
 import stripe from "tipsi-stripe"
-
-import { ApolloProvider } from "@apollo/react-hooks"
+import { ApolloProvider, gql } from "@apollo/client"
 import AsyncStorage from "@react-native-community/async-storage"
 import * as Sentry from "@sentry/react-native"
-
 import { setupApolloClient } from "./Apollo"
 import { NetworkProvider } from "./NetworkProvider"
 import { config, Env } from "./utils/config"
@@ -22,6 +20,21 @@ export const App = () => {
     async function loadClient() {
       await config.start()
       const client = await setupApolloClient()
+
+      client.writeQuery({
+        query: gql`
+          query InitializeLocalCache {
+            localBagItems {
+              productID
+              variantID
+            }
+          }
+        `,
+        data: {
+          localBagItems: [],
+        },
+      })
+
       setApolloClient(client)
 
       if (!__DEV__) {

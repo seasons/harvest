@@ -131,6 +131,7 @@ export const GET_HOMEPAGE = gql`
       }
     }
     me {
+      id
       customer {
         id
         status

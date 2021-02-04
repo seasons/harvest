@@ -8,24 +8,25 @@ import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
 import React, { useContext, useEffect, useState } from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { StatusBar } from "react-native"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
 import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { Homepage_fitPics } from "App/generated/Homepage"
-import { GET_HOMEPAGE } from "./queries/homeQueries"
 import analytics from "@segment/analytics-react-native"
 import { userSessionToIdentifyPayload } from "App/utils/auth"
+import { GET_HOMEPAGE } from "@seasons/eclipse"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
   const [navigatedToAccount, setNavigatedToAccount] = useState(false)
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
-  const { loading, error, data, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
-    variables: { firstFitPics: 8, skipFitPics: 0 },
+  const [fitPicsFetchCount, setFitPicsFetchCount] = useState(8)
+  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
+    variables: { firstFitPics: fitPicsFetchCount, skipFitPics: 0 },
   })
+
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
 
@@ -92,6 +93,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
   }
 
   if (showLoader || !data) {
+    console.log("data", data)
     return <Loader />
   }
 
@@ -129,18 +131,8 @@ export const Home = screenTrack()(({ navigation, route }) => {
           if (!isFetchingMoreFitPics && fitPicsReceived > 0) {
             fetchMore({
               variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
-              updateQuery: (prev: { fitPics: Homepage_fitPics[]; fitPicsCount: any }, { fetchMoreResult }) => {
-                if (!prev) {
-                  return []
-                } else if (!fetchMoreResult) {
-                  return prev
-                } else {
-                  return Object.assign({}, prev, {
-                    fitPics: [...prev.fitPics, ...fetchMoreResult.fitPics],
-                    fitPicsCount: fetchMoreResult.fitPicsCount,
-                  })
-                }
-              },
+            }).then((fetchMoreResult) => {
+              setFitPicsFetchCount(data?.fitPics?.length + fetchMoreResult?.data?.fitPics.length)
             })
           }
         }}

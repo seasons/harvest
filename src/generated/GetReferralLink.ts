@@ -15,6 +15,7 @@ export interface GetReferralLink_me_customer {
 
 export interface GetReferralLink_me {
   __typename: "Me";
+  id: string;
   customer: GetReferralLink_me_customer | null;
 }
 

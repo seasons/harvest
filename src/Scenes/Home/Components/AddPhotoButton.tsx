@@ -2,10 +2,10 @@ import { useNavigation } from "@react-navigation/native"
 import * as Sentry from "@sentry/react-native"
 import { Box, Button } from "App/Components"
 import { Schema as NavSchema } from "App/Navigation"
-import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import React, { useState } from "react"
 import ImagePicker from "react-native-image-picker"
+import { useAuthContext } from "App/Navigation/AuthContext"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 
@@ -31,6 +31,10 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
   }
 
   const onPress = async () => {
+    if (isMutating) {
+      return
+    }
+    setIsMutating(true)
     if (!isSignedIn) {
       showPopUp({
         title: "Sign in or apply for membership",
@@ -41,6 +45,7 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
           navigation.navigate(NavSchema.StackNames.AccountStack)
         },
       })
+      setIsMutating(false)
       return
     }
 
@@ -51,6 +56,7 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
       },
       (response) => {
         if (response.uri) {
+          setIsMutating(false)
           selectedImage(response.uri, response.type)
         } else if (response.error) {
           Sentry.captureException(response.error)
@@ -62,6 +68,7 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
             buttonText: "Got it",
             onClose: hidePopUp,
           })
+          setIsMutating(false)
         }
       }
     )

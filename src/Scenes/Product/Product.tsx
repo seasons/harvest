@@ -13,15 +13,12 @@ import { Dimensions, FlatList, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-
-import { useMutation, useQuery } from "@apollo/react-hooks"
+import { useMutation, useQuery } from "@apollo/client"
 import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
 
 import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
-import {
-  ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements
-} from "./Components"
+import { ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"

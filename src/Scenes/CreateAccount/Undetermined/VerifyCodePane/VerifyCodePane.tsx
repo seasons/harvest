@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 
 import gql from "graphql-tag"
-import { useMutation } from "react-apollo"
+import { useMutation } from "@apollo/client"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { START_VERIFICATION } from "../SendCodePane/"
 import { TextInputRef } from "App/Components/TextInput"

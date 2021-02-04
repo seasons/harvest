@@ -1,6 +1,6 @@
 import gql from "graphql-tag"
 import React, { useState } from "react"
-import { useMutation } from "react-apollo"
+import { useMutation } from "@apollo/client"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { Box, Button, Flex, CloseButton, Sans, Spacer, TextInput, Container } from "../../Components"
 import { isValidEmail } from "../../helpers/regex"

@@ -8,7 +8,6 @@ export const typeDefs = gql`
     variantID: ID!
   }
   extend type Query {
-    isLoggedIn: Boolean!
     localBagItems: [LocalProduct!]!
     isInBag(productID: ID!): Boolean!
   }
@@ -28,7 +27,7 @@ interface AppResolvers extends Resolvers {
   // We will update this with our app's resolvers later
 }
 
-export const resolvers = {
+export const resolvers: any = {
   localBagItems: (_, __, { cache }) => {
     const queryResult = cache.readQuery({
       query: GET_LOCAL_BAG,

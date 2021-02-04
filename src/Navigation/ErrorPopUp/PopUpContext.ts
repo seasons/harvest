@@ -1,5 +1,5 @@
+import { PopUpData } from "@seasons/eclipse"
 import React, { useContext } from "react"
-import { PopUpData } from "./PopUpProvider"
 
 export const usePopUpContext = () => useContext(PopUpContext)
 

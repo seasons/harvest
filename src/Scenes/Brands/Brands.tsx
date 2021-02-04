@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react"
 import gql from "graphql-tag"
 import { AlphabetScrubber } from "App/Components/AlphabetScrubber"
-import { useQuery } from "@apollo/react-hooks"
+import { useQuery } from "@apollo/client"
 import { Container, Box, Spacer, Sans, FixedBackArrow, Flex, Separator } from "App/Components"
 import { FlatList, TouchableOpacity } from "react-native"
 import { GetBrands } from "App/generated/GetBrands"
