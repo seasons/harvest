@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import gql from "graphql-tag"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { PopUp } from "App/Components/PopUp"
 import { Container, Box, Spacer, Sans, FixedBackArrow, FadeInImage, Flex, Button } from "App/Components"
 import { Dimensions, ScrollView, StatusBar, Share } from "react-native"

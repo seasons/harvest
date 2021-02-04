@@ -6,14 +6,12 @@ import { NotificationsProvider } from "App/Notifications"
 import { getUserSession, userSessionToIdentifyPayload } from "App/utils/auth"
 import React, { useEffect, useImperativeHandle } from "react"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
-
 import AsyncStorage from "@react-native-community/async-storage"
 import { createStackNavigator } from "@react-navigation/stack"
 import analytics from "@segment/analytics-react-native"
-
 import AuthContext from "./AuthContext"
 import { ModalAndMainScreens } from "./Stacks"
-import { gql } from "@apollo/client"
+import gql from "graphql-tag"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
