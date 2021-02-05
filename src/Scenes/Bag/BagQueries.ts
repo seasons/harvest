@@ -85,10 +85,7 @@ export const GET_BAG = gql`
             id
             productVariant {
               id
-              internalSize {
-                id
-                display
-              }
+              displayShort
               product {
                 id
                 slug

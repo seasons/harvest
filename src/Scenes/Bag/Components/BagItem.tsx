@@ -88,7 +88,7 @@ export const BagItem: React.FC<BagItemProps> = ({
 
   // Show buy CTA whenever a sellable status is enabled, regardless of
   // underlying availability
-  const isBuyable = bagItem?.productVariant?.sellable?.new || bagItem?.productVariant?.sellable.used
+  const isBuyable = bagItem?.productVariant?.sellable?.new || bagItem?.productVariant?.sellable?.used
 
   const variantSize = variantToUse?.displayLong?.toLowerCase()
   const variantId = bagItem.variantID
