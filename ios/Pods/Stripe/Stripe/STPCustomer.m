@@ -116,7 +116,8 @@ NS_ASSUME_NONNULL_BEGIN
                         self.defaultSource = card;
                     }
                 }
-            } else if ([object isEqualToString:@"source"]) {
+            }
+            else if ([object isEqualToString:@"source"]) {
                 STPSource *source = [STPSource decodedObjectFromAPIResponse:contents];
                 BOOL includeSource = source != nil;
                 // ignore apple pay cards from the response

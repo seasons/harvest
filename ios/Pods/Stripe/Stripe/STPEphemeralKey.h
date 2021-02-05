@@ -19,8 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL livemode;
 @property (nonatomic, readonly) NSString *secret;
 @property (nonatomic, readonly) NSDate *expires;
-@property (nonatomic, readonly, nullable) NSString *customerID;
-@property (nonatomic, readonly, nullable) NSString *issuingCardID;
+@property (nonatomic, readonly) NSString *customerID;
 
 /**
  You cannot directly instantiate an `STPEphemeralKey`. You should instead use

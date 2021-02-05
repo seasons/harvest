@@ -82,14 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
         UIView *scrollViewSuperView = self.managedScrollView.superview;
         
         UIEdgeInsets contentInsets = scrollView.contentInset;
-        UIEdgeInsets scrollIndicatorInsets = UIEdgeInsetsZero;
-#if defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0)
-        if (@available(iOS 11.1, *)) {
-            scrollIndicatorInsets = scrollView.verticalScrollIndicatorInsets;
-        }
-#else
-        scrollIndicatorInsets = scrollView.scrollIndicatorInsets;
-#endif
+        UIEdgeInsets scrollIndicatorInsets = scrollView.scrollIndicatorInsets;
         
         CGRect windowFrame = [scrollViewSuperView convertRect:scrollViewSuperView.frame 
                                                        toView:nil];

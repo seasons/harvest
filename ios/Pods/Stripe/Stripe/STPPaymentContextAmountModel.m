@@ -37,7 +37,8 @@
     NSInteger shippingAmount = (shippingMethod != nil) ? [shippingMethod.amount stp_amountWithCurrency:currency] : 0;
     if (_paymentSummaryItems == nil) {
         return _paymentAmount + shippingAmount;
-    } else {
+    }
+    else {
         PKPaymentSummaryItem *lastItem = _paymentSummaryItems.lastObject;
         return [lastItem.amount stp_amountWithCurrency:currency] + shippingAmount;
     }
@@ -62,7 +63,8 @@
             [items insertObject:shippingItem atIndex:0];
         }
         return [items copy];
-    } else {
+    }
+    else {
         if ([_paymentSummaryItems count] > 0 && shippingItem != nil) {
             NSMutableArray *items = [_paymentSummaryItems mutableCopy];
             PKPaymentSummaryItem *origTotalItem = [items lastObject];
@@ -70,7 +72,8 @@
             PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:origTotalItem.label amount:newTotal];
             [items removeLastObject];
             return [[items arrayByAddingObjectsFromArray:@[shippingItem, totalItem]] copy];
-        } else {
+        }
+        else {
             return _paymentSummaryItems;
         }
     }

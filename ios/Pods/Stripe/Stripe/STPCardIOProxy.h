@@ -11,10 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class STPCardIOProxy, STPPaymentMethodCardParams;
+@class STPCardIOProxy, STPCardParams;
 
 @protocol STPCardIOProxyDelegate <NSObject>
-- (void)cardIOProxy:(STPCardIOProxy *)proxy didFinishWithCardParams:(STPPaymentMethodCardParams *)cardParams;
+- (void)cardIOProxy:(STPCardIOProxy *)proxy didFinishWithCardParams:(STPCardParams *)cardParams;
 @end
 
 @interface STPCardIOProxy : NSObject

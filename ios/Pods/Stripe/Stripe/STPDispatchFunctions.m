@@ -11,7 +11,8 @@
 void stpDispatchToMainThreadIfNecessary(dispatch_block_t block) {
     if ([NSThread isMainThread]) {
         block();
-    } else {
+    }
+    else {
         dispatch_async(dispatch_get_main_queue(), block);
     }
 }

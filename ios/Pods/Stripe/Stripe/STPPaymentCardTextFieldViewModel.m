@@ -21,10 +21,10 @@
     _cardNumber = [sanitizedNumber stp_safeSubstringToIndex:maxLength];
 }
 
-- (nullable NSString *)compressedCardNumberWithPlaceholder:(nullable NSString *)placeholder {
+- (NSString *)compressedCardNumber {
     NSString *cardNumber = self.cardNumber;
     if (cardNumber.length == 0) {
-        cardNumber = placeholder ?: self.defaultPlaceholder;
+        cardNumber = self.defaultPlaceholder;
     }
 
     STPCardBrand currentBrand = [STPCardValidator brandForNumber:cardNumber];
@@ -38,7 +38,7 @@
         }
     } else {
         // use the card number format
-        NSArray<NSNumber *> *cardNumberFormat = [STPCardValidator cardNumberFormatForCardNumber:cardNumber];
+        NSArray<NSNumber *> *cardNumberFormat = [STPCardValidator cardNumberFormatForBrand:currentBrand];
 
         NSUInteger index = 0;
         for (NSNumber *segment in cardNumberFormat) {
@@ -92,14 +92,14 @@
 - (void)setPostalCode:(NSString *)postalCode {
     _postalCode = [STPPostalCodeValidator formattedSanitizedPostalCodeFromString:postalCode
                                                                      countryCode:self.postalCodeCountryCode
-                                                                           usage:STPPostalCodeIntendedUsageCardField];
+                                                                           usage:STPPostalCodeIntendedUsageBillingAddress];
 }
 
 - (void)setPostalCodeCountryCode:(NSString *)postalCodeCountryCode {
     _postalCodeCountryCode = postalCodeCountryCode;
     _postalCode = [STPPostalCodeValidator formattedSanitizedPostalCodeFromString:self.postalCode
                                                                      countryCode:postalCodeCountryCode
-                                                                           usage:STPPostalCodeIntendedUsageCardField];
+                                                                           usage:STPPostalCodeIntendedUsageBillingAddress];
 }
 
 - (STPCardBrand)brand {
@@ -126,11 +126,8 @@
         case STPCardFieldTypeCVC:
             return [STPCardValidator validationStateForCVC:self.cvc cardBrand:self.brand];
         case STPCardFieldTypePostalCode:
-            if (self.postalCode.length > 0) {
-                return STPCardValidationStateValid;
-            } else {
-                return STPCardValidationStateIncomplete;
-            }
+            return [STPPostalCodeValidator validationStateForPostalCode:self.postalCode
+                                                            countryCode:self.postalCodeCountryCode];
     }
 }
 
@@ -140,10 +137,6 @@
             && [self validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid
             && (!self.postalCodeRequired
                 || [self validationStateForField:STPCardFieldTypePostalCode] == STPCardValidationStateValid));
-}
-
-- (BOOL)postalCodeRequired {
-    return (self.postalCodeRequested && [STPPostalCodeValidator postalCodeIsRequiredForCountryCode:self.postalCodeCountryCode]);
 }
 
 - (NSString *)defaultPlaceholder {
@@ -158,7 +151,7 @@
                                  NSStringFromSelector(@selector(cvc)),
                                  NSStringFromSelector(@selector(brand)),
                                  NSStringFromSelector(@selector(postalCode)),
-                                 NSStringFromSelector(@selector(postalCodeRequested)),
+                                 NSStringFromSelector(@selector(postalCodeRequired)),
                                  NSStringFromSelector(@selector(postalCodeCountryCode)),
                                  ]];
 }

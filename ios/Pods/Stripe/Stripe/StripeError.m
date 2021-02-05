@@ -27,7 +27,6 @@ NSString *const STPExpiredCard = @"com.stripe.lib:ExpiredCard";
 NSString *const STPCardDeclined = @"com.stripe.lib:CardDeclined";
 NSString *const STPProcessingError = @"com.stripe.lib:ProcessingError";
 NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
-NSString *const STPIncorrectZip = @"com.stripe.lib:IncorrectZip";
 
 @implementation NSError (Stripe)
 
@@ -76,7 +75,6 @@ NSString *const STPIncorrectZip = @"com.stripe.lib:IncorrectZip";
                                   @"incorrect_cvc": @{@"code": STPIncorrectCVC, @"message": [self stp_cardInvalidCVCUserMessage]},
                                   @"card_declined": @{@"code": STPCardDeclined, @"message": [self stp_cardErrorDeclinedUserMessage]},
                                   @"processing_error": @{@"code": STPProcessingError, @"message": [self stp_cardErrorProcessingErrorUserMessage]},
-                                  @"incorrect_zip": @{@"code": STPIncorrectZip},
                                   };
         NSDictionary *codeMapEntry = codeMap[stripeErrorCode];
         NSDictionary *cardErrorCode = codeMapEntry[@"code"];
