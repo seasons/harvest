@@ -99,7 +99,7 @@
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "styled-components": "^4.3.2",
     "styled-system": "^5.1.1",
-    "tipsi-stripe": "8.0.2",
+    "tipsi-stripe": "https://github.com/ashfurrow/tipsi-stripe.git#fix-infinite-loop",
     "unfetch": "^4.1.0"
   },
   "devDependencies": {
