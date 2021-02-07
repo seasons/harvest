@@ -9,6 +9,7 @@ export const PRODUCT_VARIANT_CREATE_DRAFT_ORDER = gql`
       total
       type
       status
+      salesTaxTotal
       createdAt
       updatedAt
       items {
@@ -16,6 +17,7 @@ export const PRODUCT_VARIANT_CREATE_DRAFT_ORDER = gql`
         recordID
         recordType
         needShipping
+        price
         taxRate
         taxName
         taxPercentage
@@ -53,6 +55,7 @@ export const SUBMIT_ORDER = gql`
       status
       createdAt
       updatedAt
+      salesTaxTotal
       # customer {
       #   id
       #   detail {

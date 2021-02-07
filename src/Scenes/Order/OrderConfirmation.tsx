@@ -1,7 +1,7 @@
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import React, { useState } from "react"
+import React from "react"
 import { ScrollView } from "react-native"
 import { space } from "App/utils"
 import { SectionHeader } from "./Components/SectionHeader"
@@ -9,11 +9,13 @@ import { LineItem } from "./Components/LineItem"
 import { OrderItem } from "./Components/OrderItem"
 
 export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
+  const tracking = useTracking()
   const order = route?.params?.order
   const totalInDollars = order?.total / 100
 
   const address = order?.customer?.detail?.shippingAddress
   const productVariantItems = order?.items?.filter((i) => !!i.productVariant)
+  const salesTaxTotalInDollars = order?.salesTaxTotal / 100
 
   if (!order) {
     return (
@@ -43,7 +45,15 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
           {!!order && (
             <Box mb={4}>
               <LineItem leftText="Order number:" rightText={order?.orderNumber} />
-              <LineItem leftText="Sales tax" rightText={order?.subTotal || ""} />
+              <LineItem
+                leftText="Sales tax"
+                rightText={
+                  salesTaxTotalInDollars?.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  }) || ""
+                }
+              />
               <LineItem
                 leftText="Total"
                 rightText={
@@ -87,6 +97,10 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
       <FixedButton
         positionBottom={space(2)}
         onPress={() => {
+          tracking.trackEvent({
+            actionName: Schema.ActionNames.CloseOrderConfirmationTapped,
+            actionType: Schema.ActionTypes.Tap,
+          })
           navigation.navigate.popToTop()
         }}
         block

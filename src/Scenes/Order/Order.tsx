@@ -97,6 +97,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
   const productVariantItems = order?.items?.filter((i) => !!i.productVariant)
 
   const totalInDollars = order?.total / 100
+  const totalSalesTaxDollars = order?.salesTaxTotal / 100
 
   if (!customer || !address) {
     return (
@@ -127,10 +128,38 @@ export const Order = screenTrack()(({ route, navigation }) => {
             <Box mb={4}>
               <SectionHeader title="Purchase summary" />
               {productVariantItems.map((item) => {
-                return <LineItem leftText={item?.productVariant?.product?.name} rightText="" />
+                const itemPriceInDollars = item?.price / 100
+                return (
+                  <LineItem
+                    leftText={item?.productVariant?.product?.name}
+                    rightText={
+                      itemPriceInDollars?.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      }) || ""
+                    }
+                    key={item?.productVariant?.id}
+                  />
+                )
               })}
-              <LineItem leftText="Subtotal" rightText={order?.subTotal || ""} />
-              <LineItem leftText="Sales tax" rightText={order?.subTotal || ""} />
+              <LineItem
+                leftText="Subtotal"
+                rightText={
+                  order?.subTotal?.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  }) || ""
+                }
+              />
+              <LineItem
+                leftText="Sales tax"
+                rightText={
+                  totalSalesTaxDollars?.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  }) || ""
+                }
+              />
               <LineItem
                 leftText="Total"
                 rightText={
