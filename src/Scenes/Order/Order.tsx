@@ -143,6 +143,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
                   />
                 )
               })}
+              <Spacer mb={2} />
               <LineItem
                 leftText="Subtotal"
                 windowWidth={windowWidth}
