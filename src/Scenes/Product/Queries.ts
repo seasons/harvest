@@ -13,6 +13,7 @@ const commonProductVariantFragment = gql`
     isSaved
     hasRestockNotification
     price {
+      id
       buyNewPrice
       buyNewAvailableForSale
       buyNewEnabled

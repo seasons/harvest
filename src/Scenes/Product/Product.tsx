@@ -7,6 +7,7 @@ import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema, screenTrack } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, StatusBar } from "react-native"
@@ -52,6 +53,7 @@ export const Product = screenTrack({
   entityType: Schema.EntityTypes.Product,
 })(({ route, navigation }) => {
   const { authState } = useAuthContext()
+  const [buyButtonMutating, setBuyButtonMutating] = useState(false)
   const [viewed, setViewed] = useState(false)
   const [isMutatingNotify, setIsMutatingNotify] = useState(false)
   const insets = useSafeAreaInsets()
@@ -135,20 +137,46 @@ export const Product = screenTrack({
 
   const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
     onCompleted: (res) => {
-      console.log("res", res)
-      // TODO: navigate to receipt screen
+      setBuyButtonMutating(false)
+      if (res?.createDraftedOrder) {
+        navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
+      }
+    },
+    onError: (error) => {
+      console.log("error createDraftOrder ", error)
+      setBuyButtonMutating(false)
     },
   })
 
   const handleCreateDraftOrder = (orderType: "Used" | "New") => {
-    return createDraftOrder({
-      variables: {
-        input: {
-          productVariantId: selectedVariant?.id,
-          orderType,
+    if (userHasSession) {
+      return createDraftOrder({
+        variables: {
+          input: {
+            productVariantId: selectedVariant?.id,
+            orderType,
+          },
         },
-      },
-    })
+      })
+    } else {
+      showPopUp({
+        title: "Sign up to buy this item",
+        note: "You need to sign in or create an account before you can order items",
+        secondaryButtonText: "Got it",
+        secondaryButtonOnPress: () => {
+          setBuyButtonMutating(false)
+          hidePopUp()
+        },
+        buttonText: "Sign up",
+        onClose: () => {
+          hidePopUp()
+          setBuyButtonMutating(false)
+          navigation.navigate("Modal", {
+            screen: "CreateAccountModal",
+          })
+        },
+      })
+    }
   }
 
   useEffect(() => {
@@ -244,9 +272,16 @@ export const Product = screenTrack({
         return (
           <ProductBuy
             product={product}
+            buyButtonMutating={buyButtonMutating}
             selectedVariant={selectedVariant}
-            onBuyNew={() => handleCreateDraftOrder(orderType.BUY_NEW)}
-            onBuyUsed={() => handleCreateDraftOrder(orderType.BUY_USED)}
+            onBuyNew={() => {
+              setBuyButtonMutating(true)
+              handleCreateDraftOrder(orderType.BUY_NEW)
+            }}
+            onBuyUsed={() => {
+              setBuyButtonMutating(true)
+              handleCreateDraftOrder(orderType.BUY_USED)
+            }}
           />
         )
       default:

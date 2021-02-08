@@ -27,6 +27,7 @@ import { DebugMenu } from "App/Scenes/DebugMenu"
 import { Faq } from "App/Scenes/Faq"
 import { FitPicConfirmation, FitPicDetail, ShareFitPicToIG } from "App/Scenes/FitPic"
 import { Home } from "App/Scenes/Home"
+import { Order, OrderConfirmation } from "App/Scenes/Order"
 import { Product, SaveProduct } from "App/Scenes/Product"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
@@ -160,6 +161,8 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />
       <HomeStack.Screen name={Schema.PageNames.ReferralView} component={ReferralView} />
       <HomeStack.Screen name={Schema.PageNames.FitPicConfirmation} component={FitPicConfirmation} />
+      <HomeStack.Screen name={Schema.PageNames.Order} component={Order} />
+      <HomeStack.Screen name={Schema.PageNames.OrderConfirmation} component={OrderConfirmation} />
       <HomeStack.Screen
         name={Schema.PageNames.FitPicDetail}
         component={FitPicDetail}
@@ -200,6 +203,8 @@ const BagStackScreen = () => {
       <BagStack.Screen name={Schema.PageNames.ReferralView} component={ReferralView} />
       <BagStack.Screen name={Schema.PageNames.Reservation} component={Reservation} />
       <BagStack.Screen name={Schema.PageNames.ReservationConfirmation} component={ReservationConfirmation} />
+      <BagStack.Screen name={Schema.PageNames.Order} component={Order} />
+      <BagStack.Screen name={Schema.PageNames.OrderConfirmation} component={OrderConfirmation} />
     </BagStack.Navigator>
   )
 }

@@ -1,6 +1,4 @@
-import {
-  GetProduct_products, GetProduct_products_brand_products_variants
-} from "App/generated/GetProduct"
+import { GetProduct_products, GetProduct_products_brand_products_variants } from "App/generated/GetProduct"
 import React from "react"
 import { Linking } from "react-native"
 import styled from "styled-components/native"
@@ -13,22 +11,24 @@ const ProductBuyNew: React.FC<{
   availableForSale: boolean
   onBuyNew: () => void
   onNavigateToPartner: () => void
-}> = ({ price, brandName, onBuyNew, onNavigateToPartner, availableForSale }) => {
+  buyButtonMutating: boolean
+}> = ({ price, brandName, onBuyNew, onNavigateToPartner, availableForSale, buyButtonMutating }) => {
   return (
     <Flex flexDirection="column" px={3} pb={3}>
       <Sans color="black100" size="4" weight="medium">
         Available from Judy Turner
       </Sans>
       <Spacer mb={2} />
-      {availableForSale ? (
-        <Button variant="primaryBlack" block onPress={onBuyNew}>
-          Buy new for {price}
-        </Button>
-      ) : (
-        <Button variant="primaryGray" block disabled>
-          Sold Out
-        </Button>
-      )}
+      <Button
+        variant="primaryBlack"
+        block
+        onPress={onBuyNew}
+        disabled={!availableForSale}
+        loading={buyButtonMutating}
+        disabled={buyButtonMutating}
+      >
+        {availableForSale ? `Buy new for ${price}` : "Sold Out"}
+      </Button>
       <Spacer mb={2} />
       <Sans size="3" opacity={0.5} color="black100">
         Orders fulfilled by{" "}
@@ -45,21 +45,22 @@ const ProductBuyUsed: React.FC<{
   price: string
   availableForSale: boolean
   onBuyUsed: () => void
-}> = ({ price, availableForSale, onBuyUsed }) => (
+  buyButtonMutating: boolean
+}> = ({ price, availableForSale, onBuyUsed, buyButtonMutating }) => (
   <Flex flexDirection="column" px={3} pb={3}>
     <Sans color="black100" size="4" weight="medium">
       Available from Seasons
     </Sans>
     <Spacer mb={2} />
-    {availableForSale ? (
-      <Button variant="primaryBlack" block onPress={onBuyUsed}>
-        Buy used for {price}
-      </Button>
-    ) : (
-      <Button variant="primaryGray" block disabled>
-        Sold Out
-      </Button>
-    )}
+    <Button
+      variant="primaryBlack"
+      block
+      onPress={onBuyUsed}
+      loading={buyButtonMutating}
+      disabled={buyButtonMutating || !availableForSale}
+    >
+      {availableForSale ? `Buy used for ${price}` : "Sold Out"}
+    </Button>
     <Spacer mb={2} />
     <Sans size="3" opacity={0.5} color="black100">
       Orders fulfilled by Seasons. Payment & shipping information on file will be used for one-tap checkout.
@@ -70,18 +71,28 @@ const ProductBuyUsed: React.FC<{
 export const ProductBuy: React.FC<{
   product: GetProduct_products
   selectedVariant: GetProduct_products_brand_products_variants
-  onBuyUsed: () => Promise<any>
-  onBuyNew: () => Promise<any>
-}> = ({ selectedVariant, onBuyUsed, onBuyNew, product }) => {
+  onBuyUsed: () => void
+  onBuyNew: () => void
+  buyButtonMutating: boolean
+}> = ({ selectedVariant, onBuyUsed, onBuyNew, product, buyButtonMutating }) => {
   if (selectedVariant?.price?.buyUsedEnabled && selectedVariant?.price?.buyUsedPrice) {
-    const price = selectedVariant?.price?.buyUsedPrice.toLocaleString("en-US", {
+    const priceInDollars = selectedVariant?.price?.buyUsedPrice / 100
+    const price = priceInDollars?.toLocaleString("en-US", {
       style: "currency",
       currency: "USD",
     })
 
-    return <ProductBuyUsed price={price} onBuyUsed={onBuyUsed} availableForSale={true} />
+    return (
+      <ProductBuyUsed
+        price={price}
+        onBuyUsed={onBuyUsed}
+        availableForSale={true}
+        buyButtonMutating={buyButtonMutating}
+      />
+    )
   } else if (selectedVariant?.price?.buyNewEnabled && selectedVariant?.price?.buyNewPrice) {
-    const price = selectedVariant?.price?.buyNewPrice.toLocaleString("en-US", {
+    const priceInDollars = selectedVariant?.price?.buyNewPrice / 100
+    const price = priceInDollars?.toLocaleString("en-US", {
       style: "currency",
       currency: "USD",
     })
@@ -96,6 +107,7 @@ export const ProductBuy: React.FC<{
 
     return (
       <ProductBuyNew
+        buyButtonMutating={buyButtonMutating}
         price={price}
         brandName={brandName}
         availableForSale={availableForSale}

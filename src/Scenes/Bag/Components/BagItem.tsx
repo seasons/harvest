@@ -40,6 +40,10 @@ export const BagItemFragment = gql`
         reservable
         displayShort
         displayLong
+        price {
+          id
+          retailPrice
+        }
       }
     }
     price {
