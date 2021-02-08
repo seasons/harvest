@@ -137,7 +137,6 @@ export const Product = screenTrack({
 
   const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
     onCompleted: (res) => {
-      console.log("res", res)
       setBuyButtonMutating(false)
       if (res?.createDraftedOrder) {
         navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })

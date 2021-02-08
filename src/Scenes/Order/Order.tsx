@@ -68,12 +68,9 @@ export const Order = screenTrack()(({ route, navigation }) => {
   const [isMutating, setIsMutating] = useState(false)
   const customer = data?.me?.customer
   const address = data?.me?.customer?.detail?.shippingAddress
-  const allAccessEnabled = data?.me?.customer?.admissions?.allAccessEnabled
-  const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
 
   const [submitOrder] = useMutation(SUBMIT_ORDER, {
     onCompleted: (res) => {
-      console.log("res", res)
       setIsMutating(false)
       if (res?.submitOrder) {
         navigation.navigate(NavigationSchema.PageNames.OrderConfirmation, {
@@ -91,10 +88,6 @@ export const Order = screenTrack()(({ route, navigation }) => {
   const phoneNumber = customer?.detail?.phoneNumber
   const paymentMethod = customer?.billingInfo?.last_digits
   const paymentBrand = customer?.billingInfo?.brand
-
-  console.log("order", order)
-
-  const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
   const productVariantItems = order?.lineItems?.filter((i) => !!i.productVariant)
 
   const totalInDollars = order?.total / 100

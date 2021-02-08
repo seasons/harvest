@@ -90,8 +90,6 @@ export const BagItem: React.FC<BagItemProps> = ({
   const isReserved = bagItem.status !== "Added"
   const imageURL = product?.images?.[0]?.url || ""
 
-  console.log("bagItem", bagItem)
-
   // Show buy CTA whenever a sellable status is enabled, regardless of
   // underlying availability
   const isBuyable = bagItem?.productVariant?.sellable?.new || bagItem?.productVariant?.sellable?.used

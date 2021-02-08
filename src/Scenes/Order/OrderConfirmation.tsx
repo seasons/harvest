@@ -15,7 +15,6 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
   const tracking = useTracking()
   const order = route?.params?.order
   const customer = route?.params?.customer
-  console.log("order", order)
   const address = customer?.detail?.shippingAddress
   const productVariantItems = order?.lineItems?.filter((i) => !!i.productVariant)
 
