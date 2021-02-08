@@ -2,20 +2,22 @@ import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import React from "react"
-import { ScrollView } from "react-native"
-import { space } from "App/utils"
+import { Dimensions, ScrollView } from "react-native"
+import { color, space } from "App/utils"
 import { SectionHeader } from "./Components/SectionHeader"
 import { LineItem } from "./Components/LineItem"
 import { OrderItem } from "./Components/OrderItem"
+import { CheckCircled } from "Assets/svgs"
+
+const windowWidth = Dimensions.get("window").width
 
 export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
   const tracking = useTracking()
   const order = route?.params?.order
-  const totalInDollars = order?.total / 100
-
-  const address = order?.customer?.detail?.shippingAddress
-  const productVariantItems = order?.items?.filter((i) => !!i.productVariant)
-  const salesTaxTotalInDollars = order?.salesTaxTotal / 100
+  const customer = route?.params?.customer
+  console.log("order", order)
+  const address = customer?.detail?.shippingAddress
+  const productVariantItems = order?.lineItems?.filter((i) => !!i.productVariant)
 
   if (!order) {
     return (
@@ -32,9 +34,11 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
       <Flex style={{ flex: 1 }} px={2}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <Spacer mb={80} />
+          <CheckCircled backgroundColor={color("green100")} />
+          <Spacer mb={4} />
           <Box pb={1}>
             <Sans size="7" color="black100">
-              Order confirmed
+              We've got your order
             </Sans>
           </Box>
           <Box mb={4}>
@@ -43,40 +47,56 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
             </Sans>
           </Box>
           {!!order && (
-            <Box mb={4}>
-              <LineItem leftText="Order number:" rightText={order?.orderNumber} />
+            <Box mb={1}>
               <LineItem
-                leftText="Sales tax"
-                rightText={
-                  salesTaxTotalInDollars?.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }) || ""
-                }
-              />
-              <LineItem
-                leftText="Total"
-                rightText={
-                  totalInDollars?.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }) || ""
-                }
+                windowWidth={windowWidth}
+                leftText="Order number:"
+                rightText={order?.orderNumber}
                 color="black100"
               />
+              <Spacer mb={1} />
+              <Separator />
             </Box>
           )}
           {!!address && (
-            <Box mb={4}>
-              <SectionHeader title="Shipping address" />
-              <Sans size="4" color="black50" mt={1}>
-                {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
-              </Sans>
-              <Sans size="4" color="black50">
-                {`${address.city}, ${address.state} ${address.zipCode}`}
-              </Sans>
+            <Box mb={1}>
+              <Flex flexDirection="row" width="100%" justifyContent="space-between">
+                <Flex flexDirection="row" pr={2}>
+                  <Sans size="4" color="black100">
+                    Shipping
+                  </Sans>
+                </Flex>
+                <Flex style={{ maxWidth: windowWidth - 120 }}>
+                  <Sans size="4" color="black100" style={{ textAlign: "right" }}>
+                    {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
+                  </Sans>
+                  <Sans size="4" color="black100" style={{ textAlign: "right" }}>
+                    {`${address.city}, ${address.state} ${address.zipCode}`}
+                  </Sans>
+                </Flex>
+              </Flex>
             </Box>
           )}
+          <Box mb={4}>
+            <Spacer mb={1} />
+            <Separator />
+            <Spacer mb={1} />
+            <Flex flexDirection="row" width="100%" justifyContent="space-between">
+              <Flex flexDirection="row" pr={2}>
+                <Sans size="4" color="black100">
+                  Delivery
+                </Sans>
+              </Flex>
+              <Flex>
+                <Sans size="4" color="black100" style={{ textAlign: "right" }}>
+                  5-day shipping
+                </Sans>
+                <Sans size="4" color="black100" style={{ textAlign: "right" }}>
+                  UPS Ground
+                </Sans>
+              </Flex>
+            </Flex>
+          </Box>
           <Box mb={5}>
             <SectionHeader title={productVariantItems?.length === 1 ? "Item" : "Items"} />
             <Box mt={1} mb={4}>
@@ -101,7 +121,7 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
             actionName: Schema.ActionNames.CloseOrderConfirmationTapped,
             actionType: Schema.ActionTypes.Tap,
           })
-          navigation.navigate.popToTop()
+          navigation.popToTop()
         }}
         block
       >

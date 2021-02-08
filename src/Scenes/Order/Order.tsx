@@ -4,11 +4,10 @@ import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import { Schema as NavigationSchema } from "App/Navigation"
 import React, { useState } from "react"
-import { ScrollView } from "react-native"
+import { Dimensions, ScrollView } from "react-native"
 import { useMutation, useQuery } from "@apollo/client"
 import { space } from "App/utils"
 import { SectionHeader } from "./Components/SectionHeader"
-import { ShippingOption } from "./Components"
 import { LineItem } from "./Components/LineItem"
 import { OrderItem } from "./Components/OrderItem"
 import { SUBMIT_ORDER } from "../Product/Mutations"
@@ -22,7 +21,6 @@ const GET_CUSTOMER = gql`
         lastName
         email
       }
-
       customer {
         id
         admissions {
@@ -61,6 +59,8 @@ const GET_CUSTOMER = gql`
   }
 `
 
+const windowWidth = Dimensions.get("window").width
+
 export const Order = screenTrack()(({ route, navigation }) => {
   const { data } = useQuery(GET_CUSTOMER)
   const order = route?.params?.order
@@ -78,6 +78,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
       if (res?.submitOrder) {
         navigation.navigate(NavigationSchema.PageNames.OrderConfirmation, {
           order: res.submitOrder,
+          customer: data?.me?.customer,
         })
       }
     },
@@ -94,7 +95,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
   console.log("order", order)
 
   const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
-  const productVariantItems = order?.items?.filter((i) => !!i.productVariant)
+  const productVariantItems = order?.lineItems?.filter((i) => !!i.productVariant)
 
   const totalInDollars = order?.total / 100
   const totalSalesTaxDollars = order?.salesTaxTotal / 100
@@ -127,11 +128,17 @@ export const Order = screenTrack()(({ route, navigation }) => {
           {!!order && (
             <Box mb={4}>
               <SectionHeader title="Purchase summary" />
-              {productVariantItems.map((item) => {
+              {order?.lineItems?.map((item) => {
                 const itemPriceInDollars = item?.price / 100
+                let displayName
+                if (item.recordType === "Package") {
+                  displayName = "Shipping"
+                } else {
+                  displayName = item?.productVariant?.product?.name
+                }
                 return (
                   <LineItem
-                    leftText={item?.productVariant?.product?.name}
+                    leftText={displayName}
                     rightText={
                       itemPriceInDollars?.toLocaleString("en-US", {
                         style: "currency",
@@ -139,11 +146,13 @@ export const Order = screenTrack()(({ route, navigation }) => {
                       }) || ""
                     }
                     key={item?.productVariant?.id}
+                    windowWidth={windowWidth}
                   />
                 )
               })}
               <LineItem
                 leftText="Subtotal"
+                windowWidth={windowWidth}
                 rightText={
                   order?.subTotal?.toLocaleString("en-US", {
                     style: "currency",
@@ -153,6 +162,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
               />
               <LineItem
                 leftText="Sales tax"
+                windowWidth={windowWidth}
                 rightText={
                   totalSalesTaxDollars?.toLocaleString("en-US", {
                     style: "currency",
@@ -162,6 +172,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
               />
               <LineItem
                 leftText="Total"
+                windowWidth={windowWidth}
                 rightText={
                   totalInDollars?.toLocaleString("en-US", {
                     style: "currency",
@@ -188,29 +199,6 @@ export const Order = screenTrack()(({ route, navigation }) => {
               </Sans>
               <Sans size="4" color="black50">
                 {`${address.city}, ${address.state} ${address.zipCode}`}
-              </Sans>
-            </Box>
-          )}
-          {shippingOptions?.length > 0 && !allAccessEnabled && (
-            <Box mb={4}>
-              <SectionHeader title="Select shipping" />
-              {shippingOptions.map((option, index) => {
-                return (
-                  <Box key={option?.id || index}>
-                    <ShippingOption
-                      option={option}
-                      index={index}
-                      setShippingOptionIndex={setShippingOptionIndex}
-                      shippingOptionIndex={shippingOptionIndex}
-                    />
-                    <Separator />
-                  </Box>
-                )
-              })}
-              <Spacer mb={2} />
-              <Sans size="3" color="black50">
-                UPS Ground shipping averages 1-2 days in the NY metro area, 3-4 days for the Midwest + Southeast, and
-                5-7 days on the West coast.
               </Sans>
             </Box>
           )}

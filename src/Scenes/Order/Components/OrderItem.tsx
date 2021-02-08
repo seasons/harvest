@@ -40,7 +40,6 @@ export const OrderItem: React.FC<OrderItemProps> = ({ productVariant, index, nav
         <Container flexDirection="row">
           <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
             <Box>
-              <Sans size="4">{index + 1}</Sans>
               <Sans size="4">{product.brand.name}</Sans>
               <Sans size="4" color="black50">
                 {product.name}
