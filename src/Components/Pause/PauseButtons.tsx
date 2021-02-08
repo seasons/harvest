@@ -202,6 +202,10 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
     } else if (pauseStatus === "pending") {
       await removeScheduledPause(vars)
     } else {
+      navigation.navigate(Schema.StackNames.Modal, {
+        screen: Schema.PageNames.PauseModal,
+        param: {},
+      })
       await pauseSubscription(vars)
     }
     setIsMutating(false)
@@ -240,9 +244,9 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
         )}
         {pauseStatus === "paused" && (
           <>
-            <Sans size={fullScreen ? "3" : "1"}>
+            <Sans size={fullScreen ? "4" : "2"}>
               Your membership is paused until{" "}
-              <Sans size={fullScreen ? "3" : "1"} style={{ textDecorationLine: "underline" }}>
+              <Sans size={fullScreen ? "4" : "2"} style={{ textDecorationLine: "underline" }}>
                 {DateTime.fromISO(resumeDate).toFormat("EEEE LLLL d")}
               </Sans>
               .

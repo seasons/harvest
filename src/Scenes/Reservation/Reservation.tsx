@@ -12,8 +12,8 @@ import { ScrollView } from "react-native"
 import { BagItemFragment } from "../Bag/Components/BagItem"
 import { ReservationItem } from "./Components/ReservationItem"
 import { useNavigation } from "@react-navigation/native"
-import { SectionHeader } from "../Order/Components/SectionHeader"
 import { ShippingOption } from "../Order/Components"
+import { SectionHeader } from "App/Components/SectionHeader"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions, $shippingCode: ShippingCode) {

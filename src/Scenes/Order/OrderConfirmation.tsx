@@ -4,10 +4,10 @@ import { Loader } from "App/Components/Loader"
 import React from "react"
 import { Dimensions, ScrollView } from "react-native"
 import { color, space } from "App/utils"
-import { SectionHeader } from "./Components/SectionHeader"
 import { LineItem } from "./Components/LineItem"
 import { OrderItem } from "./Components/OrderItem"
 import { CheckCircled } from "Assets/svgs"
+import { SectionHeader } from "./Components"
 
 const windowWidth = Dimensions.get("window").width
 
