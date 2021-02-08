@@ -13,6 +13,7 @@ const OrderFragment = gql`
     salesTaxTotal
     lineItems {
       id
+      price
       recordID
       recordType
       needShipping
