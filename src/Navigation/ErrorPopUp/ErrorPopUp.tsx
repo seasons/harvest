@@ -2,11 +2,13 @@ import { Box, Flex, Sans, Separator, Spacer, Button, Theme } from "App/Component
 import { color, space } from "App/utils"
 import { useComponentSize } from "App/utils/hooks/useComponentSize"
 import React, { useEffect, useState } from "react"
-import { Dimensions, Keyboard } from "react-native"
+import { Dimensions, Keyboard, KeyboardAvoidingView } from "react-native"
 import { animated, useSpring } from "react-spring/native.cjs"
 import styled from "styled-components/native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { TouchableWithoutFeedback } from "react-native-gesture-handler"
+import { useKeyboard } from "@react-native-community/hooks"
 
 const windowDimensions = Dimensions.get("window")
 const windowHeight = windowDimensions.height
@@ -22,6 +24,7 @@ export const ErrorPopUp: React.FC = () => {
     })
   }, [])
 
+  const keyboard = useKeyboard()
   const [size, onLayout] = useComponentSize()
 
   const { data, show } = popUpState
@@ -60,49 +63,71 @@ export const ErrorPopUp: React.FC = () => {
 
   return (
     <Theme>
-      <AnimatedPopUp
-        style={{ transform: [{ translateY: animation.translateY }] }}
-        color={colors?.backgroundColor || color("white100")}
-      >
-        <Box p={2} onLayout={onLayout} pb={insets?.bottom}>
-          {!!data?.icon && <Box mt={2}>{data?.icon}</Box>}
-          <Spacer mt={2} />
-          <Box>
-            <Sans size="5" color={colors?.primaryText}>
-              {data?.title}
-            </Sans>
-            {data?.note && (
-              <>
-                <Spacer mb={0.5} />
-                <Sans size="4" color={colors?.secondaryText}>
-                  {data?.note}
-                </Sans>
-              </>
-            )}
-          </Box>
-          <Spacer mb={3} />
-          <Separator color={colors?.separator} />
-          <Flex flexDirection="row">
-            {showSecondaryButton && (
-              <>
-                <Button width={twoButtonWidth} variant="primaryWhite" onPress={data?.secondaryButtonOnPress}>
-                  {data?.secondaryButtonText}
-                </Button>
-                <Spacer mr={1} />
-              </>
-            )}
-            <Button
-              width={showSecondaryButton ? twoButtonWidth : null}
-              variant="primaryBlack"
-              block={!showSecondaryButton}
-              onPress={() => data?.onClose?.()}
+      {show && (
+        <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor }}>
+          <KeyboardAvoidingView
+            behavior="position"
+            keyboardVerticalOffset={0}
+            style={{ flex: 1, position: "relative" }}
+          >
+            <TouchableWithoutFeedback
+              onPress={() => {
+                Keyboard.dismiss()
+              }}
+              style={{
+                height: "100%",
+                width: "100%",
+                zIndex: 3,
+              }}
+            />
+            <AnimatedPopUp
+              style={{
+                transform: [{ translateY: animation.translateY }],
+                bottom: keyboard.keyboardShown ? keyboard.keyboardHeight : 0,
+              }}
+              color={colors?.backgroundColor || color("white100")}
             >
-              {data?.buttonText}
-            </Button>
-          </Flex>
-        </Box>
-      </AnimatedPopUp>
-      <AnimatedOverlay style={{ backgroundColor: animation.backgroundColor }} onPress={() => Keyboard.dismiss()} />
+              <Box p={2} onLayout={onLayout} pb={insets?.bottom}>
+                {!!data?.icon && <Box mt={2}>{data?.icon}</Box>}
+                <Spacer mt={2} />
+                <Box>
+                  <Sans size="5" color={colors?.primaryText}>
+                    {data?.title}
+                  </Sans>
+                  {data?.note && (
+                    <>
+                      <Spacer mb={0.5} />
+                      <Sans size="4" color={colors?.secondaryText}>
+                        {data?.note}
+                      </Sans>
+                    </>
+                  )}
+                </Box>
+                <Spacer mb={3} />
+                <Separator color={colors?.separator} />
+                <Flex flexDirection="row">
+                  {showSecondaryButton && (
+                    <>
+                      <Button width={twoButtonWidth} variant="primaryWhite" onPress={data?.secondaryButtonOnPress}>
+                        {data?.secondaryButtonText}
+                      </Button>
+                      <Spacer mr={1} />
+                    </>
+                  )}
+                  <Button
+                    width={showSecondaryButton ? twoButtonWidth : null}
+                    variant="primaryBlack"
+                    block={!showSecondaryButton}
+                    onPress={() => data?.onClose?.()}
+                  >
+                    {data?.buttonText}
+                  </Button>
+                </Flex>
+              </Box>
+            </AnimatedPopUp>
+          </KeyboardAvoidingView>
+        </AnimatedOverlay>
+      )}
     </Theme>
   )
 }
@@ -124,7 +149,6 @@ const Container = styled(Box)<{ color: string }>`
   position: absolute;
   width: 100%;
   height: 100%;
-  bottom: 0;
   left: 0;
   overflow: hidden;
   z-index: 100;

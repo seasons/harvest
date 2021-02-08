@@ -17,8 +17,7 @@
 @property (nonatomic, readwrite) BOOL livemode;
 @property (nonatomic, readwrite) NSString *secret;
 @property (nonatomic, readwrite) NSDate *expires;
-@property (nonatomic, readwrite, nullable) NSString *customerID;
-@property (nonatomic, readwrite, nullable) NSString *issuingCardID;
+@property (nonatomic, readwrite) NSString *customerID;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
@@ -41,24 +40,19 @@
     }
 
     NSString *customerID;
-    NSString *issuingCardID;
     for (id obj in associatedObjects) {
         if ([obj isKindOfClass:[NSDictionary class]]) {
             NSString *type = [obj stp_stringForKey:@"type"];
             if ([type isEqualToString:@"customer"]) {
                 customerID = [obj stp_stringForKey:@"id"];
             }
-            if ([type isEqualToString:@"issuing.card"]) {
-                issuingCardID = [obj stp_stringForKey:@"id"];
-            }
         }
     }
-    if (!customerID && !issuingCardID) {
+    if (!customerID) {
         return nil;
     }
     STPEphemeralKey *key = [self new];
     key.customerID = customerID;
-    key.issuingCardID = issuingCardID;
     key.stripeID = stripeId;
     key.livemode = [dict stp_boolForKey:@"livemode" or:YES];
     key.created = created;
@@ -79,11 +73,14 @@
     if (!object || ![object isKindOfClass:self.class]) {
         return NO;
     }
-    return [self isEqualToEphemeralKey:object];
+    return [self isEqualToResourceKey:object];
 }
 
-- (BOOL)isEqualToEphemeralKey:(STPEphemeralKey *)other {
-    return [self.stripeID isEqualToString:other.stripeID];
+- (BOOL)isEqualToResourceKey:(STPEphemeralKey *)other {
+    return [self.stripeID isEqualToString:other.stripeID] 
+        && [self.secret isEqualToString:other.secret]
+        && [self.expires isEqual:other.expires]
+        && [self.customerID isEqual:other.customerID];
 }
 
 @end

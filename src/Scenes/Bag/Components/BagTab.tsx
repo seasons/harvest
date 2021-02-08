@@ -20,7 +20,7 @@ import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
 import { BagCardButton } from "./BagCardButton"
 import { BuyBottomSheet, height as bottomSheetHeight, TabType as BuyTabType, Tab as BuyTab } from "./BuyBottomSheet"
-import { AddSlot, Stylist, SurpriseMe } from "Assets/svgs"
+import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
 import { UserState, State as CreateAccountState } from "App/Scenes/CreateAccount/CreateAccount"
 
 export const BagTab: React.FC<{

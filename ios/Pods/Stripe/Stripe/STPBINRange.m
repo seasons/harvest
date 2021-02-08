@@ -38,9 +38,9 @@
                             @[@"37", @"37", @15, @(STPCardBrandAmex)],
 
                             // Diners Club
-                            @[@"30", @"30", @16, @(STPCardBrandDinersClub)],
+                            @[@"30", @"30", @14, @(STPCardBrandDinersClub)],
                             @[@"36", @"36", @14, @(STPCardBrandDinersClub)],
-                            @[@"38", @"39", @16, @(STPCardBrandDinersClub)],
+                            @[@"38", @"39", @14, @(STPCardBrandDinersClub)],
 
                             // Discover
                             @[@"60", @"60", @16, @(STPCardBrandDiscover)],
@@ -49,7 +49,7 @@
                             // JCB
                             @[@"35", @"35", @16, @(STPCardBrandJCB)],
 
-                            // Mastercard
+                            // MasterCard
                             @[@"50", @"59", @16, @(STPCardBrandMasterCard)],
                             @[@"22", @"27", @16, @(STPCardBrandMasterCard)],
                             @[@"67", @"67", @16, @(STPCardBrandMasterCard)], // Maestro
@@ -106,13 +106,15 @@
 
     if (number.length < self.qRangeLow.length) {
         withinLowRange = number.integerValue >= [self.qRangeLow substringToIndex:number.length].integerValue;
-    } else {
+    }
+    else {
         withinLowRange = [number substringToIndex:self.qRangeLow.length].integerValue >= self.qRangeLow.integerValue;
     }
 
     if (number.length < self.qRangeHigh.length) {
         withinHighRange = number.integerValue <= [self.qRangeHigh substringToIndex:number.length].integerValue;
-    } else {
+    }
+    else {
         withinHighRange = [number substringToIndex:self.qRangeHigh.length].integerValue <= self.qRangeHigh.integerValue;
     }
 

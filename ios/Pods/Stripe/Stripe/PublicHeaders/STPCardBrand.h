@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
     STPCardBrandAmex,
 
     /**
-     Mastercard card
+     MasterCard card
      */
     STPCardBrandMasterCard,
 
@@ -53,13 +53,3 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
      */
     STPCardBrandUnknown,
 };
-
-/**
- Returns a string representation for the provided card brand;
- i.e. `[NSString stringFromBrand:STPCardBrandVisa] ==  @"Visa"`.
- 
- @param brand the brand you want to convert to a string
- 
- @return A string representing the brand, suitable for displaying to a user.
- */
-NSString * STPStringFromCardBrand(STPCardBrand brand);

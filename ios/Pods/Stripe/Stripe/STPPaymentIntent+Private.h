@@ -8,16 +8,9 @@
 
 #import "STPPaymentIntent.h"
 
-@class STPPaymentMethod;
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPPaymentIntent (Private)
-
-/**
- The optionally expanded PaymentMethod used in this PaymentIntent.
- */
-@property (nonatomic, nullable, readonly) STPPaymentMethod *paymentMethod;
+@interface STPPaymentIntent ()
 
 /**
  Helper function for extracting PaymentIntent id from the Client Secret.
@@ -47,17 +40,25 @@ NS_ASSUME_NONNULL_BEGIN
  Parse the string and return the correct `STPPaymentIntentConfirmationMethod`,
  or `STPPaymentIntentConfirmationMethodUnknown` if it's unrecognized by this version of the SDK.
 
- @param string the NSString with the confirmation method
+ @param string the NSString with the capture method
  */
 + (STPPaymentIntentConfirmationMethod)confirmationMethodFromString:(NSString *)string;
 
 /**
- Parse the string and return the correct `STPPaymentIntentSetupFutureUsage`,
- or `STPPaymentIntentSetupFutureUsageUnknown` if it's unrecognized by this version of the SDK.
- 
- @param string the NSString with the setup future usage value
+ Parse the string and return the correct `STPPaymentIntentSourceActionType`,
+ or `STPPaymentIntentSourceActionTypeUnknown` if it's unrecognized by this version of the SDK.
+
+ @param string the NSString with the `next_source_action.type`
  */
-+ (STPPaymentIntentSetupFutureUsage)setupFutureUsageFromString:(NSString *)string;
++ (STPPaymentIntentSourceActionType)sourceActionTypeFromString:(NSString *)string;
+
+/**
+ Return the string representing the provided `STPPaymentIntentSourceActionType`.
+
+ @param sourceActionType the enum value to convert to a string
+ @return the string, or @"unknown" if this was an unrecognized type
+ */
++ (NSString *)stringFromSourceActionType:(STPPaymentIntentSourceActionType)sourceActionType;
 
 @end
 

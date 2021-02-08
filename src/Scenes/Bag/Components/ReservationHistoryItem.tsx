@@ -12,6 +12,7 @@ export const ReservationHistoryItem = ({ item }) => {
   const date = item?.createdAt && DateTime.fromISO(item?.createdAt).toUTC().toFormat("MM/dd")
   const imageWidth = (Dimensions.get("window").width - space(5)) / 3
   const aspectRatio = 1.25
+
   return (
     <Box>
       <Spacer mb={2} />
@@ -30,7 +31,7 @@ export const ReservationHistoryItem = ({ item }) => {
       <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start" px="14px">
         {item.products?.map((physicalProduct) => {
           const variant = physicalProduct?.productVariant
-          const variantSizeDisplay = variant?.display
+          const variantSizeDisplay = variant?.displayShort
           const product = variant?.product
           const brandName = product?.brand?.name
           const image = product?.images?.[0]

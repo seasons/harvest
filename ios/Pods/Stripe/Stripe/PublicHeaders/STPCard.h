@@ -11,7 +11,7 @@
 #import "STPAPIResponseDecodable.h"
 #import "STPCardBrand.h"
 #import "STPCardParams.h"
-#import "STPPaymentOption.h"
+#import "STPPaymentMethod.h"
 #import "STPSourceProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 
  @see https://stripe.com/docs/api#cards
  */
-@interface STPCard : NSObject<STPAPIResponseDecodable, STPPaymentOption, STPSourceProtocol>
+@interface STPCard : NSObject<STPAPIResponseDecodable, STPPaymentMethod, STPSourceProtocol>
 
 /**
  You cannot directly instantiate an `STPCard`. You should only use one that has 
@@ -115,6 +115,13 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 @property (nonatomic, nullable, readonly) NSString *currency;
 
 /**
+ A set of key/value pairs associated with the card object.
+
+ @see https://stripe.com/docs/api#metadata
+ */
+@property (nonatomic, copy, nullable, readonly) NSDictionary<NSString *, NSString *> *metadata;
+
+/**
  Returns a string representation for the provided card brand; 
  i.e. `[NSString stringFromBrand:STPCardBrandVisa] ==  @"Visa"`.
 
@@ -143,15 +150,6 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 + (STPCardBrand)brandFromString:(NSString *)string;
 
 #pragma mark - Deprecated methods
-
-/**
- A set of key/value pairs associated with the card object.
- 
- @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
- 
- @see https://stripe.com/docs/api#metadata
- */
-@property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata DEPRECATED_MSG_ATTRIBUTE("Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.");
 
 /**
  The Stripe ID for the card.
