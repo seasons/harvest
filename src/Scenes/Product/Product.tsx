@@ -10,7 +10,7 @@ import gql from "graphql-tag"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
-import { Dimensions, FlatList, StatusBar } from "react-native"
+import { Animated, Dimensions, FlatList, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
@@ -58,6 +58,7 @@ export const Product = screenTrack({
   const [isMutatingNotify, setIsMutatingNotify] = useState(false)
   const insets = useSafeAreaInsets()
   const flatListRef = useRef(null)
+  const animatedScrollYRef = useRef(new Animated.Value(0))
   const userHasSession = !!authState?.userSession
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const [showSizeWarning, setShowSizeWarning] = useState(false)
@@ -341,13 +342,16 @@ export const Product = screenTrack({
           }}
         />
       </ShareButtonWrapper>
-      <FlatList
+      <Animated.FlatList
         ListHeaderComponent={() => <Spacer mb={insets.top} />}
         data={sections}
         ref={flatListRef}
         ListFooterComponent={() => <Spacer mb={listFooterSpacing} />}
         keyExtractor={(item) => item}
         renderItem={(item) => renderItem(item)}
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: animatedScrollYRef.current } } }], {
+          useNativeDriver: true,
+        })}
       />
       <SelectionButtons
         bottom={selectionButtonsBottom}
@@ -359,6 +363,9 @@ export const Product = screenTrack({
         hasNotification={hasNotification}
         data={data}
         setShowSizeWarning={setShowSizeWarning}
+        onBuyUsed={() => handleCreateDraftOrder("Used")}
+        onBuyNew={() => handleCreateDraftOrder("New")}
+        animatedScrollY={animatedScrollYRef.current}
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
