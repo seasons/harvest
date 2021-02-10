@@ -32,8 +32,6 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
     currency: "USD",
   })
 
-  const dueDate = ""
-
   const checkLines = [
     "Extend or resume anytime",
     "Buy items anytime with a member discount",
@@ -51,7 +49,6 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
     onCompleted: () => {
       navigation.navigate("Modal", {
         screen: Schema.PageNames.PauseConfirmation,
-        params: { dueDate },
       })
       setWithoutItemsMutating(false)
     },
@@ -74,7 +71,7 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
   }
 
   const onPauseWithoutItems = () => {
-    return null
+    pauseSubscription()
   }
 
   return (
