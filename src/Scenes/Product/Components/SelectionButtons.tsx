@@ -9,13 +9,14 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import React, { useEffect, useState } from "react"
 import { Animated, Dimensions, TouchableWithoutFeedback, StyleSheet } from "react-native"
 import styled from "styled-components/native"
+import { VARIANT_WANT_HEIGHT } from "../Product"
 
 interface Props {
   toggleShowVariantPicker: (show: boolean) => void
   setShowSizeWarning: (show: boolean) => void
   showVariantPicker: boolean
   selectedVariant: GetProduct_products_brand_products_variants
-  bottom?: number
+  showNotifyMeMessage: boolean
   data: GetProduct
   onNotifyMe: () => void
   onBuyNew: () => void
@@ -28,7 +29,7 @@ interface Props {
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
 const buyCtaHeight = space(2) + space(3) + 20
 
-const renderBuyCTA = ({ price, onBuyNew, onBuyUsed, animatedScrollY }) => {
+const renderBuyCTA = ({ price, onBuyNew, onBuyUsed, animatedScrollY, showNotifyMeMessage }) => {
   const opacity = animatedScrollY.interpolate({
     inputRange: [0, 50],
     outputRange: [1, 0],
@@ -58,7 +59,7 @@ const renderBuyCTA = ({ price, onBuyNew, onBuyUsed, animatedScrollY }) => {
     )
   }
 
-  return cta ? (
+  return cta && !showNotifyMeMessage ? (
     <Animated.View
       style={{
         opacity,
@@ -85,7 +86,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
   const [loaded, setLoaded] = useState(false)
   const {
     hasNotification,
-    bottom = 0,
+    showNotifyMeMessage,
     selectedVariant,
     showVariantPicker,
     toggleShowVariantPicker,
@@ -110,7 +111,13 @@ export const SelectionButtons: React.FC<Props> = (props) => {
     return null
   }
 
-  const BuyCTA = renderBuyCTA({ price: selectedVariant.price, onBuyUsed, onBuyNew, animatedScrollY })
+  const BuyCTA = renderBuyCTA({
+    price: selectedVariant.price,
+    onBuyUsed,
+    onBuyNew,
+    animatedScrollY,
+    showNotifyMeMessage,
+  })
   const selectionButtonsTopOffset = BuyCTA
     ? animatedScrollY.interpolate({
         inputRange: [0, 50, 100, 101],
@@ -119,7 +126,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
     : buyCtaHeight - space(2)
 
   return (
-    <Wrapper style={{ bottom }}>
+    <Wrapper style={{ bottom: showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0 }}>
       <Flex flexDirection="column">
         <Animated.View style={{ transform: [{ translateY: selectionButtonsTopOffset }] }}>
           <Flex px={2} paddingBottom={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">

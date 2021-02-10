@@ -1,11 +1,17 @@
-import React from "react"
+import React, { useState } from "react"
 import { Linking } from "react-native"
 import { Flex, Button, Spacer, Sans } from "App/Components"
 import { TabBar } from "Components/TabBar"
+import { Schema as NavigationSchema } from "App/Navigation"
 import styled from "styled-components/native"
 import { color } from "App/utils"
+import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "App/Scenes/Product/Mutations"
+import { useMutation } from "@apollo/client"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { BagItemFragment_product_variants } from "App/generated/BagItemFragment"
+import { OrderType } from "App/Scenes/Product/Product"
 
-export const height = 298
+export const height = 310
 
 const TAB_LABELS = ["New", "Used"]
 export enum TabType {
@@ -24,10 +30,49 @@ export type Tab =
 type Props = {
   onDismiss: () => void
   tabs: Tab[]
+  initialTab: number
+  variant: BagItemFragment_product_variants
+  navigation: any
 }
 
-export const BuyBottomSheet: React.FC<Props> = ({ onDismiss, tabs }) => {
-  const [activeTabIdx, setActiveTabIdx] = React.useState<number>(0)
+export const BuyBottomSheet: React.FC<Props> = ({ onDismiss, tabs, initialTab = 0, variant, navigation }) => {
+  const [activeTabIdx, setActiveTabIdx] = React.useState<number>(initialTab)
+  const [isMutating, setIsMutating] = useState(false)
+  const { showPopUp, hidePopUp } = usePopUpContext()
+
+  const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
+    onCompleted: (res) => {
+      setIsMutating(false)
+      if (res?.createDraftedOrder) {
+        onDismiss()
+        navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
+      }
+    },
+    onError: (error) => {
+      console.log("error createDraftOrder ", error)
+      setIsMutating(false)
+      showPopUp({
+        title: "Sorry! There was a problem",
+        note: "There was an issue purchasing this item, please contact us if the issue persists.",
+        buttonText: "Got it",
+        onClose: () => {
+          hidePopUp()
+        },
+      })
+    },
+  })
+
+  const handleCreateDraftOrder = (orderType: "Used" | "New") => {
+    return createDraftOrder({
+      variables: {
+        input: {
+          productVariantID: variant?.id,
+          orderType,
+        },
+      },
+    })
+  }
+
   const handleBuyNew = () => {
     /** TODO: implement **/
   }
@@ -40,12 +85,17 @@ export const BuyBottomSheet: React.FC<Props> = ({ onDismiss, tabs }) => {
     /** TODO: implement **/
   }
 
+  const onBuyUsed = () => {
+    setIsMutating(true)
+    handleCreateDraftOrder(OrderType.BUY_USED)
+  }
+
   const renderTab = (tab: Tab) => {
     switch (tab.type) {
       case TabType.NEW:
         return (
           <Flex flexDirection="column" alignItems="center" px="3" py="4" key={TabType.NEW}>
-            <Button variant="primaryBlack" block onPress={handleBuyNew}>
+            <Button variant="primaryBlack" block onPress={handleBuyNew} loading={isMutating}>
               Buy new for{" "}
               {(tab.price / 100).toLocaleString("en-US", {
                 style: "currency",
@@ -69,7 +119,7 @@ export const BuyBottomSheet: React.FC<Props> = ({ onDismiss, tabs }) => {
       case TabType.NEW_UNAVAILABLE:
         return (
           <Flex flexDirection="column" px="3" py="4" alignItems="center" key={TabType.NEW_UNAVAILABLE}>
-            <Button variant="primaryGray" block disabled>
+            <Button variant="secondaryWhite" block disabled>
               Sold Out
             </Button>
             <Spacer mb={3} />
@@ -89,8 +139,8 @@ export const BuyBottomSheet: React.FC<Props> = ({ onDismiss, tabs }) => {
       case TabType.USED:
         return (
           <Flex flexDirection="column" px="3" py="4" alignItems="center" key={TabType.USED}>
-            <Button variant="secondaryWhite" block onPress={onNotifyMe}>
-              Buy new for{" "}
+            <Button variant="secondaryWhite" block onPress={onBuyUsed} disabled={isMutating} loading={isMutating}>
+              Buy used for{" "}
               {(tab.price / 100).toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
@@ -127,6 +177,7 @@ export const BuyBottomSheet: React.FC<Props> = ({ onDismiss, tabs }) => {
 
   return (
     <Root flexDirection="column">
+      <Spacer mb={2} />
       <TabBar
         spaceEvenly
         tabs={TAB_LABELS}
