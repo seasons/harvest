@@ -27,12 +27,6 @@ export const REMOVE_SCHEDULED_PAUSE = gql`
   }
 `
 
-const PAUSE_MEMBERSHIP = gql`
-  mutation PauseSubscription($subscriptionID: String!) {
-    pauseSubscription(subscriptionID: $subscriptionID)
-  }
-`
-
 const UPDATE_RESUME_DATE = gql`
   mutation UpdateResumeDate($date: DateTime!) {
     updateResumeDate(date: $date)
@@ -119,33 +113,6 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
     },
   })
 
-  const [pauseSubscription] = useMutation(PAUSE_MEMBERSHIP, {
-    refetchQueries: [
-      {
-        query: GET_MEMBERSHIP_INFO,
-      },
-    ],
-    onCompleted: () => {
-      navigation.navigate("Modal", {
-        screen: Schema.PageNames.PauseConfirmation,
-        params: { dueDate },
-      })
-      setIsMutating(false)
-    },
-    onError: (err) => {
-      const popUpData = {
-        title: "Oops!",
-        note: "There was an error pausing your membership, please contact us.",
-        buttonText: "Close",
-        onClose: () => hidePopUp(),
-      }
-      console.log("err", err)
-      Sentry.captureException(err)
-      showPopUp(popUpData)
-      setIsMutating(false)
-    },
-  })
-
   const [resumeSubscription] = useMutation(RESUME_MEMBERSHIP, {
     refetchQueries: [
       {
@@ -204,9 +171,8 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
     } else {
       navigation.navigate(Schema.StackNames.Modal, {
         screen: Schema.PageNames.PauseModal,
-        param: {},
+        params: { customer },
       })
-      await pauseSubscription(vars)
     }
     setIsMutating(false)
   }
