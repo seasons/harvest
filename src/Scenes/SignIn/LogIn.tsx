@@ -35,8 +35,8 @@ const LOG_IN = gql`
         }
       }
       user {
-        createdAt
         id
+        createdAt
         email
         firstName
         lastName

@@ -10,7 +10,7 @@ import gql from "graphql-tag"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
-import { Animated, Dimensions, FlatList, StatusBar } from "react-native"
+import { Animated, Dimensions, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
@@ -27,8 +27,8 @@ import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT } from "./Queries"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
-const VARIANT_WANT_HEIGHT = 52
-enum orderType {
+export const VARIANT_WANT_HEIGHT = 52
+export enum OrderType {
   BUY_USED = "Used",
   BUY_NEW = "New",
 }
@@ -154,7 +154,7 @@ export const Product = screenTrack({
       return createDraftOrder({
         variables: {
           input: {
-            productVariantId: selectedVariant?.id,
+            productVariantID: selectedVariant?.id,
             orderType,
           },
         },
@@ -277,11 +277,11 @@ export const Product = screenTrack({
             selectedVariant={selectedVariant}
             onBuyNew={() => {
               setBuyButtonMutating(true)
-              handleCreateDraftOrder(orderType.BUY_NEW)
+              handleCreateDraftOrder(OrderType.BUY_NEW)
             }}
             onBuyUsed={() => {
               setBuyButtonMutating(true)
-              handleCreateDraftOrder(orderType.BUY_USED)
+              handleCreateDraftOrder(OrderType.BUY_USED)
             }}
           />
         )
@@ -291,7 +291,7 @@ export const Product = screenTrack({
   }
 
   const selectionButtonsBottom = showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0
-  const listFooterSpacing = selectionButtonsBottom + 58
+  const listFooterSpacing = selectionButtonsBottom + 100
   const sections = ["imageRail", "productDetails", "buy", "productMeasurements", "aboutTheBrand", "moreLikeThis"]
   const url = `https://www.wearseasons.com/product/${product.slug}`
   const title = product.name
@@ -354,7 +354,7 @@ export const Product = screenTrack({
         })}
       />
       <SelectionButtons
-        bottom={selectionButtonsBottom}
+        showNotifyMeMessage={showNotifyMeMessage}
         toggleShowVariantPicker={toggleShowVariantPicker}
         showVariantPicker={showVariantPicker}
         selectedVariant={selectedVariant}
