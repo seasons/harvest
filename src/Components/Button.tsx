@@ -114,8 +114,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: black100,
         },
         disabled: {
-          backgroundColor: white100,
-          borderColor: black10,
+          backgroundColor: black04,
+          borderColor: black04,
           color: black50,
         },
       }
@@ -244,10 +244,10 @@ export class Button extends Component<ButtonProps, ButtonState> {
     return this.props.variant === "primaryWhite" || this.props.variant === "secondaryWhite" ? "black100" : "white100"
   }
 
-  getSize(): { height: number | string; size: "4"; px: number } {
+  getSize(): { height: number | string; size: "3" | "4"; px: number } {
     switch (this.props.size) {
       case "small":
-        return { height: 36, size: "4", px: 21 }
+        return { height: 32, size: "3", px: 21 }
       default:
         return { height: 48, size: "4", px: 30 }
     }

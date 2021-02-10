@@ -168,7 +168,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
           switch (option) {
             case Option.ShareToIG:
               return (
-                <SectionWrapper isFirst={isFirst} isLast={isLast} onPress={() => shareToIG()}>
+                <SectionWrapper isFirst={isFirst} isLast={isLast} onPress={() => shareToIG()} key={index}>
                   <Flex py={2} alignItems="center">
                     <Instagram />
                     <Sans pt={0.5} size="4" color="black50">
@@ -183,6 +183,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
                   isFirst={isFirst}
                   isLast={isLast}
                   onPress={() => props.navigation.navigate("ReferralView")}
+                  key={index}
                 >
                   <Flex py={2} alignItems="center">
                     <Box

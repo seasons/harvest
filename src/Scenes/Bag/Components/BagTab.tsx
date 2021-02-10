@@ -134,7 +134,15 @@ export const BagTab: React.FC<{
       : { type: BuyTabType.USED_UNAVAILABLE }
 
     bottomSheetSetProps({
-      renderContent: () => <BuyBottomSheet onDismiss={() => bottomSheetSnapToIndex(1)} tabs={[newTab, usedTab]} />,
+      renderContent: () => (
+        <BuyBottomSheet
+          onDismiss={() => bottomSheetSnapToIndex(1)}
+          tabs={[newTab, usedTab]}
+          initialTab={price.buyNewEnabled ? 0 : 1}
+          variant={bagItem?.productVariant}
+          navigation={navigation}
+        />
+      ),
       snapPoints: [bottomSheetHeight, 0],
       initialSnap: 1,
       enabledInnerScrolling: false,

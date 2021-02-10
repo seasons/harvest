@@ -47,6 +47,7 @@ export const BagItemFragment = gql`
       }
     }
     price {
+      id
       buyNewPrice
       buyNewEnabled
       buyNewAvailableForSale
@@ -92,7 +93,7 @@ export const BagItem: React.FC<BagItemProps> = ({
 
   // Show buy CTA whenever a sellable status is enabled, regardless of
   // underlying availability
-  const isBuyable = bagItem?.productVariant?.sellable?.new || bagItem?.productVariant?.sellable?.used
+  const isBuyable = bagItem?.productVariant?.price?.buyNewEnabled || bagItem?.productVariant?.price?.buyUsedEnabled
 
   const variantSize = variantToUse?.displayLong?.toLowerCase()
   const variantId = bagItem.variantID
@@ -170,19 +171,19 @@ export const BagItem: React.FC<BagItemProps> = ({
         <Box style={{ width: "100%" }} p={2}>
           <Sans size="4">{`${index + 1}.`}</Sans>
           <Spacer mb={1} />
-          <Sans size="4">{product?.brand?.name}</Sans>
-          <Sans size="4" color="black50">
+          <Sans size="3">{product?.brand?.name}</Sans>
+          <Sans size="3" color="black50">
             {product.name}
           </Sans>
-          <Sans size="4" color="black50">
+          <Sans size="3" color="black50">
             Size {variantSize}
           </Sans>
         </Box>
-        {isBuyable && (
-          <Button size="small" variant="secondaryWhite" onPress={onShowBuyBottomSheet}>
+        <Box p={2}>
+          <Button size="small" variant="secondaryWhite" onPress={onShowBuyBottomSheet} disabled={!isBuyable}>
             Buy
           </Button>
-        )}
+        </Box>
       </Flex>
     )
   }

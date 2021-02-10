@@ -93,7 +93,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
   }
 
   if (showLoader || !data) {
-    console.log("data", data)
     return <Loader />
   }
 

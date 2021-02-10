@@ -114,12 +114,14 @@ export const GET_BAG = gql`
         returnedPackage {
           id
           shippingLabel {
+            id
             trackingURL
           }
         }
         sentPackage {
           id
           shippingLabel {
+            id
             trackingURL
           }
         }
@@ -136,11 +138,11 @@ export const GET_BAG = gql`
       }
       savedItems {
         id
+        saved
         productVariant {
           id
           ...BagItemProductVariant
         }
-        saved
       }
     }
   }

@@ -12,8 +12,8 @@ import { OrderItem } from "./Components/OrderItem"
 import { SUBMIT_ORDER } from "../Product/Mutations"
 import { SectionHeader } from "./Components"
 
-const GET_CUSTOMER = gql`
-  query GetCustomer {
+const GET_CUSTOMER_ORDER_VIEW = gql`
+  query GetCustomerOrderView {
     me {
       user {
         id
@@ -62,7 +62,7 @@ const GET_CUSTOMER = gql`
 const windowWidth = Dimensions.get("window").width
 
 export const Order = screenTrack()(({ route, navigation }) => {
-  const { data } = useQuery(GET_CUSTOMER)
+  const { data } = useQuery(GET_CUSTOMER_ORDER_VIEW)
   const order = route?.params?.order
   const tracking = useTracking()
   const [isMutating, setIsMutating] = useState(false)
@@ -143,17 +143,6 @@ export const Order = screenTrack()(({ route, navigation }) => {
                   />
                 )
               })}
-              <Spacer mb={2} />
-              <LineItem
-                leftText="Subtotal"
-                windowWidth={windowWidth}
-                rightText={
-                  order?.subTotal?.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }) || ""
-                }
-              />
               <LineItem
                 leftText="Sales tax"
                 windowWidth={windowWidth}

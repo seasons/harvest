@@ -10,7 +10,7 @@ import gql from "graphql-tag"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
-import { Dimensions, FlatList, StatusBar } from "react-native"
+import { Animated, Dimensions, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
@@ -27,8 +27,8 @@ import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT } from "./Queries"
 
 const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
-const VARIANT_WANT_HEIGHT = 52
-enum orderType {
+export const VARIANT_WANT_HEIGHT = 52
+export enum OrderType {
   BUY_USED = "Used",
   BUY_NEW = "New",
 }
@@ -58,6 +58,7 @@ export const Product = screenTrack({
   const [isMutatingNotify, setIsMutatingNotify] = useState(false)
   const insets = useSafeAreaInsets()
   const flatListRef = useRef(null)
+  const animatedScrollYRef = useRef(new Animated.Value(0))
   const userHasSession = !!authState?.userSession
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const [showSizeWarning, setShowSizeWarning] = useState(false)
@@ -153,7 +154,7 @@ export const Product = screenTrack({
       return createDraftOrder({
         variables: {
           input: {
-            productVariantId: selectedVariant?.id,
+            productVariantID: selectedVariant?.id,
             orderType,
           },
         },
@@ -276,11 +277,11 @@ export const Product = screenTrack({
             selectedVariant={selectedVariant}
             onBuyNew={() => {
               setBuyButtonMutating(true)
-              handleCreateDraftOrder(orderType.BUY_NEW)
+              handleCreateDraftOrder(OrderType.BUY_NEW)
             }}
             onBuyUsed={() => {
               setBuyButtonMutating(true)
-              handleCreateDraftOrder(orderType.BUY_USED)
+              handleCreateDraftOrder(OrderType.BUY_USED)
             }}
           />
         )
@@ -290,7 +291,7 @@ export const Product = screenTrack({
   }
 
   const selectionButtonsBottom = showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0
-  const listFooterSpacing = selectionButtonsBottom + 58
+  const listFooterSpacing = selectionButtonsBottom + 100
   const sections = ["imageRail", "productDetails", "buy", "productMeasurements", "aboutTheBrand", "moreLikeThis"]
   const url = `https://www.wearseasons.com/product/${product.slug}`
   const title = product.name
@@ -341,16 +342,19 @@ export const Product = screenTrack({
           }}
         />
       </ShareButtonWrapper>
-      <FlatList
+      <Animated.FlatList
         ListHeaderComponent={() => <Spacer mb={insets.top} />}
         data={sections}
         ref={flatListRef}
         ListFooterComponent={() => <Spacer mb={listFooterSpacing} />}
         keyExtractor={(item) => item}
         renderItem={(item) => renderItem(item)}
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: animatedScrollYRef.current } } }], {
+          useNativeDriver: true,
+        })}
       />
       <SelectionButtons
-        bottom={selectionButtonsBottom}
+        showNotifyMeMessage={showNotifyMeMessage}
         toggleShowVariantPicker={toggleShowVariantPicker}
         showVariantPicker={showVariantPicker}
         selectedVariant={selectedVariant}
@@ -359,6 +363,9 @@ export const Product = screenTrack({
         hasNotification={hasNotification}
         data={data}
         setShowSizeWarning={setShowSizeWarning}
+        onBuyUsed={() => handleCreateDraftOrder("Used")}
+        onBuyNew={() => handleCreateDraftOrder("New")}
+        animatedScrollY={animatedScrollYRef.current}
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
