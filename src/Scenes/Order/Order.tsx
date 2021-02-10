@@ -69,6 +69,8 @@ export const Order = screenTrack()(({ route, navigation }) => {
   const customer = data?.me?.customer
   const address = data?.me?.customer?.detail?.shippingAddress
 
+  console.log("order", order)
+
   const [submitOrder] = useMutation(SUBMIT_ORDER, {
     onCompleted: (res) => {
       setIsMutating(false)
