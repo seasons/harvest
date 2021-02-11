@@ -60,6 +60,13 @@ export const GET_PAYMENT_DATA = gql`
             state
             zip
           }
+          creditNotes {
+            id
+            reasonCode
+            date
+            total
+            status
+          }
         }
         billingInfo {
           id

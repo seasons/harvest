@@ -55,13 +55,23 @@ const LineItemsSection: React.FC<{ title: string; value: { name: string; amount:
       <Box mb={1} />
       <Separator color={color("black10")} />
       <Spacer mb={2} />
-      {value.map(({ name, amount }) => (
+      {value.map(({ name, amount, date }) => (
         <>
           <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="space-between">
-            <Sans size="4" color="black50">
-              {name}
+            <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="flex-start">
+              <Box pr={3}>
+                <Sans size="4" color="black50">
+                  {date}
+                </Sans>
+              </Box>
+              <Sans size="4" color="black50">
+                {name}
+              </Sans>
+            </Flex>
+            <Sans size="4">
+              {name === "Refund" ? "-" : ""}
+              {amount}
             </Sans>
-            <Sans size="4">{amount}</Sans>
           </Flex>
           <Spacer mb={2} />
           <Separator color={color("black10")} />
@@ -131,7 +141,18 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
           { title: "Billed to", value: createBillingAddress(invoice.billingAddress) },
           {
             title: "Line items",
-            value: invoice.lineItems?.map((a) => ({ name: a.description, amount: centsToDollars(a.amount) })),
+            value: [
+              ...invoice.lineItems?.map((a) => ({
+                name: a.description,
+                amount: centsToDollars(a.amount),
+                date: formatInvoiceDate(a.dateFrom, false),
+              })),
+              ...(invoice.creditNotes?.map((a) => ({
+                name: "Refund",
+                amount: centsToDollars(a.total),
+                date: formatInvoiceDate(a.date, false),
+              })) || []),
+            ],
           },
         ]}
         ListHeaderComponent={() => (
