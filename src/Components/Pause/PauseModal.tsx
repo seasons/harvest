@@ -26,6 +26,7 @@ const PAUSE_MEMBERSHIP = gql`
 
 export const PauseModal = screenTrack()(({ navigation, route }) => {
   const customer = route?.params?.customer
+  const [viewState, setViewState] = useState(null)
   const [withItemsMutating, setWithItemsMutating] = useState(false)
   const [withoutItemsMutating, setWithoutItemsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -55,6 +56,10 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
       navigation.pop()
       navigation.navigate("Modal", {
         screen: Schema.PageNames.PauseConfirmation,
+        params: {
+          viewState,
+          billingDate,
+        },
       })
       setWithoutItemsMutating(false)
       setWithItemsMutating(false)
@@ -129,6 +134,7 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
                 return
               }
               setWithItemsMutating(true)
+              setViewState(PauseType.WithItems)
               onPause(PauseType.WithItems)
             }}
           >
@@ -149,6 +155,7 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
                 return
               }
               setWithoutItemsMutating(true)
+              setViewState(PauseType.WithoutItems)
               onPause(PauseType.WithoutItems)
             }}
           >
