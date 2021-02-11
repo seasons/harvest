@@ -101,7 +101,6 @@ export const createBillingAddress = (billingAddress) => {
 }
 
 export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
-  console.log(route)
   if (!route?.params?.invoice) {
     console.error("error InvoiceDetail.tsx: ", "No invoice passed to InvoiceDetail")
     return (
