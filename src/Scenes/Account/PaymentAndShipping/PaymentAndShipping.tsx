@@ -68,6 +68,10 @@ export const GET_PAYMENT_DATA = gql`
             total
             status
           }
+          discounts {
+            amount
+            description
+          }
         }
         billingInfo {
           id

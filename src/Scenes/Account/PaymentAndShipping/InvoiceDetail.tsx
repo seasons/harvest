@@ -130,6 +130,7 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
 
   const totalTaxes = invoice.lineItems?.reduce((taxes, curLineItem) => taxes + curLineItem.taxAmount, 0)
   const totalPaid = getAdjustedInvoiceTotal(invoice)
+  const formattedInvoiceDueDate = formatInvoiceDate(invoice.dueDate, false)
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow
@@ -140,7 +141,7 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
       <FlatList
         data={[
           { title: "Amount", value: totalPaid },
-          { title: "Invoice date", value: formatInvoiceDate(invoice.dueDate) },
+          { title: "Invoice date", value: formattedInvoiceDueDate },
           { title: "Billed to", value: createBillingAddress(invoice.billingAddress) },
           {
             title: "Line items",
@@ -148,17 +149,22 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
               ...invoice.lineItems?.map((a) => ({
                 name: a.description,
                 amount: centsToDollars(a.amount),
-                date: formatInvoiceDate(a.dateFrom, false),
+                date: formattedInvoiceDueDate,
               })),
               ...(totalTaxes
                 ? [
                     {
                       name: "Taxes",
                       amount: centsToDollars(totalTaxes),
-                      date: formatInvoiceDate(invoice.dueDate, false),
+                      date: formattedInvoiceDueDate,
                     },
                   ]
                 : []),
+              ...(invoice.discounts?.map((a) => ({
+                name: a.description,
+                amount: "-" + centsToDollars(a.amount),
+                date: formattedInvoiceDueDate,
+              })) || []),
               ...(invoice.creditNotes?.map((a) => ({
                 name: "Refund",
                 amount: centsToDollars(a.total),
