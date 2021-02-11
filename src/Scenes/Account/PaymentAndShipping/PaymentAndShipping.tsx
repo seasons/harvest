@@ -1,4 +1,4 @@
-import { Box, Container, FixedBackArrow, FixedButton, Sans, Spacer, Separator } from "App/Components"
+import { Box, Container, FixedBackArrow, FixedButton, Sans, Spacer, Separator, Flex } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
@@ -7,6 +7,8 @@ import { FlatList } from "react-native"
 import { screenTrack } from "App/utils/track"
 import { color } from "App/utils"
 import { Schema as NavigationSchema } from "App/Navigation"
+import { TouchableOpacity } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
@@ -112,6 +114,26 @@ const AccountSection: React.FC<{ title: string; value: string | [string] }> = ({
   )
 }
 
+const PaymentHistorySection: React.FC<{ title: string; value: any }> = ({ title, value }) => {
+  const navigation = useNavigation()
+  return (
+    <Box key={title} px={2}>
+      <Sans size="5">{title}</Sans>
+      <Box mb={1} />
+      <Separator color={color("black10")} />
+      <Spacer mb={3} />
+      <TouchableOpacity key={title} onPress={() => navigation.navigate("InvoiceDetail")}>
+        <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="space-between">
+          <Sans size="5">{value.date}</Sans>
+          <Sans size="5">{value.amount}</Sans>
+        </Flex>
+      </TouchableOpacity>
+      <Spacer mb={4} />
+      <Separator color={color("black10")} />
+    </Box>
+  )
+}
+
 export const PaymentAndShipping = screenTrack()(({ navigation }) => {
   const { error, previousData, data = previousData, startPolling, stopPolling } = useQuery(GET_PAYMENT_DATA)
   useEffect(() => {
@@ -170,6 +192,8 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
       phoneNumber = details?.phoneNumber
       sections.push({ title: "Phone number", value: details.phoneNumber })
     }
+
+    sections.push({ title: "Payment history", value: { date: "October, 2020", amount: "$110.50" } })
   }
 
   const handleEditBtnPressed = () => {
@@ -181,6 +205,9 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
   }
 
   const renderItem = (item) => {
+    if (item.title === "Payment history") {
+      return <PaymentHistorySection title={item.title} value={item.value} />
+    }
     return <AccountSection title={item.title} value={item.value} />
   }
 
