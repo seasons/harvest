@@ -9,6 +9,7 @@ import { color } from "App/utils"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native"
+import { centsToDollars, formatInvoiceDate } from "./utils"
 
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
@@ -28,6 +29,36 @@ export const GET_PAYMENT_DATA = gql`
             city
             state
             zipCode
+          }
+        }
+        invoices {
+          id
+          status
+          closingDate
+          dueDate
+          amount
+          lineItems {
+            id
+            dateFrom
+            isTaxed
+            taxAmount
+            taxRate
+            discountAmount
+            description
+            entityDescription
+            entityType
+            entityId
+            amount
+          }
+          billingAddress {
+            firstName
+            lastName
+            line1
+            line2
+            line3
+            city
+            state
+            zip
           }
         }
         billingInfo {
@@ -116,18 +147,22 @@ const AccountSection: React.FC<{ title: string; value: string | [string] }> = ({
 
 const PaymentHistorySection: React.FC<{ title: string; value: any }> = ({ title, value }) => {
   const navigation = useNavigation()
+  // console.log(value)
   return (
     <Box key={title} px={2}>
       <Sans size="5">{title}</Sans>
       <Box mb={1} />
       <Separator color={color("black10")} />
       <Spacer mb={3} />
-      <TouchableOpacity key={title} onPress={() => navigation.navigate("InvoiceDetail")}>
-        <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="space-between">
-          <Sans size="5">{value.date}</Sans>
-          <Sans size="5">{value.amount}</Sans>
-        </Flex>
-      </TouchableOpacity>
+      {value.map((a) => (
+        <TouchableOpacity key={title} onPress={() => navigation.navigate("InvoiceDetail", { invoice: a })}>
+          <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="space-between">
+            <Sans size="5">{formatInvoiceDate(a.dueDate)}</Sans>
+            <Sans size="5">{centsToDollars(a.amount)}</Sans>
+          </Flex>
+        </TouchableOpacity>
+      ))}
+
       <Spacer mb={4} />
       <Separator color={color("black10")} />
     </Box>
@@ -193,7 +228,13 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
       sections.push({ title: "Phone number", value: details.phoneNumber })
     }
 
-    sections.push({ title: "Payment history", value: { date: "October, 2020", amount: "$110.50" } })
+    if (customer?.invoices) {
+      sections.push({
+        title: "Payment history",
+        value: customer.invoices,
+      })
+      // sections.push({ title: "Payment history", value: { date: "October, 2020", amount: "$110.50" } })
+    }
   }
 
   const handleEditBtnPressed = () => {
