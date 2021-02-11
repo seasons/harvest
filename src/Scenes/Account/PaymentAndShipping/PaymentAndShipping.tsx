@@ -9,7 +9,7 @@ import { color } from "App/utils"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import { centsToDollars, formatInvoiceDate } from "./utils"
+import { getAdjustedInvoiceTotal, formatInvoiceDate } from "./utils"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 
 export const GET_PAYMENT_DATA = gql`
@@ -167,16 +167,14 @@ const PaymentHistorySection: React.FC<{ title: string; value: any }> = ({ title,
           <TouchableOpacity key={title} onPress={() => navigation.navigate("InvoiceDetail", { invoice: a })}>
             <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="space-between">
               <Sans size="5">{formatInvoiceDate(a.dueDate)}</Sans>
-              <Sans size="5">{centsToDollars(a.amount)}</Sans>
+              <Sans size="5">{getAdjustedInvoiceTotal(a)}</Sans>
             </Flex>
           </TouchableOpacity>
           <Spacer mb={3} />
           <Separator color={color("black10")} />
         </>
       ))}
-
-      <Spacer mb={4} />
-      <Separator color={color("black10")} />
+      <Spacer mb={100} />
     </Box>
   )
 }
@@ -245,7 +243,6 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
         title: "Payment history",
         value: customer.invoices,
       })
-      // sections.push({ title: "Payment history", value: { date: "October, 2020", amount: "$110.50" } })
     }
   }
 

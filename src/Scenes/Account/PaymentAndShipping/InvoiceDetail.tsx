@@ -5,7 +5,7 @@ import { FlatList } from "react-native"
 import { screenTrack } from "App/utils/track"
 import { color } from "App/utils"
 import { Schema as NavigationSchema } from "App/Navigation"
-import { centsToDollars, formatInvoiceDate } from "./utils"
+import { centsToDollars, formatInvoiceDate, getAdjustedInvoiceTotal } from "./utils"
 
 const BillingToSection: React.FC<{ title: string; value: string | [string] }> = ({ title, value }) => {
   return (
@@ -101,6 +101,7 @@ export const createBillingAddress = (billingAddress) => {
 }
 
 export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
+  console.log(route)
   if (!route?.params?.invoice) {
     console.error("error InvoiceDetail.tsx: ", "No invoice passed to InvoiceDetail")
     return (
@@ -127,6 +128,8 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
     }
   }
 
+  const totalTaxes = invoice.lineItems?.reduce((taxes, curLineItem) => taxes + curLineItem.taxAmount, 0)
+  const totalPaid = getAdjustedInvoiceTotal(invoice)
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow
@@ -136,7 +139,7 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
       />
       <FlatList
         data={[
-          { title: "Amount", value: centsToDollars(invoice.amount) },
+          { title: "Amount", value: totalPaid },
           { title: "Invoice date", value: formatInvoiceDate(invoice.dueDate) },
           { title: "Billed to", value: createBillingAddress(invoice.billingAddress) },
           {
@@ -147,6 +150,15 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
                 amount: centsToDollars(a.amount),
                 date: formatInvoiceDate(a.dateFrom, false),
               })),
+              ...(totalTaxes
+                ? [
+                    {
+                      name: "Taxes",
+                      amount: centsToDollars(totalTaxes),
+                      date: formatInvoiceDate(invoice.dueDate, false),
+                    },
+                  ]
+                : []),
               ...(invoice.creditNotes?.map((a) => ({
                 name: "Refund",
                 amount: centsToDollars(a.total),
