@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native"
 import { Container, Box, Spacer, Sans, FixedBackArrow, FadeInImage, Flex, Button } from "App/Components"
 import { Dimensions, ScrollView } from "react-native"
+import React from "react"
 import { ListCheck } from "Assets/svgs/ListCheck"
 import { space } from "App/utils"
 
@@ -65,6 +66,7 @@ export const ImageWithInfoView: React.FC<Props> = ({
         <Button block variant="secondaryWhite" onPress={bottomButtonOnPress}>
           {bottomButtonText}
         </Button>
+        <Spacer mb={2} />
       </Flex>
     </Container>
   )

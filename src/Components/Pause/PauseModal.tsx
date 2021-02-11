@@ -13,9 +13,14 @@ import { DateTime } from "luxon"
 
 const viewWidth = Dimensions.get("window").width
 
+enum PauseType {
+  WithItems = "WithItems",
+  WithoutItems = "WithoutItems",
+}
+
 const PAUSE_MEMBERSHIP = gql`
-  mutation PauseSubscription($subscriptionID: String!) {
-    pauseSubscription(subscriptionID: $subscriptionID)
+  mutation PauseSubscription($subscriptionID: String!, $pauseType: PauseType) {
+    pauseSubscription(subscriptionID: $subscriptionID, pauseType: $pauseType)
   }
 `
 
@@ -47,10 +52,12 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
       },
     ],
     onCompleted: () => {
+      navigation.pop()
       navigation.navigate("Modal", {
         screen: Schema.PageNames.PauseConfirmation,
       })
       setWithoutItemsMutating(false)
+      setWithItemsMutating(false)
     },
     onError: (err) => {
       const popUpData = {
@@ -63,15 +70,17 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
       Sentry.captureException(err)
       showPopUp(popUpData)
       setWithoutItemsMutating(false)
+      setWithItemsMutating(false)
     },
   })
 
-  const onPauseWithItems = () => {
-    return null
-  }
-
-  const onPauseWithoutItems = () => {
-    pauseSubscription()
+  const onPause = (pauseType: PauseType) => {
+    pauseSubscription({
+      variables: {
+        subscriptionID: customer?.membership.subscriptionId,
+        pauseType,
+      },
+    })
   }
 
   return (
@@ -88,7 +97,7 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
           </Box>
           <Box mb={3}>
             <Sans size="4" color="black50">
-              If you have any questions, contact us below at membership@seasons.nyc
+              If you have any questions, contact us below at membership@seasons.nyc.
             </Sans>
           </Box>
           <Flex flexDirection="column">
@@ -112,7 +121,17 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
             {`Hold onto your items while your membership is paused for only ${pauseWithItemPrice} per month`}
           </Sans>
           <Spacer mb={2} />
-          <Button block variant="primaryBlack" onPress={onPauseWithItems}>
+          <Button
+            block
+            variant="primaryBlack"
+            onPress={() => {
+              if (withItemsMutating || withoutItemsMutating) {
+                return
+              }
+              setWithItemsMutating(true)
+              onPause(PauseType.WithItems)
+            }}
+          >
             Pause with items
           </Button>
           <Spacer mb={4} />
@@ -122,7 +141,17 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
             Send back your items and skip next month's bill.
           </Sans>
           <Spacer mb={2} />
-          <Button block variant="primaryWhite" onPress={onPauseWithoutItems}>
+          <Button
+            block
+            variant="primaryWhite"
+            onPress={() => {
+              if (withItemsMutating || withoutItemsMutating) {
+                return
+              }
+              setWithoutItemsMutating(true)
+              onPause(PauseType.WithoutItems)
+            }}
+          >
             Pause without items
           </Button>
           <Spacer mb={4} />
