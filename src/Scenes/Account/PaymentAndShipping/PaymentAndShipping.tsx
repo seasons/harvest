@@ -3,13 +3,14 @@ import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "@apollo/client"
-import { FlatList } from "react-native"
+import { FlatList, StyleSheet } from "react-native"
 import { screenTrack } from "App/utils/track"
 import { color } from "App/utils"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { centsToDollars, formatInvoiceDate } from "./utils"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
@@ -160,14 +161,18 @@ const PaymentHistorySection: React.FC<{ title: string; value: any }> = ({ title,
       <Sans size="5">{title}</Sans>
       <Box mb={1} />
       <Separator color={color("black10")} />
-      <Spacer mb={3} />
       {value.map((a) => (
-        <TouchableOpacity key={title} onPress={() => navigation.navigate("InvoiceDetail", { invoice: a })}>
-          <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="space-between">
-            <Sans size="5">{formatInvoiceDate(a.dueDate)}</Sans>
-            <Sans size="5">{centsToDollars(a.amount)}</Sans>
-          </Flex>
-        </TouchableOpacity>
+        <>
+          <Spacer mb={3} />
+          <TouchableOpacity key={title} onPress={() => navigation.navigate("InvoiceDetail", { invoice: a })}>
+            <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="space-between">
+              <Sans size="5">{formatInvoiceDate(a.dueDate)}</Sans>
+              <Sans size="5">{centsToDollars(a.amount)}</Sans>
+            </Flex>
+          </TouchableOpacity>
+          <Spacer mb={3} />
+          <Separator color={color("black10")} />
+        </>
       ))}
 
       <Spacer mb={4} />
@@ -278,6 +283,12 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
         keyExtractor={(item) => item.title}
         renderItem={({ item }) => renderItem(item)}
       />
+      <FadeBottom2
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          top: "95%",
+        }}
+      ></FadeBottom2>
       <FixedButton block variant="primaryWhite" onPress={handleEditBtnPressed}>
         Edit
       </FixedButton>
