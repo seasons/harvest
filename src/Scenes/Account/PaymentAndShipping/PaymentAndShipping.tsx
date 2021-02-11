@@ -159,7 +159,6 @@ const AccountSection: React.FC<{ title: string; value: string | [string] }> = ({
 
 const PaymentHistorySection: React.FC<{ title: string; value: any }> = ({ title, value }) => {
   const navigation = useNavigation()
-  // console.log(value)
   return (
     <Box key={title} px={2}>
       <Sans size="5">{title}</Sans>
