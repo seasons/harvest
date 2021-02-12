@@ -14,6 +14,7 @@ import { InviteFromContacts } from "App/Scenes/Account/InviteFriends"
 import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
 import { EditCreditCard } from "App/Scenes/Account/PaymentAndShipping/EditCreditCard"
 import { EditPaymentMethod } from "App/Scenes/Account/PaymentAndShipping/EditPaymentMethod"
+import { InvoiceDetail } from "App/Scenes/Account/PaymentAndShipping/InvoiceDetail"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
 import { SurpriseMe } from "App/Scenes/Bag/SurpriseMe"
@@ -215,6 +216,7 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name={Schema.PageNames.Account} component={Account} />
       <AccountStack.Screen name={Schema.PageNames.MembershipInfo} component={MembershipInfo} />
       <AccountStack.Screen name={Schema.PageNames.PaymentAndShipping} component={PaymentAndShipping} />
+      <AccountStack.Screen name={Schema.PageNames.InvoiceDetail} component={InvoiceDetail} />
       <AccountStack.Screen name={Schema.PageNames.EditPaymentAndShipping} component={EditPaymentAndShipping} />
       <AccountStack.Screen name={Schema.PageNames.PersonalPreferences} component={PersonalPreferences} />
       <AccountStack.Screen name={Schema.PageNames.Webview} component={Webview} />
