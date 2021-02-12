@@ -55,8 +55,8 @@ const LineItemsSection: React.FC<{ title: string; value: { name: string; amount:
       <Box mb={1} />
       <Separator color={color("black10")} />
       <Spacer mb={2} />
-      {value.map(({ name, amount, date }) => (
-        <>
+      {value?.map(({ name, amount, date }) => (
+        <Box key={name}>
           <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="space-between">
             <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="flex-start">
               <Box pr={3}>
