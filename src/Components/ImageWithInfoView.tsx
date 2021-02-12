@@ -30,14 +30,13 @@ export const ImageWithInfoView: React.FC<Props> = ({
   bottomButtonText,
 }) => {
   const navigation = useNavigation()
+  const uri = imageURL + "?w=850&fit=clip&fm=jpg"
+
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteTransparent" />
       <ScrollView>
-        <FadeInImage
-          source={{ uri: imageURL + "?w=850&fit=clip&fm=jpg" }}
-          style={{ width: windowWidth, height: slideHeight }}
-        />
+        <FadeInImage source={{ uri }} style={{ width: windowWidth, height: slideHeight }} />
         <Box px={2} pt={4} pb={140}>
           <Sans size="7">{title}</Sans>
           <Spacer mb={1} />

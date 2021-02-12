@@ -44,8 +44,6 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
     "Earn loyalty rewards over time",
   ]
 
-  console.log("customer", customer)
-
   const [pauseSubscription] = useMutation(PAUSE_MEMBERSHIP, {
     refetchQueries: [
       {
