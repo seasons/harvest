@@ -130,6 +130,40 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
   const totalTaxes = invoice.lineItems?.reduce((taxes, curLineItem) => taxes + curLineItem.taxAmount, 0)
   const totalPaid = getAdjustedInvoiceTotal(invoice)
   const formattedInvoiceDueDate = formatInvoiceDate(invoice.dueDate, false)
+  const items = [
+    { title: "Amount", value: totalPaid },
+    { title: "Invoice date", value: formattedInvoiceDueDate },
+    { title: "Billed to", value: createBillingAddress(invoice.billingAddress) },
+    {
+      title: "Line items",
+      value: [
+        ...invoice.lineItems?.map((a) => ({
+          name: a.description,
+          amount: centsToDollars(a.amount),
+          date: formattedInvoiceDueDate,
+        })),
+        ...(totalTaxes
+          ? [
+              {
+                name: "Taxes",
+                amount: centsToDollars(totalTaxes),
+                date: formattedInvoiceDueDate,
+              },
+            ]
+          : []),
+        ...(invoice.discounts?.map((a) => ({
+          name: a.description,
+          amount: "-" + centsToDollars(a.amount),
+          date: formattedInvoiceDueDate,
+        })) || []),
+        ...(invoice.creditNotes?.map((a) => ({
+          name: "Refund",
+          amount: centsToDollars(a.total),
+          date: formatInvoiceDate(a.date, false),
+        })) || []),
+      ],
+    },
+  ]
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow
@@ -138,40 +172,7 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
         onPress={() => navigation.navigate(NavigationSchema.PageNames.PaymentAndShipping)}
       />
       <FlatList
-        data={[
-          { title: "Amount", value: totalPaid },
-          { title: "Invoice date", value: formattedInvoiceDueDate },
-          { title: "Billed to", value: createBillingAddress(invoice.billingAddress) },
-          {
-            title: "Line items",
-            value: [
-              ...invoice.lineItems?.map((a) => ({
-                name: a.description,
-                amount: centsToDollars(a.amount),
-                date: formattedInvoiceDueDate,
-              })),
-              ...(totalTaxes
-                ? [
-                    {
-                      name: "Taxes",
-                      amount: centsToDollars(totalTaxes),
-                      date: formattedInvoiceDueDate,
-                    },
-                  ]
-                : []),
-              ...(invoice.discounts?.map((a) => ({
-                name: a.description,
-                amount: "-" + centsToDollars(a.amount),
-                date: formattedInvoiceDueDate,
-              })) || []),
-              ...(invoice.creditNotes?.map((a) => ({
-                name: "Refund",
-                amount: centsToDollars(a.total),
-                date: formatInvoiceDate(a.date, false),
-              })) || []),
-            ],
-          },
-        ]}
+        data={items}
         ListHeaderComponent={() => (
           <Box px={2}>
             <Spacer mb={80} />
