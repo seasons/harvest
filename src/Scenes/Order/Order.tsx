@@ -7,10 +7,10 @@ import React, { useState } from "react"
 import { Dimensions, ScrollView } from "react-native"
 import { useMutation, useQuery } from "@apollo/client"
 import { space } from "App/utils"
-import { SectionHeader } from "./Components/SectionHeader"
 import { LineItem } from "./Components/LineItem"
 import { OrderItem } from "./Components/OrderItem"
 import { SUBMIT_ORDER } from "../Product/Mutations"
+import { SectionHeader } from "./Components"
 
 const GET_CUSTOMER_ORDER_VIEW = gql`
   query GetCustomerOrderView {

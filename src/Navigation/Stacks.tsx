@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
 import { ExtendPauseConfirmation, PauseConfirmation, ResumeConfirmation } from "App/Components/Pause"
+import { PauseModal } from "App/Components/Pause/PauseModal"
 import { Schema } from "App/Navigation"
 import {
   Account,
@@ -142,6 +143,7 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.InviteFromContactsModal} component={InviteFromContacts} />
       <ModalStack.Screen name={Schema.PageNames.ShareReservationToIGModal} component={ShareReservationToIG} />
       <ModalStack.Screen name={Schema.PageNames.ShareFitPicToIGModal} component={ShareFitPicToIG} />
+      <ModalStack.Screen name={Schema.PageNames.PauseModal} component={PauseModal} />
     </ModalStack.Navigator>
   )
 }

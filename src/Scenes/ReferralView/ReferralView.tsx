@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react"
 import gql from "graphql-tag"
 import { useQuery } from "@apollo/client"
 import { PopUp } from "App/Components/PopUp"
-import { Container, Box, Spacer, Sans, FixedBackArrow, FadeInImage, Flex, Button } from "App/Components"
-import { Dimensions, ScrollView, StatusBar, Share } from "react-native"
+import { Box, Spacer, Sans, FixedBackArrow, Button } from "App/Components"
+import { Dimensions, StatusBar, Share } from "react-native"
 import { Loader } from "App/Components/Loader"
 import { screenTrack, useTracking, Schema } from "App/utils/track"
 import Contacts from "react-native-contacts"
-import { ListCheck } from "Assets/svgs/ListCheck"
-import { space } from "App/utils"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { ImageWithInfoView } from "App/Components/ImageWithInfoView"
 
 const GET_REFERRAL_VIEW = gql`
   query GetReferralView {
@@ -30,7 +29,6 @@ const GET_REFERRAL_VIEW = gql`
 `
 
 const windowWidth = Dimensions.get("window").width
-const slideHeight = windowWidth * 0.84
 
 export const ReferralView = screenTrack()((props: any) => {
   const tracking = useTracking()
@@ -110,63 +108,28 @@ export const ReferralView = screenTrack()((props: any) => {
 
   return (
     <>
-      <Container insetsTop={false} insetsBottom={false}>
-        <FixedBackArrow navigation={navigation} variant="whiteTransparent" />
-        <ScrollView>
-          <FadeInImage
-            source={{ uri: referralView?.properties?.imageURL + "?w=850&fit=clip&fm=jpg" }}
-            style={{ width: windowWidth, height: slideHeight }}
-          />
-          <Box px={2} pt={4} pb={140}>
-            <Sans size="7">{referralView.title}</Sans>
-            <Spacer mb={1} />
-            <Sans size="4" color="black50">
-              {referralView.caption}
-            </Sans>
-            <Spacer mb={4} />
-            {referralView?.properties?.listText?.map((text, index) => {
-              return (
-                <Flex key={index} flexDirection="row" pb={2} alignItems="center">
-                  <ListCheck />
-                  <Spacer mr={2} />
-                  <Sans size="4" color="black50" style={{ textDecorationLine: "underline" }}>
-                    {text}
-                  </Sans>
-                </Flex>
-              )
-            })}
-          </Box>
-        </ScrollView>
-        <Flex flexDirection="column" px={2} style={{ position: "absolute", bottom: space(3), left: 0 }}>
-          <Button
-            block
-            variant="primaryBlack"
-            onPress={() => {
-              tracking.trackEvent({
-                actionName: Schema.ActionNames.InviteFromContactsTapped,
-                actionType: Schema.ActionTypes.Tap,
-              })
-              onPressInviteFromContacts()
-            }}
-          >
-            Invite contacts
-          </Button>
-          <Spacer mb={1} />
-          <Button
-            block
-            variant="secondaryWhite"
-            onPress={() => {
-              tracking.trackEvent({
-                actionName: Schema.ActionNames.ShareLinkTapped,
-                actionType: Schema.ActionTypes.Tap,
-              })
-              onShare()
-            }}
-          >
-            Share link
-          </Button>
-        </Flex>
-      </Container>
+      <ImageWithInfoView
+        listText={referralView?.properties?.listText}
+        caption={referralView.caption}
+        title={referralView.title}
+        imageURL={referralView?.properties?.imageURL}
+        topButtonText="Invite contacts"
+        bottomButtonText="Share link"
+        topButtonOnPress={() => {
+          tracking.trackEvent({
+            actionName: Schema.ActionNames.InviteFromContactsTapped,
+            actionType: Schema.ActionTypes.Tap,
+          })
+          onPressInviteFromContacts()
+        }}
+        bottomButtonOnPress={() => {
+          tracking.trackEvent({
+            actionName: Schema.ActionNames.ShareLinkTapped,
+            actionType: Schema.ActionTypes.Tap,
+          })
+          onShare()
+        }}
+      />
       <InviteContactsPopUp />
     </>
   )

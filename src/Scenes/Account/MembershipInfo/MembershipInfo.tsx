@@ -3,7 +3,7 @@ import React from "react"
 import { useQuery } from "@apollo/client"
 import { ScrollView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Box, Button, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
+import { Box, Button, Container, FixedBackArrow, Sans, SectionHeader, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
@@ -25,17 +25,23 @@ export const GET_MEMBERSHIP_INFO = gql`
         }
         membership {
           id
+          subscriptionId
           pauseRequests(orderBy: createdAt_DESC) {
             id
             resumeDate
             pauseDate
             pausePending
           }
+          subscription {
+            id
+            nextBillingAt
+          }
           plan {
             id
             price
             description
             itemCount
+            pauseWithItemsPrice
           }
         }
       }
@@ -81,9 +87,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={4} />
           {!!plan?.price && (
             <>
-              <Sans size="4">What you pay</Sans>
-              <Spacer mb={12} />
-              <Separator />
+              <SectionHeader title="What you pay" />
               <Spacer mb={1} />
               <Sans size="4" color={color("black50")}>
                 {`${itemCount} items, $${plan.price / 100}`} / per month
@@ -93,9 +97,8 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           {!!whatsIncluded && (
             <>
               <Spacer mb={4} />
-              <Sans size="4">Whats included</Sans>
-              <Spacer mb={12} />
-              <Separator />
+              <SectionHeader title="Whats included" />
+              <Spacer mb={1} />
               {whatsIncluded.map((text) => (
                 <Box key={text}>
                   <Spacer mb={1} />
@@ -107,7 +110,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
             </>
           )}
           <Spacer mb={4} />
-          <Sans size="4">Change your plan</Sans>
+          <SectionHeader title="Change your plan" />
           <Spacer mb={2} />
           <Button
             variant="secondaryWhite"
@@ -117,7 +120,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
             View membership options
           </Button>
           <Spacer mb={4} />
-          <Sans size="4">Pause or cancel</Sans>
+          <SectionHeader title="Pause or cancel" />
           <Spacer mb={2} />
           <PauseButtons customer={customer} />
         </Box>
