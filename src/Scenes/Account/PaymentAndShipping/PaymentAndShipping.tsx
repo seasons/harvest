@@ -164,8 +164,8 @@ const PaymentHistorySection: React.FC<{ title: string; value: any }> = ({ title,
       <Sans size="5">{title}</Sans>
       <Box mb={1} />
       <Separator color={color("black10")} />
-      {value.map((a) => (
-        <>
+      {value?.map((a, i) => (
+        <Box key={i}>
           <Spacer mb={3} />
           <TouchableOpacity key={title} onPress={() => navigation.navigate("InvoiceDetail", { invoice: a })}>
             <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="space-between">
