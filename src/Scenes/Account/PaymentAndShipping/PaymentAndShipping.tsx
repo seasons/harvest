@@ -175,7 +175,7 @@ const PaymentHistorySection: React.FC<{ title: string; value: any }> = ({ title,
           </TouchableOpacity>
           <Spacer mb={3} />
           <Separator color={color("black10")} />
-        </>
+        </Box>
       ))}
       <Spacer mb={100} />
     </Box>

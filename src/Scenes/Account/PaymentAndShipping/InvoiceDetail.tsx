@@ -47,7 +47,10 @@ const TopSection: React.FC<{ title: string; value: string }> = ({ title, value }
   )
 }
 
-const LineItemsSection: React.FC<{ title: string; value: { name: string; amount: string }[] }> = ({ title, value }) => {
+const LineItemsSection: React.FC<{ title: string; value: { name: string; amount: string; date: string }[] }> = ({
+  title,
+  value,
+}) => {
   return (
     <Box key={title} px={2}>
       <Box mb={0.5} />
@@ -76,7 +79,7 @@ const LineItemsSection: React.FC<{ title: string; value: { name: string; amount:
           <Spacer mb={2} />
           <Separator color={color("black10")} />
           <Spacer mb={2} />
-        </>
+        </Box>
       ))}
       <Spacer mb={1} />
     </Box>
