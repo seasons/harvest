@@ -32,7 +32,8 @@ platform :ios do
     lane :beta do
         build
         changelog_from_git_commits
-        upload_to_testflight
+
+        pilot(api_key_path: "./fastlane/5ZM3SSYZ29.json")
     end
 end
   
