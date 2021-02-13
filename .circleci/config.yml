@@ -54,6 +54,8 @@ jobs:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
+      - env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run:
           name: Install dependencies
           command: yarn install
