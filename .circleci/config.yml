@@ -1,6 +1,9 @@
 # .circleci/config.yml
 
-version: 2
+version: 2.1
+
+orbs:
+  node: circleci/node@12.16.3
 
 jobs:
   build-and-test:
