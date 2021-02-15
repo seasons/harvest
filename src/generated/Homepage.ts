@@ -3,11 +3,20 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { HomePageSectionType, Rating, QuestionType, CustomerStatus } from "./globalTypes";
+import { ViewType, HomePageSectionType, Rating, QuestionType, CustomerStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: Homepage
 // ====================================================
+
+export interface Homepage_banner {
+  __typename: "View";
+  id: string;
+  title: string;
+  caption: string | null;
+  type: ViewType | null;
+  properties: any | null;
+}
 
 export interface Homepage_homepage_sections_tagData {
   __typename: "ProductsByTagTagData";
@@ -432,6 +441,7 @@ export interface Homepage_fitPics {
 }
 
 export interface Homepage {
+  banner: Homepage_banner | null;
   homepage: Homepage_homepage | null;
   reservationFeedback: Homepage_reservationFeedback | null;
   me: Homepage_me | null;

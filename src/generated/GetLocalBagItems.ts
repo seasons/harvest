@@ -17,12 +17,19 @@ export interface GetLocalBagItems_products_variants_product_brand {
   __typename: "Brand";
   id: string;
   name: string;
+  websiteUrl: string | null;
 }
 
 export interface GetLocalBagItems_products_variants_product_images {
   __typename: "Image";
   id: string;
   url: string | null;
+}
+
+export interface GetLocalBagItems_products_variants_product_variants_price {
+  __typename: "ProductVariantPrice";
+  id: string;
+  retailPrice: number | null;
 }
 
 export interface GetLocalBagItems_products_variants_product_variants {
@@ -32,6 +39,7 @@ export interface GetLocalBagItems_products_variants_product_variants {
   reservable: number;
   displayShort: string | null;
   displayLong: string | null;
+  price: GetLocalBagItems_products_variants_product_variants_price;
 }
 
 export interface GetLocalBagItems_products_variants_product {
@@ -45,10 +53,21 @@ export interface GetLocalBagItems_products_variants_product {
   variants: GetLocalBagItems_products_variants_product_variants[] | null;
 }
 
+export interface GetLocalBagItems_products_variants_price {
+  __typename: "ProductVariantPrice";
+  id: string;
+  buyNewPrice: number | null;
+  buyNewEnabled: boolean;
+  buyNewAvailableForSale: boolean | null;
+  buyUsedPrice: number | null;
+  buyUsedEnabled: boolean;
+}
+
 export interface GetLocalBagItems_products_variants {
   __typename: "ProductVariant";
   id: string;
   product: GetLocalBagItems_products_variants_product;
+  price: GetLocalBagItems_products_variants_price;
 }
 
 export interface GetLocalBagItems_products {
