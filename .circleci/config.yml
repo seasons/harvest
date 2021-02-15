@@ -16,6 +16,9 @@ jobs:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
+      - node/install:
+          node-version: 12.16.3
+          install-yarn: true
       - run:
           name: Install dependencies
           command: yarn install
@@ -57,6 +60,9 @@ jobs:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
+      - node/install:
+          node-version: 12.16.3
+          install-yarn: true
       - run:
           name: Install dependencies
           command: yarn install
