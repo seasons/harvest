@@ -100,7 +100,7 @@ jobs:
             npm install -g react-native-version
       - run:
           name: Fastlane
-          command: bundle exec fastlane $FASTLANE_LANE
+          command: bundle exec fastlane ios beta
       - store_artifacts:
           path: output/Seasons.ipa
 
