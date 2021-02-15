@@ -1,36 +1,34 @@
 import React, { useState } from "react"
 import { Box, Flex, FadeInImage } from "App/Components"
 import { LogoText, Sans } from "App/Components/Typography"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { space } from "App/utils"
 import styled from "styled-components/native"
 import { FlatList, TouchableWithoutFeedback, Dimensions } from "react-native"
-import { imageResize } from "App/helpers/imageResize"
 import { useNavigation } from "@react-navigation/native"
-import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { FadeTop, FadeBottom } from "Assets/svgs"
 
 const windowWidth = Dimensions.get("window").width
-const slideHeight = windowWidth * PRODUCT_ASPECT_RATIO
+const slideHeight = windowWidth
 
 export const HomeBlogContent = ({ items }) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
   const tracking = useTracking()
   const navigation = useNavigation()
 
   const renderItem = ({ item }) => {
-    const resizedImage = !!item.imageURL && imageResize(item.imageURL, "medium")
+    const imageURL = !!item.imageURL && item.imageURL
     return (
       <TouchableWithoutFeedback
         onPress={() => {
-          navigation.navigate(Schema.PageNames.Webview, { uri: item.url })
+          navigation.navigate(Schema.PageNames.Webview, { uri: item?.url || "" })
         }}
       >
         <Box>
-          <FadeInImage source={{ uri: resizedImage }} style={{ width: windowWidth, height: slideHeight }} />
+          <FadeInImage source={{ uri: imageURL }} style={{ width: windowWidth, height: slideHeight }} />
         </Box>
       </TouchableWithoutFeedback>
     )
@@ -66,8 +64,11 @@ export const HomeBlogContent = ({ items }) => {
         <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="space-between" alignContent="center">
           <LogoText>SEASONS</LogoText>
           <Box p={2} pr={6}>
-            <Sans size="3" color="white100">
+            <Sans size="5" color="white100">
               {items?.[currentPage - 1]?.name}
+            </Sans>
+            <Sans size="5" color="black25" style={{ textTransform: "capitalize" }}>
+              {items?.[currentPage - 1]?.category}
             </Sans>
           </Box>
         </Flex>
@@ -76,7 +77,7 @@ export const HomeBlogContent = ({ items }) => {
             {items.map((_item, index) => {
               return (
                 <Box pt={1} key={index}>
-                  <Sans color={currentPage === index + 1 ? "white100" : "black25"} size="1">
+                  <Sans color={currentPage === index + 1 ? "white100" : "black25"} size="4">
                     {index + 1}
                   </Sans>
                 </Box>

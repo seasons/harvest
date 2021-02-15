@@ -1,828 +1,849 @@
 export const BagFixture = {
   me: {
-    activeReservation: null,
     customer: {
-      id: "12345",
+      id: "ckb9vhdqjb9180740lffdnmnt",
       plan: "Essential",
-      reservations: [],
-    },
-    bag: [
-      {
-        id: "ck6cn9vi50e6i0722fx0q3bfq",
-        productVariant: {
-          id: "ck69vklqa06b10722lurvl4ca",
-          product: {
-            name: "Conroy Leather Biker Jacket",
-            id: "ck69viyie01w20722g086g2pk",
-            modelSize: { display: "M" },
-            brand: {
-              id: "ck69vhvre002q0722grv8x8l5",
-              name: "All Saints",
-            },
-            images: [
-              {
-                id: "attZRQeLHTGArpUjd",
-                url:
-                  "https://dl.airtable.com/.attachments/3e866f0792e5a2f824663defe5ff2f44/8669d5ff/AllSaints-Leather-Jacket-2-Front.png",
-                filename: "AllSaints-Leather-Jacket-2-Front.png",
-                size: 5059996,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/128bd2c38a6ed79fddbc065a985b62fe/7ec8f674",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/2f4f1ba08924794e2b6c47a2c67cbe89/f65bdf3c",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/6ac4b40846401243ab2e8db4b337a5fc/78c085f9",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-              {
-                id: "attxGbW3Wk7hw6reK",
-                url:
-                  "https://dl.airtable.com/.attachments/cc5513ac231dd91bfabfd770bd5e540e/dff0b047/AllSaints-Leather-Jacket-2-CloseUp.png",
-                filename: "AllSaints-Leather-Jacket-2-CloseUp.png",
-                size: 4477580,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/a8d8d63e4b4dbdaf2235ffeda1ac39fd/26cf7187",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/c47a21661ffe11455254aa5daa32d926/a42db530",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/67edc09888bd3a0dfc43d2d665c6166d/950cb35f",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-              {
-                id: "attUqAG2drslNpFyK",
-                url:
-                  "https://dl.airtable.com/.attachments/873a02b2386030075dad1cb19352376b/1cbaa44d/AllSaints-Leather-Jacket-2-Back.png",
-                filename: "AllSaints-Leather-Jacket-2-Back.png",
-                size: 3685782,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/49241e47401add22dddc20be5c554f31/53e8e6db",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/30261dd90b10ca3e10400019c84c9181/1882309c",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/4ac6e6ef44e6a787598976e2e0fe43d9/b1145387",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-              {
-                id: "attRZDWM9FNEh4mDM",
-                url:
-                  "https://dl.airtable.com/.attachments/1a3d4d4ba58c229abeb0e5179e89e954/90b7cfc8/AllSaints-Leather-Jacket-2-Side.png",
-                filename: "AllSaints-Leather-Jacket-2-Side.png",
-                size: 2900030,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/f867c4466f81da6d7d1ec061c38a8655/f4b68271",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/79230f18fc6fcb68d037c8c15943aac6/3a53bf0a",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/503bb9addc363b8c61d619b089257198/b1b54a09",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-            ],
-            variants: [
-              {
-                id: "ck69vklnb06aq072250e2939n",
-                size: "L",
-                reservable: 0,
-                internalSize: {
-                  display: "L",
-                },
-              },
-              {
-                id: "ck69vklqa06b10722lurvl4ca",
-                size: "M",
-                reservable: 0,
-                internalSize: {
-                  display: "M",
-                },
-              },
-              {
-                id: "ck69vklt906bc07224hjd98pu",
-                size: "S",
-                reservable: 0,
-                internalSize: {
-                  display: "S",
-                },
-              },
-            ],
+      status: "Active",
+      invoices: [{ id: "1250", subscriptionId: "16CHU4S1XzKfpLVP", __typename: "Invoice" }],
+      membership: {
+        id: "ckbccoaj3027s0775566n5zn5",
+        pauseRequests: [
+          {
+            id: "ckbccoaoo027y0775djmfxpit",
+            resumeDate: "2020-08-10T21:36:05.000Z",
+            pauseDate: "2020-07-10T21:36:05.000Z",
+            pausePending: false,
+            __typename: "PauseRequest",
           },
-        },
-        position: 0,
-        saved: false,
-        status: "Added",
+        ],
+        __typename: "CustomerMembership",
       },
-      {
-        id: "ck6jouijm0g4m0722z64bqvki",
-        productVariant: {
-          id: "ck69vkaj705fr0722m0md1hvo",
-          product: {
-            name: "Logo Hoodie",
-            id: "ck69vixyo01um0722qgoea1hs",
-            modelSize: { display: "M" },
-            brand: {
-              id: "ck69vhvk6002c07229dpkuz4h",
-              name: "Aimé Leon Dore",
-            },
-            images: [
-              {
-                id: "attdFYFLXT4zYXP75",
-                url:
-                  "https://dl.airtable.com/.attachments/c215a40108342e3741ff18f4faa1ec78/66ee3d70/AimeLeonDore-Burgandy-Hoodie-Front.png",
-                filename: "AimeLeonDore-Burgandy-Hoodie-Front.png",
-                size: 7530907,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/fbde00d9e835e4329cde0d8e0f0fb838/7908dac1",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/85328ab25a9d96990bfe4d7a3a98c95d/408a1991",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/353f2012c74c84a05a875f997230f7dd/492b862b",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-              {
-                id: "attUVws7d3rjzjnBp",
-                url:
-                  "https://dl.airtable.com/.attachments/1dbb097da51c9d9dfcd69934df4e9f74/8ffcea47/AimeLeonDore-Burgandy-Hoodie-CloseUp.png",
-                filename: "AimeLeonDore-Burgandy-Hoodie-CloseUp.png",
-                size: 9920324,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/00b6a69a34650d03acb3412254a82f02/1e1ace3b",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/a665b972b12630efde09dbdb321151ed/2a47fdcd",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/8bcfdf330cb4bd43a789d1b83bd1525e/56c38ff6",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-              {
-                id: "attYY3rh2KMFR00w4",
-                url:
-                  "https://dl.airtable.com/.attachments/14cdae43fa2dba68c3a3e949cadbe9a2/13b6c658/AimeLeonDore-Burgandy-Hoodie-Back.png",
-                filename: "AimeLeonDore-Burgandy-Hoodie-Back.png",
-                size: 6406162,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/e80f4c327b4da0ba3952509719ce0659/8553c10e",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/b1ca86ff8279e5976e163439347731ab/979294d3",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/5d2c197ef2d4aeb78aa7f954d57aed18/75714092",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-              {
-                id: "attrY34iLiKmSZQ2y",
-                url:
-                  "https://dl.airtable.com/.attachments/b798be2ffb8de5ff323f12a60fdb2651/83439c64/AimeLeonDore-Burgandy-Hoodie-Side.png",
-                filename: "AimeLeonDore-Burgandy-Hoodie-Side.png",
-                size: 5947114,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/33f4d66a0a15754640b99cdf0ea28edc/da39afc9",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/07a8850ddfb696bbdff8f6f711773c45/110316ee",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/d7b00683a3e6c6f135bc98392673d2e7/e4127717",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-            ],
-            variants: [
-              {
-                id: "ck69vkaj705fr0722m0md1hvo",
-                size: "S",
-                reservable: 0,
-                internalSize: {
-                  display: "S",
-                },
-              },
-              {
-                id: "ck69vkaqy05gd0722nxwyy52z",
-                size: "M",
-                reservable: 0,
-                internalSize: {
-                  display: "M",
-                },
-              },
-              {
-                id: "ck69vkaue05go0722dhgizmtn",
-                size: "L",
-                reservable: 0,
-                internalSize: {
-                  display: "L",
-                },
-              },
-            ],
-          },
-        },
-        position: 0,
-        saved: false,
-        status: "Added",
-      },
-      {
-        id: "ck6jovqaz0g7s0722b9r5qv4n",
-        productVariant: {
-          id: "ck69vkc7n05kn0722xymj54ec",
-          product: {
-            name: "Fleece Bomber Jacket",
-            id: "ck69viyy801xi0722t28fgo8q",
-            modelSize: { display: "M" },
-            brand: {
-              id: "ck69vi6gs00km0722kxdcgyww",
-              name: "Ambush",
-            },
-            images: [
-              {
-                id: "attG917BVVGJW3asT",
-                url:
-                  "https://dl.airtable.com/.attachments/d94921a64cadffb6ec24f6d8851e3112/55ea59de/Ambush-OrangeFleece-Jacket-Front.png",
-                filename: "Ambush-OrangeFleece-Jacket-Front.png",
-                size: 10091321,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/76a7016a8f020c492361011790fc3cbc/cb10b4cc",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/8711c940278c16a93e9fefcdf241bd9f/6417f956",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/e452ae466337c172b633c2d440290fae/34f2dbba",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-              {
-                id: "att3fhGriCIikko9f",
-                url:
-                  "https://dl.airtable.com/.attachments/0ff3fde86ec718c00df4bc20e693d436/4e28533f/Ambush-OrangeFleece-Jacket-CloseUp.png",
-                filename: "Ambush-OrangeFleece-Jacket-CloseUp.png",
-                size: 10642026,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/1207631d298778090d92860e7149b084/0fbec47c",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/9cb0ca78815b88dbe82b92990eb5ebfe/a4958a62",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/83abcb433c59adebfee2cdc85e5841b9/75e642cd",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-              {
-                id: "attPvhYKKdNREbCwU",
-                url:
-                  "https://dl.airtable.com/.attachments/55d350abe5de9142015250f91694e27f/1f5c19ad/Ambush-OrangeFleece-Jacket-Back.png",
-                filename: "Ambush-OrangeFleece-Jacket-Back.png",
-                size: 10036968,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/80907461b6e81c74483ffd81bea94211/0339cd3f",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/315873d1f707dee620fd68531361ac92/3bc5f927",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/201b5da995544271a3348cace1523db1/d8d4bafc",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-              {
-                id: "attLXITgX6xcimW0u",
-                url:
-                  "https://dl.airtable.com/.attachments/3e36e6720c47cf44d99d7fd79765f477/2435f8a6/Ambush-OrangeFleece-Jacket-Side.png",
-                filename: "Ambush-OrangeFleece-Jacket-Side.png",
-                size: 6564916,
-                type: "image/png",
-                thumbnails: {
-                  small: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/99f07306cff81b7fa35abfbe5ab76f09/94b63718",
-                    width: 29,
-                    height: 36,
-                  },
-                  large: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/40a6e40fec1b88215591bf982954fb94/7dbe7cb9",
-                    width: 512,
-                    height: 640,
-                  },
-                  full: {
-                    url: "https://dl.airtable.com/.attachmentThumbnails/14a3f06015fecf0fe6bd16ec28b2e6e1/b34760eb",
-                    width: 3000,
-                    height: 3000,
-                  },
-                },
-              },
-            ],
-            variants: [
-              {
-                id: "ck69vkc7n05kn0722xymj54ec",
-                size: "S",
-                reservable: 0,
-                internalSize: {
-                  display: "S",
-                },
-              },
-              {
-                id: "ck69vkcb105ky0722t46yumtv",
-                size: "M",
-                reservable: 0,
-                internalSize: {
-                  display: "M",
-                },
-              },
-              {
-                id: "ck69vkchh05lk07221gnpy5x3",
-                size: "L",
-                reservable: 0,
-                internalSize: {
-                  display: "L",
-                },
-              },
-            ],
-          },
-        },
-        position: 0,
-        saved: false,
-        status: "Added",
-      },
-    ],
-    savedItems: [],
-  },
-}
-
-export const BagFixtureWithReservation = {
-  me: {
-    customer: {
-      id: "12345",
-      plan: "Essential",
-      reservations: [],
-    },
-    bag: [],
-    savedItems: [],
-    activeReservation: {
-      id: "ck6jsqpv6g7bm07030k261a68",
-      shipped: false,
-      returnAt: "Thursday March 30th",
-      createdAt: "2020-02-12T20:58:29.105Z",
-      products: [
+      reservations: [
         {
-          id: "ck2zeef4o104d0734k7nx0yq7",
-          seasonsUID: "JOEL-GRY-MM-006-01",
-          inventoryStatus: "Reserved",
-          productStatus: "New",
-          productVariant: {
-            size: "M",
-            product: {
-              name: "Down Nicasio Parka",
-              retailPrice: 1200,
-              brand: {
-                name: "John Elliott",
+          id: "ckbb5xhw901xu0722wj2v8rf5",
+          status: "Completed",
+          reservationNumber: 207077236,
+          createdAt: "2020-06-11T19:16:16.451Z",
+          products: [
+            {
+              id: "ck99014t467190778ymjv48yg",
+              productVariant: {
+                id: "ck99010m166x007787ckl7e2o",
+                internalSize: { id: "ck9900znh66uq07782dws1fuf", display: "31", __typename: "Size" },
+                product: {
+                  id: "ck98zi3s454zg0778giday0bu",
+                  images: [
+                    {
+                      id: "ckaf5oc7fw01o0781j15gkan6",
+                      url:
+                        "https://seasons-s3.imgix.net/esnt/canvas-lounge-pants-gray/canvas-lounge-pants-gray-1.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                    {
+                      id: "ckaf5oc7mw01q0781r93lftnw",
+                      url:
+                        "https://seasons-s3.imgix.net/esnt/canvas-lounge-pants-gray/canvas-lounge-pants-gray-2.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                    {
+                      id: "ckaf5oc7tw01s07813od1bu8r",
+                      url:
+                        "https://seasons-s3.imgix.net/esnt/canvas-lounge-pants-gray/canvas-lounge-pants-gray-3.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                    {
+                      id: "ckaf5oc86w01u07811mzutsrx",
+                      url:
+                        "https://seasons-s3.imgix.net/esnt/canvas-lounge-pants-gray/canvas-lounge-pants-gray-4.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                  ],
+                  brand: { id: "ck76gctjcyc5g0768n18h6zqu", name: "Essentials", __typename: "Brand" },
+                  __typename: "Product",
+                },
+                __typename: "ProductVariant",
               },
-              images: [
-                {
-                  id: "attJzOO36MX4sAq4M",
-                  url:
-                    "https://dl.airtable.com/.attachments/ed40cd99997fa178fc3f9cc6b62f8b59/f13b37a3/JohnElliott-Down-NicasioParka-Front.png",
-                  filename: "JohnElliott-Down- NicasioParka-Front.png",
-                  size: 10230330,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/d396cc39d89e868dc88b60b538d0c36f/9f6eb2ba",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/d52c8546b8da259c89228b65dcf3e75a/195e1b4d",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/f0097e7bd971ef60a58d4006017d2980/2d704b9b",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-                {
-                  id: "att9bHT2CTrfry2Tm",
-                  url:
-                    "https://dl.airtable.com/.attachments/7a070eb855cc708ae4e680e98c1a6571/109c8e9b/JohnElliott-DownNicasioParka-CloseUP.png",
-                  filename: "JohnElliott-DownNicasioParka-CloseUP.png",
-                  size: 5841384,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/a2800696af19441ad763b8d6e68a543a/b73944ee",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/2069a94941ae4d876e6d5c3c06079bf6/8bb6d9dc",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/73d31778f06c948345168896dc7987e6/ca8bcc2d",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-                {
-                  id: "attYzmJkXyAVlVwVf",
-                  url:
-                    "https://dl.airtable.com/.attachments/24958cf93c0d3cd37d34ab0d35d0b6f2/116d4aae/JohnElliott-DownNicasioParka-Jacket-Back.png",
-                  filename: "JohnElliott-DownNicasioParka-Jacket-Back.png",
-                  size: 7815131,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/4cd9367d0cae29be61f6c1109af41301/a85bdb63",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/b4c5fdb2376a95ec44ab486ab5a390d0/978e1ade",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/914c54e43c0427766c9ab8ff0fbdf8b8/fb128e7b",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-                {
-                  id: "attr4Cgd1023LjaNZ",
-                  url:
-                    "https://dl.airtable.com/.attachments/3d1576b52608ceec791eb6634aab4a3f/32763719/JohnElliott-DownNicasioParka-Side.png",
-                  filename: "JohnElliott-DownNicasioParka-Side.png",
-                  size: 6898849,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/f3c02b71d40bbbc15ae7cd6389e7f48c/119555a2",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/2eb9af781967aaf512b316cde5aa21e9/01da18e9",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/e29b098b903909908873cd52fc2d195d/4f9f15d2",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-              ],
+              __typename: "PhysicalProduct",
             },
-          },
-        },
-        {
-          id: "ck3t6v7nz1tty070781zt0ujn",
-          seasonsUID: "DVNN-BLU-MM-006-01",
-          inventoryStatus: "Reserved",
-          productStatus: "New",
-          productVariant: {
-            size: "M",
-            product: {
-              name: "Vester Belted Coat",
-              retailPrice: 1640,
-              brand: {
-                name: "Dries Van Noten",
+            {
+              id: "ck9901enz67nb0778iringzh4",
+              productVariant: {
+                id: "ck9901ahn67ej07782zf77n8v",
+                internalSize: { id: "ck99019t567b607788ncygqkk", display: "30", __typename: "Size" },
+                product: {
+                  id: "ck98zi40v55040778654aaf11",
+                  images: [
+                    {
+                      id: "ckaf5qbzcw1sm0781uufmfzw9",
+                      url:
+                        "https://seasons-s3.imgix.net/noah/5-pocket-denim-jeans-black/5-pocket-denim-jeans-black-1.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                    {
+                      id: "ckaf5qbziw1so07818k1v7vzg",
+                      url:
+                        "https://seasons-s3.imgix.net/noah/5-pocket-denim-jeans-black/5-pocket-denim-jeans-black-2.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                    {
+                      id: "ckaf5qbzow1sr0781p0nsxueb",
+                      url:
+                        "https://seasons-s3.imgix.net/noah/5-pocket-denim-jeans-black/5-pocket-denim-jeans-black-3.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                    {
+                      id: "ckaf5qbzvw1st0781kiv7dvjp",
+                      url:
+                        "https://seasons-s3.imgix.net/noah/5-pocket-denim-jeans-black/5-pocket-denim-jeans-black-4.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                  ],
+                  brand: { id: "ck2ze8vyh0pcl0734rxtb74xk", name: "Noah", __typename: "Brand" },
+                  __typename: "Product",
+                },
+                __typename: "ProductVariant",
               },
-              images: [
-                {
-                  id: "attIhGXuw6NyrvNQs",
-                  url:
-                    "https://dl.airtable.com/.attachments/52b85078c145edca522b95d6b1e0e488/83673196/DriesVanNoten-Pea-Coat-Front.png",
-                  filename: "DriesVanNoten-Pea-Coat-Front.png",
-                  size: 3245948,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/51a8f3afb29b395414321522bd0b763e/3595ab8d",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/0a2e5a8fa29386712cb8f65be21f3785/e4593b5c",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/ea079d625b97174d2f245c2a375426ae/042649df",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-                {
-                  id: "attKpBScFs4XiZAnj",
-                  url:
-                    "https://dl.airtable.com/.attachments/1615c892bfddd7ed30b7349e9c4d47fc/6c0c890b/DriesVanNoten-Pea-Coat-CloseUp.png",
-                  filename: "DriesVanNoten-Pea-Coat-CloseUp.png",
-                  size: 5858409,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/d7a6d2f835be70345a5d49f9dfe944b8/16ac1ca0",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/9f8195a5c7e144f295d18e1b5e4fd99e/706eed0f",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/ab019aa6277a2c23d47939fc259abb0c/f6fe5347",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-                {
-                  id: "atthMi2RRPEjvDkTk",
-                  url:
-                    "https://dl.airtable.com/.attachments/84e0140978eb90fd2d16b0afbd2b7a15/b28e2584/DriesVanNoten-Pea-Coat-Back.png",
-                  filename: "DriesVanNoten-Pea-Coat-Back.png",
-                  size: 5010843,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/492703bc6cac1c115d0346a352cd6704/eb77f989",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/198f96177bd7b1f0d5a75de5ce96fce2/3d3126e4",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/df60575d1fd07d2feb65ec206e4107b7/502cac8d",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-                {
-                  id: "atttcNIqlqijHf50M",
-                  url:
-                    "https://dl.airtable.com/.attachments/214513e026725813a30216f9c4a763cf/7f800143/DriesVanNoten-Pea-Coat-Side.png",
-                  filename: "DriesVanNoten-Pea-Coat-Side.png",
-                  size: 5676968,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/edefeac6f5e5563743282c823dc6ffb2/ba52403a",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/b4c7bc725c1fe5bbc89cdcc5315fff0a/9ae7ec24",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/dc1089123bb9f972842bdbb4fb56c089/0784c057",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-              ],
+              __typename: "PhysicalProduct",
             },
-          },
-        },
-        {
-          id: "ck52yu2msetus0715plobbvj5",
-          seasonsUID: "NIKE-BLU-MM-001-01",
-          inventoryStatus: "Reserved",
-          productStatus: "New",
-          productVariant: {
-            size: "M",
-            internalSize: {
-              display: "M",
-            },
-            product: {
-              name: "Fur Jacket",
-              retailPrice: 1150,
-              brand: {
-                name: "Nike",
+            {
+              id: "ck9902cvf68vg0778zkb1o7gt",
+              productVariant: {
+                id: "ck990284i68qd07780xgrpmhg",
+                internalSize: { id: "ck990265668o8077806v95z73", display: "29", __typename: "Size" },
+                product: {
+                  id: "ck98zi4es551b0778k4n0bbj5",
+                  images: [
+                    {
+                      id: "ckaf5u0e0w5n8078120bd9r8o",
+                      url:
+                        "https://seasons-s3.imgix.net/stis/nylon-ripstop-pants-red/nylon-ripstop-pants-red-1.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                    {
+                      id: "ckaf5u0e7w5na0781mtaejzne",
+                      url:
+                        "https://seasons-s3.imgix.net/stis/nylon-ripstop-pants-red/nylon-ripstop-pants-red-2.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                    {
+                      id: "ckaf5u0eew5nc0781eugq2fk1",
+                      url:
+                        "https://seasons-s3.imgix.net/stis/nylon-ripstop-pants-red/nylon-ripstop-pants-red-3.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                    {
+                      id: "ckaf5u0emw5ne078121mojljb",
+                      url:
+                        "https://seasons-s3.imgix.net/stis/nylon-ripstop-pants-red/nylon-ripstop-pants-red-4.png?fit=clip&fm=webp&w=416",
+                      __typename: "Image",
+                    },
+                  ],
+                  brand: { id: "ck2ze8ypi0pgf0734caf0kf7d", name: "Stone Island", __typename: "Brand" },
+                  __typename: "Product",
+                },
+                __typename: "ProductVariant",
               },
-              images: [
-                {
-                  id: "attzIBbAVI0hDKrtG",
-                  url:
-                    "https://dl.airtable.com/.attachments/a1ed90b048b9e253b294b7ebead1edd6/88f04cf6/NIKExAMBUSH-Swoosh-Jacket-Front.png",
-                  filename: "NIKExAMBUSH-Swoosh-Jacket-Front.png",
-                  size: 11247657,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/8bb6b8c468653153ab386be409aac788/751369b1",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/36a171d7cbf90f58c7a4f5ece4bacbb6/16366a07",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/ac545e7d57e1351dd10f20071ac6eed1/c5a8737b",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-                {
-                  id: "attHTVs9nUod0BCOf",
-                  url:
-                    "https://dl.airtable.com/.attachments/27e12eb0038f85cea8e907ad20b72d14/3b5e7cd9/NIKExAMBUSH-Swoosh-Jacket-CloseUp.png",
-                  filename: "NIKExAMBUSH-Swoosh-Jacket-CloseUp.png",
-                  size: 10585897,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/8b5f625d9e816b1f6f8034580b0237de/3743df2f",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/d96d5af8c66f58fb0c0ff085f7a058a8/41d895bb",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/5a287e8b3e61697139b251666547bb56/59393314",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-                {
-                  id: "attuVFqh2NQj872H0",
-                  url:
-                    "https://dl.airtable.com/.attachments/9f0f978e68989a64579cd4dbd429776d/145226d6/NIKExAMBUSH-Swoosh-Jacket-Back.png",
-                  filename: "NIKExAMBUSH-Swoosh-Jacket-Back.png",
-                  size: 13622432,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/ce5398acb2aa15f5bcdca8aa461d2f4d/97996a63",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/443a5dbb997797694da5044a8cd44efd/1c68fff2",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/547959907beb15d7b2a649ab44fa3359/9abb8c24",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-                {
-                  id: "attKvTqIi5fg7IKob",
-                  url:
-                    "https://dl.airtable.com/.attachments/ed48add1710dc1c6aa8c54fda0df9b14/10cc6c16/NIKExAMBUSH-Swoosh-Jacket-Side.png",
-                  filename: "NIKExAMBUSH-Swoosh-Jacket-Side.png",
-                  size: 6831333,
-                  type: "image/png",
-                  thumbnails: {
-                    small: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/dcc41b3ffc19f61ced9c92865a5686c5/d51440a6",
-                      width: 29,
-                      height: 36,
-                    },
-                    large: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/995ca982bf979a62b77ba965c46c7d46/45d01f5f",
-                      width: 512,
-                      height: 640,
-                    },
-                    full: {
-                      url: "https://dl.airtable.com/.attachmentThumbnails/ed2a33798d7c23f0a98ecccdae1adf4c/69b3c96e",
-                      width: 3000,
-                      height: 3000,
-                    },
-                  },
-                },
-              ],
+              __typename: "PhysicalProduct",
             },
-          },
+          ],
+          __typename: "Reservation",
         },
       ],
+      __typename: "Customer",
     },
+    activeReservation: null,
+    bag: [
+      {
+        id: "ckbb5shgt01t20722mrktpjr8",
+        productVariant: {
+          id: "ck9901ahn67ej07782zf77n8v",
+          product: {
+            id: "ck98zi40v55040778654aaf11",
+            name: "5-Pocket Denim Jeans",
+            modelSize: { id: "ck9yuf3xxkmg50751ccast62y", display: "S", __typename: "Size" },
+            brand: { id: "ck2ze8vyh0pcl0734rxtb74xk", name: "Noah", __typename: "Brand" },
+            images: [
+              {
+                id: "ckaf5qbzcw1sm0781uufmfzw9",
+                url:
+                  "https://seasons-s3.imgix.net/noah/5-pocket-denim-jeans-black/5-pocket-denim-jeans-black-1.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5qbziw1so07818k1v7vzg",
+                url:
+                  "https://seasons-s3.imgix.net/noah/5-pocket-denim-jeans-black/5-pocket-denim-jeans-black-2.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5qbzow1sr0781p0nsxueb",
+                url:
+                  "https://seasons-s3.imgix.net/noah/5-pocket-denim-jeans-black/5-pocket-denim-jeans-black-3.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5qbzvw1st0781kiv7dvjp",
+                url:
+                  "https://seasons-s3.imgix.net/noah/5-pocket-denim-jeans-black/5-pocket-denim-jeans-black-4.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+            ],
+            variants: [
+              {
+                id: "ck9901ahn67ej07782zf77n8v",
+                reservable: 0,
+                internalSize: { id: "ck99019t567b607788ncygqkk", display: "30", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck9901fhd67py07782axti1xx",
+                reservable: 1,
+                internalSize: { id: "ck9901esg67nl0778mqfucqvf", display: "32", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck9901kd667yj077823sh35j8",
+                reservable: 1,
+                internalSize: { id: "ck9901jpi67w50778bw3pp5xs", display: "34", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+            ],
+            __typename: "Product",
+          },
+          __typename: "ProductVariant",
+        },
+        position: 0,
+        saved: false,
+        status: "Added",
+        __typename: "BagItem",
+      },
+      {
+        id: "ckbb5ssdj01u60722hdnwkx4q",
+        productVariant: {
+          id: "ck99010m166x007787ckl7e2o",
+          product: {
+            id: "ck98zi3s454zg0778giday0bu",
+            name: "Canvas\n  Lounge Pants",
+            modelSize: { id: "ck9yuf2xikmbm0751dj72lm1j", display: "S", __typename: "Size" },
+            brand: { id: "ck76gctjcyc5g0768n18h6zqu", name: "Essentials", __typename: "Brand" },
+            images: [
+              {
+                id: "ckaf5oc7fw01o0781j15gkan6",
+                url:
+                  "https://seasons-s3.imgix.net/esnt/canvas-lounge-pants-gray/canvas-lounge-pants-gray-1.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5oc7mw01q0781r93lftnw",
+                url:
+                  "https://seasons-s3.imgix.net/esnt/canvas-lounge-pants-gray/canvas-lounge-pants-gray-2.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5oc7tw01s07813od1bu8r",
+                url:
+                  "https://seasons-s3.imgix.net/esnt/canvas-lounge-pants-gray/canvas-lounge-pants-gray-3.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5oc86w01u07811mzutsrx",
+                url:
+                  "https://seasons-s3.imgix.net/esnt/canvas-lounge-pants-gray/canvas-lounge-pants-gray-4.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+            ],
+            variants: [
+              {
+                id: "ck99010m166x007787ckl7e2o",
+                reservable: 1,
+                internalSize: { id: "ck9900znh66uq07782dws1fuf", display: "31", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck99015my67410778cgjsoipb",
+                reservable: 0,
+                internalSize: { id: "ck99014wo671m0778333lp64v", display: "32", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+            ],
+            __typename: "Product",
+          },
+          __typename: "ProductVariant",
+        },
+        position: 0,
+        saved: false,
+        status: "Added",
+        __typename: "BagItem",
+      },
+      {
+        id: "ckbb5sx6k01va0722qv8lc97h",
+        productVariant: {
+          id: "ck990284i68qd07780xgrpmhg",
+          product: {
+            id: "ck98zi4es551b0778k4n0bbj5",
+            name: "Nylon\n  Ripstop Pants",
+            modelSize: { id: "ck9yuf575kmn10751kqnrqv0h", display: "M", __typename: "Size" },
+            brand: { id: "ck2ze8ypi0pgf0734caf0kf7d", name: "Stone Island", __typename: "Brand" },
+            images: [
+              {
+                id: "ckaf5u0e0w5n8078120bd9r8o",
+                url:
+                  "https://seasons-s3.imgix.net/stis/nylon-ripstop-pants-red/nylon-ripstop-pants-red-1.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5u0e7w5na0781mtaejzne",
+                url:
+                  "https://seasons-s3.imgix.net/stis/nylon-ripstop-pants-red/nylon-ripstop-pants-red-2.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5u0eew5nc0781eugq2fk1",
+                url:
+                  "https://seasons-s3.imgix.net/stis/nylon-ripstop-pants-red/nylon-ripstop-pants-red-3.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5u0emw5ne078121mojljb",
+                url:
+                  "https://seasons-s3.imgix.net/stis/nylon-ripstop-pants-red/nylon-ripstop-pants-red-4.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+            ],
+            variants: [
+              {
+                id: "ck990284i68qd07780xgrpmhg",
+                reservable: 1,
+                internalSize: { id: "ck990265668o8077806v95z73", display: "29", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck9902dvu68yc07784he10q1e",
+                reservable: 1,
+                internalSize: { id: "ck9902cze68vs0778n313wd67", display: "32", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck9902j54695707785hhie578",
+                reservable: 1,
+                internalSize: { id: "ck9902ifz69370778f341qt6a", display: "34", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck9902o9q69bi0778qs2x3nly",
+                reservable: 1,
+                internalSize: { id: "ck9902niw699g0778nobqwcl2", display: "36", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+            ],
+            __typename: "Product",
+          },
+          __typename: "ProductVariant",
+        },
+        position: 0,
+        saved: false,
+        status: "Added",
+        __typename: "BagItem",
+      },
+    ],
+    savedItems: [
+      {
+        id: "ckbb00w1y011g0722egcjumme",
+        productVariant: {
+          id: "ck8aslacjbeky0792luvmg78g",
+          product: {
+            id: "ck8as6f72abmc07924pnblvu5",
+            name: "Thumper Jacket",
+            modelSize: { id: "ck9yuet37klfc0751l694rblj", display: "XL", __typename: "Size" },
+            brand: { id: "ck2ze8toe0p9l0734m1ll8bbl", name: "John Elliott", __typename: "Brand" },
+            images: [
+              {
+                id: "ckaf4ytftv9di07815d4453ed",
+                url:
+                  "https://seasons-s3.imgix.net/joel/thumper-jacket-pink/thumper-jacket-pink-1.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf4ytgav9dl07817cfad7ue",
+                url:
+                  "https://seasons-s3.imgix.net/joel/thumper-jacket-pink/thumper-jacket-pink-2.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf4ytgrv9dn0781wkkmvv0a",
+                url:
+                  "https://seasons-s3.imgix.net/joel/thumper-jacket-pink/thumper-jacket-pink-3.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf4yth8v9dp078151ygubjv",
+                url:
+                  "https://seasons-s3.imgix.net/joel/thumper-jacket-pink/thumper-jacket-pink-4.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+            ],
+            variants: [
+              {
+                id: "ck8ask21ibbed0792cpocr1me",
+                reservable: 1,
+                internalSize: { id: "ck8apnoev6gpz0792f0xwlpxq", display: "S", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck8aslacjbeky0792luvmg78g",
+                reservable: 1,
+                internalSize: { id: "ck8appi4s6nck0792y8u47mhs", display: "M", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck8asdx1kau76079296kt8q0e",
+                reservable: 0,
+                internalSize: { id: "ck8apggyb5lha0792jul3xqej", display: "L", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck8asfr82aywm0792s6ec1idt",
+                reservable: 1,
+                internalSize: { id: "ck8apilz45ume0792o1pok9th", display: "XL", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+            ],
+            __typename: "Product",
+          },
+          __typename: "ProductVariant",
+        },
+        saved: true,
+        __typename: "BagItem",
+      },
+      {
+        id: "ckbb7s30m02i307227qobrkl2",
+        productVariant: {
+          id: "ck3t6vb861txx07077ppdi02e",
+          product: {
+            id: "ck3t6h3zz1srd0707wnzesq1x",
+            name: "Quilted Down Puffer",
+            modelSize: { id: "ck98zg1dq50j10778b119c2r6", display: "L", __typename: "Size" },
+            brand: { id: "ck2ze8lwj0p1o0734vhlwtpbc", name: "Aimé Leon Dore", __typename: "Brand" },
+            images: [
+              {
+                id: "ckaez5jt9p6bd0781jzvqhdj5",
+                url:
+                  "https://seasons-s3.imgix.net/alde/quilted-down-puffer-black/quilted-down-puffer-black-1.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaez5jthp6bf0781kf44mfqx",
+                url:
+                  "https://seasons-s3.imgix.net/alde/quilted-down-puffer-black/quilted-down-puffer-black-2.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaez5jtop6bh07811kc78568",
+                url:
+                  "https://seasons-s3.imgix.net/alde/quilted-down-puffer-black/quilted-down-puffer-black-3.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaez5jtvp6bj0781j628d0aw",
+                url:
+                  "https://seasons-s3.imgix.net/alde/quilted-down-puffer-black/quilted-down-puffer-black-4.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+            ],
+            variants: [
+              {
+                id: "ck3t6vas31txb0707q0hplg7p",
+                reservable: 1,
+                internalSize: { id: "ck8apkuwx64kc0792jupia3f0", display: "S", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck3t6vb861txx07077ppdi02e",
+                reservable: 1,
+                internalSize: { id: "ck8apk71y61tn079253pcfoam", display: "M", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck3t6vbmz1tyj0707eib9w32d",
+                reservable: 1,
+                internalSize: { id: "ck8apl1q865jt07924f1ifat2", display: "L", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+            ],
+            __typename: "Product",
+          },
+          __typename: "ProductVariant",
+        },
+        saved: true,
+        __typename: "BagItem",
+      },
+      {
+        id: "ckbb7sxx302jr0722ev8npvv6",
+        productVariant: {
+          id: "ck990008q65w80778dq4illmq",
+          product: {
+            id: "ck98zi37r54xy0778vdhazyoy",
+            name: "Straight-Leg Cargo Trouser",
+            modelSize: { id: "ck9yuf0nkkm0707517zel4868", display: "S", __typename: "Size" },
+            brand: { id: "ck2ze8ypi0pgf0734caf0kf7d", name: "Stone Island", __typename: "Brand" },
+            images: [
+              {
+                id: "ckaf5j8qtvur90781lvqk2uye",
+                url:
+                  "https://seasons-s3.imgix.net/stis/straight-leg-cargo-trouser-white/straight-leg-cargo-trouser-white-1.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5j8r2vurc0781b4dnylru",
+                url:
+                  "https://seasons-s3.imgix.net/stis/straight-leg-cargo-trouser-white/straight-leg-cargo-trouser-white-2.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5j8r9vure0781hgo1vtbh",
+                url:
+                  "https://seasons-s3.imgix.net/stis/straight-leg-cargo-trouser-white/straight-leg-cargo-trouser-white-3.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf5j8rgvurg0781kc84ea8w",
+                url:
+                  "https://seasons-s3.imgix.net/stis/straight-leg-cargo-trouser-white/straight-leg-cargo-trouser-white-4.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+            ],
+            variants: [
+              {
+                id: "ck9kbkqmz80nf07419w7vz0ji",
+                reservable: 1,
+                internalSize: { id: "ck9kbkpyj80lz0741uzwu1gdh", display: "30", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck990008q65w80778dq4illmq",
+                reservable: 1,
+                internalSize: { id: "ck98zzzjh65ty0778m4yd47pe", display: "31", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck99006i7661h0778e8fhof27",
+                reservable: 1,
+                internalSize: { id: "ck990053n65zp07786lytdedl", display: "32", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+            ],
+            __typename: "Product",
+          },
+          __typename: "ProductVariant",
+        },
+        saved: true,
+        __typename: "BagItem",
+      },
+      {
+        id: "ckbbb6tnp03im0722tx6t0rh2",
+        productVariant: {
+          id: "ck8app2lp6luc0792ktqma8wa",
+          product: {
+            id: "ck7xsjpiechlt0713tnyknf91",
+            name: "Core Nylon Logo Pant",
+            modelSize: { id: "ck9yueivekkqc0751lheoborh", display: "M", __typename: "Size" },
+            brand: { id: "ck2ze8lwj0p1o0734vhlwtpbc", name: "Aimé Leon Dore", __typename: "Brand" },
+            images: [
+              {
+                id: "ckaf481g6uhch0781x9dizk0l",
+                url:
+                  "https://seasons-s3.imgix.net/alde/core-nylon-logo-pant-green/core-nylon-logo-pant-green-1.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf481geuhcj0781d086wk1u",
+                url:
+                  "https://seasons-s3.imgix.net/alde/core-nylon-logo-pant-green/core-nylon-logo-pant-green-2.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf481gluhcl0781rzfgt58j",
+                url:
+                  "https://seasons-s3.imgix.net/alde/core-nylon-logo-pant-green/core-nylon-logo-pant-green-3.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf481gsuhcn0781nmvv1d7a",
+                url:
+                  "https://seasons-s3.imgix.net/alde/core-nylon-logo-pant-green/core-nylon-logo-pant-green-4.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+            ],
+            variants: [
+              {
+                id: "ck8api5g05sba0792kbro3pxf",
+                reservable: 0,
+                internalSize: { id: "ck8api4rz5s8m0792r7jhvqrt", display: "31", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck8app2lp6luc0792ktqma8wa",
+                reservable: 0,
+                internalSize: { id: "ck8app1q36lpq0792w5dtqwdp", display: "32", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck8apj43g5wne0792jyk5mma3",
+                reservable: 1,
+                internalSize: { id: "ck8apj3do5wjs0792whyw1hl4", display: "35", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+            ],
+            __typename: "Product",
+          },
+          __typename: "ProductVariant",
+        },
+        saved: true,
+        __typename: "BagItem",
+      },
+      {
+        id: "ckbbbnv6703th072238igwyds",
+        productVariant: {
+          id: "ck8apk6bd61qs0792hgxt3y3d",
+          product: {
+            id: "ck8ap6i414la40792fw2ycpsd",
+            name: "Le Blouson Valensole Tie-Dyed Cotton Jacket",
+            modelSize: { id: "ck9yuerxeklcc0751kt0vyo07", display: "M", __typename: "Size" },
+            brand: { id: "ck8ap3x2a4ex70792jktbephc", name: "Jacquemus", __typename: "Brand" },
+            images: [
+              {
+                id: "ckaf4uzbjv5fv0781kmasup15",
+                url:
+                  "https://seasons-s3.imgix.net/jqmu/le-blouson-valensole-tie-dyed-cotton-jacket-blue/le-blouson-valensole-tie-dyed-cotton-jacket-blue-1.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf4uzbsv5fx0781j7v3x9yi",
+                url:
+                  "https://seasons-s3.imgix.net/jqmu/le-blouson-valensole-tie-dyed-cotton-jacket-blue/le-blouson-valensole-tie-dyed-cotton-jacket-blue-2.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf4uzbzv5fz0781bqyix5zu",
+                url:
+                  "https://seasons-s3.imgix.net/jqmu/le-blouson-valensole-tie-dyed-cotton-jacket-blue/le-blouson-valensole-tie-dyed-cotton-jacket-blue-3.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf4uzc8v5g10781u3r9xpjy",
+                url:
+                  "https://seasons-s3.imgix.net/jqmu/le-blouson-valensole-tie-dyed-cotton-jacket-blue/le-blouson-valensole-tie-dyed-cotton-jacket-blue-4.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+            ],
+            variants: [
+              {
+                id: "ck8apltb868z20792n7sss3uq",
+                reservable: 1,
+                internalSize: { id: "ck8aplt1e68xt0792b817wqa9", display: "S", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck8apk6bd61qs0792hgxt3y3d",
+                reservable: 1,
+                internalSize: { id: "ck8apk62961ox0792zkb254u8", display: "M", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck8apojof6kb20792ie14pa0g",
+                reservable: 0,
+                internalSize: { id: "ck8apoj7j6k9e0792ovt539bv", display: "L", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+            ],
+            __typename: "Product",
+          },
+          __typename: "ProductVariant",
+        },
+        saved: true,
+        __typename: "BagItem",
+      },
+      {
+        id: "ckbbbojb503wk0722g2976a2c",
+        productVariant: {
+          id: "ck8apm68p6a2t0792138lrsor",
+          product: {
+            id: "ck7f5xnvjydqf07350qbjzt5o",
+            name: "105 Tie-Dyed Denim Jeans",
+            modelSize: { id: "ck9yue6tokjo2075176628923", display: "S", __typename: "Size" },
+            brand: { id: "ck7f5wouqyc660735v3kw86xw", name: "Orslow", __typename: "Brand" },
+            images: [
+              {
+                id: "ckaf3cz2gtl270781kcb9c0ov",
+                url:
+                  "https://seasons-s3.imgix.net/orsl/105-tie-dyed-denim-jeans-blue/105-tie-dyed-denim-jeans-blue-1.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf3cz2qtl290781ix5vs7mm",
+                url:
+                  "https://seasons-s3.imgix.net/orsl/105-tie-dyed-denim-jeans-blue/105-tie-dyed-denim-jeans-blue-2.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf3cz2xtl2b0781526u88ci",
+                url:
+                  "https://seasons-s3.imgix.net/orsl/105-tie-dyed-denim-jeans-blue/105-tie-dyed-denim-jeans-blue-3.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf3cz34tl2d0781lgfsyb98",
+                url:
+                  "https://seasons-s3.imgix.net/orsl/105-tie-dyed-denim-jeans-blue/105-tie-dyed-denim-jeans-blue-4.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+            ],
+            variants: [
+              {
+                id: "ck8apegfh5dfu0792i89jjfc2",
+                reservable: 1,
+                internalSize: { id: "ck8apeec75d9t07920i82pagn", display: "29", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck8apm68p6a2t0792138lrsor",
+                reservable: 0,
+                internalSize: { id: "ck8apm58o69yh07921brbcan6", display: "32", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+            ],
+            __typename: "Product",
+          },
+          __typename: "ProductVariant",
+        },
+        saved: true,
+        __typename: "BagItem",
+      },
+      {
+        id: "ckbbbpf4y03yn07220ooi5b9k",
+        productVariant: {
+          id: "ck5fme3fp9t3v0720l1zq1pbj",
+          product: {
+            id: "ck5fl81wg97hd0720idvpc81n",
+            name: "Brushed Sweater",
+            modelSize: { id: "ck98zglvn51tb0778kf6q9ihj", display: "L", __typename: "Size" },
+            brand: { id: "ck2ze8yui0pgm0734up2bbjvp", name: "Stüssy", __typename: "Brand" },
+            images: [
+              {
+                id: "ckaf0b3i4qf200781w1n6y4hs",
+                url:
+                  "https://seasons-s3.imgix.net/stus/brushed-sweater-green/brushed-sweater-green-1.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf0b3ibqf220781em7o4kp0",
+                url:
+                  "https://seasons-s3.imgix.net/stus/brushed-sweater-green/brushed-sweater-green-2.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf0b3iiqf250781si2h3i0k",
+                url:
+                  "https://seasons-s3.imgix.net/stus/brushed-sweater-green/brushed-sweater-green-3.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf0b3ipqf270781gr7za3z6",
+                url:
+                  "https://seasons-s3.imgix.net/stus/brushed-sweater-green/brushed-sweater-green-4.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+            ],
+            variants: [
+              {
+                id: "ck5fme2bf9t390720bmyp1zk9",
+                reservable: 1,
+                internalSize: { id: "ck8aphbgs5ox20792s15m0ekq", display: "S", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck5fme3fp9t3v0720l1zq1pbj",
+                reservable: 0,
+                internalSize: { id: "ck8aprge96uaj0792xeoc19yx", display: "M", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck5fme4ho9t4h07203hrhiv5w",
+                reservable: 1,
+                internalSize: { id: "ck8ape17y5c6v0792uy27em2s", display: "L", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+            ],
+            __typename: "Product",
+          },
+          __typename: "ProductVariant",
+        },
+        saved: true,
+        __typename: "BagItem",
+      },
+      {
+        id: "ckbbc1nq5044y0722n42qggpx",
+        productVariant: {
+          id: "ck8aph0y25nlq0792y1lk9igh",
+          product: {
+            id: "ck7f5xygbyedh07358j7zeuaz",
+            name: "Checkered Trousers",
+            modelSize: { id: "ck9yue69akjlr0751oq7jk63y", display: "S", __typename: "Size" },
+            brand: { id: "ck7f5wsstycap0735xh2b580n", name: "Kolor", __typename: "Brand" },
+            images: [
+              {
+                id: "ckaf3b1mwtj1q078165a88kf8",
+                url:
+                  "https://seasons-s3.imgix.net/klor/checkered-trousers-blue/checkered-trousers-blue-1.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf3b1n3tj1s0781z8o25430",
+                url:
+                  "https://seasons-s3.imgix.net/klor/checkered-trousers-blue/checkered-trousers-blue-2.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf3b1natj1u0781bijoyi3s",
+                url:
+                  "https://seasons-s3.imgix.net/klor/checkered-trousers-blue/checkered-trousers-blue-3.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+              {
+                id: "ckaf3b1nhtj1w07813864fuim",
+                url:
+                  "https://seasons-s3.imgix.net/klor/checkered-trousers-blue/checkered-trousers-blue-4.png?fit=clip&fm=webp&w=416",
+                __typename: "Image",
+              },
+            ],
+            variants: [
+              {
+                id: "ck8apfai15gr00792atuh1vli",
+                reservable: 0,
+                internalSize: { id: "ck8apf9v65gnw0792fo66yx05", display: "31", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck8aph0y25nlq0792y1lk9igh",
+                reservable: 1,
+                internalSize: { id: "ck8aph09c5niu0792n5rfavnl", display: "33", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+              {
+                id: "ck8apjlcf5yqm079207pe1ixz",
+                reservable: 1,
+                internalSize: { id: "ck8apjkpy5ynx07925gvtymep", display: "34", __typename: "Size" },
+                __typename: "ProductVariant",
+              },
+            ],
+            __typename: "Product",
+          },
+          __typename: "ProductVariant",
+        },
+        saved: true,
+        __typename: "BagItem",
+      },
+    ],
+    __typename: "Me",
   },
 }

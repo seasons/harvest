@@ -1,187 +1,56 @@
-import { Box, Container, FixedBackArrow, Sans, Spacer, VariantSizes } from "App/Components"
-import { FadeInImage } from "App/Components/FadeInImage"
-import { ReadMore } from "App/Components/ReadMore"
+import { useQuery } from "@apollo/client"
+import { Container, FixedBackArrow } from "App/Components"
 import { GetBrand } from "App/generated/GetBrand"
-import { imageResize } from "App/helpers/imageResize"
-import { color, space } from "App/utils"
-import { Schema, screenTrack, useTracking } from "App/utils/track"
-import gql from "graphql-tag"
-import { get } from "lodash"
-import React, { useState } from "react"
-import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
-
-import { useQuery } from "@apollo/react-hooks"
-
-const IMAGE_HEIGHT = 240
-
-const GET_BRAND = gql`
-  query GetBrandAndProducts($brandID: ID!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!) {
-    brand(where: { id: $brandID }) {
-      id
-      name
-      basedIn
-      description
-      products(first: $first, skip: $skip, orderBy: $orderBy, where: { status: Available }) {
-        id
-        slug
-        name
-        description
-        images {
-          id
-          url
-        }
-        modelHeight
-        externalURL
-        retailPrice
-        status
-        createdAt
-        updatedAt
-        variants {
-          id
-          internalSize {
-            top {
-              letter
-            }
-            bottom {
-              type
-              value
-            }
-            productType
-            display
-          }
-          total
-          reservable
-          nonReservable
-          reserved
-          isSaved
-        }
-      }
-    }
-  }
-`
+import { Schema, screenTrack } from "App/utils/track"
+import React, { useEffect, useState } from "react"
+import { Loader } from "App/Components/Loader"
+import { GET_BRAND } from "./queries/brandQueries"
+import { BrandBottomSheet } from "./BrandBottomSheet"
+import { StatusBar } from "react-native"
+import { BrandPhotos } from "./BrandPhotos"
 
 export const Brand = screenTrack({
   entityType: Schema.EntityTypes.Brand,
 })((props: any) => {
-  const [readMoreExpanded, setReadMoreExpanded] = useState(false)
-  const tracking = useTracking()
-  const { navigation, route } = props
+  const { navigation, route, error } = props
+  const [currentImage, setCurrentImage] = useState(1)
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      StatusBar.setBarStyle("light-content")
+    })
+    return unsubscribe
+  }, [navigation])
+
   const brandID = route?.params?.id
+  if (error) {
+    console.log("error Brand.tsx: ", error)
+  }
 
   const { data, loading, fetchMore } = useQuery<GetBrand>(GET_BRAND, {
     variables: {
       brandID,
       first: 10,
       skip: 0,
-      orderBy: "createdAt_DESC",
+      orderBy: "publishedAt_DESC",
     },
   })
 
-  const products = data?.brand?.products
-  const basedIn = data?.brand?.basedIn
-  const description = data?.brand?.description
-
-  const renderItem = ({ item }, i, navigation) => {
-    const itemWidth = Dimensions.get("window").width / 2 - 2
-    const product = item
-
-    const image = get(product, "images[0]", { url: "" })
-    const resizedImage = imageResize(image.url, "thumb")
-    const isLeft = i % 2 === 0
-
-    if (!product) {
-      return null
-    }
-
-    const productName = product?.name
-
+  if (!data) {
     return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          tracking.trackEvent({
-            actionName: Schema.ActionNames.ProductTapped,
-            actionType: Schema.ActionTypes.Tap,
-            productSlug: product.slug,
-            productId: product.id,
-          })
-          navigation.navigate("Product", { id: product.id, slug: product.slug })
-        }}
-      >
-        <Box mr={isLeft ? 0.0 : "4px"} mb={0.5} width={itemWidth}>
-          <FadeInImage source={{ uri: resizedImage }} style={{ width: "100%", height: IMAGE_HEIGHT }} />
-          <Box my={0.5} mx={1}>
-            {productName && <Sans size="0">{productName}</Sans>}
-            <VariantSizes size="0" variants={product.variants} />
-          </Box>
-          <Spacer mb={0.5} />
-        </Box>
-      </TouchableWithoutFeedback>
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
     )
   }
 
+  const images = data?.brand?.images
+
   return (
-    <Container insetsBottom={false}>
-      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      <FlatList
-        ListHeaderComponent={() => (
-          <Box px={2}>
-            <Spacer mb={80} />
-            <Sans size="3" style={{ textDecorationLine: "underline" }}>
-              {data?.brand?.name}
-            </Sans>
-            {basedIn && (
-              <Sans size="2" color={color("black50")}>
-                {basedIn}
-              </Sans>
-            )}
-            {description && (
-              <>
-                <Spacer mb={3} />
-                <Sans size="2">About</Sans>
-                <Spacer mb={0.5} />
-                <ReadMore
-                  readMoreExpanded={readMoreExpanded}
-                  setReadMoreExpanded={setReadMoreExpanded}
-                  content={description}
-                  maxChars={100}
-                />
-              </>
-            )}
-            <Spacer mb={3} />
-          </Box>
-        )}
-        ListFooterComponent={() => <Spacer mb={space(2)} />}
-        data={products}
-        numColumns={2}
-        onEndReachedThreshold={0.7}
-        onEndReached={() => {
-          if (!loading) {
-            fetchMore({
-              variables: {
-                skip: products.length,
-              },
-              updateQuery: (prev, { fetchMoreResult }) => {
-                if (!prev) {
-                  return []
-                }
-
-                if (!fetchMoreResult) {
-                  return prev
-                }
-
-                return Object.assign({}, prev, {
-                  brand: {
-                    ...prev.brand,
-                    products: [...prev.brand.products, ...fetchMoreResult.brand.products],
-                  },
-                })
-              },
-            })
-          }
-        }}
-        keyExtractor={(item, index) => item.id + index}
-        renderItem={(item, i) => renderItem(item, i, navigation)}
-      />
+    <Container insetsBottom={false} insetsTop={false}>
+      <FixedBackArrow navigation={navigation} variant="whiteTransparent" />
+      <BrandPhotos images={images} currentImage={currentImage} setCurrentImage={setCurrentImage} />
+      <BrandBottomSheet data={data} loading={loading} fetchMore={fetchMore} currentImage={currentImage} />
     </Container>
   )
 })

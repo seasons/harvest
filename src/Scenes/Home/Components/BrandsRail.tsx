@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react"
-import { Box, Sans, Flex, Spacer } from "App/Components"
-import { TouchableOpacity, ScrollView } from "react-native"
-import { chunk } from "lodash"
-import { useTracking } from "react-tracking"
+import { Box, Flex, Sans, Spacer } from "App/Components"
 import { Schema } from "App/utils/track"
+import { chunk } from "lodash"
+import React, { useEffect, useState } from "react"
+import { TouchableOpacity } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
+import { useTracking } from "react-tracking"
+
 import { useNavigation } from "@react-navigation/native"
 
 interface BrandsRailProps {
@@ -25,8 +27,19 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title }) => {
     return rowGroup.map((brand) => {
       return (
         <Flex flexDirection="row" key={brand.name}>
-          <TouchableOpacity onPress={() => navigation.navigate("Brand", { id: brand?.id })}>
-            <Sans size="2" style={{ textDecorationLine: "underline" }}>
+          <TouchableOpacity
+            onPress={() => {
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.BrandTapped,
+                actionType: Schema.ActionTypes.Tap,
+                brandID: brand?.id,
+                brandSlug: brand?.slug,
+                brandName: brand?.name,
+              })
+              navigation.navigate("Brand", { id: brand.id, slug: brand.slug, name: brand.name })
+            }}
+          >
+            <Sans size="5" style={{ textDecorationLine: "underline" }}>
               {brand.name}
             </Sans>
           </TouchableOpacity>
@@ -39,7 +52,7 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title }) => {
   return (
     <Box pl={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between" pr={2}>
-        <Sans size="1">{title}</Sans>
+        <Sans size="4">{title}</Sans>
         <TouchableOpacity
           onPress={() => {
             tracking.trackEvent({
@@ -49,7 +62,7 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title }) => {
             navigation.navigate("Brands")
           }}
         >
-          <Sans size="1" style={{ textDecorationLine: "underline" }}>
+          <Sans size="4" style={{ textDecorationLine: "underline" }}>
             View all
           </Sans>
         </TouchableOpacity>

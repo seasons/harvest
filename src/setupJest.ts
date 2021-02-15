@@ -1,14 +1,16 @@
 import "./testUtils/renderUntil"
+
 import chalk from "chalk"
 import Enzyme from "enzyme"
 import Adapter from "enzyme-adapter-react-16"
 import expect from "expect"
+import { NativeModules, View } from "react-native"
 import track, { useTracking } from "react-tracking"
 // Waiting on https://github.com/thymikee/snapshot-diff/pull/17
 import diff from "snapshot-diff"
 import { format } from "util"
+
 import mockAsyncStorage from "@react-native-community/async-storage/jest/async-storage-mock"
-import { NativeModules, View } from "react-native"
 
 NativeModules.RNCNetInfo = {
   getCurrentState: jest.fn(() => Promise.resolve()),
@@ -28,6 +30,31 @@ jest.mock("react-native-share", () => ({
     PINTEREST: "pinterest",
   },
 }))
+
+jest.mock("react-native-reanimated", () => {
+  return {
+    Value: jest.fn(),
+    event: jest.fn(),
+    add: jest.fn(),
+    eq: jest.fn(),
+    set: jest.fn(),
+    cond: jest.fn(),
+    interpolate: jest.fn(),
+    View: jest.fn(),
+    Extrapolate: { CLAMP: jest.fn() },
+  }
+})
+
+jest.mock("@react-navigation/native", () => {
+  const actualNav = jest.requireActual("@react-navigation/native")
+  return {
+    ...actualNav,
+    useFocusEffect: () => jest.fn(),
+    useNavigation: () => {
+      navigation: () => jest.fn()
+    },
+  }
+})
 
 jest.doMock("reanimated-bottom-sheet", () => {
   BottomSheet: View

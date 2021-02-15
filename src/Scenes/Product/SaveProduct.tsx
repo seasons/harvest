@@ -1,28 +1,45 @@
-import { useMutation } from "@apollo/react-hooks"
+import { useMutation } from "@apollo/client"
 import React, { useState } from "react"
 import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components/native"
-import { GET_PRODUCT } from "App/Apollo/Queries"
-import { Box, Button, Container, FadeInImage, Flex, Handle, Radio, Sans, Separator, Spacer } from "App/Components"
+import { GET_PRODUCT } from "./Queries"
+import {
+  Box,
+  Button,
+  Container,
+  FadeInImage,
+  Flex,
+  Handle,
+  Radio,
+  Sans,
+  Separator,
+  Spacer,
+  FixedBackArrow,
+} from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { GetProduct_product } from "App/generated/GetProduct"
+import { GetProduct_products_largeImages } from "App/generated/GetProduct"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { sizeToName } from "./Components/VariantList"
 import { SAVE_ITEM } from "./Components/SaveProductButton"
+import { useNavigation } from "@react-navigation/native"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+import { GetBrowseProducts_products_images } from "App/generated/GetBrowseProducts"
+import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
+
+const screenWidth = Dimensions.get("window").width
 
 interface SaveProductProps {
   route: any
-  navigation: any
 }
 
-export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, navigation }) => {
-  const insets = useSafeArea()
+export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route }) => {
+  const insets = useSafeAreaInsets()
   const tracking = useTracking()
   const [selectedVariantID, setSelectedVariantID] = useState(null)
-  const product: GetProduct_product = route?.params?.product
+  const navigation = useNavigation()
+  const product = route?.params?.product
   const showPopUp = route?.params?.showPopUp
   const hidePopUp = route?.params?.hidePopUp
   const [saveItem] = useMutation(SAVE_ITEM, {
@@ -30,31 +47,36 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
       {
         query: GET_PRODUCT,
         variables: {
-          productID: product?.id,
+          where: { id: product?.id },
         },
       },
       {
         query: GET_BAG,
       },
+      {
+        query: GET_HOMEPAGE,
+        variables: { firstFitPics: 8, skipFitPics: 0 },
+      },
     ],
   })
 
   if (!product || !showPopUp || !hidePopUp) {
-    return <Loader />
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} />
+        <Loader />
+      </>
+    )
   }
 
-  const {
-    brand: { name: brandName },
-    description,
-    images,
-    name,
-    type,
-    variants,
-  } = product
+  // largeImages come from product query and images come from browse query
+  const images =
+    (product?.largeImages as GetProduct_products_largeImages[]) ||
+    (product.images as GetBrowseProducts_products_images[])
 
-  if (!type || !images || images.length === 0) {
-    return <Loader />
-  }
+  const { description, name, variants } = product
+
+  const brandName = product?.brand?.name
 
   const onSelectSize = (variantID) => {
     tracking.trackEvent({
@@ -71,16 +93,22 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
           <>
             <Spacer mt={68} />
             <Flex flexDirection="row" justifyContent="space-between">
-              <Flex flexDirection="column" justifyContent="flex-end">
-                <Sans size="1">{name}</Sans>
-                <Sans size="1" color={color("black50")}>
-                  {brandName}
-                </Sans>
+              <Flex flexDirection="column" justifyContent="flex-end" width={screenWidth - (90 + space(6))}>
+                <Sans size="4">{name}</Sans>
+                {!!brandName && (
+                  <Sans size="4" color={color("black50")}>
+                    {brandName}
+                  </Sans>
+                )}
               </Flex>
-              <ImageContainer height={112} imageWidth={90} source={{ uri: images?.[0]?.url || "" }} />
+              <ImageContainer
+                height={90 * PRODUCT_ASPECT_RATIO}
+                imageWidth={90}
+                source={{ uri: images?.[0]?.url || "" }}
+              />
             </Flex>
             <Spacer mt={20} />
-            <Sans size="1" color={color("black50")}>
+            <Sans size="4" color={color("black50")}>
               {description}
             </Sans>
             <Spacer mt={3} />
@@ -89,20 +117,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
         )
       case "Sizes":
         const renderSizeRow = (item) => {
-          const {
-            id,
-            internalSize: { bottom, top },
-            isSaved,
-          } = item
-          let sizeName
-          switch (type) {
-            case "Top":
-              sizeName = sizeToName(top?.letter)
-              break
-            case "Bottom":
-              sizeName = bottom?.value
-              break
-          }
+          const { id, displayLong, isSaved } = item
           return (
             <TouchableWithoutFeedback onPress={() => onSelectSize(id)}>
               <Box>
@@ -110,12 +125,12 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
                 <Flex flexDirection="row" justifyContent="space-between">
                   <Flex flexDirection="row">
                     <Radio selected={id === selectedVariantID} onSelect={() => onSelectSize(id)} />
-                    <Sans color={color("black100")} ml={1} size="1" weight="medium">
-                      {sizeName}
+                    <Sans color={color("black100")} ml={1} size="4" weight="medium">
+                      {displayLong}
                     </Sans>
                   </Flex>
                   {isSaved && (
-                    <Sans color={color("black50")} size="1" weight="medium">
+                    <Sans color={color("black50")} size="4" weight="medium">
                       (Saved)
                     </Sans>
                   )}
@@ -157,10 +172,9 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
         },
       },
     })
-    navigation.pop()
+    navigation.goBack()
   }
 
-  const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 39) / 2
   const buttonHeight = 48
   const sections = [{ type: "Header" }, { type: "Sizes", variants }]
@@ -185,7 +199,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
               actionName: Schema.ActionNames.SaveProductModalCancelTapped,
               actionType: Schema.ActionTypes.Tap,
             })
-            navigation.pop()
+            navigation.goBack()
           }}
         >
           Cancel
@@ -211,7 +225,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route, n
   )
 })
 
-const ImageContainer = styled(FadeInImage)`
+const ImageContainer = styled(FadeInImage)<{ imageWidth: number; height: number }>`
   background: #f6f6f6;
   height: ${(props) => props.height};
   width: ${(props) => props.imageWidth};

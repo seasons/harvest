@@ -3,11 +3,13 @@ import * as AuthContext from "App/Navigation/AuthContext"
 import { waitForLoad } from "App/testUtils/waitForLoad"
 import { mount } from "enzyme"
 import React from "react"
-import { MockedProvider } from "@apollo/react-testing"
+
+import { MockedProvider } from "@apollo/client/testing"
+
 import { Bag } from "../"
 import { GET_BAG } from "../BagQueries"
 import { BagItem } from "../Components/BagItem"
-import { BagFixture, BagFixtureWithReservation } from "./__fixtures__/BagFixture"
+import { BagFixture } from "./__fixtures__/BagFixture"
 
 const mocks = [
   {
@@ -22,23 +24,11 @@ const mocks = [
   },
 ]
 
-const mockWithReservation = [
-  {
-    request: {
-      query: GET_BAG,
-    },
-    result: {
-      data: {
-        ...BagFixtureWithReservation,
-      },
-    },
-  },
-]
-
 beforeEach(() => {
   const authContextValues = {
     signIn: () => null,
     signOut: () => null,
+    resetStore: () => null,
     userSession: null,
     authState: { authInitializing: true, isSignedIn: false, userSession: "1234" },
   }
@@ -57,19 +47,7 @@ describe("Bag", () => {
 
     expect(component).toMatchSnapshot()
     expect(component.find(BagItem).length).toEqual(3)
-    expect(component.text()).toContain("All Saints")
-  })
-
-  it("renders the FAQ button if user has a reservation", async () => {
-    const component = mount(
-      <MockedProvider mocks={mockWithReservation} addTypename={false}>
-        <Bag navigation={null} />
-      </MockedProvider>
-    )
-
-    await waitForLoad(component)
-
-    expect(component.find(FixedButton).text()).toContain("FAQ")
+    expect(component.text()).toContain("Stone Island")
   })
 
   it("renders the Reserve button if no reservation", async () => {

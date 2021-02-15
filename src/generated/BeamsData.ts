@@ -3,16 +3,25 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { UserRole } from "./globalTypes";
+
 // ====================================================
-// GraphQL mutation operation: BeamsData
+// GraphQL query operation: BeamsData
 // ====================================================
 
-export interface BeamsData_beamsData {
-  __typename: "BeamsData";
+export interface BeamsData_me_user {
+  __typename: "User";
   email: string;
   beamsToken: string;
+  roles: UserRole[];
+}
+
+export interface BeamsData_me {
+  __typename: "Me";
+  id: string;
+  user: BeamsData_me_user | null;
 }
 
 export interface BeamsData {
-  beamsData: BeamsData_beamsData;
+  me: BeamsData_me | null;
 }

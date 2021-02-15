@@ -53,14 +53,16 @@ buck-out/
 # For more information about the recommended setup visit:
 # https://docs.fastlane.tools/best-practices/source-control/
 
-*/fastlane/report.xml
-*/fastlane/Preview.html
-*/fastlane/screenshots
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/*.json
 
 # Bundle artifact
 *.jsbundle
 
 .jest/cache
 .vscode/react/
+ios/report.*.json
 
 env.json

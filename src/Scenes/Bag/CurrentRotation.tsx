@@ -1,4 +1,3 @@
-import { ACTIVE_RESERVATION } from "App/Apollo/Queries"
 import { Box, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { Container } from "Components/Container"
@@ -6,14 +5,51 @@ import { Sans } from "Components/Typography"
 import { get } from "lodash"
 import { DateTime } from "luxon"
 import React, { useEffect } from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { FlatList } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { Bag } from "./Bag"
+import gql from "graphql-tag"
 import { CurrentRotationItem } from "./Components/CurrentRotationItem"
 
+const ACTIVE_RESERVATION = gql`
+  query ActiveReservation {
+    me {
+      id
+      activeReservation {
+        id
+        shipped
+        createdAt
+        products {
+          id
+          seasonsUID
+          inventoryStatus
+          productStatus
+          productVariant {
+            id
+            size
+            product {
+              id
+              name
+              retailPrice
+              brand {
+                id
+                name
+              }
+              images(size: Thumb) {
+                id
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export const CurrentRotation = (props) => {
-  const { data, loading, refetch } = useQuery(ACTIVE_RESERVATION)
+  const { previousData, data = previousData, loading, refetch } = useQuery(ACTIVE_RESERVATION)
 
   useEffect(() => {
     refetch()
@@ -49,10 +85,10 @@ export const CurrentRotation = (props) => {
             data={activeReservation ? activeReservation.products : []}
             ListHeaderComponent={() => (
               <Box p={2}>
-                <Sans size="3" color="black">
+                <Sans size="7" color="black">
                   Current Rotation
                 </Sans>
-                <Sans size="2" color="gray">
+                <Sans size="5" color="black50">
                   Return By {returnDate}
                 </Sans>
               </Box>

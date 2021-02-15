@@ -2,6 +2,7 @@ import { config, Env } from "App/utils/config"
 import Auth0 from "react-native-auth0"
 
 import AsyncStorage from "@react-native-community/async-storage"
+import { CustomerStatus } from "App/generated/globalTypes"
 
 const auth0Domain = config.get(Env.AUTH0_DOMAIN)
 const auth0ClientId = config.get(Env.AUTH0_CLIENT_ID)
@@ -14,6 +15,17 @@ const auth0 = new Auth0({
 export interface UserSession {
   token: string
   refreshToken: string
+  user?: {
+    email: string
+    id: string
+  }
+  customer?: {
+    id: string
+    status: CustomerStatus
+    admissions: {
+      admissable?: boolean
+    }
+  }
 }
 
 export const getUserSession: () => Promise<UserSession | null> = async () => {
@@ -31,6 +43,20 @@ export const getAccessTokenFromSession = async () => {
   const userSession = await getUserSession()
   const accessToken = userSession ? userSession.token : ""
   return accessToken
+}
+
+export const userSessionToIdentifyPayload = (session) => {
+  const cust = session?.customer
+  const traits = {
+    ...session?.user,
+    status: cust?.status,
+    admissable: cust?.admissions?.admissable,
+    authorizations: cust?.admissions?.authorizationsCount,
+    state: cust?.detail?.shippingAddress?.state,
+    bagItems: cust?.bagItems?.length,
+    customerID: cust?.id,
+  }
+  return traits
 }
 
 export const getAccessTokenOrRefresh = async () => {

@@ -1,28 +1,58 @@
-import { InMemoryCache, IntrospectionFragmentMatcher } from "apollo-cache-inmemory"
-import { ApolloClient } from "apollo-client"
-import { ApolloLink, Observable } from "apollo-link"
 import { setContext } from "apollo-link-context"
 import { onError } from "apollo-link-error"
-import { HttpLink } from "apollo-link-http"
-import unfetch from "unfetch"
-import introspectionQueryResultData from "../fragmentTypes.json"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { config, Env } from "App/utils/config"
+import { isEmpty } from "lodash"
+import { Platform } from "react-native"
+
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, Observable } from "@apollo/client"
+import * as Sentry from "@sentry/react-native"
+
+import { resolvers, typeDefs } from "./resolvers"
 
 export const setupApolloClient = async () => {
-  const fragmentMatcher = new IntrospectionFragmentMatcher({
-    introspectionQueryResultData,
+  const cache = new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          fitPicsCount: {
+            read(newCount) {
+              return newCount
+            },
+          },
+          fitPics: {
+            merge(existing = [], incoming = [], { args: { skipFitPics = 0 } }) {
+              const merged = existing ? existing.slice(0) : []
+              for (let i = 0; i < incoming.length; ++i) {
+                merged[skipFitPics + i] = incoming[i]
+              }
+              existing = merged
+              return existing
+            },
+          },
+          productsConnection: {
+            merge(existing = {}, incoming = {}, { args: { skip = 0 } }) {
+              let mergedEdges = !isEmpty(existing) ? existing?.edges?.slice(0) : []
+              if (incoming?.edges?.length > 0) {
+                for (let i = 0; i < incoming?.edges?.length; ++i) {
+                  mergedEdges[skip + i] = incoming?.edges?.[i]
+                }
+              }
+              return { ...existing, ...incoming, edges: mergedEdges }
+            },
+          },
+        },
+      },
+    },
   })
 
-  const cache = new InMemoryCache({ fragmentMatcher })
+  const httpLink = new HttpLink({
+    uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/", // Server URL (must be absolute)
+  }) as any
 
-  const link = new HttpLink({
-    uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/",
-    // FIXME: unfetch here is being used for this fix https://github.com/jhen0409/react-native-debugger/issues/432
-    fetch: unfetch,
-  })
+  const authLink = setContext(async (_, { headers: oldHeaders }) => {
+    const headers = { ...oldHeaders, application: "harvest", platform: Platform.OS }
 
-  const authLink = setContext(async (_, { headers }) => {
     // get the authentication token from local storage if it exists
     const accessToken = await getAccessTokenFromSession()
     if (accessToken) {
@@ -37,14 +67,40 @@ export const setupApolloClient = async () => {
         headers,
       }
     }
-    // return the headers to the context so httpLink can read them
+    // return the headers to the context so createUploadLink can read them
   })
 
-  const errorLink = onError(({ networkError, operation, forward }) => {
+  // @ts-ignore
+  const errorLink = onError(({ graphQLErrors, networkError, operation, forward, response }) => {
+    if (graphQLErrors) {
+      console.log("graphQLErrors", graphQLErrors)
+
+      for (const err of graphQLErrors) {
+        // Add scoped report details and send to Sentry
+        Sentry.withScope((scope) => {
+          // Annotate whether failing operation was query/mutation/subscription
+          scope.setTag("kind", operation.operationName)
+          // Log query and variables as extras
+          // (make sure to strip out sensitive data!)
+          scope.setExtra("query", operation.query)
+          scope.setExtra("variables", operation.variables)
+          if (err.path) {
+            // We can also add the path as breadcrumb
+            scope.addBreadcrumb({
+              category: "query-path",
+              message: err.path.join(" > "),
+              level: Sentry.Severity.Debug,
+            })
+          }
+          Sentry.captureException(err)
+        })
+      }
+    }
+
     if (networkError) {
-      console.log("networkError", networkError)
+      console.log("networkError", JSON.stringify(networkError))
       // User access token has expired
-      if (networkError.statusCode === 401) {
+      if ((networkError as any).statusCode === 401) {
         // We assume we have both tokens needed to run the async request
         // Let's refresh token through async request
         return new Observable((observer) => {
@@ -80,9 +136,10 @@ export const setupApolloClient = async () => {
 
   return new ApolloClient({
     // Provide required constructor fields
+    link: ApolloLink.from([authLink, errorLink, httpLink]) as any,
+    typeDefs,
+    resolvers,
     cache,
-    // link: authLink.concat(link),
-    link: ApolloLink.from([authLink, errorLink, link]),
     // Provide some optional constructor fields
     name: "react-web-client",
     version: "1.3",

@@ -1,20 +1,19 @@
 import { Box, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
 import { Schema, useTracking } from "App/utils/track"
-import { get, head } from "lodash"
+import { head } from "lodash"
 import React from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 interface ReservationItemProps {
   bagItem: any
   index?: number
-  sectionHeight: number
   navigation?: any
 }
 
-export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index, sectionHeight, navigation }) => {
+export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index, navigation }) => {
   const tracking = useTracking()
   const product = bagItem?.productVariant?.product
   const variantToUse = head(
@@ -24,8 +23,8 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
     return null
   }
 
-  const imageURL = imageResize(get(product, "images[0].url"), "thumb")
-  const variantSize = get(variantToUse, "internalSize.display")
+  const imageURL = product?.images?.[0]?.url
+  const variantSize = variantToUse?.displayLong?.toLowerCase()
 
   return (
     <Box key={product.id}>
@@ -36,6 +35,7 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
             actionType: Schema.ActionTypes.Tap,
             productSlug: product.slug,
             productId: product.id,
+            productName: product.name,
           })
           navigation?.navigate("Product", { id: product.id, slug: product.slug })
         }}
@@ -43,13 +43,13 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
         <ReservationItemContainer flexDirection="row">
           <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
             <Box>
-              <Sans size="2">{index + 1}</Sans>
-              <Sans size="2">{product.brand.name}</Sans>
-              <Sans size="2" color="black50">
+              <Sans size="4">{index + 1}</Sans>
+              <Sans size="4">{product.brand.name}</Sans>
+              <Sans size="4" color="black50">
                 {product.name}
               </Sans>
               {!!variantSize && (
-                <Sans size="2" color="black50">
+                <Sans size="4" color="black50">
                   Size {variantSize}
                 </Sans>
               )}
@@ -58,7 +58,7 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
             {!!imageURL && (
               <FadeInImage
-                style={{ height: sectionHeight, width: 170 }}
+                style={{ height: 170 * PRODUCT_ASPECT_RATIO, width: 170 }}
                 resizeMode="contain"
                 source={{ uri: imageURL }}
               />
@@ -70,9 +70,8 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
   )
 }
 
-const ReservationItemContainer = styled(Box)`
+const ReservationItemContainer = styled(Flex)`
   background: white;
-  border-radius: 8px;
   overflow: hidden;
   height: 210px;
 `

@@ -1,32 +1,56 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
+import { ExtendPauseConfirmation, PauseConfirmation, ResumeConfirmation } from "App/Components/Pause"
+import { PauseModal } from "App/Components/Pause/PauseModal"
 import { Schema } from "App/Navigation"
-import { Account, EditPaymentAndShipping, PaymentAndShipping } from "App/Scenes/Account"
+import {
+  Account,
+  EditMeasurements,
+  EditPaymentAndShipping,
+  EditShippingAddress,
+  EditStylePreferences,
+  PaymentAndShipping,
+} from "App/Scenes/Account"
+import { InviteFromContacts } from "App/Scenes/Account/InviteFriends"
+import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
+import { EditCreditCard } from "App/Scenes/Account/PaymentAndShipping/EditCreditCard"
+import { EditPaymentMethod } from "App/Scenes/Account/PaymentAndShipping/EditPaymentMethod"
+import { InvoiceDetail } from "App/Scenes/Account/PaymentAndShipping/InvoiceDetail"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
+import { SurpriseMe } from "App/Scenes/Bag/SurpriseMe"
 import { Brand } from "App/Scenes/Brand"
 import { Brands } from "App/Scenes/Brands"
 import { Browse, Filters } from "App/Scenes/Browse"
+import { CollectionScene } from "App/Scenes/Collection"
+import { CreateAccount } from "App/Scenes/CreateAccount"
+import { ApplyPromoCode } from "App/Scenes/CreateAccount/Admitted/ApplyPromoCode/ApplyPromoCode"
 import { DebugMenu } from "App/Scenes/DebugMenu"
 import { Faq } from "App/Scenes/Faq"
+import { FitPicConfirmation, FitPicDetail, ShareFitPicToIG } from "App/Scenes/FitPic"
 import { Home } from "App/Scenes/Home"
+import { Order, OrderConfirmation } from "App/Scenes/Order"
 import { Product, SaveProduct } from "App/Scenes/Product"
 import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
-import { Reservation, ReservationConfirmation } from "App/Scenes/Reservation"
+import { ReferralView } from "App/Scenes/ReferralView"
+import { Reservation, ReservationConfirmation, ShareReservationToIG } from "App/Scenes/Reservation"
 import {
   ReservationFeedback,
   ReservationFeedbackConfirmation,
   ReservationFeedbackFinish,
 } from "App/Scenes/ReservationFeedback"
 import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn } from "App/Scenes/SignIn"
+import { Tag } from "App/Scenes/Tag"
 import { Webview } from "App/Scenes/Webview"
 import { color } from "App/utils"
 import React from "react"
+import { createSharedElementStackNavigator } from "react-navigation-shared-element"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
+import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 import { NavBar } from "./NavBar"
 
-const HomeStack = createStackNavigator()
+const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
 const AccountStack = createStackNavigator()
 const BrowseStack = createStackNavigator()
@@ -94,9 +118,15 @@ const ModalStackScreen = () => {
       }}
     >
       <ModalStack.Screen name={Schema.PageNames.FiltersModal} component={Filters} />
+      <ModalStack.Screen name={Schema.PageNames.UpdatePaymentPlanModal} component={UpdatePaymentPlanModal} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordModal} component={ResetPassword} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
       <ModalStack.Screen name={Schema.PageNames.SignInModal} component={SignIn} />
+      <ModalStack.Screen name={Schema.PageNames.CreateAccountModal} component={CreateAccount} />
+      <ModalStack.Screen name={Schema.PageNames.SurpriseMe} component={SurpriseMe} />
+      <ModalStack.Screen name={Schema.PageNames.EditShippingAddress} component={EditShippingAddress} />
+      <ModalStack.Screen name={Schema.PageNames.EditStylePreferences} component={EditStylePreferences} />
+      <ModalStack.Screen name={Schema.PageNames.EditMeasurements} component={EditMeasurements} />
       <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackModal} component={ReservationFeedback} />
       <ModalStack.Screen
         name={Schema.PageNames.ReservationFeedbackConfirmationModal}
@@ -106,6 +136,14 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.AllowNotificationsModal} component={AllowNotifications} />
       <ModalStack.Screen name={Schema.PageNames.SaveProductModal} component={SaveProduct} />
       <ModalStack.Screen name={Schema.PageNames.DebugMenu} component={DebugMenu} />
+      <ModalStack.Screen name={Schema.PageNames.ResumeConfirmation} component={ResumeConfirmation} />
+      <ModalStack.Screen name={Schema.PageNames.PauseConfirmation} component={PauseConfirmation} />
+      <ModalStack.Screen name={Schema.PageNames.ExtendPauseConfirmation} component={ExtendPauseConfirmation} />
+      <ModalStack.Screen name={Schema.PageNames.ApplyPromoCode} component={ApplyPromoCode} />
+      <ModalStack.Screen name={Schema.PageNames.InviteFromContactsModal} component={InviteFromContacts} />
+      <ModalStack.Screen name={Schema.PageNames.ShareReservationToIGModal} component={ShareReservationToIG} />
+      <ModalStack.Screen name={Schema.PageNames.ShareFitPicToIGModal} component={ShareFitPicToIG} />
+      <ModalStack.Screen name={Schema.PageNames.PauseModal} component={PauseModal} />
     </ModalStack.Navigator>
   )
 }
@@ -116,8 +154,28 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name={Schema.PageNames.Home} component={Home} />
       <HomeStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
       <HomeStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
+      <HomeStack.Screen
+        name={Schema.PageNames.Collection}
+        component={CollectionScene}
+        initialParams={{ collectionSlug: "" }}
+      />
+      <HomeStack.Screen name={Schema.PageNames.Tag} component={Tag} />
       <HomeStack.Screen name={Schema.PageNames.Brands} component={Brands} />
       <HomeStack.Screen name={Schema.PageNames.Webview} component={Webview} />
+      <HomeStack.Screen name={Schema.PageNames.ReferralView} component={ReferralView} />
+      <HomeStack.Screen name={Schema.PageNames.FitPicConfirmation} component={FitPicConfirmation} />
+      <HomeStack.Screen name={Schema.PageNames.Order} component={Order} />
+      <HomeStack.Screen name={Schema.PageNames.OrderConfirmation} component={OrderConfirmation} />
+      <HomeStack.Screen
+        name={Schema.PageNames.FitPicDetail}
+        component={FitPicDetail}
+        sharedElements={(route, otherRoute) => {
+          if (otherRoute.name === Schema.PageNames.Home) {
+            const { item } = route.params as { item: FitPic }
+            return item ? [`fitpic.photo.${item.id}`] : []
+          }
+        }}
+      />
     </HomeStack.Navigator>
   )
 }
@@ -125,7 +183,11 @@ const HomeStackScreen = () => {
 const BrowseStackScreen = () => {
   return (
     <BrowseStack.Navigator initialRouteName={Schema.PageNames.Browse} screenOptions={{ ...defaultOptions }}>
-      <BrowseStack.Screen name={Schema.PageNames.Browse} component={Browse} initialParams={{ sizeFilters: [] }} />
+      <BrowseStack.Screen
+        name={Schema.PageNames.Browse}
+        component={Browse}
+        initialParams={{ sizeFilters: [], categorySlug: "" }}
+      />
       <BrowseStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
       <BrowseStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
     </BrowseStack.Navigator>
@@ -138,11 +200,14 @@ const BagStackScreen = () => {
       <BagStack.Screen name={Schema.PageNames.Bag} component={Bag} />
       <BagStack.Screen name={Schema.PageNames.Webview} component={Webview} />
       <BagStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
-      <BrowseStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
+      <BagStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
       <BagStack.Screen name={Schema.PageNames.CurrentRotation} component={CurrentRotation} />
       <BagStack.Screen name={Schema.PageNames.Faq} component={Faq} />
+      <BagStack.Screen name={Schema.PageNames.ReferralView} component={ReferralView} />
       <BagStack.Screen name={Schema.PageNames.Reservation} component={Reservation} />
       <BagStack.Screen name={Schema.PageNames.ReservationConfirmation} component={ReservationConfirmation} />
+      <BagStack.Screen name={Schema.PageNames.Order} component={Order} />
+      <BagStack.Screen name={Schema.PageNames.OrderConfirmation} component={OrderConfirmation} />
     </BagStack.Navigator>
   )
 }
@@ -153,6 +218,7 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name={Schema.PageNames.Account} component={Account} />
       <AccountStack.Screen name={Schema.PageNames.MembershipInfo} component={MembershipInfo} />
       <AccountStack.Screen name={Schema.PageNames.PaymentAndShipping} component={PaymentAndShipping} />
+      <AccountStack.Screen name={Schema.PageNames.InvoiceDetail} component={InvoiceDetail} />
       <AccountStack.Screen name={Schema.PageNames.EditPaymentAndShipping} component={EditPaymentAndShipping} />
       <AccountStack.Screen name={Schema.PageNames.PersonalPreferences} component={PersonalPreferences} />
       <AccountStack.Screen name={Schema.PageNames.Webview} component={Webview} />
@@ -161,6 +227,9 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name={Schema.PageNames.ProductRequestConfirmation} component={ProductRequestConfirmation} />
       <AccountStack.Screen name={Schema.PageNames.ProductRequestGallery} component={ProductRequestGallery} />
       <AccountStack.Screen name={Schema.PageNames.Faq} component={Faq} />
+      <AccountStack.Screen name={Schema.PageNames.ReferralView} component={ReferralView} />
+      <AccountStack.Screen name={Schema.PageNames.EditPaymentMethod} component={EditPaymentMethod} />
+      <AccountStack.Screen name={Schema.PageNames.EditCreditCard} component={EditCreditCard} />
     </AccountStack.Navigator>
   )
 }

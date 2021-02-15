@@ -1,20 +1,49 @@
 import gql from "graphql-tag"
 import React from "react"
-import { useQuery } from "react-apollo"
+import { useQuery } from "@apollo/client"
 import { ScrollView } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
-import { Box, ContactUsButton, Container, FixedBackArrow, Sans, Separator, Spacer } from "App/Components"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Box, Button, Container, FixedBackArrow, Sans, SectionHeader, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { MembershipCard } from "./Components"
+import { PauseButtons } from "App/Components/Pause"
+import { Schema } from "App/Navigation"
 
-const GET_MEMBERSHIP_INFO = gql`
+export const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
     me {
+      id
       customer {
         id
-        plan
+        status
+        invoices {
+          id
+          subscriptionId
+          dueDate
+        }
+        membership {
+          id
+          subscriptionId
+          pauseRequests(orderBy: createdAt_DESC) {
+            id
+            resumeDate
+            pauseDate
+            pausePending
+          }
+          subscription {
+            id
+            nextBillingAt
+          }
+          plan {
+            id
+            price
+            description
+            itemCount
+            pauseWithItemsPrice
+          }
+        }
       }
       user {
         id
@@ -26,98 +55,76 @@ const GET_MEMBERSHIP_INFO = gql`
 `
 
 export const MembershipInfo = screenTrack()(({ navigation }) => {
-  const insets = useSafeArea()
-  const { loading, data } = useQuery(GET_MEMBERSHIP_INFO)
-
-  const plan = data?.me?.customer?.plan
+  const insets = useSafeAreaInsets()
+  const { previousData, data = previousData } = useQuery(GET_MEMBERSHIP_INFO)
+  const customer = data?.me?.customer
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
-  let planInfo = null
+  const plan = customer?.membership?.plan
 
-  if (plan === "Essential") {
-    planInfo = {
-      planName: plan,
-      price: "155",
-      whatsIncluded: [
-        "3 pieces per month",
-        "Swap out 1, 2 or all 3 pieces per month",
-        "Free shipping, returns & dry cleaning",
-        "Insurance included",
-      ],
-    }
-  } else if (plan === "AllAccess") {
-    planInfo = {
-      planName: "All Access",
-      price: "195",
-      whatsIncluded: [
-        "3 pieces at a time",
-        "Unlimited swaps. 1, 2 or all 3 pieces at a time",
-        "Free shipping, returns & dry cleaning",
-        "Insurance included",
-      ],
-    }
+  const itemCount = plan?.itemCount
+
+  if (!plan) {
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
   }
 
-  if (loading || !planInfo) {
-    return <Loader />
-  }
+  const whatsIncluded = plan?.description?.split("\n")
+
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <ScrollView>
         <Box px={2} pb={insets.bottom}>
           <Spacer mb={80} />
-          <Sans size="3">Membership info</Sans>
+          <Sans size="7">Membership info</Sans>
           <Spacer mb={3} />
-          <MembershipCard memberName={`${firstName} ${lastName}`} planName={planInfo?.planName} />
+          <MembershipCard memberName={`${firstName} ${lastName}`} />
           <Spacer mb={4} />
-          {!!planInfo?.price && (
+          {!!plan?.price && (
             <>
-              <Sans size="1">What you pay</Sans>
-              <Spacer mb={12} />
-              <Separator />
+              <SectionHeader title="What you pay" />
               <Spacer mb={1} />
-              <Sans size="1" color={color("black50")}>
-                {`$${planInfo.price}`} / per month
+              <Sans size="4" color={color("black50")}>
+                {`${itemCount} items, $${plan.price / 100}`} / per month
               </Sans>
             </>
           )}
-          {!!planInfo?.whatsIncluded && (
+          {!!whatsIncluded && (
             <>
               <Spacer mb={4} />
-              <Sans size="1">Whats included</Sans>
-              <Spacer mb={12} />
-              <Separator />
-              {planInfo.whatsIncluded.map((text) => (
+              <SectionHeader title="Whats included" />
+              <Spacer mb={1} />
+              {whatsIncluded.map((text) => (
                 <Box key={text}>
                   <Spacer mb={1} />
-                  <Sans size="1" color={color("black50")}>
-                    {text}
+                  <Sans size="4" color={color("black50")}>
+                    {text.trim()}
                   </Sans>
                 </Box>
               ))}
             </>
           )}
           <Spacer mb={4} />
-          <Sans size="1">Upgrade your plan</Sans>
-          <Spacer mb={12} />
-          <Separator />
-          <Spacer mb={1} />
-          <Sans size="1" color={color("black50")}>
-            Interested in upgrading or downgrading your current plan? Contact us below.
-          </Sans>
+          <SectionHeader title="Change your plan" />
+          <Spacer mb={2} />
+          <Button
+            variant="secondaryWhite"
+            onPress={() => navigation.navigate("Modal", { screen: Schema.PageNames.UpdatePaymentPlanModal })}
+            block
+          >
+            View membership options
+          </Button>
           <Spacer mb={4} />
-          <Sans size="1">Pause or cancel</Sans>
-          <Spacer mb={12} />
-          <Separator />
-          <Spacer mb={1} />
-          <Sans size="1" color={color("black50")}>
-            If you’d like to pause or cancel your Seasons membership, contact us below.
-          </Sans>
-          <Spacer mb={88} />
+          <SectionHeader title="Pause or cancel" />
+          <Spacer mb={2} />
+          <PauseButtons customer={customer} />
         </Box>
       </ScrollView>
-      <ContactUsButton subject="Membership" />
     </Container>
   )
 })

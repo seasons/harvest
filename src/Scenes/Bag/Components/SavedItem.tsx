@@ -1,54 +1,75 @@
-import { Box, Flex, Sans, Button, Separator, Spacer } from "App/Components"
+import { Box, Button, Flex, Sans, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
-import { get, head } from "lodash"
-import React, { useState } from "react"
-import { TouchableWithoutFeedback } from "react-native"
-import styled from "styled-components/native"
+import { Spinner } from "App/Components/Spinner"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
-import { useMutation } from "react-apollo"
+import { CheckCircled } from "Assets/svgs"
+import React, { useState } from "react"
+import { useMutation } from "@apollo/client"
+import { TouchableWithoutFeedback } from "react-native"
+import styled from "styled-components/native"
+import * as Sentry from "@sentry/react-native"
 import { ADD_TO_BAG, GET_BAG } from "../BagQueries"
-import { GreenCheck } from "Assets/svgs"
-import { Spinner } from "App/Components/Spinner"
-import { Variant } from "App/Scenes/Product/Components/VariantList"
+import {
+  GetBagAndSavedItems_me_bag_productVariant_product,
+  GetBagAndSavedItems_me_bag_productVariant_product_variants,
+} from "App/generated/GetBagAndSavedItems"
+import { ListCheck } from "Assets/svgs/ListCheck"
+import { GET_PRODUCT } from "App/Scenes/Product/Queries"
+import { UPSERT_RESTOCK_NOTIF } from "App/Scenes/Product/Product"
 
 interface BagItemProps {
   bagIsFull: boolean
   hasActiveReservation: boolean
-  bagItem: any
-  sectionHeight: number
   navigation?: any
-  removeItemFromBag?: Function
+  product: GetBagAndSavedItems_me_bag_productVariant_product
+  variantToUse: GetBagAndSavedItems_me_bag_productVariant_product_variants
 }
 
 export const SavedItem: React.FC<BagItemProps> = ({
   bagIsFull,
-  bagItem,
-  sectionHeight,
+  variantToUse,
+  product,
   navigation,
-  removeItemFromBag,
   hasActiveReservation,
 }) => {
   const [isMutating, setIsMutating] = useState(false)
   const [addingToBag, setAddingToBag] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
-  if (!bagItem) {
-    return null
-  }
-  const variantToUse: Variant = head(
-    (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
-  )
-  const product = get(bagItem, "productVariant.product")
-  if (!product) {
-    return null
-  }
 
-  const imageURL = imageResize(get(product, "images[0].url"), "thumb")
-  const variantSize = variantToUse?.internalSize?.display
-  const reservable = variantToUse?.reservable
+  const imageURL = product?.images?.[0]?.url || ""
+  const variantSize = variantToUse?.displayLong?.toLowerCase()
+  const reservable = variantToUse?.reservable > 0
+  const hasRestockNotification = variantToUse?.hasRestockNotification
+
+  const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
+    variables: {
+      variantID: variantToUse.id,
+      shouldNotify: !hasRestockNotification,
+    },
+    refetchQueries: [
+      {
+        query: GET_PRODUCT,
+        variables: {
+          where: {
+            id: product.id,
+            slug: product.slug,
+          },
+        },
+      },
+    ],
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: (e) => {
+      console.log("error", e)
+      Sentry.captureException(JSON.stringify(e))
+      setIsMutating(false)
+    },
+  })
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
@@ -64,7 +85,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
       setAddingToBag(false)
       if (bagIsFull) {
         showPopUp({
-          icon: <GreenCheck />,
+          icon: <CheckCircled />,
           title: "Added to bag",
           note: "Your bag is full. Place your reservation from the bag tab.",
           buttonText: "Got It",
@@ -76,113 +97,110 @@ export const SavedItem: React.FC<BagItemProps> = ({
       setIsMutating(false)
       setAddingToBag(false)
       if (err && err.graphQLErrors) {
-        showPopUp({
-          title: "Your bag is full",
-          note: "Remove one or more items from your bag to continue adding this item.",
-          buttonText: "Got It",
-          onClose: () => hidePopUp(),
-        })
+        if (err.graphQLErrors?.[0]?.message?.includes("Bag is full")) {
+          showPopUp({
+            title: "Your bag is full",
+            note: "Remove one or more items from your bag to continue adding this item.",
+            buttonText: "Got It",
+            onClose: () => hidePopUp(),
+          })
+        } else {
+          Sentry.captureException(err)
+          console.log("err SavedItem.tsx", err)
+          showPopUp({
+            title: "Oops!",
+            note: "There was a problem adding your item to your bag.",
+            buttonText: "Got It",
+            onClose: () => hidePopUp(),
+          })
+        }
       }
     },
   })
 
+  const onAddToBag = () => {
+    if (!isMutating || !addingToBag) {
+      setAddingToBag(true)
+      addToBag()
+      tracking.trackEvent({
+        actionName: Schema.ActionNames.SavedItemAddedToBag,
+        actionType: Schema.ActionTypes.Tap,
+        productSlug: product.slug,
+        productId: product.id,
+        variantId: variantToUse.id,
+      })
+    }
+  }
+
+  const onNotifyMe = () => {
+    if (!isMutating) {
+      setIsMutating(true)
+      upsertRestockNotification()
+      tracking.trackEvent({
+        actionName: Schema.ActionNames.NotifyMeTapped,
+        actionType: Schema.ActionTypes.Tap,
+        productSlug: product.slug,
+        productId: product.id,
+        variantId: variantToUse.id,
+        shouldNotify: !hasRestockNotification,
+      })
+    }
+  }
+
   return (
-    <Box py={1} key={product.id}>
+    <Box key={product.id} width="100%">
       <TouchableWithoutFeedback
-        onPress={() => (navigation ? navigation.navigate("Product", { id: product.id, slug: product.slug }) : null)}
+        onPress={() => {
+          navigation ? navigation.navigate("Product", { id: product.id, slug: product.slug, name: product.name }) : null
+        }}
       >
         <BagItemContainer flexDirection="row" px={2}>
           <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
             <Box>
-              <Sans size="1">{product.brand.name}</Sans>
-              <Sans size="1" color={color("black50")}>
+              <Sans size="4">{product.brand.name}</Sans>
+              <Sans size="4" color={color("black50")}>
                 {product.name}
               </Sans>
-              <Sans size="1" color={color("black50")}>
+              <Sans size="4" color={color("black50")}>
                 Size {variantSize}
               </Sans>
               <Spacer mb={3} />
 
               <Flex flexDirection="row" alignItems="center">
                 <ColoredDot reservable={reservable} />
-                {!!reservable ? (
-                  <>
-                    {!hasActiveReservation ? (
-                      <>
-                        <Sans
-                          size="1"
-                          style={{ textDecorationLine: "underline" }}
-                          onPress={() => {
-                            if (!addingToBag) {
-                              setAddingToBag(true)
-                              addToBag()
-                              tracking.trackEvent({
-                                actionName: Schema.ActionNames.SavedItemAddedToBag,
-                                actionType: Schema.ActionTypes.Tap,
-                                productSlug: product.slug,
-                                productId: product.id,
-                                variantId: variantToUse.id,
-                              })
-                            }
-                          }}
-                        >
-                          {"  "}Add to bag
-                        </Sans>
-                      </>
-                    ) : (
-                      <Sans size="1" color="black50">
-                        {"  "}Available
-                      </Sans>
-                    )}
-                  </>
-                ) : (
-                  <Sans size="1" color="black50">
-                    {"  "}Unavailable
-                  </Sans>
-                )}
+                <Spacer mr={1} />
+                <Sans size="4" color="black50">
+                  {reservable ? "Available" : "Unavailable"}
+                </Sans>
               </Flex>
             </Box>
-            <Button
-              onPress={() => {
-                setIsMutating(true)
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.BagItemRemoved,
-                  actionType: Schema.ActionTypes.Tap,
-                  productSlug: product.slug,
-                  productId: product.id,
-                  variantId: variantToUse.id,
-                })
-                removeItemFromBag({
-                  variables: {
-                    id: variantToUse.id,
-                    saved: true,
-                  },
-                })
-              }}
-              variant="secondaryWhite"
-              size="small"
-              disabled={isMutating || addingToBag}
-              loading={isMutating}
-            >
-              Remove
-            </Button>
+            {(!hasActiveReservation || !reservable) && (
+              <Button
+                onPress={() => {
+                  reservable ? onAddToBag() : onNotifyMe()
+                }}
+                variant="secondaryWhite"
+                size="small"
+                Icon={!reservable && hasRestockNotification ? ListCheck : null}
+                disabled={isMutating || addingToBag}
+                loading={addingToBag}
+              >
+                {reservable ? "Add to bag" : "Notify me"}
+              </Button>
+            )}
           </Flex>
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
             {!!imageURL && (
-              <ImageWrapper>
-                <ImageContainer
-                  radius
-                  style={{ height: sectionHeight, width: 170 }}
-                  resizeMode="contain"
-                  source={{ uri: imageURL }}
-                />
-              </ImageWrapper>
+              <ImageContainer
+                style={{ height: 170 * PRODUCT_ASPECT_RATIO, width: 170 }}
+                resizeMode="contain"
+                source={{ uri: imageURL }}
+              />
             )}
           </Flex>
         </BagItemContainer>
       </TouchableWithoutFeedback>
       <Spacer mb={2} />
-      <Separator color={color("black10")} />
       {addingToBag && (
         <Overlay>
           <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
@@ -204,7 +222,7 @@ const Overlay = styled(Box)`
   background-color: rgba(255, 255, 255, 0.5);
 `
 
-const BagItemContainer = styled(Box)`
+const BagItemContainer = styled(Flex)`
   overflow: hidden;
   height: 210px;
 `
@@ -213,14 +231,9 @@ const ImageContainer = styled(FadeInImage)`
   height: 214;
 `
 
-const ImageWrapper = styled(FadeInImage)`
-  border-radius: 30px;
-  overflow: hidden;
-`
-
-const ColoredDot = styled(Box)`
-  height: 10;
-  width: 10;
+const ColoredDot = styled(Box)<{ reservable: boolean }>`
+  height: 8;
+  width: 8;
   background-color: ${(p) => (!!p.reservable ? color("green100") : color("black50"))};
-  border-radius: 100;
+  border-radius: 4;
 `

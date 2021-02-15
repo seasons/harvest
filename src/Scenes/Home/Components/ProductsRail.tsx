@@ -1,14 +1,15 @@
-import React, { useState } from "react"
-import { Box, Sans, Spacer, VariantSizes, Flex } from "App/Components"
-import { FlatList, TouchableWithoutFeedback, Dimensions, TouchableOpacity } from "react-native"
-import { space } from "App/utils"
-import * as Animatable from "react-native-animatable"
+import { Box, Flex, Sans, Spacer, VariantSizes } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
-import { Homepage_homepage_sections_results_Product, Homepage_homepage_sections_results } from "App/generated/Homepage"
-import { useTracking, Schema } from "App/utils/track"
-import { useNavigation } from "@react-navigation/native"
+import { Homepage_homepage_sections_results, Homepage_homepage_sections_results_Product } from "App/generated/Homepage"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+import { space } from "App/utils"
+import { Schema, useTracking } from "App/utils/track"
+import React, { useState } from "react"
+import { Dimensions, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
+import * as Animatable from "react-native-animatable"
+import { FlatList } from "react-native-gesture-handler"
+
+import { useNavigation } from "@react-navigation/native"
 
 export const ProductsRail: React.FC<{
   items: Homepage_homepage_sections_results[]
@@ -40,14 +41,18 @@ export const ProductsRail: React.FC<{
     }
   }
 
+  if (!items.length) {
+    return null
+  }
+
   return (
     <Box mb={3} pl={2}>
       <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-        <Sans size="1">{title}</Sans>
+        <Sans size="4">{title}</Sans>
         {onViewAll && (
           <TouchableOpacity onPress={onViewAll}>
             <Box px={2}>
-              <Sans size="1" style={{ textDecorationLine: "underline" }}>
+              <Sans size="4" style={{ textDecorationLine: "underline" }}>
                 View all
               </Sans>
             </Box>
@@ -58,22 +63,21 @@ export const ProductsRail: React.FC<{
       <FlatList
         data={items}
         renderItem={({ item }: { item: Homepage_homepage_sections_results_Product; index: number }) => {
-          const image = item?.images?.[0]
-          const resizedImage = image && imageResize(image?.url, large ? "small" : "thumb")
+          const image = item?.images?.[0]?.url
           const brandName = item.brand && item.brand.name
           return (
             <Animatable.View animation="fadeIn" duration={300}>
               <TouchableWithoutFeedback
-                onPress={() => navigation.navigate("Product", { id: item.id, slug: item.slug })}
+                onPress={() => navigation.navigate("Product", { id: item.id, slug: item.slug, name: item.name })}
               >
                 <Box mr={0.5} style={{ width: slideWidth }}>
                   <FadeInImage
-                    source={{ uri: resizedImage }}
+                    source={{ uri: image }}
                     style={{ width: slideWidth, height: slideWidth * PRODUCT_ASPECT_RATIO }}
                   />
                   <Spacer mb={0.5} />
-                  {!!brandName && <Sans size="0">{brandName}</Sans>}
-                  {item.variants && <VariantSizes size="0" variants={item.variants} />}
+                  {!!brandName && <Sans size="2">{brandName}</Sans>}
+                  {item.variants && <VariantSizes size="2" variants={item.variants} />}
                 </Box>
               </TouchableWithoutFeedback>
             </Animatable.View>

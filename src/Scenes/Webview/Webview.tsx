@@ -6,18 +6,19 @@ import Share from "react-native-share"
 import { Platform } from "react-native"
 import styled from "styled-components/native"
 import { useTracking, Schema, screenTrack } from "App/utils/track"
-import { useInterval } from "App/utils/hooks/useInterval"
+import { animated, useSpring } from "react-spring"
 import { color } from "App/utils"
+import { WebViewProgressEvent } from "react-native-webview/lib/WebViewTypes"
 
 export const WebviewComponent = screenTrack()(({ navigation, route }) => {
   const [loadProgress, setLoadProgress] = useState(5)
+  const [showLoadBar, setShowLoadBar] = useState(true)
+  const loadProgressAnimation = useSpring({
+    width: loadProgress + "%",
+    opacity: showLoadBar ? 1 : 0,
+  })
   const tracking = useTracking()
   const uri = route?.params?.uri || ""
-  useInterval(() => {
-    if (loadProgress < 100 && loadProgress != 0) {
-      setLoadProgress(loadProgress + 5)
-    }
-  }, 300)
 
   const url = uri
   const options = Platform.select({
@@ -37,11 +38,14 @@ export const WebviewComponent = screenTrack()(({ navigation, route }) => {
     },
   })
 
+  const onLoadProgress = (event: WebViewProgressEvent) => {
+    setLoadProgress(event.nativeEvent.progress * 100)
+  }
+
   const onLoaded = () => {
-    setLoadProgress(100)
     setTimeout(() => {
-      setLoadProgress(0)
-    }, 200)
+      setShowLoadBar(false)
+    }, 100)
   }
 
   const share = () => {
@@ -70,24 +74,25 @@ export const WebviewComponent = screenTrack()(({ navigation, route }) => {
       >
         <TouchableOpacity onPress={share}>
           <Box px={2}>
-            <Sans size="1">Share</Sans>
+            <Sans size="4">Share</Sans>
           </Box>
         </TouchableOpacity>
-        <LoadBar loadProgress={loadProgress} />
+        <AnimatedLoadBar opacity={loadProgressAnimation.opacity} width={loadProgressAnimation.width} />
       </Flex>
       <Separator />
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      <WebView source={{ uri }} onLoad={onLoaded} />
+      <WebView source={{ uri }} onLoadProgress={onLoadProgress} onLoad={onLoaded} />
     </Container>
   )
 })
 
-const LoadBar = styled(Box)<{ loadProgress: string }>`
+const LoadBar = styled(Box)<{ loadProgress: string; opacity: number }>`
   position: absolute;
   z-index: 100;
   bottom: 0;
   left: 0;
   height: 4;
-  width: ${(p) => p.loadProgress + "%"};
   background-color: ${color("black100")};
 `
+
+const AnimatedLoadBar = animated(LoadBar)

@@ -16,7 +16,8 @@
       "Assets/*": ["assets/*"],
       "Components/*": ["src/Components/*"],
       "Scenes/*": ["src/Scenes/*"],
-      "Utils/*": ["src/utils/*"]
+      "Utils/*": ["src/utils/*"],
+      "@/*": ["node_modules/@seasons/eclipse/src/*"]
     }
   }
 }

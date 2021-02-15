@@ -1,9 +1,9 @@
+import { color } from "App/utils"
 import React from "react"
 import { ImageProps, View } from "react-native"
+import FadeIn from "react-native-fade-in-image"
 import FastImage from "react-native-fast-image"
 import styled from "styled-components/native"
-import FadeIn from "@expo/react-native-fade-in-image"
-import { color } from "App/utils"
 
 interface FadeInImageProps extends ImageProps {
   radius?: boolean

@@ -57,7 +57,7 @@ export const DebugMenu = () => {
         <TouchableOpacity onPress={item.onPress}>
           <Spacer mb={2} />
           <Flex flexDirection="row">
-            <Sans size="2">{item.title}</Sans>
+            <Sans size="5">{item.title}</Sans>
           </Flex>
           <Spacer mb={2} />
         </TouchableOpacity>
@@ -76,7 +76,7 @@ export const DebugMenu = () => {
             <Separator />
           </Box>
         )}
-        renderItem={item => renderItem(item)}
+        renderItem={(item) => renderItem(item)}
         ListFooterComponent={() => <Spacer mb={space(2)} />}
         data={listItems}
       />

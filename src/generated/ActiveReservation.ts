@@ -11,19 +11,28 @@ import { InventoryStatus, PhysicalProductStatus } from "./globalTypes";
 
 export interface ActiveReservation_me_activeReservation_products_productVariant_product_brand {
   __typename: "Brand";
+  id: string;
   name: string;
+}
+
+export interface ActiveReservation_me_activeReservation_products_productVariant_product_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
 }
 
 export interface ActiveReservation_me_activeReservation_products_productVariant_product {
   __typename: "Product";
+  id: string;
   name: string;
   retailPrice: number | null;
   brand: ActiveReservation_me_activeReservation_products_productVariant_product_brand;
-  images: any;
+  images: ActiveReservation_me_activeReservation_products_productVariant_product_images[];
 }
 
 export interface ActiveReservation_me_activeReservation_products_productVariant {
   __typename: "ProductVariant";
+  id: string;
   size: string | null;
   product: ActiveReservation_me_activeReservation_products_productVariant_product;
 }
@@ -34,7 +43,7 @@ export interface ActiveReservation_me_activeReservation_products {
   seasonsUID: string;
   inventoryStatus: InventoryStatus;
   productStatus: PhysicalProductStatus;
-  productVariant: ActiveReservation_me_activeReservation_products_productVariant;
+  productVariant: ActiveReservation_me_activeReservation_products_productVariant | null;
 }
 
 export interface ActiveReservation_me_activeReservation {
@@ -47,6 +56,7 @@ export interface ActiveReservation_me_activeReservation {
 
 export interface ActiveReservation_me {
   __typename: "Me";
+  id: string;
   activeReservation: ActiveReservation_me_activeReservation | null;
 }
 

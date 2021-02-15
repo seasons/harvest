@@ -1,10 +1,13 @@
 import "../../setupAnalytics"
-import _track, { Track as _Track, TrackingInfo, useTracking as _useTracking, TrackingProp } from "react-tracking"
-import analytics from "@segment/analytics-react-native"
-import { PageViewEvent } from "./schema"
-import * as Schema from "./schema"
-export { Schema }
 
+import { Platform } from "react-native"
+import _track, { Track as _Track, TrackingInfo, TrackingProp, useTracking as _useTracking } from "react-tracking"
+
+import analytics from "@segment/analytics-react-native"
+
+import * as Schema from "./schema"
+
+export { Schema }
 /**
  * Useful notes:
  *  * At the bottom of this file there is an example of how to test track'd code.
@@ -70,27 +73,29 @@ export const track: Track = _track
  *
  */
 
-export function screenTrack<P>(trackingInfo?: TrackingInfo<PageViewEvent, P, null>) {
+export function screenTrack<P>(trackingInfo?: TrackingInfo<Schema.PageViewEvent, P, null>) {
   const decorateTracking = (props, state, args) => {
     const baseData = typeof trackingInfo === "function" ? trackingInfo?.(props, state, args) : trackingInfo
     const info = {
       page: props?.route?.name,
       entitySlug: props?.route?.params?.slug,
       entityId: props?.route?.params?.id,
+      entityName: props?.route?.params?.name,
       ...baseData,
     }
     return info
   }
 
   return _track(decorateTracking as any, {
-    dispatch: data => {
+    dispatch: (data) => {
+      const newData = { ...data, platform: Platform.OS, application: "harvest" } as any
       if (__DEV__) {
-        console.log("[Event tracked]", JSON.stringify(data, null, 2))
+        console.log("[Event tracked]", JSON.stringify(newData, null, 2))
       }
-      if (data.actionName) {
-        return analytics.track(data.page, data)
+      if (newData.actionName) {
+        return analytics.track(newData.actionName, newData)
       } else {
-        return analytics.screen(data.page, data)
+        return analytics.screen(newData.page, newData)
       }
     },
     dispatchOnMount: true,

@@ -4,11 +4,11 @@ import { NotificationGraphic } from "Assets/svgs"
 import { color } from "App/utils"
 import { useNotificationsContext } from "App/Notifications/NotificationsContext"
 
-export const AllowNotifications = ({ navigation, route }) => {
+export const AllowNotifications = ({ navigation }) => {
   const [isMutating, setIsMutating] = useState(false)
-  const { requestPermissions, setDeviceNotifStatus } = useNotificationsContext()
+  const { requestPermissions } = useNotificationsContext()
 
-  const callback = () => {
+  const callback = (_status) => {
     setIsMutating(false)
     navigation.navigate("Main")
   }
@@ -19,10 +19,10 @@ export const AllowNotifications = ({ navigation, route }) => {
         <NotificationGraphic />
       </Flex>
       <Flex px={2}>
-        <Sans color={color("black100")} size="3">
+        <Sans color={color("black100")} size="7">
           Allow notifications
         </Sans>
-        <Sans color={color("black50")} size="1">
+        <Sans color={color("black50")} size="4">
           Get notified about your order status, new products, and restocks. Never miss an update.
         </Sans>
         <Spacer mb={3} />
@@ -44,7 +44,6 @@ export const AllowNotifications = ({ navigation, route }) => {
         <Button
           block
           onPress={() => {
-            setDeviceNotifStatus("Denied")
             navigation.navigate("Main")
           }}
           variant="primaryWhite"

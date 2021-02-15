@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from "react"
+import React, { Component, ComponentType, ReactNode } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
@@ -6,11 +6,9 @@ import { TextCheckSVG } from "../../assets/svgs"
 import { Box, BoxProps } from "./Box"
 import { Flex } from "./Flex"
 import { Spacer } from "./Spacer"
+import { Spinner } from "./Spinner"
 import { themeProps } from "./Theme"
 import { Sans } from "./Typography"
-import { Spinner } from "./Spinner"
-import { DownChevronIcon } from "Assets/icons"
-import { color } from "App/utils"
 
 enum DisplayState {
   Default = "default",
@@ -38,18 +36,19 @@ export interface ButtonProps extends BoxProps {
   width?: number | string
   borderRadius?: number
   loading?: boolean
-  rotateChevron?: boolean
-  showChevron?: boolean
+  Icon?: ComponentType
   block?: boolean
+  borderColor?: string
 }
 
 export type ButtonVariant =
   | "primaryBlack"
   | "secondaryWhite"
   | "primaryWhite"
-  | "black85"
   | "secondaryBlack"
+  | "tertiaryBlack"
   | "tertiaryWhite"
+  | "primaryGray"
 export type ButtonSize = "small" | "large"
 
 /** Default button size */
@@ -62,7 +61,7 @@ export const defaultVariant: ButtonVariant = "primaryBlack"
  */
 export function getColorsForVariant(variant: ButtonVariant) {
   const {
-    colors: { black100, white100, black50, black10, black85 },
+    colors: { black100, white100, black50, black10, black85, black04 },
   } = themeProps
 
   switch (variant) {
@@ -74,8 +73,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: white100,
         },
         pressed: {
-          backgroundColor: black85,
-          borderColor: black85,
+          backgroundColor: black50,
+          borderColor: black50,
           color: white100,
         },
         disabled: {
@@ -115,8 +114,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: black100,
         },
         disabled: {
-          backgroundColor: black10,
-          borderColor: black10,
+          backgroundColor: black04,
+          borderColor: black04,
           color: black50,
         },
       }
@@ -138,7 +137,43 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: black50,
         },
       }
-    case "black85":
+    case "primaryGray":
+      return {
+        default: {
+          backgroundColor: black04,
+          borderColor: black04,
+          color: black100,
+        },
+        pressed: {
+          backgroundColor: black10,
+          borderColor: black10,
+          color: black100,
+        },
+        disabled: {
+          backgroundColor: black10,
+          borderColor: black10,
+          color: black100,
+        },
+      }
+    case "secondaryBlack":
+      return {
+        default: {
+          backgroundColor: black100,
+          borderColor: black85,
+          color: white100,
+        },
+        pressed: {
+          backgroundColor: black85,
+          borderColor: black50,
+          color: white100,
+        },
+        disabled: {
+          backgroundColor: black85,
+          borderColor: black85,
+          color: white100,
+        },
+      }
+    case "tertiaryBlack":
       return {
         default: {
           backgroundColor: black85,
@@ -153,25 +188,7 @@ export function getColorsForVariant(variant: ButtonVariant) {
         disabled: {
           backgroundColor: black10,
           borderColor: black10,
-          color: white100,
-        },
-      }
-    case "secondaryBlack":
-      return {
-        default: {
-          backgroundColor: black100,
-          borderColor: black50,
-          color: white100,
-        },
-        pressed: {
-          backgroundColor: black85,
-          borderColor: black50,
-          color: white100,
-        },
-        disabled: {
-          backgroundColor: black100,
-          borderColor: black85,
-          color: white100,
+          color: black50,
         },
       }
     default:
@@ -224,21 +241,15 @@ export class Button extends Component<ButtonProps, ButtonState> {
   }
 
   get spinnerColor() {
-    // const { inline, variant } = this.props
-
-    // if (inline) {
-    //   return variant === "primaryWhite" ? "white100" : "black100"
-    // }
-
-    return "white100"
+    return this.props.variant === "primaryWhite" || this.props.variant === "secondaryWhite" ? "black100" : "white100"
   }
 
-  getSize(): { height: number | string; size: "0" | "1" | "2"; px: number } {
+  getSize(): { height: number | string; size: "3" | "4"; px: number } {
     switch (this.props.size) {
       case "small":
-        return { height: 36, size: "1", px: 21 }
+        return { height: 32, size: "3", px: 21 }
       default:
-        return { height: 48, size: "1", px: 30 }
+        return { height: 48, size: "4", px: 30 }
     }
   }
 
@@ -275,13 +286,14 @@ export class Button extends Component<ButtonProps, ButtonState> {
   render() {
     const {
       borderRadius = 28,
+      backgroundColor,
       children,
       showCheckMark,
       disabled,
       loading,
-      showChevron,
-      rotateChevron,
+      Icon,
       selected = false,
+      borderColor,
       ...rest
     } = this.props
     const { px, size, height } = this.getSize()
@@ -290,7 +302,14 @@ export class Button extends Component<ButtonProps, ButtonState> {
     const { current, previous } = this.state
     const from = disabled ? variantColors[DisplayState.Disabled] : variantColors[previous]
     const to = disabled ? variantColors[DisplayState.Disabled] : variantColors[current]
-
+    const overridenBg = backgroundColor ? { backgroundColor, borderColor: backgroundColor } : {}
+    const overridenBorderColor = borderColor ? { backgroundColor, borderColor } : {}
+    let iconOpacity = 1
+    if (loading) {
+      iconOpacity = 0
+    } else if (disabled) {
+      iconOpacity = 0.5
+    }
     return (
       <Spring native from={from} to={to}>
         {(props) => (
@@ -314,29 +333,44 @@ export class Button extends Component<ButtonProps, ButtonState> {
               <AnimatedContainer
                 disabled={disabled}
                 {...rest}
-                style={{ ...props, borderRadius, height: buttonHeight }}
+                style={{ ...props, ...overridenBg, ...overridenBorderColor, borderRadius, height: buttonHeight }}
                 px={px}
               >
-                {!loading && (
-                  <>
-                    <Sans color={to.color} size={size}>
-                      {children}
-                    </Sans>
-                    {showChevron && (
-                      <>
-                        <Spacer mr={1} />
-                        <DownChevronIcon color={color("black100")} rotate={rotateChevron} />
-                      </>
-                    )}
-                    {showCheckMark && (
-                      <Flex flexDirection="row" flexWrap="nowrap">
-                        <Spacer mr={0.5} />
-                        <TextCheckSVG color={to.color} />
-                      </Flex>
-                    )}
-                  </>
-                )}
-                {loading && <Spinner size={this.props.size} color={this.spinnerColor as any} />}
+                <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ position: "relative" }}>
+                  {!!Icon && (
+                    <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ opacity: iconOpacity }}>
+                      <Icon />
+                      <Spacer mr={1} />
+                    </Flex>
+                  )}
+                  <Sans color={to.color} size={size} style={{ opacity: loading ? 0 : 1 }}>
+                    {children}
+                  </Sans>
+                  {showCheckMark && (
+                    <Flex
+                      flexDirection="row"
+                      flexWrap="nowrap"
+                      alignItems="center"
+                      style={{ opacity: loading ? 0 : 1 }}
+                    >
+                      <Spacer mr={0.5} />
+                      <TextCheckSVG color={to.color} />
+                    </Flex>
+                  )}
+                  {loading && (
+                    <Flex
+                      alignItems="center"
+                      justifyContent="center"
+                      width="100%"
+                      height="100%"
+                      style={{
+                        position: "absolute",
+                      }}
+                    >
+                      <Spinner size={this.props.size} color={this.spinnerColor as any} />
+                    </Flex>
+                  )}
+                </Flex>
               </AnimatedContainer>
             </Flex>
           </TouchableWithoutFeedback>

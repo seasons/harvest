@@ -1,19 +1,23 @@
 import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { color, space } from "App/utils"
+import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useState } from "react"
-import { useMutation, useQuery } from "react-apollo"
+import { useMutation, useQuery } from "@apollo/client"
+import * as Sentry from "@sentry/react-native"
 import { ScrollView } from "react-native"
 import { BagItemFragment } from "../Bag/Components/BagItem"
 import { ReservationItem } from "./Components/ReservationItem"
+import { useNavigation } from "@react-navigation/native"
+import { ShippingOption } from "../Order/Components"
+import { SectionHeader } from "App/Components/SectionHeader"
 
 const RESERVE_ITEMS = gql`
-  mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions) {
-    reserveItems(items: $items, options: $options) {
+  mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions, $shippingCode: ShippingCode) {
+    reserveItems(items: $items, options: $options, shippingCode: $shippingCode) {
       id
     }
   }
@@ -22,12 +26,14 @@ const RESERVE_ITEMS = gql`
 const GET_CUSTOMER = gql`
   query GetCustomer {
     me {
+      id
       user {
         id
         firstName
         lastName
         email
       }
+
       bag {
         id
         productVariant {
@@ -37,19 +43,34 @@ const GET_CUSTOMER = gql`
       }
       customer {
         id
+        admissions {
+          id
+          allAccessEnabled
+        }
         detail {
+          id
           phoneNumber
           shippingAddress {
-            slug
-            name
+            id
             address1
             address2
             city
             state
             zipCode
+            shippingOptions {
+              id
+              externalCost
+              averageDuration
+              shippingMethod {
+                id
+                code
+                displayText
+              }
+            }
           }
         }
         billingInfo {
+          id
           last_digits
         }
       }
@@ -58,24 +79,13 @@ const GET_CUSTOMER = gql`
   ${BagItemFragment}
 `
 
-const SectionHeader = ({ title }) => {
-  return (
-    <>
-      <Flex flexDirection="row" flex={1} width="100%">
-        <Sans size="2" color="black">
-          {title}
-        </Sans>
-      </Flex>
-      <Spacer mb={1} />
-      <Separator />
-    </>
-  )
-}
-
 export const Reservation = screenTrack()((props) => {
   const [isMutating, setIsMutating] = useState(false)
   const tracking = useTracking()
-  const { data, loading } = useQuery(GET_CUSTOMER)
+  const navigation = useNavigation()
+  const { previousData, data = previousData } = useQuery(GET_CUSTOMER)
+  const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
       {
@@ -86,70 +96,105 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
     onError: (err) => {
+      if (err.graphQLErrors?.[0]?.message.includes("Address Validation Error")) {
+        showPopUp({
+          title: "Sorry!",
+          note:
+            "UPS could not validate your shipping address, please double check your shipping address is valid in your account details.",
+          buttonText: "Close",
+          onClose: () => hidePopUp(),
+        })
+      } else {
+        Sentry.captureException(err)
+        showPopUp({
+          title: "Sorry!",
+          note: "We couldn't process your order because of an unexpected error, please try again later",
+          buttonText: "Close",
+          onClose: () => hidePopUp(),
+        })
+      }
+      console.log("Error reservation.tsx: ", err)
       setIsMutating(false)
-      console.warn("Error reservation.tsx: ", err)
     },
   })
-  const { showPopUp, hidePopUp } = usePopUpContext()
-
-  if (loading) {
-    return <Loader />
-  }
 
   const customer = data?.me?.customer
-  const address = data?.me?.customer?.detail?.shippingAddress || {
-    address1: "",
-    address2: "",
-    city: "",
-    state: "",
-    zipCode: "",
-  }
+  const address = data?.me?.customer?.detail?.shippingAddress
+  const allAccessEnabled = data?.me?.customer?.admissions?.allAccessEnabled
 
   const phoneNumber = customer?.detail?.phoneNumber
-  const items = data?.me?.bag ?? []
+  const items = data?.me?.bag
+
+  if (!customer || !items || !address) {
+    return (
+      <>
+        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+        <Loader />
+      </>
+    )
+  }
+
+  const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
 
   return (
     <>
       <Container insetsTop insetsBottom={false} backgroundColor="white100">
         <FixedBackArrow navigation={props.navigation} variant="whiteBackground" />
-        <Flex flex={1} px={2}>
+        <Flex style={{ flex: 1 }} px={2}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <Spacer mb={80} />
             <Box pb={1}>
-              <Sans size="3" color="black100">
+              <Sans size="7" color="black100">
                 Review your order
               </Sans>
             </Box>
             <Box mb={4}>
-              <Sans size="2" color="black50">
+              <Sans size="4" color="black50">
                 As a reminder, orders placed{" "}
-                <Sans size="2" color="black100" style={{ textDecorationLine: "underline" }}>
-                  after 5:00pm
+                <Sans size="4" color="black100" style={{ textDecorationLine: "underline" }}>
+                  after 4:00pm
                 </Sans>{" "}
                 will be processed the following business day.
-              </Sans>
-            </Box>
-            <Box mb={4}>
-              <SectionHeader title="Delivery Time" />
-              <Sans size="2" color="black50" mt={1}>
-                2-day Shipping
               </Sans>
             </Box>
             {address && (
               <Box mb={4}>
                 <SectionHeader title="Shipping address" />
-                <Sans size="2" color="black50" mt={1}>
+                <Sans size="4" color="black50" mt={1}>
                   {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
                 </Sans>
-                <Sans size="2" color="black50">
+                <Sans size="4" color="black50">
                   {`${address.city}, ${address.state} ${address.zipCode}`}
+                </Sans>
+              </Box>
+            )}
+            {shippingOptions?.length > 0 && !allAccessEnabled && (
+              <Box mb={4}>
+                <SectionHeader title="Select shipping" />
+                {shippingOptions.map((option, index) => {
+                  return (
+                    <Box key={option?.id || index}>
+                      <ShippingOption
+                        option={option}
+                        index={index}
+                        setShippingOptionIndex={setShippingOptionIndex}
+                        shippingOptionIndex={shippingOptionIndex}
+                      />
+                      <Separator />
+                    </Box>
+                  )
+                })}
+                <Spacer mb={2} />
+                <Sans size="3" color="black50">
+                  UPS Ground shipping averages 1-2 days in the NY metro area, 3-4 days for the Midwest + Southeast, and
+                  5-7 days on the West coast.
                 </Sans>
               </Box>
             )}
             {!!phoneNumber && (
               <Box mb={4}>
                 <SectionHeader title="Phone number" />
-                <Sans size="2" color="black50" mt={1}>
+                <Sans size="4" color="black50" mt={1}>
                   {phoneNumber}
                 </Sans>
               </Box>
@@ -161,9 +206,9 @@ export const Reservation = screenTrack()((props) => {
                   items.map((item, i) => {
                     return (
                       <Box key={item.id}>
-                        <ReservationItem sectionHeight={206} index={i} bagItem={item} navigation={props.navigation} />
+                        <ReservationItem index={i} bagItem={item} navigation={props.navigation} />
                         <Spacer mb={1} />
-                        <Separator />
+                        {i !== items.length - 1 && <Separator />}
                         <Spacer mb={1} />
                       </Box>
                     )
@@ -174,6 +219,8 @@ export const Reservation = screenTrack()((props) => {
         </Flex>
         <FixedButton
           positionBottom={space(2)}
+          loading={isMutating}
+          disabled={isMutating}
           onPress={async () => {
             if (isMutating) {
               return
@@ -184,26 +231,17 @@ export const Reservation = screenTrack()((props) => {
             })
             setIsMutating(true)
             const itemIDs = items?.map((item) => item?.productVariant?.id)
-            try {
-              const { data } = await reserveItems({
-                variables: {
-                  items: itemIDs,
-                },
+            const { data } = await reserveItems({
+              variables: {
+                items: itemIDs,
+                shippingCode: shippingOptions?.[shippingOptionIndex]?.shippingMethod?.code,
+              },
+            })
+            if (data?.reserveItems) {
+              props.navigation.navigate("BagStack", {
+                screen: "ReservationConfirmation",
+                params: { reservationID: data.reserveItems.id },
               })
-              if (data.reserveItems) {
-                props.navigation.navigate("BagStack", {
-                  screen: "ReservationConfirmation",
-                  params: { reservationID: data.reserveItems.id },
-                })
-              }
-            } catch (e) {
-              showPopUp({
-                title: "Sorry!",
-                note: "We couldn't process your order because of an unexpected error, please try again later",
-                buttonText: "Close",
-                onClose: () => hidePopUp(),
-              })
-              setIsMutating(false)
             }
           }}
           block
@@ -211,7 +249,6 @@ export const Reservation = screenTrack()((props) => {
           Place order
         </FixedButton>
       </Container>
-      {isMutating && <Loader variant="blackOpaque85" />}
     </>
   )
 })

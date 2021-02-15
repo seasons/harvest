@@ -1,4 +1,4 @@
-import { Box, Flex } from "App/Components"
+import { Box, Flex, Spacer } from "App/Components"
 import { Sans } from "Components/Typography"
 import React from "react"
 import { TouchableOpacity } from "react-native"
@@ -7,21 +7,21 @@ import { BagPlus } from "../../../../assets/svgs"
 
 export const EmptyBagItem: React.FC<{ index: number; navigation: any }> = ({ index, navigation }) => {
   return (
-    <Box p={2}>
+    <Box>
       <EmptyBagItemContainer>
-        <Flex flex={1} pt="84px" flexDirection="column" alignItems="center">
-          <Flex flexWrap="nowrap" flexDirection="column" alignItems="center" alignSelf="center">
-            <TouchableOpacity onPress={() => navigation.navigate("BrowseStack")}>
-              <Box>
-                <Box my={1} mx="auto">
-                  <BagPlus />
-                </Box>
-                <Sans size="2" color="black50" textAlign="center">
-                  {`Slot ${index + 1}`}
-                </Sans>
-              </Box>
-            </TouchableOpacity>
-          </Flex>
+        <Spacer />
+        <Sans size="4" color="black100">
+          {index + 1}. Add an item
+        </Sans>
+        <Sans size="4" color="black50">
+          Or tap below for recommendations
+        </Sans>
+        <Flex pt="84px" flexDirection="row" alignItems="flex-end" justifyContent="flex-end" style={{ flex: 1 }}>
+          <TouchableOpacity onPress={() => navigation.navigate("BrowseStack")}>
+            <Box>
+              <BagPlus />
+            </Box>
+          </TouchableOpacity>
         </Flex>
       </EmptyBagItemContainer>
     </Box>
@@ -31,5 +31,5 @@ export const EmptyBagItem: React.FC<{ index: number; navigation: any }> = ({ ind
 const EmptyBagItemContainer = styled(Box)`
   border-radius: 8px;
   overflow: hidden;
-  height: 270;
+  height: 216;
 `

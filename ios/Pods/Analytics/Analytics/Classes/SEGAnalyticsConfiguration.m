@@ -7,9 +7,15 @@
 //
 
 #import "SEGAnalyticsConfiguration.h"
+#import "SEGAnalytics.h"
 #import "SEGCrypto.h"
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#elif TARGET_OS_OSX
+#import <Cocoa/Cocoa.h>
+#endif
 
-
+#if TARGET_OS_IPHONE
 @implementation UIApplication (SEGApplicationProtocol)
 
 - (UIBackgroundTaskIdentifier)seg_beginBackgroundTaskWithName:(nullable NSString *)taskName expirationHandler:(void (^__nullable)(void))handler
@@ -23,10 +29,10 @@
 }
 
 @end
+#endif
 
 @implementation SEGAnalyticsExperimental
 @end
-
 
 @interface SEGAnalyticsConfiguration ()
 
@@ -66,13 +72,15 @@
             @"(fb\\d+://authorize#access_token=)([^ ]+)": @"$1((redacted/fb-auth-token))"
         };
         _factories = [NSMutableArray array];
-        Class applicationClass = NSClassFromString(@"UIApplication");
-        if (applicationClass) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            _application = [applicationClass performSelector:NSSelectorFromString(@"sharedApplication")];
-#pragma clang diagnostic pop
+#if TARGET_OS_IPHONE
+        if ([UIApplication respondsToSelector:@selector(sharedApplication)]) {
+            _application = [UIApplication performSelector:@selector(sharedApplication)];
         }
+#elif TARGET_OS_OSX
+        if ([NSApplication respondsToSelector:@selector(sharedApplication)]) {
+            _application = [NSApplication performSelector:@selector(sharedApplication)];
+        }
+#endif
     }
     return self;
 }
@@ -85,6 +93,18 @@
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<%p:%@, %@>", self, self.class, [self dictionaryWithValuesForKeys:@[ @"writeKey", @"shouldUseLocationServices", @"flushAt" ]]];
+}
+
+// MARK: remove these when `middlewares` property is removed.
+
+- (void)setMiddlewares:(NSArray<id<SEGMiddleware>> *)middlewares
+{
+    self.sourceMiddleware = middlewares;
+}
+
+- (NSArray<id<SEGMiddleware>> *)middlewares
+{
+    return self.sourceMiddleware;
 }
 
 @end

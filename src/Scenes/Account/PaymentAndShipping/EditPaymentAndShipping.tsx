@@ -1,49 +1,51 @@
 import gql from "graphql-tag"
 import React, { useState } from "react"
-import { useMutation, useQuery } from "react-apollo"
-import { Dimensions } from "react-native"
+import { useMutation, useQuery } from "@apollo/client"
+import { Dimensions, Keyboard, KeyboardAvoidingView } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
-import { useSafeArea } from "react-native-safe-area-context"
-import { Box, Button, Container, Flex, FixedBackArrow, Radio, Sans, Spacer, TextInput } from "App/Components"
-import { Loader } from "App/Components/Loader"
-import styled from "styled-components/native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Box, Button, Container, Flex, FixedBackArrow, Sans, Spacer, TextInput } from "App/Components"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
-import { chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage } from "src/generated/chargebeeUpdatePaymentPage"
 import {
   GetUserPaymentData_me_customer_billingInfo,
   GetUserPaymentData_me_customer_detail_shippingAddress,
 } from "src/generated/getUserPaymentData"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { space } from "App/utils"
+import { screenTrack } from "App/utils/track"
+import * as Sentry from "@sentry/react-native"
+import analytics from "@segment/analytics-react-native"
+import { Schema as NavigationSchema } from "App/Navigation"
 
-export const GET_CHARGEBEE_UPDATE_PAYMENT_PAGE = gql`
-  query chargebeeUpdatePaymentPage {
-    chargebeeUpdatePaymentPage {
-      created_at
-      embed
-      expires_at
+export const GET_CURRENT_PLAN = gql`
+  query GetCurrentPlan {
+    me {
       id
-      object
-      resource_version
-      state
-      type
-      updated_at
-      url
+      customer {
+        id
+        user {
+          id
+        }
+        paymentPlan {
+          id
+          planID
+          price
+          name
+        }
+      }
     }
   }
 `
 
+export const PAYMENT_UPDATE = gql`
+  mutation applePayUpdatePaymentMethod($planID: String!, $token: StripeToken!, $tokenType: String) {
+    applePayUpdatePaymentMethod(planID: $planID, token: $token, tokenType: $tokenType)
+  }
+`
+
 const UPDATE_PAYMENT_AND_SHIPPING = gql`
-  mutation updatePaymentAndShipping(
-    $billingAddress: AddressInput!
-    $shippingAddress: AddressInput!
-    $phoneNumber: String!
-  ) {
-    updatePaymentAndShipping(
-      billingAddress: $billingAddress
-      shippingAddress: $shippingAddress
-      phoneNumber: $phoneNumber
-    )
+  mutation updatePaymentAndShipping($shippingAddress: AddressInput!, $phoneNumber: String!) {
+    updatePaymentAndShipping(shippingAddress: $shippingAddress, phoneNumber: $phoneNumber)
   }
 `
 
@@ -55,12 +57,13 @@ const SHIPPING_ADDRESS = "Shipping address"
 export const EditPaymentAndShipping: React.FC<{
   navigation: any
   route: any
-}> = ({ navigation, route }) => {
+}> = screenTrack()(({ navigation, route }) => {
   const { showPopUp, hidePopUp } = usePopUpContext()
-  const billingInfo: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
+  const { previousData, data = previousData } = useQuery(GET_CURRENT_PLAN)
+  const billingAddress: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
   const currentPhoneNumber = route?.params?.phoneNumber
-  const insets = useSafeArea()
+  const insets = useSafeAreaInsets()
   const [isMutating, setIsMutating] = useState(false)
   const [shippingAddress, setShippingAddress] = useState({
     address1: currentShippingAddress?.address1 || "",
@@ -69,49 +72,45 @@ export const EditPaymentAndShipping: React.FC<{
     state: currentShippingAddress?.state || "",
     zipCode: currentShippingAddress?.zipCode || "",
   })
-  const [billingAddress, setBillingAddress] = useState({
-    address1: billingInfo?.street1 || "",
-    address2: billingInfo?.street2 || "",
-    city: billingInfo?.city || "",
-    state: billingInfo?.state || "",
-    zipCode: billingInfo?.postal_code || "",
-  })
-  const [sameAsDeliveryRadioSelected, setSameAsDeliveryRadioSelected] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState(currentPhoneNumber)
 
+  console.log("billingAddress 1212", billingAddress)
+
   const [updatePaymentAndShipping] = useMutation(UPDATE_PAYMENT_AND_SHIPPING, {
-    onError: error => {
+    onError: (error) => {
       let popUpData = {
         buttonText: "Got it",
-        note: "Make sure your shipping and billing address are valid.",
+        note: "Make sure your shipping and billing address are both valid.",
         title: "Something went wrong!",
         onClose: () => hidePopUp(),
       }
-      if (error.message.includes("SHIPPING_ADDRESS_NOT_NYC")) {
+      if (error.toString().includes("shipping address is invalid")) {
         popUpData = {
-          ...popUpData,
-          note: "Unfortunately we only ship to Manhattan, Queens, The Bronx, and Brooklyn right now.",
-          title: "Uh oh. That’s not NYC",
+          title: "Your shipping address is invalid",
+          note: "Please check if your shipping address looks valid. If you're having trouble contact us.",
+          buttonText: "Close",
+          onClose: hidePopUp,
+        }
+      } else if (error.toString().includes("billing address is invalid")) {
+        popUpData = {
+          title: "Your billing address is invalid",
+          note: "Please check if your billing address looks valid. If you're having trouble contact us.",
+          buttonText: "Close",
+          onClose: hidePopUp,
         }
       }
+      Sentry.captureException(error)
+      Keyboard.dismiss()
       showPopUp(popUpData)
-      console.log("error EditView.tsx: ", error)
+      console.log("Error EditView.tsx: ", error)
+    },
+    onCompleted: (data) => {
+      const userId = data?.customer?.user?.id
+      if (!!userId) {
+        analytics.identify(userId, { state: shippingState })
+      }
     },
   })
-
-  const { data, loading, error } = useQuery(GET_CHARGEBEE_UPDATE_PAYMENT_PAGE)
-
-  if (loading) {
-    return <Loader />
-  }
-
-  if (error) {
-    console.error("error EditPaymentAndShipping.tsx: ", error)
-    return <Loader />
-  }
-
-  const chargebeeUpdatePaymentHostedPage: chargebeeUpdatePaymentPage_chargebeeUpdatePaymentPage =
-    data?.chargebeeUpdatePaymentPage
 
   const {
     address1: shippingAddress1,
@@ -121,46 +120,12 @@ export const EditPaymentAndShipping: React.FC<{
     zipCode: shippingZipCode,
   } = shippingAddress
 
-  const {
-    address1: billingAddress1,
-    address2: billingAddress2,
-    city: billingCity,
-    state: billingState,
-    zipCode: billingZipCode,
-  } = billingAddress
-
-  const handleSameAsDeliveryAddress = () => {
-    if (sameAsDeliveryRadioSelected) {
-      setBillingAddress({
-        address1: "",
-        address2: "",
-        city: "",
-        state: "",
-        zipCode: "",
-      })
-    } else {
-      setBillingAddress({
-        address1: shippingAddress1,
-        address2: shippingAddress2,
-        city: shippingCity,
-        state: shippingState,
-        zipCode: shippingZipCode,
-      })
-    }
-    setSameAsDeliveryRadioSelected(!sameAsDeliveryRadioSelected)
-  }
+  const paymentPlan = data?.me?.customer?.paymentPlan
 
   const handleSaveBtnPressed = async () => {
     setIsMutating(true)
     const result = await updatePaymentAndShipping({
       variables: {
-        billingAddress: {
-          city: billingCity,
-          postalCode: billingZipCode,
-          state: billingState,
-          street1: billingAddress1,
-          street2: billingAddress2,
-        },
         phoneNumber,
         shippingAddress: {
           city: shippingCity,
@@ -178,20 +143,11 @@ export const EditPaymentAndShipping: React.FC<{
     })
     setIsMutating(false)
     if (result) {
-      navigation.pop()
+      navigation.goBack()
     }
   }
 
-  const handleEditBillingInfoBtnPressed = () => {
-    if (chargebeeUpdatePaymentHostedPage?.url) {
-      navigation.navigate("Webview", {
-        uri: chargebeeUpdatePaymentHostedPage?.url,
-        variant: "whiteBackground",
-      })
-    }
-  }
-
-  const handleCancelBtnPressed = () => navigation.pop()
+  const handleCancelBtnPressed = () => navigation.goBack()
 
   const sections = [SHIPPING_ADDRESS, BILLING_ADDRESS, PHONE_NUMBER, EDIT_BILLING_INFO]
 
@@ -202,7 +158,7 @@ export const EditPaymentAndShipping: React.FC<{
       case SHIPPING_ADDRESS:
         return (
           <>
-            <Sans size="1">{SHIPPING_ADDRESS}</Sans>
+            <Sans size="4">{SHIPPING_ADDRESS}</Sans>
             <Spacer mb={2} />
             <TextInput
               currentValue={shippingAddress1}
@@ -247,62 +203,10 @@ export const EditPaymentAndShipping: React.FC<{
             </Flex>
           </>
         )
-      case BILLING_ADDRESS:
-        return (
-          <>
-            <Sans size="1">{BILLING_ADDRESS}</Sans>
-            <Spacer mb={2} />
-            <Radio
-              borderRadius={4}
-              selected={sameAsDeliveryRadioSelected}
-              onSelect={handleSameAsDeliveryAddress}
-              label="Same as Delivery Address"
-              labelSize="1"
-            />
-            <Spacer mb={2} />
-            <TextInput
-              currentValue={billingAddress1}
-              placeholder="Address 1"
-              onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, address1: text })}
-            />
-            <Spacer mb={2} />
-            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput
-                currentValue={billingAddress2}
-                placeholder="Address 2"
-                style={{ flex: 1 }}
-                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, address2: text })}
-              />
-              <Spacer ml={1} />
-              <TextInput
-                currentValue={billingZipCode}
-                placeholder="Zipcode"
-                style={{ flex: 1 }}
-                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, zipCode: text })}
-              />
-            </Flex>
-            <Spacer mb={2} />
-            <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between">
-              <TextInput
-                currentValue={billingCity}
-                placeholder="City"
-                style={{ flex: 1 }}
-                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, city: text })}
-              />
-              <Spacer ml={1} />
-              <TextInput
-                currentValue={billingState}
-                placeholder="State"
-                style={{ flex: 1 }}
-                onChangeText={(inputKey, text) => setBillingAddress({ ...billingAddress, state: text })}
-              />
-            </Flex>
-          </>
-        )
       case PHONE_NUMBER:
         return (
           <>
-            <Sans size="1">{PHONE_NUMBER}</Sans>
+            <Sans size="4">{PHONE_NUMBER}</Sans>
             <Spacer mb={2} />
             <TextInput
               currentValue={phoneNumber}
@@ -313,44 +217,58 @@ export const EditPaymentAndShipping: React.FC<{
         )
       case EDIT_BILLING_INFO:
         return (
-          <Flex flexDirection="row" justifyContent="space-between">
-            <Button variant="primaryWhite" size="large" width="100%" onPress={handleEditBillingInfoBtnPressed}>
-              Edit payment method
-            </Button>
+          <Flex flexDirection="row" justifyContent="space-between" pt={3}>
+            {paymentPlan && (
+              <Button
+                variant="primaryWhite"
+                size="large"
+                width="100%"
+                onPress={() =>
+                  navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+                    screen: NavigationSchema.PageNames.EditPaymentMethod,
+                    params: { billingAddress, paymentPlan },
+                  })
+                }
+              >
+                Edit payment method
+              </Button>
+            )}
           </Flex>
         )
       default:
-        return null
+        return <></>
     }
   }
 
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      <Box px={2}>
+      <Box px={2} style={{ flex: 1 }}>
         <KeyboardAwareFlatList
           data={sections}
           ListHeaderComponent={() => (
             <Box mt={insets.top}>
               <Spacer mb={2} />
-              <Sans size="3">Payment & Shipping</Sans>
+              <Sans size="7">Payment & Shipping</Sans>
               <Spacer mb={4} />
             </Box>
           )}
-          ItemSeparatorComponent={() => <Spacer mb={6} />}
+          ItemSeparatorComponent={() => <Spacer mb={3} />}
           keyExtractor={(item, index) => item + String(index)}
           renderItem={renderItem}
           ListFooterComponent={() => <Spacer mb={space(1) * 8 + 50} />}
           showsVerticalScrollIndicator={false}
         />
       </Box>
-      <ButtonWrapper>
-        <Flex flexDirection="row" justifyContent="space-between" p={2}>
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={space(2)} style={{ bottom: space(2) }}>
+        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
           <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
             Cancel
           </Button>
+          <Spacer ml={1} />
           <Button
             loading={isMutating}
+            disabled={isMutating}
             variant="secondaryBlack"
             size="large"
             width={buttonWidth}
@@ -359,14 +277,7 @@ export const EditPaymentAndShipping: React.FC<{
             Save
           </Button>
         </Flex>
-      </ButtonWrapper>
+      </KeyboardAvoidingView>
     </Container>
   )
-}
-
-const ButtonWrapper = styled(Box)`
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-`
+})

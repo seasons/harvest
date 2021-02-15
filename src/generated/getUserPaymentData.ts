@@ -9,23 +9,26 @@
 
 export interface GetUserPaymentData_me_customer_detail_shippingAddress {
   __typename: "Location";
-  name: string;
+  id: string;
+  name: string | null;
   company: string | null;
-  address1: string;
+  address1: string | null;
   address2: string | null;
-  city: string;
-  state: string;
+  city: string | null;
+  state: string | null;
   zipCode: string;
 }
 
 export interface GetUserPaymentData_me_customer_detail {
   __typename: "CustomerDetail";
+  id: string;
   phoneNumber: string | null;
   shippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress | null;
 }
 
 export interface GetUserPaymentData_me_customer_billingInfo {
   __typename: "BillingInfo";
+  id: string;
   brand: string;
   city: string | null;
   expiration_month: number;
@@ -47,6 +50,7 @@ export interface GetUserPaymentData_me_customer {
 
 export interface GetUserPaymentData_me_activeReservation_customer_billingInfo {
   __typename: "BillingInfo";
+  id: string;
   last_digits: string;
   street1: string | null;
   street2: string | null;
@@ -69,6 +73,7 @@ export interface GetUserPaymentData_me_activeReservation {
 
 export interface GetUserPaymentData_me {
   __typename: "Me";
+  id: string;
   customer: GetUserPaymentData_me_customer | null;
   activeReservation: GetUserPaymentData_me_activeReservation | null;
 }

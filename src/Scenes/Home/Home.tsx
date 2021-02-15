@@ -1,116 +1,37 @@
 import { Box } from "App/Components"
-import { Loader } from "App/Components/Loader"
-import { color } from "App/utils"
-import { NetworkContext } from "App/NetworkProvider"
-import { screenTrack } from "App/utils/track"
 import { ErrorScreen } from "App/Components/ErrorScreen"
+import { Loader } from "App/Components/Loader"
+import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
+import { Schema } from "App/Navigation"
+import { NetworkContext } from "App/NetworkProvider"
+import { color } from "App/utils"
+import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
-import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
-import gql from "graphql-tag"
-import React, { useEffect, useState, useContext } from "react"
-import { useQuery } from "react-apollo"
-import * as Animatable from "react-native-animatable"
-import { useSafeArea } from "react-native-safe-area-context"
+import React, { useContext, useEffect, useState } from "react"
+import { useQuery } from "@apollo/client"
+import { StatusBar } from "react-native"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
-import { Schema } from "App/Navigation"
+import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { BagItemFragment } from "../Bag/Components/BagItem"
-import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
-import { StatusBar } from "react-native"
+import analytics from "@segment/analytics-react-native"
+import { userSessionToIdentifyPayload } from "App/utils/auth"
+import { GET_HOMEPAGE } from "@seasons/eclipse"
 
-export const GET_HOMEPAGE = gql`
-  query Homepage {
-    homepage {
-      sections {
-        title
-        type
-        results {
-          ... on Brand {
-            id
-            name
-            since
-          }
-          ... on Product {
-            id
-            slug
-            images {
-              id
-              url
-            }
-            brand {
-              id
-              name
-            }
-            variants {
-              id
-              internalSize {
-                display
-              }
-              reservable
-            }
-          }
-        }
-      }
-    }
-    reservationFeedback {
-      id
-      comment
-      rating
-      feedbacks {
-        id
-        isCompleted
-        questions {
-          id
-          options
-          question
-          responses
-          type
-        }
-        variant {
-          id
-          product {
-            id
-            images {
-              id
-              url
-            }
-            name
-            retailPrice
-          }
-        }
-      }
-    }
-    me {
-      customer {
-        id
-        shouldRequestFeedback
-      }
-      savedItems {
-        id
-        productVariant {
-          id
-          ...BagItemProductVariant
-        }
-      }
-    }
-    blogPosts(collection: "5e72a4bad1075fcf7313bf38", count: 6) {
-      id
-      url
-      name
-      imageURL
-    }
-  }
-  ${BagItemFragment}
-`
-
-export const Home = screenTrack()(({ navigation }) => {
+export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
+  const [navigatedToAccount, setNavigatedToAccount] = useState(false)
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
-  const { loading, error, data, refetch } = useQuery(GET_HOMEPAGE, {})
+  const [fitPicsFetchCount, setFitPicsFetchCount] = useState(8)
+  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
+    variables: { firstFitPics: fitPicsFetchCount, skipFitPics: 0 },
+  })
+
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
-  const insets = useSafeArea()
+
+  const totalFitPics = data?.fitPicsCount?.aggregate?.count ?? 0
+  const fitPicsReceived = data?.fitPics?.length ?? 0
 
   useEffect(() => {
     if (!loading && showSplash) {
@@ -125,10 +46,35 @@ export const Home = screenTrack()(({ navigation }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       StatusBar.setBarStyle("light-content")
-      refetch()
     })
     return unsubscribe
   }, [navigation])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      StatusBar.setBarStyle("dark-content")
+    })
+    return unsubscribe
+  }, [navigation])
+
+  useEffect(() => {
+    const status = data?.me?.customer?.status
+    // Check if user status is authorized and navigate to account pane
+    if (!!status && status === "Authorized" && !navigatedToAccount) {
+      setNavigatedToAccount(true)
+      navigation?.navigate("AccountStack", { screen: "Account" })
+    }
+  }, [data, navigation])
+
+  useEffect(() => {
+    if (!!data) {
+      // do the identify call
+      const userId = data?.me?.customer?.user?.id
+      if (!!userId) {
+        analytics.identify(userId, userSessionToIdentifyPayload(data?.me?.customer))
+      }
+    }
+  }, [data])
 
   const NoInternetComponent = (
     <ErrorScreen
@@ -169,13 +115,7 @@ export const Home = screenTrack()(({ navigation }) => {
     goToReservationFeedbackScreen()
   }
 
-  if (error) {
-    console.error("error /home/index.tsx: ", error)
-  }
-
-  if (showLoader || !data) {
-    return <Loader />
-  }
+  const isFetchingMoreFitPics = loading && fitPicsReceived < totalFitPics
 
   return !network?.isConnected && !data ? (
     NoInternetComponent
@@ -183,25 +123,35 @@ export const Home = screenTrack()(({ navigation }) => {
     <Container insetsTop={false} insetsBottom={false}>
       <StatusBar barStyle="light-content" />
       <HomeBlogContent items={data?.blogPosts} />
-      <Animatable.View animation="fadeIn" duration={300}>
-        {reservationFeedback &&
-          shouldRequestFeedback &&
-          (reservationFeedback.rating ? (
-            <ReservationFeedbackReminderWrapper style={{ bottom: insets.bottom + 8 }}>
-              <ReservationFeedbackReminder
-                reservationFeedback={reservationFeedback}
-                onPress={onPressReservationFeedbackReminder}
-              />
-            </ReservationFeedbackReminderWrapper>
-          ) : (
-            <ReservationFeedbackPopUp
+      <HomeBottomSheet
+        data={data}
+        isFetchingMoreFitPics={isFetchingMoreFitPics}
+        fetchMoreFitPics={() => {
+          if (!isFetchingMoreFitPics && fitPicsReceived > 0) {
+            fetchMore({
+              variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
+            }).then((fetchMoreResult) => {
+              setFitPicsFetchCount(data?.fitPics?.length + fetchMoreResult?.data?.fitPics.length)
+            })
+          }
+        }}
+      />
+      {reservationFeedback &&
+        shouldRequestFeedback &&
+        (reservationFeedback.rating ? (
+          <ReservationFeedbackReminderWrapper>
+            <ReservationFeedbackReminder
               reservationFeedback={reservationFeedback}
-              show={showReservationFeedbackPopUp}
-              onSelectedRating={onSelectedReviewRating}
+              onPress={onPressReservationFeedbackReminder}
             />
-          ))}
-      </Animatable.View>
-      <HomeBottomSheet data={data} />
+          </ReservationFeedbackReminderWrapper>
+        ) : (
+          <ReservationFeedbackPopUp
+            reservationFeedback={reservationFeedback}
+            show={showReservationFeedbackPopUp}
+            onSelectedRating={onSelectedReviewRating}
+          />
+        ))}
     </Container>
   )
 })
@@ -209,7 +159,9 @@ export const Home = screenTrack()(({ navigation }) => {
 const ReservationFeedbackReminderWrapper = styled(Box)`
   position: absolute;
   left: 0;
+  bottom: 0;
   background: ${color("white100")};
   width: 100%;
   height: ${RESERVATION_FEEDBACK_REMINDER_HEIGHT};
+  z-index: 100;
 `

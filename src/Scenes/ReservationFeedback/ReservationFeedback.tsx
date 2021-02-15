@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/react-hooks"
+import { useMutation } from "@apollo/client"
 import React, { useState } from "react"
 import { Dimensions, FlatList, Text, TouchableWithoutFeedback } from "react-native"
 
@@ -109,7 +109,7 @@ export const ReservationFeedback: React.FC<{
         ListHeaderComponent={() => (
           <>
             <Text style={{ flexWrap: "wrap", width: contentWidth }}>
-              <Sans size="2">{`${index + 1}. ${question}`}</Sans>
+              <Sans size="5">{`${index + 1}. ${question}`}</Sans>
             </Text>
             <Spacer mb={3} />
           </>
@@ -141,7 +141,7 @@ export const ReservationFeedback: React.FC<{
       actionName: TrackingSchema.ActionNames.ReservationFeedbackContinueLaterButtonTapped,
       actionType: TrackingSchema.ActionTypes.Tap,
     })
-    navigation.pop()
+    navigation.goBack()
   }
 
   const onQuestionsFlatListScrollEnd = (event) => {
@@ -173,7 +173,7 @@ export const ReservationFeedback: React.FC<{
             />
             <ImageRail height={200} images={images} imageWidth={161} showPageDots={false} />
             <Spacer mb={1} />
-            <Sans size="0">{productName}</Sans>
+            <Sans size="2">{productName}</Sans>
             <Spacer mb={2} />
             <Separator />
             <Spacer mb={3} />
@@ -202,7 +202,7 @@ export const ReservationFeedback: React.FC<{
         <Box>
           <TouchableWithoutFeedback onPress={handleContinueLaterPressed}>
             <Text style={{ textAlign: "center" }}>
-              <Sans style={{ textDecorationLine: "underline" }} size="1" color={color("black100")}>
+              <Sans style={{ textDecorationLine: "underline" }} size="4" color={color("black100")}>
                 Continue later
               </Sans>
             </Text>

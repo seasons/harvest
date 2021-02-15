@@ -1,11 +1,12 @@
 import gql from "graphql-tag"
-import React, { useState } from "react"
-import { useMutation } from "react-apollo"
+import React, { useState, useEffect } from "react"
+import { useMutation } from "@apollo/client"
 import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
-import { Box, PopUp, FixedButton, Flex, Sans, Spacer, TextInput, FixedBackArrow, Container } from "App/Components"
+import { Box, FixedButton, Flex, Sans, Spacer, TextInput, FixedBackArrow, Container } from "App/Components"
 import { color, space } from "App/utils"
+import * as Sentry from "@sentry/react-native"
 import { screenTrack, useTracking, Schema } from "App/utils/track"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 
 const ADD_PRODUCT_REQUEST = gql`
   mutation AddProductRequest($reason: String!, $url: String!) {
@@ -26,6 +27,7 @@ const ADD_PRODUCT_REQUEST = gql`
 
 export const ProductRequest = screenTrack()((props: any) => {
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true)
+  const [isMutating, setIsMutating] = useState(false)
   const [likeReason, setLikeReason] = useState("")
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [url, setURL] = useState("")
@@ -42,9 +44,14 @@ export const ProductRequest = screenTrack()((props: any) => {
     onError: (error) => {
       console.error(error)
       Keyboard.dismiss()
+      Sentry.captureException(error)
       showPopUp(pupUpData)
     },
   })
+
+  useEffect(() => {
+    return setIsMutating(false)
+  }, [])
 
   const onURLChange = (val) => {
     setURL(val)
@@ -57,6 +64,7 @@ export const ProductRequest = screenTrack()((props: any) => {
   }
 
   const handleNextBtnPressed = async () => {
+    setIsMutating(true)
     tracking.trackEvent({
       actionName: Schema.ActionNames.NextButtonTapped,
       actionType: Schema.ActionTypes.Tap,
@@ -75,10 +83,12 @@ export const ProductRequest = screenTrack()((props: any) => {
         props.navigation.navigate("ProductRequestConfirmation", {
           productRequest,
         })
+        setIsMutating(false)
       } else {
         // Means that we failed to scrape the product information from the URL
         // and just stored the URL for now
         props.navigation.navigate("FinishProductRequest")
+        setIsMutating(false)
       }
     } else {
       Keyboard.dismiss()
@@ -93,26 +103,20 @@ export const ProductRequest = screenTrack()((props: any) => {
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
           <Box px={2}>
             <Spacer mb={80} />
-            <Sans size="3" color="white" weight="medium">
+            <Sans size="7" color="white" weight="medium">
               Submit an item
             </Sans>
             <Spacer mb={14} />
-            <Sans size="2" color={color("black25")} weight="medium">
+            <Sans size="5" color={color("black25")} weight="medium">
               Recommend something for us to carry by pasting the link to the item below.
             </Sans>
             <Spacer mb={4} />
-            <TextInput
-              placeholder="Your link goes here"
-              variant="dark"
-              textContentType="link"
-              onChangeText={(_, val) => onURLChange(val)}
-            />
+            <TextInput placeholder="Your link goes here" variant="dark" onChangeText={(_, val) => onURLChange(val)} />
             <Spacer mb={1} />
             <TextInput
               style={{ height: 240, paddingTop: space(2) }}
               placeholder="Tell us why you like this"
               variant="dark"
-              textContentType="whyLike"
               multiline={true}
               onChangeText={(_, val) => onLikeReasonChange(val)}
             />
@@ -120,8 +124,14 @@ export const ProductRequest = screenTrack()((props: any) => {
         </Flex>
       </TouchableWithoutFeedback>
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0}>
-        <FixedButton block disabled={isNextButtonDisabled} variant="primaryWhite" onPress={handleNextBtnPressed}>
-          Next
+        <FixedButton
+          block
+          disabled={isNextButtonDisabled || isMutating}
+          loading={isMutating}
+          variant="primaryWhite"
+          onPress={handleNextBtnPressed}
+        >
+          Submit
         </FixedButton>
       </KeyboardAvoidingView>
     </Container>

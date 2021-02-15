@@ -35,6 +35,8 @@ export interface Event extends Global {
    */
   entityId?: string
 
+  entityName?: string
+
   /**
    * The public slug for this entity.
    */
@@ -70,9 +72,11 @@ export enum PageNames {
 }
 
 export enum EntityTypes {
+  Collection = "Collection",
   Brand = "Brand",
   Product = "Product",
   Reservation = "Reservation",
+  Tag = "Tag",
 }
 
 export enum ActionTypes {
@@ -94,11 +98,18 @@ export enum ActionTypes {
  * Action event discriptors / names
  */
 export enum ActionNames {
+  // CreateAccount
+
   // Web view
   ShareButtonTapped = "Share button tapped",
+
+  RateUsTapped = "Rate us tapped",
+  FollowUsTapped = "Follow us tapped",
+
   // Home page
   BrowseButtonTapped = "Browse Button Tapped",
   ViewAllBrandsTapped = "View All Brands Tapped",
+  ViewAllCategoriesTapped = "View All Categories Tapped",
 
   // Browse page
   FiltersButtonTapped = "Filters Button Tapped",
@@ -110,6 +121,7 @@ export enum ActionNames {
   BrowsePagePaginated = "Browse Page Paginated",
 
   // Bag
+  SavedItemRemoved = "Saved Item Removed",
   BagItemRemoved = "Bag Item Removed",
   BagSavedItemRemoved = "Bag Saved Item Removed",
   BagItemSaved = "Bag Item Saved",
@@ -119,15 +131,20 @@ export enum ActionNames {
   ReserveButtonTapped = "Reserve Button Tapped",
   ReservationHistoryTabTapped = "Reservation History Tab Tapped",
   SavedItemAddedToBag = "Saved Item Added To Bag",
+  NotifyMeTapped = "Notify Me Tapped",
 
   // Brand view
   ReadMoreTapped = "Read More Tapped",
+
+  // Tags rail
+  ViewAllProductsByTagsTapped = "View All Products By Tags Tapped",
 
   // Brands view
   AlphabetTapped = "Alphabet Tapped",
 
   // Reservation
   PlaceOrderTapped = "Place Order Tapped",
+  CloseOrderConfirmationTapped = "Close Order Confirmation Tapped",
 
   // Reservation Confirmation
   ReservationConfirmationDoneButtonTapped = "Reservation Confirmation Done Button Tapped",
@@ -205,6 +222,40 @@ export enum ActionNames {
 
   TopsTabTapped = "Tops Tab Tapped",
   BottomsTabTapped = "Bottoms Tab Tapped",
+
+  // Signup Action names
+  CreateAnAccountTapped = "Create An Account Tapped",
+  CreateMyAccountTapped = "Create My Account Tapped",
+  EnterPhoneNumberNextTapped = "Enter Phone Number Next Tapped",
+  EnterPhoneNumberVerificationCodeNextTapped = "Enter Phone Number Verification Code Next Tapped",
+  GetMeasurementsFinishTapped = "Get Measurements Finish Tapped",
+  ChoosePlanTapped = "Choose Plan Tapped",
+  LearnMoreTapped = "Learn More Tapped",
+  SignupCompleted = "Signup Completed",
+  PlanTapped = "Plan Tapped",
+
+  // Promo Code
+  ApplyPromoCodeEntrypointTapped = "Apply Promo Code Entrypoint Tapped",
+  ApplyPromoCodeTapped = "Promo Code Apply Button Tapped",
+
+  Tier0PlanTabTapped = "Tier 0 Plan Tab Tapped",
+  Tier1PlanTabTapped = "Tier 1 Plan Tab Tapped",
+
+  ApplePayTapped = "Apple Pay Tapped",
+  AddCreditCardTapped = "Add Credit Card Tapped",
+
+  InviteFromContactsTapped = "Invite From Contacts Tapped",
+  ShareLinkTapped = "Share Link Tapped",
+
+  // Reservation Sharing
+  ShareToIGButtonTapped = "Share To IG Button Tapped",
+  DownloadReservationShareImageTapped = "Download Reservation Share Image Tapped",
+  AvailableFilterToggled = "Available Filter Toggled",
+
+  // FitPic
+  FitPicConfirmationCancelButtonTapped = "FitPic Confirmation Cancel Button Tapped",
+  FitPicConfirmationUsePhotoButtonTapped = "FitPic Confirmation Use Photo Button Tapped",
+  DownloadFitPicShareImageTapped = "Download FitPic Share Image Tapped",
 }
 
 /**

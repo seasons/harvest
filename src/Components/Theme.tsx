@@ -29,13 +29,16 @@ export const themeProps = {
     black85: "#252525",
     black50: "#7F7F7F",
     black25: "#BFBFBF",
+    black20: "#CCCCCC",
     black10: "#E5E5E5",
     black04: "#F6F6F6",
     white100: "#fff",
     green100: "#06BC6F",
     green: "#44524A",
-    lightGreen: "#989F9B",
+    lightGreen: "#01b06c",
+    blue100: "#2442EC",
     blue: "#2B50DF",
+    productBackgroundColor: "#E9E9EB",
   },
 
   fontFamily,
@@ -45,6 +48,7 @@ export const themeProps = {
     0.5: 4,
     /** Equivalent to 8px  */
     1: 8,
+    1.5: 12,
     /** Equivalent to 16px  */
     2: 16,
     /** Equivalent to 24px  */
@@ -58,25 +62,30 @@ export const themeProps = {
   },
 
   typeSizes: {
-    /** Equivalent to 14px size / 20px line-height  */
-    "0": {
+    // These sizes are shared between Flare, Eclipse and Harvest
+    "2": {
       fontSize: 12,
       lineHeight: 16,
     },
-    /** Equivalent to 16px size / 24px line-height  */
-    "1": {
+    "3": {
+      fontSize: 14,
+      lineHeight: 20,
+    },
+    "4": {
       fontSize: 16,
       lineHeight: 24,
     },
-    /** Equivalent to 18px size / 26px line-height  */
-    "2": {
+    "5": {
       fontSize: 18,
       lineHeight: 26,
     },
-    /** Equivalent to 24px size / 32px line-height  */
-    "3": {
+    "7": {
       fontSize: 24,
       lineHeight: 32,
+    },
+    "9": {
+      fontSize: 32,
+      lineHeight: 40,
     },
   },
 }
@@ -96,3 +105,5 @@ export type Color = keyof typeof themeProps["colors"]
 export type TypeSizes = typeof themeProps.typeSizes
 /** All available sizes for our sans font */
 export type SansSize = keyof TypeSizes | Array<keyof TypeSizes>
+/** All available sizes for our display font */
+export type DisplaySize = keyof TypeSizes | Array<keyof TypeSizes>

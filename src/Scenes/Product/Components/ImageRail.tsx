@@ -1,16 +1,15 @@
 import { Box, Flex } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
 import React, { useState } from "react"
 import { FlatList } from "react-native"
 import styled from "styled-components/native"
-import { GetProduct_product } from "App/generated/GetProduct"
+import { GetProduct_products } from "App/generated/GetProduct"
 import { Schema, useTracking } from "App/utils/track"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 export const ImageRail: React.FC<{
   height?: number
-  images: GetProduct_product["images"]
+  images: GetProduct_products["largeImages"]
   imageWidth?: number
   showPageDots: Boolean
   TextComponent?: React.ComponentType
@@ -38,17 +37,15 @@ export const ImageRail: React.FC<{
       <FlatList
         data={images}
         renderItem={({ item }) => {
-          const imageURL = imageResize(item && item.url, "medium")
           return (
-            <Box mr={0.5}>
-              <ImageContainer height={imageHeight} imageWidth={imageWidth} source={{ uri: imageURL }} />
+            <Box mr={images?.length > 1 ? 0.5 : 0}>
+              <ImageContainer height={imageHeight} imageWidth={imageWidth} source={{ uri: item?.url || "" }} />
             </Box>
           )
         }}
         onScroll={onScroll}
         keyExtractor={(item) => {
-          const itemID = item && item.id
-          return itemID
+          return item?.url || ""
         }}
         showsHorizontalScrollIndicator={false}
         horizontal
@@ -66,21 +63,22 @@ export const ImageRail: React.FC<{
             {!!TextComponent && <TextComponent />}
             {showPageDots && (
               <Flex style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-                {images?.map((_, i) => {
-                  return (
-                    <Box
-                      key={i}
-                      style={{
-                        height: 8,
-                        width: 8,
-                        backgroundColor: currentPage - 1 === i ? "black" : "white",
-                        marginLeft: 3,
-                        borderColor: "black",
-                        borderWidth: 1,
-                      }}
-                    />
-                  )
-                })}
+                {images?.length > 1 &&
+                  images?.map((_, i) => {
+                    return (
+                      <Box
+                        key={i}
+                        style={{
+                          height: 8,
+                          width: 8,
+                          backgroundColor: currentPage - 1 === i ? "black" : "white",
+                          marginLeft: 3,
+                          borderColor: "black",
+                          borderWidth: 1,
+                        }}
+                      />
+                    )
+                  })}
               </Flex>
             )}
           </Flex>
@@ -90,7 +88,7 @@ export const ImageRail: React.FC<{
   )
 }
 
-const ImageContainer = styled(FadeInImage)`
+const ImageContainer = styled(FadeInImage)<{ imageWidth: number }>`
   background: #f6f6f6;
   height: ${(props) => props.height};
   width: ${(props) => props.imageWidth};

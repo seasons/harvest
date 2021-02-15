@@ -1,5 +1,5 @@
-import { BagItemFragment } from "./Components/BagItem"
 import gql from "graphql-tag"
+import { BagItemFragment } from "./Components/BagItem"
 
 export const CHECK_ITEMS = gql`
   mutation CheckItemsAvailability($items: [ID!]!) {
@@ -7,27 +7,95 @@ export const CHECK_ITEMS = gql`
   }
 `
 
+export const GET_LOCAL_BAG = gql`
+  query GetLocalBag {
+    localBagItems @client {
+      productID
+      variantID
+    }
+  }
+`
+
+export const GET_LOCAL_BAG_ITEMS = gql`
+  query GetLocalBagItems($ids: [ID!]) {
+    products(where: { id_in: $ids }) {
+      id
+
+      variants {
+        id
+        ...BagItemProductVariant
+      }
+    }
+  }
+  ${BagItemFragment}
+`
+
 export const GET_BAG = gql`
   query GetBagAndSavedItems {
+    paymentPlans(where: { status: "active" }) {
+      id
+      planID
+      tier
+      price
+      itemCount
+    }
     me {
+      id
       customer {
         id
-        plan
+        status
+        invoices {
+          id
+          subscriptionId
+        }
+        user {
+          id
+        }
+        detail {
+          id
+          shippingAddress {
+            id
+            city
+            state
+            address1
+            zipCode
+          }
+        }
+        membership {
+          id
+          subscription {
+            id
+            nextBillingAt
+          }
+          plan {
+            id
+            tier
+            price
+            itemCount
+            pauseWithItemsPrice
+          }
+          pauseRequests(orderBy: createdAt_DESC) {
+            id
+            resumeDate
+            pauseDate
+            pausePending
+          }
+        }
         reservations(orderBy: createdAt_DESC) {
           id
-          status(display: true)
+          status
           reservationNumber
           createdAt
           products {
             id
             productVariant {
               id
-              internalSize {
-                display
-              }
+              displayShort
               product {
                 id
-                images {
+                slug
+                name
+                images(size: Thumb) {
                   id
                   url
                 }
@@ -45,6 +113,23 @@ export const GET_BAG = gql`
         returnAt
         shipped
         createdAt
+        status
+        phase
+        updatedAt
+        returnedPackage {
+          id
+          shippingLabel {
+            id
+            trackingURL
+          }
+        }
+        sentPackage {
+          id
+          shippingLabel {
+            id
+            trackingURL
+          }
+        }
       }
       bag {
         id
@@ -58,15 +143,24 @@ export const GET_BAG = gql`
       }
       savedItems {
         id
+        saved
         productVariant {
           id
           ...BagItemProductVariant
         }
-        saved
       }
     }
   }
   ${BagItemFragment}
+`
+
+export const ADD_OR_REMOVE_FROM_LOCAL_BAG = gql`
+  mutation AddOrRemoveFromLocalBag($productID: ID!, $variantID: ID!) {
+    addOrRemoveFromLocalBag(productID: $productID, variantID: $variantID) @client {
+      productID
+      variantID
+    }
+  }
 `
 
 export const ADD_TO_BAG = gql`

@@ -1,9 +1,7 @@
 import { Box, Flex, Sans } from "App/Components"
 import React from "react"
-import { get } from "lodash"
 import styled from "styled-components/native"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
 
 export const CurrentRotationItem = ({ physicalProduct }) => {
   const productVariant = physicalProduct.productVariant
@@ -13,20 +11,20 @@ export const CurrentRotationItem = ({ physicalProduct }) => {
     return null
   }
 
-  const imageURL = imageResize(get(product, "images[0].url"), "thumb")
+  const imageURL = product?.images?.[0]?.url || ""
 
   return (
     <Container key={product.id}>
       <Box p={2}>
-        <Sans size="2">{product.brand.name}</Sans>
-        <Sans size="2" color="gray">
+        <Sans size="5">{product.brand.name}</Sans>
+        <Sans size="5" color="black50">
           {product.name}
         </Sans>
         <Flex flexDirection="row">
-          <Sans size="2" color="gray">
+          <Sans size="5" color="black50">
             Size {productVariant.size}
           </Sans>
-          <Sans size="2" color="gray" style={{ marginLeft: "auto" }}>
+          <Sans size="5" color="black50" style={{ marginLeft: "auto" }}>
             Retail ${product.retailPrice}
           </Sans>
         </Flex>

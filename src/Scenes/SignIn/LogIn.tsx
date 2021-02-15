@@ -1,29 +1,51 @@
 import { Box, Button, CloseButton, Container, Flex, Sans, Spacer, TextInput } from "App/Components"
 import { isValidEmail } from "App/helpers/regex"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { useNotificationsContext } from "App/Notifications/NotificationsContext"
 import { color } from "App/utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
-import { useMutation } from "react-apollo"
+import { useMutation } from "@apollo/client"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { checkNotifications } from "react-native-permissions"
 
 import AsyncStorage from "@react-native-community/async-storage"
-import { usePopUpContext } from "App/Navigation/PopUp/PopUpContext"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
     login(email: $email, password: $password) {
+      customer {
+        id
+        status
+        admissions {
+          id
+          admissable
+        }
+        bagItems {
+          id
+        }
+        detail {
+          id
+          shippingAddress {
+            id
+            state
+          }
+        }
+      }
       user {
+        id
+        createdAt
         email
         firstName
         lastName
+        beamsToken
+        roles
       }
       token
       refreshToken
       expiresIn
-      beamsToken
     }
   }
 `
@@ -33,19 +55,20 @@ interface LogInProps {
   navigation: any
 }
 
-export const LogIn: React.FC<LogInProps> = props => {
+export const LogIn: React.FC<LogInProps> = (props) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isMutating, setIsMutating] = useState(false)
   const [emailComplete, setEmailComplete] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { signIn } = useAuthContext()
+  const { init } = useNotificationsContext()
 
   const [login] = useMutation(LOG_IN, {
     onCompleted: () => {
       setIsMutating(false)
     },
-    onError: err => {
+    onError: (err) => {
       const popUpData = {
         title: "Oops! Try again!",
         note: "Your email or password may be incorrect. Not a member? Apply for the waitlist.",
@@ -58,22 +81,28 @@ export const LogIn: React.FC<LogInProps> = props => {
     },
   })
 
-  const onEmailChange = val => {
+  const onEmailChange = (val) => {
     setEmail(val)
     setEmailComplete(isValidEmail(val))
   }
 
-  const checkPermissions = beamsToken => {
+  const checkPermissions = () => {
     checkNotifications()
       .then(({ status }) => {
         if (status === "denied") {
           props.navigation.popToTop()
-          props.navigation.navigate("Modal", { screen: "AllowNotificationsModal", params: { beamsToken, email } })
+          props.navigation.navigate("Modal", { screen: "AllowNotificationsModal" })
         } else {
+          // if, e.g, another used signed in on this device first and this user is inherting their "granted"
+          // status, ensure we properly set up their push notifications infrastructure
+          if (status === "granted") {
+            init()
+          }
+
           props.navigation.navigate("Main")
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("error checking for permission", error)
         props.navigation.navigate("Main")
       })
@@ -94,11 +123,12 @@ export const LogIn: React.FC<LogInProps> = props => {
           data: { login: userSession },
         } = result
         signIn(userSession)
-        const beamsToken = result?.data?.login?.beamsToken
-        const beamsData = { beamsToken, email }
+        const beamsToken = userSession?.user?.beamsToken
+        const roles = userSession?.user?.roles
+        const beamsData = { beamsToken, email, roles }
         AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
         AsyncStorage.setItem("userSession", JSON.stringify(userSession))
-        checkPermissions(beamsToken)
+        checkPermissions()
       }
     }
   }
@@ -111,29 +141,27 @@ export const LogIn: React.FC<LogInProps> = props => {
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
-      <CloseButton />
+      <CloseButton variant="light" />
       <Flex style={{ flex: 1 }}>
         <Spacer mb={3} />
         <Flex flexDirection="column" justifyContent="space-between" style={{ flex: 1 }}>
           <Box p={2} mt={5}>
-            <Sans color={color("black100")} size="3">
+            <Sans color={color("black100")} size="7">
               Welcome
             </Sans>
             <Spacer mb={3} />
             <TextInput
-              placeholder="Email"
+              headerText="Email"
               variant="light"
-              textContentType="Email"
               inputKey="email"
               onChangeText={(_, val) => onEmailChange(val)}
             />
             <Spacer mb={2} />
             <TextInput
               secureTextEntry
-              placeholder="Password"
+              headerText="Password"
               variant="light"
               inputKey="password"
-              textContentType="Password"
               onChangeText={(_, val) => setPassword(val)}
             />
             <Spacer mb={4} />
@@ -143,12 +171,12 @@ export const LogIn: React.FC<LogInProps> = props => {
             <Spacer mb={3} />
             <Flex flexDirection="row" justifyContent="center">
               <Text>
-                <Sans size="2" color="gray">
-                  Forget password?
+                <Sans size="4" color="black50">
+                  Forgot your password?
                 </Sans>{" "}
                 <TouchableWithoutFeedback onPress={handleResetPassword}>
-                  <Sans style={{ textDecorationLine: "underline" }} size="2" color={color("black50")}>
-                    Reset
+                  <Sans style={{ textDecorationLine: "underline" }} size="4" color={color("black50")}>
+                    Reset it
                   </Sans>
                 </TouchableWithoutFeedback>
               </Text>
@@ -156,7 +184,7 @@ export const LogIn: React.FC<LogInProps> = props => {
           </Box>
           <Box p={4} pb={5}>
             <Text style={{ textAlign: "center" }}>
-              <Sans size="2" color="gray">
+              <Sans size="5" color="black50">
                 Sign in using the same email and password you used for the waitlist.
               </Sans>
             </Text>

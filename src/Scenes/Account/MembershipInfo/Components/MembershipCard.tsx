@@ -3,60 +3,43 @@ import { Text } from "react-native"
 import styled from "styled-components/native"
 import { Box, Flex, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
-import { SeasonsLogoSVG } from "Assets/svgs"
+import { LogoIcon } from "Assets/icons/LogoIcon"
 
 export interface MembershipCardProps {
   memberName: string
-  planName: string
 }
 
-export const MembershipCard: React.FC<MembershipCardProps> = ({
-  memberName,
-  planName,
-}) => {
+export const MembershipCard: React.FC<MembershipCardProps> = ({ memberName }) => {
   let backgroundColor
-  let planNameColor
-  switch (planName) {
-    case "Essential":
-      backgroundColor = color("white100")
-      planNameColor = color("black100")
-      break;
-    case "All Access":
-      backgroundColor = color("black100")
-      planNameColor = color("white100")
-      break;
-  }
 
-  if (!memberName || !planName || !backgroundColor || !planNameColor) {
-    return null
+  if (!memberName) {
+    return <></>
   }
 
   return (
-    <Card backgroundColor={backgroundColor} >
+    <Card backgroundColor={backgroundColor}>
       <Box px={3}>
         <Spacer mt={3} />
-        <Flex flexDirection="column" justifyContent="space-between" >
-          <SeasonsLogoSVG width={28} height={28} />
-          <Spacer mt={104} />
-          <Flex flexDirection="row" justifyContent="space-between" >
-            <Text style={{ letterSpacing: 2 }}>
-              <Sans color={planNameColor} size="1" >
-                {planName.toUpperCase()}
-              </Sans>
-            </Text>
-            <Sans color={color("black50")} size="1">
+        <Flex flexDirection="column" justifyContent="space-between">
+          <LogoIcon width={60} height={60} />
+          <Spacer mt={70} />
+          <Flex flexDirection="row" justifyContent="space-between">
+            <Sans color="black25" size="4">
+              Membership card
+            </Sans>
+            <Sans color={color("white100")} size="4">
               {memberName}
             </Sans>
           </Flex>
         </Flex>
         <Spacer mt={3} />
       </Box>
-    </Card >
+    </Card>
   )
 }
 
 const Card = styled(Box)`
-  background-color: ${props => props.backgroundColor};
+  background-color: ${color("black100")};
   height: 200;
   border-radius: 8;
   shadow-offset: 0px 6px;

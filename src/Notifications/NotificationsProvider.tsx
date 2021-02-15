@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react"
+import React from "react"
 import { config, Env } from "App/utils/config"
 import AsyncStorage from "@react-native-community/async-storage"
 import { checkNotifications, requestNotifications } from "react-native-permissions"
@@ -6,8 +6,7 @@ import { Platform } from "react-native"
 import gql from "graphql-tag"
 import NotificationsContext from "./NotificationsContext"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
-import { useMutation } from "react-apollo"
-import { GET_USER } from "App/Scenes/Account/Account"
+import { useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { getUserSession } from "App/utils/auth"
 
@@ -15,18 +14,14 @@ import { getUserSession } from "App/utils/auth"
 export const seasonsNotifInterest = "seasons-general-notifications"
 
 export const GET_BEAMS_DATA = gql`
-  mutation BeamsData {
-    beamsData {
-      email
-      beamsToken
-    }
-  }
-`
-
-export const UPDATE_USER_PUSH_NOTIFICATIONS = gql`
-  mutation UpdateUserPushNotifications($pushNotificationsStatus: String!) {
-    updateUserPushNotifications(pushNotificationsStatus: $pushNotificationsStatus) {
-      pushNotifications
+  query BeamsData {
+    me {
+      id
+      user {
+        email
+        beamsToken
+        roles
+      }
     }
   }
 `
@@ -49,53 +44,22 @@ const setUserId = (userId, token) => {
 
 export const NotificationsProvider = ({ children }) => {
   const navigation = useNavigation()
-  const [updateUserPushNotifications] = useMutation(UPDATE_USER_PUSH_NOTIFICATIONS, {
-    refetchQueries: [
-      {
-        query: GET_USER,
-      },
-    ],
-  })
-  const [notificationState, dispatch] = useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case "SUBSCRIBE":
-          return {
-            ...prevState,
-            subscribedToNotifs: true,
-          }
-        case "UNSUBSCRIBE":
-          return {
-            ...prevState,
-            subscribedToNotifs: false,
-          }
-      }
-    },
-    {
-      subscribedToNotifs: null,
-    }
-  )
-  const [getBeamsData] = useMutation(GET_BEAMS_DATA, {})
-  useEffect(() => {
-    // If users are logged in without a beamsToken this will fetch one
-    const checkBeamsData = async () => {
+  useQuery(GET_BEAMS_DATA, {
+    onCompleted: async (data) => {
       const beamsData = await AsyncStorage.getItem("beamsData")
       const userSession = await getUserSession()
       if (!beamsData && userSession && userSession.token) {
-        const result = await getBeamsData()
-        if (result?.data) {
-          const { data } = result
-          const beamsToken = data?.beamsToken
-          const email = data?.email
-          const beamsData = { beamsToken, email }
-          AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
-        }
+        const beamsToken = data?.me?.user?.beamsToken
+        const email = data?.me?.user?.email
+        const roles = data?.me?.user?.roles
+        const beamsData = { beamsToken, email, roles }
+        AsyncStorage.setItem("beamsData", JSON.stringify(beamsData))
       }
-    }
-    checkBeamsData()
-  }, [])
+      notificationsContext.checkStatus()
+    },
+  })
 
-  const handleNotification = notification => {
+  const handleNotification = (notification) => {
     const route = notification?.userInfo?.data?.route
     const screen = notification?.userInfo?.data?.screen
     const params = notification?.userInfo?.data?.params
@@ -110,13 +74,16 @@ export const NotificationsProvider = ({ children }) => {
           } else if (route) {
             navigation?.navigate(route)
           }
+          break
         // inactive: App came in foreground by clicking on notification.
         //           Use notification.userInfo for redirecting to specific view controller
         case "background":
-        // background: App is in background and notification is received.
-        //             You can fetch required data here don't do anything with UI
+          // background: App is in background and notification is received.
+          //             You can fetch required data here don't do anything with UI
+          break
         case "active":
-        // App is foreground and notification is received. Show a alert or something.
+          // App is foreground and notification is received. Show a alert or something.
+          break
         default:
           break
       }
@@ -125,7 +92,7 @@ export const NotificationsProvider = ({ children }) => {
     }
   }
 
-  const attachListeners = (email, beamsToken) => {
+  const attachListeners = (email, roles, beamsToken) => {
     RNPusherPushNotifications.setInstanceId(config.get(Env.RN_PUSHER_ID))
     // Init interests after registration
     RNPusherPushNotifications.on("registered", () => {
@@ -139,92 +106,74 @@ export const NotificationsProvider = ({ children }) => {
           console.log("Success subscribe in attachListeners")
         }
       )
+      if (roles?.includes("Admin")) {
+        RNPusherPushNotifications.subscribe(
+          `debug-${seasonsNotifInterest}`,
+          (statusCode, response) => {
+            console.error(statusCode, response)
+          },
+          () => {
+            console.log("Success subscribe in attachListeners (debug)")
+          }
+        )
+      }
     })
 
-    AsyncStorage.setItem("subscribedToNotifs", "true")
-    dispatch({ type: "SUBSCRIBE" })
-
     // Setup notification listeners
-    RNPusherPushNotifications.on("notification", notification => {
+    RNPusherPushNotifications.on("notification", (notification) => {
       handleNotification(notification)
     })
   }
 
-  useEffect(() => {
-    notificationsContext.checkStatus()
-  }, [])
-
   const notificationsContext = {
-    requestPermissions: async callback => {
+    requestPermissions: async (callback) => {
       requestNotifications(["alert", "sound", "badge", "criticalAlert"]).then(async ({ status }) => {
         if (status === "granted") {
           const beamsData = await AsyncStorage.getItem("beamsData")
           if (beamsData) {
-            const { beamsToken, email } = JSON.parse(beamsData)
-            attachListeners(email, beamsToken)
-            notificationsContext.setDeviceNotifStatus("Granted")
+            const { beamsToken, email, roles } = JSON.parse(beamsData)
+            attachListeners(email, roles, beamsToken)
           }
-        } else {
-          notificationsContext.setDeviceNotifStatus("Blocked")
         }
-        callback?.()
+        callback?.(status)
       })
       // Set your app key and register for push
     },
     checkStatus: async () => {
-      const subscription = await AsyncStorage.getItem("subscribedToNotifs")
-      if (subscription && subscription === "true") {
-        const beamsData = await AsyncStorage.getItem("beamsData")
-        if (beamsData) {
-          const { beamsToken, email } = JSON.parse(beamsData)
-          attachListeners(email, beamsToken)
-        }
-      } else if (subscription && subscription === "false") {
-        return
-      } else {
-        checkNotifications()
-          .then(async ({ status }) => {
-            if (status === "granted") {
-              const beamsData = await AsyncStorage.getItem("beamsData")
-              if (beamsData) {
-                const { beamsToken, email } = JSON.parse(beamsData)
-                attachListeners(email, beamsToken)
-              }
+      checkNotifications()
+        .then(async ({ status }) => {
+          if (status === "granted") {
+            const beamsData = await AsyncStorage.getItem("beamsData")
+            if (beamsData) {
+              const { beamsToken, roles, email } = JSON.parse(beamsData)
+              attachListeners(email, roles, beamsToken)
             }
-          })
-          .catch(error => {
-            console.log("error checking for permission", error)
-          })
-      }
+          }
+        })
+        .catch((error) => {
+          console.log("error checking for permission", error)
+        })
     },
     init: async () => {
       const beamsData = await AsyncStorage.getItem("beamsData")
       if (beamsData) {
-        const { beamsToken, email } = JSON.parse(beamsData)
-        attachListeners(email, beamsToken)
+        const { beamsToken, roles, email } = JSON.parse(beamsData)
+        attachListeners(email, roles, beamsToken)
       }
     },
-    setDeviceNotifStatus: async status => {
-      await updateUserPushNotifications({
-        variables: {
-          pushNotificationsStatus: status,
-        },
-      })
-    },
     unsubscribe: async () => {
+      console.log("seasonsNotifInterest", seasonsNotifInterest)
       RNPusherPushNotifications.unsubscribe(
         seasonsNotifInterest,
         (statusCode, response) => {
-          console.log(statusCode, response)
+          console.log("statusCode: ", statusCode, " response: ", response)
         },
         () => {
-          console.log("unsubscribe Success")
+          console.log("unsubscribe success")
         }
       )
-      AsyncStorage.setItem("subscribedToNotifs", "false")
-      dispatch({ type: "UNSUBSCRIBE" })
+      RNPusherPushNotifications.clearAllState()
     },
-    subscribedToNotifs: notificationState.subscribedToNotifs,
   }
 
   return <NotificationsContext.Provider value={notificationsContext}>{children}</NotificationsContext.Provider>

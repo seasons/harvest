@@ -1,31 +1,19 @@
 import { color } from "App/utils"
-import React, { useEffect } from "react"
-import { TextInput as RNTextInput, ViewStyle } from "react-native"
-import { animated, Spring } from "react-spring/renderprops-native.cjs"
-import styled from "styled-components/native"
-
-import { Box } from "./"
+import React, { MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react"
+import {
+  KeyboardType,
+  NativeSyntheticEvent,
+  TextInput as RNTextInput,
+  TextInputKeyPressEventData,
+  TouchableWithoutFeedback,
+  ViewStyle,
+} from "react-native"
+import { animated, useSpring } from "react-spring"
+import { Box, Spacer } from "./"
 import { themeProps } from "./Theme"
-import { fontFamily } from "./Typography"
+import { fontFamily, Sans } from "./Typography"
 
-export interface TextInputProps {
-  /** The theme of the input */
-  style?: ViewStyle
-  variant?: TextInputVariant
-  placeholder?: string
-  secureTextEntry?: boolean
-  autoCompleteType?: string
-  textContentType?: string
-  inputKey?: string
-  multiline?: boolean
-  currentValue?: string
-  autoCapitalize?: string
-  autoFocus?: boolean
-  blurOnSubmit?: boolean
-  onChangeText?: (inputKey: string, text: string) => void
-}
-
-enum DisplayState {
+export enum DisplayState {
   Active = "active",
   Inactive = "inactive",
 }
@@ -35,7 +23,7 @@ export const defaultVariant: TextInputVariant = "light"
 
 export function getColorsForVariant(variant: TextInputVariant) {
   const {
-    colors: { black100, white100, black50 },
+    colors: { black100, white100, black50, black10 },
   } = themeProps
 
   switch (variant) {
@@ -48,7 +36,7 @@ export function getColorsForVariant(variant: TextInputVariant) {
         },
         inactive: {
           backgroundColor: white100,
-          borderColor: black50,
+          borderColor: black10,
           color: black50,
         },
       }
@@ -61,90 +49,199 @@ export function getColorsForVariant(variant: TextInputVariant) {
         },
         inactive: {
           backgroundColor: black100,
-          borderColor: black50,
+          borderColor: black10,
           color: white100,
         },
       }
     default:
+      return getColorsForVariant("light")
   }
 }
 
-export const TextInput: React.FC<TextInputProps> = ({
-  variant = defaultVariant,
-  placeholder,
-  secureTextEntry,
-  onChangeText,
-  style,
-  inputKey,
-  multiline = false,
-  currentValue,
-  autoCapitalize = "none",
-  autoFocus,
-  blurOnSubmit = true,
-}) => {
-  const [previous, setPrevious] = React.useState(DisplayState.Inactive)
-  const [current, setCurrent] = React.useState(currentValue ? DisplayState.Active : DisplayState.Inactive)
-  const [value, setValue] = React.useState(currentValue)
-  const variantColors = getColorsForVariant(variant)
-
-  const from = variantColors[previous]
-  const to = variantColors[current]
-
-  useEffect(() => {
-    if (currentValue !== undefined && currentValue !== value) {
-      handleOnChangeText(currentValue)
-    }
-  })
-
-  const handleOnChangeText = (text) => {
-    setValue(text)
-    if (text.length) {
-      setCurrent(DisplayState.Active)
-      setPrevious(DisplayState.Inactive)
-    } else {
-      setCurrent(DisplayState.Inactive)
-      setPrevious(DisplayState.Active)
-    }
-    if (onChangeText) {
-      onChangeText(inputKey, text)
-    }
-  }
-
-  const height = style && style.height ? style.height : 56
-  const flex = style && style.flex
-
-  return (
-    <Box style={{ height, flex }}>
-      <Spring native from={from} to={to}>
-        {(props) => (
-          <AnimatedTextInput
-            autoFocus={autoFocus}
-            blurOnSubmit={blurOnSubmit}
-            multiline={multiline}
-            secureTextEntry={secureTextEntry}
-            placeholder={placeholder}
-            style={{ ...style, ...props }}
-            autoCapitalize={autoCapitalize}
-            placeholderTextColor={variant === "light" ? color("black50") : color("black25")}
-            onChangeText={(text) => handleOnChangeText(text)}
-            value={value}
-          />
-        )}
-      </Spring>
-    </Box>
-  )
+export interface TextInputRef {
+  blur: () => void
+  focus: () => void
+  isFocused: () => boolean
 }
 
-const StyledTextInput = styled(RNTextInput)<TextInputProps>`
-  border-width: 1;
-  height: 56;
-  border-radius: 8;
-  font-size: 18;
-  line-height: 20;
-  padding-left: 15;
-  flex: 2;
-  padding-right: 15;
-  font-family: ${fontFamily.sans.medium};
-`
+/////////////////////////////////////////////////////////
+// Note: Any styling changes here should also appear in
+// App/Scenes/CreateAccount/FakeTextInput
+/////////////////////////////////////////////////////////
 
-const AnimatedTextInput = animated(StyledTextInput)
+export interface TextInputProps {
+  autoCapitalize?: "none" | "sentences" | "words" | "characters"
+  autoCompleteType?:
+    | "username"
+    | "password"
+    | "email"
+    | "name"
+    | "tel"
+    | "street-address"
+    | "postal-code"
+    | "cc-number"
+    | "cc-csc"
+    | "cc-exp"
+    | "cc-exp-month"
+    | "cc-exp-year"
+    | "off"
+  autoFocus?: boolean
+  blurOnSubmit?: boolean
+  currentValue?: string
+  headerText?: string
+  inputKey?: string
+  keyboardType?: KeyboardType
+  multiline?: boolean
+  onChangeText?: (inputKey: string, text: string) => void
+  onKeyPress?: (input: NativeSyntheticEvent<TextInputKeyPressEventData>) => void
+  onFocus?: () => void
+  onBlur?: () => void
+  placeholder?: string
+  ref?: MutableRefObject<typeof TextInput>
+  secureTextEntry?: boolean
+  style?: ViewStyle
+  textContentType?:
+    | "none"
+    | "URL"
+    | "addressCity"
+    | "addressCityAndState"
+    | "addressState"
+    | "countryName"
+    | "creditCardNumber"
+    | "emailAddress"
+    | "familyName"
+    | "fullStreetAddress"
+    | "givenName"
+    | "jobTitle"
+    | "location"
+    | "middleName"
+    | "name"
+    | "namePrefix"
+    | "nameSuffix"
+    | "nickname"
+    | "organizationName"
+    | "postalCode"
+    | "streetAddressLine1"
+    | "streetAddressLine2"
+    | "sublocality"
+    | "telephoneNumber"
+    | "username"
+    | "password"
+  variant?: TextInputVariant
+  hideBottomBar?: boolean
+}
+
+export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
+  (
+    {
+      autoCapitalize = "none",
+      autoCompleteType,
+      autoFocus,
+      blurOnSubmit = true,
+      currentValue,
+      headerText,
+      inputKey,
+      keyboardType,
+      multiline = false,
+      onChangeText,
+      onKeyPress,
+      onFocus,
+      onBlur,
+      placeholder,
+      secureTextEntry,
+      style,
+      textContentType,
+      variant = defaultVariant,
+      hideBottomBar = false,
+    },
+    ref
+  ) => {
+    const [state, setState] = useState(currentValue ? DisplayState.Active : DisplayState.Inactive)
+    const [value, setValue] = useState(currentValue)
+    const textInputRef: MutableRefObject<RNTextInput> = useRef(null)
+    useEffect(() => {
+      if (currentValue !== undefined && currentValue !== value) {
+        handleOnChangeText(currentValue)
+      }
+    })
+    useImperativeHandle(ref, () => ({
+      isFocused: (): boolean => {
+        return textInputRef?.current?.isFocused()
+      },
+      blur: () => {
+        textInputRef?.current?.blur()
+      },
+      focus: () => {
+        textInputRef?.current?.focus()
+      },
+    }))
+
+    const variantColors = getColorsForVariant(variant)
+    const animation = useSpring(state == DisplayState.Active ? variantColors.active : variantColors.inactive)
+
+    const handleOnChangeText = (text) => {
+      setValue(text)
+      setState(text.length ? DisplayState.Active : DisplayState.Inactive)
+      onChangeText?.(inputKey, text)
+    }
+
+    const height = style?.height || (headerText ? 56 : 40)
+    const placeholderColor = variant === "light" ? color("black50") : color("black10")
+
+    return (
+      <AnimatedBox
+        style={{
+          flex: style?.flex,
+          height,
+          borderBottomWidth: hideBottomBar ? 0 : 1,
+          borderTopWidth: 0,
+          borderLeftWidth: 0,
+          borderRightWidth: 0,
+          borderColor: animation.borderColor,
+          backgroundColor: animation.backgroundColor,
+        }}
+      >
+        <TouchableWithoutFeedback onPress={() => textInputRef?.current?.focus?.()}>
+          <Box>
+            {!!headerText && (
+              <Sans size="3" color={placeholderColor}>
+                {headerText}
+              </Sans>
+            )}
+            <Spacer mb={1} />
+          </Box>
+        </TouchableWithoutFeedback>
+        <RNTextInput
+          autoCapitalize={autoCapitalize}
+          autoCompleteType={autoCompleteType}
+          autoFocus={autoFocus}
+          blurOnSubmit={blurOnSubmit}
+          keyboardType={keyboardType}
+          multiline={multiline}
+          onChangeText={handleOnChangeText}
+          onKeyPress={onKeyPress}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          placeholderTextColor={placeholderColor}
+          ref={textInputRef}
+          secureTextEntry={secureTextEntry}
+          style={{
+            color: variantColors.active.color,
+            fontFamily: fontFamily.sans.medium.toString(),
+            fontSize: themeProps.typeSizes[4].fontSize,
+            ...style,
+            textAlignVertical: "center",
+          }}
+          textContentType={textContentType}
+          value={value}
+        />
+        <TouchableWithoutFeedback onPress={() => textInputRef?.current?.focus?.()}>
+          <Spacer mb={1} />
+        </TouchableWithoutFeedback>
+      </AnimatedBox>
+    )
+  }
+)
+
+const AnimatedBox = animated(Box)

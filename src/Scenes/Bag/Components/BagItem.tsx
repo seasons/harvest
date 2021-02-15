@@ -1,38 +1,60 @@
-import { Box, Flex, Sans, Button, Spacer } from "App/Components"
+import { Box, Button, Flex, Sans, Spacer } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
-import { imageResize } from "App/helpers/imageResize"
+import { Spinner } from "App/Components/Spinner"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+import { useAuthContext } from "App/Navigation/AuthContext"
+import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
+import { GET_PRODUCT } from "App/Scenes/Product/Queries"
+import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { get, head } from "lodash"
 import React, { useState } from "react"
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { color } from "App/utils"
-import { Spinner } from "App/Components/Spinner"
+
+import { useMutation } from "@apollo/client"
+
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
     product {
       id
+      slug
       name
       modelSize {
+        id
         display
       }
       brand {
         id
         name
+        websiteUrl
       }
-      images {
+      images(size: Thumb) {
         id
         url
       }
       variants {
         id
+        hasRestockNotification
         reservable
-        internalSize {
-          display
+        displayShort
+        displayLong
+        price {
+          id
+          retailPrice
         }
       }
+    }
+    price {
+      id
+      buyNewPrice
+      buyNewEnabled
+      buyNewAvailableForSale
+      buyUsedPrice
+      buyUsedEnabled
     }
   }
 `
@@ -43,6 +65,7 @@ interface BagItemProps {
   navigation?: any
   removeItemFromBag?: Function
   removeFromBagAndSaveItem?: Function
+  onShowBuyBottomSheet: () => void
 }
 
 export const BagItem: React.FC<BagItemProps> = ({
@@ -51,7 +74,9 @@ export const BagItem: React.FC<BagItemProps> = ({
   navigation,
   removeItemFromBag,
   removeFromBagAndSaveItem,
+  onShowBuyBottomSheet,
 }) => {
+  const { authState } = useAuthContext()
   const [isMutating, setIsMutating] = useState(false)
   const tracking = useTracking()
   if (!bagItem) {
@@ -66,9 +91,73 @@ export const BagItem: React.FC<BagItemProps> = ({
   }
 
   const isReserved = bagItem.status !== "Added"
-  const imageURL = imageResize(get(product, "images[0].url"), "thumb")
-  const variantSize = get(variantToUse, "internalSize.display")
+  const imageURL = product?.images?.[0]?.url || ""
+
+  // Show buy CTA whenever a sellable status is enabled, regardless of
+  // underlying availability
+  const isBuyable = bagItem?.productVariant?.price?.buyNewEnabled || bagItem?.productVariant?.price?.buyUsedEnabled
+
+  const variantSize = variantToUse?.displayLong?.toLowerCase()
   const variantId = bagItem.variantID
+
+  const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {
+    variables: {
+      productID: product.id,
+      variantID: variantToUse.id,
+    },
+    awaitRefetchQueries: true,
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+      {
+        query: GET_PRODUCT,
+        variables: { where: { id: product.id } },
+      },
+    ],
+  })
+
+  const onSaveForLater = () => {
+    if (!isMutating) {
+      setIsMutating(true)
+      tracking.trackEvent({
+        actionName: Schema.ActionNames.BagItemSaved,
+        actionType: Schema.ActionTypes.Tap,
+        productSlug: product.slug,
+        productId: product.id,
+        variantId: variantId,
+      })
+      removeFromBagAndSaveItem({
+        variables: {
+          id: variantId,
+          saved: false,
+        },
+        refetchQueries: [
+          {
+            query: GET_BAG,
+          },
+          {
+            query: GET_PRODUCT,
+            variables: {
+              where: {
+                id: product.id,
+              },
+            },
+          },
+          {
+            query: GET_BROWSE_PRODUCTS,
+            variables: {
+              name: "all",
+              first: 10,
+              skip: 0,
+              orderBy: "publishedAt_DESC",
+              sizes: [],
+            },
+          },
+        ],
+      })
+    }
+  }
 
   const ReservedItemContent = () => {
     return (
@@ -79,18 +168,25 @@ export const BagItem: React.FC<BagItemProps> = ({
         }}
         flexWrap="nowrap"
         flexDirection="column"
-        justifyContent="flex-end"
+        justifyContent="space-between"
       >
         <Box style={{ width: "100%" }} p={2}>
-          <Sans size="1">{`${index + 1}.`}</Sans>
+          <Sans size="4">{`${index + 1}.`}</Sans>
           <Spacer mb={1} />
-          <Sans size="1">{product?.brand?.name}</Sans>
-          <Sans size="1" color="black50">
+          <Sans size="3">{product?.brand?.name}</Sans>
+          <Sans size="3" color="black50">
             {product.name}
           </Sans>
-          <Sans size="1" color="black50">
+          <Sans size="3" color="black50">
             Size {variantSize}
           </Sans>
+        </Box>
+        <Box p={2}>
+          {isBuyable && (
+            <Button size="small" variant="secondaryWhite" onPress={onShowBuyBottomSheet}>
+              Buy
+            </Button>
+          )}
         </Box>
       </Flex>
     )
@@ -98,71 +194,69 @@ export const BagItem: React.FC<BagItemProps> = ({
 
   const NonReservedItemContent = () => {
     return (
-      <Flex style={{ flex: 2, width: "100%" }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
+      <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
         <Box>
           <Box style={{ width: "100%" }}>
-            <Sans size="1">{`${index + 1}. ${product?.brand?.name}`}</Sans>
-            <Sans size="1" color="black50">
+            <Sans size="4">{`${index + 1}. ${product?.brand?.name}`}</Sans>
+            <Sans size="4" color="black50">
               {product.name}
             </Sans>
-            <Sans size="1" color="black50">
+            <Sans size="4" color="black50">
               Size {variantSize}
             </Sans>
             <Spacer mb={3} />
-            <TouchableOpacity
-              onPress={() => {
-                if (!isMutating) {
-                  setIsMutating(true)
-                  tracking.trackEvent({
-                    actionName: Schema.ActionNames.BagItemSaved,
-                    actionType: Schema.ActionTypes.Tap,
-                    productSlug: product.slug,
-                    productId: product.id,
-                    variantId: variantId,
-                  })
-                  removeFromBagAndSaveItem({
-                    variables: {
-                      id: variantId,
-                      saved: false,
-                    },
-                  })
-                }
-              }}
-            >
-              <Sans size="1" style={{ textDecorationLine: "underline" }}>
-                Save for later
-              </Sans>
-            </TouchableOpacity>
+            {authState.isSignedIn && (
+              <TouchableOpacity onPress={onSaveForLater}>
+                <Sans size="4" style={{ textDecorationLine: "underline" }}>
+                  Save for later
+                </Sans>
+              </TouchableOpacity>
+            )}
           </Box>
         </Box>
-        {!isReserved && (
-          <Flex flexDirection="row" pt={1}>
-            <Box flex={1}>
-              <Button
-                size="small"
-                variant="secondaryWhite"
-                disabled={isMutating}
-                onPress={() => {
-                  tracking.trackEvent({
-                    actionName: Schema.ActionNames.BagItemRemoved,
-                    actionType: Schema.ActionTypes.Tap,
-                    productSlug: product.slug,
-                    productId: product.id,
-                    variantId: variantId,
-                  })
+        <Flex flexDirection="row" pt={1}>
+          <Box>
+            <Button
+              size="small"
+              variant="secondaryWhite"
+              disabled={isMutating}
+              onPress={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.BagItemRemoved,
+                  actionType: Schema.ActionTypes.Tap,
+                  productSlug: product.slug,
+                  productId: product.id,
+                  variantId: variantId,
+                })
+                if (!authState.isSignedIn) {
+                  removeFromLocalBag()
+                } else {
                   removeItemFromBag({
                     variables: {
                       id: variantId,
                       saved: false,
                     },
+                    refetchQueries: [
+                      {
+                        query: GET_BAG,
+                      },
+                      {
+                        query: GET_PRODUCT,
+                        variables: {
+                          where: {
+                            id: product.id,
+                          },
+                        },
+                      },
+                    ],
                   })
-                }}
-              >
-                Remove
-              </Button>
-            </Box>
-          </Flex>
-        )}
+                }
+              }}
+            >
+              Remove
+            </Button>
+          </Box>
+        </Flex>
       </Flex>
     )
   }
@@ -186,16 +280,21 @@ export const BagItem: React.FC<BagItemProps> = ({
             actionType: Schema.ActionTypes.Tap,
             productSlug: product.slug,
             productId: product.id,
+            productName: product.name,
           })
           navigation?.navigate("Product", { id: product.id, slug: product.slug })
         }}
       >
         <Box style={shadowStyles}>
-          <BagItemContainer isReserved={isReserved} flexDirection="row">
+          <BagItemContainer isReserved={isReserved}>
             {isReserved ? <ReservedItemContent /> : <NonReservedItemContent />}
             <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
               {!!imageURL && (
-                <ImageContainer style={{ height: 216, width: 170 }} resizeMode="contain" source={{ uri: imageURL }} />
+                <FadeInImage
+                  style={{ height: 216, width: 216 / PRODUCT_ASPECT_RATIO }}
+                  resizeMode="contain"
+                  source={{ uri: imageURL }}
+                />
               )}
             </Flex>
           </BagItemContainer>
@@ -212,17 +311,14 @@ export const BagItem: React.FC<BagItemProps> = ({
   )
 }
 
-const BagItemContainer = styled(Box)<{ isReserved: boolean }>`
+const BagItemContainer = styled(Flex)<{ isReserved: boolean }>`
   height: 216px;
   overflow: hidden;
+  flex-direction: row;
   background-color: ${color("white100")};
   border-color: ${color("black10")};
   border-width: ${(p) => (p.isReserved ? "1px" : "0px")};
   border-radius: ${(p) => (p.isReserved ? "8px" : "0px")};
-`
-
-const ImageContainer = styled(FadeInImage)`
-  height: 214;
 `
 
 const Overlay = styled(Box)`
