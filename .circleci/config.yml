@@ -66,23 +66,13 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
-      - run:
-          name: install node@12.0.0
-          command: |
-            set +e         
-            touch $BASH_ENV    
-            curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.5/install.sh | bash
-            echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
-            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
-            echo nvm install 12.0.0 >> $BASH_ENV
-            echo nvm alias default 12.0.0 >> $BASH_ENVV
+      - node/install:
+          node-version: 12.16.3
+          install-yarn: true
       - restore_cache:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
-      - node/install:
-          node-version: 12.16.3
-          install-yarn: true
       - run:
           name: Install dependencies
           command: yarn install
@@ -131,7 +121,6 @@ workflows:
   version: 2
   beta-release:
     jobs:
-      - build-and-test
       - beta:
           filters:
             branches:
