@@ -1,6 +1,9 @@
 # .circleci/config.yml
 
-version: 2
+version: 2.1
+
+orbs:
+  node: circleci/node@4.1.0
 
 jobs:
   build-and-test:
@@ -13,6 +16,9 @@ jobs:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
+      - node/install:
+          node-version: 12.16.3
+          install-yarn: true
       - run:
           name: Install dependencies
           command: yarn install
@@ -54,8 +60,9 @@ jobs:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
-      - env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - node/install:
+          node-version: 12.16.3
+          install-yarn: true
       - run:
           name: Install dependencies
           command: yarn install
@@ -93,7 +100,7 @@ jobs:
             npm install -g react-native-version
       - run:
           name: Fastlane
-          command: bundle exec fastlane $FASTLANE_LANE
+          command: bundle exec fastlane ios beta
       - store_artifacts:
           path: output/Seasons.ipa
 

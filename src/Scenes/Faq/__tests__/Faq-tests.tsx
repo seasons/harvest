@@ -1,9 +1,11 @@
-import React from "react"
-import { mount } from "enzyme"
-import { MockedProvider } from "@apollo/react-testing"
 import { waitForLoad } from "App/testUtils/waitForLoad"
-import { GET_FAQ, Faq } from "../Faq"
+import { mount } from "enzyme"
+import React from "react"
+
+import { MockedProvider } from "@apollo/client/testing"
+
 import { FaqSection } from "../Components/FaqSection"
+import { Faq, GET_FAQ } from "../Faq"
 
 const FaqFixture = {
   faq: {

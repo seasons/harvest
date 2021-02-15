@@ -3,6 +3,7 @@ import { FadeInImage } from "App/Components/FadeInImage"
 import { Spinner } from "App/Components/Spinner"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
@@ -11,9 +12,10 @@ import { get, head } from "lodash"
 import React, { useState } from "react"
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
+
 import { useMutation } from "@apollo/client"
+
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
-import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -180,9 +182,11 @@ export const BagItem: React.FC<BagItemProps> = ({
           </Sans>
         </Box>
         <Box p={2}>
-          <Button size="small" variant="secondaryWhite" onPress={onShowBuyBottomSheet} disabled={!isBuyable}>
-            Buy
-          </Button>
+          {isBuyable && (
+            <Button size="small" variant="secondaryWhite" onPress={onShowBuyBottomSheet}>
+              Buy
+            </Button>
+          )}
         </Box>
       </Flex>
     )
