@@ -121,6 +121,7 @@ workflows:
   version: 2
   beta-release:
     jobs:
+      - build-and-test
       - beta:
           filters:
             branches:
