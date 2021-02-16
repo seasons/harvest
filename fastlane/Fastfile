@@ -1,7 +1,9 @@
-platform :ios do  
+ENV["SPACESHIP_SKIP_2FA_UPGRADE"] = "1"
+
+platform :ios do
     before_all do
         setup_circle_ci
-    end  
+    end
 
     desc 'Fetch certificates and provisioning profiles'
     lane :certificates do
@@ -32,7 +34,7 @@ platform :ios do
     lane :beta do
         build
         changelog_from_git_commits
-        upload_to_testflight
+
+        pilot(api_key_path: "./fastlane/5ZM3SSYZ29.json")
     end
 end
-  

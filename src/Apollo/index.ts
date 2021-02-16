@@ -1,11 +1,14 @@
-import { ApolloLink, Observable, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client"
 import { setContext } from "apollo-link-context"
 import { onError } from "apollo-link-error"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
-import { Platform } from "react-native"
-import * as Sentry from "@sentry/react-native"
-import { resolvers, typeDefs } from "./resolvers"
+import { config, Env } from "App/utils/config"
 import { isEmpty } from "lodash"
+import { Platform } from "react-native"
+
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, Observable } from "@apollo/client"
+import * as Sentry from "@sentry/react-native"
+
+import { resolvers, typeDefs } from "./resolvers"
 
 export const setupApolloClient = async () => {
   const cache = new InMemoryCache({
@@ -44,7 +47,7 @@ export const setupApolloClient = async () => {
   })
 
   const httpLink = new HttpLink({
-    uri: process.env.MONSOON_ENDPOINT || "http://localhost:4000/", // Server URL (must be absolute)
+    uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/", // Server URL (must be absolute)
   }) as any
 
   const authLink = setContext(async (_, { headers: oldHeaders }) => {

@@ -1,4 +1,6 @@
-import { Box, Button, Container, FadeInImage, FixedBackArrow, Flex, Sans, Separator, Spacer } from "App/Components"
+import {
+  Box, Button, Container, FadeInImage, FixedBackArrow, Flex, Sans, Separator, Spacer
+} from "App/Components"
 import { ShareButton } from "App/Components/ShareButton"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -6,13 +8,14 @@ import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Instagram } from "Assets/svgs"
 import { DateTime } from "luxon"
 import React, { useState } from "react"
-import { useMutation } from "@apollo/client"
 import { Dimensions, Linking } from "react-native"
 import FastImage from "react-native-fast-image"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
 import { SharedElement } from "react-navigation-shared-element"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 import styled from "styled-components"
+
+import { useMutation } from "@apollo/client"
 
 import { GET_BAG } from "../Bag/BagQueries"
 import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
@@ -176,7 +179,7 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
                 : ((date: DateTime) => `${date.monthLong} ${date.day}, ${date.year}`)(DateTime.fromISO(item.createdAt))}
             </Sans>
           </Box>
-          {item.products.length > 0 && (
+          {item.products?.length > 0 && (
             <>
               <Spacer mb={6} />
               <Sans px={2} mb={1} size="3">
@@ -194,7 +197,7 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
       </ScrollView>
 
       <FixedBackArrow variant={"blackTransparent"} navigation={navigation} />
-      {item.products.length > 0 && (
+      {item.products?.length > 0 && (
         <ShareButtonWrapper>
           <ShareButton
             onPress={() => {

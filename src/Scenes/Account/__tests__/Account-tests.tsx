@@ -1,13 +1,17 @@
-import { MockedProvider } from "@apollo/react-testing"
-import { mount } from "enzyme"
-import React from "react"
-import { EditPaymentAndShipping, PaymentAndShipping } from ".."
 import * as AuthContext from "App/Navigation/AuthContext"
 import { waitForLoad } from "App/testUtils/waitForLoad"
-import { GetChargebeeUpdatePaymentPageDataFixture, GetPaymentDataFixture } from "./__fixtures__/AccountFixture"
+import { mount } from "enzyme"
+import React from "react"
+
+import { MockedProvider } from "@apollo/client/testing"
+
+import { EditPaymentAndShipping, PaymentAndShipping } from "../"
 import { GET_CHARGEBEE_UPDATE_PAYMENT_PAGE } from "../PaymentAndShipping/EditPaymentAndShipping"
 import { GET_PAYMENT_DATA } from "../PaymentAndShipping/PaymentAndShipping"
 import { AccountSection } from "../PersonalPreferences/PersonalPreferences"
+import {
+  GetChargebeeUpdatePaymentPageDataFixture, GetPaymentDataFixture
+} from "./__fixtures__/AccountFixture"
 
 beforeEach(() => {
   const authContextValues = {
