@@ -161,7 +161,7 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
           </Button>
           <Spacer mb={4} />
           <Sans color="black50" size="2">
-            {`If we do not receive your items back before ${billingDate}, your membership will automatically resume nad you will be billed. If you have any questions contact us below at membership@seasons.nyc`}
+            {`If we do not receive your items back before ${billingDate}, your membership will automatically resume and you will be billed. If you have any questions contact us below at membership@seasons.nyc`}
           </Sans>
           <Spacer mb={2} />
           <Button
