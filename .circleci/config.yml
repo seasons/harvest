@@ -19,6 +19,9 @@ jobs:
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.staging.conf"
           to: .env
+      - aws-s3/copy:
+          from: "s3://harvest-scripts/5ZM3SSYZ29.json"
+          to: "./fastlane/5ZM3SSYZ29.json"
       - restore_cache:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
@@ -63,6 +66,9 @@ jobs:
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.staging.conf"
           to: .env
+      - aws-s3/copy:
+          from: "s3://harvest-scripts/5ZM3SSYZ29.json"
+          to: "./fastlane/5ZM3SSYZ29.json"
       - restore_cache:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
@@ -112,5 +118,3 @@ workflows:
           filters:
             branches:
               only: release
-          requires:
-            - build-and-test
