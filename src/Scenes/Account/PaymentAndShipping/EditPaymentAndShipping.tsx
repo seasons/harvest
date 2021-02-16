@@ -1,56 +1,24 @@
 import gql from "graphql-tag"
 import React, { useState } from "react"
-import { useMutation, useQuery } from "@apollo/client"
+import { useMutation } from "@apollo/client"
 import { Dimensions, Keyboard, KeyboardAvoidingView } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, Sans, Spacer, TextInput } from "App/Components"
 import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
-import {
-  GetUserPaymentData_me_customer_billingInfo,
-  GetUserPaymentData_me_customer_detail_shippingAddress,
-} from "src/generated/getUserPaymentData"
+import { GetUserPaymentData_me_customer_detail_shippingAddress } from "src/generated/getUserPaymentData"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { space } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import * as Sentry from "@sentry/react-native"
 import analytics from "@segment/analytics-react-native"
-import { Schema as NavigationSchema } from "App/Navigation"
 
-export const GET_CURRENT_PLAN = gql`
-  query GetCurrentPlan {
-    me {
-      id
-      customer {
-        id
-        user {
-          id
-        }
-        paymentPlan {
-          id
-          planID
-          price
-          name
-        }
-      }
-    }
-  }
-`
-
-export const PAYMENT_UPDATE = gql`
-  mutation applePayUpdatePaymentMethod($planID: String!, $token: StripeToken!, $tokenType: String) {
-    applePayUpdatePaymentMethod(planID: $planID, token: $token, tokenType: $tokenType)
-  }
-`
-
-const UPDATE_PAYMENT_AND_SHIPPING = gql`
+const UPDATE_PHONE_AND_SHIPPING = gql`
   mutation updatePaymentAndShipping($shippingAddress: AddressInput!, $phoneNumber: String!) {
     updatePaymentAndShipping(shippingAddress: $shippingAddress, phoneNumber: $phoneNumber)
   }
 `
 
-const BILLING_ADDRESS = "Billing address"
-const EDIT_BILLING_INFO = "Edit billing info"
 const PHONE_NUMBER = "Phone number"
 const SHIPPING_ADDRESS = "Shipping address"
 
@@ -59,8 +27,6 @@ export const EditPaymentAndShipping: React.FC<{
   route: any
 }> = screenTrack()(({ navigation, route }) => {
   const { showPopUp, hidePopUp } = usePopUpContext()
-  const { previousData, data = previousData } = useQuery(GET_CURRENT_PLAN)
-  const billingAddress: GetUserPaymentData_me_customer_billingInfo = route?.params?.billingInfo
   const currentShippingAddress: GetUserPaymentData_me_customer_detail_shippingAddress = route?.params?.shippingAddress
   const currentPhoneNumber = route?.params?.phoneNumber
   const insets = useSafeAreaInsets()
@@ -74,9 +40,7 @@ export const EditPaymentAndShipping: React.FC<{
   })
   const [phoneNumber, setPhoneNumber] = useState(currentPhoneNumber)
 
-  console.log("billingAddress 1212", billingAddress)
-
-  const [updatePaymentAndShipping] = useMutation(UPDATE_PAYMENT_AND_SHIPPING, {
+  const [updatePaymentAndShipping] = useMutation(UPDATE_PHONE_AND_SHIPPING, {
     onError: (error) => {
       let popUpData = {
         buttonText: "Got it",
@@ -120,8 +84,6 @@ export const EditPaymentAndShipping: React.FC<{
     zipCode: shippingZipCode,
   } = shippingAddress
 
-  const paymentPlan = data?.me?.customer?.paymentPlan
-
   const handleSaveBtnPressed = async () => {
     setIsMutating(true)
     const result = await updatePaymentAndShipping({
@@ -149,7 +111,7 @@ export const EditPaymentAndShipping: React.FC<{
 
   const handleCancelBtnPressed = () => navigation.goBack()
 
-  const sections = [SHIPPING_ADDRESS, BILLING_ADDRESS, PHONE_NUMBER, EDIT_BILLING_INFO]
+  const sections = [SHIPPING_ADDRESS, PHONE_NUMBER]
 
   const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 40) / 2
@@ -215,26 +177,6 @@ export const EditPaymentAndShipping: React.FC<{
             />
           </>
         )
-      case EDIT_BILLING_INFO:
-        return (
-          <Flex flexDirection="row" justifyContent="space-between" pt={3}>
-            {paymentPlan && (
-              <Button
-                variant="primaryWhite"
-                size="large"
-                width="100%"
-                onPress={() =>
-                  navigation.navigate(NavigationSchema.StackNames.AccountStack, {
-                    screen: NavigationSchema.PageNames.EditPaymentMethod,
-                    params: { billingAddress, paymentPlan },
-                  })
-                }
-              >
-                Edit payment method
-              </Button>
-            )}
-          </Flex>
-        )
       default:
         return <></>
     }
@@ -249,7 +191,7 @@ export const EditPaymentAndShipping: React.FC<{
           ListHeaderComponent={() => (
             <Box mt={insets.top}>
               <Spacer mb={2} />
-              <Sans size="7">Payment & Shipping</Sans>
+              <Sans size="7">Edit shipping & phone</Sans>
               <Spacer mb={4} />
             </Box>
           )}

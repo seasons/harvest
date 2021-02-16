@@ -18,6 +18,12 @@ export const GET_PAYMENT_DATA = gql`
       id
       customer {
         id
+        paymentPlan {
+          id
+          planID
+          price
+          name
+        }
         detail {
           id
           phoneNumber
@@ -134,21 +140,34 @@ export const createBillingAddress = (billingInfo) => {
   return addressArray
 }
 
-const AccountSection: React.FC<{ title: string; value: string | [string] }> = ({ title, value }) => {
+const AccountSection: React.FC<{ title: string; value: string | [string]; onEdit: () => void }> = ({
+  title,
+  value,
+  onEdit,
+}) => {
   return (
     <Box key={title} px={2}>
-      <Sans size="5">{title}</Sans>
+      <Flex flexDirection="row" justifyContent={!!onEdit ? "space-between" : "flex-start"} alignItems="center">
+        <Sans size="4">{title}</Sans>
+        {!!onEdit && (
+          <TouchableOpacity onPress={onEdit}>
+            <Sans size="4" style={{ textDecorationLine: "underline" }}>
+              Edit
+            </Sans>
+          </TouchableOpacity>
+        )}
+      </Flex>
       <Box mb={1} />
       <Separator color={color("black10")} />
       <Box mb={1} />
       {Array.isArray(value) ? (
         value.map((text) => (
-          <Sans key={text} size="5" color="black50">
+          <Sans key={text} size="4" color="black50">
             {text}
           </Sans>
         ))
       ) : (
-        <Sans size="5" color="black50">
+        <Sans size="4" color="black50">
           {value}
         </Sans>
       )}
@@ -161,7 +180,7 @@ const PaymentHistorySection: React.FC<{ title: string; value: any }> = ({ title,
   const navigation = useNavigation()
   return (
     <Box key={title} px={2}>
-      <Sans size="5">{title}</Sans>
+      <Sans size="4">{title}</Sans>
       <Box mb={1} />
       <Separator color={color("black10")} />
       {value?.map((a, i) => (
@@ -169,8 +188,8 @@ const PaymentHistorySection: React.FC<{ title: string; value: any }> = ({ title,
           <Spacer mb={3} />
           <TouchableOpacity key={title} onPress={() => navigation.navigate("InvoiceDetail", { invoice: a })}>
             <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="space-between">
-              <Sans size="5">{formatInvoiceDate(a.dueDate)}</Sans>
-              <Sans size="5">{getAdjustedInvoiceTotal(a)}</Sans>
+              <Sans size="4">{formatInvoiceDate(a.dueDate)}</Sans>
+              <Sans size="4">{getAdjustedInvoiceTotal(a)}</Sans>
             </Flex>
           </TouchableOpacity>
           <Spacer mb={3} />
@@ -211,6 +230,8 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
     )
   }
 
+  const paymentPlan = data?.me?.customer?.paymentPlan
+
   const sections = []
   let shippingAddress = null
   let billingInfo = null
@@ -220,7 +241,17 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
     const details = customer.detail
     if (details?.shippingAddress) {
       shippingAddress = details.shippingAddress
-      sections.push({ title: "Shipping address", value: createShippingAddress(details.shippingAddress) })
+      sections.push({
+        title: "Shipping address",
+        value: createShippingAddress(details.shippingAddress),
+        onEdit: () => {
+          navigation.navigate("EditPaymentAndShipping", {
+            billingInfo,
+            phoneNumber,
+            shippingAddress,
+          })
+        },
+      })
     }
 
     if (customer?.billingInfo) {
@@ -228,17 +259,39 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
       sections.push({
         title: "Billing address",
         value: createBillingAddress(customer.billingInfo),
+        onEdit: () => {
+          navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+            screen: NavigationSchema.PageNames.EditPaymentMethod,
+            params: { billingAddress: billingInfo, paymentPlan },
+          })
+        },
       })
 
       sections.push({
         title: "Payment info",
         value: `${customer.billingInfo.brand.toUpperCase()} ${customer.billingInfo.last_digits}`,
+        onEdit: () => {
+          navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+            screen: NavigationSchema.PageNames.EditPaymentMethod,
+            params: { billingAddress: billingInfo, paymentPlan },
+          })
+        },
       })
     }
 
     if (details?.phoneNumber) {
       phoneNumber = details?.phoneNumber
-      sections.push({ title: "Phone number", value: details.phoneNumber })
+      sections.push({
+        title: "Phone number",
+        value: details.phoneNumber,
+        onEdit: () => {
+          navigation.navigate("EditPaymentAndShipping", {
+            billingInfo,
+            phoneNumber,
+            shippingAddress,
+          })
+        },
+      })
     }
 
     if (customer?.invoices) {
@@ -249,19 +302,11 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
     }
   }
 
-  const handleEditBtnPressed = () => {
-    navigation.navigate("EditPaymentAndShipping", {
-      billingInfo,
-      phoneNumber,
-      shippingAddress,
-    })
-  }
-
   const renderItem = (item) => {
     if (item.title === "Payment history") {
       return <PaymentHistorySection title={item.title} value={item.value} />
     }
-    return <AccountSection title={item.title} value={item.value} />
+    return <AccountSection title={item.title} value={item.value} onEdit={item.onEdit} />
   }
 
   return (
@@ -276,7 +321,7 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
         ListHeaderComponent={() => (
           <Box px={2}>
             <Spacer mb={80} />
-            <Sans size="7">Payment & Shipping</Sans>
+            <Sans size="7">Payment & shipping</Sans>
             <Spacer mb={4} />
           </Box>
         )}
@@ -288,10 +333,7 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
           ...StyleSheet.absoluteFillObject,
           top: "95%",
         }}
-      ></FadeBottom2>
-      <FixedButton block variant="primaryWhite" onPress={handleEditBtnPressed}>
-        Edit
-      </FixedButton>
+      />
     </Container>
   )
 })

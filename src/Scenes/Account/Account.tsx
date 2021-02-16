@@ -174,25 +174,25 @@ export const Account = screenTrack()(({ navigation }) => {
 
   const topList = [
     {
-      title: "Manage Membership",
+      title: "Manage membership",
       icon: <ManageMembership />,
       onPress: () => navigation.navigate("MembershipInfo"),
       tracking: Schema.ActionNames.MembershipInfoTapped,
     },
     {
-      title: "Personal Preferences",
+      title: "Personal preferences",
       icon: <PersonalPreferences />,
       onPress: () => navigation.navigate("PersonalPreferences"),
       tracking: Schema.ActionNames.PersonalPreferencesTapped,
     },
     {
-      title: "Payment & Shipping",
+      title: "Payment & shipping",
       icon: <MapPin />,
       onPress: () => navigation.navigate("PaymentAndShipping"),
       tracking: Schema.ActionNames.PaymentAndShippingTapped,
     },
     {
-      title: "Frequently Asked Questions",
+      title: "Frequently asked questions",
       icon: <SpeechBubble />,
       onPress: () => navigation.navigate("Faq"),
       tracking: Schema.ActionNames.FAQTapped,
