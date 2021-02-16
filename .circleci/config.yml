@@ -3,6 +3,7 @@
 version: 2.1
 
 orbs:
+  aws-s3: circleci/aws-s3@2.0.0
   node: circleci/node@4.1.0
 
 jobs:
@@ -15,6 +16,9 @@ jobs:
       - node/install:
           node-version: 12.16.3
           install-yarn: true
+      - aws-s3/copy:
+          from: "s3://harvest-scripts/env.staging.conf"
+          to: .env
       - restore_cache:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
@@ -56,6 +60,9 @@ jobs:
       - node/install:
           node-version: 12.16.3
           install-yarn: true
+      - aws-s3/copy:
+          from: "s3://harvest-scripts/env.staging.conf"
+          to: .env
       - restore_cache:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
@@ -90,11 +97,6 @@ jobs:
           key: pods-v4-{{ checksum "ios/Podfile.lock" }}
           paths:
             - ./Pods
-      - run:
-          name: Install command line tool
-          command: |
-            npm install -g react-native-cli
-            npm install -g react-native-version
       - run:
           name: Fastlane
           command: bundle exec fastlane ios beta
