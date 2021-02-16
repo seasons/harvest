@@ -357,8 +357,12 @@ export const Account = screenTrack()(({ navigation }) => {
             {!!data ? renderBody() : <ListSkeleton />}
           </Box>
           <InsetSeparator />
-          {!!referralLink && <InvitedFriendsRow referralLink={referralLink} />}
-          <InsetSeparator />
+          {!!referralLink && (
+            <>
+              <InvitedFriendsRow referralLink={referralLink} />
+              <InsetSeparator />
+            </>
+          )}
           <NotificationToggle pushNotification={pushNotification} />
           <InsetSeparator />
           <Spacer mb={4} />
