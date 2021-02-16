@@ -103,17 +103,19 @@ jobs:
           key: pods-v4-{{ checksum "ios/Podfile.lock" }}
           paths:
             - ./Pods
+      # - run:
+      #     name: Fastlane
+      #     command: bundle exec fastlane ios beta
       - run:
-          name: Fastlane
-          command: bundle exec fastlane ios beta
+          name: Bump version
+          command: yarn version --patch
       - store_artifacts:
-          path: output/Seasons.ipa
+          path: seasons.ipa
 
 workflows:
   version: 2
   beta-release:
     jobs:
-      - build-and-test
       - beta:
           filters:
             branches:
