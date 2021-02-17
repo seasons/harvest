@@ -328,12 +328,6 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
         keyExtractor={(item) => item.title}
         renderItem={({ item }) => renderItem(item)}
       />
-      <FadeBottom2
-        style={{
-          ...StyleSheet.absoluteFillObject,
-          top: "95%",
-        }}
-      />
     </Container>
   )
 })
