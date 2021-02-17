@@ -97,7 +97,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   // underlying availability
   const isBuyable = bagItem?.productVariant?.price?.buyNewEnabled || bagItem?.productVariant?.price?.buyUsedEnabled
 
-  const variantSize = variantToUse?.displayLong?.toLowerCase()
+  const variantSize = variantToUse?.displayShort
   const variantId = bagItem.variantID
 
   const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {
