@@ -1,6 +1,10 @@
 # .circleci/config.yml
 
-version: 2
+version: 2.1
+
+orbs:
+  aws-s3: circleci/aws-s3@2.0.0
+  node: circleci/node@4.1.0
 
 jobs:
   build-and-test:
@@ -9,6 +13,15 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
+      - node/install:
+          node-version: 12.16.3
+          install-yarn: true
+      - aws-s3/copy:
+          from: "s3://harvest-scripts/env.staging.conf"
+          to: .env
+      - aws-s3/copy:
+          from: "s3://harvest-scripts/5ZM3SSYZ29.json"
+          to: "./fastlane/5ZM3SSYZ29.json"
       - restore_cache:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
@@ -33,9 +46,6 @@ jobs:
           key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
-      - run:
-          name: Test suites
-          command: yarn test
       - store_artifacts:
           path: output
       - store_test_results:
@@ -49,7 +59,17 @@ jobs:
       FASTLANE_LANE: ios beta
     shell: /bin/bash --login -o pipefail
     steps:
+      - add_ssh_keys
       - checkout
+      - node/install:
+          node-version: 12.16.3
+          install-yarn: true
+      - aws-s3/copy:
+          from: "s3://harvest-scripts/env.staging.conf"
+          to: .env
+      - aws-s3/copy:
+          from: "s3://harvest-scripts/5ZM3SSYZ29.json"
+          to: "./fastlane/5ZM3SSYZ29.json"
       - restore_cache:
           key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
@@ -85,24 +105,19 @@ jobs:
           paths:
             - ./Pods
       - run:
-          name: Install command line tool
-          command: |
-            npm install -g react-native-cli
-            npm install -g react-native-version
+          name: Bump version
+          command: yarn version --patch
       - run:
-          name: Fastlane
-          command: bundle exec fastlane $FASTLANE_LANE
+          name: Push changes to github
+          command: git push origin master && git push --tags
       - store_artifacts:
-          path: output/Seasons.ipa
+          path: seasons.ipa
 
 workflows:
   version: 2
   beta-release:
     jobs:
-      - build-and-test
       - beta:
           filters:
             branches:
               only: release
-          requires:
-            - build-and-test

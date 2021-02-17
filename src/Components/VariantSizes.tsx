@@ -1,11 +1,11 @@
 import { Box, Flex, Sans } from "App/Components"
-import { Homepage_homepage_sections_results_Product_variants } from "App/generated/Homepage"
+import { Homepage_me_savedItems_productVariant_product_variants } from "App/generated/Homepage"
 import { color } from "App/utils"
 import React from "react"
 import styled from "styled-components/native"
 
 export const VariantSizes: React.FC<{
-  variants: Homepage_homepage_sections_results_Product_variants[]
+  variants: Homepage_me_savedItems_productVariant_product_variants[]
   size: "2" | "4"
 }> = ({ variants, size }) => {
   const availableVariants = variants.filter((a) => !!a?.displayShort)

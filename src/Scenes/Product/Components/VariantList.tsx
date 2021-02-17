@@ -19,7 +19,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
     setSizeData(variants)
 
     // Update size data
-    if (variants?.length && !selectedVariant.id) {
+    if (variants?.length && !variants.includes(selectedVariant)) {
       const firstAvailableSize =
         find(variants, (size) => size.isInBag) || find(variants, (size) => size.reservable > 0) || variants?.[0]
       setSelectedVariant(firstAvailableSize)

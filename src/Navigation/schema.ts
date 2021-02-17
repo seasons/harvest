@@ -21,6 +21,7 @@ export enum PageNames {
   InviteFromContactsModal = "InviteFromContactsModal",
   ShareReservationToIGModal = "ShareReservationToIGModal",
   ShareFitPicToIGModal = "ShareFitPicToIGModal",
+  PauseModal = "PauseModal",
 
   // Home
   Home = "Home",
@@ -46,6 +47,7 @@ export enum PageNames {
   Account = "Account",
   MembershipInfo = "MembershipInfo",
   PaymentAndShipping = "PaymentAndShipping",
+  InvoiceDetail = "InvoiceDetail",
   EditPaymentAndShipping = "EditPaymentAndShipping",
   EditShippingAddress = "EditShippingAddress",
   EditStylePreferences = "EditStylePreferences",

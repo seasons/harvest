@@ -27,12 +27,19 @@ export interface GetCustomer_me_bag_productVariant_product_brand {
   __typename: "Brand";
   id: string;
   name: string;
+  websiteUrl: string | null;
 }
 
 export interface GetCustomer_me_bag_productVariant_product_images {
   __typename: "Image";
   id: string;
   url: string | null;
+}
+
+export interface GetCustomer_me_bag_productVariant_product_variants_price {
+  __typename: "ProductVariantPrice";
+  id: string;
+  retailPrice: number | null;
 }
 
 export interface GetCustomer_me_bag_productVariant_product_variants {
@@ -42,6 +49,7 @@ export interface GetCustomer_me_bag_productVariant_product_variants {
   reservable: number;
   displayShort: string | null;
   displayLong: string | null;
+  price: GetCustomer_me_bag_productVariant_product_variants_price;
 }
 
 export interface GetCustomer_me_bag_productVariant_product {
@@ -55,10 +63,21 @@ export interface GetCustomer_me_bag_productVariant_product {
   variants: GetCustomer_me_bag_productVariant_product_variants[] | null;
 }
 
+export interface GetCustomer_me_bag_productVariant_price {
+  __typename: "ProductVariantPrice";
+  id: string;
+  buyNewPrice: number | null;
+  buyNewEnabled: boolean;
+  buyNewAvailableForSale: boolean | null;
+  buyUsedPrice: number | null;
+  buyUsedEnabled: boolean;
+}
+
 export interface GetCustomer_me_bag_productVariant {
   __typename: "ProductVariant";
   id: string;
   product: GetCustomer_me_bag_productVariant_product;
+  price: GetCustomer_me_bag_productVariant_price;
 }
 
 export interface GetCustomer_me_bag {

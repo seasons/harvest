@@ -20,7 +20,6 @@ import { GET_HOMEPAGE } from "@seasons/eclipse"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
-  const [navigatedToAccount, setNavigatedToAccount] = useState(false)
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
   const [fitPicsFetchCount, setFitPicsFetchCount] = useState(8)
   const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
@@ -56,15 +55,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
     })
     return unsubscribe
   }, [navigation])
-
-  useEffect(() => {
-    const status = data?.me?.customer?.status
-    // Check if user status is authorized and navigate to account pane
-    if (!!status && status === "Authorized" && !navigatedToAccount) {
-      setNavigatedToAccount(true)
-      navigation?.navigate("AccountStack", { screen: "Account" })
-    }
-  }, [data, navigation])
 
   useEffect(() => {
     if (!!data) {

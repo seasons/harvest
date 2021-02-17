@@ -43,8 +43,8 @@ export interface LogIn_login_customer {
 
 export interface LogIn_login_user {
   __typename: "User";
-  createdAt: any;
   id: string;
+  createdAt: any;
   email: string;
   firstName: string;
   lastName: string;

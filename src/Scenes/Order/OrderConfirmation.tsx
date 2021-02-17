@@ -1,13 +1,15 @@
-import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
+import {
+  Box, Container, FixedBackArrow, FixedButton, Flex, Sans, SectionHeader, Separator, Spacer
+} from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { color, space } from "App/utils"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
+import { CheckCircled } from "Assets/svgs"
 import React from "react"
 import { Dimensions, ScrollView } from "react-native"
-import { color, space } from "App/utils"
-import { SectionHeader } from "./Components/SectionHeader"
+
 import { LineItem } from "./Components/LineItem"
 import { OrderItem } from "./Components/OrderItem"
-import { CheckCircled } from "Assets/svgs"
 
 const windowWidth = Dimensions.get("window").width
 

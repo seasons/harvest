@@ -1,7 +1,7 @@
 import { Flex, Sans, Separator, Spacer } from "App/Components"
 import React from "react"
 
-export const SectionHeader = ({ title }) => {
+export const SectionHeader: React.FC<{ title: string }> = ({ title }) => {
   return (
     <>
       <Flex flexDirection="row" style={{ flex: 1 }} width="100%">

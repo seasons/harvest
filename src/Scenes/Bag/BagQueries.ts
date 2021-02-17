@@ -63,11 +63,16 @@ export const GET_BAG = gql`
         }
         membership {
           id
+          subscription {
+            id
+            nextBillingAt
+          }
           plan {
             id
             tier
             price
             itemCount
+            pauseWithItemsPrice
           }
           pauseRequests(orderBy: createdAt_DESC) {
             id

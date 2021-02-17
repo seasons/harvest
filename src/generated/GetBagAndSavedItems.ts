@@ -44,12 +44,19 @@ export interface GetBagAndSavedItems_me_customer_detail {
   shippingAddress: GetBagAndSavedItems_me_customer_detail_shippingAddress | null;
 }
 
+export interface GetBagAndSavedItems_me_customer_membership_subscription {
+  __typename: "CustomerMembershipSubscriptionData";
+  id: string;
+  nextBillingAt: any;
+}
+
 export interface GetBagAndSavedItems_me_customer_membership_plan {
   __typename: "PaymentPlan";
   id: string;
   tier: PaymentPlanTier | null;
   price: number | null;
   itemCount: number | null;
+  pauseWithItemsPrice: number | null;
 }
 
 export interface GetBagAndSavedItems_me_customer_membership_pauseRequests {
@@ -63,14 +70,9 @@ export interface GetBagAndSavedItems_me_customer_membership_pauseRequests {
 export interface GetBagAndSavedItems_me_customer_membership {
   __typename: "CustomerMembership";
   id: string;
+  subscription: GetBagAndSavedItems_me_customer_membership_subscription | null;
   plan: GetBagAndSavedItems_me_customer_membership_plan | null;
   pauseRequests: GetBagAndSavedItems_me_customer_membership_pauseRequests[] | null;
-}
-
-export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_internalSize {
-  __typename: "Size";
-  id: string;
-  display: string;
 }
 
 export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_images {
@@ -97,7 +99,7 @@ export interface GetBagAndSavedItems_me_customer_reservations_products_productVa
 export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant {
   __typename: "ProductVariant";
   id: string;
-  internalSize: GetBagAndSavedItems_me_customer_reservations_products_productVariant_internalSize | null;
+  displayShort: string | null;
   product: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product;
 }
 
@@ -129,6 +131,7 @@ export interface GetBagAndSavedItems_me_customer {
 
 export interface GetBagAndSavedItems_me_activeReservation_returnedPackage_shippingLabel {
   __typename: "Label";
+  id: string;
   trackingURL: string | null;
 }
 
@@ -140,6 +143,7 @@ export interface GetBagAndSavedItems_me_activeReservation_returnedPackage {
 
 export interface GetBagAndSavedItems_me_activeReservation_sentPackage_shippingLabel {
   __typename: "Label";
+  id: string;
   trackingURL: string | null;
 }
 
@@ -172,12 +176,19 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_brand {
   __typename: "Brand";
   id: string;
   name: string;
+  websiteUrl: string | null;
 }
 
 export interface GetBagAndSavedItems_me_bag_productVariant_product_images {
   __typename: "Image";
   id: string;
   url: string | null;
+}
+
+export interface GetBagAndSavedItems_me_bag_productVariant_product_variants_price {
+  __typename: "ProductVariantPrice";
+  id: string;
+  retailPrice: number | null;
 }
 
 export interface GetBagAndSavedItems_me_bag_productVariant_product_variants {
@@ -187,6 +198,7 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_variants {
   reservable: number;
   displayShort: string | null;
   displayLong: string | null;
+  price: GetBagAndSavedItems_me_bag_productVariant_product_variants_price;
 }
 
 export interface GetBagAndSavedItems_me_bag_productVariant_product {
@@ -200,10 +212,21 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product {
   variants: GetBagAndSavedItems_me_bag_productVariant_product_variants[] | null;
 }
 
+export interface GetBagAndSavedItems_me_bag_productVariant_price {
+  __typename: "ProductVariantPrice";
+  id: string;
+  buyNewPrice: number | null;
+  buyNewEnabled: boolean;
+  buyNewAvailableForSale: boolean | null;
+  buyUsedPrice: number | null;
+  buyUsedEnabled: boolean;
+}
+
 export interface GetBagAndSavedItems_me_bag_productVariant {
   __typename: "ProductVariant";
   id: string;
   product: GetBagAndSavedItems_me_bag_productVariant_product;
+  price: GetBagAndSavedItems_me_bag_productVariant_price;
 }
 
 export interface GetBagAndSavedItems_me_bag {
@@ -225,12 +248,19 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_brand 
   __typename: "Brand";
   id: string;
   name: string;
+  websiteUrl: string | null;
 }
 
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_images {
   __typename: "Image";
   id: string;
   url: string | null;
+}
+
+export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants_price {
+  __typename: "ProductVariantPrice";
+  id: string;
+  retailPrice: number | null;
 }
 
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants {
@@ -240,6 +270,7 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_varian
   reservable: number;
   displayShort: string | null;
   displayLong: string | null;
+  price: GetBagAndSavedItems_me_savedItems_productVariant_product_variants_price;
 }
 
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product {
@@ -253,17 +284,28 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product {
   variants: GetBagAndSavedItems_me_savedItems_productVariant_product_variants[] | null;
 }
 
+export interface GetBagAndSavedItems_me_savedItems_productVariant_price {
+  __typename: "ProductVariantPrice";
+  id: string;
+  buyNewPrice: number | null;
+  buyNewEnabled: boolean;
+  buyNewAvailableForSale: boolean | null;
+  buyUsedPrice: number | null;
+  buyUsedEnabled: boolean;
+}
+
 export interface GetBagAndSavedItems_me_savedItems_productVariant {
   __typename: "ProductVariant";
   id: string;
   product: GetBagAndSavedItems_me_savedItems_productVariant_product;
+  price: GetBagAndSavedItems_me_savedItems_productVariant_price;
 }
 
 export interface GetBagAndSavedItems_me_savedItems {
   __typename: "BagItem";
   id: string;
-  productVariant: GetBagAndSavedItems_me_savedItems_productVariant;
   saved: boolean | null;
+  productVariant: GetBagAndSavedItems_me_savedItems_productVariant;
 }
 
 export interface GetBagAndSavedItems_me {

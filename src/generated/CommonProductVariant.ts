@@ -9,6 +9,16 @@ import { LetterSize, BottomSizeType } from "./globalTypes";
 // GraphQL fragment: CommonProductVariant
 // ====================================================
 
+export interface CommonProductVariant_price {
+  __typename: "ProductVariantPrice";
+  id: string;
+  buyNewPrice: number | null;
+  buyNewAvailableForSale: boolean | null;
+  buyNewEnabled: boolean;
+  buyUsedEnabled: boolean;
+  buyUsedPrice: number | null;
+}
+
 export interface CommonProductVariant_manufacturerSizes_top {
   __typename: "TopSize";
   id: string;
@@ -51,5 +61,6 @@ export interface CommonProductVariant {
   isInBag: boolean;
   isSaved: boolean;
   hasRestockNotification: boolean;
+  price: CommonProductVariant_price;
   manufacturerSizes: CommonProductVariant_manufacturerSizes[] | null;
 }
