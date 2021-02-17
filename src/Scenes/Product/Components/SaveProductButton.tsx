@@ -81,6 +81,9 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
   }
 
   const handleSaveButton = () => {
+    if (!selectedVariant?.id) {
+      return
+    }
     onPressSaveButton()
     if (!userHasSession) {
       navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SignInModal })
