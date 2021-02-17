@@ -74,13 +74,18 @@ export enum CouponType {
 }
 
 export enum CreditNoteReasonCode {
+  Chargeback = "Chargeback",
+  Fraudulent = "Fraudulent",
   OrderCancellation = "OrderCancellation",
   OrderChange = "OrderChange",
   Other = "Other",
   ProductUnsatisfactory = "ProductUnsatisfactory",
   ServiceUnsatisfactory = "ServiceUnsatisfactory",
+  SubscriptionCancellation = "SubscriptionCancellation",
   SubscriptionChange = "SubscriptionChange",
+  SubscriptionPause = "SubscriptionPause",
   Waiver = "Waiver",
+  WriteOff = "WriteOff",
 }
 
 export enum CreditNoteStatus {
@@ -356,8 +361,6 @@ export enum ProductOrderByInput {
   externalURL_DESC = "externalURL_DESC",
   id_ASC = "id_ASC",
   id_DESC = "id_DESC",
-  modelHeight_ASC = "modelHeight_ASC",
-  modelHeight_DESC = "modelHeight_DESC",
   name_ASC = "name_ASC",
   name_DESC = "name_DESC",
   photographyStatus_ASC = "photographyStatus_ASC",
@@ -1691,7 +1694,7 @@ export interface CustomerMembershipSubscriptionDataCreateInput {
   subscriptionId: string;
   currentTermStart: any;
   currentTermEnd: any;
-  nextBillingAt: any;
+  nextBillingAt?: any | null;
   status: string;
   planPrice: number;
 }
@@ -4393,7 +4396,6 @@ export interface ProductCreateInput {
   description?: string | null;
   externalURL?: string | null;
   buyNewEnabled?: boolean | null;
-  modelHeight?: number | null;
   name: string;
   photographyStatus?: PhotographyStatus | null;
   productFit?: ProductFit | null;
@@ -4440,7 +4442,6 @@ export interface ProductCreateWithoutCategoryInput {
   description?: string | null;
   externalURL?: string | null;
   buyNewEnabled?: boolean | null;
-  modelHeight?: number | null;
   name: string;
   photographyStatus?: PhotographyStatus | null;
   productFit?: ProductFit | null;
@@ -4471,7 +4472,6 @@ export interface ProductCreateWithoutVariantsInput {
   description?: string | null;
   externalURL?: string | null;
   buyNewEnabled?: boolean | null;
-  modelHeight?: number | null;
   name: string;
   photographyStatus?: PhotographyStatus | null;
   productFit?: ProductFit | null;
@@ -4838,14 +4838,6 @@ export interface ProductScalarWhereInput {
   externalURL_not_ends_with?: string | null;
   buyNewEnabled?: boolean | null;
   buyNewEnabled_not?: boolean | null;
-  modelHeight?: number | null;
-  modelHeight_not?: number | null;
-  modelHeight_in?: number[] | null;
-  modelHeight_not_in?: number[] | null;
-  modelHeight_lt?: number | null;
-  modelHeight_lte?: number | null;
-  modelHeight_gt?: number | null;
-  modelHeight_gte?: number | null;
   name?: string | null;
   name_not?: string | null;
   name_in?: string[] | null;
@@ -5077,7 +5069,6 @@ export interface ProductUpdateDataInput {
   description?: string | null;
   externalURL?: string | null;
   buyNewEnabled?: boolean | null;
-  modelHeight?: number | null;
   name?: string | null;
   photographyStatus?: PhotographyStatus | null;
   productFit?: ProductFit | null;
@@ -5108,7 +5099,6 @@ export interface ProductUpdateManyDataInput {
   description?: string | null;
   externalURL?: string | null;
   buyNewEnabled?: boolean | null;
-  modelHeight?: number | null;
   name?: string | null;
   photographyStatus?: PhotographyStatus | null;
   productFit?: ProductFit | null;
@@ -5172,7 +5162,6 @@ export interface ProductUpdateWithoutCategoryDataInput {
   description?: string | null;
   externalURL?: string | null;
   buyNewEnabled?: boolean | null;
-  modelHeight?: number | null;
   name?: string | null;
   photographyStatus?: PhotographyStatus | null;
   productFit?: ProductFit | null;
@@ -5202,7 +5191,6 @@ export interface ProductUpdateWithoutVariantsDataInput {
   description?: string | null;
   externalURL?: string | null;
   buyNewEnabled?: boolean | null;
-  modelHeight?: number | null;
   name?: string | null;
   photographyStatus?: PhotographyStatus | null;
   productFit?: ProductFit | null;
@@ -6148,14 +6136,6 @@ export interface ProductWhereInput {
   externalURL_not_ends_with?: string | null;
   buyNewEnabled?: boolean | null;
   buyNewEnabled_not?: boolean | null;
-  modelHeight?: number | null;
-  modelHeight_not?: number | null;
-  modelHeight_in?: number[] | null;
-  modelHeight_not_in?: number[] | null;
-  modelHeight_lt?: number | null;
-  modelHeight_lte?: number | null;
-  modelHeight_gt?: number | null;
-  modelHeight_gte?: number | null;
   name?: string | null;
   name_not?: string | null;
   name_in?: string[] | null;
