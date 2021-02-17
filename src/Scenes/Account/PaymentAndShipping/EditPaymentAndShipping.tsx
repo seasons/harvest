@@ -191,7 +191,7 @@ export const EditPaymentAndShipping: React.FC<{
           ListHeaderComponent={() => (
             <Box mt={insets.top}>
               <Spacer mb={2} />
-              <Sans size="7">Edit shipping & phone</Sans>
+              <Sans size="7">Edit shipping address</Sans>
               <Spacer mb={4} />
             </Box>
           )}
