@@ -35,6 +35,9 @@ platform :ios do
         build
         changelog_from_git_commits
 
-        pilot(api_key_path: "./fastlane/5ZM3SSYZ29.json")
+        upload_to_testflight(
+          api_key_path: "./fastlane/5ZM3SSYZ29.json",
+          skip_waiting_for_build_processing: true
+        )
     end
 end
