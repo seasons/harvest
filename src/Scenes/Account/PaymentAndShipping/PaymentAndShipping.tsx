@@ -1,16 +1,15 @@
-import { Box, Container, FixedBackArrow, FixedButton, Sans, Spacer, Separator, Flex } from "App/Components"
+import { Box, Container, FixedBackArrow, Sans, Spacer, Separator, Flex } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
 import { useQuery } from "@apollo/client"
-import { FlatList, StyleSheet } from "react-native"
+import { FlatList } from "react-native"
 import { screenTrack } from "App/utils/track"
 import { color } from "App/utils"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { getAdjustedInvoiceTotal, formatInvoiceDate } from "./utils"
-import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 
 export const GET_PAYMENT_DATA = gql`
   query GetUserPaymentData {
@@ -246,7 +245,6 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
         value: createShippingAddress(details.shippingAddress),
         onEdit: () => {
           navigation.navigate("EditPaymentAndShipping", {
-            billingInfo,
             phoneNumber,
             shippingAddress,
           })
@@ -286,7 +284,6 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
         value: details.phoneNumber,
         onEdit: () => {
           navigation.navigate("EditPaymentAndShipping", {
-            billingInfo,
             phoneNumber,
             shippingAddress,
           })
