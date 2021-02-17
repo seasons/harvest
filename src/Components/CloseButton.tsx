@@ -42,7 +42,7 @@ const Wrapper = styled(Box)`
   z-index: 100;
 `
 
-const Circle = styled(Box)<{ variant: string; borderColor: string; borderWidth: number; backgroundColor: string }>`
+const Circle = styled(Box)<{ variant: string }>`
   border-radius: 100;
   height: 40;
   width: 40;

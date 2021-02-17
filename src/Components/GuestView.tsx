@@ -1,6 +1,6 @@
 import { Box, Button, Container, Flex, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
-import { SeasonsLogoSVG } from "Assets/svgs"
+import { SeasonsCircleSVG } from "Assets/svgs"
 import React from "react"
 import { TouchableOpacity, Linking } from "react-native"
 import { Schema, useTracking } from "App/utils/track"
@@ -12,7 +12,7 @@ export const GuestView = ({ navigation }) => {
       <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="space-between">
         <Box px={2}>
           <Spacer mb={64} />
-          <SeasonsLogoSVG width={40} height={40} />
+          <SeasonsCircleSVG />
           <Spacer mb={64} />
           <Sans color={color("black100")} size="7">
             Join the community

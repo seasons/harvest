@@ -75,6 +75,7 @@ export const GET_PRODUCT = gql`
       slug
       name
       productFit
+      modelHeight
       category {
         id
         name
@@ -85,7 +86,6 @@ export const GET_PRODUCT = gql`
         id
         display
       }
-      modelHeight
       color {
         id
         name
@@ -125,6 +125,23 @@ export const GET_PRODUCT = gql`
       }
       type
       variants {
+        internalSize {
+          id
+          bottom {
+            id
+            waist
+            rise
+            hem
+            inseam
+          }
+          top {
+            id
+            length
+            sleeve
+            shoulder
+            chest
+          }
+        }
         ...CommonProductVariant
       }
     }

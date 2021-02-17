@@ -112,7 +112,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
   }
 
   const BuyCTA = renderBuyCTA({
-    price: selectedVariant.price,
+    price: selectedVariant?.price,
     onBuyUsed,
     onBuyNew,
     animatedScrollY,

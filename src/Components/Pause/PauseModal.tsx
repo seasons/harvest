@@ -159,18 +159,10 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
           >
             Pause without items
           </Button>
-          <Spacer mb={4} />
+          <Spacer mb={3} />
           <Sans color="black50" size="2">
-            {`If we do not receive your items back before ${billingDate}, your membership will automatically resume nad you will be billed. If you have any questions contact us below at membership@seasons.nyc`}
+            {`If we do not receive your items back before ${billingDate}, your membership will automatically resume and you will be billed. If you have any questions contact at membership@seasons.nyc`}
           </Sans>
-          <Spacer mb={2} />
-          <Button
-            block
-            variant="primaryWhite"
-            onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership question"`)}
-          >
-            Contact us
-          </Button>
           <Spacer mb={60} />
         </Flex>
       </ScrollView>

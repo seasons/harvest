@@ -73,6 +73,23 @@ export enum CouponType {
   Percentage = "Percentage",
 }
 
+export enum CreditNoteReasonCode {
+  OrderCancellation = "OrderCancellation",
+  OrderChange = "OrderChange",
+  Other = "Other",
+  ProductUnsatisfactory = "ProductUnsatisfactory",
+  ServiceUnsatisfactory = "ServiceUnsatisfactory",
+  SubscriptionChange = "SubscriptionChange",
+  Waiver = "Waiver",
+}
+
+export enum CreditNoteStatus {
+  Adjusted = "Adjusted",
+  RefundDue = "RefundDue",
+  Refunded = "Refunded",
+  Voided = "Voided",
+}
+
 export enum CustomerStatus {
   Active = "Active",
   Authorized = "Authorized",
@@ -84,10 +101,21 @@ export enum CustomerStatus {
   Waitlisted = "Waitlisted",
 }
 
+export enum CustomerStyle {
+  AvantGarde = "AvantGarde",
+  Bold = "Bold",
+  Classic = "Classic",
+  Minimalist = "Minimalist",
+  Streetwear = "Streetwear",
+  Techwear = "Techwear",
+}
+
 export enum EmailId {
+  BuyUsedOrderConfirmation = "BuyUsedOrderConfirmation",
   CompleteAccount = "CompleteAccount",
   DayFiveAuthorizationFollowup = "DayFiveAuthorizationFollowup",
   DayFourAuthorizationFollowup = "DayFourAuthorizationFollowup",
+  DaySevenAuthorizationFollowup = "DaySevenAuthorizationFollowup",
   DaySixAuthorizationFollowup = "DaySixAuthorizationFollowup",
   DayThreeAuthorizationFollowup = "DayThreeAuthorizationFollowup",
   DayTwoAuthorizationFollowup = "DayTwoAuthorizationFollowup",
@@ -142,6 +170,15 @@ export enum InventoryStatus {
   Stored = "Stored",
 }
 
+export enum InvoiceStatus {
+  NotPaid = "NotPaid",
+  Paid = "Paid",
+  PaymentDue = "PaymentDue",
+  Pending = "Pending",
+  Posted = "Posted",
+  Voided = "Voided",
+}
+
 export enum LetterSize {
   L = "L",
   M = "M",
@@ -151,6 +188,13 @@ export enum LetterSize {
   XXL = "XXL",
   XXS = "XXS",
   XXXL = "XXXL",
+}
+
+export enum LineItemIdentityType {
+  Addon = "Addon",
+  Adhoc = "Adhoc",
+  Plan = "Plan",
+  PlanSetup = "PlanSetup",
 }
 
 export enum LocationType {
@@ -165,6 +209,36 @@ export enum OnboardingStep {
   SetShippingAddress = "SetShippingAddress",
   SetStylePreferences = "SetStylePreferences",
   VerifiedPhone = "VerifiedPhone",
+}
+
+export enum OrderLineItemRecordType {
+  ExternalProduct = "ExternalProduct",
+  Package = "Package",
+  PhysicalProduct = "PhysicalProduct",
+  ProductVariant = "ProductVariant",
+}
+
+export enum OrderStatus {
+  Cancelled = "Cancelled",
+  Drafted = "Drafted",
+  Fulfilled = "Fulfilled",
+  Returned = "Returned",
+  Submitted = "Submitted",
+}
+
+export enum OrderType {
+  External = "External",
+  New = "New",
+  Used = "Used",
+}
+
+export enum PackageStatus {
+  Blocked = "Blocked",
+  Cancelled = "Cancelled",
+  Delivered = "Delivered",
+  Queued = "Queued",
+  Received = "Received",
+  Shipped = "Shipped",
 }
 
 export enum PackageTransitEventStatus {
@@ -206,9 +280,15 @@ export enum PackageTransitEventSubStatus {
   ReturnToSender = "ReturnToSender",
 }
 
+export enum PauseType {
+  WithItems = "WithItems",
+  WithoutItems = "WithoutItems",
+}
+
 export enum PaymentPlanTier {
   AllAccess = "AllAccess",
   Essential = "Essential",
+  Pause = "Pause",
 }
 
 export enum PhotographyStatus {
@@ -417,6 +497,11 @@ export enum UserVerificationStatus {
   Approved = "Approved",
   Denied = "Denied",
   Pending = "Pending",
+}
+
+export enum ViewType {
+  Banner = "Banner",
+  Referral = "Referral",
 }
 
 export enum WarehouseLocationType {
@@ -1355,6 +1440,11 @@ export interface ColorWhereUniqueInput {
   colorCode?: string | null;
 }
 
+export interface CreateDraftedOrderInput {
+  orderType: OrderType;
+  productVariantID: string;
+}
+
 export interface CustomerAdmissionsDataCreateOneWithoutCustomerInput {
   create?: CustomerAdmissionsDataCreateWithoutCustomerInput | null;
   connect?: CustomerAdmissionsDataWhereUniqueInput | null;
@@ -1489,9 +1579,11 @@ export interface CustomerDetailCreateInput {
   phoneOS?: string | null;
   insureShipment?: boolean | null;
   instagramHandle?: string | null;
+  impactId?: string | null;
   weight?: CustomerDetailCreateweightInput | null;
   topSizes?: CustomerDetailCreatetopSizesInput | null;
   waistSizes?: CustomerDetailCreatewaistSizesInput | null;
+  styles?: CustomerDetailCreatestylesInput | null;
   stylePreferences?: StylePreferencesCreateOneInput | null;
   shippingAddress?: LocationCreateOneInput | null;
 }
@@ -1499,6 +1591,10 @@ export interface CustomerDetailCreateInput {
 export interface CustomerDetailCreateOneInput {
   create?: CustomerDetailCreateInput | null;
   connect?: CustomerDetailWhereUniqueInput | null;
+}
+
+export interface CustomerDetailCreatestylesInput {
+  set?: CustomerStyle[] | null;
 }
 
 export interface CustomerDetailCreatetopSizesInput {
@@ -1532,9 +1628,11 @@ export interface CustomerDetailUpdateDataInput {
   phoneOS?: string | null;
   insureShipment?: boolean | null;
   instagramHandle?: string | null;
+  impactId?: string | null;
   weight?: CustomerDetailUpdateweightInput | null;
   topSizes?: CustomerDetailUpdatetopSizesInput | null;
   waistSizes?: CustomerDetailUpdatewaistSizesInput | null;
+  styles?: CustomerDetailUpdatestylesInput | null;
   stylePreferences?: StylePreferencesUpdateOneInput | null;
   shippingAddress?: LocationUpdateOneInput | null;
 }
@@ -1546,6 +1644,10 @@ export interface CustomerDetailUpdateOneInput {
   delete?: boolean | null;
   update?: CustomerDetailUpdateDataInput | null;
   upsert?: CustomerDetailUpsertNestedInput | null;
+}
+
+export interface CustomerDetailUpdatestylesInput {
+  set?: CustomerStyle[] | null;
 }
 
 export interface CustomerDetailUpdatetopSizesInput {
@@ -1579,7 +1681,52 @@ export interface CustomerMembershipCreateWithoutCustomerInput {
   subscriptionId: string;
   giftId?: string | null;
   plan?: PaymentPlanCreateOneInput | null;
+  subscription?: CustomerMembershipSubscriptionDataCreateOneInput | null;
   pauseRequests?: PauseRequestCreateManyWithoutMembershipInput | null;
+}
+
+export interface CustomerMembershipSubscriptionDataCreateInput {
+  id?: string | null;
+  planID: string;
+  subscriptionId: string;
+  currentTermStart: any;
+  currentTermEnd: any;
+  nextBillingAt: any;
+  status: string;
+  planPrice: number;
+}
+
+export interface CustomerMembershipSubscriptionDataCreateOneInput {
+  create?: CustomerMembershipSubscriptionDataCreateInput | null;
+  connect?: CustomerMembershipSubscriptionDataWhereUniqueInput | null;
+}
+
+export interface CustomerMembershipSubscriptionDataUpdateDataInput {
+  planID?: string | null;
+  subscriptionId?: string | null;
+  currentTermStart?: any | null;
+  currentTermEnd?: any | null;
+  nextBillingAt?: any | null;
+  status?: string | null;
+  planPrice?: number | null;
+}
+
+export interface CustomerMembershipSubscriptionDataUpdateOneInput {
+  create?: CustomerMembershipSubscriptionDataCreateInput | null;
+  connect?: CustomerMembershipSubscriptionDataWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: CustomerMembershipSubscriptionDataUpdateDataInput | null;
+  upsert?: CustomerMembershipSubscriptionDataUpsertNestedInput | null;
+}
+
+export interface CustomerMembershipSubscriptionDataUpsertNestedInput {
+  update: CustomerMembershipSubscriptionDataUpdateDataInput;
+  create: CustomerMembershipSubscriptionDataCreateInput;
+}
+
+export interface CustomerMembershipSubscriptionDataWhereUniqueInput {
+  id?: string | null;
 }
 
 export interface CustomerMembershipUpdateOneWithoutCustomerInput {
@@ -1595,6 +1742,7 @@ export interface CustomerMembershipUpdateWithoutCustomerDataInput {
   subscriptionId?: string | null;
   giftId?: string | null;
   plan?: PaymentPlanUpdateOneInput | null;
+  subscription?: CustomerMembershipSubscriptionDataUpdateOneInput | null;
   pauseRequests?: PauseRequestUpdateManyWithoutMembershipInput | null;
 }
 
@@ -3029,6 +3177,7 @@ export interface PackageCreateInput {
   transactionID: string;
   weight?: number | null;
   cost?: number | null;
+  status?: PackageStatus | null;
   items?: PhysicalProductCreateManyInput | null;
   shippingLabel: LabelCreateOneInput;
   fromAddress: LocationCreateOneInput;
@@ -3051,6 +3200,7 @@ export interface PackageCreateWithoutEventsInput {
   transactionID: string;
   weight?: number | null;
   cost?: number | null;
+  status?: PackageStatus | null;
   items?: PhysicalProductCreateManyInput | null;
   shippingLabel: LabelCreateOneInput;
   fromAddress: LocationCreateOneInput;
@@ -3206,6 +3356,7 @@ export interface PackageUpdateDataInput {
   transactionID?: string | null;
   weight?: number | null;
   cost?: number | null;
+  status?: PackageStatus | null;
   items?: PhysicalProductUpdateManyInput | null;
   shippingLabel?: LabelUpdateOneRequiredInput | null;
   fromAddress?: LocationUpdateOneRequiredInput | null;
@@ -3233,6 +3384,7 @@ export interface PackageUpdateWithoutEventsDataInput {
   transactionID?: string | null;
   weight?: number | null;
   cost?: number | null;
+  status?: PackageStatus | null;
   items?: PhysicalProductUpdateManyInput | null;
   shippingLabel?: LabelUpdateOneRequiredInput | null;
   fromAddress?: LocationUpdateOneRequiredInput | null;
@@ -3261,6 +3413,7 @@ export interface PauseRequestCreateManyWithoutMembershipInput {
 export interface PauseRequestCreateWithoutMembershipInput {
   id?: string | null;
   pausePending: boolean;
+  pauseType?: PauseType | null;
   pauseDate?: any | null;
   resumeDate?: any | null;
   notified?: boolean | null;
@@ -3302,6 +3455,10 @@ export interface PauseRequestScalarWhereInput {
   updatedAt_gte?: any | null;
   pausePending?: boolean | null;
   pausePending_not?: boolean | null;
+  pauseType?: PauseType | null;
+  pauseType_not?: PauseType | null;
+  pauseType_in?: PauseType[] | null;
+  pauseType_not_in?: PauseType[] | null;
   pauseDate?: any | null;
   pauseDate_not?: any | null;
   pauseDate_in?: any[] | null;
@@ -3324,6 +3481,7 @@ export interface PauseRequestScalarWhereInput {
 
 export interface PauseRequestUpdateManyDataInput {
   pausePending?: boolean | null;
+  pauseType?: PauseType | null;
   pauseDate?: any | null;
   resumeDate?: any | null;
   notified?: boolean | null;
@@ -3353,6 +3511,7 @@ export interface PauseRequestUpdateWithWhereUniqueWithoutMembershipInput {
 
 export interface PauseRequestUpdateWithoutMembershipDataInput {
   pausePending?: boolean | null;
+  pauseType?: PauseType | null;
   pauseDate?: any | null;
   resumeDate?: any | null;
   notified?: boolean | null;
@@ -7978,6 +8137,10 @@ export interface StylePreferencesUpsertNestedInput {
 
 export interface StylePreferencesWhereUniqueInput {
   id?: string | null;
+}
+
+export interface SubmitOrderInput {
+  orderID: string;
 }
 
 export interface TagCreateManyWithoutProductsInput {

@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CustomerStatus, PaymentPlanTier } from "./globalTypes";
+import { CustomerStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetMembershipInfo
@@ -24,18 +24,27 @@ export interface GetMembershipInfo_me_customer_membership_pauseRequests {
   pausePending: boolean;
 }
 
+export interface GetMembershipInfo_me_customer_membership_subscription {
+  __typename: "CustomerMembershipSubscriptionData";
+  id: string;
+  nextBillingAt: any;
+}
+
 export interface GetMembershipInfo_me_customer_membership_plan {
   __typename: "PaymentPlan";
   id: string;
   price: number | null;
   description: string | null;
-  tier: PaymentPlanTier | null;
+  itemCount: number | null;
+  pauseWithItemsPrice: number | null;
 }
 
 export interface GetMembershipInfo_me_customer_membership {
   __typename: "CustomerMembership";
   id: string;
+  subscriptionId: string;
   pauseRequests: GetMembershipInfo_me_customer_membership_pauseRequests[] | null;
+  subscription: GetMembershipInfo_me_customer_membership_subscription | null;
   plan: GetMembershipInfo_me_customer_membership_plan | null;
 }
 

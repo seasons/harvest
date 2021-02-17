@@ -88,6 +88,16 @@ export interface GetProduct_products_brand_products_brand {
   name: string;
 }
 
+export interface GetProduct_products_brand_products_variants_price {
+  __typename: "ProductVariantPrice";
+  id: string;
+  buyNewPrice: number | null;
+  buyNewAvailableForSale: boolean | null;
+  buyNewEnabled: boolean;
+  buyUsedEnabled: boolean;
+  buyUsedPrice: number | null;
+}
+
 export interface GetProduct_products_brand_products_variants_manufacturerSizes_top {
   __typename: "TopSize";
   id: string;
@@ -130,6 +140,7 @@ export interface GetProduct_products_brand_products_variants {
   isInBag: boolean;
   isSaved: boolean;
   hasRestockNotification: boolean;
+  price: GetProduct_products_brand_products_variants_price;
   manufacturerSizes: GetProduct_products_brand_products_variants_manufacturerSizes[] | null;
 }
 
@@ -149,6 +160,7 @@ export interface GetProduct_products_brand {
   name: string;
   logo: any | null;
   since: any | null;
+  websiteUrl: string | null;
   products: GetProduct_products_brand_products[] | null;
 }
 
@@ -156,6 +168,41 @@ export interface GetProduct_products_largeImages {
   __typename: "Image";
   imageId: string;
   url: string | null;
+}
+
+export interface GetProduct_products_variants_internalSize_bottom {
+  __typename: "BottomSize";
+  id: string;
+  waist: number | null;
+  rise: number | null;
+  hem: number | null;
+  inseam: number | null;
+}
+
+export interface GetProduct_products_variants_internalSize_top {
+  __typename: "TopSize";
+  id: string;
+  length: number | null;
+  sleeve: number | null;
+  shoulder: number | null;
+  chest: number | null;
+}
+
+export interface GetProduct_products_variants_internalSize {
+  __typename: "Size";
+  id: string;
+  bottom: GetProduct_products_variants_internalSize_bottom | null;
+  top: GetProduct_products_variants_internalSize_top | null;
+}
+
+export interface GetProduct_products_variants_price {
+  __typename: "ProductVariantPrice";
+  id: string;
+  buyNewPrice: number | null;
+  buyNewAvailableForSale: boolean | null;
+  buyNewEnabled: boolean;
+  buyUsedEnabled: boolean;
+  buyUsedPrice: number | null;
 }
 
 export interface GetProduct_products_variants_manufacturerSizes_top {
@@ -190,6 +237,7 @@ export interface GetProduct_products_variants_manufacturerSizes {
 
 export interface GetProduct_products_variants {
   __typename: "ProductVariant";
+  internalSize: GetProduct_products_variants_internalSize | null;
   id: string;
   displayLong: string | null;
   displayShort: string | null;
@@ -200,6 +248,7 @@ export interface GetProduct_products_variants {
   isInBag: boolean;
   isSaved: boolean;
   hasRestockNotification: boolean;
+  price: GetProduct_products_variants_price;
   manufacturerSizes: GetProduct_products_variants_manufacturerSizes[] | null;
 }
 
@@ -209,11 +258,11 @@ export interface GetProduct_products {
   slug: string;
   name: string;
   productFit: ProductFit | null;
+  modelHeight: number | null;
   category: GetProduct_products_category;
   description: string | null;
   retailPrice: number | null;
   modelSize: GetProduct_products_modelSize | null;
-  modelHeight: number | null;
   color: GetProduct_products_color;
   secondaryColor: GetProduct_products_secondaryColor | null;
   brand: GetProduct_products_brand;

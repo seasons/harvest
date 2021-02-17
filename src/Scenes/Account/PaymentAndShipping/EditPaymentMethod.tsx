@@ -1,7 +1,6 @@
 import { Box, Button, Container, FixedBackArrow, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Schema as TrackSchema, useTracking, screenTrack } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { PAYMENT_UPDATE } from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
 import { GET_PAYMENT_DATA } from "App/Scenes/Account/PaymentAndShipping/PaymentAndShipping"
 import { color } from "App/utils/color"
 import { CheckCircled } from "Assets/svgs/CheckCircled"
@@ -11,6 +10,7 @@ import { useMutation } from "@apollo/client"
 import { Dimensions, Keyboard } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import stripe from "tipsi-stripe"
+import gql from "graphql-tag"
 import * as Sentry from "@sentry/react-native"
 import { PaymentMethods } from "./PaymentMethods"
 import { Schema as NavigationSchema } from "App/Navigation"
@@ -22,6 +22,12 @@ interface BillingAddress {
   state: string
   postal_code: String
 }
+
+export const PAYMENT_UPDATE = gql`
+  mutation applePayUpdatePaymentMethod($planID: String!, $token: StripeToken!, $tokenType: String) {
+    applePayUpdatePaymentMethod(planID: $planID, token: $token, tokenType: $tokenType)
+  }
+`
 
 const windowDimensions = Dimensions.get("window")
 const windowWidth = windowDimensions.width
@@ -152,7 +158,7 @@ export const EditPaymentMethod: React.FC<{
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Spacer mt={100} />
       <Box px={2}>
-        <Sans size="7">Update your payment method</Sans>
+        <Sans size="7">Update your payment source and address</Sans>
       </Box>
       {applePaySuccess ? <CardSuccess /> : <PaymentMethods onApplePay={onApplePay} onCreditCard={onCreditCard} />}
     </Container>
