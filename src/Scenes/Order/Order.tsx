@@ -1,5 +1,13 @@
 import {
-  Box, Container, FixedBackArrow, FixedButton, Flex, Sans, SectionHeader, Separator, Spacer
+  Box,
+  Container,
+  FixedBackArrow,
+  FixedButton,
+  Flex,
+  Sans,
+  SectionHeader,
+  Separator,
+  Spacer,
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { Schema as NavigationSchema } from "App/Navigation"
@@ -201,7 +209,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
             <Box mt={1} mb={4}>
               {productVariantItems?.map((item, i) => {
                 return (
-                  <Box key={item.productVariant?.id}>
+                  <Box key={i}>
                     <OrderItem index={i} productVariant={item.productVariant} navigation={navigation} />
                     <Spacer mb={1} />
                     {i !== productVariantItems.length - 1 && <Separator />}

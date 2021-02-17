@@ -82,7 +82,6 @@ export const Product = screenTrack({
     translateY: showVariantPicker ? 0 : variantPickerHeight,
     overlayOpacity: showVariantPicker ? 1 : 0,
   })
-
   const [hasNotification, setHasNotification] = useState(false)
 
   const [selectedVariant, setSelectedVariant] = useState(
