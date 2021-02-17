@@ -1,16 +1,19 @@
-import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
+import {
+  Box, Container, FixedBackArrow, FixedButton, Flex, Sans, SectionHeader, Separator, Spacer
+} from "App/Components"
 import { Loader } from "App/Components/Loader"
-import gql from "graphql-tag"
 import { Schema as NavigationSchema } from "App/Navigation"
+import { space } from "App/utils"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
+import gql from "graphql-tag"
 import React, { useState } from "react"
 import { Dimensions, ScrollView } from "react-native"
+
 import { useMutation, useQuery } from "@apollo/client"
-import { space } from "App/utils"
+
+import { SUBMIT_ORDER } from "../Product/Mutations"
 import { LineItem } from "./Components/LineItem"
 import { OrderItem } from "./Components/OrderItem"
-import { SUBMIT_ORDER } from "../Product/Mutations"
-import { SectionHeader } from "./Components"
 
 const GET_CUSTOMER_ORDER_VIEW = gql`
   query GetCustomerOrderView {

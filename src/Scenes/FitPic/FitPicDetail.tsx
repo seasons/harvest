@@ -1,6 +1,4 @@
-import {
-  Box, Button, Container, FadeInImage, FixedBackArrow, Flex, Sans, Separator, Spacer
-} from "App/Components"
+import { Box, Button, Container, FadeInImage, FixedBackArrow, Flex, Sans, Separator, Spacer } from "App/Components"
 import { ShareButton } from "App/Components/ShareButton"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -179,14 +177,14 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
                 : ((date: DateTime) => `${date.monthLong} ${date.day}, ${date.year}`)(DateTime.fromISO(item.createdAt))}
             </Sans>
           </Box>
-          {item.products?.length > 0 && (
+          {item?.products?.length > 0 && (
             <>
               <Spacer mb={6} />
               <Sans px={2} mb={1} size="3">
                 Tagged Items
               </Sans>
               <Box>
-                {item.products?.map((item, i) => {
+                {item?.products?.map((item, i) => {
                   return renderItem(item)
                 })}
               </Box>
@@ -197,7 +195,7 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
       </ScrollView>
 
       <FixedBackArrow variant={"blackTransparent"} navigation={navigation} />
-      {item.products?.length > 0 && (
+      {item?.products?.length > 0 && (
         <ShareButtonWrapper>
           <ShareButton
             onPress={() => {

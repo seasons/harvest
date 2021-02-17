@@ -59,6 +59,7 @@ jobs:
       FASTLANE_LANE: ios beta
     shell: /bin/bash --login -o pipefail
     steps:
+      - add_ssh_keys
       - checkout
       - node/install:
           node-version: 12.16.3
@@ -103,12 +104,12 @@ jobs:
           key: pods-v4-{{ checksum "ios/Podfile.lock" }}
           paths:
             - ./Pods
-      # - run:
-      #     name: Fastlane
-      #     command: bundle exec fastlane ios beta
       - run:
           name: Bump version
           command: yarn version --patch
+      - run:
+          name: Push changes to github
+          command: git push origin master && git push --tags
       - store_artifacts:
           path: seasons.ipa
 

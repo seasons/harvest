@@ -44,7 +44,6 @@ export interface GetPlans_me_customer_admissions {
   __typename: "CustomerAdmissionsData";
   id: string;
   admissable: boolean;
-  allAccessEnabled: boolean;
   authorizationsCount: number;
 }
 

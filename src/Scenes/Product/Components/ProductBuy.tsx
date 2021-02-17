@@ -47,7 +47,7 @@ const ProductBuyUsed: React.FC<{
   onBuyUsed: () => void
   buyButtonMutating: boolean
 }> = ({ price, availableForSale, onBuyUsed, buyButtonMutating }) => (
-  <Flex flexDirection="column" px={3} pb={3}>
+  <Flex flexDirection="column" px={3} pb={3} pt={2}>
     <Sans color="black100" size="4" weight="medium">
       Available from Seasons
     </Sans>
@@ -80,6 +80,8 @@ export const ProductBuy: React.FC<{
     const price = priceInDollars?.toLocaleString("en-US", {
       style: "currency",
       currency: "USD",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     })
 
     return (

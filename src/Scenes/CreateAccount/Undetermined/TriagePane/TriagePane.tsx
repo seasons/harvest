@@ -59,15 +59,6 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
     awaitRefetchQueries: true,
   })
 
-  useEffect(() => {
-    if ((checkStatus === CheckStatus.Waiting && check) || (checkStatus === CheckStatus.AwaitingRetry && check)) {
-      const runTriage = async () => {
-        await triageCustomer()
-      }
-      runTriage()
-    }
-  }, [check, checkStatus])
-
   const triageCustomer = async () => {
     if (checkStatus === CheckStatus.Checking) {
       return
@@ -78,6 +69,15 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
     const result = await triage()
     setStatus(result?.data?.triageCustomer)
   }
+
+  useEffect(() => {
+    if ((checkStatus === CheckStatus.Waiting && check) || (checkStatus === CheckStatus.AwaitingRetry && check)) {
+      const runTriage = async () => {
+        await triageCustomer()
+      }
+      runTriage()
+    }
+  }, [check, checkStatus, triageCustomer])
 
   return (
     <Container insetsBottom={false} insetsTop={false}>
