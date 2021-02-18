@@ -7,51 +7,7 @@ orbs:
   node: circleci/node@4.1.0
 
 jobs:
-  build-and-test:
-    macos:
-      xcode: "11.3.1"
-    shell: /bin/bash --login -o pipefail
-    steps:
-      - checkout
-      - node/install:
-          node-version: 12.16.3
-          install-yarn: true
-      - aws-s3/copy:
-          from: "s3://harvest-scripts/env.staging.conf"
-          to: .env
-      - aws-s3/copy:
-          from: "s3://harvest-scripts/5ZM3SSYZ29.json"
-          to: "./fastlane/5ZM3SSYZ29.json"
-      - restore_cache:
-          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
-      - restore_cache:
-          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
-      - run:
-          name: Install dependencies
-          command: yarn install
-      - save_cache:
-          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
-          paths:
-            - ~/.cache/yarn
-      - save_cache:
-          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
-          paths:
-            - node_modules
-      - restore_cache:
-          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
-      - run:
-          name: Bundle install
-          command: bundle check || bundle install
-      - save_cache:
-          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
-          paths:
-            - vendor/bundle
-      - store_artifacts:
-          path: output
-      - store_test_results:
-          path: output/scan
-
-  beta:
+  staging:
     macos:
       xcode: "11.3.1"
     environment:
@@ -113,11 +69,80 @@ jobs:
       - store_artifacts:
           path: seasons.ipa
 
+  production:
+    macos:
+      xcode: "11.3.1"
+    environment:
+      FL_OUTPUT_DIR: output
+      FASTLANE_LANE: ios beta
+    shell: /bin/bash --login -o pipefail
+    steps:
+      - add_ssh_keys
+      - checkout
+      - node/install:
+          node-version: 12.16.3
+          install-yarn: true
+      - aws-s3/copy:
+          from: "s3://harvest-scripts/env.production.conf"
+          to: .env
+      - aws-s3/copy:
+          from: "s3://harvest-scripts/5ZM3SSYZ29.json"
+          to: "./fastlane/5ZM3SSYZ29.json"
+      - restore_cache:
+          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
+      - restore_cache:
+          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
+          paths:
+            - node_modules
+      - run:
+          name: "Install React Native dependencies"
+          command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
+      - restore_cache:
+          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
+      - run: bundle install
+      - save_cache:
+          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+      - restore_cache:
+          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+      - run:
+          name: Install CocoaPods
+          command: cd ios ; pod install ;
+      - save_cache:
+          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+          paths:
+            - ./Pods
+      - run:
+          name: Bump version
+          command: yarn version --minor
+      - run:
+          name: Push changes to github
+          command: git push origin master && git push --tags
+      - store_artifacts:
+          path: seasons.ipa
+
 workflows:
   version: 2
   beta-release:
     jobs:
-      - beta:
+      - staging:
           filters:
             branches:
-              only: release
+              only: staging
+
+  production-release:
+    jobs:
+      - production:
+          filters:
+            branches:
+              only: production
