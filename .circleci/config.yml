@@ -127,7 +127,7 @@ jobs:
           command: yarn version --minor
       - run:
           name: Push changes to github
-          command: git push origin master && git push --tags
+          command: git push origin HEAD:master && git push --tags
       - store_artifacts:
           path: seasons.ipa
 
