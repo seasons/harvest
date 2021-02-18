@@ -117,7 +117,6 @@ export const Bag = screenTrack()((props) => {
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS, {
     onCompleted: (res) => {
       setMutating(false)
-      console.log("data 2222", res)
       if (res.checkItemsAvailability) {
         navigation.navigate(NavigationSchema.StackNames.BagStack, { screen: NavigationSchema.PageNames.Reservation })
       }
