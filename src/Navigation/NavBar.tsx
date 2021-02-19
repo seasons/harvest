@@ -6,6 +6,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { Image } from "react-native"
+import { NotificationBar } from "@seasons/eclipse"
+import { navigateTo } from "App/Navigation"
 
 export const NavBar = ({ state, navigation, currentScreen }) => {
   const insets = useSafeAreaInsets()
@@ -61,9 +63,14 @@ export const NavBar = ({ state, navigation, currentScreen }) => {
     config: { mass: 1, tension: 450, friction: 50 },
   })
 
+  const onClickNotificationBar = ({ mobile }) => {
+    navigateTo(navigation, mobile)
+  }
+
   return (
     <>
       <AnimatedTray style={{ height: trayHeight, transform: [{ translateY: animation.translateY }] }}>
+        <NotificationBar onClick={onClickNotificationBar} />
         <MainTabs>{tabs}</MainTabs>
       </AnimatedTray>
       <AnimatedSpacer style={{ backgroundColor: color("black100"), height: animation.spacerHeight }}>
