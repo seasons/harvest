@@ -59,8 +59,6 @@ const renderBuyCTA = ({ price, onBuyNew, onBuyUsed, animatedScrollY, showNotifyM
     )
   }
 
-  console.log("cta && !showNotifyMeMessage", price && price.buyUsedEnabled && price.buyUsedPrice)
-
   return cta && !showNotifyMeMessage ? (
     <Animated.View
       style={{
