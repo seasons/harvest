@@ -3,6 +3,7 @@ import { onError } from "apollo-link-error"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { config, Env } from "App/utils/config"
 import { isEmpty } from "lodash"
+import { createUploadLink } from "apollo-upload-client"
 import { Platform } from "react-native"
 
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, Observable } from "@apollo/client"
@@ -46,7 +47,7 @@ export const setupApolloClient = async () => {
     },
   })
 
-  const httpLink = new HttpLink({
+  const httpLink = createUploadLink({
     uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/", // Server URL (must be absolute)
   }) as any
 
