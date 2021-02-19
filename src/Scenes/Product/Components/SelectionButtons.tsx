@@ -59,10 +59,13 @@ const renderBuyCTA = ({ price, onBuyNew, onBuyUsed, animatedScrollY, showNotifyM
     )
   }
 
+  console.log("cta && !showNotifyMeMessage", price && price.buyUsedEnabled && price.buyUsedPrice)
+
   return cta && !showNotifyMeMessage ? (
     <Animated.View
       style={{
         opacity,
+        zIndex: 29,
       }}
     >
       <FadeBottom2
@@ -73,7 +76,7 @@ const renderBuyCTA = ({ price, onBuyNew, onBuyUsed, animatedScrollY, showNotifyM
           top: -20,
           height: buyCtaHeight + 20,
         }}
-      ></FadeBottom2>
+      />
       <Flex paddingBottom="3" justifyContent="center" flexDirection="row">
         {cta}
       </Flex>
@@ -128,7 +131,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
   return (
     <Wrapper style={{ bottom: showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0 }}>
       <Flex flexDirection="column">
-        <Animated.View style={{ transform: [{ translateY: selectionButtonsTopOffset }] }}>
+        <Animated.View style={{ transform: [{ translateY: selectionButtonsTopOffset }], zIndex: 30 }}>
           <Flex px={2} paddingBottom={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
             <TouchableWithoutFeedback
               onPress={() => {
