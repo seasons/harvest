@@ -14,7 +14,6 @@ import {
 import { InviteFromContacts } from "App/Scenes/Account/InviteFriends"
 import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
 import { EditCreditCard } from "App/Scenes/Account/PaymentAndShipping/EditCreditCard"
-import { EditPaymentMethod } from "App/Scenes/Account/PaymentAndShipping/EditPaymentMethod"
 import { InvoiceDetail } from "App/Scenes/Account/PaymentAndShipping/InvoiceDetail"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
 import { Bag, CurrentRotation } from "App/Scenes/Bag"
@@ -228,7 +227,6 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name={Schema.PageNames.ProductRequestGallery} component={ProductRequestGallery} />
       <AccountStack.Screen name={Schema.PageNames.Faq} component={Faq} />
       <AccountStack.Screen name={Schema.PageNames.ReferralView} component={ReferralView} />
-      <AccountStack.Screen name={Schema.PageNames.EditPaymentMethod} component={EditPaymentMethod} />
       <AccountStack.Screen name={Schema.PageNames.EditCreditCard} component={EditCreditCard} />
     </AccountStack.Navigator>
   )

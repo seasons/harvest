@@ -1,5 +1,13 @@
 import {
-  Box, Container, FixedBackArrow, FixedButton, Flex, Sans, SectionHeader, Separator, Spacer
+  Box,
+  Container,
+  FixedBackArrow,
+  FixedButton,
+  Flex,
+  Sans,
+  SectionHeader,
+  Separator,
+  Spacer,
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { Schema as NavigationSchema } from "App/Navigation"
@@ -95,6 +103,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
 
   const totalInDollars = order?.total / 100
   const totalSalesTaxDollars = order?.salesTaxTotal / 100
+  const needsShipping = order?.lineItems?.some((item) => item.needShipping)
 
   if (!customer || !address) {
     return (
@@ -124,7 +133,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
           {!!order && (
             <Box mb={4}>
               <SectionHeader title="Purchase summary" />
-              {order?.lineItems?.map((item) => {
+              {order?.lineItems?.map((item, index) => {
                 const itemPriceInDollars = item?.price / 100
                 let displayName
                 if (item.recordType === "Package") {
@@ -141,7 +150,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
                         currency: "USD",
                       }) || ""
                     }
-                    key={item?.productVariant?.id}
+                    key={item?.productVariant?.id ?? index}
                     windowWidth={windowWidth}
                   />
                 )
@@ -177,7 +186,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
               </Sans>
             </Box>
           )}
-          {!!address && (
+          {!!address && needsShipping && (
             <Box mb={4}>
               <SectionHeader title="Shipping address" />
               <Sans size="4" color="black50" mt={1}>
@@ -201,7 +210,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
             <Box mt={1} mb={4}>
               {productVariantItems?.map((item, i) => {
                 return (
-                  <Box key={item.productVariant?.id}>
+                  <Box key={i}>
                     <OrderItem index={i} productVariant={item.productVariant} navigation={navigation} />
                     <Spacer mb={1} />
                     {i !== productVariantItems.length - 1 && <Separator />}

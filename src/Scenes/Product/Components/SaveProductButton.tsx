@@ -101,6 +101,9 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
         },
       })
     } else {
+      if (!selectedVariant?.id) {
+        return
+      }
       tracking.trackEvent({
         actionName: Schema.ActionNames.ProductSaved,
         actionType: Schema.ActionTypes.Tap,

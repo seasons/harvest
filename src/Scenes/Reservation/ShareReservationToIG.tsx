@@ -4,7 +4,7 @@ import { Box, Button, CloseButton, Display, FadeInImage, FixedBackArrow, Flex, S
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { SeasonsCircleSVG } from "Assets/svgs"
-import React, { MutableRefObject, useEffect, useRef, useState } from "react"
+import React, { createRef, MutableRefObject, useEffect, useRef, useState } from "react"
 import { useQuery } from "@apollo/client"
 import { Dimensions, FlatList } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
@@ -43,44 +43,50 @@ const GET_CUSTOMER_RESERVATION_ITEMS = gql`
   }
 `
 
+const windowWidth = Dimensions.get("window").width
+
 export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
   const tracking = useTracking()
   const reservationID = route?.params?.reservationID
   const flatListRef: MutableRefObject<FlatList<any>> = useRef(null)
   const [currentPageNumber, setCurrentPageNumber] = useState(0)
   const insets = useSafeAreaInsets()
+  const [viewRefs, setViewRefs] = React.useState([])
 
   const { previousData, data = previousData } = useQuery(GET_CUSTOMER_RESERVATION_ITEMS, {
     variables: {
       reservationID,
     },
   })
+
   useEffect(() => {
     // Need to snap to content inset on load
     flatListRef?.current?.scrollToOffset({ animated: false, offset: -32 })
-  }, [])
+  }, [flatListRef])
 
   const reservation = data?.me?.customer?.reservations?.[0]
-  // console.log(reservation)
-  let products =
-    reservation?.products?.map((product) => {
-      return product?.productVariant?.product
-    }) ?? []
+  let products = reservation?.products?.map((product) => product?.productVariant?.product) ?? []
 
-  const viewShotRefs = [...Array(products.length)].map((_arr, index) => useRef(null))
+  useEffect(() => {
+    if (products?.length > 0 && viewRefs.length !== products?.length) {
+      setViewRefs((elRefs) => [...Array(products?.length)].map((_, i) => elRefs[i] || createRef()))
+    }
+  }, [products, setViewRefs])
 
-  let onScrollEnd = (e) => {
-    let pageNumber = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / 310 + 0.5), 0), products.length)
-    setCurrentPageNumber(pageNumber)
+  const onScrollEnd = (e) => {
+    let pageNumber = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / 310 + 0.5), 0), products?.length ?? 0)
+    if (!!pageNumber && pageNumber !== currentPageNumber) {
+      setCurrentPageNumber(pageNumber)
+    }
   }
 
   const slideWidth = 310
   const slideSpacing = 24
-  const convertSizing = (pixels) => (pixels * slideWidth) / Dimensions.get("window").width
+  const convertSizing = (pixels) => (pixels * slideWidth) / windowWidth
 
   const onDownload = async () => {
-    if (currentPageNumber < viewShotRefs?.length) {
-      captureRef(viewShotRefs[currentPageNumber], {
+    if (currentPageNumber < viewRefs?.length) {
+      captureRef(viewRefs[currentPageNumber], {
         result: "tmpfile",
       }).then(
         async (url) => {
@@ -100,8 +106,8 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
       actionName: Schema.ActionNames.ShareToIGButtonTapped,
       actionType: Schema.ActionTypes.Tap,
     })
-    if (currentPageNumber < viewShotRefs?.length) {
-      captureRef(viewShotRefs[currentPageNumber], {
+    if (currentPageNumber < viewRefs?.length) {
+      captureRef(viewRefs[currentPageNumber], {
         result: "base64",
         // Recommended Instagram story dimension
         width: 1080,
@@ -137,7 +143,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     const instagramShareHeight = (slideWidth * 16) / 9
     return (
       <ViewShot
-        ref={viewShotRefs[index]}
+        ref={viewRefs[index]}
         style={{ borderRadius: 6, overflow: "hidden", height: instagramShareHeight, width: slideWidth }}
       >
         <Box style={{ height: "100%", width: "100%", backgroundColor: color("white100") }}>

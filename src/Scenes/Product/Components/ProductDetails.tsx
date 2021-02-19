@@ -66,22 +66,20 @@ export const ProductDetails: React.FC<{
             </TouchableOpacity>
           )}
         </Box>
-        {!!(selectedVariant && selectedVariant.id) && (
-          <SaveButtonWrapper>
-            <SaveProductButton
-              height={21}
-              width={16}
-              selectedVariant={selectedVariant}
-              product={product}
-              onPressSaveButton={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.SaveProductButtonTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                })
-              }}
-            />
-          </SaveButtonWrapper>
-        )}
+        <SaveButtonWrapper>
+          <SaveProductButton
+            height={21}
+            width={16}
+            selectedVariant={selectedVariant}
+            product={product}
+            onPressSaveButton={() => {
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.SaveProductButtonTapped,
+                actionType: Schema.ActionTypes.Tap,
+              })
+            }}
+          />
+        </SaveButtonWrapper>
       </Flex>
       <Spacer mb={1} />
       {!!description && (

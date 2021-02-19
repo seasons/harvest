@@ -33,10 +33,10 @@ const UPDATE_RESUME_DATE = gql`
   }
 `
 
-export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; fullScreen?: boolean }> = ({
-  customer,
-  fullScreen,
-}) => {
+export const PauseButtons: React.FC<{
+  customer: GetMembershipInfo_me_customer
+  fullScreen?: boolean
+}> = ({ customer, fullScreen }) => {
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
@@ -44,7 +44,6 @@ export const PauseButtons: React.FC<{ customer: GetMembershipInfo_me_customer; f
   const pauseRequest = customer?.membership?.pauseRequests?.[0]
   const customerStatus = customer?.status
   const pausePending = pauseRequest?.pausePending
-  const dueDate = pauseRequest?.pauseDate && DateTime.fromISO(pauseRequest?.pauseDate).toFormat("EEEE LLLL d")
 
   const resumeDate =
     customer?.membership?.pauseRequests?.[0]?.resumeDate &&

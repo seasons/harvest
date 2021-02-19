@@ -4,6 +4,7 @@ import React from "react"
 import { FlatList } from "react-native"
 import { screenTrack } from "App/utils/track"
 import { color } from "App/utils"
+import { truncate } from "lodash"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { centsToDollars, formatInvoiceDate, getAdjustedInvoiceTotal } from "./utils"
 
@@ -141,7 +142,10 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
       title: "Line items",
       value: [
         ...invoice.lineItems?.map((a) => ({
-          name: a.description,
+          name: truncate(a.description, {
+            length: 24,
+            separator: " ",
+          }),
           amount: centsToDollars(a.amount),
           date: formattedInvoiceDueDate,
         })),

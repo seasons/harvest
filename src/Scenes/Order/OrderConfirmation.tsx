@@ -1,5 +1,13 @@
 import {
-  Box, Container, FixedBackArrow, FixedButton, Flex, Sans, SectionHeader, Separator, Spacer
+  Box,
+  Container,
+  FixedBackArrow,
+  FixedButton,
+  Flex,
+  Sans,
+  SectionHeader,
+  Separator,
+  Spacer,
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color, space } from "App/utils"
@@ -19,6 +27,7 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
   const customer = route?.params?.customer
   const address = customer?.detail?.shippingAddress
   const productVariantItems = order?.lineItems?.filter((i) => !!i.productVariant)
+  const needsShipping = order?.lineItems?.some((item) => item.needShipping)
 
   if (!order) {
     return (
@@ -39,12 +48,14 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
           <Spacer mb={4} />
           <Box pb={1}>
             <Sans size="7" color="black100">
-              We've got your order
+              {needsShipping ? "We've got your order" : "It's all yours"}
             </Sans>
           </Box>
           <Box mb={4}>
             <Sans size="4" color="black50">
-              We've emailed you a confirmation and we'll notify you when it's out for delivery.
+              {needsShipping
+                ? "We've emailed you a confirmation and we'll notify you when it's out for delivery."
+                : "All you have to do is hold onto it and we'll reset your slot when we receive your return"}
             </Sans>
           </Box>
           {!!order && (
@@ -59,7 +70,7 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
               <Separator />
             </Box>
           )}
-          {!!address && (
+          {!!address && needsShipping && (
             <Box mb={1}>
               <Flex flexDirection="row" width="100%" justifyContent="space-between">
                 <Flex flexDirection="row" pr={2}>
@@ -78,27 +89,29 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
               </Flex>
             </Box>
           )}
-          <Box mb={4}>
-            <Spacer mb={1} />
-            <Separator />
-            <Spacer mb={1} />
-            <Flex flexDirection="row" width="100%" justifyContent="space-between">
-              <Flex flexDirection="row" pr={2}>
-                <Sans size="4" color="black100">
-                  Delivery
-                </Sans>
+          {needsShipping && (
+            <Box mb={2}>
+              <Spacer mb={1} />
+              <Separator />
+              <Spacer mb={1} />
+              <Flex flexDirection="row" width="100%" justifyContent="space-between">
+                <Flex flexDirection="row" pr={2}>
+                  <Sans size="4" color="black100">
+                    Delivery
+                  </Sans>
+                </Flex>
+                <Flex>
+                  <Sans size="4" color="black100" style={{ textAlign: "right" }}>
+                    5-day shipping
+                  </Sans>
+                  <Sans size="4" color="black100" style={{ textAlign: "right" }}>
+                    UPS Ground
+                  </Sans>
+                </Flex>
               </Flex>
-              <Flex>
-                <Sans size="4" color="black100" style={{ textAlign: "right" }}>
-                  5-day shipping
-                </Sans>
-                <Sans size="4" color="black100" style={{ textAlign: "right" }}>
-                  UPS Ground
-                </Sans>
-              </Flex>
-            </Flex>
-          </Box>
-          <Box mb={5}>
+            </Box>
+          )}
+          <Box mb={5} pt={2}>
             <SectionHeader title={productVariantItems?.length === 1 ? "Item" : "Items"} />
             <Box mt={1} mb={4}>
               {productVariantItems?.map((item, i) => {

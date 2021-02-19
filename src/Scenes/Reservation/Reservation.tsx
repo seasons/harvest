@@ -5,6 +5,7 @@ import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
+import { Schema as NavigationSchema } from "App/Navigation"
 import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/client"
 import * as Sentry from "@sentry/react-native"
@@ -159,7 +160,16 @@ export const Reservation = screenTrack()((props) => {
             </Box>
             {address && (
               <Box mb={4}>
-                <SectionHeader title="Shipping address" />
+                <SectionHeader
+                  title="Shipping address"
+                  rightText="Edit"
+                  onPressRightText={() => {
+                    navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+                      screen: NavigationSchema.PageNames.EditPaymentAndShipping,
+                      params: { phoneNumber, shippingAddress: address },
+                    })
+                  }}
+                />
                 <Sans size="4" color="black50" mt={1}>
                   {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
                 </Sans>

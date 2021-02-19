@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client"
 import gql from "graphql-tag"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { screenTrack } from "App/utils/track"
-import { Dimensions, Linking, ScrollView, Text } from "react-native"
+import { Dimensions, ScrollView, Text } from "react-native"
 import { ListCheck } from "Assets/svgs/ListCheck"
 import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
 import { Schema } from "App/Navigation"
@@ -63,11 +63,21 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
       setWithItemsMutating(false)
     },
     onError: (err) => {
-      const popUpData = {
-        title: "Oops!",
-        note: "There was an error pausing your membership, please contact us.",
-        buttonText: "Close",
-        onClose: () => hidePopUp(),
+      let popUpData
+      if (err.message.includes("You must have an active reservation to pause with items")) {
+        popUpData = {
+          title: "You must have a reservation",
+          note: "You must have an active reservation to pause with items.",
+          buttonText: "Close",
+          onClose: () => hidePopUp(),
+        }
+      } else {
+        popUpData = {
+          title: "Oops!",
+          note: "There was an error pausing your membership, please contact us.",
+          buttonText: "Close",
+          onClose: () => hidePopUp(),
+        }
       }
       console.log("err", err)
       Sentry.captureException(err)

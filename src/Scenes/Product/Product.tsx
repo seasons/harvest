@@ -55,6 +55,7 @@ export const Product = screenTrack({
   const { authState } = useAuthContext()
   const [buyButtonMutating, setBuyButtonMutating] = useState(false)
   const [viewed, setViewed] = useState(false)
+  const [showNotifyMeMessage, setShowNotifyMeMessage] = useState(false)
   const [isMutatingNotify, setIsMutatingNotify] = useState(false)
   const insets = useSafeAreaInsets()
   const flatListRef = useRef(null)
@@ -81,7 +82,6 @@ export const Product = screenTrack({
     translateY: showVariantPicker ? 0 : variantPickerHeight,
     overlayOpacity: showVariantPicker ? 1 : 0,
   })
-
   const [hasNotification, setHasNotification] = useState(false)
 
   const [selectedVariant, setSelectedVariant] = useState(
@@ -226,17 +226,18 @@ export const Product = screenTrack({
     }
   }, [data, product])
 
+  useEffect(() => {
+    const inStock = selectedVariant && selectedVariant.reservable > 0
+    if (selectedVariant?.id && !inStock) {
+      setShowNotifyMeMessage(true)
+    }
+  }, [selectedVariant])
+
   const brandProducts = product?.brand?.products
 
   const viewWidth = Dimensions.get("window").width
   const images = product?.largeImages
   const imageWidth = viewWidth
-
-  const inStock = selectedVariant && selectedVariant.reservable > 0
-  let showNotifyMeMessage = false
-  if (!inStock) {
-    showNotifyMeMessage = true
-  }
 
   if (error) {
     console.error("Error:", error)
