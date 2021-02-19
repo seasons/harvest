@@ -357,7 +357,7 @@ export const Bag = screenTrack()((props) => {
           renderItem={(item) => {
             return renderItem(item)
           }}
-          ListFooterComponent={() => <Spacer pb={160} />}
+          ListFooterComponent={() => <Spacer pb={80} />}
         />
         {isBagView && pauseStatus !== "paused" && !hasActiveReservation && (
           <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
