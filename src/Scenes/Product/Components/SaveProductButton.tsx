@@ -81,9 +81,6 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
   }
 
   const handleSaveButton = () => {
-    if (!selectedVariant?.id) {
-      return
-    }
     onPressSaveButton()
     if (!userHasSession) {
       navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SignInModal })
@@ -104,6 +101,9 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
         },
       })
     } else {
+      if (!selectedVariant?.id) {
+        return
+      }
       tracking.trackEvent({
         actionName: Schema.ActionNames.ProductSaved,
         actionType: Schema.ActionTypes.Tap,
