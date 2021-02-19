@@ -2,24 +2,27 @@ import { Box, Container, FixedBackArrow, Flex, Sans, Spacer, VariantSizes } from
 import { Loader } from "App/Components/Loader"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema, screenTrack } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
-import { Schema as NavigationSchema } from "App/Navigation"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
 import { Animated, Dimensions, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
+
 import { useMutation, useQuery } from "@apollo/client"
 import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
 
 import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
-import { ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements } from "./Components"
+import {
+  ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements
+} from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
@@ -84,20 +87,18 @@ export const Product = screenTrack({
   })
   const [hasNotification, setHasNotification] = useState(false)
 
-  const [selectedVariant, setSelectedVariant] = useState(
-    product?.variants?.[0] || {
-      id: "",
-      reservable: 0,
-      size: "",
-      display: {
-        short: "",
-        long: "",
-      },
-      stock: 0,
-      isInBag: false,
-      hasRestockNotification: null,
-    }
-  )
+  const [selectedVariant, setSelectedVariant] = useState({
+    id: "",
+    reservable: 0,
+    size: "",
+    display: {
+      short: "",
+      long: "",
+    },
+    stock: 0,
+    isInBag: false,
+    hasRestockNotification: null,
+  })
 
   const [addRecentlyViewedItem] = useMutation(ADD_VIEWED_PRODUCT, {
     refetchQueries: [
@@ -228,8 +229,8 @@ export const Product = screenTrack({
 
   useEffect(() => {
     const inStock = selectedVariant && selectedVariant.reservable > 0
-    if (selectedVariant?.id && !inStock) {
-      setShowNotifyMeMessage(true)
+    if (selectedVariant?.id) {
+      setShowNotifyMeMessage(!inStock)
     }
   }, [selectedVariant])
 
