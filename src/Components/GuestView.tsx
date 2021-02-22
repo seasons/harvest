@@ -57,7 +57,7 @@ export const GuestView = ({ navigation }) => {
             <Spacer mr={4} />
             <Box backgroundColor="black10" style={{ width: 1 }} />
             <Spacer mr={4} />
-            <TouchableOpacity onPress={() => navigation.navigate("Webview", { uri: "https://www.seasons.nyc" })}>
+            <TouchableOpacity onPress={() => navigation.navigate("Webview", { uri: "https://www.wearseasons.com" })}>
               <Sans size="4" color={color("black50")} style={{ textDecorationLine: "underline" }}>
                 Learn more
               </Sans>
