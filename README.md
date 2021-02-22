@@ -91,8 +91,8 @@ You're all set to start making changes in eclipse and
 
 ### Creating a release via CI
 
-1. Create a PR (release <-- master) and merge it (e.g. https://github.com/seasons/harvest/pull/472)
-   - For staging builds, we’ll push to branch `beta`
-   - For production builds, we’ll push to branch `release`
+1. Create a new build:
+   - For staging builds, run `git push origin master:staging` or create a PR to `staging`
+   - For production builds, run `git push origin master:production` or create a PR to `production`
 1. That will kick off the build process on CircleCI (Should take about ~25mins to complete)
 1. That will bump the minor version in package.json and push a commit back to github along with a release tag
