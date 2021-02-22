@@ -63,8 +63,8 @@ export const NavBar = ({ state, navigation, currentScreen }) => {
     config: { mass: 1, tension: 450, friction: 50 },
   })
 
-  const onClickNotificationBar = ({ mobile }) => {
-    navigateTo(navigation, mobile)
+  const onClickNotificationBar = (route) => {
+    navigateTo(navigation, route)
   }
 
   return (
