@@ -16,6 +16,7 @@ import styled from "styled-components/native"
 import { useMutation } from "@apollo/client"
 
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
+import { Check } from "Assets/svgs"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -83,6 +84,8 @@ export const BagItem: React.FC<BagItemProps> = ({
   if (!bagItem) {
     return null
   }
+
+  console.log("bagItem", bagItem)
   const variantToUse = head(
     (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
   )
@@ -100,6 +103,7 @@ export const BagItem: React.FC<BagItemProps> = ({
 
   const variantSize = variantToUse?.displayShort
   const variantId = bagItem.variantID
+  const purchased = bagItem?.productVariant?.purchased
 
   const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
@@ -183,10 +187,19 @@ export const BagItem: React.FC<BagItemProps> = ({
           </Sans>
         </Box>
         <Box p={2}>
-          {isBuyable && (
+          {isBuyable && !purchased && (
             <Button size="small" variant="secondaryWhite" onPress={onShowBuyBottomSheet}>
               Buy
             </Button>
+          )}
+          {purchased && (
+            <Flex flexDirection="row" alignItems="center">
+              <Check color={color("black50")} />
+              <Spacer mr={1} />
+              <Sans size="3" color="black50">
+                Purchased
+              </Sans>
+            </Flex>
           )}
         </Box>
       </Flex>
