@@ -75,7 +75,7 @@ export const ProductBuy: React.FC<{
   onBuyNew: () => void
   buyButtonMutating: boolean
 }> = ({ selectedVariant, onBuyUsed, onBuyNew, product, buyButtonMutating }) => {
-  if (selectedVariant?.price?.buyUsedEnabled && selectedVariant?.price?.buyUsedPrice) {
+  if (selectedVariant?.price?.buyNewAvailableForSale) {
     const priceInDollars = selectedVariant?.price?.buyUsedPrice / 100
     const price = priceInDollars?.toLocaleString("en-US", {
       style: "currency",
