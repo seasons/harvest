@@ -86,7 +86,6 @@ export const BagItem: React.FC<BagItemProps> = ({
     return null
   }
 
-  console.log("bagItem", bagItem)
   const variantToUse = head(
     (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
   )
