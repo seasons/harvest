@@ -5,13 +5,13 @@ import { Dimensions, Keyboard, KeyboardAvoidingView } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, Sans, Spacer, TextInput } from "App/Components"
-import { GET_PAYMENT_DATA } from "./PaymentAndShipping"
 import { GetUserPaymentData_me_customer_detail_shippingAddress } from "src/generated/getUserPaymentData"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { space } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import * as Sentry from "@sentry/react-native"
 import analytics from "@segment/analytics-react-native"
+import { GET_PAYMENT_DATA } from "./queries"
 
 const UPDATE_PHONE_AND_SHIPPING = gql`
   mutation updatePaymentAndShipping($shippingAddress: AddressInput!, $phoneNumber: String!) {
