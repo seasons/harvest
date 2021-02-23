@@ -19,8 +19,7 @@ interface Props {
   showNotifyMeMessage: boolean
   data: GetProduct
   onNotifyMe: () => void
-  onBuyNew: () => void
-  onBuyUsed: () => void
+  scrollToBuyCTA: () => void
   hasNotification: boolean
   isMutatingNotify: boolean
   animatedScrollY: Animated.Value
@@ -29,7 +28,7 @@ interface Props {
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
 const buyCtaHeight = space(2) + space(3) + 20
 
-const renderBuyCTA = ({ price, onBuyNew, onBuyUsed, animatedScrollY, showNotifyMeMessage }) => {
+const renderBuyCTA = ({ price, scrollToBuyCTA, animatedScrollY, showNotifyMeMessage }) => {
   const opacity = animatedScrollY.interpolate({
     inputRange: [0, 50],
     outputRange: [1, 0],
@@ -38,7 +37,7 @@ const renderBuyCTA = ({ price, onBuyNew, onBuyUsed, animatedScrollY, showNotifyM
   let cta
   if (price && price.buyUsedEnabled && price.buyUsedPrice) {
     cta = (
-      <UnderlinedSans size="4" onPress={onBuyUsed}>
+      <UnderlinedSans size="4" onPress={scrollToBuyCTA}>
         {" "}
         Buy used for{" "}
         {(price.buyUsedPrice / 100).toLocaleString("en-US", {
@@ -49,7 +48,7 @@ const renderBuyCTA = ({ price, onBuyNew, onBuyUsed, animatedScrollY, showNotifyM
     )
   } else if (price && price.buyNewEnabled && price.buyNewPrice && price.buyNewAvailableForSale) {
     cta = (
-      <UnderlinedSans size="4" onPress={onBuyNew}>
+      <UnderlinedSans size="4" onPress={scrollToBuyCTA}>
         Buy new for{" "}
         {(price.buyNewPrice / 100).toLocaleString("en-US", {
           style: "currency",
@@ -95,8 +94,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
     isMutatingNotify,
     onNotifyMe,
     setShowSizeWarning,
-    onBuyUsed,
-    onBuyNew,
+    scrollToBuyCTA,
     animatedScrollY,
   } = props
   const inStock = selectedVariant && selectedVariant.reservable > 0
@@ -114,8 +112,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
 
   const BuyCTA = renderBuyCTA({
     price: selectedVariant?.price,
-    onBuyUsed,
-    onBuyNew,
+    scrollToBuyCTA,
     animatedScrollY,
     showNotifyMeMessage,
   })
