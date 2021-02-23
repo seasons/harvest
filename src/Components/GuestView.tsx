@@ -12,7 +12,7 @@ export const GuestView = ({ navigation }) => {
       <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="space-between">
         <Box px={2}>
           <Spacer mb={64} />
-          <SeasonsCircleSVG />
+          <SeasonsCircleSVG width={60} height={60} />
           <Spacer mb={64} />
           <Sans color={color("black100")} size="7">
             Join the community

@@ -20,16 +20,15 @@ import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
 
 import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
-import {
-  ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements
-} from "./Components"
+import { ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT } from "./Queries"
 
-const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
+const windowHeight = Dimensions.get("window").height
+const variantPickerHeight = windowHeight / 2.5 + 50
 export const VARIANT_WANT_HEIGHT = 52
 export enum OrderType {
   BUY_USED = "Used",
@@ -55,6 +54,7 @@ export const UPSERT_RESTOCK_NOTIF = gql`
 export const Product = screenTrack({
   entityType: Schema.EntityTypes.Product,
 })(({ route, navigation }) => {
+  const productBuyRef = useRef(null)
   const { authState } = useAuthContext()
   const [buyButtonMutating, setBuyButtonMutating] = useState(false)
   const [viewed, setViewed] = useState(false)
@@ -274,6 +274,7 @@ export const Product = screenTrack({
       case "buy":
         return (
           <ProductBuy
+            productBuyRef={productBuyRef}
             product={product}
             buyButtonMutating={buyButtonMutating}
             selectedVariant={selectedVariant}
@@ -330,6 +331,12 @@ export const Product = screenTrack({
     }
   }
 
+  const scrollToBuyCTA = () => {
+    productBuyRef.current.measure((fx, fy, width, height, px, py) => {
+      flatListRef.current?.scrollToOffset({ offset: py - (windowHeight / 2 - 80), animated: true })
+    })
+  }
+
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "productBackground"} />
@@ -365,8 +372,7 @@ export const Product = screenTrack({
         hasNotification={hasNotification}
         data={data}
         setShowSizeWarning={setShowSizeWarning}
-        onBuyUsed={() => handleCreateDraftOrder("Used")}
-        onBuyNew={() => handleCreateDraftOrder("New")}
+        scrollToBuyCTA={scrollToBuyCTA}
         animatedScrollY={animatedScrollYRef.current}
       />
       {showNotifyMeMessage && (

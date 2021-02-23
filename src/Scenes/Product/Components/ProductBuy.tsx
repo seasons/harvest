@@ -4,6 +4,7 @@ import { Linking } from "react-native"
 import styled from "styled-components/native"
 
 import { Button, Flex, Sans, Spacer } from "@seasons/eclipse"
+import { Box } from "App/Components"
 
 const ProductBuyNew: React.FC<{
   price: string
@@ -74,8 +75,9 @@ export const ProductBuy: React.FC<{
   onBuyUsed: () => void
   onBuyNew: () => void
   buyButtonMutating: boolean
-}> = ({ selectedVariant, onBuyUsed, onBuyNew, product, buyButtonMutating }) => {
-  if (selectedVariant?.price?.buyUsedEnabled && selectedVariant?.price?.buyUsedPrice) {
+  productBuyRef: React.MutableRefObject<any>
+}> = ({ selectedVariant, onBuyUsed, onBuyNew, product, buyButtonMutating, productBuyRef }) => {
+  if (selectedVariant?.price?.buyUsedAvailableForSale) {
     const priceInDollars = selectedVariant?.price?.buyUsedPrice / 100
     const price = priceInDollars?.toLocaleString("en-US", {
       style: "currency",
@@ -85,12 +87,14 @@ export const ProductBuy: React.FC<{
     })
 
     return (
-      <ProductBuyUsed
-        price={price}
-        onBuyUsed={onBuyUsed}
-        availableForSale={true}
-        buyButtonMutating={buyButtonMutating}
-      />
+      <Box ref={productBuyRef}>
+        <ProductBuyUsed
+          price={price}
+          onBuyUsed={onBuyUsed}
+          availableForSale={true}
+          buyButtonMutating={buyButtonMutating}
+        />
+      </Box>
     )
   } else if (selectedVariant?.price?.buyNewEnabled && selectedVariant?.price?.buyNewPrice) {
     const priceInDollars = selectedVariant?.price?.buyNewPrice / 100
@@ -108,14 +112,16 @@ export const ProductBuy: React.FC<{
     }
 
     return (
-      <ProductBuyNew
-        buyButtonMutating={buyButtonMutating}
-        price={price}
-        brandName={brandName}
-        availableForSale={availableForSale}
-        onBuyNew={onBuyNew}
-        onNavigateToPartner={handleNavigateToPartner}
-      />
+      <Box ref={productBuyRef}>
+        <ProductBuyNew
+          buyButtonMutating={buyButtonMutating}
+          price={price}
+          brandName={brandName}
+          availableForSale={availableForSale}
+          onBuyNew={onBuyNew}
+          onNavigateToPartner={handleNavigateToPartner}
+        />
+      </Box>
     )
   }
 

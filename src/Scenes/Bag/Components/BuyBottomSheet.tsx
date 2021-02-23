@@ -139,7 +139,7 @@ export const BuyBottomSheet: React.FC<Props> = ({ onDismiss, tabs, initialTab = 
       case TabType.USED:
         return (
           <Flex flexDirection="column" px="3" py="4" alignItems="center" key={TabType.USED}>
-            <Button variant="secondaryWhite" block onPress={onBuyUsed} disabled={isMutating} loading={isMutating}>
+            <Button variant="primaryWhite" block onPress={onBuyUsed} disabled={isMutating} loading={isMutating}>
               Buy used for{" "}
               {(tab.price / 100).toLocaleString("en-US", {
                 style: "currency",
