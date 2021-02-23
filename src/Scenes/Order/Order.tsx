@@ -9,6 +9,7 @@ import {
   Separator,
   Spacer,
 } from "App/Components"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Loader } from "App/Components/Loader"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { space } from "App/utils"
@@ -22,6 +23,7 @@ import { useMutation, useQuery } from "@apollo/client"
 import { SUBMIT_ORDER } from "../Product/Mutations"
 import { LineItem } from "./Components/LineItem"
 import { OrderItem } from "./Components/OrderItem"
+import { GET_BAG } from "../Bag/BagQueries"
 
 const GET_CUSTOMER_ORDER_VIEW = gql`
   query GetCustomerOrderView {
@@ -76,11 +78,17 @@ export const Order = screenTrack()(({ route, navigation }) => {
   const { data } = useQuery(GET_CUSTOMER_ORDER_VIEW)
   const order = route?.params?.order
   const tracking = useTracking()
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
   const customer = data?.me?.customer
   const address = data?.me?.customer?.detail?.shippingAddress
 
   const [submitOrder] = useMutation(SUBMIT_ORDER, {
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+    ],
     onCompleted: (res) => {
       setIsMutating(false)
       if (res?.submitOrder) {
@@ -93,6 +101,12 @@ export const Order = screenTrack()(({ route, navigation }) => {
     onError: (error) => {
       console.log("error createDraftOrder ", error)
       setIsMutating(false)
+      showPopUp({
+        title: "Oops! Try again!",
+        note: "There was an issue purchasing this item. Please retry or contact us.",
+        buttonText: "Close",
+        onClose: hidePopUp,
+      })
     },
   })
 
@@ -127,7 +141,8 @@ export const Order = screenTrack()(({ route, navigation }) => {
           </Box>
           <Box mb={4}>
             <Sans size="4" color="black50">
-              Purchased items will live in your bag until your reservation is returned & processed. We’ll reset.
+              Purchased items will live in your bag until your reservation is returned & processed. We’ll reset your
+              slot and you'll be able to get a new item.
             </Sans>
           </Box>
           {!!order && (
@@ -236,6 +251,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
           })
           setIsMutating(true)
           await submitOrder({
+            awaitRefetchQueries: true,
             variables: {
               input: {
                 orderID: order.id,
