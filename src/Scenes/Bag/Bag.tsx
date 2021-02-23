@@ -259,6 +259,7 @@ export const Bag = screenTrack()((props) => {
         },
       })
     }
+    setMutating(false)
   }
 
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
