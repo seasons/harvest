@@ -55,6 +55,7 @@ export const BagItemFragment = gql`
       buyNewPrice
       buyNewEnabled
       buyNewAvailableForSale
+      buyUsedAvailableForSale
       buyUsedPrice
       buyUsedEnabled
     }
