@@ -77,7 +77,7 @@ export const ProductBuy: React.FC<{
   buyButtonMutating: boolean
   productBuyRef: React.MutableRefObject<any>
 }> = ({ selectedVariant, onBuyUsed, onBuyNew, product, buyButtonMutating, productBuyRef }) => {
-  if (selectedVariant?.price?.buyUsedAvailableForSale) {
+  if (selectedVariant?.price?.buyUsedEnabled && selectedVariant?.price?.buyUsedPrice) {
     const priceInDollars = selectedVariant?.price?.buyUsedPrice / 100
     const price = priceInDollars?.toLocaleString("en-US", {
       style: "currency",
@@ -91,7 +91,7 @@ export const ProductBuy: React.FC<{
         <ProductBuyUsed
           price={price}
           onBuyUsed={onBuyUsed}
-          availableForSale={true}
+          availableForSale={selectedVariant?.price?.buyUsedAvailableForSale}
           buyButtonMutating={buyButtonMutating}
         />
       </Box>
