@@ -1,14 +1,4 @@
-import {
-  Box,
-  Container,
-  FixedBackArrow,
-  FixedButton,
-  Flex,
-  Sans,
-  SectionHeader,
-  Separator,
-  Spacer,
-} from "App/Components"
+import { Box, Container, FixedButton, Flex, Sans, SectionHeader, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
@@ -32,7 +22,6 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
   if (!order) {
     return (
       <>
-        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <Loader />
       </>
     )
@@ -40,7 +29,6 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
-      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Flex style={{ flex: 1 }} px={2}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <Spacer mb={80} />
