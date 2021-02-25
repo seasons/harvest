@@ -145,7 +145,16 @@ export const Product = screenTrack({
       }
     },
     onError: (error) => {
+      showPopUp({
+        title: "Sorry!",
+        note: "There was an issue creating the order, please try again.",
+        buttonText: "Okay",
+        onClose: () => {
+          hidePopUp()
+        },
+      })
       console.log("error createDraftOrder ", error)
+      Sentry.captureException(JSON.stringify(error))
       setBuyButtonMutating(false)
     },
   })
