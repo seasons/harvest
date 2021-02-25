@@ -32,7 +32,6 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
   if (!order) {
     return (
       <>
-        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <Loader />
       </>
     )
@@ -40,7 +39,6 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
-      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Flex style={{ flex: 1 }} px={2}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <Spacer mb={80} />
