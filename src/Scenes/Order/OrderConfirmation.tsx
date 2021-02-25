@@ -1,14 +1,4 @@
-import {
-  Box,
-  Container,
-  FixedBackArrow,
-  FixedButton,
-  Flex,
-  Sans,
-  SectionHeader,
-  Separator,
-  Spacer,
-} from "App/Components"
+import { Box, Container, FixedButton, Flex, Sans, SectionHeader, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
