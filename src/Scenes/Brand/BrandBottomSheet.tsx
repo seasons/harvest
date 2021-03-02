@@ -172,7 +172,6 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
                 skip: products.length,
               },
             }).then((fetchMoreResult: any) => {
-              console.log("fetchMoreResult", fetchMoreResult)
               setProductCount(products.length + fetchMoreResult?.data?.brand?.products?.length)
             })
           }
