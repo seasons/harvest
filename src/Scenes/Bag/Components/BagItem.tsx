@@ -301,7 +301,7 @@ export const BagItem: React.FC<BagItemProps> = ({
       >
         <Box style={shadowStyles}>
           <BagItemContainer isReserved={isReserved}>
-            {isReserved ? <ReservedItemContent /> : <NonReservedItemContent />}
+            {isReserved || true ? <ReservedItemContent /> : <NonReservedItemContent />}
             <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
               {!!imageURL && (
                 <FadeInImage

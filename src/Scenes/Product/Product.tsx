@@ -289,6 +289,9 @@ export const Product = screenTrack({
       case "buy":
         return (
           <ProductBuyCTA
+            px={3}
+            pb={3}
+            ref={productBuyRef}
             product={filter(ProductBuyCTA_ProductFragment, product)}
             selectedVariant={filter(ProductBuyCTA_ProductVariantFragment, selectedVariant)}
             buyButtonMutating={buyButtonMutating}
