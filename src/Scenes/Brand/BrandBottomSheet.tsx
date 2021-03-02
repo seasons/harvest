@@ -15,6 +15,7 @@ interface BrandBottomSheetProps {
   loading: boolean
   fetchMore: any
   currentImage: number
+  setProductCount: (count: number) => void
 }
 
 export const BRAND_SNAP_PADDING = 70
@@ -56,7 +57,13 @@ const MetaDataCarousel = ({ data }) => {
   )
 }
 
-export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loading, fetchMore, currentImage }) => {
+export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
+  data,
+  loading,
+  fetchMore,
+  currentImage,
+  setProductCount,
+}) => {
   const [readMoreExpanded, setReadMoreExpanded] = useState(false)
   const [flatListHeight, setFlatListHeight] = useState(0)
   const insets = useSafeAreaInsets()
@@ -164,22 +171,9 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({ data, loadin
               variables: {
                 skip: products.length,
               },
-              updateQuery: (prev, { fetchMoreResult }) => {
-                if (!prev) {
-                  return []
-                }
-
-                if (!fetchMoreResult) {
-                  return prev
-                }
-
-                return Object.assign({}, prev, {
-                  brand: {
-                    ...prev.brand,
-                    products: [...prev.brand.products, ...fetchMoreResult.brand.products],
-                  },
-                })
-              },
+            }).then((fetchMoreResult: any) => {
+              console.log("fetchMoreResult", fetchMoreResult)
+              setProductCount(products.length + fetchMoreResult?.data?.brand?.products?.length)
             })
           }
         }}

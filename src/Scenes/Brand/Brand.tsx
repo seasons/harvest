@@ -13,6 +13,7 @@ export const Brand = screenTrack({
   entityType: Schema.EntityTypes.Brand,
 })((props: any) => {
   const { navigation, route, error } = props
+  const [productCount, setProductCount] = useState(10)
   const [currentImage, setCurrentImage] = useState(1)
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -26,10 +27,10 @@ export const Brand = screenTrack({
     console.log("error Brand.tsx: ", error)
   }
 
-  const { data, loading, fetchMore } = useQuery<GetBrand>(GET_BRAND, {
+  const { previousData, data = previousData, loading, fetchMore } = useQuery<GetBrand>(GET_BRAND, {
     variables: {
       brandID,
-      first: 10,
+      first: productCount,
       skip: 0,
       orderBy: "publishedAt_DESC",
     },
@@ -50,7 +51,13 @@ export const Brand = screenTrack({
     <Container insetsBottom={false} insetsTop={false}>
       <FixedBackArrow navigation={navigation} variant="whiteTransparent" />
       <BrandPhotos images={images} currentImage={currentImage} setCurrentImage={setCurrentImage} />
-      <BrandBottomSheet data={data} loading={loading} fetchMore={fetchMore} currentImage={currentImage} />
+      <BrandBottomSheet
+        setProductCount={setProductCount}
+        data={data}
+        loading={loading}
+        fetchMore={fetchMore}
+        currentImage={currentImage}
+      />
     </Container>
   )
 })
