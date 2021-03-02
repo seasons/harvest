@@ -27,7 +27,7 @@ export interface GetMembershipInfo_me_customer_membership_pauseRequests {
 export interface GetMembershipInfo_me_customer_membership_subscription {
   __typename: "CustomerMembershipSubscriptionData";
   id: string;
-  nextBillingAt: any;
+  nextBillingAt: any | null;
 }
 
 export interface GetMembershipInfo_me_customer_membership_plan {

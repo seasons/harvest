@@ -133,13 +133,14 @@ export const GET_BAG = gql`
       }
       bag {
         id
-        productVariant {
-          id
-          ...BagItemProductVariant
-        }
         position
         saved
         status
+        productVariant {
+          id
+          purchased
+          ...BagItemProductVariant
+        }
       }
       savedItems {
         id

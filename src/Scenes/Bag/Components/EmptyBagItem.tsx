@@ -10,10 +10,10 @@ export const EmptyBagItem: React.FC<{ index: number; navigation: any }> = ({ ind
     <Box>
       <EmptyBagItemContainer>
         <Spacer />
-        <Sans size="4" color="black100">
+        <Sans size="3" color="black100">
           {index + 1}. Add an item
         </Sans>
-        <Sans size="4" color="black50">
+        <Sans size="3" color="black50">
           Or tap below for recommendations
         </Sans>
         <Flex pt="84px" flexDirection="row" alignItems="flex-end" justifyContent="flex-end" style={{ flex: 1 }}>

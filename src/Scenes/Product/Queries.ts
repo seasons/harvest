@@ -15,6 +15,7 @@ const commonProductVariantFragment = gql`
     price {
       id
       buyNewPrice
+      buyUsedAvailableForSale
       buyNewAvailableForSale
       buyNewEnabled
       buyUsedEnabled

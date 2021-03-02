@@ -114,7 +114,41 @@ export const Bag = screenTrack()((props) => {
     },
   })
 
-  const [checkItemsAvailability] = useMutation(CHECK_ITEMS)
+  const [checkItemsAvailability] = useMutation(CHECK_ITEMS, {
+    onCompleted: (res) => {
+      setMutating(false)
+      if (res.checkItemsAvailability) {
+        navigation.navigate(NavigationSchema.StackNames.BagStack, { screen: NavigationSchema.PageNames.Reservation })
+      }
+    },
+    onError: (e) => {
+      const { graphQLErrors } = e
+      console.log("Bag.tsx handleReserve: ", graphQLErrors)
+      const error = graphQLErrors.length > 0 ? graphQLErrors[0] : null
+      if (error) {
+        const { code } = error.extensions
+        if (code === "515" || code === "511") {
+          refetch()
+
+          showPopUp({
+            title: "One or more items have been reserved already",
+            note:
+              "Sorry, some of the items you had selected were confirmed before you, we've moved these to your saved items.",
+            buttonText: "Got it",
+            onClose: () => hidePopUp(),
+          })
+        } else {
+          showPopUp({
+            title: "Sorry!",
+            note: "We couldn't process your order because of an unexpected error, please try again later",
+            buttonText: "Got it",
+            onClose: () => hidePopUp(),
+          })
+        }
+      }
+      setMutating(false)
+    },
+  })
 
   if (isLoading) {
     return <Loader />
@@ -154,108 +188,78 @@ export const Bag = screenTrack()((props) => {
 
   const handleReserve = async (navigation) => {
     setMutating(true)
-    try {
-      if (!isSignedIn) {
+    // try {
+    if (!isSignedIn) {
+      showPopUp({
+        title: "Sign up to reserve your items",
+        note: "You need to create an account before you can reserve items",
+        buttonText: "Got it",
+        onClose: () => {
+          hidePopUp()
+          navigation.navigate("Modal", {
+            screen: "CreateAccountModal",
+          })
+        },
+      })
+    } else if (customerStatus === "Authorized") {
+      showPopUp({
+        title: "You need to choose a plan first",
+        note: "Sign up to a plan to continue reserving your items",
+        buttonText: "Got it",
+        onClose: () => {
+          hidePopUp()
+          navigation.navigate("Modal", {
+            screen: NavigationSchema.PageNames.CreateAccountModal,
+            params: {
+              initialState: CreateAccountState.ChoosePlan,
+              initialUserState: CreateAccountUserState.Admitted,
+            },
+          })
+        },
+      })
+    } else if (bagCount > itemCount) {
+      showPopUp({
+        title: "You must remove some items first",
+        note: `Your plan has ${itemCount} ${itemCount === 1 ? "slot" : "slots"} but your bag has ${bagCount} items.`,
+        buttonText: "Got it",
+        onClose: () => hidePopUp(),
+      })
+    } else {
+      const hasShippingAddress =
+        !!shippingAddress.address1 && !!shippingAddress.city && !!shippingAddress.state && !!shippingAddress.zipCode
+      if (!hasShippingAddress) {
         showPopUp({
-          title: "Sign up to reserve your items",
-          note: "You need to create an account before you can reserve items",
-          buttonText: "Got it",
-          onClose: () => {
-            hidePopUp()
-            navigation.navigate("Modal", {
-              screen: "CreateAccountModal",
-            })
-          },
-        })
-      } else if (customerStatus === "Authorized") {
-        showPopUp({
-          title: "You need to choose a plan first",
-          note: "Sign up to a plan to continue reserving your items",
-          buttonText: "Got it",
-          onClose: () => {
-            hidePopUp()
-            navigation.navigate("Modal", {
-              screen: NavigationSchema.PageNames.CreateAccountModal,
-              params: {
-                initialState: CreateAccountState.ChoosePlan,
-                initialUserState: CreateAccountUserState.Admitted,
-              },
-            })
-          },
-        })
-      } else if (bagCount > itemCount) {
-        showPopUp({
-          title: "You must remove some items first",
-          note: `Your plan has ${itemCount} ${itemCount === 1 ? "slot" : "slots"} but your bag has ${bagCount} items.`,
+          title: "Your shipping address is incomplete",
+          note:
+            "Please update your shipping address under Payment & Shipping in your account settings to complete your reservation.",
           buttonText: "Got it",
           onClose: () => hidePopUp(),
-        })
-      } else {
-        const hasShippingAddress =
-          !!shippingAddress.address1 && !!shippingAddress.city && !!shippingAddress.state && !!shippingAddress.zipCode
-        if (!hasShippingAddress) {
-          showPopUp({
-            title: "Your shipping address is incomplete",
-            note:
-              "Please update your shipping address under Payment & Shipping in your account settings to complete your reservation.",
-            buttonText: "Got it",
-            onClose: () => hidePopUp(),
-            secondaryButtonText: "Go to settings",
-            secondaryButtonOnPress: () => {
-              navigation.navigate(NavigationSchema.StackNames.AccountStack, {
-                screen: NavigationSchema.PageNames.PaymentAndShipping,
-              })
-              hidePopUp()
-            },
-          })
-          setMutating(false)
-          return
-        }
-        const { data } = await checkItemsAvailability({
-          variables: {
-            items: items.map((item) => item.variantID),
-          },
-          refetchQueries: [
-            {
-              query: GET_BAG,
-            },
-          ],
-          update(cache, { data, errors }) {
-            console.log(data, errors)
+          secondaryButtonText: "Go to settings",
+          secondaryButtonOnPress: () => {
+            navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+              screen: NavigationSchema.PageNames.PaymentAndShipping,
+            })
+            hidePopUp()
           },
         })
-        if (data.checkItemsAvailability) {
-          navigation.navigate(NavigationSchema.StackNames.BagStack, { screen: NavigationSchema.PageNames.Reservation })
-        }
+        setMutating(false)
+        return
       }
-      setMutating(false)
-    } catch (e) {
-      const { graphQLErrors } = e
-      console.log("Bag.tsx handleReserve: ", graphQLErrors)
-      const error = graphQLErrors.length > 0 ? graphQLErrors[0] : null
-      if (error) {
-        const { code } = error.extensions
-        if (code === "511") {
-          refetch()
-
-          showPopUp({
-            title: "One or more items have been reserved already",
-            note:
-              "Sorry, some of the items you had selected were confirmed before you, please replace them with available items",
-            buttonText: "Got it",
-            onClose: () => hidePopUp(),
-          })
-        } else {
-          showPopUp({
-            title: "Sorry!",
-            note: "We couldn't process your order because of an unexpected error, please try again later",
-            buttonText: "Got it",
-            onClose: () => hidePopUp(),
-          })
-        }
-      }
-      setMutating(false)
+      await checkItemsAvailability({
+        variables: {
+          items: items.map((item) => item.variantID),
+        },
+        refetchQueries: [
+          {
+            query: GET_BAG,
+          },
+        ],
+        update(cache, { data, errors }) {
+          console.log(data, errors)
+        },
+      })
     }
+    setMutating(false)
   }
 
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
@@ -353,7 +357,7 @@ export const Bag = screenTrack()((props) => {
           renderItem={(item) => {
             return renderItem(item)
           }}
-          ListFooterComponent={() => <Spacer pb={160} />}
+          ListFooterComponent={() => <Spacer pb={80} />}
         />
         {isBagView && pauseStatus !== "paused" && !hasActiveReservation && (
           <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>

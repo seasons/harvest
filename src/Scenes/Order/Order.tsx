@@ -1,6 +1,15 @@
 import {
-  Box, Container, FixedBackArrow, FixedButton, Flex, Sans, SectionHeader, Separator, Spacer
+  Box,
+  Container,
+  FixedBackArrow,
+  FixedButton,
+  Flex,
+  Sans,
+  SectionHeader,
+  Separator,
+  Spacer,
 } from "App/Components"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Loader } from "App/Components/Loader"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { space } from "App/utils"
@@ -14,6 +23,7 @@ import { useMutation, useQuery } from "@apollo/client"
 import { SUBMIT_ORDER } from "../Product/Mutations"
 import { LineItem } from "./Components/LineItem"
 import { OrderItem } from "./Components/OrderItem"
+import { GET_BAG } from "../Bag/BagQueries"
 
 const GET_CUSTOMER_ORDER_VIEW = gql`
   query GetCustomerOrderView {
@@ -68,11 +78,17 @@ export const Order = screenTrack()(({ route, navigation }) => {
   const { data } = useQuery(GET_CUSTOMER_ORDER_VIEW)
   const order = route?.params?.order
   const tracking = useTracking()
+  const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
   const customer = data?.me?.customer
   const address = data?.me?.customer?.detail?.shippingAddress
 
   const [submitOrder] = useMutation(SUBMIT_ORDER, {
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+    ],
     onCompleted: (res) => {
       setIsMutating(false)
       if (res?.submitOrder) {
@@ -85,6 +101,12 @@ export const Order = screenTrack()(({ route, navigation }) => {
     onError: (error) => {
       console.log("error createDraftOrder ", error)
       setIsMutating(false)
+      showPopUp({
+        title: "Oops! Try again!",
+        note: "There was an issue purchasing this item. Please retry or contact us.",
+        buttonText: "Close",
+        onClose: hidePopUp,
+      })
     },
   })
 
@@ -95,6 +117,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
 
   const totalInDollars = order?.total / 100
   const totalSalesTaxDollars = order?.salesTaxTotal / 100
+  const needsShipping = order?.lineItems?.some((item) => item.needShipping)
 
   if (!customer || !address) {
     return (
@@ -118,13 +141,14 @@ export const Order = screenTrack()(({ route, navigation }) => {
           </Box>
           <Box mb={4}>
             <Sans size="4" color="black50">
-              Purchased items will live in your bag until your reservation is returned & processed. We’ll reset.
+              Purchased items will live in your bag until your reservation is returned & processed. We’ll reset your
+              slot and you'll be able to get a new item.
             </Sans>
           </Box>
           {!!order && (
             <Box mb={4}>
               <SectionHeader title="Purchase summary" />
-              {order?.lineItems?.map((item) => {
+              {order?.lineItems?.map((item, index) => {
                 const itemPriceInDollars = item?.price / 100
                 let displayName
                 if (item.recordType === "Package") {
@@ -141,7 +165,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
                         currency: "USD",
                       }) || ""
                     }
-                    key={item?.productVariant?.id}
+                    key={item?.productVariant?.id ?? index}
                     windowWidth={windowWidth}
                   />
                 )
@@ -177,7 +201,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
               </Sans>
             </Box>
           )}
-          {!!address && (
+          {!!address && needsShipping && (
             <Box mb={4}>
               <SectionHeader title="Shipping address" />
               <Sans size="4" color="black50" mt={1}>
@@ -201,7 +225,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
             <Box mt={1} mb={4}>
               {productVariantItems?.map((item, i) => {
                 return (
-                  <Box key={item.productVariant?.id}>
+                  <Box key={i}>
                     <OrderItem index={i} productVariant={item.productVariant} navigation={navigation} />
                     <Spacer mb={1} />
                     {i !== productVariantItems.length - 1 && <Separator />}
@@ -227,6 +251,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
           })
           setIsMutating(true)
           await submitOrder({
+            awaitRefetchQueries: true,
             variables: {
               input: {
                 orderID: order.id,

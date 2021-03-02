@@ -9,7 +9,6 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import React, { useRef, useState } from "react"
 import { useMutation, useQuery } from "@apollo/client"
 import { Dimensions, Image, KeyboardAvoidingView, ScrollView, View } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box } from "@seasons/eclipse"
 
 const SUBMIT_FIT_PIC = gql`
@@ -33,7 +32,6 @@ const GET_INSTAGRAM_HANDLE = gql`
 
 export const FitPicConfirmation = screenTrack()(({ route, navigation }) => {
   const tracking = useTracking()
-  const insets = useSafeAreaInsets()
 
   const { previousData, data = previousData, loading } = useQuery(GET_INSTAGRAM_HANDLE, { fetchPolicy: "no-cache" })
 

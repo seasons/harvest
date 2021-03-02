@@ -16,6 +16,7 @@ import styled from "styled-components/native"
 import { useMutation } from "@apollo/client"
 
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
+import { Check } from "Assets/svgs"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -38,6 +39,7 @@ export const BagItemFragment = gql`
       }
       variants {
         id
+        reservable
         hasRestockNotification
         reservable
         displayShort
@@ -53,6 +55,7 @@ export const BagItemFragment = gql`
       buyNewPrice
       buyNewEnabled
       buyNewAvailableForSale
+      buyUsedAvailableForSale
       buyUsedPrice
       buyUsedEnabled
     }
@@ -82,6 +85,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   if (!bagItem) {
     return null
   }
+
   const variantToUse = head(
     (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
   )
@@ -97,8 +101,9 @@ export const BagItem: React.FC<BagItemProps> = ({
   // underlying availability
   const isBuyable = bagItem?.productVariant?.price?.buyNewEnabled || bagItem?.productVariant?.price?.buyUsedEnabled
 
-  const variantSize = variantToUse?.displayLong?.toLowerCase()
+  const variantSize = variantToUse?.displayShort
   const variantId = bagItem.variantID
+  const purchased = bagItem?.productVariant?.purchased
 
   const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
@@ -171,7 +176,7 @@ export const BagItem: React.FC<BagItemProps> = ({
         justifyContent="space-between"
       >
         <Box style={{ width: "100%" }} p={2}>
-          <Sans size="4">{`${index + 1}.`}</Sans>
+          <Sans size="3">{`${index + 1}.`}</Sans>
           <Spacer mb={1} />
           <Sans size="3">{product?.brand?.name}</Sans>
           <Sans size="3" color="black50">
@@ -182,10 +187,19 @@ export const BagItem: React.FC<BagItemProps> = ({
           </Sans>
         </Box>
         <Box p={2}>
-          {isBuyable && (
+          {isBuyable && !purchased && (
             <Button size="small" variant="secondaryWhite" onPress={onShowBuyBottomSheet}>
               Buy
             </Button>
+          )}
+          {purchased && (
+            <Flex flexDirection="row" alignItems="center">
+              <Check color={color("black50")} />
+              <Spacer mr={1} />
+              <Sans size="3" color="black50">
+                Purchased
+              </Sans>
+            </Flex>
           )}
         </Box>
       </Flex>
@@ -197,17 +211,17 @@ export const BagItem: React.FC<BagItemProps> = ({
       <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
         <Box>
           <Box style={{ width: "100%" }}>
-            <Sans size="4">{`${index + 1}. ${product?.brand?.name}`}</Sans>
-            <Sans size="4" color="black50">
+            <Sans size="3">{`${index + 1}. ${product?.brand?.name}`}</Sans>
+            <Sans size="3" color="black50">
               {product.name}
             </Sans>
-            <Sans size="4" color="black50">
+            <Sans size="3" color="black50">
               Size {variantSize}
             </Sans>
             <Spacer mb={3} />
             {authState.isSignedIn && (
               <TouchableOpacity onPress={onSaveForLater}>
-                <Sans size="4" style={{ textDecorationLine: "underline" }}>
+                <Sans size="3" style={{ textDecorationLine: "underline" }}>
                   Save for later
                 </Sans>
               </TouchableOpacity>
