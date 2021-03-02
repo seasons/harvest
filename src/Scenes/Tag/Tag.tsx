@@ -42,11 +42,12 @@ export const Tag = screenTrack({
   const [readMoreExpanded, setReadMoreExpanded] = useState(false)
   const { navigation, route } = props
   const { tag, title, description } = route?.params?.tagData
+  const [productCount, setProductCount] = useState(10)
 
   const { previousData, data = previousData, loading, fetchMore } = useQuery(GET_TAG, {
     variables: {
       tag,
-      first: 10,
+      first: productCount,
       skip: 0,
       orderBy: "publishedAt_DESC",
     },
@@ -100,19 +101,8 @@ export const Tag = screenTrack({
               variables: {
                 skip: products.length,
               },
-              updateQuery: (prev, { fetchMoreResult }) => {
-                if (!prev) {
-                  return []
-                }
-
-                if (!fetchMoreResult) {
-                  return prev
-                }
-
-                return Object.assign({}, prev, {
-                  products: [...prev.products, ...fetchMoreResult.products],
-                })
-              },
+            }).then((fetchMoreResult: any) => {
+              setProductCount(products.length + fetchMoreResult?.data?.products?.length)
             })
           }
         }}

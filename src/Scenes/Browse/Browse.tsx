@@ -21,6 +21,7 @@ const PAGE_LENGTH = 10
 export const Browse = screenTrack()((props: any) => {
   const currentFilters = props?.route?.params?.filters || EMPTY_BROWSE_FILTERS
   const routeCategorySlug = props?.route?.params?.categorySlug || "all"
+  const [productCount, setProductCount] = useState(PAGE_LENGTH)
   const [edges, setEdges] = useState(new Array(PAGE_LENGTH).fill({ node: { id: "" } }))
   const [categoryItems, setCategoryItems] = useState(new Array(PAGE_LENGTH).fill({ slug: "" }))
   const [filters, setFilters] = useState<BrowseFilters>(currentFilters)
@@ -47,14 +48,14 @@ export const Browse = screenTrack()((props: any) => {
     }
   }, [routeCategorySlug])
 
-  const { data, loading, fetchMore } = useQuery<GetBrowseProducts>(GET_BROWSE_PRODUCTS, {
+  const { previousData, data = previousData, loading, fetchMore } = useQuery<GetBrowseProducts>(GET_BROWSE_PRODUCTS, {
     variables: {
       tops: filters.topSizeFilters,
       bottoms: filters.bottomSizeFilters,
       available: filters.availableOnly,
       brandNames: filters.designerFilters,
       categoryName: currentCategory,
-      first: PAGE_LENGTH,
+      first: productCount,
       skip: 0,
       orderBy: "publishedAt_DESC",
     },
@@ -178,21 +179,8 @@ export const Browse = screenTrack()((props: any) => {
                   variables: {
                     skip: products.length,
                   },
-                  updateQuery: (prev: GetBrowseProducts, { fetchMoreResult }) => {
-                    if (!prev) {
-                      return []
-                    }
-
-                    if (!fetchMoreResult) {
-                      return prev
-                    }
-                    return Object.assign({}, prev, {
-                      productsConnection: {
-                        __typename: "ProductConnection",
-                        edges: [...prev.productsConnection?.edges, ...fetchMoreResult.productsConnection?.edges],
-                      },
-                    })
-                  },
+                }).then((fetchMoreResult: any) => {
+                  setProductCount(products.length + fetchMoreResult?.data?.productsConnection?.edges?.length)
                 })
               }
             }}
