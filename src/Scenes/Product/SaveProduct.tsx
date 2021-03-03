@@ -26,7 +26,7 @@ import { SAVE_ITEM } from "./Components/SaveProductButton"
 import { useNavigation } from "@react-navigation/native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { GetBrowseProducts_products_images } from "App/generated/GetBrowseProducts"
-import { GET_HOMEPAGE } from "@seasons/eclipse"
+import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
 
 const screenWidth = Dimensions.get("window").width
 
@@ -54,7 +54,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
         query: GET_BAG,
       },
       {
-        query: GET_HOMEPAGE,
+        query: GET_HOMEPAGE_NATIVE,
         variables: { firstFitPics: 8, skipFitPics: 0 },
       },
     ],

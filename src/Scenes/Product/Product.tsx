@@ -25,7 +25,7 @@ import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT } from "./Queries"
-import { GET_HOMEPAGE } from "@seasons/eclipse"
+import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
 
 const windowHeight = Dimensions.get("window").height
 const variantPickerHeight = windowHeight / 2.5 + 50
@@ -103,7 +103,7 @@ export const Product = screenTrack({
   const [addRecentlyViewedItem] = useMutation(ADD_VIEWED_PRODUCT, {
     refetchQueries: [
       {
-        query: GET_HOMEPAGE,
+        query: GET_HOMEPAGE_NATIVE,
         variables: {
           firstFitPics: 8,
         },
