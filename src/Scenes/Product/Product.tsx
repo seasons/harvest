@@ -19,13 +19,13 @@ import { useMutation, useQuery } from "@apollo/client"
 import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
 
-import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
 import { ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT } from "./Queries"
+import { GET_HOMEPAGE } from "@seasons/eclipse"
 
 const windowHeight = Dimensions.get("window").height
 const variantPickerHeight = windowHeight / 2.5 + 50

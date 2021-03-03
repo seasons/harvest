@@ -26,7 +26,7 @@ import { SAVE_ITEM } from "./Components/SaveProductButton"
 import { useNavigation } from "@react-navigation/native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { GetBrowseProducts_products_images } from "App/generated/GetBrowseProducts"
-import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
+import { GET_HOMEPAGE } from "@seasons/eclipse"
 
 const screenWidth = Dimensions.get("window").width
 

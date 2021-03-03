@@ -16,11 +16,9 @@ import styled from "styled-components/native"
 import { useQuery } from "@apollo/client"
 import analytics from "@segment/analytics-react-native"
 
-import {
-  ReservationFeedbackPopUp, ReservationFeedbackReminder
-} from "../ReservationFeedback/Components"
+import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { GET_HOMEPAGE } from "./queries/homeQueries"
+import { GET_HOMEPAGE } from "@seasons/eclipse"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
@@ -29,6 +27,8 @@ export const Home = screenTrack()(({ navigation, route }) => {
   const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
     variables: { firstFitPics: fitPicsFetchCount, skipFitPics: 0 },
   })
+
+  console.log("data", data)
 
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)

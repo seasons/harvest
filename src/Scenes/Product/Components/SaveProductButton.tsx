@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useTracking, Schema } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { GET_HOMEPAGE } from "App/Scenes/Home/queries/homeQueries"
+import { GET_HOMEPAGE } from "@seasons/eclipse"
 
 export const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
