@@ -8,7 +8,7 @@ import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { screenTrack, useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { Container } from "Components/Container"
 import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
-import { GET_HOMEPAGE } from "@seasons/eclipse"
+import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
 
 export const ReservationFeedbackConfirmation: React.FC<{
   navigation: any
@@ -23,7 +23,7 @@ export const ReservationFeedbackConfirmation: React.FC<{
   const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK, {
     refetchQueries: [
       {
-        query: GET_HOMEPAGE,
+        query: GET_HOMEPAGE_NATIVE,
         variables: { firstFitPics: 8, skipFitPics: 0 },
       },
     ],
