@@ -16,17 +16,15 @@ import styled from "styled-components/native"
 import { useQuery } from "@apollo/client"
 import analytics from "@segment/analytics-react-native"
 
-import {
-  ReservationFeedbackPopUp, ReservationFeedbackReminder
-} from "../ReservationFeedback/Components"
+import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { GET_HOMEPAGE } from "./queries/homeQueries"
+import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
   const [fitPicsFetchCount, setFitPicsFetchCount] = useState(8)
-  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
+  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(GET_HOMEPAGE_NATIVE, {
     variables: { firstFitPics: fitPicsFetchCount, skipFitPics: 0 },
   })
 

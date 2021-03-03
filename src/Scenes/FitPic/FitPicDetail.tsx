@@ -16,9 +16,9 @@ import styled from "styled-components"
 import { useMutation } from "@apollo/client"
 
 import { GET_BAG } from "../Bag/BagQueries"
-import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
 import { SAVE_ITEM } from "../Product/Components/SaveProductButton"
 import { GET_PRODUCT } from "../Product/Queries"
+import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
 
 interface FitPicDetailProps {
   navigation: any
@@ -77,7 +77,7 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
             query: GET_BAG,
           },
           {
-            query: GET_HOMEPAGE,
+            query: GET_HOMEPAGE_NATIVE,
             variables: { firstFitPics: 8, skipFitPics: 0 },
           },
         ],

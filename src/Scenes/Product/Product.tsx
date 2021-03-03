@@ -19,7 +19,7 @@ import { useMutation, useQuery } from "@apollo/client"
 import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
 
-import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
+import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
 import { ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { SizeWarning } from "./Components/SizeWarning"
@@ -103,7 +103,7 @@ export const Product = screenTrack({
   const [addRecentlyViewedItem] = useMutation(ADD_VIEWED_PRODUCT, {
     refetchQueries: [
       {
-        query: GET_HOMEPAGE,
+        query: GET_HOMEPAGE_NATIVE,
         variables: {
           firstFitPics: 8,
         },
