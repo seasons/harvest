@@ -48,8 +48,7 @@ export const setupApolloClient = async () => {
   })
 
   const httpLink = createUploadLink({
-    //uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/", // Server URL (must be absolute)
-    uri: "http://192.168.1.10:4000/",
+    uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/", // Server URL (must be absolute)
   }) as any
 
   const authLink = setContext(async (_, { headers: oldHeaders }) => {
