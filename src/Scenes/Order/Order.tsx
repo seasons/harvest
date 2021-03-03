@@ -28,6 +28,7 @@ import { GET_BAG } from "../Bag/BagQueries"
 const GET_CUSTOMER_ORDER_VIEW = gql`
   query GetCustomerOrderView {
     me {
+      id
       user {
         id
         firstName

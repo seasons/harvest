@@ -15,7 +15,7 @@ import * as Sentry from "@sentry/react-native"
 
 export type PauseStatus = "active" | "pending" | "paused"
 
-const RESUME_MEMBERSHIP = gql`
+export const RESUME_MEMBERSHIP = gql`
   mutation ResumeSubscription($subscriptionID: String!) {
     resumeSubscription(subscriptionID: $subscriptionID)
   }
@@ -209,9 +209,9 @@ export const PauseButtons: React.FC<{
         )}
         {pauseStatus === "paused" && (
           <>
-            <Sans size={fullScreen ? "4" : "2"}>
+            <Sans size="4">
               Your membership is paused until{" "}
-              <Sans size={fullScreen ? "4" : "2"} style={{ textDecorationLine: "underline" }}>
+              <Sans size="4" style={{ textDecorationLine: "underline" }}>
                 {DateTime.fromISO(resumeDate).toFormat("EEEE LLLL d")}
               </Sans>
               .
