@@ -12,15 +12,16 @@ export const GuestView = ({ navigation }) => {
       <Flex style={{ flex: 1 }} flexDirection="column" justifyContent="space-between">
         <Box px={2}>
           <Spacer mb={64} />
-          <SeasonsCircleSVG />
+          <SeasonsCircleSVG width={60} height={60} />
           <Spacer mb={64} />
           <Sans color={color("black100")} size="7">
-            Join the community
+            Wear. Swap. Repeat.
           </Sans>
           <Spacer mb={0.5} />
           <Box pr={3}>
             <Sans size="4" color={color("black50")}>
-              Sign in to start reserving or create an account to get access. Currently available in select cities.
+              A members-only rental service for designer menswear. Access hundreds of styles and discover new brands
+              with zero commitment.
             </Sans>
           </Box>
         </Box>

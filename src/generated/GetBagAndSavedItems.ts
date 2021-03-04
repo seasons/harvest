@@ -47,7 +47,7 @@ export interface GetBagAndSavedItems_me_customer_detail {
 export interface GetBagAndSavedItems_me_customer_membership_subscription {
   __typename: "CustomerMembershipSubscriptionData";
   id: string;
-  nextBillingAt: any;
+  nextBillingAt: any | null;
 }
 
 export interface GetBagAndSavedItems_me_customer_membership_plan {

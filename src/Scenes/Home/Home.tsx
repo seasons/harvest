@@ -5,24 +5,26 @@ import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { NetworkContext } from "App/NetworkProvider"
 import { color } from "App/utils"
+import { userSessionToIdentifyPayload } from "App/utils/auth"
 import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
 import React, { useContext, useEffect, useState } from "react"
-import { useQuery } from "@apollo/client"
 import { StatusBar } from "react-native"
 import SplashScreen from "react-native-splash-screen"
 import styled from "styled-components/native"
+
+import { useQuery } from "@apollo/client"
+import analytics from "@segment/analytics-react-native"
+
 import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import analytics from "@segment/analytics-react-native"
-import { userSessionToIdentifyPayload } from "App/utils/auth"
-import { GET_HOMEPAGE } from "@seasons/eclipse"
+import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
   const [fitPicsFetchCount, setFitPicsFetchCount] = useState(8)
-  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(GET_HOMEPAGE, {
+  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(GET_HOMEPAGE_NATIVE, {
     variables: { firstFitPics: fitPicsFetchCount, skipFitPics: 0 },
   })
 

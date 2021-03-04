@@ -1,5 +1,5 @@
 PODS:
-  - A0Auth0 (2.3.0):
+  - A0Auth0 (2.3.1):
     - React
   - Analytics (4.0.5)
   - boost-for-react-native (1.63.0)
@@ -34,7 +34,7 @@ PODS:
     - libwebp/demux
   - libwebp/webp (1.1.0)
   - Mixpanel (3.6.3)
-  - Permission-Notifications (2.1.3):
+  - Permission-Notifications (2.1.4):
     - RNPermissions
   - PushNotifications (3.0.4)
   - RCTRequired (0.63.3)
@@ -313,7 +313,7 @@ PODS:
     - SDWebImageWebPCoder (~> 0.2.3)
   - RNGestureHandler (1.7.0):
     - React
-  - RNPermissions (2.1.3):
+  - RNPermissions (2.1.4):
     - React
   - RNRate (1.2.1):
     - React
@@ -321,7 +321,7 @@ PODS:
     - React
   - RNScreens (2.10.1):
     - React
-  - RNSentry (1.3.7):
+  - RNSentry (1.3.8):
     - React
     - Sentry (~> 4.4.0)
   - RNShare (4.0.2):
@@ -555,7 +555,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  A0Auth0: 802f5f5add8ac5265cfeea125caa2720dafccfa6
+  A0Auth0: 672afa3f770b06befa3a6d57c8fd26730344b6db
   Analytics: 4bcf052c91e1f3339219e83d6a036fb2bd7c218d
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cde416483dac037923206447da6e1454df403714
@@ -567,7 +567,7 @@ SPEC CHECKSUMS:
   GoogleIDFASupport: aaf8c10bd429abb1c15349d5252244f5eda8ead1
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   Mixpanel: 0e9d50ecc6398e1082e690ddedf6968e57e81935
-  Permission-Notifications: 5d8c88b22dbbf1f0fe278b223caae0d0675c11bc
+  Permission-Notifications: d437cafc026900006d35981d35a2d694f883f44e
   PushNotifications: 6e3d148e5e129af9d4a9279b288c934f9a7f9066
   RCTRequired: 48884c74035a0b5b76dbb7a998bd93bcfc5f2047
   RCTRestart: 3915cac548a37703970941ca33de79a304b8b247
@@ -610,11 +610,11 @@ SPEC CHECKSUMS:
   RNDeviceInfo: b6e650fbd234732c759544218657d549b4339038
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNGestureHandler: b6b359bb800ae399a9c8b27032bdbf7c18f08a08
-  RNPermissions: 6772df08e03565f718f7e140d9fccae441b8ca8b
+  RNPermissions: 3635b407c15f2fe591bd2101c8f20aa0912caba8
   RNRate: a39ac26dc9daf3f9b639ce274b7f80672ae36db1
   RNReanimated: dd8c286ab5dd4ba36d3a7fef8bff7e08711b5476
   RNScreens: b748efec66e095134c7166ca333b628cd7e6f3e2
-  RNSentry: 370623102247ebea20191b5fb549ecc7a275b324
+  RNSentry: 05cc998036c027785e466c896211b5c75b3e0ffd
   RNShare: 7a7277f3c313652422d9de072ac50714dff5e8a4
   RNSharedElement: 00b1a1420d213a34459bb9a5aacabb38107d7948
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e

@@ -2,23 +2,24 @@ import { Box, Container, FixedBackArrow, Flex, Sans, Spacer, VariantSizes } from
 import { Loader } from "App/Components/Loader"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema, screenTrack } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
-import { Schema as NavigationSchema } from "App/Navigation"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
 import { Animated, Dimensions, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
+
 import { useMutation, useQuery } from "@apollo/client"
 import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
 
-import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
+import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
 import { ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { SizeWarning } from "./Components/SizeWarning"
@@ -26,7 +27,8 @@ import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT } from "./Queries"
 
-const variantPickerHeight = Dimensions.get("window").height / 2.5 + 50
+const windowHeight = Dimensions.get("window").height
+const variantPickerHeight = windowHeight / 2.5 + 50
 export const VARIANT_WANT_HEIGHT = 52
 export enum OrderType {
   BUY_USED = "Used",
@@ -52,9 +54,11 @@ export const UPSERT_RESTOCK_NOTIF = gql`
 export const Product = screenTrack({
   entityType: Schema.EntityTypes.Product,
 })(({ route, navigation }) => {
+  const productBuyRef = useRef(null)
   const { authState } = useAuthContext()
   const [buyButtonMutating, setBuyButtonMutating] = useState(false)
   const [viewed, setViewed] = useState(false)
+  const [showNotifyMeMessage, setShowNotifyMeMessage] = useState(false)
   const [isMutatingNotify, setIsMutatingNotify] = useState(false)
   const insets = useSafeAreaInsets()
   const flatListRef = useRef(null)
@@ -81,28 +85,25 @@ export const Product = screenTrack({
     translateY: showVariantPicker ? 0 : variantPickerHeight,
     overlayOpacity: showVariantPicker ? 1 : 0,
   })
-
   const [hasNotification, setHasNotification] = useState(false)
 
-  const [selectedVariant, setSelectedVariant] = useState(
-    product?.variants?.[0] || {
-      id: "",
-      reservable: 0,
-      size: "",
-      display: {
-        short: "",
-        long: "",
-      },
-      stock: 0,
-      isInBag: false,
-      hasRestockNotification: null,
-    }
-  )
+  const [selectedVariant, setSelectedVariant] = useState({
+    id: "",
+    reservable: 0,
+    size: "",
+    display: {
+      short: "",
+      long: "",
+    },
+    stock: 0,
+    isInBag: false,
+    hasRestockNotification: null,
+  })
 
   const [addRecentlyViewedItem] = useMutation(ADD_VIEWED_PRODUCT, {
     refetchQueries: [
       {
-        query: GET_HOMEPAGE,
+        query: GET_HOMEPAGE_NATIVE,
         variables: {
           firstFitPics: 8,
         },
@@ -144,7 +145,16 @@ export const Product = screenTrack({
       }
     },
     onError: (error) => {
+      showPopUp({
+        title: "Sorry!",
+        note: "There was an issue creating the order, please try again.",
+        buttonText: "Okay",
+        onClose: () => {
+          hidePopUp()
+        },
+      })
       console.log("error createDraftOrder ", error)
+      Sentry.captureException(JSON.stringify(error))
       setBuyButtonMutating(false)
     },
   })
@@ -226,17 +236,18 @@ export const Product = screenTrack({
     }
   }, [data, product])
 
+  useEffect(() => {
+    const inStock = selectedVariant && selectedVariant.reservable > 0
+    if (selectedVariant?.id) {
+      setShowNotifyMeMessage(!inStock)
+    }
+  }, [selectedVariant])
+
   const brandProducts = product?.brand?.products
 
   const viewWidth = Dimensions.get("window").width
   const images = product?.largeImages
   const imageWidth = viewWidth
-
-  const inStock = selectedVariant && selectedVariant.reservable > 0
-  let showNotifyMeMessage = false
-  if (!inStock) {
-    showNotifyMeMessage = true
-  }
 
   if (error) {
     console.error("Error:", error)
@@ -272,6 +283,7 @@ export const Product = screenTrack({
       case "buy":
         return (
           <ProductBuy
+            productBuyRef={productBuyRef}
             product={product}
             buyButtonMutating={buyButtonMutating}
             selectedVariant={selectedVariant}
@@ -328,6 +340,12 @@ export const Product = screenTrack({
     }
   }
 
+  const scrollToBuyCTA = () => {
+    productBuyRef.current.measure((fx, fy, width, height, px, py) => {
+      flatListRef.current?.scrollToOffset({ offset: py - (windowHeight / 2 - 80), animated: true })
+    })
+  }
+
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "productBackground"} />
@@ -363,8 +381,7 @@ export const Product = screenTrack({
         hasNotification={hasNotification}
         data={data}
         setShowSizeWarning={setShowSizeWarning}
-        onBuyUsed={() => handleCreateDraftOrder("Used")}
-        onBuyNew={() => handleCreateDraftOrder("New")}
+        scrollToBuyCTA={scrollToBuyCTA}
         animatedScrollY={animatedScrollYRef.current}
       />
       {showNotifyMeMessage && (

@@ -172,7 +172,7 @@ export const ShareFitPicToIG = screenTrack()(({ route, navigation }) => {
                 width: convertSizing(234),
                 height: convertSizing(300),
               }}
-            ></Image>
+            />
             <Image
               source={{ uri: fitPicImage?.url || "" }}
               style={{

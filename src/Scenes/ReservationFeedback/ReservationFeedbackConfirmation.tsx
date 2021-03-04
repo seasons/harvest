@@ -2,15 +2,13 @@ import { useMutation } from "@apollo/client"
 import React, { useState } from "react"
 import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import styled from "styled-components/native"
-import { Box, Button, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput } from "App/Components"
+import { Button, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput } from "App/Components"
 import { Schema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { space } from "App/utils"
 import { screenTrack, useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { Container } from "Components/Container"
 import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
-import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
+import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
 
 export const ReservationFeedbackConfirmation: React.FC<{
   navigation: any
@@ -25,7 +23,7 @@ export const ReservationFeedbackConfirmation: React.FC<{
   const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK, {
     refetchQueries: [
       {
-        query: GET_HOMEPAGE,
+        query: GET_HOMEPAGE_NATIVE,
         variables: { firstFitPics: 8, skipFitPics: 0 },
       },
     ],

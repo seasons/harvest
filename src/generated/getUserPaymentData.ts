@@ -9,6 +9,14 @@ import { InvoiceStatus, LineItemIdentityType, CreditNoteReasonCode, CreditNoteSt
 // GraphQL query operation: GetUserPaymentData
 // ====================================================
 
+export interface GetUserPaymentData_me_customer_paymentPlan {
+  __typename: "PaymentPlan";
+  id: string;
+  planID: string;
+  price: number | null;
+  name: string | null;
+}
+
 export interface GetUserPaymentData_me_customer_detail_shippingAddress {
   __typename: "Location";
   id: string;
@@ -101,6 +109,7 @@ export interface GetUserPaymentData_me_customer_billingInfo {
 export interface GetUserPaymentData_me_customer {
   __typename: "Customer";
   id: string;
+  paymentPlan: GetUserPaymentData_me_customer_paymentPlan | null;
   detail: GetUserPaymentData_me_customer_detail | null;
   invoices: (GetUserPaymentData_me_customer_invoices | null)[] | null;
   billingInfo: GetUserPaymentData_me_customer_billingInfo | null;

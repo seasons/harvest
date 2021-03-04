@@ -1,7 +1,6 @@
 import { Box, Button, Container, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput } from "App/Components"
 import { Schema as TrackSchema, useTracking, screenTrack } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { GET_PAYMENT_DATA } from "App/Scenes/Account/PaymentAndShipping/PaymentAndShipping"
 import { color } from "App/utils/color"
 import { CheckCircled } from "Assets/svgs/CheckCircled"
 import { String } from "aws-sdk/clients/augmentedairuntime"
@@ -14,8 +13,9 @@ import stripe, { PaymentCardTextField } from "tipsi-stripe"
 import * as Sentry from "@sentry/react-native"
 import { space } from "App/utils/space"
 import { Schema as NavigationSchema } from "App/Navigation"
-import { PAYMENT_UPDATE } from "./EditPaymentMethod"
 import { useQuery } from "@apollo/client"
+import { PAYMENT_UPDATE } from "./PaymentAndShipping"
+import { GET_PAYMENT_DATA } from "./queries"
 
 interface BillingAddress {
   street1: string
