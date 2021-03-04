@@ -224,11 +224,6 @@ export const EditCreditCard: React.FC<{
           addressZip: zipCode,
         }
         const token = await stripe.createTokenWithCard(params)
-        console.log({
-          planID: paymentPlan.planID,
-          token,
-          tokenType: "card",
-        })
         updateCreditCard({
           variables: {
             planID: paymentPlan.planID,
