@@ -15,6 +15,7 @@ import * as Sentry from "@sentry/react-native"
 import { space } from "App/utils/space"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { PAYMENT_UPDATE } from "./EditPaymentMethod"
+import { useQuery } from "@apollo/client"
 
 interface BillingAddress {
   street1: string
@@ -105,8 +106,14 @@ export const EditCreditCard: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ route, navigation }) => {
-  const paymentPlan = route?.params?.paymentPlan
-  const routeBillingAddress: BillingAddress = route?.params?.billingAddress
+  let paymentPlan = route?.params?.paymentPlan
+  let routeBillingAddress: BillingAddress = route?.params?.billingAddress
+  const { data } = useQuery(GET_PAYMENT_DATA, { skip: !!paymentPlan })
+  if (!paymentPlan) {
+    paymentPlan = data?.me?.customer?.paymentPlan
+    routeBillingAddress = data?.me?.customer?.billingInfo
+  }
+
   const tracking = useTracking()
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -217,6 +224,11 @@ export const EditCreditCard: React.FC<{
           addressZip: zipCode,
         }
         const token = await stripe.createTokenWithCard(params)
+        console.log({
+          planID: paymentPlan.planID,
+          token,
+          tokenType: "card",
+        })
         updateCreditCard({
           variables: {
             planID: paymentPlan.planID,

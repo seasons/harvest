@@ -1,4 +1,4 @@
-import { Box, Container, FixedBackArrow, FixedButton, Sans, Spacer, Separator, Flex } from "App/Components"
+import { Box, Container, FixedBackArrow, Sans, Spacer, Separator, Flex } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useEffect } from "react"
