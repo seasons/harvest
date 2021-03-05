@@ -9,6 +9,23 @@ import { ShippingCode } from "./globalTypes";
 // GraphQL query operation: GetCustomerOrderView
 // ====================================================
 
+export interface GetCustomerOrderView_me_activeReservation_products_productVariant {
+  __typename: "ProductVariant";
+  id: string;
+}
+
+export interface GetCustomerOrderView_me_activeReservation_products {
+  __typename: "PhysicalProduct";
+  id: string;
+  productVariant: GetCustomerOrderView_me_activeReservation_products_productVariant | null;
+}
+
+export interface GetCustomerOrderView_me_activeReservation {
+  __typename: "Reservation";
+  id: string;
+  products: GetCustomerOrderView_me_activeReservation_products[];
+}
+
 export interface GetCustomerOrderView_me_user {
   __typename: "User";
   id: string;
@@ -73,6 +90,8 @@ export interface GetCustomerOrderView_me_customer {
 
 export interface GetCustomerOrderView_me {
   __typename: "Me";
+  id: string;
+  activeReservation: GetCustomerOrderView_me_activeReservation | null;
   user: GetCustomerOrderView_me_user | null;
   customer: GetCustomerOrderView_me_customer | null;
 }

@@ -92,6 +92,7 @@ export interface GetProduct_products_brand_products_variants_price {
   __typename: "ProductVariantPrice";
   id: string;
   buyNewPrice: number | null;
+  buyUsedAvailableForSale: boolean | null;
   buyNewAvailableForSale: boolean | null;
   buyNewEnabled: boolean;
   buyUsedEnabled: boolean;
@@ -199,6 +200,7 @@ export interface GetProduct_products_variants_price {
   __typename: "ProductVariantPrice";
   id: string;
   buyNewPrice: number | null;
+  buyUsedAvailableForSale: boolean | null;
   buyNewAvailableForSale: boolean | null;
   buyNewEnabled: boolean;
   buyUsedEnabled: boolean;

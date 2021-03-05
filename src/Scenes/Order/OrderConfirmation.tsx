@@ -43,7 +43,7 @@ export const OrderConfirmation = screenTrack()(({ route, navigation }) => {
             <Sans size="4" color="black50">
               {needsShipping
                 ? "We've emailed you a confirmation and we'll notify you when it's out for delivery."
-                : "All you have to do is hold onto it and we'll reset your slot when we receive your return"}
+                : "We've emailed you a confirmation and will reset this slot after processing your return."}
             </Sans>
           </Box>
           {!!order && (

@@ -15,6 +15,7 @@ import { Schema as NavigationSchema } from "App/Navigation"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
+import { Text } from "react-native"
 import React, { useState } from "react"
 import { Dimensions, ScrollView } from "react-native"
 
@@ -129,6 +130,10 @@ export const Order = screenTrack()(({ route, navigation }) => {
     )
   }
 
+  const subText = needsShipping
+    ? "All orders will be processed Tuesdays and Thursdays between the hours of 12pm - 4pm EST. As a reminder, "
+    : "Any purchased items will live in your bag until your reservation is returned & processed. As a reminder, "
+
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
@@ -141,10 +146,14 @@ export const Order = screenTrack()(({ route, navigation }) => {
             </Sans>
           </Box>
           <Box mb={4}>
-            <Sans size="4" color="black50">
-              Purchased items will live in your bag until your reservation is returned & processed. We’ll reset your
-              slot and you'll be able to get a new item.
-            </Sans>
+            <Text>
+              <Sans size="4" color="black50">
+                {subText}
+                <Sans size="4" color="black50" style={{ textDecorationLine: "underline" }}>
+                  all sales are final.
+                </Sans>
+              </Sans>
+            </Text>
           </Box>
           {!!order && (
             <Box mb={4}>

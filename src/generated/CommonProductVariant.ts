@@ -13,6 +13,7 @@ export interface CommonProductVariant_price {
   __typename: "ProductVariantPrice";
   id: string;
   buyNewPrice: number | null;
+  buyUsedAvailableForSale: boolean | null;
   buyNewAvailableForSale: boolean | null;
   buyNewEnabled: boolean;
   buyUsedEnabled: boolean;
