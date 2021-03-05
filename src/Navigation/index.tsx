@@ -3,6 +3,7 @@ import { NavigationContainer, NavigationContainerRef, getStateFromPath } from "@
 import { AuthProvider, AuthProviderRef } from "./AuthProvider"
 import * as Schema from "./schema"
 export { Schema }
+export * from "./utils"
 
 const getActiveRouteName = (state) => {
   const route = state.routes[state.index]

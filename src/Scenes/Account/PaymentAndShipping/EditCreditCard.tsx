@@ -13,6 +13,7 @@ import stripe, { PaymentCardTextField } from "tipsi-stripe"
 import * as Sentry from "@sentry/react-native"
 import { space } from "App/utils/space"
 import { Schema as NavigationSchema } from "App/Navigation"
+import { useQuery } from "@apollo/client"
 import { PAYMENT_UPDATE } from "./PaymentAndShipping"
 import { GET_PAYMENT_DATA } from "./queries"
 
@@ -105,8 +106,14 @@ export const EditCreditCard: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ route, navigation }) => {
-  const paymentPlan = route?.params?.paymentPlan
-  const routeBillingAddress: BillingAddress = route?.params?.billingAddress
+  let paymentPlan = route?.params?.paymentPlan
+  let routeBillingAddress: BillingAddress = route?.params?.billingAddress
+  const { data } = useQuery(GET_PAYMENT_DATA, { skip: !!paymentPlan })
+  if (!paymentPlan) {
+    paymentPlan = data?.me?.customer?.paymentPlan
+    routeBillingAddress = data?.me?.customer?.billingInfo
+  }
+
   const tracking = useTracking()
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
