@@ -1,4 +1,4 @@
-import { Box, Flex, Handle, Sans } from "App/Components"
+import { Box, Flex, Handle } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
 import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
 import { AddPhotoButton } from "./AddPhotoButton"
-import { ProductsRail } from "@seasons/eclipse"
+import { ProductsRail, CollectionsRail } from "@seasons/eclipse"
 import { BrandsRail, CategoriesRail, FitPicCollection, HomeFooter, TagsRail } from "./"
 import { FitPicCollectionRef } from "./FitPicCollection"
 import { HomepageBanner } from "App/Components/HomepageBanner"
@@ -28,6 +28,7 @@ enum SectionType {
   ProductsByTag = "ProductsByTag",
   Collection = "Collection",
   Banner = "Banner",
+  FeaturedCollections = "FeaturedCollections",
 }
 
 const sectionsFrom = (data: any, navigation) => {
@@ -86,6 +87,13 @@ const sectionsFrom = (data: any, navigation) => {
   }
   if (data?.justAddedBottoms?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
+  }
+  if (data?.featuredCollections?.length > 0) {
+    sections.push({
+      type: SectionType.FeaturedCollections,
+      results: data?.featuredCollections,
+      title: "Featured collections",
+    })
   }
   if (data?.collections?.length > 0) {
     sections.push(
@@ -178,6 +186,22 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
             title={item.title}
             items={item.results}
             onViewAll={() => {
+              navigation.navigate(Schema.StackNames.HomeStack, {
+                screen: Schema.PageNames.Collection,
+                params: { collectionSlug: item.slug },
+              })
+            }}
+          />
+        )
+      case SectionType.FeaturedCollections:
+        const imageWidth = dimensions.width - space(4)
+        return (
+          <CollectionsRail
+            title="Featured collections"
+            items={item.results}
+            imageWidth={imageWidth}
+            imageHeight={imageWidth}
+            onPressItem={(item) => {
               navigation.navigate(Schema.StackNames.HomeStack, {
                 screen: Schema.PageNames.Collection,
                 params: { collectionSlug: item.slug },
