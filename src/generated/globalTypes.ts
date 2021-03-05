@@ -328,6 +328,7 @@ export enum PhysicalProductStatus {
   Lost = "Lost",
   New = "New",
   PermanentlyDamaged = "PermanentlyDamaged",
+  Sold = "Sold",
   Used = "Used",
 }
 

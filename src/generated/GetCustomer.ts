@@ -45,8 +45,8 @@ export interface GetCustomer_me_bag_productVariant_product_variants_price {
 export interface GetCustomer_me_bag_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
-  hasRestockNotification: boolean;
   reservable: number;
+  hasRestockNotification: boolean;
   displayShort: string | null;
   displayLong: string | null;
   price: GetCustomer_me_bag_productVariant_product_variants_price;
@@ -69,6 +69,7 @@ export interface GetCustomer_me_bag_productVariant_price {
   buyNewPrice: number | null;
   buyNewEnabled: boolean;
   buyNewAvailableForSale: boolean | null;
+  buyUsedAvailableForSale: boolean | null;
   buyUsedPrice: number | null;
   buyUsedEnabled: boolean;
 }

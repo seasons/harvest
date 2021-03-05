@@ -194,8 +194,8 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_variants_pric
 export interface GetBagAndSavedItems_me_bag_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
-  hasRestockNotification: boolean;
   reservable: number;
+  hasRestockNotification: boolean;
   displayShort: string | null;
   displayLong: string | null;
   price: GetBagAndSavedItems_me_bag_productVariant_product_variants_price;
@@ -218,6 +218,7 @@ export interface GetBagAndSavedItems_me_bag_productVariant_price {
   buyNewPrice: number | null;
   buyNewEnabled: boolean;
   buyNewAvailableForSale: boolean | null;
+  buyUsedAvailableForSale: boolean | null;
   buyUsedPrice: number | null;
   buyUsedEnabled: boolean;
 }
@@ -225,6 +226,7 @@ export interface GetBagAndSavedItems_me_bag_productVariant_price {
 export interface GetBagAndSavedItems_me_bag_productVariant {
   __typename: "ProductVariant";
   id: string;
+  purchased: boolean;
   product: GetBagAndSavedItems_me_bag_productVariant_product;
   price: GetBagAndSavedItems_me_bag_productVariant_price;
 }
@@ -232,10 +234,10 @@ export interface GetBagAndSavedItems_me_bag_productVariant {
 export interface GetBagAndSavedItems_me_bag {
   __typename: "BagItem";
   id: string;
-  productVariant: GetBagAndSavedItems_me_bag_productVariant;
   position: number | null;
   saved: boolean | null;
   status: BagItemStatus;
+  productVariant: GetBagAndSavedItems_me_bag_productVariant;
 }
 
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_modelSize {
@@ -266,8 +268,8 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_product_varian
 export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
-  hasRestockNotification: boolean;
   reservable: number;
+  hasRestockNotification: boolean;
   displayShort: string | null;
   displayLong: string | null;
   price: GetBagAndSavedItems_me_savedItems_productVariant_product_variants_price;
@@ -290,6 +292,7 @@ export interface GetBagAndSavedItems_me_savedItems_productVariant_price {
   buyNewPrice: number | null;
   buyNewEnabled: boolean;
   buyNewAvailableForSale: boolean | null;
+  buyUsedAvailableForSale: boolean | null;
   buyUsedPrice: number | null;
   buyUsedEnabled: boolean;
 }
