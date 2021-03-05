@@ -20,6 +20,7 @@ const GET_REFERRAL_VIEW = gql`
       properties
     }
     me {
+      id
       customer {
         id
         referralLink

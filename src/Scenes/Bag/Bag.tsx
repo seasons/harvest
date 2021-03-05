@@ -274,33 +274,17 @@ export const Bag = screenTrack()((props) => {
 
   const renderItem = ({ item }) => {
     if (isBagView) {
-      if (pauseStatus === "paused") {
-        return (
-          <Box
-            style={{
-              position: "relative",
-              height: "100%",
-              width: "100%",
-            }}
-            px={2}
-            pb={5}
-          >
-            <PauseButtons customer={me?.customer} fullScreen />
-          </Box>
-        )
-      } else {
-        return (
-          <BagTab
-            itemCount={itemCount}
-            data={data}
-            pauseStatus={pauseStatus}
-            items={item.data}
-            removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-            deleteBagItem={deleteBagItem}
-            setItemCount={setItemCount}
-          />
-        )
-      }
+      return (
+        <BagTab
+          itemCount={itemCount}
+          data={data}
+          pauseStatus={pauseStatus}
+          items={item.data}
+          removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+          deleteBagItem={deleteBagItem}
+          setItemCount={setItemCount}
+        />
+      )
     } else if (isSavedView) {
       return (
         <SavedItemsTab
@@ -350,9 +334,6 @@ export const Bag = screenTrack()((props) => {
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           data={sections}
-          contentContainerStyle={
-            pauseStatus === "paused" ? { height: "100%", width: "100%", position: "relative" } : {}
-          }
           keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
           renderItem={(item) => {
             return renderItem(item)
