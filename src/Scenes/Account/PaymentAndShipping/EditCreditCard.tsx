@@ -1,19 +1,23 @@
-import { Box, Button, Container, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput } from "App/Components"
-import { Schema as TrackSchema, useTracking, screenTrack } from "App/utils/track"
+import {
+  Box, Button, Container, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput
+} from "App/Components"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { color } from "App/utils/color"
+import { space } from "App/utils/space"
+import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs/CheckCircled"
 import { String } from "aws-sdk/clients/augmentedairuntime"
 import React, { useEffect, useState } from "react"
-import { useMutation } from "@apollo/client"
 import { Dimensions, KeyboardAvoidingView, ScrollView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe, { PaymentCardTextField } from "tipsi-stripe"
+
+import { useMutation, useQuery } from "@apollo/client"
 import * as Sentry from "@sentry/react-native"
-import { space } from "App/utils/space"
-import { Schema as NavigationSchema } from "App/Navigation"
-import { useQuery } from "@apollo/client"
+import { navigate } from "@storybook/addon-links/dist/preview"
+
 import { PAYMENT_UPDATE } from "./PaymentAndShipping"
 import { GET_PAYMENT_DATA } from "./queries"
 
@@ -267,7 +271,15 @@ export const EditCreditCard: React.FC<{
 
   return (
     <Container insetsBottom={false}>
-      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+      <FixedBackArrow
+        navigation={navigation}
+        onPress={() => {
+          navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+            screen: NavigationSchema.PageNames.PaymentAndShipping,
+          })
+        }}
+        variant="whiteBackground"
+      />
       <ScrollView style={{ flex: 1 }}>
         <Spacer mt={100} />
         <Box px={2}>
