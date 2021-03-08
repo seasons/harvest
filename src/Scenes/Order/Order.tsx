@@ -72,7 +72,6 @@ export const Order = screenTrack()(({ route, navigation }) => {
       onBackPressed={handleBackPressed}
       onOrderItemPressed={handleOrderItemPressed}
       order={order}
-      onError={handleError}
       windowWidth={windowWidth}
     />
   )
