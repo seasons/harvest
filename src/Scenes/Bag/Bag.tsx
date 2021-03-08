@@ -63,7 +63,7 @@ export const Bag = screenTrack()((props) => {
         setItemCount(dataItemCount)
       }
       setIsLoading(false)
-      const userId = me.customer?.user?.id
+      const userId = me?.customer?.user?.id
       if (!!userId) {
         const savedItems = me?.savedItems?.length || 0
         const baggedItems = me?.bag?.length || 0
