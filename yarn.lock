@@ -3030,7 +3030,7 @@
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
 
-"@seasons/eclipse@^1.2.4":
+"@seasons/eclipse@^1.2.8":
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.2.8.tgz#8aa1fae5b382ce89ed789f36af330aacef3274c2"
   integrity sha512-+R384R7sl1SlaeaCl6UqAz5vVUxcotLVSyGKFx0T3oh1sy1ggKp/wojcsRE3zfGx4oGbtJ11h/EI6o/gdzmx6g==
