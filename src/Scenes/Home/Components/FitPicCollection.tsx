@@ -42,7 +42,7 @@ export const FitPicCollection = React.forwardRef<FitPicCollectionRef, FitPicColl
     const onPress = (index: number) => navigation.navigate("FitPicDetail", { item: items[index] })
 
     const renderItem = (item: FitPics, index: number) => {
-      const imageWidth = (screenWidth - 35) / 2
+      const imageWidth = (screenWidth - 3) / 2
       const imageHeight = imageWidth * (5 / 4)
 
       return (
@@ -62,11 +62,13 @@ export const FitPicCollection = React.forwardRef<FitPicCollectionRef, FitPicColl
     }
 
     return (
-      <Box mb={3} pl={2} pr={2} ref={boxRef} onLayout={() => measureLayout()}>
-        <Sans size="4">Seasons Fit Check</Sans>
-        <Sans size="4" color="black50">
-          Add a photo below to be featured
-        </Sans>
+      <Box mb={3} ref={boxRef} onLayout={() => measureLayout()}>
+        <Box px={2}>
+          <Sans size="4">Seasons Fit Check</Sans>
+          <Sans size="4" color="black50">
+            Add a photo below to be featured
+          </Sans>
+        </Box>
         <Spacer mb={2} />
         <Flex flexWrap="wrap" flexDirection="row" width="100%" justifyContent="space-between">
           {items.map(renderItem)}

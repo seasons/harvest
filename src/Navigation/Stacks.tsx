@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
 import { ExtendPauseConfirmation, PauseConfirmation, ResumeConfirmation } from "App/Components/Pause"
 import { PauseModal } from "App/Components/Pause/PauseModal"
-import { Schema } from "App/Navigation"
+import { navigateTo, Schema } from "App/Navigation"
 import {
   Account,
   EditMeasurements,
@@ -11,6 +11,7 @@ import {
   EditStylePreferences,
   PaymentAndShipping,
 } from "App/Scenes/Account"
+import { useNavigation } from "@react-navigation/native"
 import { InviteFromContacts } from "App/Scenes/Account/InviteFriends"
 import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
 import { EditCreditCard } from "App/Scenes/Account/PaymentAndShipping/EditCreditCard"
@@ -48,6 +49,7 @@ import { createSharedElementStackNavigator } from "react-navigation-shared-eleme
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 import { NavBar } from "./NavBar"
+import { NotificationBar } from "@seasons/eclipse"
 
 const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
@@ -88,6 +90,10 @@ export const ModalAndMainScreens = ({ currentScreen }) => {
 }
 
 const TabsStack = ({ currentScreen }) => {
+  const navigation = useNavigation()
+  const onClickNotificationBar = (route) => {
+    navigateTo(navigation, route)
+  }
   return (
     <Tab.Navigator
       initialRouteName={Schema.PageNames.Home}
@@ -97,7 +103,12 @@ const TabsStack = ({ currentScreen }) => {
         safeAreaInset: { bottom: "never" },
       }}
       tabBar={(props) => {
-        return <NavBar {...props} currentScreen={currentScreen} />
+        return (
+          <>
+            <NotificationBar onClick={onClickNotificationBar} />
+            <NavBar {...props} currentScreen={currentScreen} />
+          </>
+        )
       }}
     >
       <Tab.Screen name={Schema.StackNames.HomeStack} component={HomeStackScreen} />

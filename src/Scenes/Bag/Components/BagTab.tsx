@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native"
 import * as Sentry from "@sentry/react-native"
 import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
-import { PauseStatus, REMOVE_SCHEDULED_PAUSE } from "App/Components/Pause/PauseButtons"
+import { PauseStatus, REMOVE_SCHEDULED_PAUSE, RESUME_MEMBERSHIP } from "App/Components/Pause/PauseButtons"
 import { GetBagAndSavedItems } from "App/generated/GetBagAndSavedItems"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -11,6 +11,7 @@ import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
+import { Schema as NavSchema } from "App/Navigation"
 import React, { useEffect, useState } from "react"
 import { useLazyQuery, useMutation } from "@apollo/client"
 import { Linking } from "react-native"
@@ -66,6 +67,30 @@ export const BagTab: React.FC<{
       getLocalBag()
     }
   }, [items])
+
+  const [resumeSubscription] = useMutation(RESUME_MEMBERSHIP, {
+    refetchQueries: [
+      {
+        query: GET_BAG,
+      },
+    ],
+    onCompleted: () => {
+      navigation.navigate("Modal", { screen: NavSchema.PageNames.ResumeConfirmation })
+      setIsMutating(false)
+    },
+    onError: (err) => {
+      const popUpData = {
+        title: "Oops!",
+        note: "There was an error resuming your membership, please contact us.",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
+      }
+      console.log("err", err)
+      Sentry.captureException(err)
+      showPopUp(popUpData)
+      setIsMutating(false)
+    },
+  })
 
   const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
     refetchQueries: [
@@ -161,6 +186,10 @@ export const BagTab: React.FC<{
   }
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
   const showPendingMessage = pauseStatus === "pending" && !!pauseRequest?.pauseDate
+  const isPaused = pauseStatus === "paused"
+  const pauseType = pauseRequest?.pauseType
+  const withOrWithoutDisplay = pauseType === "WithoutItems" ? "without items" : "with items"
+  const pausedWithoutItmes = isPaused && pauseType === "WithoutItems"
 
   return (
     <Box>
@@ -181,7 +210,7 @@ export const BagTab: React.FC<{
             View FAQ
           </Sans>
         </Flex>
-        {((hasActiveReservation && !!returnReminder) || !hasActiveReservation) && (
+        {((hasActiveReservation && !!returnReminder) || !hasActiveReservation) && !pausedWithoutItmes && (
           <Sans size="4" color="black50">
             {hasActiveReservation && !!returnReminder ? returnReminder : "Reserve your order below"}
           </Sans>
@@ -195,9 +224,11 @@ export const BagTab: React.FC<{
           </Box>
           <Box px={2} py={3}>
             <Sans size="4" color="black50">
-              {`Your membership is scheduled to be paused on ${DateTime.fromISO(pauseRequest.pauseDate).toFormat(
-                "EEEE LLLL dd"
-              )}. To continue it tap `}
+              {`Your membership is scheduled to be paused ${withOrWithoutDisplay} on ${DateTime.fromISO(
+                pauseRequest.pauseDate
+              ).toFormat("EEEE LLLL dd")}.${
+                pauseType === "WithoutItems" ? " Please return your order before this date." : ""
+              } To continue it tap `}
               <Sans
                 size="4"
                 style={{ textDecorationLine: "underline" }}
@@ -221,9 +252,45 @@ export const BagTab: React.FC<{
           </Box>
         </>
       )}
+      {isPaused && (
+        <>
+          <Box px={2}>
+            <Separator color={color("black10")} />
+          </Box>
+          <Box px={2} py={3}>
+            <Sans size="4" color="black50">
+              {`Your membership is paused ${withOrWithoutDisplay} until ${DateTime.fromISO(
+                pauseRequest.resumeDate
+              ).toFormat("EEEE LLLL dd")}. To continue reserving earlier, resume it by tapping `}
+              <Sans
+                size="4"
+                style={{ textDecorationLine: "underline" }}
+                onPress={async () => {
+                  if (isMutating) {
+                    return
+                  }
+                  setIsMutating(true)
+                  const subscriptionId = me?.customer?.invoices?.[0]?.subscriptionId || ""
+                  await resumeSubscription({
+                    variables: {
+                      subscriptionID: subscriptionId,
+                    },
+                  })
+                }}
+              >
+                here
+              </Sans>
+              .
+            </Sans>
+          </Box>
+        </>
+      )}
       <Separator />
       {hasActiveReservation && <DeliveryStatus activeReservation={activeReservation} />}
       {paddedItems?.map((bagItem, index) => {
+        if (pausedWithoutItmes) {
+          return null
+        }
         const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
         const spacing = isReserved ? "7px" : 2
         return bagItem?.productID?.length > 0 ? (
@@ -258,9 +325,9 @@ export const BagTab: React.FC<{
         )
       })}
       <Spacer mb={3} />
-      <Separator />
+      {!pausedWithoutItmes && <Separator />}
       <Spacer mb={3} />
-      {!hasActiveReservation && itemCount && itemCount < 3 && (
+      {!hasActiveReservation && itemCount && itemCount < 3 && !isPaused && (
         <>
           <BagCardButton Icon={AddSlot} title="Add a slot" caption="Reserve another item" onPress={onAddSlot} />
           <Spacer mb={3} />
@@ -268,7 +335,7 @@ export const BagTab: React.FC<{
           <Spacer mb={3} />
         </>
       )}
-      {hasActiveReservation && (
+      {hasActiveReservation && !isPaused && (
         <>
           <BagCardButton
             Icon={DarkInstagram}
@@ -286,7 +353,7 @@ export const BagTab: React.FC<{
           <Spacer mb={3} />
         </>
       )}
-      {isSignedIn && (
+      {isSignedIn && !isPaused && (
         <>
           <BagCardButton
             Icon={SurpriseMe}
@@ -302,16 +369,18 @@ export const BagTab: React.FC<{
         </>
       )}
 
-      <BagCardButton
-        Icon={Stylist}
-        title="Chat with our stylist"
-        caption="Get a personalized consultation"
-        onPress={() =>
-          Linking.openURL(
-            "mailto:membership@seasons.nyc?subject=Chat%20with%20a%20stylist&body=I%20would%20like%20to%20chat%20with%20a%20seasons%20stylist%20to%20help%20find%20items%20that%20suit%20me.%20Thanks!"
-          )
-        }
-      />
+      {!isPaused && (
+        <BagCardButton
+          Icon={Stylist}
+          title="Chat with our stylist"
+          caption="Get a personalized consultation"
+          onPress={() =>
+            Linking.openURL(
+              "mailto:membership@seasons.nyc?subject=Chat%20with%20a%20stylist&body=I%20would%20like%20to%20chat%20with%20a%20seasons%20stylist%20to%20help%20find%20items%20that%20suit%20me.%20Thanks!"
+            )
+          }
+        />
+      )}
       <Spacer mb={10} />
     </Box>
   )

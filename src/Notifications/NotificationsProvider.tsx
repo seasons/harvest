@@ -68,7 +68,7 @@ export const NotificationsProvider = ({ children }) => {
       switch (notification.appState) {
         case "inactive":
           if (route && screen && params) {
-            navigation?.navigate(route, { screen, params })
+            navigation?.navigate(route, { screen, ...params })
           } else if (route && params) {
             navigation?.navigate(route, params)
           } else if (route) {

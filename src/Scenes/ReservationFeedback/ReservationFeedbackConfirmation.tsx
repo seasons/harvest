@@ -1,16 +1,15 @@
 import { useMutation } from "@apollo/client"
 import React, { useState } from "react"
-import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native"
+import { Dimensions, Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import styled from "styled-components/native"
-import { Box, Button, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput } from "App/Components"
+import { Button, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput } from "App/Components"
 import { Schema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { space } from "App/utils"
 import { screenTrack, useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { Container } from "Components/Container"
 import { UPDATE_RESERVATION_FEEDBACK } from "./Components/ReservationFeedbackPopUp"
-import { GET_HOMEPAGE } from "../Home/queries/homeQueries"
+import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
+import { space } from "App/utils"
 
 export const ReservationFeedbackConfirmation: React.FC<{
   navigation: any
@@ -25,7 +24,7 @@ export const ReservationFeedbackConfirmation: React.FC<{
   const [updateReservationFeedback] = useMutation(UPDATE_RESERVATION_FEEDBACK, {
     refetchQueries: [
       {
-        query: GET_HOMEPAGE,
+        query: GET_HOMEPAGE_NATIVE,
         variables: { firstFitPics: 8, skipFitPics: 0 },
       },
     ],
@@ -74,11 +73,11 @@ export const ReservationFeedbackConfirmation: React.FC<{
   }
 
   return (
-    <Container>
+    <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
-      <Flex px={2} style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center">
+          <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" px={2}>
             <Spacer mb={68} />
             <Sans size="4" color="black50" weight="medium">
               Finish
@@ -90,21 +89,27 @@ export const ReservationFeedbackConfirmation: React.FC<{
             <Spacer mb={2} />
             <Separator />
             <Spacer mb={2} />
-            <TextInput
-              autoCapitalize="sentences"
-              autoFocus
-              blurOnSubmit={false}
-              currentValue={comment}
-              style={{ height: 250, paddingLeft: 0, paddingTop: 0, borderWidth: 0 }}
-              placeholder="Tell us anything else on your mind"
-              multiline={true}
-              onChangeText={(_, val) => setComment(val)}
-            />
           </Flex>
         </TouchableWithoutFeedback>
-      </Flex>
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={16 + insets.bottom}>
-        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" mb={2}>
+        <Flex flexDirection="column" flexWrap="nowrap" justifyContent="center" px={2}>
+          <TextInput
+            autoCapitalize="sentences"
+            autoFocus
+            blurOnSubmit={false}
+            currentValue={comment}
+            style={{ height: 200, paddingLeft: 0, paddingTop: 0, borderWidth: 0 }}
+            placeholder="Tell us anything else on your mind"
+            multiline={true}
+            onChangeText={(_, val) => setComment(val)}
+          />
+        </Flex>
+      </ScrollView>
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={space(3) + insets.bottom}
+        style={{ bottom: space(2) }}
+      >
+        <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center" pb={2}>
           <Button
             block
             variant="primaryWhite"

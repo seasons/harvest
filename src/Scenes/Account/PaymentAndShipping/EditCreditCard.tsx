@@ -1,18 +1,22 @@
 import { Box, Button, Container, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput } from "App/Components"
-import { Schema as TrackSchema, useTracking, screenTrack } from "App/utils/track"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { color } from "App/utils/color"
+import { space } from "App/utils/space"
+import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs/CheckCircled"
 import { String } from "aws-sdk/clients/augmentedairuntime"
 import React, { useEffect, useState } from "react"
-import { useMutation } from "@apollo/client"
 import { Dimensions, KeyboardAvoidingView, ScrollView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe, { PaymentCardTextField } from "tipsi-stripe"
+
+import { useMutation, useQuery } from "@apollo/client"
+import { useNotificationBarContext } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
-import { space } from "App/utils/space"
-import { Schema as NavigationSchema } from "App/Navigation"
+import { navigate } from "@storybook/addon-links/dist/preview"
+
 import { PAYMENT_UPDATE } from "./PaymentAndShipping"
 import { GET_PAYMENT_DATA } from "./queries"
 
@@ -105,10 +109,18 @@ export const EditCreditCard: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ route, navigation }) => {
-  const paymentPlan = route?.params?.paymentPlan
-  const routeBillingAddress: BillingAddress = route?.params?.billingAddress
+  let paymentPlan = route?.params?.paymentPlan
+  let routeBillingAddress: BillingAddress = route?.params?.billingAddress
+  const { data } = useQuery(GET_PAYMENT_DATA, { skip: !!paymentPlan })
+  if (!paymentPlan) {
+    paymentPlan = data?.me?.customer?.paymentPlan
+    routeBillingAddress = data?.me?.customer?.billingInfo
+  }
+
   const tracking = useTracking()
   const insets = useSafeAreaInsets()
+
+  const { hideNotificationBar } = useNotificationBarContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
   const [onPaymentUpdate, setOnPaymentUpdate] = useState(false)
@@ -227,6 +239,7 @@ export const EditCreditCard: React.FC<{
         })
         // You should complete the operation by calling
         stripe.completeApplePayRequest()
+        hideNotificationBar()
       } catch (error) {
         const popUpData = {
           title: "Oops! Try again!",
@@ -241,34 +254,31 @@ export const EditCreditCard: React.FC<{
     }
   }
 
-  const CardSuccess = () => {
-    return (
-      <Flex style={{ flex: 1 }} flexDirection="row" justifyContent="center" alignItems="flex-start">
-        <Box pb={insets.bottom} px={2} style={{ width: windowWidth }}>
-          <Spacer mb={4} />
-          <CheckCircled backgroundColor={color("green100")} />
-          <Spacer mb={2} />
-          <Separator />
-          <Spacer mb={2} />
-          <Sans size="4" style={{ width: windowWidth - 100 }}>
-            Your card has been successfully updated.
-          </Sans>
-        </Box>
-      </Flex>
-    )
-  }
-
   return (
     <Container insetsBottom={false}>
-      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
+      {!onPaymentUpdate && (
+        <FixedBackArrow
+          navigation={navigation}
+          onPress={() => {
+            navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+              screen: NavigationSchema.PageNames.PaymentAndShipping,
+            })
+          }}
+          variant="whiteBackground"
+        />
+      )}
       <ScrollView style={{ flex: 1 }}>
         <Spacer mt={100} />
         <Box px={2}>
-          <Sans size="7">Update your payment method</Sans>
+          {onPaymentUpdate && (
+            <>
+              <CheckCircled backgroundColor={color("green100")} />
+              <Spacer mb={2} />
+            </>
+          )}
+          <Sans size="7">{onPaymentUpdate ? "Payment method updated" : "Update your payment method"}</Sans>
         </Box>
-        {onPaymentUpdate ? (
-          <CardSuccess />
-        ) : (
+        {!onPaymentUpdate && (
           <PaymentForm
             setBillingAddress={setBillingAddress}
             isMutating={isMutating}

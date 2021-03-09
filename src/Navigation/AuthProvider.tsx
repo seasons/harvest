@@ -1,17 +1,20 @@
+import { BottomSheetProvider } from "App/Navigation/BottomSheetContext"
 import { ErrorPopUp } from "App/Navigation/ErrorPopUp"
 import { PopUpProvider } from "App/Navigation/ErrorPopUp/PopUpProvider"
-import { BottomSheetProvider } from "App/Navigation/BottomSheetContext"
-import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { NotificationsProvider } from "App/Notifications"
 import { getUserSession, userSessionToIdentifyPayload } from "App/utils/auth"
+import gql from "graphql-tag"
 import React, { useEffect, useImperativeHandle } from "react"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
+
+import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import AsyncStorage from "@react-native-community/async-storage"
 import { createStackNavigator } from "@react-navigation/stack"
+import { NotificationBarProvider } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
+
 import AuthContext from "./AuthContext"
 import { ModalAndMainScreens } from "./Stacks"
-import gql from "graphql-tag"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -130,18 +133,20 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
       <AuthContext.Provider value={authContext}>
         <BottomSheetProvider>
           <ActionSheetProvider>
-            <PopUpProvider>
-              <RootStack.Navigator>
-                <RootStack.Screen name="Root" options={{ headerShown: false }}>
-                  {() => (
-                    <NotificationsProvider>
-                      <ModalAndMainScreens currentScreen={currentScreen} />
-                    </NotificationsProvider>
-                  )}
-                </RootStack.Screen>
-              </RootStack.Navigator>
-              <ErrorPopUp />
-            </PopUpProvider>
+            <NotificationBarProvider>
+              <PopUpProvider>
+                <RootStack.Navigator>
+                  <RootStack.Screen name="Root" options={{ headerShown: false }}>
+                    {() => (
+                      <NotificationsProvider>
+                        <ModalAndMainScreens currentScreen={currentScreen} />
+                      </NotificationsProvider>
+                    )}
+                  </RootStack.Screen>
+                </RootStack.Navigator>
+                <ErrorPopUp />
+              </PopUpProvider>
+            </NotificationBarProvider>
           </ActionSheetProvider>
         </BottomSheetProvider>
       </AuthContext.Provider>
