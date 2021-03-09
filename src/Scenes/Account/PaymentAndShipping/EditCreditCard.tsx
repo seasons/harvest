@@ -15,6 +15,7 @@ import styled from "styled-components"
 import stripe, { PaymentCardTextField } from "tipsi-stripe"
 
 import { useMutation, useQuery } from "@apollo/client"
+import { useNotificationBarContext } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 import { navigate } from "@storybook/addon-links/dist/preview"
 
@@ -120,6 +121,8 @@ export const EditCreditCard: React.FC<{
 
   const tracking = useTracking()
   const insets = useSafeAreaInsets()
+
+  const { hideNotificationBar } = useNotificationBarContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
   const [onPaymentUpdate, setOnPaymentUpdate] = useState(false)
@@ -238,6 +241,7 @@ export const EditCreditCard: React.FC<{
         })
         // You should complete the operation by calling
         stripe.completeApplePayRequest()
+        hideNotificationBar()
       } catch (error) {
         const popUpData = {
           title: "Oops! Try again!",
