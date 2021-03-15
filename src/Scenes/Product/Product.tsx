@@ -18,9 +18,15 @@ import styled from "styled-components/native"
 import { useMutation, useQuery } from "@apollo/client"
 import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
+import {
+  ProductBuyCTA,
+  ProductBuyCTA_ProductFragment,
+  ProductBuyCTA_ProductVariantFragment,
+  GET_HOMEPAGE_NATIVE,
+} from "@seasons/eclipse"
+import { filter } from "graphql-anywhere"
 
-import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
-import { ImageRail, MoreFromBrand, ProductBuy, ProductDetails, ProductMeasurements } from "./Components"
+import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
@@ -282,11 +288,13 @@ export const Product = screenTrack({
         return <MoreFromBrand flatListRef={flatListRef} products={brandProducts} brandName={product.brand.name} />
       case "buy":
         return (
-          <ProductBuy
-            productBuyRef={productBuyRef}
-            product={product}
+          <ProductBuyCTA
+            px={3}
+            pb={3}
+            ref={productBuyRef}
+            product={filter(ProductBuyCTA_ProductFragment, product)}
+            selectedVariant={filter(ProductBuyCTA_ProductVariantFragment, selectedVariant)}
             buyButtonMutating={buyButtonMutating}
-            selectedVariant={selectedVariant}
             onBuyNew={() => {
               setBuyButtonMutating(true)
               handleCreateDraftOrder(OrderType.BUY_NEW)
@@ -297,6 +305,7 @@ export const Product = screenTrack({
             }}
           />
         )
+
       default:
         return null
     }

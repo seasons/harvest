@@ -97,13 +97,12 @@ export const BagItem: React.FC<BagItemProps> = ({
   const isReserved = bagItem.status !== "Added"
   const imageURL = product?.images?.[0]?.url || ""
 
-  // Show buy CTA whenever a sellable status is enabled, regardless of
-  // underlying availability
+  // Show buy alert whenever a sellable status is enabled, regardless of underlying availability
   const isBuyable = bagItem?.productVariant?.price?.buyNewEnabled || bagItem?.productVariant?.price?.buyUsedEnabled
+  const purchased = bagItem?.productVariant?.purchased
 
   const variantSize = variantToUse?.displayShort
   const variantId = bagItem.variantID
-  const purchased = bagItem?.productVariant?.purchased
 
   const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
