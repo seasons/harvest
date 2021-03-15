@@ -49,9 +49,11 @@ export const Order = screenTrack()(({ route, navigation }) => {
 
       if (result.errors) {
         handleError((result.errors as any) as readonly ApolloError[])
+        return
       }
     } catch (e) {
       handleError(e)
+      return
     }
 
     navigation.navigate(NavigationSchema.PageNames.OrderConfirmation, {
