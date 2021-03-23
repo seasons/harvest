@@ -64,10 +64,10 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
     },
     onError: (err) => {
       let popUpData
-      if (err.message.includes("You must have an active reservation to pause with items")) {
+      if (err.message.includes("You must have reserved items to pause with items")) {
         popUpData = {
-          title: "You must have a reservation",
-          note: "You must have an active reservation to pause with items.",
+          title: "You must have reserved items",
+          note: "You must have reserved items to pause with items.",
           buttonText: "Close",
           onClose: () => hidePopUp(),
         }
