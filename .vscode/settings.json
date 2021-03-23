@@ -1,11 +1,11 @@
 {
   "git.ignoreLimitWarning": true,
-  "eslint.enable": false,
   "editor.formatOnSave": true,
   "search.exclude": {
     "**/node_modules": true,
     ".vscode/.react/*": true
   },
+  "prettier.eslintIntegration": true,
   "cSpell.ignoreWords": ["Semibold"],
   "cSpell.diagnosticLevel": "Hint",
   "tslint.autoFixOnSave": true,
