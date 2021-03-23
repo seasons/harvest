@@ -1,5 +1,7 @@
 import gql from "graphql-tag"
-import { BagItemFragment } from "./Components/BagItem"
+import { BagItemFragment_ProductVariant } from "./Components/BagItem"
+import { BagTabFragment_Query } from "./Components/BagTab"
+import { SavedItemsTabFragment_ProductVariant } from "./Components/SavedItemsTab"
 
 export const CHECK_ITEMS = gql`
   mutation CheckItemsAvailability($items: [ID!]!) {
@@ -20,14 +22,13 @@ export const GET_LOCAL_BAG_ITEMS = gql`
   query GetLocalBagItems($ids: [ID!]) {
     products(where: { id_in: $ids }) {
       id
-
       variants {
         id
-        ...BagItemProductVariant
+        ...BagItemFragment_ProductVariant
       }
     }
   }
-  ${BagItemFragment}
+  ${BagItemFragment_ProductVariant}
 `
 
 export const GET_BAG = gql`
@@ -44,10 +45,6 @@ export const GET_BAG = gql`
       customer {
         id
         status
-        invoices {
-          id
-          subscriptionId
-        }
         user {
           id
         }
@@ -134,13 +131,10 @@ export const GET_BAG = gql`
       }
       bag {
         id
-        position
-        saved
         status
         productVariant {
           id
           purchased
-          ...BagItemProductVariant
         }
       }
       savedItems {
@@ -148,12 +142,14 @@ export const GET_BAG = gql`
         saved
         productVariant {
           id
-          ...BagItemProductVariant
+          ...SavedItemsTabFragment_ProductVariant
         }
       }
     }
+    ...BagTabFragment_Query
   }
-  ${BagItemFragment}
+  ${BagTabFragment_Query}
+  ${SavedItemsTabFragment_ProductVariant}
 `
 
 export const ADD_OR_REMOVE_FROM_LOCAL_BAG = gql`

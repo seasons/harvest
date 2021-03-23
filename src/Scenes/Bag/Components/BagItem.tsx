@@ -7,59 +7,49 @@ import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
-import gql from "graphql-tag"
-import { get, head } from "lodash"
 import React, { useState } from "react"
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-
+import gql from "graphql-tag"
 import { useMutation } from "@apollo/client"
-
-import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
 import { Check } from "Assets/svgs"
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
 
-export const BagItemFragment = gql`
-  fragment BagItemProductVariant on ProductVariant {
+export const BagItemFragment_ProductVariant = gql`
+  fragment BagItemFragment_ProductVariant on ProductVariant {
+    id
+    purchased
+    displayShort
     product {
       id
       slug
       name
-      modelSize {
-        id
-        display
-      }
       brand {
         id
         name
-        websiteUrl
       }
       images(size: Thumb) {
         id
         url
       }
-      variants {
-        id
-        reservable
-        hasRestockNotification
-        reservable
-        displayShort
-        displayLong
-        price {
-          id
-          retailPrice
-        }
-      }
     }
     price {
       id
-      buyNewPrice
       buyNewEnabled
-      buyNewAvailableForSale
-      buyUsedAvailableForSale
-      buyUsedPrice
       buyUsedEnabled
     }
   }
+`
+
+export const BagItemFragment_BagItem = gql`
+  fragment BagItemFragment_BagItem on BagItem {
+    id
+    status
+    productVariant {
+      ...BagItemFragment_ProductVariant
+    }
+  }
+  ${BagItemFragment_ProductVariant}
 `
 
 interface BagItemProps {
@@ -82,32 +72,27 @@ export const BagItem: React.FC<BagItemProps> = ({
   const { authState } = useAuthContext()
   const [isMutating, setIsMutating] = useState(false)
   const tracking = useTracking()
-  if (!bagItem) {
-    return null
-  }
+  const product = bagItem?.productVariant?.product
 
-  const variantToUse = head(
-    (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
-  )
-  const product = get(bagItem, "productVariant.product")
   if (!product) {
     return null
   }
 
+  const variant = bagItem?.productVariant
   const isReserved = bagItem.status !== "Added"
   const imageURL = product?.images?.[0]?.url || ""
 
   // Show buy alert whenever a sellable status is enabled, regardless of underlying availability
-  const isBuyable = bagItem?.productVariant?.price?.buyNewEnabled || bagItem?.productVariant?.price?.buyUsedEnabled
-  const purchased = bagItem?.productVariant?.purchased
+  const isBuyable = variant?.price?.buyNewEnabled || variant?.price?.buyUsedEnabled
+  const purchased = variant?.purchased
 
-  const variantSize = variantToUse?.displayShort
-  const variantId = bagItem.variantID
+  const variantSize = variant?.displayShort
+  const variantID = variant?.id
 
   const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
       productID: product.id,
-      variantID: variantToUse.id,
+      variantID,
     },
     awaitRefetchQueries: true,
     refetchQueries: [
@@ -129,11 +114,11 @@ export const BagItem: React.FC<BagItemProps> = ({
         actionType: Schema.ActionTypes.Tap,
         productSlug: product.slug,
         productId: product.id,
-        variantId: variantId,
+        variantId: variantID,
       })
       removeFromBagAndSaveItem({
         variables: {
-          id: variantId,
+          id: variantID,
           saved: false,
         },
         refetchQueries: [
@@ -239,14 +224,14 @@ export const BagItem: React.FC<BagItemProps> = ({
                   actionType: Schema.ActionTypes.Tap,
                   productSlug: product.slug,
                   productId: product.id,
-                  variantId: variantId,
+                  variantId: variantID,
                 })
                 if (!authState.isSignedIn) {
                   removeFromLocalBag()
                 } else {
                   removeItemFromBag({
                     variables: {
-                      id: variantId,
+                      id: variantID,
                       saved: false,
                     },
                     refetchQueries: [
@@ -313,6 +298,7 @@ export const BagItem: React.FC<BagItemProps> = ({
           </BagItemContainer>
         </Box>
       </TouchableWithoutFeedback>
+
       {isMutating && (
         <Overlay>
           <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">

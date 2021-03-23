@@ -1,24 +1,33 @@
 import { Box, Flex, Sans, Separator } from "App/Components"
 import React from "react"
-
 import { useNavigation } from "@react-navigation/native"
-
 import { BagView } from "../Bag"
 import { BagEmptyState } from "./BagEmptyState"
-import { SavedItem } from "./SavedItem"
+import { SavedItem, SavedItemFragment_ProductVariant } from "./SavedItem"
 import { ScrollView, TouchableOpacity } from "react-native"
 import { Dimensions } from "react-native"
 import styled from "styled-components/native"
 import { color } from "App/utils"
+import gql from "graphql-tag"
 import { GET_BAG } from "../BagQueries"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 import { useTracking, Schema } from "App/utils/track"
-import { GetBagAndSavedItems_me_bag_productVariant_product_variants } from "App/generated/GetBagAndSavedItems"
-import { get, head } from "lodash"
+import { get } from "lodash"
 import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
 
 const dimensions = Dimensions.get("window")
 const windowWidth = dimensions.width
+
+export const SavedItemsTabFragment_ProductVariant = gql`
+  fragment SavedItemsTabFragment_ProductVariant on ProductVariant {
+    product {
+      id
+      slug
+    }
+    ...SavedItemFragment
+  }
+  ${SavedItemFragment_ProductVariant}
+`
 
 const ItemRow = ({ bagItem, navigation, deleteBagItem, bagIsFull, hasActiveReservation }) => {
   const tracking = useTracking()
@@ -26,10 +35,8 @@ const ItemRow = ({ bagItem, navigation, deleteBagItem, bagIsFull, hasActiveReser
   if (!bagItem) {
     return null
   }
-  const variantToUse: GetBagAndSavedItems_me_bag_productVariant_product_variants = head(
-    (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
-  )
   const product = get(bagItem, "productVariant.product")
+  const variant = bagItem?.productVariant
 
   if (!product) {
     return null
@@ -41,12 +48,12 @@ const ItemRow = ({ bagItem, navigation, deleteBagItem, bagIsFull, hasActiveReser
       actionType: Schema.ActionTypes.Tap,
       productSlug: product.slug,
       productId: product.id,
-      variantId: variantToUse.id,
+      variantId: variant.id,
     })
 
     deleteBagItem({
       variables: {
-        id: variantToUse.id,
+        id: variant.id,
         saved: true,
       },
       refetchQueries: [
@@ -92,8 +99,7 @@ const ItemRow = ({ bagItem, navigation, deleteBagItem, bagIsFull, hasActiveReser
             hasActiveReservation={hasActiveReservation}
             bagIsFull={bagIsFull}
             navigation={navigation}
-            variantToUse={variantToUse}
-            product={product}
+            variant={variant}
           />
         </Box>
         <RemoveWrapper alignItems="center" justifyContent="center">

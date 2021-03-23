@@ -15,15 +15,70 @@ import { Schema as NavSchema } from "App/Navigation"
 import React, { useEffect, useState } from "react"
 import { useLazyQuery, useMutation } from "@apollo/client"
 import { Linking } from "react-native"
+import gql from "graphql-tag"
+import { BagItem, BagItemFragment_BagItem } from "./BagItem"
 import { GET_BAG, GET_LOCAL_BAG_ITEMS } from "../BagQueries"
-import { BagItem } from "./BagItem"
 import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
 import { BagCardButton } from "./BagCardButton"
 import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
-import { ProductBuyAlertTab, ProductBuyAlertTabType } from "@seasons/eclipse"
+import { ProductBuyAlertTabType } from "@seasons/eclipse"
 import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
 import { UserState, State as CreateAccountState } from "App/Scenes/CreateAccount/CreateAccount"
+
+export const BagTabFragment_Query = gql`
+  fragment BagTabFragment_Query on Query {
+    me {
+      id
+      activeReservation {
+        id
+        returnAt
+      }
+      customer {
+        id
+        status
+        membership {
+          id
+          subscriptionId
+          pauseRequests(orderBy: createdAt_DESC) {
+            id
+            resumeDate
+            pauseDate
+            pauseType
+          }
+          plan {
+            id
+            tier
+          }
+        }
+      }
+      bag {
+        id
+        status
+        productVariant {
+          id
+          product {
+            id
+            brand {
+              id
+              name
+              websiteUrl
+            }
+          }
+          price {
+            id
+            buyNewAvailableForSale
+            buyNewEnabled
+            buyNewPrice
+            buyUsedPrice
+          }
+        }
+        ...BagItemFragment_BagItem
+      }
+    }
+  }
+  ${BagItemFragment_BagItem}
+`
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
@@ -147,15 +202,15 @@ export const BagTab: React.FC<{
       buyNewEnabled: false,
       buNewAvailableForSale: false,
       buyUsedEnabled: false,
-      buyUsedAvailableForSale: false
+      buyUsedAvailableForSale: false,
     }
     const { name: brandName, websiteUrl: brandHref } = bagItem?.productVariant?.product?.brand
 
-    const newTab: ProductBuyAlertTab = price.buyNewAvailableForSale
+    const newTab = price.buyNewAvailableForSale
       ? { type: ProductBuyAlertTabType.NEW, price: price.buyNewPrice, brandHref, brandName }
       : { type: ProductBuyAlertTabType.NEW_UNAVAILABLE, brandHref, brandName }
 
-    const usedTab: ProductBuyAlertTab = price.buyUsedAvailableForSale
+    const usedTab = price.buyUsedAvailableForSale
       ? { type: ProductBuyAlertTabType.USED, price: price.buyUsedPrice, brandHref, brandName }
       : { type: ProductBuyAlertTabType.USED_UNAVAILABLE }
 
@@ -189,7 +244,9 @@ export const BagTab: React.FC<{
   const isPaused = pauseStatus === "paused"
   const pauseType = pauseRequest?.pauseType
   const withOrWithoutDisplay = pauseType === "WithoutItems" ? "without items" : "with items"
-  const pausedWithoutItmes = isPaused && pauseType === "WithoutItems"
+  const pausedWithoutItems = isPaused && pauseType === "WithoutItems"
+  const subscriptionID = me?.customer?.membership?.subscriptionId || ""
+  const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
 
   return (
     <Box>
@@ -210,7 +267,7 @@ export const BagTab: React.FC<{
             View FAQ
           </Sans>
         </Flex>
-        {((hasActiveReservation && !!returnReminder) || !hasActiveReservation) && !pausedWithoutItmes && (
+        {((hasActiveReservation && !!returnReminder) || !hasActiveReservation) && !pausedWithoutItems && (
           <Sans size="4" color="black50">
             {hasActiveReservation && !!returnReminder ? returnReminder : "Reserve your order below"}
           </Sans>
@@ -237,10 +294,9 @@ export const BagTab: React.FC<{
                     return
                   }
                   setIsMutating(true)
-                  const subscriptionId = me?.customer?.invoices?.[0]?.subscriptionId || ""
                   await removeScheduledPause({
                     variables: {
-                      subscriptionID: subscriptionId,
+                      subscriptionID,
                     },
                   })
                 }}
@@ -270,10 +326,9 @@ export const BagTab: React.FC<{
                     return
                   }
                   setIsMutating(true)
-                  const subscriptionId = me?.customer?.invoices?.[0]?.subscriptionId || ""
                   await resumeSubscription({
                     variables: {
-                      subscriptionID: subscriptionId,
+                      subscriptionID,
                     },
                   })
                 }}
@@ -288,10 +343,9 @@ export const BagTab: React.FC<{
       <Separator />
       {hasActiveReservation && <DeliveryStatus activeReservation={activeReservation} />}
       {paddedItems?.map((bagItem, index) => {
-        if (pausedWithoutItmes) {
+        if (pausedWithoutItems) {
           return null
         }
-        const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
         const spacing = isReserved ? "7px" : 2
         return bagItem?.productID?.length > 0 ? (
           <Box key={bagItem.productID} px={2}>
@@ -325,7 +379,7 @@ export const BagTab: React.FC<{
         )
       })}
       <Spacer mb={3} />
-      {!pausedWithoutItmes && <Separator />}
+      {!pausedWithoutItems && <Separator />}
       <Spacer mb={3} />
       {!hasActiveReservation && itemCount && itemCount < 3 && !isPaused && (
         <>
