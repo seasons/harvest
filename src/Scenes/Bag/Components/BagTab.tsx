@@ -162,6 +162,7 @@ export const BagTab: React.FC<{
     bottomSheetSetProps({
       renderContent: () => (
         <BuyBottomSheet
+          productVariantId={bagItem?.productVariant?.id}
           onDismiss={() => bottomSheetSnapToIndex(1)}
           tabs={[newTab, usedTab]}
           initialTab={price.buyNewEnabled ? 0 : 1}

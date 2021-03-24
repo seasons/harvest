@@ -39,7 +39,7 @@ export const BuyBottomSheet = ({ productVariantId, onDismiss, tabs, initialTab, 
       const res = await createDraftOrder({
         variables: {
           input: {
-            productVariantId: productVariantId,
+            productVariantID: productVariantId,
             orderType,
           },
         },
@@ -50,7 +50,8 @@ export const BuyBottomSheet = ({ productVariantId, onDismiss, tabs, initialTab, 
         return
       }
 
-      navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
+      navigation.navigate(NavigationSchema.PageNames.Order, { order: res.data.createDraftedOrder })
+      onDismiss()
     } catch (err) {
       handleError(err)
     }
