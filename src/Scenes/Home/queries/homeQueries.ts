@@ -1,8 +1,10 @@
 import gql from "graphql-tag"
+import { LaunchCalendarFragment_Query } from "../Components/LaunchCalendar"
 
-const HomePageProductFragment = gql`
-  fragment HomePageProduct on Product {
+const HomePageProductFragment_Product = gql`
+  fragment HomePageProductFragment_Product on Product {
     id
+    slug
     name
     modelSize {
       id
@@ -10,6 +12,7 @@ const HomePageProductFragment = gql`
     }
     brand {
       id
+      slug
       name
     }
     images(size: Thumb) {
@@ -25,8 +28,8 @@ const HomePageProductFragment = gql`
 `
 
 // Traits we pass to segment on homepage renders
-const CustomerTraitsFragment = gql`
-  fragment SegmentTraits on Customer {
+const CustomerTraitsFragment_Customer = gql`
+  fragment CustomerTraitsFragment_Customer on Customer {
     bagItems {
       id
     }
@@ -49,8 +52,8 @@ const CustomerTraitsFragment = gql`
   }
 `
 
-export const GET_HOMEPAGE = gql`
-  query Homepage($firstFitPics: Int!, $skipFitPics: Int) {
+export const Homepage_Query = gql`
+  query Homepage_Query($firstFitPics: Int!, $skipFitPics: Int) {
     banner: view(viewID: "Banner") {
       id
       title
@@ -60,12 +63,14 @@ export const GET_HOMEPAGE = gql`
     }
     homepage {
       sections {
+        id
         title
+        type
         tagData {
+          id
           tagName
           description
         }
-        type
         results {
           ... on Brand {
             id
@@ -136,7 +141,7 @@ export const GET_HOMEPAGE = gql`
         id
         status
         shouldRequestFeedback
-        ...SegmentTraits
+        ...CustomerTraitsFragment_Customer
       }
       savedItems {
         id
@@ -166,6 +171,35 @@ export const GET_HOMEPAGE = gql`
         }
       }
     }
+    featuredCollections: collections(orderBy: updatedAt_DESC, where: { published: true }, first: 5) {
+      id
+      slug
+      title
+      subTitle
+      displayTextOverlay
+      textOverlayColor
+      images {
+        id
+        url
+      }
+    }
+    collections(orderBy: updatedAt_DESC, placements: [Homepage], where: { published: true }) {
+      id
+      slug
+      title
+      products(first: 10, orderBy: updatedAt_DESC) {
+        id
+        name
+        brand {
+          id
+          name
+        }
+        images(size: Thumb) {
+          id
+          url
+        }
+      }
+    }
     blogPosts(count: 5) {
       id
       url
@@ -175,7 +209,7 @@ export const GET_HOMEPAGE = gql`
     }
     archivalProducts: products(
       where: { AND: [{ tags_some: { name: "Vintage" } }, { status: Available }] }
-      first: 12
+      first: 10
       orderBy: publishedAt_DESC
     ) {
       id
@@ -192,7 +226,8 @@ export const GET_HOMEPAGE = gql`
       orderBy: publishedAt_DESC
       where: { AND: [{ variants_some: { id_not: null } }, { status: Available }, { tags_none: { name: "Vintage" } }] }
     ) {
-      ...HomePageProduct
+      id
+      ...HomePageProductFragment_Product
     }
     justAddedTops: products(
       first: 8
@@ -200,7 +235,8 @@ export const GET_HOMEPAGE = gql`
       orderBy: publishedAt_DESC
       where: { AND: [{ variants_some: { id_not: null } }, { status: Available }, { tags_none: { name: "Vintage" } }] }
     ) {
-      ...HomePageProduct
+      id
+      ...HomePageProductFragment_Product
     }
     justAddedBottoms: products(
       first: 8
@@ -208,7 +244,8 @@ export const GET_HOMEPAGE = gql`
       orderBy: publishedAt_DESC
       where: { AND: [{ variants_some: { id_not: null } }, { status: Available }, { tags_none: { name: "Vintage" } }] }
     ) {
-      ...HomePageProduct
+      id
+      ...HomePageProductFragment_Product
     }
     fitPicsCount: fitPicsConnection(where: { status: Published }) {
       aggregate {
@@ -255,7 +292,9 @@ export const GET_HOMEPAGE = gql`
       }
       createdAt
     }
+    ...LaunchCalendarFragment_Query
   }
-  ${HomePageProductFragment}
-  ${CustomerTraitsFragment}
+  ${HomePageProductFragment_Product}
+  ${CustomerTraitsFragment_Customer}
+  ${LaunchCalendarFragment_Query}
 `
