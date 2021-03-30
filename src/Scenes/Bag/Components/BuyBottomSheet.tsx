@@ -62,7 +62,7 @@ export const BuyBottomSheet = ({ productVariantId, onDismiss, tabs, initialTab, 
     return Promise.resolve()
   }
 
-  const handleNavigateToPartner = (href: string) => {
+  const handleNavigateToBrand = (href: string) => {
     Linking.openURL(href)
   }
 
@@ -71,7 +71,7 @@ export const BuyBottomSheet = ({ productVariantId, onDismiss, tabs, initialTab, 
       onDismiss={onDismiss}
       tabs={tabs}
       initialTab={initialTab}
-      onNavigateToPartner={handleNavigateToPartner}
+      onNavigateToBrand={handleNavigateToBrand}
       onCreateDraftOrder={handleCreateDraftOrder}
       onNotifyMe={handleNotifyMe}
     />

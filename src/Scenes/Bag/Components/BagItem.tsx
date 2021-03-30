@@ -32,6 +32,9 @@ export const BagItemFragment = gql`
         id
         name
         websiteUrl
+        logoImage {
+          url
+        }
       }
       images(size: Thumb) {
         id

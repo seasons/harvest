@@ -147,13 +147,19 @@ export const BagTab: React.FC<{
       buyNewEnabled: false,
       buNewAvailableForSale: false,
       buyUsedEnabled: false,
-      buyUsedAvailableForSale: false
+      buyUsedAvailableForSale: false,
     }
-    const { name: brandName, websiteUrl: brandHref } = bagItem?.productVariant?.product?.brand
+    const { name: brandName, websiteUrl: brandHref, logoImage } = bagItem?.productVariant?.product?.brand
 
     const newTab: ProductBuyAlertTab = price.buyNewAvailableForSale
-      ? { type: ProductBuyAlertTabType.NEW, price: price.buyNewPrice, brandHref, brandName }
-      : { type: ProductBuyAlertTabType.NEW_UNAVAILABLE, brandHref, brandName }
+      ? {
+          type: ProductBuyAlertTabType.NEW,
+          price: price.buyNewPrice,
+          brandHref,
+          brandName,
+          brandLogoUri: logoImage?.url,
+        }
+      : { type: ProductBuyAlertTabType.NEW_UNAVAILABLE, brandHref, brandName, brandLogoUri: logoImage?.url }
 
     const usedTab: ProductBuyAlertTab = price.buyUsedAvailableForSale
       ? { type: ProductBuyAlertTabType.USED, price: price.buyUsedPrice, brandHref, brandName }
