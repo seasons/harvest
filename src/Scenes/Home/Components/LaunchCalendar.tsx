@@ -2,7 +2,14 @@ import React from "react"
 import gql from "graphql-tag"
 import styled from "styled-components/native"
 import { DateTime } from "luxon"
-import { Box, Flex, Sans } from "App/Components"
+import { Box, FadeInImage, Flex, Sans, Spacer } from "App/Components"
+import { Linking, ScrollView, TouchableWithoutFeedback } from "react-native"
+import { space } from "App/utils/space"
+import { color } from "App/utils"
+import { Schema } from "App/Navigation"
+import { useNavigation } from "@react-navigation/native"
+
+const ITEM_WIDTH = 171
 
 export const LaunchCalendarFragment_Query = gql`
   fragment LaunchCalendarFragment_Query on Query {
@@ -11,6 +18,10 @@ export const LaunchCalendarFragment_Query = gql`
       launchAt
       brand {
         id
+        slug
+        published
+        websiteUrl
+        name
         logoImage {
           id
           url
@@ -18,42 +29,50 @@ export const LaunchCalendarFragment_Query = gql`
       }
       collection {
         id
+        slug
         title
       }
     }
   }
 `
 
-const Item = ({ launch, index }) => {
-  const imageURL = launch?.brand?.logoImage?.url
+const Item = ({ launch, index, itemCount }) => {
+  const navigation = useNavigation()
+  const collection = launch?.collection
+  const brand = launch?.brand
+  const uri = brand?.logoImage?.url
 
-  const breakpointStyles = {
-    borderTop: index < 4 ? "1px solid black" : "none",
-    borderLeft: index === 0 || index % 4 === 0 ? "1px solid black" : "none",
+  const onPress = () => {
+    if (brand?.published) {
+      navigation.navigate(Schema.PageNames.Brand, { id: brand.id, slug: brand.slug, name: brand.name })
+    } else if (brand?.websiteUrl) {
+      Linking.openURL(brand.websiteUrl)
+    } else if (collection?.slug) {
+      navigation.navigate(Schema.PageNames.Collection, {
+        collectionSlug: collection.slug,
+      })
+    }
   }
 
   return (
-    <ItemContainer index={index}>
-      <LaunchContentWrapper
-        p={["70px", "70px", "70px", "40px", "80px"]}
-        height="100%"
-        width="100%"
-        breakpointStyles={breakpointStyles}
-      >
-        {imageURL ? (
-          <BackgroundImage imageURL={imageURL} />
-        ) : (
-          <Sans size="5" style={{ textAlign: "center", textTransform: "uppercase" }}>
-            {launch.collection?.title}
+    <TouchableWithoutFeedback onPress={onPress}>
+      <ItemContainer index={index} itemCount={itemCount}>
+        <LaunchContentWrapper height="100%" width="100%">
+          {uri ? (
+            <FadeInImage source={{ uri }} style={{ width: 87, height: 24 }} />
+          ) : (
+            <Sans size="5" style={{ textAlign: "center", textTransform: "uppercase" }}>
+              {launch.collection?.title}
+            </Sans>
+          )}
+        </LaunchContentWrapper>
+        <DateTextWrapper py={1}>
+          <Sans size="3" style={{ textAlign: "center" }}>
+            {DateTime.fromISO(launch?.launchAt).toUTC().toFormat("LLLL d").toUpperCase()}
           </Sans>
-        )}
-      </LaunchContentWrapper>
-      <DateTextWrapper py={1} breakpointStyles={breakpointStyles}>
-        <Sans size="4" style={{ textAlign: "center" }}>
-          {DateTime.fromISO(launch?.launchAt).toUTC().toFormat("LLLL d")}
-        </Sans>
-      </DateTextWrapper>
-    </ItemContainer>
+        </DateTextWrapper>
+      </ItemContainer>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -64,16 +83,16 @@ const getSeasonString = () => {
   let season
   if (nowMonth < 2) {
     year = now.year
-    season = "Fall / Winter"
+    season = "FW"
   } else if (nowMonth > 7) {
     year = now.year + 1
-    season = "Fall / Winter"
+    season = "FW"
   } else {
     year = now.year
-    season = "Spring / Summer"
+    season = "SS"
   }
 
-  return `${season} ${year}`
+  return `${season}${year.toString().slice(-2)}`
 }
 
 export const LaunchCalendar: React.FC<{ launches: any }> = ({ launches }) => {
@@ -87,56 +106,48 @@ export const LaunchCalendar: React.FC<{ launches: any }> = ({ launches }) => {
 
   return (
     <Box>
-      <Flex px={[2, 2, 2, 2, 2]} pb={2} flexDirection="row" justifyContent="space-between" alignItems="flex-end">
-        <Sans size="9" style={{ textAlign: "left" }}>
+      <Flex px={2} pb={2} flexDirection="row" justifyContent="space-between" alignItems="flex-end">
+        <Sans size="4" style={{ textAlign: "left" }}>
           Launch calendar
         </Sans>
         <Sans size="4" color="black50" style={{ textAlign: "right" }}>
           {getSeasonString()}
         </Sans>
       </Flex>
-      <Flex px={[2, 2, 2, 2, 2]}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {filteredLaunched.map((launch, index) => (
-          <Item launch={launch} key={index} index={index} />
+          <Item launch={launch} key={index} index={index} itemCount={filteredLaunched.length} />
         ))}
-      </Flex>
+      </ScrollView>
+      <Spacer mb={4} />
     </Box>
   )
 }
 
-const BackgroundImage = styled(Box)<{ imageURL: string }>`
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  background: url(${(p) => p.imageURL}) no-repeat center center;
-  background-size: contain;
-`
-
-const ItemContainer = styled(Box)<{ index: number }>`
-  width: 100%;
+const ItemContainer = styled(Box)<{ index: number; itemCount: number }>`
+  width: ${ITEM_WIDTH}px;
   position: relative;
+  border-color: ${color("black10")};
+  margin-left: ${(p) => (p.index === 0 ? space(2) : 0)};
+  margin-right: ${(p) => (p.index + 1 === p.itemCount ? space(2) : 0)};
+  border-left-width: ${(p) => (p.index === 0 ? 1 : 0)};
+  border-right-width: 1;
+  border-top-width: 1;
+  border-bottom-width: 1;
 `
 
-const DateTextWrapper = styled(Box)<{ breakpointStyles: any }>`
+const DateTextWrapper = styled(Box)`
   position: relative;
-  width: 100%;
-  border-top: 1px solid black;
-  border-left: ${(p) => p.breakpointStyles.borderLeft};
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
+  border-top-width: 1;
+  border-color: ${color("black10")};
+  width: ${ITEM_WIDTH}px;
 `
 
-const LaunchContentWrapper = styled(Box)<{ breakpointStyles: any }>`
+const LaunchContentWrapper = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  height: 250px;
-  width: 100%;
-  border-top: ${(p) => p.breakpointStyles.borderTop};
-  border-left: ${(p) => p.breakpointStyles.borderLeft};
-  border-right: 1px solid black;
+  height: 180px;
+  width: ${ITEM_WIDTH}px;
 `
