@@ -3,7 +3,7 @@ import gql from "graphql-tag"
 import styled from "styled-components/native"
 import { DateTime } from "luxon"
 import { Box, FadeInImage, Flex, Sans, Spacer } from "App/Components"
-import { Linking, ScrollView, TouchableWithoutFeedback } from "react-native"
+import { Linking, ScrollView, TouchableWithoutFeedback, Image } from "react-native"
 import { space } from "App/utils/space"
 import { color } from "App/utils"
 import { Schema } from "App/Navigation"
@@ -59,11 +59,17 @@ const Item = ({ launch, index, itemCount }) => {
       <ItemContainer index={index} itemCount={itemCount}>
         <LaunchContentWrapper height="100%" width="100%">
           {uri ? (
-            <FadeInImage source={{ uri }} style={{ width: 87, height: 24 }} />
+            <FadeInImage
+              source={{ uri }}
+              style={{ width: 168, height: 180, backgroundColor: color("white100") }}
+              resizeMode="contain"
+            />
           ) : (
-            <Sans size="5" style={{ textAlign: "center", textTransform: "uppercase" }}>
-              {launch.collection?.title}
-            </Sans>
+            <Flex height="100%" width="100%" px={2} flexDirection="row" alignItems="center">
+              <Sans size="4" style={{ textAlign: "center", textTransform: "uppercase" }}>
+                {launch.collection?.title}
+              </Sans>
+            </Flex>
           )}
         </LaunchContentWrapper>
         <DateTextWrapper py={1}>
