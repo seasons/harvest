@@ -11,7 +11,7 @@ import { screenTrack, useTracking, Schema } from "App/utils/track"
 
 const GET_BRANDS = gql`
   query GetBrands($orderBy: BrandOrderByInput!) {
-    brands(orderBy: $orderBy, where: { products_some: { id_not: null } }) {
+    brands(orderBy: $orderBy, where: { products_some: { id_not: null }, published: true }) {
       id
       slug
       name

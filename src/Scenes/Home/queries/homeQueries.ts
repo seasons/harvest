@@ -1,5 +1,5 @@
 import gql from "graphql-tag"
-import { LaunchCalendarFragment_Query } from "../Components/LaunchCalendar"
+import { HomeBottomSheetFragment_Query } from "../Components/HomeBottomSheet"
 
 const HomePageProductFragment_Product = gql`
   fragment HomePageProductFragment_Product on Product {
@@ -61,6 +61,13 @@ export const Homepage_Query = gql`
       type
       properties
     }
+    featuredBrands: brands(
+      where: { products_some: { id_not: null }, name_not: null, featured: true, published: true }
+      orderBy: name_ASC
+    ) {
+      name
+      slug
+    }
     homepage {
       sections {
         id
@@ -72,11 +79,6 @@ export const Homepage_Query = gql`
           description
         }
         results {
-          ... on Brand {
-            id
-            name
-            since
-          }
           ... on Category {
             id
             slug
@@ -292,9 +294,9 @@ export const Homepage_Query = gql`
       }
       createdAt
     }
-    ...LaunchCalendarFragment_Query
+    ...HomeBottomSheetFragment_Query
   }
   ${HomePageProductFragment_Product}
   ${CustomerTraitsFragment_Customer}
-  ${LaunchCalendarFragment_Query}
+  ${HomeBottomSheetFragment_Query}
 `
