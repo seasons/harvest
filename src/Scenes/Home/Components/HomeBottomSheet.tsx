@@ -189,8 +189,6 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
   const snapPoint = 0
   const secondSnapPoint = blogContentHeight - insets.top
 
-  console.log("data", data)
-
   const renderItem = (item) => {
     switch (item.type) {
       case SectionType.Banner:
