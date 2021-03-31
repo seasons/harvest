@@ -12,13 +12,11 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
 import { SharedElement } from "react-navigation-shared-element"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 import styled from "styled-components"
-
 import { useMutation } from "@apollo/client"
-
 import { GET_BAG } from "../Bag/BagQueries"
 import { SAVE_ITEM } from "../Product/Components/SaveProductButton"
 import { GET_PRODUCT } from "../Product/Queries"
-import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
+import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
 
 interface FitPicDetailProps {
   navigation: any
@@ -77,7 +75,7 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
             query: GET_BAG,
           },
           {
-            query: GET_HOMEPAGE_NATIVE,
+            query: Homepage_Query,
             variables: { firstFitPics: 8, skipFitPics: 0 },
           },
         ],

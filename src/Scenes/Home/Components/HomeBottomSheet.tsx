@@ -14,6 +14,7 @@ import { ProductsRail, CollectionsRail } from "@seasons/eclipse"
 import { BrandsRail, CategoriesRail, FitPicCollection, HomeFooter, TagsRail } from "./"
 import { FitPicCollectionRef } from "./FitPicCollection"
 import { HomepageBanner } from "App/Components/HomepageBanner"
+import { LaunchCalendar } from "./LaunchCalendar"
 
 const dimensions = Dimensions.get("window")
 
@@ -29,6 +30,7 @@ enum SectionType {
   Collection = "Collection",
   Banner = "Banner",
   FeaturedCollections = "FeaturedCollections",
+  LaunchCalendar = "LaunchCalendar",
 }
 
 const sectionsFrom = (data: any, navigation) => {
@@ -88,11 +90,17 @@ const sectionsFrom = (data: any, navigation) => {
   if (data?.justAddedBottoms?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
   }
-  if (data?.featuredCollections?.length > 0) {
+  if (data?.launch?.length > 0) {
     sections.push({
       type: SectionType.FeaturedCollections,
       results: data?.featuredCollections,
       title: "Featured collections",
+    })
+  }
+  if (data?.launches?.length > 0) {
+    sections.push({
+      type: SectionType.LaunchCalendar,
+      results: data?.launches,
     })
   }
   if (data?.collections?.length > 0) {
@@ -179,6 +187,8 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
         return <BrandsRail title={item.title} items={item.results} />
       case SectionType.ArchivalProducts:
         return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
+      case SectionType.LaunchCalendar:
+        return <LaunchCalendar launches={item.results} />
       case SectionType.Collection:
         return (
           <ProductsRail
