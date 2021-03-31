@@ -1,5 +1,6 @@
 import gql from "graphql-tag"
 import { HomeBottomSheetFragment_Query } from "../Components/HomeBottomSheet"
+import { LaunchCalendarFragment_Query } from "../Components/LaunchCalendar"
 
 const HomePageProductFragment_Product = gql`
   fragment HomePageProductFragment_Product on Product {
@@ -60,13 +61,6 @@ export const Homepage_Query = gql`
       caption
       type
       properties
-    }
-    featuredBrands: brands(
-      where: { products_some: { id_not: null }, name_not: null, featured: true, published: true }
-      orderBy: name_ASC
-    ) {
-      name
-      slug
     }
     homepage {
       sections {
