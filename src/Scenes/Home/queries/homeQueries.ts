@@ -1,4 +1,5 @@
 import gql from "graphql-tag"
+import { HomeBottomSheetFragment_Query } from "../Components/HomeBottomSheet"
 import { LaunchCalendarFragment_Query } from "../Components/LaunchCalendar"
 
 const HomePageProductFragment_Product = gql`
@@ -72,11 +73,6 @@ export const Homepage_Query = gql`
           description
         }
         results {
-          ... on Brand {
-            id
-            name
-            since
-          }
           ... on Category {
             id
             slug
@@ -292,9 +288,9 @@ export const Homepage_Query = gql`
       }
       createdAt
     }
-    ...LaunchCalendarFragment_Query
+    ...HomeBottomSheetFragment_Query
   }
   ${HomePageProductFragment_Product}
   ${CustomerTraitsFragment_Customer}
-  ${LaunchCalendarFragment_Query}
+  ${HomeBottomSheetFragment_Query}
 `
