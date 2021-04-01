@@ -1,9 +1,9 @@
-import { Flex, Sans, Spacer, Box } from "App/Components"
-import { TouchableWithoutFeedback } from "react-native"
+import { Box, Flex, Sans, Spacer } from "App/Components"
+import { color } from "App/utils/color"
 import { SmallCheckCircled } from "Assets/svgs"
 import React from "react"
+import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components"
-import { color } from "styled-system"
 
 export const ShippingOption = ({ option, index, shippingOptionIndex, setShippingOptionIndex }) => {
   const method = option?.shippingMethod
