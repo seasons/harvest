@@ -2,7 +2,7 @@ import { useMutation, ApolloError } from "@apollo/client"
 import { screenTrack, Schema, useTracking } from "App/utils/track"
 import React from "react"
 import { ReviewOrder } from "@seasons/eclipse"
-import { Dimensions } from "react-native"
+import { Dimensions, Linking } from "react-native"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { SUBMIT_ORDER } from "../Product/Mutations"
 import { GET_BAG } from "../Bag/BagQueries"
@@ -67,6 +67,9 @@ export const Order = screenTrack()(({ route, navigation }) => {
   const handleOrderItemPressed = (product) => {
     navigation.navigate("Product", { id: product.id, slug: product.slug })
   }
+  const handleNavigateToBrand = (href: string) => {
+    Linking.openURL(href)
+  }
 
   return (
     <ReviewOrder
@@ -75,6 +78,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
       onOrderItemPressed={handleOrderItemPressed}
       order={order}
       windowWidth={windowWidth}
+      onNavigateToBrand={handleNavigateToBrand}
     />
   )
 })
