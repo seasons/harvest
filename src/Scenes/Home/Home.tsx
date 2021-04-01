@@ -18,13 +18,13 @@ import analytics from "@segment/analytics-react-native"
 
 import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
+import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
   const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
   const [fitPicsFetchCount, setFitPicsFetchCount] = useState(8)
-  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(GET_HOMEPAGE_NATIVE, {
+  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(Homepage_Query, {
     variables: { firstFitPics: fitPicsFetchCount, skipFitPics: 0 },
   })
 

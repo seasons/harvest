@@ -20,7 +20,7 @@ export const GET_BROWSE_PRODUCTS = gql`
         slug
       }
     }
-    brands(orderBy: name_ASC, where: { products_some: { id_not: null }, name_not: null }) {
+    brands(orderBy: name_ASC, where: { products_some: { id_not: null }, name_not: null, published: true }) {
       id
       slug
       name

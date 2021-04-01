@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react"
 import { TouchableOpacity } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import { useTracking } from "react-tracking"
-
 import { useNavigation } from "@react-navigation/native"
 
 interface BrandsRailProps {
