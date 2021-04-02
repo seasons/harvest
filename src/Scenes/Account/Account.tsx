@@ -341,7 +341,7 @@ export const Account = screenTrack()(({ navigation }) => {
             authorizedAt={null}
             authorizationWindowClosesAt={null}
             version={"mobile"}
-            title={"Want to Reactivate?"}
+            title={"Ready to Reactivate?"}
             detail="If you'd like to reactivate your account, please request access and we'll get back to you shortly."
           />
         )
