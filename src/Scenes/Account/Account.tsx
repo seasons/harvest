@@ -266,9 +266,19 @@ export const Account = screenTrack()(({ navigation }) => {
   const renderBody = () => {
     switch (status) {
       case CustomerStatus.Created:
+        return (
+          <OnboardingChecklist
+            rawMeasurements={rawMeasurements}
+            navigation={navigation}
+            onboardingSteps={onboardingSteps}
+            shippingAddress={shippingAddress}
+            stylePreferences={stylePreferences}
+            userState={UserState.Undetermined}
+          />
+        )
+
       case CustomerStatus.Waitlisted:
-        const userState = status == CustomerStatus.Created ? UserState.Undetermined : UserState.Waitlisted
-        const rewaitlisted = status === CustomerStatus.Waitlisted && customer?.admissions?.authorizationsCount > 0
+        const firstWaitlist = status === CustomerStatus.Waitlisted && customer?.admissions?.authorizationsCount === 0
         return (
           <>
             <WaitlistedCTA
@@ -276,14 +286,14 @@ export const Account = screenTrack()(({ navigation }) => {
               authorizationWindowClosesAt={DateTime.fromISO(customer?.admissions?.authorizationWindowClosesAt)}
               version={"mobile"}
             />
-            {!rewaitlisted && (
+            {firstWaitlist && (
               <OnboardingChecklist
                 rawMeasurements={rawMeasurements}
                 navigation={navigation}
                 onboardingSteps={onboardingSteps}
                 shippingAddress={shippingAddress}
                 stylePreferences={stylePreferences}
-                userState={userState}
+                userState={UserState.Waitlisted}
               />
             )}
           </>
@@ -323,9 +333,18 @@ export const Account = screenTrack()(({ navigation }) => {
       case CustomerStatus.Active:
       case CustomerStatus.Suspended:
       case CustomerStatus.Paused:
-      case CustomerStatus.Deactivated:
       case CustomerStatus.PaymentFailed:
         return <AccountList list={topList} roles={roles} />
+      case CustomerStatus.Deactivated:
+        return (
+          <WaitlistedCTA
+            authorizedAt={null}
+            authorizationWindowClosesAt={null}
+            version={"mobile"}
+            title={"Ready to Resume?"}
+            detail="If you'd like to reactivate your account, please request access and we'll get back to you shortly."
+          />
+        )
     }
   }
 
