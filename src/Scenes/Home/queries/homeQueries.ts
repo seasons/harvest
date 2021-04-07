@@ -201,7 +201,10 @@ export const Homepage_Query = gql`
       url
       name
       category
-      imageURL
+      image {
+        id
+        url
+      }
     }
     archivalProducts: products(
       where: { AND: [{ tags_some: { name: "Vintage" } }, { status: Available }] }
