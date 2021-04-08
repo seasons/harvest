@@ -1,6 +1,5 @@
 import gql from "graphql-tag"
 import { HomeBottomSheetFragment_Query } from "../Components/HomeBottomSheet"
-import { LaunchCalendarFragment_Query } from "../Components/LaunchCalendar"
 
 const HomePageProductFragment_Product = gql`
   fragment HomePageProductFragment_Product on Product {
