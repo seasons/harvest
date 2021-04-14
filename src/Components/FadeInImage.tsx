@@ -19,7 +19,7 @@ export const FadeInImage: React.FC<FadeInImageProps> = (props) => {
   )
 }
 
-const Container = styled(View)`
+const Container = styled(View)<{ radius: boolean }>`
   background-color: ${color("black04")};
   overflow: hidden;
   border-radius: ${(p) => (p.radius ? 15 : 0)};

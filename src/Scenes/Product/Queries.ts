@@ -1,4 +1,5 @@
 import gql from "graphql-tag"
+import { ProductBuyCTA_ProductVariantFragment, ProductBuyCTA_ProductFragment } from "@seasons/eclipse"
 
 const commonProductVariantFragment = gql`
   fragment CommonProductVariant on ProductVariant {
@@ -43,7 +44,9 @@ const commonProductVariantFragment = gql`
         inseam
       }
     }
+    ...ProductBuyCTA_ProductVariantFragment
   }
+  ${ProductBuyCTA_ProductVariantFragment}
 `
 
 export const GET_PRODUCT = gql`
@@ -145,7 +148,9 @@ export const GET_PRODUCT = gql`
         }
         ...CommonProductVariant
       }
+      ...ProductBuyCTA_ProductFragment
     }
   }
+  ${ProductBuyCTA_ProductFragment}
   ${commonProductVariantFragment}
 `

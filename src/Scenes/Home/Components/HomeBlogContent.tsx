@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
 import { useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { FadeTop, FadeBottom } from "Assets/svgs"
+import { imageResize } from "@seasons/eclipse/src/helpers/imageResize"
 
 const windowWidth = Dimensions.get("window").width
 const slideHeight = windowWidth
@@ -20,7 +21,7 @@ export const HomeBlogContent = ({ items }) => {
   const navigation = useNavigation()
 
   const renderItem = ({ item }) => {
-    const imageURL = !!item.imageURL && item.imageURL
+    const imageURL = item.image?.url && imageResize(item.image?.url, "large")
     return (
       <TouchableWithoutFeedback
         onPress={() => {

@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useTracking, Schema } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { GET_HOMEPAGE_NATIVE } from "@seasons/eclipse"
+import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
 
 export const SAVE_ITEM = gql`
   mutation SaveItem($item: ID!, $save: Boolean!) {
@@ -64,7 +64,7 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
         query: GET_BAG,
       },
       {
-        query: GET_HOMEPAGE_NATIVE,
+        query: Homepage_Query,
         variables: { firstFitPics: 8, skipFitPics: 0 },
       },
     ],

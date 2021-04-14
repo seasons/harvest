@@ -20,7 +20,8 @@ import { BagItem } from "./BagItem"
 import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
 import { BagCardButton } from "./BagCardButton"
-import { BuyBottomSheet, height as bottomSheetHeight, TabType as BuyTabType, Tab as BuyTab } from "./BuyBottomSheet"
+import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
+import { ProductBuyAlertTab, ProductBuyAlertTabType } from "@seasons/eclipse"
 import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
 import { UserState, State as CreateAccountState } from "App/Scenes/CreateAccount/CreateAccount"
 
@@ -146,25 +147,31 @@ export const BagTab: React.FC<{
       buyNewEnabled: false,
       buNewAvailableForSale: false,
       buyUsedEnabled: false,
+      buyUsedAvailableForSale: false,
     }
-    const { name: brandName, websiteUrl: brandHref } = bagItem?.productVariant?.product?.brand
+    const { name: brandName, websiteUrl: brandHref, logoImage } = bagItem?.productVariant?.product?.brand
 
-    const newTab: BuyTab = price.buyNewEnabled
-      ? { type: BuyTabType.NEW, price: price.buyNewPrice, brandHref, brandName }
-      : { type: BuyTabType.NEW_UNAVAILABLE, brandHref, brandName }
+    const newTab: ProductBuyAlertTab = price.buyNewAvailableForSale
+      ? {
+          type: ProductBuyAlertTabType.NEW,
+          price: price.buyNewPrice,
+          brandHref,
+          brandName,
+          brandLogoUri: logoImage?.url,
+        }
+      : { type: ProductBuyAlertTabType.NEW_UNAVAILABLE, brandHref, brandName, brandLogoUri: logoImage?.url }
 
-    // FIXME: need to check product inventory status somewhere (maybe expose buyUsedAvailabeForSale) as a proxy for stock
-    const usedTab: BuyTab = price.buyUsedEnabled
-      ? { type: BuyTabType.USED, price: price.buyUsedPrice, brandHref, brandName }
-      : { type: BuyTabType.USED_UNAVAILABLE }
+    const usedTab: ProductBuyAlertTab = price.buyUsedAvailableForSale
+      ? { type: ProductBuyAlertTabType.USED, price: price.buyUsedPrice, brandHref, brandName }
+      : { type: ProductBuyAlertTabType.USED_UNAVAILABLE }
 
     bottomSheetSetProps({
       renderContent: () => (
         <BuyBottomSheet
+          productVariantId={bagItem?.productVariant?.id}
           onDismiss={() => bottomSheetSnapToIndex(1)}
           tabs={[newTab, usedTab]}
           initialTab={price.buyNewEnabled ? 0 : 1}
-          variant={bagItem?.productVariant}
           navigation={navigation}
         />
       ),

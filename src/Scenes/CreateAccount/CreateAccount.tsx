@@ -29,9 +29,9 @@ export interface Coupon {
 }
 
 export enum UserState {
-  Undetermined,
-  Admitted,
-  Waitlisted,
+  Undetermined = "Undetermined",
+  Admitted = "Admitted",
+  Waitlisted = "Waitlisted",
 }
 
 export enum PaymentMethod {
