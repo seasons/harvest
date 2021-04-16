@@ -3047,27 +3047,27 @@
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
 
-"@seasons/eclipse@^1.2.21":
-  version "1.2.21"
-  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.2.21.tgz#09ff6e788c4e043ca44cb891ce35ddb9017159c8"
-  integrity sha512-eEGpMx90jeKkc9pppfhoR2sOAWC5JCCHwiKj70ky267NaPEadTguUuOCrwFZUKWZtqBI18qQ+1YPotmoI5AgkQ==
+"@seasons/eclipse@^1.2.24":
+  version "1.2.24"
+  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.2.24.tgz#42c13a75a258f9760c9262971a216623bcf3e86a"
+  integrity sha512-VI7qKbUVVU8+K4Ob2Sntab/yAL7Tkw22XPXgQvMgLK0NwLfZnG8+sE7vz4n1Tk2UR4t3jhwSA0u+v2gEgKvmBA==
   dependencies:
     dripsy "^1.4.6"
 
-"@segment/analytics-react-native-google-analytics@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@segment/analytics-react-native-google-analytics/-/analytics-react-native-google-analytics-1.1.0.tgz#4ef302bb706b4697fee7f75692bcda38e795eaea"
-  integrity sha512-ddQ+cx08M4Q98nCwKFwJyk5HuYGmG2fVLprkDzbejd0sTkPfWWBUQ3j2YgI1IP299DqMxP0bv8NSc171EXsX4g==
+"@segment/analytics-react-native-google-analytics@^1.4.1":
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/@segment/analytics-react-native-google-analytics/-/analytics-react-native-google-analytics-1.4.3.tgz#12c2888561662c58e32a2ac1571669a1e17d9254"
+  integrity sha512-P6yETSZVdSD0FLNbyNdlsE9EQeREnbOT/KMZJrNcSoN2x0InLK65+ObHVzJquIyo3DqW6sbz7hFNaBkhiL9rsw==
 
-"@segment/analytics-react-native-mixpanel@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@segment/analytics-react-native-mixpanel/-/analytics-react-native-mixpanel-1.1.0.tgz#6546702a3bc12ddf8fa11f1e4936799df7108984"
-  integrity sha512-rwSKYfZ2yfDoLxPuYqNVzKUKsMdXw0IZHMht/Zg+WkvHgIj/reb5PBzDGS9b0Z9EuS7Esh3QPARuFv2m7XunxA==
+"@segment/analytics-react-native-mixpanel@^1.4.1":
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/@segment/analytics-react-native-mixpanel/-/analytics-react-native-mixpanel-1.4.3.tgz#9d0db2873c5953af239e222285d205d6db70c207"
+  integrity sha512-ickRLTYgntKAAnVugFZ6az1VB2ecA/bM02QDooFvKk88h0lVPMKv13rZixSBuHBsX6YpScPWUgeH8T+orlS8Gg==
 
-"@segment/analytics-react-native@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@segment/analytics-react-native/-/analytics-react-native-1.1.0.tgz#209c28a7b6f60c80bdce8e7c66bfb26aaeef9ed6"
-  integrity sha512-9a4/uvsP+MebvoLDpUAjeeflgDVQjYaPEYp22JpAZiMlr0Tmsrrbwud/FE/bHeMX6HeLfgeCghhK4GvfeZsc9g==
+"@segment/analytics-react-native@^1.4.1":
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/@segment/analytics-react-native/-/analytics-react-native-1.4.3.tgz#82e9f3cb52c0ad4c61e1035dc20201cf0ccb5f81"
+  integrity sha512-pVFId6wonpU72COAhIwnUsrWVX/IDHqE6d4mSWRts0z+xoqFOHGh1TqXFGjnCEi3R0i0DtsN1dnWok8IhKew+A==
 
 "@sentry/browser@^5.15.4":
   version "5.15.5"
