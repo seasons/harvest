@@ -185,8 +185,6 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
 
   useEffect(() => setSections(sectionsFrom(data, navigation)), [data, navigation])
 
-  console.log("data", data)
-
   const blogContentHeight = dimensions.width
   const snapPoint = 0
   const secondSnapPoint = blogContentHeight - insets.top
