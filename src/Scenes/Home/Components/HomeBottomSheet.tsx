@@ -100,7 +100,7 @@ const sectionsFrom = (data: any, navigation) => {
   if (data?.justAddedBottoms?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
   }
-  if (data?.launch?.length > 0) {
+  if (data?.featuredCollections?.length > 0) {
     sections.push({
       type: SectionType.FeaturedCollections,
       results: data?.featuredCollections,
@@ -184,6 +184,8 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
   const reservationFeedback = data?.reservationFeedback
 
   useEffect(() => setSections(sectionsFrom(data, navigation)), [data, navigation])
+
+  console.log("data", data)
 
   const blogContentHeight = dimensions.width
   const snapPoint = 0
