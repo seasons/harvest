@@ -55,7 +55,6 @@ export const ShareFitPicToIG = screenTrack()(({ route, navigation }) => {
 
   const fitPicImage = data?.fitPic?.image
   const products = data?.fitPic?.products || [{}]
-  console.log(data)
 
   const viewShotRefs = [...Array(products.length)].map((_arr, index) => createRef())
 

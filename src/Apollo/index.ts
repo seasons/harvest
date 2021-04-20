@@ -1,12 +1,14 @@
 import { setContext } from "apollo-link-context"
 import { onError } from "apollo-link-error"
+import { createUploadLink } from "apollo-upload-client"
 import { getAccessTokenFromSession, getNewToken } from "App/utils/auth"
 import { config, Env } from "App/utils/config"
+import { sha256 } from "js-sha256"
 import { isEmpty } from "lodash"
-import { createUploadLink } from "apollo-upload-client"
 import { Platform } from "react-native"
 
-import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, Observable } from "@apollo/client"
+import { ApolloClient, ApolloLink, InMemoryCache, Observable } from "@apollo/client"
+import { createPersistedQueryLink } from "@apollo/client/link/persisted-queries"
 import * as Sentry from "@sentry/react-native"
 
 import { resolvers, typeDefs } from "./resolvers"
@@ -135,9 +137,11 @@ export const setupApolloClient = async () => {
     }
   })
 
+  const persistedQueryLink = createPersistedQueryLink({ useGETForHashedQueries: true, sha256 })
+
   return new ApolloClient({
     // Provide required constructor fields
-    link: ApolloLink.from([authLink, errorLink, httpLink]) as any,
+    link: ApolloLink.from([persistedQueryLink, authLink, errorLink, httpLink]) as any,
     typeDefs,
     resolvers,
     cache,
