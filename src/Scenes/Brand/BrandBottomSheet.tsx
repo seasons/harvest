@@ -1,6 +1,7 @@
 import { Box, Flex, Handle, ProductGridItem, Sans, Spacer } from "App/Components"
 import { CarouselPageDots } from "App/Components/CarouselPageDots"
 import { ReadMore } from "App/Components/ReadMore"
+import { Spinner } from "App/Components/Spinner"
 import { color, space } from "App/utils"
 import { DateTime } from "luxon"
 import React, { useMemo, useRef, useState } from "react"
@@ -70,7 +71,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
   const bottomSheetRef: React.MutableRefObject<ScrollBottomSheet<string>> = useRef(null)
 
   const brand = data?.brand
-  const products = brand?.products
+  const products = brand?.products?.edges
   const description = brand?.description
   const images = brand?.images
 
@@ -84,6 +85,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
 
   const snapPoints = hasImages ? [topSnapPoint, secondSnapPoint] : [topSnapPoint]
   const initialSnapPoint = hasImages ? 1 : 0
+  const aggregateCount = data?.brand?.productsAggregate?.aggregate?.count
 
   const metaData = []
   if (brand?.basedIn) {
@@ -150,7 +152,16 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
             <Spacer mb={3} />
           </Box>
         )}
-        ListFooterComponent={() => <Spacer mb={3} />}
+        ListFooterComponent={() => (
+          <Box>
+            {!!aggregateCount && aggregateCount > products?.length && products?.length > 0 && (
+              <Flex py={3} flexDirection="row" justifyContent="center" alignItems="center">
+                <Spinner />
+              </Flex>
+            )}
+            <Spacer mb={3} />
+          </Box>
+        )}
         containerStyle={{
           backgroundColor: "white",
           borderRadius: 20,
@@ -161,7 +172,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
         renderHandle={() => (
           <Handle style={{ marginTop: space(2), marginBottom: space(1) }} backgroundColor="black10" />
         )}
-        keyExtractor={(item, index) => item?.id + index}
+        keyExtractor={(item, index) => item?.node?.id + index}
         data={products}
         numColumns={numColumns}
         onEndReachedThreshold={0.7}
@@ -172,11 +183,11 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
                 skip: products.length,
               },
             }).then((fetchMoreResult: any) => {
-              setProductCount(products.length + fetchMoreResult?.data?.brand?.products?.length)
+              setProductCount(products.length + fetchMoreResult?.data?.brand?.products?.edges?.length)
             })
           }
         }}
-        renderItem={({ item }, i) => <ProductGridItem product={item} addLeftSpacing={i % numColumns !== 0} />}
+        renderItem={({ item }, i) => <ProductGridItem product={item?.node} addLeftSpacing={i % numColumns !== 0} />}
         onLayout={(e) => {
           if (!flatListHeight) {
             setFlatListHeight(e.nativeEvent.layout.height)
@@ -188,7 +199,18 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
         }}
       />
     )
-  }, [products, flatListHeight, readMoreExpanded, setReadMoreExpanded, snapPoints, initialSnapPoint, metaData])
+  }, [
+    products,
+    flatListHeight,
+    readMoreExpanded,
+    setReadMoreExpanded,
+    snapPoints,
+    initialSnapPoint,
+    metaData,
+    aggregateCount,
+    fetchMore,
+    setProductCount,
+  ])
 
   return <>{content}</>
 }
