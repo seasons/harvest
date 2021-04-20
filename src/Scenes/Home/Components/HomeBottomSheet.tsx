@@ -100,19 +100,14 @@ const sectionsFrom = (data: any, navigation) => {
   if (data?.justAddedBottoms?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
   }
-  if (data?.launch?.length > 0) {
+  if (data?.featuredCollections?.length > 0) {
     sections.push({
       type: SectionType.FeaturedCollections,
       results: data?.featuredCollections,
       title: "Featured collections",
     })
   }
-  if (data?.launches?.length > 0) {
-    sections.push({
-      type: SectionType.LaunchCalendar,
-      results: data?.launches,
-    })
-  }
+
   if (data?.collections?.length > 0) {
     sections.push(
       ...data?.collections
@@ -151,8 +146,15 @@ const sectionsFrom = (data: any, navigation) => {
         description:
           "Great clothes are great clothes and we believe the past still lends itself to dressing for the now. What archive items lack in newness, they make up for by way of history. Through the Seasons archival section, we hope to add unique history and vibrance to our catalog, made possible by yesterday’s clothes.\n\nHere you’ll find garments celebrating historic eras of fashion, music, film, media and beyond. From 80s concert merchandise to early 2000s runway pieces, the archive section encompasses a unique field of textile designs, production styles and comfortable wear that can bring style and biography to any outfit or wardrobe.",
       },
-      title: "Just added archival",
+      title: "Just added vintage",
       results: data?.archivalProducts,
+    })
+  }
+
+  if (data?.launches?.length > 0) {
+    sections.push({
+      type: SectionType.LaunchCalendar,
+      results: data?.launches,
     })
   }
 

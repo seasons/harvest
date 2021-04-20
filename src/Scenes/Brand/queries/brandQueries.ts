@@ -13,30 +13,39 @@ export const GET_BRAND = gql`
         id
         url
       }
-      products(first: $first, skip: $skip, orderBy: $orderBy, where: { status: Available }) {
-        id
-        slug
-        name
-        description
-        images(size: Thumb) {
-          id
-          url
+      productsAggregate: productsConnection(where: { status: Available }) {
+        aggregate {
+          count
         }
-        modelHeight
-        externalURL
-        retailPrice
-        status
-        createdAt
-        updatedAt
-        variants {
-          id
-          displayShort
-          displayLong
-          total
-          reservable
-          nonReservable
-          reserved
-          isSaved
+      }
+      products: productsConnection(first: $first, skip: $skip, orderBy: $orderBy, where: { status: Available }) {
+        edges {
+          node {
+            id
+            slug
+            name
+            description
+            images(size: Thumb) {
+              id
+              url
+            }
+            modelHeight
+            externalURL
+            retailPrice
+            status
+            createdAt
+            updatedAt
+            variants {
+              id
+              displayShort
+              displayLong
+              total
+              reservable
+              nonReservable
+              reserved
+              isSaved
+            }
+          }
         }
       }
     }

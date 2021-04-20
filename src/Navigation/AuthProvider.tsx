@@ -3,7 +3,6 @@ import { ErrorPopUp } from "App/Navigation/ErrorPopUp"
 import { PopUpProvider } from "App/Navigation/ErrorPopUp/PopUpProvider"
 import { NotificationsProvider } from "App/Notifications"
 import { getUserSession, userSessionToIdentifyPayload } from "App/utils/auth"
-import gql from "graphql-tag"
 import React, { useEffect, useImperativeHandle } from "react"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 
@@ -15,6 +14,7 @@ import analytics from "@segment/analytics-react-native"
 
 import AuthContext from "./AuthContext"
 import { ModalAndMainScreens } from "./Stacks"
+import { GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -106,21 +106,16 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         await AsyncStorage.removeItem("beamsData")
         RNPusherPushNotifications.clearAllState()
         apolloClient.resetStore()
-        apolloClient.writeQuery({
-          query: gql`
-            query ResetLocalCache {
-              localBagItems {
-                productID
-                variantID
-              }
-            }
-          `,
-          data: {
-            localBagItems: [],
-          },
-        })
         analytics.reset()
         dispatch({ type: "SIGN_OUT" })
+        setTimeout(() => {
+          apolloClient.writeQuery({
+            query: GET_LOCAL_BAG,
+            data: {
+              localBagItems: [],
+            },
+          })
+        }, 2000)
       },
       resetStore: () => {
         apolloClient.resetStore()

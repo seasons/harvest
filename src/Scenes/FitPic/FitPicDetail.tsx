@@ -8,7 +8,7 @@ import { DateTime } from "luxon"
 import React, { useState } from "react"
 import { Dimensions, Linking } from "react-native"
 import FastImage from "react-native-fast-image"
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
+import { ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler"
 import { SharedElement } from "react-navigation-shared-element"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 import styled from "styled-components"
@@ -105,43 +105,41 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
     const imageURL = product?.images?.[0]?.url
     return (
       <Box key={product.id}>
-        <Separator />
-        <Flex pl={2} pr={1} py={1} flexDirection="row">
-          <Flex py={1} flexDirection="column" justifyContent="space-between">
-            <Flex>
-              <Sans size="3">{product.brand.name}</Sans>
-              <Sans size="3" color="black50">
-                {product.name}
-              </Sans>
-              {isSignedIn && !product.isSaved && (
-                <TouchableOpacity onPress={() => onSaveForLater(product)}>
-                  <Sans mt={2} size="3" style={{ textDecorationLine: "underline" }}>
-                    Save for later
-                  </Sans>
-                </TouchableOpacity>
+        <Box px={2}>
+          <Separator />
+        </Box>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            onViewProduct(product)
+          }}
+        >
+          <Flex px={2} py={1} flexDirection="row">
+            <Flex flexDirection="column" justifyContent="space-between">
+              <Flex>
+                <Sans size="3">{product.brand.name}</Sans>
+                <Sans size="3" color="black50" style={{ maxWidth: screenWidth - 190 }}>
+                  {product.name}
+                </Sans>
+                {isSignedIn && !product.isSaved && (
+                  <TouchableOpacity onPress={() => onSaveForLater(product)}>
+                    <Sans mt={2} size="3" style={{ textDecorationLine: "underline" }}>
+                      Save for later
+                    </Sans>
+                  </TouchableOpacity>
+                )}
+              </Flex>
+            </Flex>
+            <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
+              {!!imageURL && (
+                <FadeInImage
+                  style={{ height: 144 * PRODUCT_ASPECT_RATIO, width: 144 }}
+                  resizeMode="contain"
+                  source={{ uri: imageURL }}
+                />
               )}
             </Flex>
-            <Button
-              mt={1}
-              onPress={() => {
-                onViewProduct(product)
-              }}
-              variant="secondaryWhite"
-              size="small"
-            >
-              View
-            </Button>
           </Flex>
-          <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
-            {!!imageURL && (
-              <FadeInImage
-                style={{ height: 144 * PRODUCT_ASPECT_RATIO, width: 144 }}
-                resizeMode="contain"
-                source={{ uri: imageURL }}
-              />
-            )}
-          </Flex>
-        </Flex>
+        </TouchableWithoutFeedback>
       </Box>
     )
   }
@@ -186,7 +184,9 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
                   return renderItem(item)
                 })}
               </Box>
-              <Separator mb={6} />
+              <Box px={2}>
+                <Separator mb={6} />
+              </Box>
             </>
           )}
         </Flex>
