@@ -360,21 +360,24 @@ export const BagTab: React.FC<{
           <Spacer mb={3} />
         </>
       )}
-      {isSignedIn && !isPaused && (
-        <>
-          <BagCardButton
-            Icon={SurpriseMe}
-            title="Surprise me"
-            caption="Discover styles in your size"
-            onPress={() => {
-              navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
-            }}
-          />
-          <Spacer mb={3} />
-          <Separator />
-          <Spacer mb={3} />
-        </>
-      )}
+      {
+        // FIXME: Add this back when the query is optimized
+        isSignedIn && !isPaused && false && (
+          <>
+            <BagCardButton
+              Icon={SurpriseMe}
+              title="Surprise me"
+              caption="Discover styles in your size"
+              onPress={() => {
+                navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
+              }}
+            />
+            <Spacer mb={3} />
+            <Separator />
+            <Spacer mb={3} />
+          </>
+        )
+      }
 
       {!isPaused && (
         <BagCardButton
