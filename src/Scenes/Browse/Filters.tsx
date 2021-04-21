@@ -236,7 +236,7 @@ export const Filters = screenTrack()((props: any) => {
                   <Flex justifyContent="flex-start" flexWrap="nowrap" flexDirection="row">
                     <Radio selected={selected} pointerEvents="none" />
                     <Spacer mr={1} />
-                    <Sans size="5" style={{ textDecorationLine: "underline" }}>
+                    <Sans size="4" style={{ textDecorationLine: "underline" }}>
                       {designer.name}
                     </Sans>
                   </Flex>

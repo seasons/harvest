@@ -5,7 +5,7 @@ import { Spinner } from "App/Components/Spinner"
 import { color } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { FlatList, StatusBar, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 import { BrowseEmptyState } from "./BrowseEmptyState"
@@ -15,6 +15,7 @@ import { GetBrowseProducts } from "App/generated/GetBrowseProducts"
 import { Sans, Spacer } from "@seasons/eclipse"
 import { BrowseFilters, EMPTY_BROWSE_FILTERS } from "./Filters"
 import { GET_BROWSE_PRODUCTS } from "./queries/browseQueries"
+import { useScrollToTop } from "@react-navigation/native"
 
 const PAGE_LENGTH = 10
 
@@ -28,6 +29,9 @@ export const Browse = screenTrack()((props: any) => {
   const [currentCategory, setCurrentCategory] = useState(routeCategorySlug)
   const routeCategoryIdx = categoryItems.findIndex(({ slug }) => slug === routeCategorySlug)
   const tracking = useTracking()
+  const scrollViewEl = useRef(null)
+
+  useScrollToTop(scrollViewEl)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -44,7 +48,7 @@ export const Browse = screenTrack()((props: any) => {
       setCurrentCategory(routeCategorySlug)
     }
     if (scrollViewEl) {
-      scrollViewEl.scrollToOffset({ offset: 0, animated: true })
+      scrollViewEl?.current?.scrollToOffset({ offset: 0, animated: true })
     }
   }, [routeCategorySlug])
 
@@ -74,7 +78,6 @@ export const Browse = screenTrack()((props: any) => {
     }
   }, [data])
 
-  let scrollViewEl = null
   const filtersButtonHeight = 36
   const numFiltersSelected = [...filters.topSizeFilters, ...filters.bottomSizeFilters, ...filters.designerFilters]
     .length
@@ -91,7 +94,7 @@ export const Browse = screenTrack()((props: any) => {
     if (item.slug !== currentCategory) {
       setCurrentCategory(item.slug)
     }
-    scrollViewEl.scrollToOffset({ offset: 0, animated: true })
+    scrollViewEl?.current?.scrollToOffset({ offset: 0, animated: true })
   }
 
   const onFilterBtnPress = () => {
@@ -143,7 +146,7 @@ export const Browse = screenTrack()((props: any) => {
               <BrowseEmptyState setCurrentCategory={setCurrentCategory} setFilters={setFilters} />
             )}
             data={edges}
-            ref={(ref) => (scrollViewEl = ref)}
+            ref={scrollViewEl}
             keyExtractor={(item, index) => item?.node?.id + index}
             renderItem={({ item }, index) => {
               const node = item?.node
