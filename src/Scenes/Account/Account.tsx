@@ -28,6 +28,7 @@ import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
 import { WaitlistedCTA, AuthorizedCTA } from "@seasons/eclipse"
+import { useScrollToTop } from "@react-navigation/native"
 
 export const GET_USER = gql`
   query GetUser {
@@ -86,8 +87,10 @@ export const GET_USER = gql`
 export const Account = screenTrack()(({ navigation }) => {
   const { authState, signOut } = useAuthContext()
   const { previousData, data = previousData, refetch } = useQuery(GET_USER)
-
+  const scrollViewRef = React.useRef(null)
   const tracking = useTracking()
+
+  useScrollToTop(scrollViewRef)
 
   useEffect(() => {
     const unsubscribe = navigation?.addListener("focus", () => {
@@ -351,7 +354,7 @@ export const Account = screenTrack()(({ navigation }) => {
   return (
     <Container insetsBottom={false}>
       <Animatable.View animation="fadeIn" duration={300}>
-        <ScrollView>
+        <ScrollView ref={scrollViewRef}>
           <Box px={2} py={4}>
             {!!firstName && !!lastName ? (
               <Sans size="7" color="black100">

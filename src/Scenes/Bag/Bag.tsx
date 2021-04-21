@@ -1,4 +1,4 @@
-import { useFocusEffect } from "@react-navigation/native"
+import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
 import { Box, Button, Spacer } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 import { Loader } from "App/Components/Loader"
@@ -12,7 +12,7 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useMutation, useQuery } from "@apollo/client"
 import { FlatList, RefreshControl, StatusBar, View } from "react-native"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
@@ -33,6 +33,7 @@ export const Bag = screenTrack()((props) => {
   const [itemCount, setItemCount] = useState(DEFAULT_ITEM_COUNT)
   const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
+  const flatListRef = useRef(null)
   const { bottomSheetBackdropIsVisible } = useBottomSheetContext()
   const tracking = useTracking()
 
@@ -40,6 +41,8 @@ export const Bag = screenTrack()((props) => {
   const routeTab = route?.params?.tab
   const isSignedIn = authState.isSignedIn
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+
+  useScrollToTop(flatListRef)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -338,6 +341,7 @@ export const Bag = screenTrack()((props) => {
           renderItem={(item) => {
             return renderItem(item)
           }}
+          ref={flatListRef}
           ListFooterComponent={() => <Spacer pb={80} />}
         />
         {isBagView && pauseStatus !== "paused" && !hasActiveReservation && (
