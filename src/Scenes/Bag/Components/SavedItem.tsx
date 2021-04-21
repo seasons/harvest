@@ -75,6 +75,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
     variables: {
       id: variantToUse.id,
     },
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
         query: GET_BAG,

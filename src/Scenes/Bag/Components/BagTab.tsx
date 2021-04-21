@@ -185,7 +185,6 @@ export const BagTab: React.FC<{
   }
 
   let returnReminder
-  console.log("data", data)
   if (
     hasActiveReservation &&
     me?.customer?.membership?.plan?.tier === "Essential" &&

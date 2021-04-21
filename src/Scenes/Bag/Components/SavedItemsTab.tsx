@@ -67,6 +67,7 @@ const ItemRow = ({ bagItem, navigation, deleteBagItem, bagIsFull, hasActiveReser
             name: "all",
             first: 10,
             skip: 0,
+            categoryName: "all",
             orderBy: "publishedAt_DESC",
             sizes: [],
           },

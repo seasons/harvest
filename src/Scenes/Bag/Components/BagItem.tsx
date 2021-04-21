@@ -140,6 +140,7 @@ export const BagItem: React.FC<BagItemProps> = ({
           id: variantId,
           saved: false,
         },
+        awaitRefetchQueries: true,
         refetchQueries: [
           {
             query: GET_BAG,
@@ -156,6 +157,7 @@ export const BagItem: React.FC<BagItemProps> = ({
             query: GET_BROWSE_PRODUCTS,
             variables: {
               name: "all",
+              categoryName: "all",
               first: 10,
               skip: 0,
               orderBy: "publishedAt_DESC",
