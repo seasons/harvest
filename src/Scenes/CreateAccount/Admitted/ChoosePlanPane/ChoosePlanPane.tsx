@@ -25,8 +25,8 @@ import { PopUp } from "App/Components/PopUp"
 import { themeProps } from "App/Components/Theme"
 import { calcFinalPrice } from "./utils"
 import { GET_USER } from "App/Scenes/Account/Account"
-import { Spinner } from "App/Components/Spinner"
 import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMethods"
+import { OverlaySpinner } from "App/Components/OverlaySpinner"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout($planID: String!, $token: StripeToken!, $tokenType: String, $couponID: String) {
@@ -445,13 +445,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       <PopUp show={openPopUp}>
         <PaymentMethods onApplePay={onApplePay} onCreditCard={onAddCreditCard} setOpenPopUp={setOpenPopUp} />
       </PopUp>
-      {showLoadingOverlay && (
-        <Overlay>
-          <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
-            <Spinner />
-          </Flex>
-        </Overlay>
-      )}
+      {showLoadingOverlay && <OverlaySpinner />}
     </>
   )
 }
@@ -475,14 +469,4 @@ const setCoupon = (appliedCoupon: Coupon, returnedCoupon): Coupon => {
 
 const ColoredButton = styled(Button)`
   background-color: ${(p: any) => p.backgroundColor};
-`
-
-const Overlay = styled(Box)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  z-index: 200;
 `
