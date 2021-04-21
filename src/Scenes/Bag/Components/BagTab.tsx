@@ -44,6 +44,8 @@ export const BagTab: React.FC<{
   const me = data?.me
   const activeReservation = me?.activeReservation
   const hasActiveReservation = !!activeReservation
+  const membership = me?.customer?.membership
+  const subscription = membership?.subscription
 
   const [getLocalBag, { data: localItems }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
     variables: {
@@ -183,6 +185,7 @@ export const BagTab: React.FC<{
   }
 
   let returnReminder
+  console.log("data", data)
   if (
     hasActiveReservation &&
     me?.customer?.membership?.plan?.tier === "Essential" &&
@@ -196,7 +199,7 @@ export const BagTab: React.FC<{
   const isPaused = pauseStatus === "paused"
   const pauseType = pauseRequest?.pauseType
   const withOrWithoutDisplay = pauseType === "WithoutItems" ? "without items" : "with items"
-  const pausedWithoutItmes = isPaused && pauseType === "WithoutItems"
+  const pausedWithoutItems = isPaused && pauseType === "WithoutItems"
 
   return (
     <Box>
@@ -217,7 +220,7 @@ export const BagTab: React.FC<{
             View FAQ
           </Sans>
         </Flex>
-        {((hasActiveReservation && !!returnReminder) || !hasActiveReservation) && !pausedWithoutItmes && (
+        {((hasActiveReservation && !!returnReminder) || !hasActiveReservation) && !pausedWithoutItems && (
           <Sans size="4" color="black50">
             {hasActiveReservation && !!returnReminder ? returnReminder : "Reserve your order below"}
           </Sans>
@@ -293,9 +296,9 @@ export const BagTab: React.FC<{
         </>
       )}
       <Separator />
-      {hasActiveReservation && <DeliveryStatus activeReservation={activeReservation} />}
+      {hasActiveReservation && <DeliveryStatus me={me} />}
       {paddedItems?.map((bagItem, index) => {
-        if (pausedWithoutItmes) {
+        if (pausedWithoutItems) {
           return null
         }
         const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
@@ -332,7 +335,7 @@ export const BagTab: React.FC<{
         )
       })}
       <Spacer mb={3} />
-      {!pausedWithoutItmes && <Separator />}
+      {!pausedWithoutItems && <Separator />}
       <Spacer mb={3} />
       {!hasActiveReservation && itemCount && itemCount < 3 && !isPaused && (
         <>

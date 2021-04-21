@@ -6,21 +6,85 @@ import { TouchableWithoutFeedback } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
 import { DateTime } from "luxon"
-import { GetBagAndSavedItems_me_activeReservation } from "App/generated/GetBagAndSavedItems"
+import { GetBagAndSavedItems_me } from "App/generated/GetBagAndSavedItems"
+import gql from "graphql-tag"
+
+export const DeliveryStatusFragment_Query = gql`
+  fragment DeliveryStatusFragment_Query on Query {
+    me {
+      id
+      activeReservation {
+        id
+        status
+        createdAt
+        updatedAt
+        returnedPackage {
+          id
+          shippingLabel {
+            id
+            trackingURL
+          }
+        }
+        sentPackage {
+          id
+          shippingLabel {
+            id
+            trackingURL
+          }
+        }
+      }
+      customer {
+        id
+        membership {
+          subscription {
+            id
+            currentTermStart
+            currentTermEnd
+          }
+        }
+      }
+    }
+  }
+`
 
 export const DeliveryStatus: React.FC<{
-  activeReservation: GetBagAndSavedItems_me_activeReservation
-}> = ({ activeReservation }) => {
+  me: GetBagAndSavedItems_me
+}> = ({ me }) => {
+  const activeReservation = me?.activeReservation
+  const subscription = me?.customer?.membership?.subscription
+
   const navigation = useNavigation()
   const status = activeReservation?.status
   const updatedMoreThan24HoursAgo = DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
-  const hideComponent = status === "Delivered" && updatedMoreThan24HoursAgo
+  const atHome = status === "Delivered" && updatedMoreThan24HoursAgo
 
   const sentPackageTrackingURL = activeReservation?.sentPackage?.shippingLabel?.trackingURL
   const returnedPackageTrackingURL = activeReservation?.returnedPackage?.shippingLabel?.trackingURL
 
-  if (hideComponent) {
-    return null
+  const reservationCreationDate = activeReservation?.createdAt
+  const currentTermStart = subscription?.currentTermStart
+
+  const currentTermEndDateTime = DateTime.fromISO(subscription?.currentTermEnd)
+  const nextSwapDate = currentTermEndDateTime.plus({ day: 1 })
+
+  let atHomeText
+  if (reservationCreationDate < currentTermStart) {
+    atHomeText = "You have a swap available"
+  } else {
+    atHomeText = `You get a free swap ${nextSwapDate.weekdayLong}, ${nextSwapDate.monthLong} ${nextSwapDate.day}`
+  }
+
+  if (atHome) {
+    return (
+      <Box>
+        <Box px={2} pt={3}>
+          <Sans size="5">At home</Sans>
+          <Sans size="4" color="black50">
+            {atHomeText}
+          </Sans>
+        </Box>
+      </Box>
+    )
   }
 
   let step
