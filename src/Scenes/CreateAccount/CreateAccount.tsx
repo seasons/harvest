@@ -70,8 +70,19 @@ export const GET_PLANS = gql`
       customer {
         id
         status
+        detail {
+          id
+          shippingAddress {
+            id
+            city
+            state
+            zipCode
+          }
+        }
         user {
           id
+          firstName
+          lastName
         }
         membership {
           id
@@ -275,6 +286,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             onRequestBack={() => {
               setPrevState()
             }}
+            customer={data?.me?.customer}
             plan={selectedPlan}
             onSubmit={() => {
               setNextState()

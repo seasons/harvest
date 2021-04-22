@@ -1,5 +1,5 @@
 import { Box, Button, CloseButton, Container, Flex, Sans, Separator, Spacer, Toggle } from "App/Components"
-import { GetPlans_paymentPlans } from "App/generated/GetPlans"
+import { GetPlans_me_customer, GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { isWholeNumber } from "App/helpers/validation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { StatePickerPopUp } from "App/Scenes/Account/EditShippingAddress/StatePickerPopup"
@@ -7,7 +7,7 @@ import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { color } from "App/utils/color"
 import { BackArrowIcon } from "Assets/icons"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Dimensions, Keyboard, KeyboardAvoidingView, ScrollView, TouchableOpacity } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
@@ -24,6 +24,7 @@ const windowDimensions = Dimensions.get("window")
 
 interface CreditCardFormPaneProps {
   plan: GetPlans_paymentPlans
+  customer: GetPlans_me_customer
   onSubmit: () => void
   onRequestBack: () => void
   coupon: Coupon
@@ -36,19 +37,21 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
   plan,
   onRequestBack,
   coupon,
+  customer,
 }) => {
+  console.log("customer", customer)
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
-  const [billingName, setBillingName] = useState("")
-  const [shippingName, setShippingName] = useState("")
 
+  const [billingName, setBillingName] = useState("")
   const [billingAddress1, setBillingAddress1] = useState("")
   const [billingAddress2, setBillingAddress2] = useState("")
   const [billingZipCode, setBillingZipCode] = useState("")
   const [billingCity, setBillingCity] = useState("")
   const [billingState, setBillingState] = useState("")
 
+  const [shippingName, setShippingName] = useState("")
   const [shippingAddress1, setShippingAddress1] = useState("")
   const [shippingAddress2, setShippingAddress2] = useState("")
   const [shippingZipCode, setShippingZipCode] = useState("")
@@ -63,6 +66,27 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
   const [isBillingStatePickerVisible, setIsBillingStatePickerVisible] = useState(false)
   const [isShippingStatePickerVisible, setIsShippingStatePickerVisible] = useState(false)
   const [sameAsShipping, setSameAsShipping] = useState(true)
+
+  useEffect(() => {
+    if (customer) {
+      const userFirstName = customer?.user?.firstName
+      const userLastName = customer?.user?.lastName
+      const initialShippingAddress = customer?.detail?.shippingAddress
+
+      if (!shippingName && !!userLastName && !!userFirstName) {
+        setShippingName(`${userFirstName} ${userLastName}`)
+      }
+      if (!shippingZipCode && initialShippingAddress) {
+        setShippingZipCode(initialShippingAddress?.zipCode)
+      }
+      if (!shippingCity && initialShippingAddress) {
+        setShippingCity(initialShippingAddress?.city)
+      }
+      if (!shippingState && initialShippingAddress) {
+        setShippingState(initialShippingAddress?.state)
+      }
+    }
+  }, [customer])
 
   const [paymentCheckout] = useMutation(PAYMENT_CHECKOUT, {
     onCompleted: () => {
