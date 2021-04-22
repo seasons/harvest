@@ -209,7 +209,7 @@ export const Filters = screenTrack()((props: any) => {
     } else {
       return (
         <>
-          {item.data.map((designer) => {
+          {item?.data?.map((designer) => {
             const selected = filters.designerFilters.includes(designer.slug)
             return (
               <Flex pl={2} pr={6} flexDirection="column" key={designer.id}>
