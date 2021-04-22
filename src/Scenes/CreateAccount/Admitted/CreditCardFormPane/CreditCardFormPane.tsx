@@ -39,7 +39,6 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
   coupon,
   customer,
 }) => {
-  console.log("customer", customer)
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
