@@ -17,7 +17,6 @@ import {
   GetBagAndSavedItems_me_bag_productVariant_product_variants,
 } from "App/generated/GetBagAndSavedItems"
 import { ListCheck } from "Assets/svgs/ListCheck"
-import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 import { UPSERT_RESTOCK_NOTIF } from "App/Scenes/Product/Product"
 
 interface BagItemProps {
@@ -36,6 +35,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
   hasActiveReservation,
 }) => {
   const [isMutating, setIsMutating] = useState(false)
+  const [upsertingRestockNotif, setIsUpsertingRestockNotif] = useState(false)
   const [addingToBag, setAddingToBag] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
@@ -50,24 +50,21 @@ export const SavedItem: React.FC<BagItemProps> = ({
       variantID: variantToUse.id,
       shouldNotify: !hasRestockNotification,
     },
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
-        query: GET_PRODUCT,
-        variables: {
-          where: {
-            id: product.id,
-            slug: product.slug,
-          },
-        },
+        query: GET_BAG,
       },
     ],
     onCompleted: () => {
+      setIsUpsertingRestockNotif(false)
       setIsMutating(false)
     },
     onError: (e) => {
       console.log("error", e)
       Sentry.captureException(JSON.stringify(e))
       setIsMutating(false)
+      setIsUpsertingRestockNotif(false)
     },
   })
 
@@ -135,6 +132,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
 
   const onNotifyMe = () => {
     if (!isMutating) {
+      setIsUpsertingRestockNotif(true)
       setIsMutating(true)
       upsertRestockNotification()
       tracking.trackEvent({
@@ -183,8 +181,8 @@ export const SavedItem: React.FC<BagItemProps> = ({
                 variant="secondaryWhite"
                 size="small"
                 Icon={!reservable && hasRestockNotification ? ListCheck : null}
-                disabled={isMutating || addingToBag}
-                loading={addingToBag}
+                disabled={isMutating || addingToBag || upsertingRestockNotif}
+                loading={addingToBag || upsertingRestockNotif}
               >
                 {reservable ? "Add to bag" : "Notify me"}
               </Button>
