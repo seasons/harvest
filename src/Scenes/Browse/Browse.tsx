@@ -165,7 +165,7 @@ export const Browse = screenTrack()((props: any) => {
               numColumns={numColumns}
               ListFooterComponent={() => (
                 <>
-                  {loading && (
+                  {!reachedEnd && (
                     <Flex style={{ height: 40 }} flexDirection="row" justifyContent="center">
                       <Spinner />
                     </Flex>
