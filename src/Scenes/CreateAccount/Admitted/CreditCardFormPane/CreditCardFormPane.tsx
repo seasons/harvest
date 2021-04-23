@@ -253,27 +253,6 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
               </Flex>
               <Spacer mb={4} />
               <Sans color="black100" size="4">
-                Payment information
-              </Sans>
-              <Spacer mb={2} />
-              <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start">
-                <Sans color="black50" size="3">
-                  Card number, Expiration date & CIV
-                </Sans>
-              </Flex>
-              <PaymentField
-                cursorColor={color("black50")}
-                textErrorColor={color("black50")}
-                placeholderColor={color("black50")}
-                numberPlaceholder="16 digits"
-                expirationPlaceholder="MM / YY"
-                cvcPlaceholder="3-digits"
-                disabled={isMutating}
-                onParamsChange={handleFieldParamsChange}
-              />
-              <Separator />
-              <Spacer mb={4} />
-              <Sans color="black100" size="4">
                 Shipping address
               </Sans>
               <Spacer mb={2} />
@@ -293,14 +272,37 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
                 </Sans>
                 <Toggle onChange={(newValue) => setSameAsShipping(newValue)} selected={sameAsShipping} />
               </Flex>
-              <Spacer mb={3} />
               {!sameAsShipping && (
-                <CreditCardFormAddressFields
-                  address={billingAddress}
-                  setAddress={setBillingAddress}
-                  setIsStatePickerVisible={setIsBillingStatePickerVisible}
-                />
+                <>
+                  <Spacer mb={3} />
+                  <CreditCardFormAddressFields
+                    address={billingAddress}
+                    setAddress={setBillingAddress}
+                    setIsStatePickerVisible={setIsBillingStatePickerVisible}
+                  />
+                </>
               )}
+              <Spacer mb={4} />
+              <Sans color="black100" size="4">
+                Payment information
+              </Sans>
+              <Spacer mb={2} />
+              <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start">
+                <Sans color="black50" size="3">
+                  Card number, Expiration date & CIV
+                </Sans>
+              </Flex>
+              <PaymentField
+                cursorColor={color("black50")}
+                textErrorColor={color("black50")}
+                placeholderColor={color("black50")}
+                numberPlaceholder="16 digits"
+                expirationPlaceholder="MM / YY"
+                cvcPlaceholder="3-digits"
+                disabled={isMutating}
+                onParamsChange={handleFieldParamsChange}
+              />
+              <Separator />
             </Box>
             <Spacer pb={160} />
           </ScrollView>
