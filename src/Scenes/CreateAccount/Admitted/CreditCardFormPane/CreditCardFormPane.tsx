@@ -39,23 +39,20 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
   coupon,
   customer,
 }) => {
+  const addressInitialState = {
+    name: "",
+    address1: "",
+    address2: "",
+    zipCode: "",
+    city: "",
+    state: "",
+  }
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
 
-  const [billingName, setBillingName] = useState("")
-  const [billingAddress1, setBillingAddress1] = useState("")
-  const [billingAddress2, setBillingAddress2] = useState("")
-  const [billingZipCode, setBillingZipCode] = useState("")
-  const [billingCity, setBillingCity] = useState("")
-  const [billingState, setBillingState] = useState("")
-
-  const [shippingName, setShippingName] = useState("")
-  const [shippingAddress1, setShippingAddress1] = useState("")
-  const [shippingAddress2, setShippingAddress2] = useState("")
-  const [shippingZipCode, setShippingZipCode] = useState("")
-  const [shippingCity, setShippingCity] = useState("")
-  const [shippingState, setShippingState] = useState("")
+  const [billingAddress, setBillingAddress] = useState(addressInitialState)
+  const [shippingAddress, setShippingAddress] = useState(addressInitialState)
 
   const [cardNumber, setCardNumber] = useState("")
   const [expMonth, setExpMonth] = useState("")
@@ -72,18 +69,16 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
       const userLastName = customer?.user?.lastName
       const initialShippingAddress = customer?.detail?.shippingAddress
 
-      if (!shippingName && !!userLastName && !!userFirstName) {
-        setShippingName(`${userFirstName} ${userLastName}`)
+      if (!shippingAddress.name && ((!!userLastName && !!userFirstName) || initialShippingAddress)) {
+        setShippingAddress({
+          ...shippingAddress,
+          name: !!userFirstName && !!userLastName ? `${userFirstName} ${userLastName}` : "",
+          zipCode: initialShippingAddress?.zipCode || "",
+          city: initialShippingAddress?.city || "",
+          state: initialShippingAddress?.state || "",
+        })
       }
-      if (!shippingZipCode && initialShippingAddress) {
-        setShippingZipCode(initialShippingAddress?.zipCode)
-      }
-      if (!shippingCity && initialShippingAddress) {
-        setShippingCity(initialShippingAddress?.city)
-      }
-      if (!shippingState && initialShippingAddress) {
-        setShippingState(initialShippingAddress?.state)
-      }
+      console.log("shippingAddress", shippingAddress)
     }
   }, [customer])
 
@@ -145,12 +140,12 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
       expYear,
       cvc,
       // optional
-      name: sameAsShipping ? shippingName : billingName,
-      addressLine1: sameAsShipping ? shippingAddress1 : billingAddress1,
-      addressLine2: sameAsShipping ? shippingAddress2 : billingAddress2,
-      addressCity: sameAsShipping ? shippingCity : billingCity,
-      addressState: sameAsShipping ? shippingState : billingState,
-      addressZip: sameAsShipping ? shippingZipCode : billingZipCode,
+      name: sameAsShipping ? shippingAddress.name : billingAddress.name,
+      addressLine1: sameAsShipping ? shippingAddress.address1 : billingAddress.address1,
+      addressLine2: sameAsShipping ? shippingAddress.address2 : billingAddress.address2,
+      addressCity: sameAsShipping ? shippingAddress.city : billingAddress.city,
+      addressState: sameAsShipping ? shippingAddress.state : billingAddress.state,
+      addressZip: sameAsShipping ? shippingAddress.zipCode : billingAddress.zipCode,
     }
     try {
       const token = await stripe.createTokenWithCard(params)
@@ -160,14 +155,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
           token,
           tokenType: "card",
           couponID: coupon?.couponCode,
-          shipping: {
-            name: shippingName,
-            address1: shippingAddress1,
-            address2: shippingAddress2,
-            city: shippingCity,
-            state: shippingState,
-            zipCode: shippingZipCode,
-          },
+          shipping: shippingAddress,
         },
         awaitRefetchQueries: true,
       })
@@ -188,25 +176,22 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
 
   const creditCardComplete = cardNumber.length === 16 && cvc.length === 3 && expMonth && expYear
   const shippingComplete =
-    !!shippingName &&
-    !!shippingAddress1 &&
-    !!shippingZipCode &&
-    isWholeNumber(shippingZipCode) &&
-    !!shippingState &&
-    !!shippingCity
+    !!shippingAddress.name &&
+    !!shippingAddress.address1 &&
+    !!shippingAddress.zipCode &&
+    isWholeNumber(shippingAddress.zipCode) &&
+    !!shippingAddress.state &&
+    !!shippingAddress.city
   const billingComplete =
-    (!!billingName &&
-      !!billingAddress1 &&
-      !!billingZipCode &&
-      isWholeNumber(billingZipCode) &&
-      !!billingState &&
-      !!billingCity) ||
+    (!!billingAddress.name &&
+      !!billingAddress.address1 &&
+      !!billingAddress.zipCode &&
+      isWholeNumber(billingAddress.zipCode) &&
+      !!billingAddress.state &&
+      !!billingAddress.city) ||
     sameAsShipping
 
   const disabled = !billingComplete || !shippingComplete || !creditCardComplete
-
-  console.log("disabled", disabled)
-  console.log("shippingComplete", shippingComplete)
 
   const description = plan?.description.split("\n")?.[0]
   const originalPrice = plan?.price
@@ -294,18 +279,9 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
               </Sans>
               <Spacer mb={2} />
               <CreditCardFormAddressFields
-                name={shippingName}
-                setName={setShippingName}
-                address1={shippingAddress1}
-                setAddress1={setShippingAddress1}
-                address2={shippingAddress2}
-                setAddress2={setShippingAddress2}
-                city={shippingCity}
-                setCity={setShippingCity}
-                state={shippingState}
+                address={shippingAddress}
+                setAddress={setShippingAddress}
                 setIsStatePickerVisible={setIsShippingStatePickerVisible}
-                zipCode={shippingZipCode}
-                setZipCode={setShippingZipCode}
               />
               <Spacer mb={4} />
               <Sans color="black100" size="4">
@@ -321,18 +297,9 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
               <Spacer mb={3} />
               {!sameAsShipping && (
                 <CreditCardFormAddressFields
-                  name={billingName}
-                  setName={setBillingName}
-                  address1={billingAddress1}
-                  setAddress1={setBillingAddress1}
-                  address2={billingAddress2}
-                  setAddress2={setBillingAddress2}
-                  city={billingCity}
-                  setCity={setBillingCity}
-                  state={billingState}
+                  address={billingAddress}
+                  setAddress={setBillingAddress}
                   setIsStatePickerVisible={setIsBillingStatePickerVisible}
-                  zipCode={billingZipCode}
-                  setZipCode={setBillingZipCode}
                 />
               )}
             </Box>
@@ -363,9 +330,11 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
         </KeyboardAvoidingView>
 
         <StatePickerPopUp
-          initialState={isBillingStatePickerVisible ? billingState : shippingState}
+          initialState={isBillingStatePickerVisible ? billingAddress.state : shippingAddress.state}
           onRequestClose={(state) => {
-            isBillingStatePickerVisible ? setBillingState(state) : setShippingState(state)
+            isBillingStatePickerVisible
+              ? setBillingAddress({ ...billingAddress, state })
+              : setShippingAddress({ ...shippingAddress, state })
             setIsShippingStatePickerVisible(false)
             setIsBillingStatePickerVisible(false)
           }}

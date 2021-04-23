@@ -1,76 +1,63 @@
 import React from "react"
-import { FakeTextInput, Flex, Sans, Spacer, TextInput } from "App/Components"
+import { FakeTextInput, Flex, Spacer, TextInput } from "App/Components"
 
-interface Props {
+interface Address {
   name: string
-  setName: (x: string) => void
   address1: string
-  setAddress1: (x: string) => void
   address2: string
-  setAddress2: (x: string) => void
   city: string
-  setCity: (x: string) => void
   state: string
-  setIsStatePickerVisible: (x: boolean) => void
   zipCode: string
-  setZipCode: (x: string) => void
 }
 
-export const CreditCardFormAddressFields: React.FC<Props> = ({
-  name,
-  setName,
-  address1,
-  setAddress1,
-  address2,
-  setAddress2,
-  city,
-  setCity,
-  state,
-  setIsStatePickerVisible,
-  zipCode,
-  setZipCode,
-}) => {
+interface Props {
+  address: Address
+  setAddress: (x: Address) => void
+  setIsStatePickerVisible: (x: boolean) => void
+}
+
+export const CreditCardFormAddressFields: React.FC<Props> = ({ setIsStatePickerVisible, address, setAddress }) => {
   return (
     <>
       <TextInput
         autoFocus={false}
         autoCapitalize="words"
-        currentValue={name}
+        currentValue={address.name}
         headerText="Name"
-        onChangeText={(_, val) => setName(val)}
+        onChangeText={(_, val) => setAddress({ ...address, name: val })}
       />
       <Spacer mb={3} />
       <TextInput
         autoFocus={false}
         autoCapitalize="words"
-        currentValue={address1}
+        currentValue={address.address1}
         headerText="Address 1"
-        onChangeText={(_, val) => setAddress1(val)}
+        onChangeText={(_, val) => setAddress({ ...address, address1: val })}
       />
       <Spacer mb={3} />
       <Flex flexDirection="row">
         <TextInput
           autoFocus={false}
           autoCapitalize="words"
-          currentValue={address2}
+          currentValue={address.address2}
           headerText="Address 2"
-          onChangeText={(_, val) => setAddress2(val)}
+          onChangeText={(_, val) => setAddress({ ...address, address2: val })}
           style={{ flex: 1 }}
         />
         <Spacer width={9} />
         <TextInput
           autoFocus={false}
           autoCapitalize="words"
-          currentValue={city}
+          currentValue={address.city}
           headerText="City"
-          onChangeText={(_, val) => setCity(val)}
+          onChangeText={(_, val) => setAddress({ ...address, city: val })}
           style={{ flex: 1 }}
         />
       </Flex>
       <Spacer mb={3} />
       <Flex flexDirection="row">
         <FakeTextInput
-          currentValue={state}
+          currentValue={address.state}
           headerText="State"
           onPress={() => {
             setIsStatePickerVisible(true)
@@ -80,10 +67,10 @@ export const CreditCardFormAddressFields: React.FC<Props> = ({
         <Spacer width={9} />
         <TextInput
           autoFocus={false}
-          currentValue={zipCode}
+          currentValue={address.zipCode}
           headerText="ZIP"
           keyboardType="number-pad"
-          onChangeText={(_, val) => setZipCode(val)}
+          onChangeText={(_, val) => setAddress({ ...address, zipCode: val })}
           style={{ flex: 1 }}
         />
       </Flex>
