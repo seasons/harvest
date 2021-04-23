@@ -314,7 +314,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp, 
             <Spacer mb={3} />
             <Box>
               <Sans size="3" color={color("black50")}>
-                {howDidYouFindOutAboutUsView?.title || "How did you hear about us?"}
+                {howDidYouFindOutAboutUsView?.title} (optional)
               </Sans>
               <Spacer mb={1} />
             </Box>
