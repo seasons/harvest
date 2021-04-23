@@ -29,8 +29,14 @@ import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMet
 import { OverlaySpinner } from "App/Components/OverlaySpinner"
 
 export const PAYMENT_CHECKOUT = gql`
-  mutation ApplePayCheckout($planID: String!, $token: StripeToken!, $tokenType: String, $couponID: String) {
-    applePayCheckout(planID: $planID, token: $token, tokenType: $tokenType, couponID: $couponID)
+  mutation ApplePayCheckout(
+    $planID: String!
+    $token: StripeToken!
+    $tokenType: String
+    $couponID: String
+    $shipping: JSON
+  ) {
+    applePayCheckout(planID: $planID, token: $token, tokenType: $tokenType, couponID: $couponID, shipping: $shipping)
   }
 `
 
