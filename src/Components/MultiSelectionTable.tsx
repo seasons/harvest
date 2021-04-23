@@ -12,6 +12,8 @@ interface MultiSelectionTableProps {
   onTap?: (item: Item, index: number) => void
   selectedItems: any[]
   style?: ViewStyle
+  itemHeight?: number
+  itemWidth?: number
 }
 
 export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({
@@ -19,9 +21,9 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({
   items,
   onTap,
   selectedItems,
+  itemHeight = 60,
+  itemWidth = 60,
 }) => {
-  const itemHeight = 60
-
   const _items =
     items?.map((item) => ({
       isSelected: selectedItems?.includes(item.value),
@@ -46,12 +48,12 @@ export const MultiSelectionTable: React.FC<MultiSelectionTableProps> = ({
     return (
       <Box p="2px">
         <TouchableOpacity disabled={disabled} onPress={() => onTap?.(item, index)} key={index}>
-          <Flex height={itemHeight} width={itemHeight} justifyContent="center" alignItems="center">
+          <Flex height={itemHeight} width={itemWidth} justifyContent="center" alignItems="center">
             <Flex
               justifyContent="center"
               alignItems="center"
               height={itemHeight}
-              width={itemHeight}
+              width={itemWidth}
               style={[
                 {
                   backgroundColor: color(isSelected ? "black04" : "white100"),

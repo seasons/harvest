@@ -9,13 +9,16 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
+import { useMutation, useQuery } from "@apollo/client"
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import AsyncStorage from "@react-native-community/async-storage"
 
 import { WebviewModal } from "./WebviewModal"
+import { BoxPicker } from "../GetMeasurementsPane/BoxPicker"
+import { color } from "App/utils"
+import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
 
 const SIGN_UP = gql`
   mutation SignUp($email: String!, $password: String!, $firstName: String!, $lastName: String!, $zipCode: String!) {
@@ -70,6 +73,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const [password, setPassword] = useState("")
   const [passwordConfirmation, setPasswordConfirmation] = useState("")
   const [zipCode, setZipCode] = useState("")
+  const [discoveryReferences, setDiscoveryReferences] = useState([])
 
   const validateForm = () => {
     setIsFormValid(
@@ -217,7 +221,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             keyboardDismissMode="interactive"
             keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}
-            style={{ paddingTop: 85, paddingHorizontal: 16, overflow: "visible" }}
+            style={{ paddingTop: 75, paddingHorizontal: 16, overflow: "visible" }}
             ref={scrollViewRef}
           >
             <Sans color="black100" size="7">
@@ -227,7 +231,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             <Sans color="black50" size="4">
               You'll use this to sign into the app, choose your plan, and manage your membership.
             </Sans>
-            <Spacer mb={5} />
+            <Spacer mb={4} />
             <Flex flexDirection="row">
               <TextInput
                 autoCapitalize="words"
@@ -253,7 +257,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
                 variant="light"
               />
             </Flex>
-            <Spacer mb={4} />
+            <Spacer mb={3} />
             <TextInput
               autoCompleteType="email"
               headerText="Email"
@@ -263,7 +267,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               textContentType="emailAddress"
               variant="light"
             />
-            <Spacer mb={4} />
+            <Spacer mb={3} />
             <TextInput
               autoCompleteType="password"
               headerText="Password"
@@ -278,7 +282,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               Your password must be at least 8 characters long, include at least one uppercase letter, one lowercase
               letter, & one number.
             </Sans>
-            <Spacer mb={4} />
+            <Spacer mb={3} />
             <TextInput
               autoCompleteType="password"
               headerText="Confirm Password"
@@ -288,7 +292,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               textContentType="password"
               variant="light"
             />
-            <Spacer mb={4} />
+            <Spacer mb={3} />
             <TextInput
               autoCompleteType="postal-code"
               currentValue={zipCode}
@@ -298,6 +302,39 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               onFocus={() => onFocusTextInput(5)}
               textContentType="postalCode"
               variant="light"
+            />
+            <Spacer mb={3} />
+            <Box>
+              <Sans size="3" color={color("black50")}>
+                How did you hear about us?
+              </Sans>
+              <Spacer mb={1} />
+            </Box>
+            <Spacer mb={1} />
+            <MultiSelectionTable
+              items={[
+                { label: "Friend", value: "friend" },
+                { label: "Press article", value: "pressArticle" },
+                { label: "Blog", value: "blog" },
+                { label: "Instagram", value: "instagram" },
+                { label: "Google", value: "google" },
+                { label: "Podcast", value: "podcast" },
+                { label: "Throwing Fits", value: "throwingFits" },
+                { label: "Lean Luxe", value: "leanLuxe" },
+                { label: "Threadability", value: "threadability" },
+                { label: "One Dapper Street", value: "onedapperstreet" },
+                { label: "Other", value: "other" },
+              ]}
+              onTap={(item) => {
+                // Essentially makes it a single select
+                if (discoveryReferences.length === 1 && discoveryReferences.includes(item.value)) {
+                  setDiscoveryReferences([])
+                } else {
+                  setDiscoveryReferences([item.value])
+                }
+              }}
+              selectedItems={discoveryReferences}
+              itemWidth={120}
             />
             <Spacer height={92} />
           </ScrollView>
