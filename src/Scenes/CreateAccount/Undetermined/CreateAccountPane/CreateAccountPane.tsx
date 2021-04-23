@@ -16,18 +16,24 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import AsyncStorage from "@react-native-community/async-storage"
 
 import { WebviewModal } from "./WebviewModal"
-import { BoxPicker } from "../GetMeasurementsPane/BoxPicker"
 import { color } from "App/utils"
 import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
 
 const SIGN_UP = gql`
-  mutation SignUp($email: String!, $password: String!, $firstName: String!, $lastName: String!, $zipCode: String!) {
+  mutation SignUp(
+    $email: String!
+    $password: String!
+    $firstName: String!
+    $lastName: String!
+    $zipCode: String!
+    $discoveryReference: String
+  ) {
     signup(
       email: $email
       password: $password
       firstName: $firstName
       lastName: $lastName
-      details: { shippingAddress: { create: { zipCode: $zipCode } } }
+      details: { shippingAddress: { create: { zipCode: $zipCode } }, discoveryReference: $discoveryReference }
     ) {
       user {
         id
@@ -61,9 +67,10 @@ const SIGN_UP = gql`
 
 interface CreateAccountPaneProps {
   onSignUp: () => void
+  howDidYouFindOutAboutUsView: any
 }
 
-export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }) => {
+export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp, howDidYouFindOutAboutUsView }) => {
   const tracking = useTracking()
 
   // Hooks
@@ -185,6 +192,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         zipCode,
+        discoveryReference: discoveryReferences?.[0] || "",
       },
     })
     if (result?.data) {
@@ -306,25 +314,13 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             <Spacer mb={3} />
             <Box>
               <Sans size="3" color={color("black50")}>
-                How did you hear about us?
+                {howDidYouFindOutAboutUsView?.title || "How did you hear about us?"}
               </Sans>
               <Spacer mb={1} />
             </Box>
             <Spacer mb={1} />
             <MultiSelectionTable
-              items={[
-                { label: "Friend", value: "friend" },
-                { label: "Press article", value: "pressArticle" },
-                { label: "Blog", value: "blog" },
-                { label: "Instagram", value: "instagram" },
-                { label: "Google", value: "google" },
-                { label: "Podcast", value: "podcast" },
-                { label: "Throwing Fits", value: "throwingFits" },
-                { label: "Lean Luxe", value: "leanLuxe" },
-                { label: "Threadability", value: "threadability" },
-                { label: "One Dapper Street", value: "onedapperstreet" },
-                { label: "Other", value: "other" },
-              ]}
+              items={howDidYouFindOutAboutUsView?.properties?.options}
               onTap={(item) => {
                 // Essentially makes it a single select
                 if (discoveryReferences.length === 1 && discoveryReferences.includes(item.value)) {
