@@ -78,7 +78,6 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
           state: initialShippingAddress?.state || "",
         })
       }
-      console.log("shippingAddress", shippingAddress)
     }
   }, [customer])
 
