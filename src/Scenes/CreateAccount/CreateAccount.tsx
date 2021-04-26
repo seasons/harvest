@@ -143,7 +143,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       where: { status: "active" },
     },
   })
-  console.log(data)
   const plans = data?.paymentPlans
   const howDidYouFindOutAboutUsView = data?.howDidYouFindOutAboutUs
 
