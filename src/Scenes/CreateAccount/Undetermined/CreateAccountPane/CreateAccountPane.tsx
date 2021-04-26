@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 import { WebviewModal } from "./WebviewModal"
 import { color } from "App/utils"
 import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
+import { BoxPicker } from "../GetMeasurementsPane/BoxPicker"
 
 const SIGN_UP = gql`
   mutation SignUp(
@@ -80,7 +81,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp, 
   const [password, setPassword] = useState("")
   const [passwordConfirmation, setPasswordConfirmation] = useState("")
   const [zipCode, setZipCode] = useState("")
-  const [discoveryReferences, setDiscoveryReferences] = useState([])
+  const [discoveryReference, setDiscoveryReference] = useState({ label: "", value: "" })
 
   const validateForm = () => {
     setIsFormValid(
@@ -192,7 +193,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp, 
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         zipCode,
-        discoveryReference: discoveryReferences?.[0] || "",
+        discoveryReference: discoveryReference.value || "",
       },
     })
     if (result?.data) {
@@ -220,6 +221,20 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp, 
   }
 
   // Render
+  const discoveryReferenceBackupOptions = [
+    { label: "Friend", value: "friend" },
+    { label: "Press article", value: "pressArticle" },
+    { label: "Blog", value: "blog" },
+    { label: "Instagram", value: "instagram" },
+    { label: "Google", value: "google" },
+    { label: "Podcast", value: "podcast" },
+    { label: "Throwing Fits", value: "throwingFits" },
+    { label: "Lean Luxe", value: "leanLuxe" },
+    { label: "Threadability", value: "threadability" },
+    { label: "One Dapper Street", value: "onedapperstreet" },
+    { label: "Other", value: "other" },
+  ]
+  const discoveryReferenceBackupTitle = "How did you hear about us"
   return (
     <>
       <CloseButton variant="light" />
@@ -314,23 +329,15 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp, 
             <Spacer mb={3} />
             <Box>
               <Sans size="3" color={color("black50")}>
-                {howDidYouFindOutAboutUsView?.title} (optional)
+                {howDidYouFindOutAboutUsView?.title || discoveryReferenceBackupTitle} (optional)
               </Sans>
-              <Spacer mb={1} />
             </Box>
-            <Spacer mb={1} />
-            <MultiSelectionTable
-              items={howDidYouFindOutAboutUsView?.properties?.options}
-              onTap={(item) => {
-                // Essentially makes it a single select
-                if (discoveryReferences.length === 1 && discoveryReferences.includes(item.value)) {
-                  setDiscoveryReferences([])
-                } else {
-                  setDiscoveryReferences([item.value])
-                }
-              }}
-              selectedItems={discoveryReferences}
-              itemWidth={120}
+            <BoxPicker
+              onChange={(item) => setDiscoveryReference(item)}
+              title={howDidYouFindOutAboutUsView?.title || discoveryReferenceBackupTitle}
+              currentItem={discoveryReference}
+              items={howDidYouFindOutAboutUsView?.properties?.options || discoveryReferenceBackupOptions}
+              style="linePicker"
             />
             <Spacer height={92} />
           </ScrollView>
