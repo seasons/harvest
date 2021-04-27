@@ -15,6 +15,7 @@ export interface BoxPickerProps {
   title: string
   items: Item[]
   width?: number | string
+  style?: "default" | "linePicker"
 }
 
 export const BoxPicker: React.FC<BoxPickerProps> = ({
@@ -25,22 +26,25 @@ export const BoxPicker: React.FC<BoxPickerProps> = ({
   title,
   items,
   width,
+  style = "default",
 }) => {
   const [showPopUp, setShowPopUp] = useState(false)
   const currentItemIndex = currentItem ? items.findIndex((item) => item.value === currentItem.value) || 0 : 0
   const [spinnerIndex, setSpinnerIndex] = useState(currentItemIndex)
 
+  let boxStyle = { borderRadius: 4, flex: width ? 0 : 1, borderColor: color("black10") } as any
+  if (style === "default") {
+    boxStyle = { ...boxStyle, borderWidth: 1, padding: 12 }
+  } else if (style === "linePicker") {
+    boxStyle = { ...boxStyle, borderBottomWidth: 1 }
+  }
   return (
     <Box>
-      <TouchableOpacity onPress={() => setShowPopUp(true)}>
-        <Box
-          height={height}
-          width={width}
-          style={{ borderColor: color("black10"), borderWidth: 1, flex: width ? 0 : 1, padding: 12, borderRadius: 4 }}
-        >
+      <TouchableOpacity onPress={() => setShowPopUp(true)} style={{ padding: 0 }}>
+        <Box height={height} width={width} style={boxStyle}>
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center" style={{ flex: 1 }}>
             <Sans size="4">{currentItem?.label || "Select"}</Sans>
-            <DownChevronIcon scale={1.2} color="black50" />
+            <DownChevronIcon scale={1.2} color="black10" />
           </Flex>
         </Box>
       </TouchableOpacity>

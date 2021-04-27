@@ -115,6 +115,13 @@ export const GET_PLANS = gql`
         }
       }
     }
+    howDidYouFindOutAboutUs: view(viewID: "HowDidYouFindOutAboutUs") {
+      id
+      title
+      caption
+      type
+      properties
+    }
   }
 `
 
@@ -148,6 +155,8 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
     },
   })
   const plans = data?.paymentPlans
+  const howDidYouFindOutAboutUsView = data?.howDidYouFindOutAboutUs
+
   const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const [coupon, setCoupon] = useState({
     discountAmount: 0,
@@ -213,6 +222,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             onSignUp={() => {
               setNextState()
             }}
+            howDidYouFindOutAboutUsView={howDidYouFindOutAboutUsView}
           />
         )
         break
