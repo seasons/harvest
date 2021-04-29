@@ -338,6 +338,9 @@ export const Bag = screenTrack()((props) => {
                 } else if (page === 1) {
                   return TrackSchema.ActionNames.SavedTabTapped
                 } else {
+                  if (!reservationTabData) {
+                    getReservationTab()
+                  }
                   return TrackSchema.ActionNames.ReservationHistoryTabTapped
                 }
               })(),

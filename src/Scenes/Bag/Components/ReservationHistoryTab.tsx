@@ -1,4 +1,4 @@
-import { Box, Separator, Flex } from "App/Components"
+import { Box, Separator, Flex, Spacer } from "App/Components"
 import React from "react"
 import { ReservationHistoryItem, ReservationHistoryItemFragment_Reservation } from "./ReservationHistoryItem"
 import { BagEmptyState } from "./BagEmptyState"
@@ -6,6 +6,8 @@ import { BagView } from "../Bag"
 import { color } from "App/utils"
 import { gql } from "@apollo/client"
 import { Loader } from "App/Components/Loader"
+import { Dimensions } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export const ReservationHistoryTabFragment_Customer = gql`
   fragment ReservationHistoryTabFragment_Customer on Customer {
@@ -17,9 +19,26 @@ export const ReservationHistoryTabFragment_Customer = gql`
   ${ReservationHistoryItemFragment_Reservation}
 `
 
+const { height } = Dimensions.get("window")
+
 export const ReservationHistoryTab: React.FC<{ items; loading: boolean }> = ({ items, loading }) => {
-  if (loading || true) {
-    return <Loader />
+  const insets = useSafeAreaInsets()
+
+  const wrapperHeight = height - insets.top - 140
+
+  if (loading) {
+    return (
+      <Flex
+        height={wrapperHeight}
+        width="100%"
+        justifyContent="center"
+        alignItems="center"
+        flexDirection="column"
+        style={{ backgroundColor: "red" }}
+      >
+        <Loader />
+      </Flex>
+    )
   }
 
   return (

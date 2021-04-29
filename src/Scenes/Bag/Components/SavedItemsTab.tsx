@@ -119,6 +119,8 @@ export const SavedItemsTab: React.FC<{ items; deleteBagItem; hasActiveReservatio
   bagIsFull,
 }) => {
   const navigation = useNavigation()
+  const insets = useSafeAreaInsets()
+  const wrapperHeight = height - insets.top - 140
 
   return (
     <Box>

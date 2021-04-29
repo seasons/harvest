@@ -8,12 +8,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 export const BagEmptyState: React.FC<{ currentView: BagView }> = ({ currentView }) => {
   const insets = useSafeAreaInsets()
   const { height } = Dimensions.get("window")
-  const rowHeight = height - 140 - insets.top
+  const wrapperHeight = height - 140 - insets.top
   const title = currentView === BagView.Saved ? "Nothing saved" : "No history"
   const text =
     currentView === BagView.Saved ? "You haven’t saved any items." : "You haven't placed any reservations yet."
   return (
-    <Box p={2} style={{ height: rowHeight }}>
+    <Box p={2} style={{ height: wrapperHeight }}>
       <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center" flexDirection="column">
         <Box>
           <Sans size="4" style={{ textAlign: "center" }}>

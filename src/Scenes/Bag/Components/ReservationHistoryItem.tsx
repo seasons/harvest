@@ -7,7 +7,7 @@ import styled from "styled-components/native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useNavigation } from "@react-navigation/native"
 import { gql } from "@apollo/client"
-import { PRODUCT_ASPECT_RATIO } from "@seasons/eclipse/src/helpers"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 
 export const ReservationHistoryItemFragment_Reservation = gql`
   fragment ReservationHistoryItemFragment_Reservation on Reservation {
