@@ -3,6 +3,7 @@ import { BagItemFragment } from "./Components/BagItem"
 import { BagTabHeaderFragment_Query } from "./Components/BagTabHeader"
 import { DeliveryStatusFragment_Me } from "./Components/DeliveryStatus"
 import { ReservationHistoryTabFragment_Customer } from "./Components/ReservationHistoryTab"
+import { SavedItemsTabFragment_Me } from "./Components/SavedItemsTab"
 
 export const CHECK_ITEMS = gql`
   mutation CheckItemsAvailability($items: [ID!]!) {
@@ -31,6 +32,16 @@ export const GET_LOCAL_BAG_ITEMS = gql`
     }
   }
   ${BagItemFragment}
+`
+
+export const SavedTab_Query = gql`
+  query SavedTab_Query {
+    me {
+      id
+      ...SavedItemsTabFragment_Me
+    }
+  }
+  ${SavedItemsTabFragment_Me}
 `
 
 export const ReservationHistoryTab_Query = gql`
@@ -116,14 +127,6 @@ export const GET_BAG = gql`
         productVariant {
           id
           purchased
-          ...BagItemProductVariant
-        }
-      }
-      savedItems {
-        id
-        saved
-        productVariant {
-          id
           ...BagItemProductVariant
         }
       }

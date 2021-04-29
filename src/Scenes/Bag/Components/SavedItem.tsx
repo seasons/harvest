@@ -7,15 +7,11 @@ import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import React, { useState } from "react"
-import { useMutation } from "@apollo/client"
+import { gql, useMutation } from "@apollo/client"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import * as Sentry from "@sentry/react-native"
-import { ADD_TO_BAG, GET_BAG } from "../BagQueries"
-import {
-  GetBagAndSavedItems_me_bag_productVariant_product,
-  GetBagAndSavedItems_me_bag_productVariant_product_variants,
-} from "App/generated/GetBagAndSavedItems"
+import { ADD_TO_BAG, GET_BAG, SavedTab_Query } from "../BagQueries"
 import { ListCheck } from "Assets/svgs/ListCheck"
 import { UPSERT_RESTOCK_NOTIF } from "App/Scenes/Product/Product"
 
@@ -23,37 +19,59 @@ interface BagItemProps {
   bagIsFull: boolean
   hasActiveReservation: boolean
   navigation?: any
-  product: GetBagAndSavedItems_me_bag_productVariant_product
-  variantToUse: GetBagAndSavedItems_me_bag_productVariant_product_variants
+  bagItem: any
 }
 
-export const SavedItem: React.FC<BagItemProps> = ({
-  bagIsFull,
-  variantToUse,
-  product,
-  navigation,
-  hasActiveReservation,
-}) => {
+export const SavedItemFragment_BagItem = gql`
+  fragment SavedItemFragment_BagItem on BagItem {
+    id
+    saved
+    productVariant {
+      id
+      reservable
+      displayLong
+      hasRestockNotification
+      product {
+        id
+        slug
+        name
+        brand {
+          id
+          name
+        }
+        images(size: Thumb) {
+          id
+          url
+        }
+      }
+    }
+  }
+`
+
+export const SavedItem: React.FC<BagItemProps> = ({ bagIsFull, bagItem, navigation, hasActiveReservation }) => {
   const [isMutating, setIsMutating] = useState(false)
   const [upsertingRestockNotif, setIsUpsertingRestockNotif] = useState(false)
   const [addingToBag, setAddingToBag] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const tracking = useTracking()
 
+  const variant = bagItem?.productVariant
+  const product = variant?.product
+
   const imageURL = product?.images?.[0]?.url || ""
-  const variantSize = variantToUse?.displayLong?.toLowerCase()
-  const reservable = variantToUse?.reservable > 0
-  const hasRestockNotification = variantToUse?.hasRestockNotification
+  const variantSize = variant?.displayLong?.toLowerCase()
+  const reservable = variant?.reservable > 0
+  const hasRestockNotification = variant?.hasRestockNotification
 
   const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
     variables: {
-      variantID: variantToUse.id,
+      variantID: variant.id,
       shouldNotify: !hasRestockNotification,
     },
     awaitRefetchQueries: true,
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: SavedTab_Query,
       },
     ],
     onCompleted: () => {
@@ -70,12 +88,15 @@ export const SavedItem: React.FC<BagItemProps> = ({
 
   const [addToBag] = useMutation(ADD_TO_BAG, {
     variables: {
-      id: variantToUse.id,
+      id: variant.id,
     },
     awaitRefetchQueries: true,
     refetchQueries: [
       {
         query: GET_BAG,
+      },
+      {
+        query: SavedTab_Query,
       },
     ],
     onCompleted: () => {
@@ -125,7 +146,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
         actionType: Schema.ActionTypes.Tap,
         productSlug: product.slug,
         productId: product.id,
-        variantId: variantToUse.id,
+        variantId: variant.id,
       })
     }
   }
@@ -140,7 +161,7 @@ export const SavedItem: React.FC<BagItemProps> = ({
         actionType: Schema.ActionTypes.Tap,
         productSlug: product.slug,
         productId: product.id,
-        variantId: variantToUse.id,
+        variantId: variant.id,
         shouldNotify: !hasRestockNotification,
       })
     }

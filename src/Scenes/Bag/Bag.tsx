@@ -23,6 +23,7 @@ import {
   REMOVE_FROM_BAG,
   REMOVE_FROM_BAG_AND_SAVE_ITEM,
   ReservationHistoryTab_Query,
+  SavedTab_Query,
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
@@ -51,9 +52,19 @@ export const Bag = screenTrack()((props) => {
 
   useScrollToTop(flatListRef)
 
-  const [getReservationTab, { data: reservationTabData, loading: loadingReservationTab }] = useLazyQuery(
-    ReservationHistoryTab_Query
-  )
+  const [
+    getReservationTab,
+    {
+      previousData: previousReservationTabData,
+      data: reservationTabData = previousReservationTabData,
+      loading: loadingReservationTab,
+    },
+  ] = useLazyQuery(ReservationHistoryTab_Query)
+
+  const [
+    getSavedTab,
+    { previousData: previousSavedTabData, data: savedTabData = previousSavedTabData, loading: loadingSavedTab },
+  ] = useLazyQuery(SavedTab_Query)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -79,54 +90,16 @@ export const Bag = screenTrack()((props) => {
       setIsLoading(false)
       const userId = me?.customer?.user?.id
       if (!!userId) {
-        const savedItems = me?.savedItems?.length || 0
+        const savedItems = savedTabData?.me?.savedItems?.length || 0
         const baggedItems = me?.bag?.length || 0
         analytics.identify(userId, { bagItems: savedItems + baggedItems })
       }
     }
   }, [data, setIsLoading, setItemCount])
 
-  const [deleteBagItem] = useMutation(REMOVE_FROM_BAG, {
-    update(cache, { data }) {
-      // Note: This mutation is being called in BagItem.tsx and has it's variables and refetchQueries listed there
-      const { me, paymentPlans } = cache.readQuery({ query: GET_BAG })
-      const key = currentView === BagView.Bag ? "bag" : "savedItems"
-      const list = me[key]
-      const filteredList = list.filter((a) => a.id !== data.removeFromBag.id)
-      cache.writeQuery({
-        query: GET_BAG,
-        data: {
-          me: {
-            ...me,
-            [key]: filteredList,
-          },
-          paymentPlans,
-        },
-      })
-    },
-  })
+  const [deleteBagItem] = useMutation(REMOVE_FROM_BAG)
 
-  const [removeFromBagAndSaveItem] = useMutation(REMOVE_FROM_BAG_AND_SAVE_ITEM, {
-    update(cache, { data }) {
-      const { me } = cache.readQuery({ query: GET_BAG })
-      const old = currentView === BagView.Bag ? "bag" : "savedItems"
-      const newKey = currentView === BagView.Bag ? "savedItems" : "bag"
-      const list = me[old]
-      const filteredList = list.filter((a) => a.id !== data.removeFromBag.id)
-      const item = list.find((a) => a.id === data.removeFromBag.id)
-
-      cache.writeQuery({
-        query: GET_BAG,
-        data: {
-          me: {
-            ...me,
-            [old]: filteredList,
-            [newKey]: me[newKey].concat(item),
-          },
-        },
-      })
-    },
-  })
+  const [removeFromBagAndSaveItem] = useMutation(REMOVE_FROM_BAG_AND_SAVE_ITEM)
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS, {
     onCompleted: (res) => {
@@ -182,12 +155,7 @@ export const Bag = screenTrack()((props) => {
         productID: item.productVariant.product.id,
       })) || []
 
-  const savedItems =
-    me?.savedItems?.map((item) => ({
-      ...item,
-      variantID: item.productVariant.id,
-      productID: item.productVariant.product.id,
-    })) || []
+  const savedItems = savedTabData?.me?.savedItems
 
   const bagItems = (itemCount && assign(fill(new Array(itemCount), { variantID: "", productID: "" }), items)) || []
   const hasActiveReservation = !!me?.activeReservation
@@ -203,7 +171,6 @@ export const Bag = screenTrack()((props) => {
 
   const handleReserve = async (navigation) => {
     setMutating(true)
-    // try {
     if (!isSignedIn) {
       showPopUp({
         title: "Sign up to reserve your items",
@@ -307,10 +274,11 @@ export const Bag = screenTrack()((props) => {
           bagIsFull={bagIsFull}
           hasActiveReservation={hasActiveReservation}
           deleteBagItem={deleteBagItem}
+          loading={loadingSavedTab && !savedTabData}
         />
       )
     } else {
-      return <ReservationHistoryTab items={item.data} loading={loadingReservationTab} />
+      return <ReservationHistoryTab items={item.data} loading={loadingReservationTab && !reservationTabData} />
     }
   }
 
@@ -336,6 +304,9 @@ export const Bag = screenTrack()((props) => {
                 if (page === 0) {
                   return TrackSchema.ActionNames.BagTabTapped
                 } else if (page === 1) {
+                  if (!savedTabData) {
+                    getSavedTab()
+                  }
                   return TrackSchema.ActionNames.SavedTabTapped
                 } else {
                   if (!reservationTabData) {

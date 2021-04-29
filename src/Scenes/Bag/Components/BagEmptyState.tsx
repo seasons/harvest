@@ -1,17 +1,16 @@
 import { Box, Flex, Sans, Spacer } from "App/Components"
 import { color } from "App/utils"
 import React from "react"
-import { Dimensions } from "react-native"
 import { BagView } from "../Bag"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-export const BagEmptyState: React.FC<{ currentView: BagView }> = ({ currentView }) => {
-  const insets = useSafeAreaInsets()
-  const { height } = Dimensions.get("window")
-  const wrapperHeight = height - 140 - insets.top
+export const BagEmptyState: React.FC<{ currentView: BagView; wrapperHeight: number }> = ({
+  currentView,
+  wrapperHeight,
+}) => {
   const title = currentView === BagView.Saved ? "Nothing saved" : "No history"
   const text =
     currentView === BagView.Saved ? "You haven’t saved any items." : "You haven't placed any reservations yet."
+
   return (
     <Box p={2} style={{ height: wrapperHeight }}>
       <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center" flexDirection="column">

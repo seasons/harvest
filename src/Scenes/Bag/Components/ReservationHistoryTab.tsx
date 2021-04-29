@@ -23,19 +23,11 @@ const { height } = Dimensions.get("window")
 
 export const ReservationHistoryTab: React.FC<{ items; loading: boolean }> = ({ items, loading }) => {
   const insets = useSafeAreaInsets()
-
   const wrapperHeight = height - insets.top - 140
 
   if (loading) {
     return (
-      <Flex
-        height={wrapperHeight}
-        width="100%"
-        justifyContent="center"
-        alignItems="center"
-        flexDirection="column"
-        style={{ backgroundColor: "red" }}
-      >
+      <Flex height={wrapperHeight} width="100%" justifyContent="center" alignItems="center" flexDirection="column">
         <Loader />
       </Flex>
     )
@@ -53,7 +45,7 @@ export const ReservationHistoryTab: React.FC<{ items; loading: boolean }> = ({ i
           )
         })
       ) : (
-        <BagEmptyState currentView={BagView.History} />
+        <BagEmptyState currentView={BagView.History} wrapperHeight={wrapperHeight} />
       )}
     </Flex>
   )

@@ -8,7 +8,7 @@ export const VariantSizes: React.FC<{
   variants: Homepage_me_savedItems_productVariant_product_variants[]
   size: "2" | "4"
 }> = ({ variants, size }) => {
-  const availableVariants = variants.filter((a) => !!a?.displayShort)
+  const availableVariants = variants?.filter((a) => !!a?.displayShort)
 
   return (
     <Flex flexDirection="row">
