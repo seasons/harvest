@@ -5,8 +5,10 @@ import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
 import { Schema, screenTrack } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import { filter } from "graphql-anywhere"
 import gql from "graphql-tag"
 import { head } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
@@ -14,18 +16,20 @@ import { Animated, Dimensions, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
+
 import { useMutation, useQuery } from "@apollo/client"
+import {
+  ProductBuyCTA, ProductBuyCTA_ProductFragment, ProductBuyCTA_ProductVariantFragment
+} from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 import * as Sentry from "@sentry/react-native"
-import { ProductBuyCTA, ProductBuyCTA_ProductFragment, ProductBuyCTA_ProductVariantFragment } from "@seasons/eclipse"
-import { filter } from "graphql-anywhere"
+
 import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT } from "./Queries"
-import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
 
 const windowHeight = Dimensions.get("window").height
 const variantPickerHeight = windowHeight / 2.5 + 50
@@ -216,11 +220,6 @@ export const Product = screenTrack({
   }, [product])
 
   useEffect(() => {
-    if (data?.me) {
-      const baggedItems = data?.me?.bag?.length || 0
-      const savedItems = data?.me?.savedItems?.length || 0
-      analytics?.identify(data?.me?.customer?.user?.id, { bagItems: baggedItems + savedItems })
-    }
     if (data && !product) {
       showPopUp({
         title: "Oops!",
