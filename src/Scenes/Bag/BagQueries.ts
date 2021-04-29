@@ -1,5 +1,7 @@
 import gql from "graphql-tag"
 import { BagItemFragment } from "./Components/BagItem"
+import { BagTabHeaderFragment_Query } from "./Components/BagTabHeader"
+import { DeliveryStatusFragment_Me } from "./Components/DeliveryStatus"
 
 export const CHECK_ITEMS = gql`
   mutation CheckItemsAvailability($items: [ID!]!) {
@@ -66,6 +68,7 @@ export const GET_BAG = gql`
           subscription {
             id
             nextBillingAt
+            currentTermStart
           }
           plan {
             id
@@ -117,20 +120,6 @@ export const GET_BAG = gql`
         status
         phase
         updatedAt
-        returnedPackage {
-          id
-          shippingLabel {
-            id
-            trackingURL
-          }
-        }
-        sentPackage {
-          id
-          shippingLabel {
-            id
-            trackingURL
-          }
-        }
       }
       bag {
         id
@@ -151,8 +140,12 @@ export const GET_BAG = gql`
           ...BagItemProductVariant
         }
       }
+      ...DeliveryStatusFragment_Me
     }
+    ...BagTabHeaderFragment_Query
   }
+  ${BagTabHeaderFragment_Query}
+  ${DeliveryStatusFragment_Me}
   ${BagItemFragment}
 `
 

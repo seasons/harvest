@@ -209,7 +209,7 @@ export const Filters = screenTrack()((props: any) => {
     } else {
       return (
         <>
-          {item.data.map((designer) => {
+          {item?.data?.map((designer) => {
             const selected = filters.designerFilters.includes(designer.slug)
             return (
               <Flex pl={2} pr={6} flexDirection="column" key={designer.id}>
@@ -236,7 +236,7 @@ export const Filters = screenTrack()((props: any) => {
                   <Flex justifyContent="flex-start" flexWrap="nowrap" flexDirection="row">
                     <Radio selected={selected} pointerEvents="none" />
                     <Spacer mr={1} />
-                    <Sans size="5" style={{ textDecorationLine: "underline" }}>
+                    <Sans size="4" style={{ textDecorationLine: "underline" }}>
                       {designer.name}
                     </Sans>
                   </Flex>

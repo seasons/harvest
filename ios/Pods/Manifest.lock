@@ -286,16 +286,18 @@ PODS:
     - React-Core (= 0.63.4)
     - React-cxxreact (= 0.63.4)
     - React-jsi (= 0.63.4)
-  - RNAnalytics (1.1.0):
+  - RNAnalytics (1.4.3):
+    - Analytics
+    - React-Core
+  - RNAnalyticsIntegration-Google-Analytics (1.4.3):
     - Analytics
     - React
-  - RNAnalyticsIntegration-Google-Analytics (1.1.0):
-    - Analytics
-    - React
+    - RNAnalytics
     - Segment-GoogleAnalytics
-  - RNAnalyticsIntegration-Mixpanel (1.1.0):
+  - RNAnalyticsIntegration-Mixpanel (1.4.3):
     - Analytics
     - React
+    - RNAnalytics
     - Segment-Mixpanel
   - RNCAsyncStorage (1.12.0):
     - React
@@ -600,9 +602,9 @@ SPEC CHECKSUMS:
   React-RCTText: 5c51df3f08cb9dedc6e790161195d12bac06101c
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
-  RNAnalytics: 35a54cb740c472a0a6a3de765176b82cccc2d1ef
-  RNAnalyticsIntegration-Google-Analytics: b9ee84deb74d6ca72260c4f4544f74e0f936f1d8
-  RNAnalyticsIntegration-Mixpanel: b6189df6949ec6cab33cdb7b737f36ceb95f4de6
+  RNAnalytics: 43a09152058061b4096eb6cb806093e7b772b1e5
+  RNAnalyticsIntegration-Google-Analytics: 05a91fe4be4ccde40d60d9bb16861813372c52b6
+  RNAnalyticsIntegration-Mixpanel: b341159f6879c0f61ea47659e1872e6118e28381
   RNCAsyncStorage: 2a692bcb9b69b76a2f1a95f33db057129700af64
   RNCClipboard: c7abea1baea58adca5c1f29e56dd5261837b4892
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
@@ -629,4 +631,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9e0795e2eec9efefdbd7d26c303c64bb279abe13
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1

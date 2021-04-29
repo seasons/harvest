@@ -70,8 +70,19 @@ export const GET_PLANS = gql`
       customer {
         id
         status
+        detail {
+          id
+          shippingAddress {
+            id
+            city
+            state
+            zipCode
+          }
+        }
         user {
           id
+          firstName
+          lastName
         }
         membership {
           id
@@ -103,6 +114,13 @@ export const GET_PLANS = gql`
           text
         }
       }
+    }
+    howDidYouFindOutAboutUs: view(viewID: "HowDidYouFindOutAboutUs") {
+      id
+      title
+      caption
+      type
+      properties
     }
   }
 `
@@ -137,6 +155,8 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
     },
   })
   const plans = data?.paymentPlans
+  const howDidYouFindOutAboutUsView = data?.howDidYouFindOutAboutUs
+
   const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const [coupon, setCoupon] = useState({
     discountAmount: 0,
@@ -202,6 +222,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             onSignUp={() => {
               setNextState()
             }}
+            howDidYouFindOutAboutUsView={howDidYouFindOutAboutUsView}
           />
         )
         break
@@ -275,6 +296,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             onRequestBack={() => {
               setPrevState()
             }}
+            customer={data?.me?.customer}
             plan={selectedPlan}
             onSubmit={() => {
               setNextState()

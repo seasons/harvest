@@ -5,7 +5,7 @@ import { Spinner } from "App/Components/Spinner"
 import { color } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { FlatList, StatusBar, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 import { BrowseEmptyState } from "./BrowseEmptyState"
@@ -15,6 +15,7 @@ import { GetBrowseProducts } from "App/generated/GetBrowseProducts"
 import { Sans, Spacer } from "@seasons/eclipse"
 import { BrowseFilters, EMPTY_BROWSE_FILTERS } from "./Filters"
 import { GET_BROWSE_PRODUCTS } from "./queries/browseQueries"
+import { useScrollToTop } from "@react-navigation/native"
 
 const PAGE_LENGTH = 10
 
@@ -28,6 +29,9 @@ export const Browse = screenTrack()((props: any) => {
   const [currentCategory, setCurrentCategory] = useState(routeCategorySlug)
   const routeCategoryIdx = categoryItems.findIndex(({ slug }) => slug === routeCategorySlug)
   const tracking = useTracking()
+  const scrollViewEl = useRef(null)
+
+  useScrollToTop(scrollViewEl)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -44,7 +48,7 @@ export const Browse = screenTrack()((props: any) => {
       setCurrentCategory(routeCategorySlug)
     }
     if (scrollViewEl) {
-      scrollViewEl.scrollToOffset({ offset: 0, animated: true })
+      scrollViewEl?.current?.scrollToOffset({ offset: 0, animated: true })
     }
   }, [routeCategorySlug])
 
@@ -63,7 +67,7 @@ export const Browse = screenTrack()((props: any) => {
 
   const products = data?.productsConnection?.edges
   const designers = data?.brands
-  const categories = data && data.categories
+  const categories = data?.categories
 
   useEffect(() => {
     if (products) {
@@ -74,7 +78,6 @@ export const Browse = screenTrack()((props: any) => {
     }
   }, [data])
 
-  let scrollViewEl = null
   const filtersButtonHeight = 36
   const numFiltersSelected = [...filters.topSizeFilters, ...filters.bottomSizeFilters, ...filters.designerFilters]
     .length
@@ -89,9 +92,10 @@ export const Browse = screenTrack()((props: any) => {
       category: item.slug,
     })
     if (item.slug !== currentCategory) {
+      setProductCount(PAGE_LENGTH)
       setCurrentCategory(item.slug)
     }
-    scrollViewEl.scrollToOffset({ offset: 0, animated: true })
+    scrollViewEl?.current?.scrollToOffset({ offset: 0, animated: true })
   }
 
   const onFilterBtnPress = () => {
@@ -105,97 +109,99 @@ export const Browse = screenTrack()((props: any) => {
   const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
 
   return (
-    <Container insetsBottom={false}>
-      <Flex flexDirection="column" style={{ flex: 1 }}>
-        <Box style={{ flex: 1, flexGrow: 1 }}>
-          <Flex justifyContent="space-between" width="100%" flexWrap="nowrap" flexDirection="row" alignItems="center">
-            <TouchableOpacity
-              onPress={() => {
-                setFilters({
-                  ...filters,
-                  availableOnly: !filters.availableOnly,
-                })
-              }}
-            >
-              <Flex flexWrap="nowrap" flexDirection="row" alignItems="center" px="12px" py="6px">
-                <SelectBox active={filters.availableOnly} />
-                <Spacer mr={1} />
-                <Sans size="4">Available now</Sans>
-              </Flex>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onFilterBtnPress}>
-              <Flex px="12px" py="6px">
-                <Sans size="4" style={{ textDecorationLine: "underline" }}>
-                  {filtersButtonText}
-                </Sans>
-              </Flex>
-            </TouchableOpacity>
-          </Flex>
-          <FlatList
-            contentContainerStyle={
-              products?.length
-                ? {
-                    paddingBottom: filtersButtonHeight,
-                  }
-                : { flex: 1 }
-            }
-            ListEmptyComponent={() => (
-              <BrowseEmptyState setCurrentCategory={setCurrentCategory} setFilters={setFilters} />
-            )}
-            data={edges}
-            ref={(ref) => (scrollViewEl = ref)}
-            keyExtractor={(item, index) => item?.node?.id + index}
-            renderItem={({ item }, index) => {
-              const node = item?.node
-              return (
-                <Box key={node?.id + index}>
-                  {node?.id ? (
-                    <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0} />
-                  ) : (
-                    <ProductGridItemSkeleton addLeftSpacing={index % numColumns !== 0} />
-                  )}
-                </Box>
-              )
-            }}
-            numColumns={numColumns}
-            ListFooterComponent={() => (
-              <>
-                {loading && (
-                  <Flex style={{ height: 40 }} flexDirection="row" justifyContent="center">
-                    <Spinner />
-                  </Flex>
-                )}
-              </>
-            )}
-            onEndReachedThreshold={0.7}
-            onEndReached={() => {
-              if (!loading && !reachedEnd && products?.length) {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.BrowsePagePaginated,
-                  actionType: Schema.ActionTypes.Swipe,
-                  pageNumber: Math.ceil(products.length / PAGE_LENGTH) + 1,
-                })
-                fetchMore({
-                  variables: {
-                    skip: products.length,
-                  },
-                }).then((fetchMoreResult: any) => {
-                  setProductCount(products.length + fetchMoreResult?.data?.productsConnection?.edges?.length)
-                })
+    <>
+      <Container insetsBottom={false}>
+        <Flex flexDirection="column" style={{ flex: 1 }}>
+          <Box style={{ flex: 1, flexGrow: 1 }}>
+            <Flex justifyContent="space-between" width="100%" flexWrap="nowrap" flexDirection="row" alignItems="center">
+              <TouchableOpacity
+                onPress={() => {
+                  setFilters({
+                    ...filters,
+                    availableOnly: !filters.availableOnly,
+                  })
+                }}
+              >
+                <Flex flexWrap="nowrap" flexDirection="row" alignItems="center" px="12px" py="6px">
+                  <SelectBox active={filters.availableOnly} />
+                  <Spacer mr={1} />
+                  <Sans size="4">Available now</Sans>
+                </Flex>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onFilterBtnPress}>
+                <Flex px="12px" py="6px">
+                  <Sans size="4" style={{ textDecorationLine: "underline" }}>
+                    {filtersButtonText}
+                  </Sans>
+                </Flex>
+              </TouchableOpacity>
+            </Flex>
+            <FlatList
+              contentContainerStyle={
+                products?.length
+                  ? {
+                      paddingBottom: filtersButtonHeight,
+                    }
+                  : { flex: 1 }
               }
-            }}
-          />
-        </Box>
-        <Box height={56}>
-          <CategoryPicker
-            items={categoryItems}
-            onCategoryPress={onCategoryPress}
-            currentCategory={currentCategory}
-            initialScrollIndex={routeCategoryIdx}
-          />
-        </Box>
-      </Flex>
-    </Container>
+              ListEmptyComponent={() => (
+                <BrowseEmptyState setCurrentCategory={setCurrentCategory} setFilters={setFilters} />
+              )}
+              data={edges}
+              ref={scrollViewEl}
+              keyExtractor={(item, index) => item?.node?.id + index}
+              renderItem={({ item }, index) => {
+                const node = item?.node
+                return (
+                  <Box key={node?.id + index}>
+                    {node?.id ? (
+                      <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0} />
+                    ) : (
+                      <ProductGridItemSkeleton addLeftSpacing={index % numColumns !== 0} />
+                    )}
+                  </Box>
+                )
+              }}
+              numColumns={numColumns}
+              ListFooterComponent={() => (
+                <>
+                  {!reachedEnd && (
+                    <Flex style={{ height: 40 }} flexDirection="row" justifyContent="center">
+                      <Spinner />
+                    </Flex>
+                  )}
+                </>
+              )}
+              onEndReachedThreshold={0.7}
+              onEndReached={() => {
+                if (!loading && !reachedEnd && products?.length) {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.BrowsePagePaginated,
+                    actionType: Schema.ActionTypes.Swipe,
+                    pageNumber: Math.ceil(products.length / PAGE_LENGTH) + 1,
+                  })
+                  fetchMore({
+                    variables: {
+                      skip: products.length,
+                    },
+                  }).then((fetchMoreResult: any) => {
+                    setProductCount(products.length + fetchMoreResult?.data?.productsConnection?.edges?.length)
+                  })
+                }
+              }}
+            />
+          </Box>
+          <Box height={56}>
+            <CategoryPicker
+              items={categoryItems}
+              onCategoryPress={onCategoryPress}
+              currentCategory={currentCategory}
+              initialScrollIndex={routeCategoryIdx}
+            />
+          </Box>
+        </Flex>
+      </Container>
+    </>
   )
 })
 
@@ -205,4 +211,14 @@ const SelectBox = styled(Box)<{ active: boolean }>`
   background-color: ${(p) => (p.active ? color("black100") : color("white100"))};
   border-width: 1;
   border-color: ${color("black100")};
+`
+
+const Overlay = styled(Box)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 200;
 `

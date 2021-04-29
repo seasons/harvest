@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native"
 import * as Sentry from "@sentry/react-native"
-import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
+import { Box, Sans, Separator, Spacer } from "App/Components"
 import { PauseStatus, REMOVE_SCHEDULED_PAUSE, RESUME_MEMBERSHIP } from "App/Components/Pause/PauseButtons"
 import { GetBagAndSavedItems } from "App/generated/GetBagAndSavedItems"
 import { Schema as NavigationSchema } from "App/Navigation"
@@ -8,7 +8,6 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { color } from "App/utils"
-import { Schema, useTracking } from "App/utils/track"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
 import { Schema as NavSchema } from "App/Navigation"
@@ -24,6 +23,7 @@ import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
 import { ProductBuyAlertTab, ProductBuyAlertTabType } from "@seasons/eclipse"
 import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
 import { UserState, State as CreateAccountState } from "App/Scenes/CreateAccount/CreateAccount"
+import { BagTabHeader } from "./BagTabHeader"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
@@ -39,7 +39,6 @@ export const BagTab: React.FC<{
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { bottomSheetSetProps, bottomSheetSnapToIndex } = useBottomSheetContext()
   const navigation = useNavigation()
-  const tracking = useTracking()
 
   const me = data?.me
   const activeReservation = me?.activeReservation
@@ -182,48 +181,21 @@ export const BagTab: React.FC<{
     bottomSheetSnapToIndex(0)
   }
 
-  let returnReminder
-  if (
-    hasActiveReservation &&
-    me?.customer?.membership?.plan?.tier === "Essential" &&
-    !!me?.activeReservation?.returnAt
-  ) {
-    const luxonDate = DateTime.fromISO(me?.activeReservation?.returnAt)
-    returnReminder = `Return by ${luxonDate.weekdayLong}, ${luxonDate.monthLong} ${luxonDate.day}`
-  }
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
   const showPendingMessage = pauseStatus === "pending" && !!pauseRequest?.pauseDate
   const isPaused = pauseStatus === "paused"
   const pauseType = pauseRequest?.pauseType
   const withOrWithoutDisplay = pauseType === "WithoutItems" ? "without items" : "with items"
-  const pausedWithoutItmes = isPaused && pauseType === "WithoutItems"
+  const pausedWithoutItems = isPaused && pauseType === "WithoutItems"
+
+  const status = activeReservation?.status
+  const updatedMoreThan24HoursAgo =
+    activeReservation?.updatedAt && DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
+  const atHome = status && status === "Delivered" && updatedMoreThan24HoursAgo
 
   return (
     <Box>
-      <Box px={2} pt={4}>
-        <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
-          <Sans size="4">{hasActiveReservation ? "Current rotation" : "My bag"}</Sans>
-          <Sans
-            size="4"
-            style={{ textDecorationLine: "underline" }}
-            onPress={() => {
-              tracking.trackEvent({
-                actionName: Schema.ActionNames.FAQButtonTapped,
-                actionType: Schema.ActionTypes.Tap,
-              })
-              navigation.navigate("Faq")
-            }}
-          >
-            View FAQ
-          </Sans>
-        </Flex>
-        {((hasActiveReservation && !!returnReminder) || !hasActiveReservation) && !pausedWithoutItmes && (
-          <Sans size="4" color="black50">
-            {hasActiveReservation && !!returnReminder ? returnReminder : "Reserve your order below"}
-          </Sans>
-        )}
-        <Spacer mb={3} />
-      </Box>
+      <BagTabHeader atHome={atHome} me={me} pausedWithoutItems={pausedWithoutItems} />
       {showPendingMessage && (
         <>
           <Box px={2}>
@@ -293,9 +265,9 @@ export const BagTab: React.FC<{
         </>
       )}
       <Separator />
-      {hasActiveReservation && <DeliveryStatus activeReservation={activeReservation} />}
+      {hasActiveReservation && <DeliveryStatus me={me} atHome={atHome} />}
       {paddedItems?.map((bagItem, index) => {
-        if (pausedWithoutItmes) {
+        if (pausedWithoutItems) {
           return null
         }
         const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
@@ -332,7 +304,7 @@ export const BagTab: React.FC<{
         )
       })}
       <Spacer mb={3} />
-      {!pausedWithoutItmes && <Separator />}
+      {!pausedWithoutItems && <Separator />}
       <Spacer mb={3} />
       {!hasActiveReservation && itemCount && itemCount < 3 && !isPaused && (
         <>
@@ -360,21 +332,24 @@ export const BagTab: React.FC<{
           <Spacer mb={3} />
         </>
       )}
-      {isSignedIn && !isPaused && (
-        <>
-          <BagCardButton
-            Icon={SurpriseMe}
-            title="Surprise me"
-            caption="Discover styles in your size"
-            onPress={() => {
-              navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
-            }}
-          />
-          <Spacer mb={3} />
-          <Separator />
-          <Spacer mb={3} />
-        </>
-      )}
+      {
+        // FIXME: Add this back when the query is optimized
+        isSignedIn && !isPaused && false && (
+          <>
+            <BagCardButton
+              Icon={SurpriseMe}
+              title="Surprise me"
+              caption="Discover styles in your size"
+              onPress={() => {
+                navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
+              }}
+            />
+            <Spacer mb={3} />
+            <Separator />
+            <Spacer mb={3} />
+          </>
+        )
+      }
 
       {!isPaused && (
         <BagCardButton

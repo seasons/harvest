@@ -8,7 +8,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react"
 import { Dimensions } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useScrollToTop } from "@react-navigation/native"
 import { AddPhotoButton } from "./AddPhotoButton"
 import { ProductsRail, CollectionsRail } from "@seasons/eclipse"
 import { BrandsRail, CategoriesRail, FitPicCollection, HomeFooter, TagsRail } from "./"
@@ -182,9 +182,11 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
   const [flatListHeight, setFlatListHeight] = useState(0)
   const fitPicCollectionRef: React.MutableRefObject<FitPicCollectionRef> = useRef(null)
   let [addPhotoButtonVisible, setAddPhotoButtonVisible] = useState(false)
+  const innerFlatListRef = useRef(null)
   const bottomSheetRef: React.MutableRefObject<ScrollBottomSheet<string>> = useRef(null)
   const reservationFeedback = data?.reservationFeedback
 
+  useScrollToTop(innerFlatListRef)
   useEffect(() => setSections(sectionsFrom(data, navigation)), [data, navigation])
 
   const blogContentHeight = dimensions.width
@@ -278,6 +280,7 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
           borderRadius: 20,
           marginTop: insets.top,
         }}
+        innerRef={innerFlatListRef}
         snapPoints={[snapPoint, secondSnapPoint]}
         initialSnapIndex={1}
         renderHandle={() => (

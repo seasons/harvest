@@ -9,22 +9,32 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { MutableRefObject, useEffect, useRef, useState } from "react"
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
+import { useMutation, useQuery } from "@apollo/client"
 import { Keyboard, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import AsyncStorage from "@react-native-community/async-storage"
 
 import { WebviewModal } from "./WebviewModal"
+import { color } from "App/utils"
+import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
+import { BoxPicker } from "../GetMeasurementsPane/BoxPicker"
 
 const SIGN_UP = gql`
-  mutation SignUp($email: String!, $password: String!, $firstName: String!, $lastName: String!, $zipCode: String!) {
+  mutation SignUp(
+    $email: String!
+    $password: String!
+    $firstName: String!
+    $lastName: String!
+    $zipCode: String!
+    $discoveryReference: String
+  ) {
     signup(
       email: $email
       password: $password
       firstName: $firstName
       lastName: $lastName
-      details: { shippingAddress: { create: { zipCode: $zipCode } } }
+      details: { shippingAddress: { create: { zipCode: $zipCode } }, discoveryReference: $discoveryReference }
     ) {
       user {
         id
@@ -58,9 +68,10 @@ const SIGN_UP = gql`
 
 interface CreateAccountPaneProps {
   onSignUp: () => void
+  howDidYouFindOutAboutUsView: any
 }
 
-export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }) => {
+export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp, howDidYouFindOutAboutUsView }) => {
   const tracking = useTracking()
 
   // Hooks
@@ -70,6 +81,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   const [password, setPassword] = useState("")
   const [passwordConfirmation, setPasswordConfirmation] = useState("")
   const [zipCode, setZipCode] = useState("")
+  const [discoveryReference, setDiscoveryReference] = useState({ label: "", value: "" })
 
   const validateForm = () => {
     setIsFormValid(
@@ -181,6 +193,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         zipCode,
+        discoveryReference: discoveryReference.value || "",
       },
     })
     if (result?.data) {
@@ -208,6 +221,20 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
   }
 
   // Render
+  const discoveryReferenceBackupOptions = [
+    { label: "Friend", value: "friend" },
+    { label: "Press article", value: "pressArticle" },
+    { label: "Blog", value: "blog" },
+    { label: "Instagram", value: "instagram" },
+    { label: "Google", value: "google" },
+    { label: "Podcast", value: "podcast" },
+    { label: "Throwing Fits", value: "throwingFits" },
+    { label: "Lean Luxe", value: "leanLuxe" },
+    { label: "Threadability", value: "threadability" },
+    { label: "One Dapper Street", value: "onedapperstreet" },
+    { label: "Other", value: "other" },
+  ]
+  const discoveryReferenceBackupTitle = "How did you hear about us"
   return (
     <>
       <CloseButton variant="light" />
@@ -217,7 +244,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             keyboardDismissMode="interactive"
             keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}
-            style={{ paddingTop: 85, paddingHorizontal: 16, overflow: "visible" }}
+            style={{ paddingTop: 75, paddingHorizontal: 16, overflow: "visible" }}
             ref={scrollViewRef}
           >
             <Sans color="black100" size="7">
@@ -227,7 +254,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
             <Sans color="black50" size="4">
               You'll use this to sign into the app, choose your plan, and manage your membership.
             </Sans>
-            <Spacer mb={5} />
+            <Spacer mb={4} />
             <Flex flexDirection="row">
               <TextInput
                 autoCapitalize="words"
@@ -253,7 +280,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
                 variant="light"
               />
             </Flex>
-            <Spacer mb={4} />
+            <Spacer mb={3} />
             <TextInput
               autoCompleteType="email"
               headerText="Email"
@@ -263,7 +290,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               textContentType="emailAddress"
               variant="light"
             />
-            <Spacer mb={4} />
+            <Spacer mb={3} />
             <TextInput
               autoCompleteType="password"
               headerText="Password"
@@ -278,7 +305,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               Your password must be at least 8 characters long, include at least one uppercase letter, one lowercase
               letter, & one number.
             </Sans>
-            <Spacer mb={4} />
+            <Spacer mb={3} />
             <TextInput
               autoCompleteType="password"
               headerText="Confirm Password"
@@ -288,7 +315,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               textContentType="password"
               variant="light"
             />
-            <Spacer mb={4} />
+            <Spacer mb={3} />
             <TextInput
               autoCompleteType="postal-code"
               currentValue={zipCode}
@@ -298,6 +325,19 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp }
               onFocus={() => onFocusTextInput(5)}
               textContentType="postalCode"
               variant="light"
+            />
+            <Spacer mb={3} />
+            <Box>
+              <Sans size="3" color={color("black50")}>
+                {howDidYouFindOutAboutUsView?.title || discoveryReferenceBackupTitle} (optional)
+              </Sans>
+            </Box>
+            <BoxPicker
+              onChange={(item) => setDiscoveryReference(item)}
+              title={howDidYouFindOutAboutUsView?.title || discoveryReferenceBackupTitle}
+              currentItem={discoveryReference}
+              items={howDidYouFindOutAboutUsView?.properties?.options || discoveryReferenceBackupOptions}
+              style="linePicker"
             />
             <Spacer height={92} />
           </ScrollView>

@@ -1,16 +1,5 @@
-import {
-  Box,
-  Button,
-  CloseButton,
-  Container,
-  FakeTextInput,
-  Flex,
-  Sans,
-  Separator,
-  Spacer,
-  TextInput,
-} from "App/Components"
-import { GetPlans_paymentPlans } from "App/generated/GetPlans"
+import { Box, Button, CloseButton, Container, Flex, Sans, Separator, Spacer, Toggle } from "App/Components"
+import { GetPlans_me_customer, GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { isWholeNumber } from "App/helpers/validation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { StatePickerPopUp } from "App/Scenes/Account/EditShippingAddress/StatePickerPopup"
@@ -18,24 +7,24 @@ import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { color } from "App/utils/color"
 import { BackArrowIcon } from "Assets/icons"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Dimensions, Keyboard, KeyboardAvoidingView, ScrollView, TouchableOpacity } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe, { PaymentCardTextField } from "tipsi-stripe"
-
 import { useMutation } from "@apollo/client"
 import * as Sentry from "@sentry/react-native"
-
 import { Coupon, State } from "../../CreateAccount"
 import { PAYMENT_CHECKOUT } from "../ChoosePlanPane/ChoosePlanPane"
 import { calcFinalPrice } from "../ChoosePlanPane/utils"
 import { GET_USER } from "App/Scenes/Account/Account"
+import { CreditCardFormAddressFields } from "./CreditCardFormAddressFields"
 
 const windowDimensions = Dimensions.get("window")
 
 interface CreditCardFormPaneProps {
   plan: GetPlans_paymentPlans
+  customer: GetPlans_me_customer
   onSubmit: () => void
   onRequestBack: () => void
   coupon: Coupon
@@ -48,22 +37,49 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
   plan,
   onRequestBack,
   coupon,
+  customer,
 }) => {
+  const addressInitialState = {
+    name: "",
+    address1: "",
+    address2: "",
+    zipCode: "",
+    city: "",
+    state: "",
+  }
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setIsMutating] = useState(false)
-  const [name, setName] = useState("")
-  const [address1, setAddress1] = useState("")
-  const [address2, setAddress2] = useState("")
-  const [zipCode, setZipCode] = useState("")
-  const [city, setCity] = useState("")
-  const [state, setState] = useState("")
+
+  const [billingAddress, setBillingAddress] = useState(addressInitialState)
+  const [shippingAddress, setShippingAddress] = useState(addressInitialState)
+
   const [cardNumber, setCardNumber] = useState("")
   const [expMonth, setExpMonth] = useState("")
   const [expYear, setExpYear] = useState("")
   const [cvc, setCvc] = useState("")
 
-  const [isStatePickerVisible, setIsStatePickerVisible] = useState(false)
+  const [isBillingStatePickerVisible, setIsBillingStatePickerVisible] = useState(false)
+  const [isShippingStatePickerVisible, setIsShippingStatePickerVisible] = useState(false)
+  const [sameAsShipping, setSameAsShipping] = useState(true)
+
+  useEffect(() => {
+    if (customer) {
+      const userFirstName = customer?.user?.firstName
+      const userLastName = customer?.user?.lastName
+      const initialShippingAddress = customer?.detail?.shippingAddress
+
+      if (!shippingAddress.name && ((!!userLastName && !!userFirstName) || initialShippingAddress)) {
+        setShippingAddress({
+          ...shippingAddress,
+          name: !!userFirstName && !!userLastName ? `${userFirstName} ${userLastName}` : "",
+          zipCode: initialShippingAddress?.zipCode || "",
+          city: initialShippingAddress?.city || "",
+          state: initialShippingAddress?.state || "",
+        })
+      }
+    }
+  }, [customer])
 
   const [paymentCheckout] = useMutation(PAYMENT_CHECKOUT, {
     onCompleted: () => {
@@ -123,13 +139,12 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
       expYear,
       cvc,
       // optional
-      name,
-      addressLine1: address1,
-      addressLine2: address2,
-      addressCity: city,
-      addressState: state,
-      // addressCountry: "Test Country",
-      addressZip: zipCode,
+      name: sameAsShipping ? shippingAddress.name : billingAddress.name,
+      addressLine1: sameAsShipping ? shippingAddress.address1 : billingAddress.address1,
+      addressLine2: sameAsShipping ? shippingAddress.address2 : billingAddress.address2,
+      addressCity: sameAsShipping ? shippingAddress.city : billingAddress.city,
+      addressState: sameAsShipping ? shippingAddress.state : billingAddress.state,
+      addressZip: sameAsShipping ? shippingAddress.zipCode : billingAddress.zipCode,
     }
     try {
       const token = await stripe.createTokenWithCard(params)
@@ -139,6 +154,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
           token,
           tokenType: "card",
           couponID: coupon?.couponCode,
+          shipping: shippingAddress,
         },
         awaitRefetchQueries: true,
       })
@@ -157,17 +173,24 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
     }
   }
 
-  const disabled =
-    !name.trim() ||
-    !address1.trim() ||
-    !isWholeNumber(zipCode) ||
-    zipCode.length !== 5 ||
-    !city.trim() ||
-    !state ||
-    cardNumber.length !== 16 ||
-    cvc.length !== 3 ||
-    !expMonth ||
-    !expYear
+  const creditCardComplete = cardNumber.length === 16 && cvc.length === 3 && expMonth && expYear
+  const shippingComplete =
+    !!shippingAddress.name &&
+    !!shippingAddress.address1 &&
+    !!shippingAddress.zipCode &&
+    isWholeNumber(shippingAddress.zipCode) &&
+    !!shippingAddress.state &&
+    !!shippingAddress.city
+  const billingComplete =
+    (!!billingAddress.name &&
+      !!billingAddress.address1 &&
+      !!billingAddress.zipCode &&
+      isWholeNumber(billingAddress.zipCode) &&
+      !!billingAddress.state &&
+      !!billingAddress.city) ||
+    sameAsShipping
+
+  const disabled = !billingComplete || !shippingComplete || !creditCardComplete
 
   const description = plan?.description.split("\n")?.[0]
   const originalPrice = plan?.price
@@ -230,6 +253,37 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
               </Flex>
               <Spacer mb={4} />
               <Sans color="black100" size="4">
+                Shipping address
+              </Sans>
+              <Spacer mb={2} />
+              <CreditCardFormAddressFields
+                address={shippingAddress}
+                setAddress={setShippingAddress}
+                setIsStatePickerVisible={setIsShippingStatePickerVisible}
+              />
+              <Spacer mb={4} />
+              <Sans color="black100" size="4">
+                Billing address
+              </Sans>
+              <Spacer mb={2} />
+              <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+                <Sans color="black50" size="4">
+                  Same as shipping
+                </Sans>
+                <Toggle onChange={(newValue) => setSameAsShipping(newValue)} selected={sameAsShipping} />
+              </Flex>
+              {!sameAsShipping && (
+                <>
+                  <Spacer mb={3} />
+                  <CreditCardFormAddressFields
+                    address={billingAddress}
+                    setAddress={setBillingAddress}
+                    setIsStatePickerVisible={setIsBillingStatePickerVisible}
+                  />
+                </>
+              )}
+              <Spacer mb={4} />
+              <Sans color="black100" size="4">
                 Payment information
               </Sans>
               <Spacer mb={2} />
@@ -249,66 +303,6 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
                 onParamsChange={handleFieldParamsChange}
               />
               <Separator />
-              <Spacer mb={4} />
-              <Sans color="black100" size="4">
-                Billing address
-              </Sans>
-              <Spacer mb={2} />
-              <TextInput
-                autoFocus={false}
-                autoCapitalize="words"
-                currentValue={name}
-                headerText="Name"
-                onChangeText={(_, val) => setName(val)}
-              />
-              <Spacer mb={3} />
-              <TextInput
-                autoFocus={false}
-                autoCapitalize="words"
-                currentValue={address1}
-                headerText="Address 1"
-                onChangeText={(_, val) => setAddress1(val)}
-              />
-              <Spacer mb={3} />
-              <Flex flexDirection="row">
-                <TextInput
-                  autoFocus={false}
-                  autoCapitalize="words"
-                  currentValue={address2}
-                  headerText="Address 2"
-                  onChangeText={(_, val) => setAddress2(val)}
-                  style={{ flex: 1 }}
-                />
-                <Spacer width={9} />
-                <TextInput
-                  autoFocus={false}
-                  autoCapitalize="words"
-                  currentValue={city}
-                  headerText="City"
-                  onChangeText={(_, val) => setCity(val)}
-                  style={{ flex: 1 }}
-                />
-              </Flex>
-              <Spacer mb={3} />
-              <Flex flexDirection="row">
-                <FakeTextInput
-                  currentValue={state}
-                  headerText="State"
-                  onPress={() => {
-                    setIsStatePickerVisible(true)
-                  }}
-                  style={{ flex: 1 }}
-                />
-                <Spacer width={9} />
-                <TextInput
-                  autoFocus={false}
-                  currentValue={zipCode}
-                  headerText="ZIP"
-                  keyboardType="number-pad"
-                  onChangeText={(_, val) => setZipCode(val)}
-                  style={{ flex: 1 }}
-                />
-              </Flex>
             </Box>
             <Spacer pb={160} />
           </ScrollView>
@@ -337,12 +331,15 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
         </KeyboardAvoidingView>
 
         <StatePickerPopUp
-          initialState={state}
+          initialState={isBillingStatePickerVisible ? billingAddress.state : shippingAddress.state}
           onRequestClose={(state) => {
-            setState(state)
-            setIsStatePickerVisible(false)
+            isBillingStatePickerVisible
+              ? setBillingAddress({ ...billingAddress, state })
+              : setShippingAddress({ ...shippingAddress, state })
+            setIsShippingStatePickerVisible(false)
+            setIsBillingStatePickerVisible(false)
           }}
-          visible={isStatePickerVisible}
+          visible={isBillingStatePickerVisible || isShippingStatePickerVisible}
         />
       </Container>
     </>

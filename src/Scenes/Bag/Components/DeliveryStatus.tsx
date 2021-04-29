@@ -5,21 +5,45 @@ import { color } from "App/utils"
 import { TouchableWithoutFeedback } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
-import { DateTime } from "luxon"
-import { GetBagAndSavedItems_me_activeReservation } from "App/generated/GetBagAndSavedItems"
+import { GetBagAndSavedItems_me } from "App/generated/GetBagAndSavedItems"
+import gql from "graphql-tag"
+
+export const DeliveryStatusFragment_Me = gql`
+  fragment DeliveryStatusFragment_Me on Me {
+    activeReservation {
+      id
+      status
+      returnedPackage {
+        id
+        shippingLabel {
+          id
+          trackingURL
+        }
+      }
+      sentPackage {
+        id
+        shippingLabel {
+          id
+          trackingURL
+        }
+      }
+    }
+  }
+`
 
 export const DeliveryStatus: React.FC<{
-  activeReservation: GetBagAndSavedItems_me_activeReservation
-}> = ({ activeReservation }) => {
+  me: GetBagAndSavedItems_me
+  atHome: boolean
+}> = ({ me, atHome }) => {
+  const activeReservation = me?.activeReservation
+
   const navigation = useNavigation()
   const status = activeReservation?.status
-  const updatedMoreThan24HoursAgo = DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
-  const hideComponent = status === "Delivered" && updatedMoreThan24HoursAgo
 
   const sentPackageTrackingURL = activeReservation?.sentPackage?.shippingLabel?.trackingURL
   const returnedPackageTrackingURL = activeReservation?.returnedPackage?.shippingLabel?.trackingURL
 
-  if (hideComponent) {
+  if (atHome) {
     return null
   }
 

@@ -9,7 +9,7 @@ orbs:
 jobs:
   staging:
     macos:
-      xcode: "11.3.1"
+      xcode: "12.4.0"
     environment:
       FL_OUTPUT_DIR: output
       FASTLANE_LANE: ios beta
@@ -71,7 +71,7 @@ jobs:
 
   production:
     macos:
-      xcode: "11.3.1"
+      xcode: "12.4.0"
     environment:
       FL_OUTPUT_DIR: output
       FASTLANE_LANE: ios beta
