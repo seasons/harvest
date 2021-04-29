@@ -1,5 +1,8 @@
 import gql from "graphql-tag"
-import { ProductBuyCTA_ProductVariantFragment, ProductBuyCTA_ProductFragment } from "@seasons/eclipse"
+
+import {
+  ProductBuyCTA_ProductFragment, ProductBuyCTA_ProductVariantFragment
+} from "@seasons/eclipse"
 
 const commonProductVariantFragment = gql`
   fragment CommonProductVariant on ProductVariant {
@@ -51,29 +54,6 @@ const commonProductVariantFragment = gql`
 
 export const GET_PRODUCT = gql`
   query GetProduct($where: ProductWhereInput!) {
-    me {
-      id
-      customer {
-        id
-        status
-        user {
-          id
-        }
-        membership {
-          id
-          plan {
-            id
-            itemCount
-          }
-        }
-      }
-      bag {
-        id
-      }
-      savedItems {
-        id
-      }
-    }
     products(first: 1, where: $where) {
       id
       slug
