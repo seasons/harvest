@@ -19,7 +19,7 @@ import {
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { GetProduct_products_largeImages } from "App/generated/GetProduct"
-import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { SavedTab_Query } from "App/Scenes/Bag/BagQueries"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { SAVE_ITEM } from "./Components/SaveProductButton"
@@ -51,7 +51,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
         },
       },
       {
-        query: GET_BAG,
+        query: SavedTab_Query,
       },
       {
         query: Homepage_Query,
