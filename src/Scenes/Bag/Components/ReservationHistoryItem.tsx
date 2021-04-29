@@ -6,12 +6,42 @@ import { space, color } from "App/utils"
 import styled from "styled-components/native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useNavigation } from "@react-navigation/native"
+import { gql } from "@apollo/client"
+import { PRODUCT_ASPECT_RATIO } from "@seasons/eclipse/src/helpers"
+
+export const ReservationHistoryItemFragment_Reservation = gql`
+  fragment ReservationHistoryItemFragment_Reservation on Reservation {
+    id
+    status
+    reservationNumber
+    createdAt
+    products {
+      id
+      productVariant {
+        id
+        displayShort
+        product {
+          id
+          slug
+          name
+          images(size: Thumb) {
+            id
+            url
+          }
+          brand {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+`
 
 export const ReservationHistoryItem = ({ item }) => {
   const navigation = useNavigation()
   const date = item?.createdAt && DateTime.fromISO(item?.createdAt).toUTC().toFormat("MM/dd")
   const imageWidth = (Dimensions.get("window").width - space(5)) / 3
-  const aspectRatio = 1.25
 
   return (
     <Box>
@@ -29,15 +59,16 @@ export const ReservationHistoryItem = ({ item }) => {
       </Box>
       <Spacer mb={3} />
       <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start" px="14px">
-        {item.products?.map((physicalProduct) => {
+        {item?.products?.map((physicalProduct) => {
           const variant = physicalProduct?.productVariant
           const variantSizeDisplay = variant?.displayShort
           const product = variant?.product
           const brandName = product?.brand?.name
           const image = product?.images?.[0]
           const imageURL = image?.url || ""
+
           return (
-            <Box key={physicalProduct.id} px="2px">
+            <Box key={product.id} px="2px">
               <TouchableOpacity
                 onPress={() =>
                   product?.id &&
@@ -46,7 +77,7 @@ export const ReservationHistoryItem = ({ item }) => {
               >
                 <Box width={imageWidth}>
                   <ImageContainer
-                    height={imageWidth * aspectRatio}
+                    height={imageWidth * PRODUCT_ASPECT_RATIO}
                     imageWidth={imageWidth}
                     source={{ uri: imageURL }}
                   />

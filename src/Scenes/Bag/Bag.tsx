@@ -13,10 +13,17 @@ import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
-import { useMutation, useQuery } from "@apollo/client"
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { FlatList, RefreshControl, StatusBar, View } from "react-native"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
-import { CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM } from "./BagQueries"
+import {
+  CHECK_ITEMS,
+  GET_BAG,
+  GET_LOCAL_BAG,
+  REMOVE_FROM_BAG,
+  REMOVE_FROM_BAG_AND_SAVE_ITEM,
+  ReservationHistoryTab_Query,
+} from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 
@@ -43,6 +50,10 @@ export const Bag = screenTrack()((props) => {
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
 
   useScrollToTop(flatListRef)
+
+  const [getReservationTab, { data: reservationTabData, loading: loadingReservationTab }] = useLazyQuery(
+    ReservationHistoryTab_Query
+  )
 
   useFocusEffect(
     React.useCallback(() => {
@@ -185,9 +196,10 @@ export const Bag = screenTrack()((props) => {
 
   const isBagView = BagView.Bag == currentView
   const isSavedView = BagView.Saved == currentView
-  const reservations = me?.customer?.reservations
   const bagCount = items.length
   const bagIsFull = itemCount && bagCount >= itemCount
+
+  const reservationItems = reservationTabData?.me?.customer?.reservations
 
   const handleReserve = async (navigation) => {
     setMutating(true)
@@ -298,7 +310,7 @@ export const Bag = screenTrack()((props) => {
         />
       )
     } else {
-      return <ReservationHistoryTab items={item.data} />
+      return <ReservationHistoryTab items={item.data} loading={loadingReservationTab} />
     }
   }
 
@@ -308,7 +320,7 @@ export const Bag = screenTrack()((props) => {
   } else if (isSavedView) {
     sections = [{ data: savedItems }]
   } else {
-    sections = [{ data: reservations }]
+    sections = [{ data: reservationItems }]
   }
 
   return (
