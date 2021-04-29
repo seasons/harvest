@@ -4,31 +4,24 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
 import {
-  DocumentWithText,
-  Envelope,
-  Instagram,
-  LogOutSVG,
-  ManageMembership,
-  MapPin,
-  MonocromeSeasonsLogo,
-  PersonalPreferences,
-  PrivacyPolicy,
-  SpeechBubble,
-  Star,
+  DocumentWithText, Envelope, Instagram, LogOutSVG, ManageMembership, MapPin, MonocromeSeasonsLogo,
+  PersonalPreferences, PrivacyPolicy, SpeechBubble, Star
 } from "Assets/svgs"
 import gql from "graphql-tag"
 import { DateTime } from "luxon"
 import { default as React, useEffect } from "react"
-import { useQuery } from "@apollo/client"
 import { Linking, Platform, ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
 import Share from "react-native-share"
+
+import { useQuery } from "@apollo/client"
+import { useScrollToTop } from "@react-navigation/native"
+import { AuthorizedCTA, WaitlistedCTA } from "@seasons/eclipse"
+
 import { State, UserState } from "../CreateAccount/CreateAccount"
 import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
-import { WaitlistedCTA, AuthorizedCTA } from "@seasons/eclipse"
-import { useScrollToTop } from "@react-navigation/native"
 
 export const GET_USER = gql`
   query GetUser {
@@ -377,7 +370,7 @@ export const Account = screenTrack()(({ navigation }) => {
           </Box>
           <InsetSeparator />
           <Box px={2} py={4}>
-            {!!data ? renderBody() : <ListSkeleton />}
+            {!customer ? <ListSkeleton /> : renderBody()}
           </Box>
           <InsetSeparator />
           {!!referralLink && (
