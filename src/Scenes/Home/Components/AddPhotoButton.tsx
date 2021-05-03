@@ -27,7 +27,7 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
   })
 
   const selectedImage = async (uri: string, type?: string) => {
-    navigation.navigate("FitPicConfirmation", { uri })
+    navigation.navigate("FitPicConfirmation", { uri, imageType: type })
   }
 
   const onPress = async () => {
