@@ -69,6 +69,7 @@ export const GET_PRODUCT = gql`
       modelSize {
         id
         display
+        type
       }
       color {
         id
