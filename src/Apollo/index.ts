@@ -141,7 +141,7 @@ export const setupApolloClient = async () => {
 
   return new ApolloClient({
     // Provide required constructor fields
-    link: ApolloLink.from([persistedQueryLink, authLink, errorLink, httpLink]) as any,
+    link: ApolloLink.from([authLink, errorLink, httpLink, persistedQueryLink]) as any,
     typeDefs,
     resolvers,
     cache,
