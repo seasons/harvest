@@ -13,7 +13,13 @@ import * as Sentry from "@sentry/react-native"
 
 import { resolvers, typeDefs } from "./resolvers"
 
-export const setupApolloClient = async () => {
+interface SetupApolloClientProps {
+  enablePersistedQueries?: boolean
+}
+
+export const setupApolloClient = async (
+  { enablePersistedQueries }: SetupApolloClientProps = { enablePersistedQueries: true }
+) => {
   const cache = new InMemoryCache({
     typePolicies: {
       Query: {
@@ -137,11 +143,16 @@ export const setupApolloClient = async () => {
     }
   })
 
-  const persistedQueryLink = createPersistedQueryLink({ useGETForHashedQueries: true, sha256 })
+  let links = [authLink, errorLink, httpLink]
+
+  if (enablePersistedQueries) {
+    const persistedQueryLink = createPersistedQueryLink({ useGETForHashedQueries: true, sha256 })
+    links.unshift(persistedQueryLink)
+  }
 
   return new ApolloClient({
     // Provide required constructor fields
-    link: ApolloLink.from([persistedQueryLink, authLink, errorLink, httpLink]) as any,
+    link: ApolloLink.from(links) as any,
     typeDefs,
     resolvers,
     cache,
