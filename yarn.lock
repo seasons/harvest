@@ -3047,10 +3047,10 @@
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
 
-"@seasons/eclipse@^1.2.31":
-  version "1.2.31"
-  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.2.31.tgz#0fa76ae113b66c39c4f0794c3d9fb944b4fb8231"
-  integrity sha512-TgShvRihcfrHC9Z1Zq4B66m19QoyRRZwfH6IYtQh7aCAJofTtZkTxHhVjjHr895pdpNzIQovC687j+GPtINk7w==
+"@seasons/eclipse@^1.2.39":
+  version "1.2.39"
+  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.2.39.tgz#123cd62ae3d17b444288b705b5eb7afccfa32f11"
+  integrity sha512-9U6+hvnC/VGk4LII4y9Lqjc3rbl+7pxOOA5DjQdR2msabCsWtOqEsMvAibQtGQyvUSS7MwisDQK+B4EPKDIj4w==
   dependencies:
     dripsy "^1.4.6"
 
