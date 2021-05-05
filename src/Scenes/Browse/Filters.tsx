@@ -42,7 +42,7 @@ export const Filters = screenTrack()((props: any) => {
   const insets = useSafeAreaInsets()
 
   const filterData = {
-    tops: [
+    letter: [
       { label: "XS", value: "XS" },
       { label: "S", value: "S" },
       { label: "M", value: "M" },
@@ -50,7 +50,7 @@ export const Filters = screenTrack()((props: any) => {
       { label: "XL", value: "XL" },
       { label: "XXL", value: "XXL" },
     ],
-    bottoms: [
+    waist: [
       { label: "26", value: "26" },
       { label: "27", value: "27" },
       { label: "28", value: "28" },
@@ -155,7 +155,7 @@ export const Filters = screenTrack()((props: any) => {
             </Box>
             <Box px="14px">
               <MultiSelectionTable
-                items={item.data?.tops}
+                items={item.data?.letter}
                 onTap={(item) => {
                   tracking.trackEvent({
                     actionName: Schema.ActionNames.FilterTapped,
@@ -182,7 +182,28 @@ export const Filters = screenTrack()((props: any) => {
             </Box>
             <Box px="14px">
               <MultiSelectionTable
-                items={item.data?.bottoms}
+                items={item.data?.waist}
+                onTap={(item) => {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.FilterTapped,
+                    actionType: Schema.ActionTypes.Tap,
+                    filterValue: item.value,
+                  })
+                  // Recreate a new array reference so that the component reloads
+                  setFilters({
+                    ...filters,
+                    bottomSizeFilters: [
+                      ...(filters.bottomSizeFilters.includes(item.value)
+                        ? filters.bottomSizeFilters.filter((i) => i !== item.value)
+                        : filters.bottomSizeFilters.concat([item.value])),
+                    ],
+                  })
+                }}
+                selectedItems={filters.bottomSizeFilters}
+              />
+              <Spacer mb={0.5} />
+              <MultiSelectionTable
+                items={item.data?.letter}
                 onTap={(item) => {
                   tracking.trackEvent({
                     actionName: Schema.ActionNames.FilterTapped,

@@ -16,14 +16,9 @@ import { Animated, Dimensions, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-
 import { useMutation, useQuery } from "@apollo/client"
-import {
-  ProductBuyCTA, ProductBuyCTA_ProductFragment, ProductBuyCTA_ProductVariantFragment
-} from "@seasons/eclipse"
-import analytics from "@segment/analytics-react-native"
+import { ProductBuyCTA, ProductBuyCTA_ProductFragment, ProductBuyCTA_ProductVariantFragment } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
-
 import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
 import { SizeWarning } from "./Components/SizeWarning"
