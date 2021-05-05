@@ -1,5 +1,7 @@
 import gql from "graphql-tag"
-import { ProductBuyCTA_ProductVariantFragment, ProductBuyCTA_ProductFragment } from "@seasons/eclipse"
+
+import { ProductBuyCTA_ProductFragment, ProductBuyCTA_ProductVariantFragment } from "@seasons/eclipse"
+import { ProductMeasurementsFragment_ProductVariant } from "./Components/ProductMeasurements"
 
 const commonProductVariantFragment = gql`
   fragment CommonProductVariant on ProductVariant {
@@ -51,29 +53,6 @@ const commonProductVariantFragment = gql`
 
 export const GET_PRODUCT = gql`
   query GetProduct($where: ProductWhereInput!) {
-    me {
-      id
-      customer {
-        id
-        status
-        user {
-          id
-        }
-        membership {
-          id
-          plan {
-            id
-            itemCount
-          }
-        }
-      }
-      bag {
-        id
-      }
-      savedItems {
-        id
-      }
-    }
     products(first: 1, where: $where) {
       id
       slug
@@ -89,6 +68,7 @@ export const GET_PRODUCT = gql`
       modelSize {
         id
         display
+        type
       }
       color {
         id
@@ -129,28 +109,14 @@ export const GET_PRODUCT = gql`
       }
       type
       variants {
-        internalSize {
-          id
-          bottom {
-            id
-            waist
-            rise
-            hem
-            inseam
-          }
-          top {
-            id
-            length
-            sleeve
-            shoulder
-            chest
-          }
-        }
+        id
+        ...ProductMeasurementsFragment_ProductVariant
         ...CommonProductVariant
       }
       ...ProductBuyCTA_ProductFragment
     }
   }
+  ${ProductMeasurementsFragment_ProductVariant}
   ${ProductBuyCTA_ProductFragment}
   ${commonProductVariantFragment}
 `

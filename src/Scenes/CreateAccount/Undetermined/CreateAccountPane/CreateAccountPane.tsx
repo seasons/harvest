@@ -17,7 +17,6 @@ import AsyncStorage from "@react-native-community/async-storage"
 
 import { WebviewModal } from "./WebviewModal"
 import { color } from "App/utils"
-import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
 import { BoxPicker } from "../GetMeasurementsPane/BoxPicker"
 
 const SIGN_UP = gql`
