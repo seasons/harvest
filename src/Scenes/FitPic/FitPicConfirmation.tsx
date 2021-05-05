@@ -1,14 +1,18 @@
-import gql from "graphql-tag"
 import { ReactNativeFile } from "apollo-upload-client"
-import { Button, Container, FixedBackArrow, Flex, Sans, Spacer, TextInput, Toggle } from "App/Components"
+import { setupApolloClient } from "App/Apollo"
+import {
+  Button, Container, FixedBackArrow, Flex, Sans, Spacer, TextInput, Toggle
+} from "App/Components"
 import { TextInputRef } from "App/Components/TextInput"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
-import React, { useRef, useState } from "react"
-import { useMutation, useQuery } from "@apollo/client"
+import gql from "graphql-tag"
+import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, Image, KeyboardAvoidingView, ScrollView, View } from "react-native"
+
+import { ApolloClient, ApolloProvider, useMutation, useQuery } from "@apollo/client"
 import { Box } from "@seasons/eclipse"
 
 const SUBMIT_FIT_PIC = gql`
@@ -30,7 +34,26 @@ const GET_INSTAGRAM_HANDLE = gql`
   }
 `
 
-export const FitPicConfirmation = screenTrack()(({ route, navigation }) => {
+export const FitPicConfirmation = (props) => {
+  const [client, setClient] = useState<ApolloClient<any> | null>(null)
+
+  useEffect(() => {
+    const setup = async () => {
+      const uploadApolloClient = await setupApolloClient({ enablePersistedQueries: false })
+      setClient(uploadApolloClient)
+    }
+
+    setup()
+  }, [])
+
+  return (
+    <ApolloProvider client={client}>
+      <FitPicConfirmationView {...props} />
+    </ApolloProvider>
+  )
+}
+
+const FitPicConfirmationView = screenTrack()(({ route, navigation }) => {
   const tracking = useTracking()
 
   const { previousData, data = previousData, loading } = useQuery(GET_INSTAGRAM_HANDLE, { fetchPolicy: "no-cache" })
