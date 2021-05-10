@@ -67,8 +67,8 @@ const sectionsFrom = (data: any, navigation) => {
     })
   }
 
-  if (data?.justAddedOuterwear?.length) {
-    sections.push({ type: SectionType.Products, results: data?.justAddedOuterwear, title: "Just added outerwear" })
+  if (data?.justAddedTops?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
   }
   if (data?.featuredBrands?.length) {
     sections.push({
@@ -76,8 +76,8 @@ const sectionsFrom = (data: any, navigation) => {
       results: data?.featuredBrands,
     })
   }
-  if (data?.justAddedTops?.length) {
-    sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
+  if (data?.justAddedOuterwear?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedOuterwear, title: "Just added outerwear" })
   }
   if (data?.homepage?.sections?.length) {
     sections.push(

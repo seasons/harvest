@@ -4,6 +4,7 @@ export const GET_BROWSE_PRODUCTS = gql`
   query GetBrowseProducts(
     $categoryName: String!
     $brandNames: [String]
+    $colors: [String]
     $first: Int!
     $skip: Int!
     $orderBy: ProductOrderByInput!
@@ -28,6 +29,7 @@ export const GET_BROWSE_PRODUCTS = gql`
     productsCount: productsConnection(
       category: $categoryName
       tops: $tops
+      colors: $colors
       bottoms: $bottoms
       availableOnly: $available
       brands: $brandNames
@@ -41,6 +43,7 @@ export const GET_BROWSE_PRODUCTS = gql`
     productsConnection(
       category: $categoryName
       tops: $tops
+      colors: $colors
       bottoms: $bottoms
       availableOnly: $available
       brands: $brandNames
