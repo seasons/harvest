@@ -13,12 +13,14 @@ import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
 enum FilterView {
   Sizes = 0,
   Designers = 1,
+  Colors = 2,
 }
 
 export interface BrowseFilters {
   bottomSizeFilters: any[]
   topSizeFilters: any[]
   designerFilters: any[]
+  colorFilters: any[]
   availableOnly: boolean
 }
 
@@ -27,6 +29,7 @@ export const EMPTY_BROWSE_FILTERS = {
   bottomSizeFilters: [],
   topSizeFilters: [],
   designerFilters: [],
+  colorFilters: [],
   availableOnly: false,
 }
 
@@ -64,11 +67,31 @@ export const Filters = screenTrack()((props: any) => {
       { label: "36", value: "36" },
     ],
   }
+  const colors = [
+    { label: "White", value: "white" },
+    { label: "Brown", value: "brown" },
+    { label: "Grey", value: "grey" },
+    { label: "Green", value: "green" },
+    { label: "Black", value: "black" },
+    { label: "Purple", value: "purple" },
+    { label: "Pink", value: "pink" },
+    { label: "Orange", value: "orange" },
+    { label: "Red", value: "red" },
+    { label: "Blue", value: "blue" },
+    { label: "Yellow", value: "yellow" },
+  ]
   const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 39) / 2
   const buttonHeight = 48
 
-  const sections = currentView === FilterView.Sizes ? [{ data: filterData }] : [{ data: designers }]
+  let sections
+  if (currentView === FilterView.Sizes) {
+    sections = [{ data: filterData }]
+  } else if (currentView === FilterView.Designers) {
+    sections = [{ data: designers }]
+  } else {
+    sections = [{ data: colors }]
+  }
 
   const groupBrands = (brands) => {
     const brandPairs = toPairs(
@@ -182,28 +205,7 @@ export const Filters = screenTrack()((props: any) => {
             </Box>
             <Box px="14px">
               <MultiSelectionTable
-                items={item.data?.waist}
-                onTap={(item) => {
-                  tracking.trackEvent({
-                    actionName: Schema.ActionNames.FilterTapped,
-                    actionType: Schema.ActionTypes.Tap,
-                    filterValue: item.value,
-                  })
-                  // Recreate a new array reference so that the component reloads
-                  setFilters({
-                    ...filters,
-                    bottomSizeFilters: [
-                      ...(filters.bottomSizeFilters.includes(item.value)
-                        ? filters.bottomSizeFilters.filter((i) => i !== item.value)
-                        : filters.bottomSizeFilters.concat([item.value])),
-                    ],
-                  })
-                }}
-                selectedItems={filters.bottomSizeFilters}
-              />
-              <Spacer mb={0.5} />
-              <MultiSelectionTable
-                items={item.data?.letter}
+                items={[...item.data?.letter, ...item.data?.waist]}
                 onTap={(item) => {
                   tracking.trackEvent({
                     actionName: Schema.ActionNames.FilterTapped,
@@ -227,7 +229,7 @@ export const Filters = screenTrack()((props: any) => {
           <Spacer mb={4} />
         </>
       )
-    } else {
+    } else if (currentView === FilterView.Designers) {
       return (
         <>
           {item?.data?.map((designer) => {
@@ -269,6 +271,32 @@ export const Filters = screenTrack()((props: any) => {
           })}
         </>
       )
+    } else {
+      return (
+        <Flex p={2}>
+          <MultiSelectionTable
+            items={item.data}
+            itemWidth={120}
+            onTap={(item) => {
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.FilterTapped,
+                actionType: Schema.ActionTypes.Tap,
+                filterValue: item.value,
+              })
+              // Recreate a new array reference so that the component reloads
+              setFilters({
+                ...filters,
+                colorFilters: [
+                  ...(filters.colorFilters.includes(item.value)
+                    ? filters.colorFilters.filter((i) => i !== item.value)
+                    : filters.colorFilters.concat([item.value])),
+                ],
+              })
+            }}
+            selectedItems={filters.colorFilters}
+          />
+        </Flex>
+      )
     }
   }
 
@@ -297,7 +325,7 @@ export const Filters = screenTrack()((props: any) => {
       </Flex>
       <TabBar
         spaceEvenly
-        tabs={["Sizes", "Designers"]}
+        tabs={["Sizes", "Designers", "Colors"]}
         activeTab={currentView}
         goToPage={(page: FilterView) => {
           tracking.trackEvent({

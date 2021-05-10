@@ -43,6 +43,8 @@ export const Browse = screenTrack()((props: any) => {
     setFilters(currentFilters)
   }, [currentFilters])
 
+  console.log("filters", filters)
+
   useEffect(() => {
     if (routeCategorySlug !== currentCategory) {
       setCurrentCategory(routeCategorySlug)
@@ -54,6 +56,7 @@ export const Browse = screenTrack()((props: any) => {
 
   const { previousData, data = previousData, loading, fetchMore } = useQuery<GetBrowseProducts>(GET_BROWSE_PRODUCTS, {
     variables: {
+      colors: filters.colorFilters,
       tops: filters.topSizeFilters,
       bottoms: filters.bottomSizeFilters,
       available: filters.availableOnly,
@@ -79,8 +82,12 @@ export const Browse = screenTrack()((props: any) => {
   }, [data])
 
   const filtersButtonHeight = 36
-  const numFiltersSelected = [...filters.topSizeFilters, ...filters.bottomSizeFilters, ...filters.designerFilters]
-    .length
+  const numFiltersSelected = [
+    ...filters.topSizeFilters,
+    ...filters.bottomSizeFilters,
+    ...filters.designerFilters,
+    ...filters.colorFilters,
+  ].length
   const numColumns = 2
 
   const filtersButtonText = numFiltersSelected > 0 ? `Filters +${numFiltersSelected}` : "Filters"
