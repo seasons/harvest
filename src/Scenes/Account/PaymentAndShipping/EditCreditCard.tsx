@@ -118,7 +118,6 @@ export const EditCreditCard: React.FC<{
   }
 
   const tracking = useTracking()
-  const insets = useSafeAreaInsets()
 
   const { hideNotificationBar } = useNotificationBarContext()
   const { showPopUp, hidePopUp } = usePopUpContext()

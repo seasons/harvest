@@ -105,7 +105,7 @@ const TabsStack = ({ currentScreen }) => {
       tabBar={(props) => {
         return (
           <>
-            <NotificationBar onClick={onClickNotificationBar} />
+            <NotificationBar onClickBanner={onClickNotificationBar} />
             <NavBar {...props} currentScreen={currentScreen} />
           </>
         )
