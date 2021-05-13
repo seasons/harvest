@@ -17,7 +17,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { useMutation, useQuery } from "@apollo/client"
-import { ProductBuyCTA, ProductBuyCTA_ProductFragment, ProductBuyCTA_ProductVariantFragment } from "@seasons/eclipse"
+import {
+  ProductConditionSection,
+  ProductConditionSectionFragment_PhysicalProductQualityReport,
+  ProductBuyCTA,
+  ProductBuyCTAFragment_Product,
+  ProductBuyCTAFragment_ProductVariant,
+} from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
 import { SelectionButtons } from "./Components/SelectionButtons"
@@ -242,6 +248,15 @@ export const Product = screenTrack({
   const viewWidth = Dimensions.get("window").width
   const images = product?.largeImages
   const imageWidth = viewWidth
+  const physicalProductQualityReport = (selectedVariant?.nextReservablePhysicalProduct?.reports || []).reduce(
+    (agg, report) => {
+      if (!agg) {
+        return report
+      }
+      return report.published && report.createdAt > agg.createdAt ? report : agg
+    },
+    null
+  )
 
   if (error) {
     console.error("Error:", error)
@@ -280,8 +295,8 @@ export const Product = screenTrack({
             px={3}
             pb={3}
             ref={productBuyRef}
-            product={filter(ProductBuyCTA_ProductFragment, product)}
-            selectedVariant={filter(ProductBuyCTA_ProductVariantFragment, selectedVariant)}
+            product={filter(ProductBuyCTAFragment_Product, product)}
+            selectedVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
             buyButtonMutating={buyButtonMutating}
             onBuyNew={() => {
               setBuyButtonMutating(true)
@@ -293,6 +308,18 @@ export const Product = screenTrack({
             }}
           />
         )
+      case "condition":
+        return (
+          <ProductConditionSection
+            px={2}
+            pb={3}
+            physicalProductQualityReport={
+              physicalProductQualityReport
+                ? filter(ProductConditionSectionFragment_PhysicalProductQualityReport, physicalProductQualityReport)
+                : null
+            }
+          />
+        )
 
       default:
         return null
@@ -301,7 +328,15 @@ export const Product = screenTrack({
 
   const selectionButtonsBottom = showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0
   const listFooterSpacing = selectionButtonsBottom + 100
-  const sections = ["imageRail", "productDetails", "buy", "productMeasurements", "aboutTheBrand", "moreLikeThis"]
+  const sections = [
+    "imageRail",
+    "productDetails",
+    "buy",
+    "productMeasurements",
+    "condition",
+    "aboutTheBrand",
+    "moreLikeThis",
+  ]
   const url = `https://www.wearseasons.com/product/${product.slug}`
   const title = product.name
   const message = `Check out ${product.name} on Seasons!`

@@ -1,7 +1,11 @@
 import gql from "graphql-tag"
 
-import { ProductBuyCTA_ProductFragment, ProductBuyCTA_ProductVariantFragment } from "@seasons/eclipse"
 import { ProductMeasurementsFragment_ProductVariant } from "./Components/ProductMeasurements"
+import {
+  ProductBuyCTAFragment_Product,
+  ProductBuyCTAFragment_ProductVariant,
+  ProductConditionSectionFragment_PhysicalProductQualityReport,
+} from "@seasons/eclipse"
 
 const commonProductVariantFragment = gql`
   fragment CommonProductVariant on ProductVariant {
@@ -46,9 +50,19 @@ const commonProductVariantFragment = gql`
         inseam
       }
     }
-    ...ProductBuyCTA_ProductVariantFragment
+    nextReservablePhysicalProduct {
+      id
+      reports {
+        id
+        createdAt
+        published
+        ...ProductConditionSectionFragment_PhysicalProductQualityReport
+      }
+    }
+    ...ProductBuyCTAFragment_ProductVariant
   }
-  ${ProductBuyCTA_ProductVariantFragment}
+  ${ProductBuyCTAFragment_ProductVariant}
+  ${ProductConditionSectionFragment_PhysicalProductQualityReport}
 `
 
 export const GET_PRODUCT = gql`
@@ -113,10 +127,10 @@ export const GET_PRODUCT = gql`
         ...ProductMeasurementsFragment_ProductVariant
         ...CommonProductVariant
       }
-      ...ProductBuyCTA_ProductFragment
+      ...ProductBuyCTAFragment_Product
     }
   }
   ${ProductMeasurementsFragment_ProductVariant}
-  ${ProductBuyCTA_ProductFragment}
+  ${ProductBuyCTAFragment_Product}
   ${commonProductVariantFragment}
 `
