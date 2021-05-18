@@ -204,7 +204,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
         <TouchableWithoutFeedback onPress={() => textInputRef?.current?.focus?.()}>
           <Box>
             {!!headerText && (
-              <Sans size="3" color={placeholderColor}>
+              <Sans size="2" color={placeholderColor}>
                 {headerText}
               </Sans>
             )}
@@ -229,7 +229,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
           style={{
             color: variantColors.active.color,
             fontFamily: fontFamily.sans.medium.toString(),
-            fontSize: themeProps.typeSizes[4].fontSize,
+            fontSize: themeProps.typeSizes[3].fontSize,
             ...style,
             textAlignVertical: "center",
           }}

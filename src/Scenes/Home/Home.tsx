@@ -108,15 +108,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
     return <Loader />
   }
 
-  const onSelectedReviewRating = () => {
-    // setShowReservationFeedbackPopUp(false)
-    goToReservationFeedbackScreen()
-  }
-
-  const onPressReservationFeedbackReminder = () => {
-    goToReservationFeedbackScreen()
-  }
-
   const isFetchingMoreFitPics = loading && fitPicsReceived < totalFitPics
 
   return !network?.isConnected && !data ? (

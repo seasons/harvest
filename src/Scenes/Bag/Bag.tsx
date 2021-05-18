@@ -19,7 +19,6 @@ import { State as CreateAccountState, UserState as CreateAccountUserState } from
 import {
   CHECK_ITEMS,
   GET_BAG,
-  GET_LOCAL_BAG,
   REMOVE_FROM_BAG,
   REMOVE_FROM_BAG_AND_SAVE_ITEM,
   ReservationHistoryTab_Query,
@@ -27,6 +26,7 @@ import {
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
+import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 
 export enum BagView {
   Bag = 0,

@@ -3,6 +3,6 @@ module.exports = {
     name: "Seasons | Join",
     service: "seasons-6642",
     includes: ["./src/**/*", "./node_modules/@seasons/eclipse/**/*"],
-    excludes: ["./src/queries/clientQueries.ts"],
+    // excludes: ["./src/queries/clientQueries.ts"],
   },
 }
