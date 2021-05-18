@@ -35,11 +35,6 @@ import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
 import { ReferralView } from "App/Scenes/ReferralView"
 import { Reservation, ReservationConfirmation, ShareReservationToIG } from "App/Scenes/Reservation"
-import {
-  ReservationFeedback,
-  ReservationFeedbackConfirmation,
-  ReservationFeedbackFinish,
-} from "App/Scenes/ReservationFeedback"
 import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn } from "App/Scenes/SignIn"
 import { Tag } from "App/Scenes/Tag"
 import { Webview } from "App/Scenes/Webview"
@@ -50,6 +45,7 @@ import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 import { NavBar } from "./NavBar"
 import { NotificationBar } from "@seasons/eclipse"
+import { ReservationFeedbackModal } from "App/Scenes/ReservationFeedback/ReservationFeedbackModal"
 
 const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
@@ -128,6 +124,7 @@ const ModalStackScreen = () => {
       }}
     >
       <ModalStack.Screen name={Schema.PageNames.FiltersModal} component={Filters} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackModal} component={ReservationFeedbackModal} />
       <ModalStack.Screen name={Schema.PageNames.UpdatePaymentPlanModal} component={UpdatePaymentPlanModal} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordModal} component={ResetPassword} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
@@ -137,12 +134,6 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.EditShippingAddress} component={EditShippingAddress} />
       <ModalStack.Screen name={Schema.PageNames.EditStylePreferences} component={EditStylePreferences} />
       <ModalStack.Screen name={Schema.PageNames.EditMeasurements} component={EditMeasurements} />
-      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackModal} component={ReservationFeedback} />
-      <ModalStack.Screen
-        name={Schema.PageNames.ReservationFeedbackConfirmationModal}
-        component={ReservationFeedbackConfirmation}
-      />
-      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackFinishModal} component={ReservationFeedbackFinish} />
       <ModalStack.Screen name={Schema.PageNames.AllowNotificationsModal} component={AllowNotifications} />
       <ModalStack.Screen name={Schema.PageNames.SaveProductModal} component={SaveProduct} />
       <ModalStack.Screen name={Schema.PageNames.DebugMenu} component={DebugMenu} />

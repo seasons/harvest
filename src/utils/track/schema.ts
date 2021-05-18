@@ -160,9 +160,6 @@ export enum ActionNames {
   ReservationFeedbackConfirmationSkipButtonTapped = "Reservation Feedback Confirmation Skip Button Tapped",
   ReservationFeedbackConfirmationSubmitButtonTapped = "Reservation Feedback Confirmation Submit Button Tapped",
 
-  // Reservation Feedback Finish
-  ReservationFeedbackFinishButtonTapped = "Reservation Feedback Finish Button Tapped",
-
   // Account
   MembershipInfoTapped = "Membership Info Tapped",
   PersonalPreferencesTapped = "Personal Preferences Tapped",

@@ -1,32 +1,26 @@
-import { Box } from "App/Components"
 import { ErrorScreen } from "App/Components/ErrorScreen"
 import { Loader } from "App/Components/Loader"
-import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { NetworkContext } from "App/NetworkProvider"
-import { color } from "App/utils"
 import { userSessionToIdentifyPayload } from "App/utils/auth"
 import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
 import React, { useContext, useEffect, useState } from "react"
 import { StatusBar } from "react-native"
 import SplashScreen from "react-native-splash-screen"
-import styled from "styled-components/native"
-
+import { useNotificationBarContext } from "@seasons/eclipse"
 import { useQuery } from "@apollo/client"
 import analytics from "@segment/analytics-react-native"
-
-import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
 import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
-  const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
   const [fitPicsFetchCount, setFitPicsFetchCount] = useState(8)
   const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(Homepage_Query, {
     variables: { firstFitPics: fitPicsFetchCount, skipFitPics: 0 },
   })
+  const { showNotificationBar } = useNotificationBarContext()
 
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
@@ -68,6 +62,32 @@ export const Home = screenTrack()(({ navigation, route }) => {
     }
   }, [data])
 
+  const reservationFeedback = data?.reservationFeedback
+  const shouldRequestFeedback = data?.me?.customer?.shouldRequestFeedback
+  const feedbacks = data?.reservationFeedback?.feedbacks
+  const incompleteFeedbackIndex = feedbacks?.findIndex((feedback) => !feedback.isCompleted)
+
+  useEffect(() => {
+    const goToReservationFeedbackScreen = () => {
+      navigation.navigate("Modal", {
+        screen: Schema.PageNames.ReservationFeedbackModal,
+      })
+    }
+    if (reservationFeedback && shouldRequestFeedback) {
+      let subtitle
+      if (incompleteFeedbackIndex === 0) {
+        subtitle = `Review ${feedbacks?.length} items`
+      } else {
+        subtitle = `Reviewing ${incompleteFeedbackIndex + 1} of ${feedbacks?.length} items`
+      }
+      showNotificationBar({
+        title: "Share feedback on your last order",
+        subtitle,
+        onClickBanner: goToReservationFeedbackScreen,
+      })
+    }
+  }, [shouldRequestFeedback, reservationFeedback, incompleteFeedbackIndex])
+
   const NoInternetComponent = (
     <ErrorScreen
       variant="No Internet"
@@ -88,18 +108,8 @@ export const Home = screenTrack()(({ navigation, route }) => {
     return <Loader />
   }
 
-  const reservationFeedback = data?.reservationFeedback
-  const shouldRequestFeedback = data?.me?.customer?.shouldRequestFeedback
-
-  const goToReservationFeedbackScreen = () => {
-    navigation.navigate("Modal", {
-      screen: Schema.PageNames.ReservationFeedbackModal,
-      params: { reservationFeedback },
-    })
-  }
-
   const onSelectedReviewRating = () => {
-    setShowReservationFeedbackPopUp(false)
+    // setShowReservationFeedbackPopUp(false)
     goToReservationFeedbackScreen()
   }
 
@@ -128,32 +138,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
           }
         }}
       />
-      {reservationFeedback &&
-        shouldRequestFeedback &&
-        (reservationFeedback.rating ? (
-          <ReservationFeedbackReminderWrapper>
-            <ReservationFeedbackReminder
-              reservationFeedback={reservationFeedback}
-              onPress={onPressReservationFeedbackReminder}
-            />
-          </ReservationFeedbackReminderWrapper>
-        ) : (
-          <ReservationFeedbackPopUp
-            reservationFeedback={reservationFeedback}
-            show={showReservationFeedbackPopUp}
-            onSelectedRating={onSelectedReviewRating}
-          />
-        ))}
     </Container>
   )
 })
-
-const ReservationFeedbackReminderWrapper = styled(Box)`
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  background: ${color("white100")};
-  width: 100%;
-  height: ${RESERVATION_FEEDBACK_REMINDER_HEIGHT};
-  z-index: 100;
-`
