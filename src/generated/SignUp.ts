@@ -64,4 +64,5 @@ export interface SignUpVariables {
   firstName: string;
   lastName: string;
   zipCode: string;
+  discoveryReference?: string | null;
 }
