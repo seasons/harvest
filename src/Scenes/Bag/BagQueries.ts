@@ -11,15 +11,6 @@ export const CHECK_ITEMS = gql`
   }
 `
 
-export const GET_LOCAL_BAG = gql`
-  query GetLocalBag {
-    localBagItems @client {
-      productID
-      variantID
-    }
-  }
-`
-
 export const GET_LOCAL_BAG_ITEMS = gql`
   query GetLocalBagItems($ids: [ID!]) {
     products(where: { id_in: $ids }) {
@@ -137,15 +128,6 @@ export const GET_BAG = gql`
   ${BagTabHeaderFragment_Query}
   ${DeliveryStatusFragment_Me}
   ${BagItemFragment}
-`
-
-export const ADD_OR_REMOVE_FROM_LOCAL_BAG = gql`
-  mutation AddOrRemoveFromLocalBag($productID: ID!, $variantID: ID!) {
-    addOrRemoveFromLocalBag(productID: $productID, variantID: $variantID) @client {
-      productID
-      variantID
-    }
-  }
 `
 
 export const ADD_TO_BAG = gql`

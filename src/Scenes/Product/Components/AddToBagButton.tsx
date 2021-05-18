@@ -2,7 +2,7 @@ import { Button } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { ADD_OR_REMOVE_FROM_LOCAL_BAG, ADD_TO_BAG, GET_BAG, GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
+import { ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import { head } from "lodash"
@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native"
 
 import { GET_PRODUCT } from "../Queries"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_LOCAL_BAG } from "App/queries/clientQueries"
 
 interface Props {
   setShowSizeWarning: (show: boolean) => void
