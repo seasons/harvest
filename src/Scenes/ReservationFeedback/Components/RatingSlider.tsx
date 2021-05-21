@@ -11,13 +11,14 @@ interface Props {
 
 export const RatingSlider: React.FC<Props> = ({ setViewState, viewState, currFeedbackIndex }) => {
   const sliderMoved = viewState[currFeedbackIndex].sliderMoved
+  const value = viewState[currFeedbackIndex].ratingValue === null ? 0 : viewState[currFeedbackIndex].ratingValue
   return (
     <Slider
       style={{ width: "100%", height: 40 }}
       minimumValue={0}
       maximumValue={5}
       step={0.5}
-      value={viewState[currFeedbackIndex].ratingValue}
+      value={value}
       thumbTintColor={sliderMoved ? color("black100") : color("black04")}
       minimumTrackTintColor={color("black04")}
       maximumTrackTintColor={color("black04")}

@@ -69,7 +69,7 @@ export interface ReservationFeedbackViewState {
 export const ReservationFeedbackModal: React.FC<{
   navigation: any
   route: any
-}> = screenTrack()(({ route, navigation }) => {
+}> = screenTrack()(({ navigation }) => {
   const emptyViewState = {
     sliderMoved: false,
     responses: {},
@@ -93,8 +93,6 @@ export const ReservationFeedbackModal: React.FC<{
 
   const feedbacks = data?.reservationFeedback?.feedbacks
   const [currFeedbackIndex, setCurrFeedbackIndex] = useState(-1)
-
-  console.log("data", data)
 
   useEffect(() => {
     if (currFeedbackIndex === -1 && feedbacks?.length) {
@@ -123,10 +121,6 @@ export const ReservationFeedbackModal: React.FC<{
       setViewState(viewStateCopy)
     }
   }, [currFeedback, setViewState, viewState, currFeedbackIndex])
-
-  console.log("currFeedback", currFeedback)
-  console.log("currFeedbackIndex", currFeedbackIndex)
-  console.log("currViewState", currViewState)
 
   if (!currFeedback || currFeedbackIndex === -1 || !currViewState) {
     return (
@@ -246,8 +240,8 @@ export const ReservationFeedbackModal: React.FC<{
           <Spacer mb={1} />
           <ReviewWrapper p={2}>
             <TextInput
+              onFocus={() => scrollViewRef.current.scrollToEnd({ animated: true })}
               autoCapitalize="sentences"
-              autoFocus
               hideBottomBar
               blurOnSubmit={false}
               currentValue={currViewState.review}
@@ -266,7 +260,6 @@ export const ReservationFeedbackModal: React.FC<{
           <Spacer pb={160} />
         </Box>
       </ScrollView>
-
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={insets.bottom - 16}>
         <Box width="100%" style={{ position: "relative" }}>
           <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
