@@ -1,9 +1,8 @@
 import { useMutation, useQuery } from "@apollo/client"
-import React, { useRef, useState } from "react"
-import { Dimensions, KeyboardAvoidingView, ScrollView, Text, TouchableWithoutFeedback } from "react-native"
+import React, { useEffect, useState } from "react"
+import { Dimensions, KeyboardAvoidingView, ScrollView } from "react-native"
 import { RatingSlider } from "./Components/RatingSlider"
-import { Box, Button, Flex, Sans, Separator, Spacer, TextInput } from "App/Components"
-import { Schema } from "App/Navigation"
+import { Box, Button, Flex, Sans, Spacer, TextInput } from "App/Components"
 import debounce from "lodash/debounce"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ImageRail } from "App/Scenes/Product/Components"
@@ -17,6 +16,8 @@ import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
 import { space } from "@seasons/eclipse"
 import { ReservationFeedbackHeader } from "./Components/ReservationFeedbackHeader"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import { UPDATE_PRODUCT_RESERVATION_FEEDBACK } from "./mutations"
+import { Loader } from "App/Components/Loader"
 
 const windowWidth = Dimensions.get("window").width
 
@@ -24,11 +25,11 @@ export const ReservationFeedback_Query = gql`
   query ReservationFeedback_Query {
     reservationFeedback {
       id
-      comment
-      rating
       feedbacks {
         id
         isCompleted
+        review
+        rating
         questions {
           id
           options
@@ -57,24 +58,47 @@ export const ReservationFeedback_Query = gql`
   }
 `
 
+export interface ReservationFeedbackViewState {
+  sliderMoved: boolean
+  responses: any
+  ratingValue: number | null
+  comment: string
+}
+
 export const ReservationFeedbackModal: React.FC<{
   navigation: any
   route: any
 }> = screenTrack()(({ route, navigation }) => {
+  const emptyViewState = {
+    sliderMoved: false,
+    responses: {},
+    ratingValue: null,
+    comment: "",
+  }
   const insets = useSafeAreaInsets()
-  const [isMutating, setIsMutating] = useState(false)
-  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(ReservationFeedback_Query)
-  const horizontalFlatListRef = useRef(null)
-  const [comment, setComment] = useState("")
+  const tracking = useTracking()
+  const [viewState, setViewState] = useState<ReservationFeedbackViewState[]>([emptyViewState])
+  const [updateProductReservationFeedback] = useMutation(UPDATE_PRODUCT_RESERVATION_FEEDBACK)
+  const { previousData, data = previousData } = useQuery(ReservationFeedback_Query)
+
   const feedbacks = data?.reservationFeedback?.feedbacks
-  const incompleteFeedbackIndex = feedbacks?.findIndex((feedback) => !feedback.isCompleted)
+  const [currFeedbackIndex, setCurrFeedbackIndex] = useState(-1)
 
-  const [currFeedbackIndex, setCurrFeedbackIndex] = useState(
-    incompleteFeedbackIndex === -1 ? feedbacks.length - 1 : incompleteFeedbackIndex
-  )
+  useEffect(() => {
+    if (currFeedbackIndex === -1 && feedbacks?.length) {
+      const incompleteFeedbackIndex = feedbacks?.findIndex((feedback) => !feedback.isCompleted)
+      setViewState(feedbacks.map((f) => emptyViewState))
+      setCurrFeedbackIndex(incompleteFeedbackIndex === -1 ? feedbacks.length - 1 : incompleteFeedbackIndex)
+    }
+  }, [feedbacks, setCurrFeedbackIndex, setViewState])
 
-  const incompleteFeedback = feedbacks[currFeedbackIndex]
   const currFeedback: ReservationFeedback_reservationFeedback_feedbacks = feedbacks?.[currFeedbackIndex]
+  const currViewState = viewState[currFeedbackIndex]
+
+  if (!currFeedback || currFeedbackIndex === -1 || !currViewState) {
+    return <Loader />
+  }
+
   const { variant: currVariant, questions: currQuestions } = currFeedback
   const { product: currProduct } = currVariant
   const {
@@ -85,20 +109,35 @@ export const ReservationFeedbackModal: React.FC<{
   const onLastItem = currFeedbackIndex + 1 === feedbacks?.length
 
   const handleOnSubmit = () => {
+    updateProductReservationFeedback({
+      variables: {
+        productReservationID: currFeedback.id,
+        responses: currViewState.responses,
+        input: {
+          isCompleted: true,
+          rating: currViewState.ratingValue,
+          review: currViewState.comment,
+        },
+      },
+    })
     if (onLastItem) {
+      navigation.goBack()
     } else {
+      setViewState([...viewState, emptyViewState])
       setCurrFeedbackIndex(currFeedbackIndex + 1)
     }
   }
 
   const handleLeftButton = () => {
     if (currFeedbackIndex === 0) {
+      navigation.goBack()
     } else if (currFeedbackIndex > 0) {
       setCurrFeedbackIndex(currFeedbackIndex - 1)
     }
   }
 
-  const buttonDisabled = false
+  const buttonEnabled =
+    Object.keys(currViewState.responses).length === currQuestions.length && currViewState.sliderMoved
 
   return (
     <Container insetsTop={false} insetsBottom={false}>
@@ -134,22 +173,22 @@ export const ReservationFeedbackModal: React.FC<{
                   padding="4px"
                   items={question.options.map((q) => ({ label: q, value: q }))}
                   onTap={(item) => {
-                    // tracking.trackEvent({
-                    //   actionName: Schema.ActionNames.FilterTapped,
-                    //   actionType: Schema.ActionTypes.Tap,
-                    //   filterValue: item.value,
-                    // })
-                    // Recreate a new array reference so that the component reloads
-                    // setFilters({
-                    //   ...filters,
-                    //   topSizeFilters: [
-                    //     ...(filters.topSizeFilters.includes(item.value)
-                    //       ? filters.topSizeFilters.filter((i) => i !== item.value)
-                    //       : filters.topSizeFilters.concat([item.value])),
-                    //   ],
-                    // })
+                    tracking.trackEvent({
+                      actionName: TrackingSchema.ActionNames.ReservationFeedbackOptionButtonTapped,
+                      actionType: TrackingSchema.ActionTypes.Tap,
+                      question: question.id,
+                      value: item.value,
+                    })
+                    const viewStateCopy = [...viewState]
+                    const currentStateCopy = { ...viewStateCopy[currFeedbackIndex] }
+                    currentStateCopy.responses = {
+                      ...currViewState.responses,
+                      [question.id]: currentStateCopy.responses[question.id] === item.value ? null : item.value,
+                    }
+                    viewStateCopy[currFeedbackIndex] = currentStateCopy
+                    setViewState(viewStateCopy)
                   }}
-                  selectedItems={[]}
+                  selectedItems={[currViewState.responses[question.id]]}
                 />
 
                 <Spacer mb={5} />
@@ -158,9 +197,10 @@ export const ReservationFeedbackModal: React.FC<{
           })}
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
             <Sans size="4">How would you rate it?</Sans>
+            {currViewState.sliderMoved && <Sans size="4">{currViewState.ratingValue} ⭐️</Sans>}
           </Flex>
           <Spacer mb={1} />
-          <RatingSlider />
+          <RatingSlider viewState={viewState} setViewState={setViewState} currFeedbackIndex={currFeedbackIndex} />
           <Spacer mb={5} />
           <Sans size="4">Add a review?</Sans>
           <Spacer mb={1} />
@@ -170,11 +210,17 @@ export const ReservationFeedbackModal: React.FC<{
               autoFocus
               hideBottomBar
               blurOnSubmit={false}
-              currentValue={comment}
+              currentValue={currViewState.comment}
               style={{ height: 139, paddingLeft: 0, paddingTop: 0, borderWidth: 0 }}
               placeholder="Example: there was a missing button..."
               multiline={true}
-              onChangeText={(_, val) => setComment(val)}
+              onChangeText={(_, val) => {
+                const viewStateCopy = [...viewState]
+                const currentStateCopy = { ...viewStateCopy[currFeedbackIndex] }
+                currentStateCopy.comment = val
+                viewStateCopy[currFeedbackIndex] = currentStateCopy
+                setViewState(viewStateCopy)
+              }}
             />
           </CommentWrapper>
           <Spacer pb={160} />
@@ -194,8 +240,7 @@ export const ReservationFeedbackModal: React.FC<{
               <Box style={{ flex: 1 }}>
                 <Button
                   block
-                  disabled={buttonDisabled}
-                  loading={isMutating}
+                  disabled={!buttonEnabled}
                   onPress={debounce(handleOnSubmit, 250)}
                   size="large"
                   variant="primaryBlack"
