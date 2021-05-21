@@ -5698,18 +5698,6 @@ export interface ProductVariantCreateWithoutProductInput {
   stored: number;
 }
 
-export interface ProductVariantFeedbackCreateWithoutReservationFeedbackInput {
-  id?: string | null;
-  isCompleted: boolean;
-  questions?: ProductVariantFeedbackQuestionCreateManyWithoutVariantFeedbackInput | null;
-  variant: ProductVariantCreateOneInput;
-}
-
-export interface ProductVariantFeedbackQuestionCreateManyWithoutVariantFeedbackInput {
-  create?: ProductVariantFeedbackQuestionCreateWithoutVariantFeedbackInput[] | null;
-  connect?: ProductVariantFeedbackQuestionWhereUniqueInput[] | null;
-}
-
 export interface ProductVariantFeedbackQuestionCreateWithoutVariantFeedbackInput {
   id?: string | null;
   options?: ProductVariantFeedbackQuestionCreateoptionsInput | null;
@@ -5818,68 +5806,13 @@ export interface ProductVariantFeedbackQuestionWhereUniqueInput {
   id?: string | null;
 }
 
-export interface ProductVariantFeedbackScalarWhereInput {
-  id?: string | null;
-  id_not?: string | null;
-  id_in?: string[] | null;
-  id_not_in?: string[] | null;
-  id_lt?: string | null;
-  id_lte?: string | null;
-  id_gt?: string | null;
-  id_gte?: string | null;
-  id_contains?: string | null;
-  id_not_contains?: string | null;
-  id_starts_with?: string | null;
-  id_not_starts_with?: string | null;
-  id_ends_with?: string | null;
-  id_not_ends_with?: string | null;
+export interface ProductVariantFeedbackUpdateInput {
   isCompleted?: boolean | null;
-  isCompleted_not?: boolean | null;
-  AND?: ProductVariantFeedbackScalarWhereInput[] | null;
-  OR?: ProductVariantFeedbackScalarWhereInput[] | null;
-  NOT?: ProductVariantFeedbackScalarWhereInput[] | null;
-}
-
-export interface ProductVariantFeedbackUpdateManyDataInput {
-  isCompleted?: boolean | null;
-}
-
-export interface ProductVariantFeedbackUpdateManyWithWhereNestedInput {
-  where: ProductVariantFeedbackScalarWhereInput;
-  data: ProductVariantFeedbackUpdateManyDataInput;
-}
-
-export interface ProductVariantFeedbackUpdateManyWithoutReservationFeedbackInput {
-  create?: ProductVariantFeedbackCreateWithoutReservationFeedbackInput[] | null;
-  delete?: ProductVariantFeedbackWhereUniqueInput[] | null;
-  connect?: ProductVariantFeedbackWhereUniqueInput[] | null;
-  set?: ProductVariantFeedbackWhereUniqueInput[] | null;
-  disconnect?: ProductVariantFeedbackWhereUniqueInput[] | null;
-  update?: ProductVariantFeedbackUpdateWithWhereUniqueWithoutReservationFeedbackInput[] | null;
-  upsert?: ProductVariantFeedbackUpsertWithWhereUniqueWithoutReservationFeedbackInput[] | null;
-  deleteMany?: ProductVariantFeedbackScalarWhereInput[] | null;
-  updateMany?: ProductVariantFeedbackUpdateManyWithWhereNestedInput[] | null;
-}
-
-export interface ProductVariantFeedbackUpdateWithWhereUniqueWithoutReservationFeedbackInput {
-  where: ProductVariantFeedbackWhereUniqueInput;
-  data: ProductVariantFeedbackUpdateWithoutReservationFeedbackDataInput;
-}
-
-export interface ProductVariantFeedbackUpdateWithoutReservationFeedbackDataInput {
-  isCompleted?: boolean | null;
+  rating?: number | null;
+  review?: string | null;
   questions?: ProductVariantFeedbackQuestionUpdateManyWithoutVariantFeedbackInput | null;
+  reservationFeedback?: ReservationFeedbackUpdateOneRequiredWithoutFeedbacksInput | null;
   variant?: ProductVariantUpdateOneRequiredInput | null;
-}
-
-export interface ProductVariantFeedbackUpsertWithWhereUniqueWithoutReservationFeedbackInput {
-  where: ProductVariantFeedbackWhereUniqueInput;
-  update: ProductVariantFeedbackUpdateWithoutReservationFeedbackDataInput;
-  create: ProductVariantFeedbackCreateWithoutReservationFeedbackInput;
-}
-
-export interface ProductVariantFeedbackWhereUniqueInput {
-  id?: string | null;
 }
 
 export interface ProductVariantPriceCreateInput {
@@ -7095,6 +7028,11 @@ export interface ReservationCreateManyWithoutCustomerInput {
   connect?: ReservationWhereUniqueInput[] | null;
 }
 
+export interface ReservationCreateOneInput {
+  create?: ReservationCreateInput | null;
+  connect?: ReservationWhereUniqueInput | null;
+}
+
 export interface ReservationCreateOneWithoutPackageEventsInput {
   create?: ReservationCreateWithoutPackageEventsInput | null;
   connect?: ReservationWhereUniqueInput | null;
@@ -7146,13 +7084,37 @@ export interface ReservationCreateWithoutPackageEventsInput {
   shippingOption?: ShippingOptionCreateOneInput | null;
 }
 
-export interface ReservationFeedbackUpdateInput {
+export interface ReservationFeedbackCreateWithoutFeedbacksInput {
+  id?: string | null;
   comment?: string | null;
-  feedbacks?: ProductVariantFeedbackUpdateManyWithoutReservationFeedbackInput | null;
+  rating?: Rating | null;
+  user: UserCreateOneInput;
+  reservation: ReservationCreateOneInput;
+  respondedAt?: any | null;
+}
+
+export interface ReservationFeedbackUpdateOneRequiredWithoutFeedbacksInput {
+  create?: ReservationFeedbackCreateWithoutFeedbacksInput | null;
+  update?: ReservationFeedbackUpdateWithoutFeedbacksDataInput | null;
+  upsert?: ReservationFeedbackUpsertWithoutFeedbacksInput | null;
+  connect?: ReservationFeedbackWhereUniqueInput | null;
+}
+
+export interface ReservationFeedbackUpdateWithoutFeedbacksDataInput {
+  comment?: string | null;
   rating?: Rating | null;
   user?: UserUpdateOneRequiredInput | null;
   reservation?: ReservationUpdateOneRequiredInput | null;
   respondedAt?: any | null;
+}
+
+export interface ReservationFeedbackUpsertWithoutFeedbacksInput {
+  update: ReservationFeedbackUpdateWithoutFeedbacksDataInput;
+  create: ReservationFeedbackCreateWithoutFeedbacksInput;
+}
+
+export interface ReservationFeedbackWhereUniqueInput {
+  id?: string | null;
 }
 
 export interface ReservationReceiptCreateOneWithoutReservationInput {

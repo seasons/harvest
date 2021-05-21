@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Rating, QuestionType } from "./globalTypes";
+import { QuestionType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: ReservationFeedback_Query
@@ -49,6 +49,8 @@ export interface ReservationFeedback_Query_reservationFeedback_feedbacks {
   __typename: "ProductVariantFeedback";
   id: string;
   isCompleted: boolean;
+  review: string | null;
+  rating: number | null;
   questions: ReservationFeedback_Query_reservationFeedback_feedbacks_questions[] | null;
   variant: ReservationFeedback_Query_reservationFeedback_feedbacks_variant;
 }
@@ -56,8 +58,6 @@ export interface ReservationFeedback_Query_reservationFeedback_feedbacks {
 export interface ReservationFeedback_Query_reservationFeedback {
   __typename: "ReservationFeedback";
   id: string;
-  comment: string | null;
-  rating: Rating | null;
   feedbacks: ReservationFeedback_Query_reservationFeedback_feedbacks[] | null;
 }
 
