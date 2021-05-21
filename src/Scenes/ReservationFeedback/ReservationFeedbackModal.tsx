@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client"
 import React, { useEffect, useRef, useState } from "react"
-import { Dimensions, KeyboardAvoidingView, ScrollView } from "react-native"
+import { Dimensions, Keyboard, KeyboardAvoidingView, ScrollView } from "react-native"
 import { RatingSlider } from "./Components/RatingSlider"
 import { Box, Button, CloseButton, Flex, Sans, Spacer, TextInput } from "App/Components"
 import debounce from "lodash/debounce"
@@ -141,6 +141,7 @@ export const ReservationFeedbackModal: React.FC<{
   const onLastItem = currFeedbackIndex + 1 === feedbacks?.length
 
   const handleOnSubmit = () => {
+    Keyboard.dismiss()
     updateProductReservationFeedback({
       variables: {
         productReservationID: currFeedback.id,
@@ -162,6 +163,7 @@ export const ReservationFeedbackModal: React.FC<{
   }
 
   const handleLeftButton = () => {
+    Keyboard.dismiss()
     if (currFeedbackIndex === 0) {
       navigation.goBack()
     } else if (currFeedbackIndex > 0) {
@@ -243,7 +245,7 @@ export const ReservationFeedbackModal: React.FC<{
               onFocus={() => scrollViewRef.current.scrollToEnd({ animated: true })}
               autoCapitalize="sentences"
               hideBottomBar
-              blurOnSubmit={false}
+              blurOnSubmit={true}
               currentValue={currViewState.review}
               style={{ height: 139, paddingLeft: 0, paddingTop: 0, borderWidth: 0 }}
               placeholder="Example: there was a missing button..."
