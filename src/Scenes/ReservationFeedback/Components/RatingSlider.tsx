@@ -17,6 +17,7 @@ export const RatingSlider: React.FC<Props> = ({ setViewState, viewState, currFee
       minimumValue={0}
       maximumValue={5}
       step={0.5}
+      value={viewState[currFeedbackIndex].ratingValue}
       thumbTintColor={sliderMoved ? color("black100") : color("black04")}
       minimumTrackTintColor={color("black04")}
       maximumTrackTintColor={color("black04")}

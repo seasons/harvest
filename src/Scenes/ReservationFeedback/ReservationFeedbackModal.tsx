@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@apollo/client"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, KeyboardAvoidingView, ScrollView } from "react-native"
 import { RatingSlider } from "./Components/RatingSlider"
-import { Box, Button, Flex, Sans, Spacer, TextInput } from "App/Components"
+import { Box, Button, CloseButton, Flex, Sans, Spacer, TextInput } from "App/Components"
 import debounce from "lodash/debounce"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ImageRail } from "App/Scenes/Product/Components"
@@ -18,6 +18,7 @@ import { ReservationFeedbackHeader } from "./Components/ReservationFeedbackHeade
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { UPDATE_PRODUCT_RESERVATION_FEEDBACK } from "./mutations"
 import { Loader } from "App/Components/Loader"
+import { Homepage_Query } from "../Home/queries/homeQueries"
 
 const windowWidth = Dimensions.get("window").width
 
@@ -62,7 +63,7 @@ export interface ReservationFeedbackViewState {
   sliderMoved: boolean
   responses: any
   ratingValue: number | null
-  comment: string
+  review: string
 }
 
 export const ReservationFeedbackModal: React.FC<{
@@ -73,20 +74,31 @@ export const ReservationFeedbackModal: React.FC<{
     sliderMoved: false,
     responses: {},
     ratingValue: null,
-    comment: "",
+    review: "",
   }
+  const scrollViewRef = useRef(null)
   const insets = useSafeAreaInsets()
   const tracking = useTracking()
   const [viewState, setViewState] = useState<ReservationFeedbackViewState[]>([emptyViewState])
-  const [updateProductReservationFeedback] = useMutation(UPDATE_PRODUCT_RESERVATION_FEEDBACK)
+  const [updateProductReservationFeedback] = useMutation(UPDATE_PRODUCT_RESERVATION_FEEDBACK, {
+    refetchQueries: [
+      {
+        query: Homepage_Query,
+        variables: { firstFitPics: 8, skipFitPics: 0 },
+      },
+    ],
+    awaitRefetchQueries: true,
+  })
   const { previousData, data = previousData } = useQuery(ReservationFeedback_Query)
 
   const feedbacks = data?.reservationFeedback?.feedbacks
   const [currFeedbackIndex, setCurrFeedbackIndex] = useState(-1)
 
+  console.log("data", data)
+
   useEffect(() => {
     if (currFeedbackIndex === -1 && feedbacks?.length) {
-      const incompleteFeedbackIndex = feedbacks?.findIndex((feedback) => !feedback.isCompleted)
+      const incompleteFeedbackIndex = feedbacks?.findIndex((feedback) => !feedback.isCompleted) ?? feedbacks?.length - 1
       setViewState(feedbacks.map((f) => emptyViewState))
       setCurrFeedbackIndex(incompleteFeedbackIndex === -1 ? feedbacks.length - 1 : incompleteFeedbackIndex)
     }
@@ -95,8 +107,34 @@ export const ReservationFeedbackModal: React.FC<{
   const currFeedback: ReservationFeedback_reservationFeedback_feedbacks = feedbacks?.[currFeedbackIndex]
   const currViewState = viewState[currFeedbackIndex]
 
+  useEffect(() => {
+    if (currFeedback?.isCompleted && viewState[currFeedbackIndex].sliderMoved === false) {
+      const viewStateCopy = [...viewState]
+      const currentStateCopy = { ...viewStateCopy[currFeedbackIndex] }
+      currentStateCopy.ratingValue = currFeedback.rating
+      currentStateCopy.sliderMoved = true
+      currentStateCopy.review = currFeedback.review
+      const _responses = {}
+      currFeedback.questions.forEach((q) => {
+        _responses[q.id] = q.responses?.[0] ?? null
+      })
+      currentStateCopy.responses = _responses
+      viewStateCopy[currFeedbackIndex] = currentStateCopy
+      setViewState(viewStateCopy)
+    }
+  }, [currFeedback, setViewState, viewState, currFeedbackIndex])
+
+  console.log("currFeedback", currFeedback)
+  console.log("currFeedbackIndex", currFeedbackIndex)
+  console.log("currViewState", currViewState)
+
   if (!currFeedback || currFeedbackIndex === -1 || !currViewState) {
-    return <Loader />
+    return (
+      <>
+        <CloseButton variant="light" />
+        <Loader />
+      </>
+    )
   }
 
   const { variant: currVariant, questions: currQuestions } = currFeedback
@@ -116,7 +154,7 @@ export const ReservationFeedbackModal: React.FC<{
         input: {
           isCompleted: true,
           rating: currViewState.ratingValue,
-          review: currViewState.comment,
+          review: currViewState.review,
         },
       },
     })
@@ -125,6 +163,7 @@ export const ReservationFeedbackModal: React.FC<{
     } else {
       setViewState([...viewState, emptyViewState])
       setCurrFeedbackIndex(currFeedbackIndex + 1)
+      scrollViewRef.current.scrollTo({ y: 0, x: 0, animated: false })
     }
   }
 
@@ -133,6 +172,7 @@ export const ReservationFeedbackModal: React.FC<{
       navigation.goBack()
     } else if (currFeedbackIndex > 0) {
       setCurrFeedbackIndex(currFeedbackIndex - 1)
+      scrollViewRef.current.scrollTo({ y: 0, x: 0, animated: false })
     }
   }
 
@@ -141,7 +181,8 @@ export const ReservationFeedbackModal: React.FC<{
 
   return (
     <Container insetsTop={false} insetsBottom={false}>
-      <ScrollView>
+      <CloseButton variant="light" />
+      <ScrollView ref={scrollViewRef}>
         <Box px={2} width={windowWidth}>
           <ReservationFeedbackHeader />
           <Spacer mb={3} />
@@ -155,7 +196,6 @@ export const ReservationFeedbackModal: React.FC<{
           </Sans>
           <Spacer mb={4} />
           {currQuestions?.map((question) => {
-            console.log("question", question)
             const optionsCount = question.options.length
             const itemWidth =
               optionsCount > 3
@@ -204,25 +244,25 @@ export const ReservationFeedbackModal: React.FC<{
           <Spacer mb={5} />
           <Sans size="4">Add a review?</Sans>
           <Spacer mb={1} />
-          <CommentWrapper p={2}>
+          <ReviewWrapper p={2}>
             <TextInput
               autoCapitalize="sentences"
               autoFocus
               hideBottomBar
               blurOnSubmit={false}
-              currentValue={currViewState.comment}
+              currentValue={currViewState.review}
               style={{ height: 139, paddingLeft: 0, paddingTop: 0, borderWidth: 0 }}
               placeholder="Example: there was a missing button..."
               multiline={true}
               onChangeText={(_, val) => {
                 const viewStateCopy = [...viewState]
                 const currentStateCopy = { ...viewStateCopy[currFeedbackIndex] }
-                currentStateCopy.comment = val
+                currentStateCopy.review = val
                 viewStateCopy[currFeedbackIndex] = currentStateCopy
                 setViewState(viewStateCopy)
               }}
             />
-          </CommentWrapper>
+          </ReviewWrapper>
           <Spacer pb={160} />
         </Box>
       </ScrollView>
@@ -257,7 +297,7 @@ export const ReservationFeedbackModal: React.FC<{
   )
 })
 
-const CommentWrapper = styled(Box)`
+const ReviewWrapper = styled(Box)`
   border-width: 1px;
   border-radius: 4px;
   border-color: ${color("black04")};
