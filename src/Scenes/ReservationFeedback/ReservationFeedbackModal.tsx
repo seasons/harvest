@@ -144,6 +144,7 @@ export const ReservationFeedbackModal: React.FC<{
     Keyboard.dismiss()
     updateProductReservationFeedback({
       variables: {
+        reservationFeedbackID: data.reservationFeedback.id,
         productReservationID: currFeedback.id,
         responses: currViewState.responses,
         input: {

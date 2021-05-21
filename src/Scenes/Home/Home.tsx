@@ -73,18 +73,16 @@ export const Home = screenTrack()(({ navigation, route }) => {
         screen: Schema.PageNames.ReservationFeedbackModal,
       })
     }
-    if (reservationFeedback && shouldRequestFeedback) {
-      let subtitle
-      if (incompleteFeedbackIndex === 0) {
-        subtitle = `Review ${feedbacks?.length} items`
-      } else {
-        subtitle = `Reviewing ${incompleteFeedbackIndex + 1} of ${feedbacks?.length} items`
-      }
+    if (reservationFeedback) {
+      const subtitle = `Reviewing ${incompleteFeedbackIndex + 1} of ${feedbacks?.length} items`
       showNotificationBar({
         title: "Share feedback on your last order",
         subtitle,
         onClickBanner: goToReservationFeedbackScreen,
       })
+      if (shouldRequestFeedback && reservationFeedback) {
+        goToReservationFeedbackScreen()
+      }
     }
   }, [shouldRequestFeedback, reservationFeedback, incompleteFeedbackIndex])
 
