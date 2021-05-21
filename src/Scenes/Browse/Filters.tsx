@@ -203,7 +203,7 @@ export const Filters = screenTrack()((props: any) => {
             <Box px={2}>
               <Sans size="4">Bottom sizes</Sans>
             </Box>
-            <Box px="14px">www
+            <Box px="14px">
               <MultiSelectionTable
                 items={[...item.data?.letter, ...item.data?.waist]}
                 onTap={(item) => {
