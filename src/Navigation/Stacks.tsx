@@ -35,6 +35,7 @@ import { Reservation, ReservationConfirmation, ShareReservationToIG } from "App/
 import {
   ReservationFeedback, ReservationFeedbackConfirmation, ReservationFeedbackFinish
 } from "App/Scenes/ReservationFeedback"
+import { ReservationFeedbackModal } from "App/Scenes/ReservationFeedback/ReservationFeedbackModal"
 import {
   AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn
 } from "App/Scenes/SignIn"
@@ -130,6 +131,7 @@ const ModalStackScreen = () => {
       }}
     >
       <ModalStack.Screen name={Schema.PageNames.FiltersModal} component={Filters} />
+      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackModal} component={ReservationFeedbackModal} />
       <ModalStack.Screen name={Schema.PageNames.UpdatePaymentPlanModal} component={UpdatePaymentPlanModal} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordModal} component={ResetPassword} />
       <ModalStack.Screen name={Schema.PageNames.ResetPasswordConfirmationModal} component={ResetPasswordConfirmation} />
@@ -139,12 +141,6 @@ const ModalStackScreen = () => {
       <ModalStack.Screen name={Schema.PageNames.EditShippingAddress} component={EditShippingAddress} />
       <ModalStack.Screen name={Schema.PageNames.EditStylePreferences} component={EditStylePreferences} />
       <ModalStack.Screen name={Schema.PageNames.EditMeasurements} component={EditMeasurements} />
-      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackModal} component={ReservationFeedback} />
-      <ModalStack.Screen
-        name={Schema.PageNames.ReservationFeedbackConfirmationModal}
-        component={ReservationFeedbackConfirmation}
-      />
-      <ModalStack.Screen name={Schema.PageNames.ReservationFeedbackFinishModal} component={ReservationFeedbackFinish} />
       <ModalStack.Screen name={Schema.PageNames.AllowNotificationsModal} component={AllowNotifications} />
       <ModalStack.Screen name={Schema.PageNames.SaveProductModal} component={SaveProduct} />
       <ModalStack.Screen name={Schema.PageNames.DebugMenu} component={DebugMenu} />

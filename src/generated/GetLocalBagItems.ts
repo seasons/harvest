@@ -13,11 +13,18 @@ export interface GetLocalBagItems_products_variants_product_modelSize {
   display: string;
 }
 
+export interface GetLocalBagItems_products_variants_product_brand_logoImage {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetLocalBagItems_products_variants_product_brand {
   __typename: "Brand";
   id: string;
   name: string;
   websiteUrl: string | null;
+  logoImage: GetLocalBagItems_products_variants_product_brand_logoImage | null;
 }
 
 export interface GetLocalBagItems_products_variants_product_images {

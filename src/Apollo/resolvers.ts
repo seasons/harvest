@@ -1,6 +1,5 @@
-import { GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
-
 import { ApolloCache, Resolvers } from "@apollo/client"
+import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 import gql from "graphql-tag"
 
 export const typeDefs = gql`

@@ -18,4 +18,5 @@ export interface ApplePayCheckoutVariables {
   token: StripeToken;
   tokenType?: string | null;
   couponID?: string | null;
+  shipping?: any | null;
 }

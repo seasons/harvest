@@ -15,8 +15,9 @@ import styled from "styled-components/native"
 
 import { useMutation } from "@apollo/client"
 
-import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
+import { GET_BAG } from "../BagQueries"
 import { Check } from "Assets/svgs"
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG } from "App/queries/clientQueries"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {

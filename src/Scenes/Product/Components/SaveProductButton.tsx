@@ -4,7 +4,6 @@ import { GetProduct_products } from "App/generated/GetProduct"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { SaveIcon } from "Assets/icons"
-import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "@apollo/client"
 import { TouchableOpacity } from "react-native"
@@ -13,18 +12,7 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { useTracking, Schema } from "App/utils/track"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
-
-export const SAVE_ITEM = gql`
-  mutation SaveItem($item: ID!, $save: Boolean!) {
-    saveProduct(item: $item, save: $save) {
-      id
-      productVariant {
-        id
-        isSaved
-      }
-    }
-  }
-`
+import { SAVE_ITEM } from "@seasons/eclipse/src/components/SaveProductButton/queries"
 
 export interface SaveProductButtonProps {
   product: GetProduct_products

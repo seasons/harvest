@@ -65,7 +65,7 @@ export interface GetMembershipInfo_me_user {
 
 export interface GetMembershipInfo_me {
   __typename: "Me";
-  id: string;
+  id: string | null;
   customer: GetMembershipInfo_me_customer | null;
   user: GetMembershipInfo_me_user | null;
 }

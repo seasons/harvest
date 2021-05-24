@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PaymentPlanTier, CustomerStatus, ReservationStatus, ReservationPhase, BagItemStatus } from "./globalTypes";
+import { PaymentPlanTier, CustomerStatus, PauseType, ReservationStatus, ReservationPhase, BagItemStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetBagAndSavedItems
@@ -48,6 +48,8 @@ export interface GetBagAndSavedItems_me_customer_membership_subscription {
   __typename: "CustomerMembershipSubscriptionData";
   id: string;
   nextBillingAt: any | null;
+  currentTermStart: any;
+  currentTermEnd: any;
 }
 
 export interface GetBagAndSavedItems_me_customer_membership_plan {
@@ -62,6 +64,7 @@ export interface GetBagAndSavedItems_me_customer_membership_plan {
 export interface GetBagAndSavedItems_me_customer_membership_pauseRequests {
   __typename: "PauseRequest";
   id: string;
+  pauseType: PauseType;
   resumeDate: any | null;
   pauseDate: any | null;
   pausePending: boolean;
@@ -75,49 +78,6 @@ export interface GetBagAndSavedItems_me_customer_membership {
   pauseRequests: GetBagAndSavedItems_me_customer_membership_pauseRequests[] | null;
 }
 
-export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_images {
-  __typename: "Image";
-  id: string;
-  url: string | null;
-}
-
-export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_brand {
-  __typename: "Brand";
-  id: string;
-  name: string;
-}
-
-export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant_product {
-  __typename: "Product";
-  id: string;
-  slug: string;
-  name: string;
-  images: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_images[];
-  brand: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product_brand;
-}
-
-export interface GetBagAndSavedItems_me_customer_reservations_products_productVariant {
-  __typename: "ProductVariant";
-  id: string;
-  displayShort: string | null;
-  product: GetBagAndSavedItems_me_customer_reservations_products_productVariant_product;
-}
-
-export interface GetBagAndSavedItems_me_customer_reservations_products {
-  __typename: "PhysicalProduct";
-  id: string;
-  productVariant: GetBagAndSavedItems_me_customer_reservations_products_productVariant | null;
-}
-
-export interface GetBagAndSavedItems_me_customer_reservations {
-  __typename: "Reservation";
-  id: string;
-  status: ReservationStatus;
-  reservationNumber: number;
-  createdAt: any;
-  products: GetBagAndSavedItems_me_customer_reservations_products[];
-}
-
 export interface GetBagAndSavedItems_me_customer {
   __typename: "Customer";
   id: string;
@@ -126,7 +86,6 @@ export interface GetBagAndSavedItems_me_customer {
   user: GetBagAndSavedItems_me_customer_user;
   detail: GetBagAndSavedItems_me_customer_detail | null;
   membership: GetBagAndSavedItems_me_customer_membership | null;
-  reservations: GetBagAndSavedItems_me_customer_reservations[] | null;
 }
 
 export interface GetBagAndSavedItems_me_activeReservation_returnedPackage_shippingLabel {
@@ -172,11 +131,18 @@ export interface GetBagAndSavedItems_me_bag_productVariant_product_modelSize {
   display: string;
 }
 
+export interface GetBagAndSavedItems_me_bag_productVariant_product_brand_logoImage {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetBagAndSavedItems_me_bag_productVariant_product_brand {
   __typename: "Brand";
   id: string;
   name: string;
   websiteUrl: string | null;
+  logoImage: GetBagAndSavedItems_me_bag_productVariant_product_brand_logoImage | null;
 }
 
 export interface GetBagAndSavedItems_me_bag_productVariant_product_images {
@@ -240,87 +206,16 @@ export interface GetBagAndSavedItems_me_bag {
   productVariant: GetBagAndSavedItems_me_bag_productVariant;
 }
 
-export interface GetBagAndSavedItems_me_savedItems_productVariant_product_modelSize {
-  __typename: "Size";
-  id: string;
-  display: string;
-}
-
-export interface GetBagAndSavedItems_me_savedItems_productVariant_product_brand {
-  __typename: "Brand";
-  id: string;
-  name: string;
-  websiteUrl: string | null;
-}
-
-export interface GetBagAndSavedItems_me_savedItems_productVariant_product_images {
-  __typename: "Image";
-  id: string;
-  url: string | null;
-}
-
-export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants_price {
-  __typename: "ProductVariantPrice";
-  id: string;
-  retailPrice: number | null;
-}
-
-export interface GetBagAndSavedItems_me_savedItems_productVariant_product_variants {
-  __typename: "ProductVariant";
-  id: string;
-  reservable: number;
-  hasRestockNotification: boolean;
-  displayShort: string | null;
-  displayLong: string | null;
-  price: GetBagAndSavedItems_me_savedItems_productVariant_product_variants_price;
-}
-
-export interface GetBagAndSavedItems_me_savedItems_productVariant_product {
-  __typename: "Product";
-  id: string;
-  slug: string;
-  name: string;
-  modelSize: GetBagAndSavedItems_me_savedItems_productVariant_product_modelSize | null;
-  brand: GetBagAndSavedItems_me_savedItems_productVariant_product_brand;
-  images: GetBagAndSavedItems_me_savedItems_productVariant_product_images[];
-  variants: GetBagAndSavedItems_me_savedItems_productVariant_product_variants[] | null;
-}
-
-export interface GetBagAndSavedItems_me_savedItems_productVariant_price {
-  __typename: "ProductVariantPrice";
-  id: string;
-  buyNewPrice: number | null;
-  buyNewEnabled: boolean;
-  buyNewAvailableForSale: boolean | null;
-  buyUsedAvailableForSale: boolean | null;
-  buyUsedPrice: number | null;
-  buyUsedEnabled: boolean;
-}
-
-export interface GetBagAndSavedItems_me_savedItems_productVariant {
-  __typename: "ProductVariant";
-  id: string;
-  product: GetBagAndSavedItems_me_savedItems_productVariant_product;
-  price: GetBagAndSavedItems_me_savedItems_productVariant_price;
-}
-
-export interface GetBagAndSavedItems_me_savedItems {
-  __typename: "BagItem";
-  id: string;
-  saved: boolean | null;
-  productVariant: GetBagAndSavedItems_me_savedItems_productVariant;
-}
-
 export interface GetBagAndSavedItems_me {
   __typename: "Me";
-  id: string;
+  id: string | null;
   customer: GetBagAndSavedItems_me_customer | null;
   activeReservation: GetBagAndSavedItems_me_activeReservation | null;
   bag: GetBagAndSavedItems_me_bag[] | null;
-  savedItems: GetBagAndSavedItems_me_savedItems[] | null;
 }
 
 export interface GetBagAndSavedItems {
   paymentPlans: (GetBagAndSavedItems_paymentPlans | null)[] | null;
   me: GetBagAndSavedItems_me | null;
+  __typename: "Query";
 }

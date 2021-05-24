@@ -13,6 +13,7 @@ export interface SubmitOrder_submitOrder_lineItems_productVariant_product_brand 
   __typename: "Brand";
   id: string;
   name: string;
+  websiteUrl: string | null;
 }
 
 export interface SubmitOrder_submitOrder_lineItems_productVariant_product_images {

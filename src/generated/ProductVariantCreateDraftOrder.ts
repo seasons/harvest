@@ -13,6 +13,7 @@ export interface ProductVariantCreateDraftOrder_createDraftedOrder_lineItems_pro
   __typename: "Brand";
   id: string;
   name: string;
+  websiteUrl: string | null;
 }
 
 export interface ProductVariantCreateDraftOrder_createDraftedOrder_lineItems_productVariant_product_images {

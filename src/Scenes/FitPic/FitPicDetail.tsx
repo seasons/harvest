@@ -14,9 +14,9 @@ import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
 import styled from "styled-components"
 import { useMutation } from "@apollo/client"
 import { GET_BAG } from "../Bag/BagQueries"
-import { SAVE_ITEM } from "../Product/Components/SaveProductButton"
 import { GET_PRODUCT } from "../Product/Queries"
 import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
+import { SAVE_ITEM } from "@seasons/eclipse/src/components/SaveProductButton/queries"
 
 interface FitPicDetailProps {
   navigation: any
