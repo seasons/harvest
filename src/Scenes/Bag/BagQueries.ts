@@ -1,4 +1,5 @@
 import gql from "graphql-tag"
+
 import { BagItemFragment } from "./Components/BagItem"
 import { BagTabHeaderFragment_Query } from "./Components/BagTabHeader"
 import { DeliveryStatusFragment_Me } from "./Components/DeliveryStatus"
@@ -114,6 +115,7 @@ export const GET_BAG = gql`
         id
         returnAt
         shipped
+        returnedAt
         createdAt
         status
         phase
