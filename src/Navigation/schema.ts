@@ -42,6 +42,8 @@ export enum PageNames {
   Faq = "Faq",
   Reservation = "Reservation",
   ReservationConfirmation = "ReservationConfirmation",
+  ReturnYourBag = "ReturnYourBag",
+  ReturnYourBagConfirmation = "ReturnYourBagConfirmation",
 
   // Account
   Account = "Account",
