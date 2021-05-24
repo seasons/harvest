@@ -1,32 +1,33 @@
-import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
-import { Box, Button, Spacer } from "@seasons/eclipse"
-import analytics from "@segment/analytics-react-native"
 import { Loader } from "App/Components/Loader"
 import { PauseStatus } from "App/Components/Pause/PauseButtons"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
+import { DateTime } from "luxon"
 import React, { useEffect, useRef, useState } from "react"
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { FlatList, RefreshControl, StatusBar, View } from "react-native"
-import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
+import { NavigationRoute, NavigationScreenProp } from "react-navigation"
+
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
+import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
+import { Box, Button, Spacer } from "@seasons/eclipse"
+import analytics from "@segment/analytics-react-native"
+
 import {
-  CHECK_ITEMS,
-  GET_BAG,
-  REMOVE_FROM_BAG,
-  REMOVE_FROM_BAG_AND_SAVE_ITEM,
-  ReservationHistoryTab_Query,
-  SavedTab_Query,
+  State as CreateAccountState, UserState as CreateAccountUserState
+} from "../CreateAccount/CreateAccount"
+import {
+  CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM,
+  ReservationHistoryTab_Query, SavedTab_Query
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
-import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
-import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 
 export enum BagView {
   Bag = 0,
@@ -34,7 +35,12 @@ export enum BagView {
   History = 2,
 }
 
-export const Bag = screenTrack()((props) => {
+interface BagProps {
+  navigation: NavigationScreenProp<any>
+  route: NavigationRoute
+}
+
+export const Bag = screenTrack()((props: BagProps) => {
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
@@ -80,6 +86,7 @@ export const Bag = screenTrack()((props) => {
 
   const me = data?.me
   const customerStatus = me?.customer?.status
+  const markedAsReturned = !!me?.activeReservation?.returnedAt
 
   useEffect(() => {
     if (data) {
@@ -168,8 +175,13 @@ export const Bag = screenTrack()((props) => {
   const bagIsFull = itemCount && bagCount >= itemCount
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
+  const status = me?.activeReservation?.status
+  const updatedMoreThan24HoursAgo =
+    me?.activeReservation?.updatedAt &&
+    DateTime.fromISO(me?.activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
+  const atHome = status && status === "Delivered" && updatedMoreThan24HoursAgo
 
-  const handleReserve = async (navigation) => {
+  const handleReserve = async () => {
     setMutating(true)
     if (!isSignedIn) {
       showPopUp({
@@ -260,6 +272,8 @@ export const Bag = screenTrack()((props) => {
         <BagTab
           itemCount={itemCount}
           data={data}
+          bagIsFull={bagIsFull}
+          handleReserve={handleReserve}
           pauseStatus={pauseStatus}
           items={item.data}
           removeFromBagAndSaveItem={removeFromBagAndSaveItem}
@@ -330,7 +344,7 @@ export const Bag = screenTrack()((props) => {
           ref={flatListRef}
           ListFooterComponent={() => <Spacer pb={80} />}
         />
-        {isBagView && pauseStatus !== "paused" && !hasActiveReservation && (
+        {isBagView && pauseStatus !== "paused" && (!hasActiveReservation || hasActiveReservation) && atHome && (
           <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
             <Spacer mb={2} />
             <Box px={2}>
@@ -342,12 +356,21 @@ export const Bag = screenTrack()((props) => {
                     actionType: TrackSchema.ActionTypes.Tap,
                     bagIsFull,
                   })
-                  handleReserve(navigation)
+                  if (!hasActiveReservation) {
+                    handleReserve()
+                  } else {
+                    navigation.navigate(
+                      markedAsReturned
+                        ? NavigationSchema.PageNames.ReturnYourBagConfirmation
+                        : NavigationSchema.PageNames.ReturnYourBag
+                    )
+                  }
                 }}
                 disabled={!bagIsFull || isMutating}
                 loading={isMutating}
+                variant={hasActiveReservation ? "primaryWhite" : "primaryBlack"}
               >
-                Reserve
+                {hasActiveReservation ? (markedAsReturned ? "Return Instructions" : "Return Bag") : "Reserve"}
               </Button>
             </Box>
             <Spacer mb={2} />

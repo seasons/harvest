@@ -1,23 +1,18 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
-import { ExtendPauseConfirmation, PauseConfirmation, ResumeConfirmation } from "App/Components/Pause"
+import {
+  ExtendPauseConfirmation, PauseConfirmation, ResumeConfirmation
+} from "App/Components/Pause"
 import { PauseModal } from "App/Components/Pause/PauseModal"
 import { navigateTo, Schema } from "App/Navigation"
 import {
-  Account,
-  EditMeasurements,
-  EditPaymentAndShipping,
-  EditShippingAddress,
-  EditStylePreferences,
-  PaymentAndShipping,
+  Account, EditMeasurements, EditPaymentAndShipping, EditShippingAddress, EditStylePreferences,
+  PaymentAndShipping
 } from "App/Scenes/Account"
-import { useNavigation } from "@react-navigation/native"
 import { InviteFromContacts } from "App/Scenes/Account/InviteFriends"
 import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
 import { EditCreditCard } from "App/Scenes/Account/PaymentAndShipping/EditCreditCard"
 import { InvoiceDetail } from "App/Scenes/Account/PaymentAndShipping/InvoiceDetail"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
-import { Bag, CurrentRotation } from "App/Scenes/Bag"
+import { Bag, CurrentRotation, ReturnYourBag, ReturnYourBagConfirmation } from "App/Scenes/Bag"
 import { SurpriseMe } from "App/Scenes/Bag/SurpriseMe"
 import { Brand } from "App/Scenes/Brand"
 import { Brands } from "App/Scenes/Brands"
@@ -31,11 +26,19 @@ import { FitPicConfirmation, FitPicDetail, ShareFitPicToIG } from "App/Scenes/Fi
 import { Home } from "App/Scenes/Home"
 import { Order, OrderConfirmation } from "App/Scenes/Order"
 import { Product, SaveProduct } from "App/Scenes/Product"
-import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
+import {
+  FinishProductRequest, ProductRequest, ProductRequestConfirmation
+} from "App/Scenes/ProductRequest"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
 import { ReferralView } from "App/Scenes/ReferralView"
 import { Reservation, ReservationConfirmation, ShareReservationToIG } from "App/Scenes/Reservation"
-import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn } from "App/Scenes/SignIn"
+import {
+  ReservationFeedback, ReservationFeedbackConfirmation, ReservationFeedbackFinish
+} from "App/Scenes/ReservationFeedback"
+import { ReservationFeedbackModal } from "App/Scenes/ReservationFeedback/ReservationFeedbackModal"
+import {
+  AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn
+} from "App/Scenes/SignIn"
 import { Tag } from "App/Scenes/Tag"
 import { Webview } from "App/Scenes/Webview"
 import { color } from "App/utils"
@@ -43,9 +46,13 @@ import React from "react"
 import { createSharedElementStackNavigator } from "react-navigation-shared-element"
 import { MembershipInfo } from "Scenes/Account/MembershipInfo"
 import { Homepage_fitPics as FitPic } from "src/generated/Homepage"
-import { NavBar } from "./NavBar"
+
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { useNavigation } from "@react-navigation/native"
+import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
 import { NotificationBar } from "@seasons/eclipse"
-import { ReservationFeedbackModal } from "App/Scenes/ReservationFeedback/ReservationFeedbackModal"
+
+import { NavBar } from "./NavBar"
 
 const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
@@ -209,6 +216,8 @@ const BagStackScreen = () => {
       <BagStack.Screen name={Schema.PageNames.ReservationConfirmation} component={ReservationConfirmation} />
       <BagStack.Screen name={Schema.PageNames.Order} component={Order} />
       <BagStack.Screen name={Schema.PageNames.OrderConfirmation} component={OrderConfirmation} />
+      <BagStack.Screen name={Schema.PageNames.ReturnYourBag} component={ReturnYourBag} />
+      <BagStack.Screen name={Schema.PageNames.ReturnYourBagConfirmation} component={ReturnYourBagConfirmation} />
     </BagStack.Navigator>
   )
 }
