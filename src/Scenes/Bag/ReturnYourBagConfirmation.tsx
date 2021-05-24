@@ -38,7 +38,6 @@ export const ReturnYourBagConfirmation = screenTrack()((props) => {
   }
 
   const items = data?.me?.activeReservation.returnedProducts
-  console.log(items)
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
