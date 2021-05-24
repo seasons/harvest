@@ -4,6 +4,7 @@ import { space } from "App/utils/space"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
+import { DateTime } from "luxon"
 import React, { useState } from "react"
 import { Dimensions, FlatList } from "react-native"
 
@@ -78,10 +79,12 @@ export const ReturnYourBag = () => {
               </Sans>
               <Spacer mt="1" />
               <Sans size="5" color="black50">
-                Heads up, it looks like you don’t have have a free swap until January 19th. Return your items early &
-                place a new order for only $35
+                Heads up, it looks like you don’t have have a free swap until{" "}
+                <Sans size="5" style={{ textDecorationLine: "underline" }}>
+                  {DateTime.fromISO(activeReservation.returnAt).toLocaleString(DateTime.DATE_FULL)}
+                </Sans>
+                . Return your items early & place a new order for only $35
               </Sans>
-
               <Box mt={4} mb={1}>
                 <Sans size="5">Which items are you returning?</Sans>
               </Box>
@@ -95,7 +98,12 @@ export const ReturnYourBag = () => {
           )}
           keyExtractor={(_item, index) => String(index)}
           renderItem={(item) => renderItem(item)}
-          ListFooterComponent={() => <Spacer mb={40} />}
+          ListFooterComponent={() => (
+            <Box px={2}>
+              <Separator />
+              <Spacer mb={40} />
+            </Box>
+          )}
         />
       </Box>
 

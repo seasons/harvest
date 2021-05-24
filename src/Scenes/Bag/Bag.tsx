@@ -10,6 +10,7 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
+import { DateTime } from "luxon"
 import React, { useEffect, useRef, useState } from "react"
 import { FlatList, RefreshControl, StatusBar, View } from "react-native"
 import { NavigationRoute, NavigationScreenProp } from "react-navigation"
@@ -174,8 +175,13 @@ export const Bag = screenTrack()((props: BagProps) => {
   const bagIsFull = itemCount && bagCount >= itemCount
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
+  const status = me?.activeReservation?.status
+  const updatedMoreThan24HoursAgo =
+    me?.activeReservation?.updatedAt &&
+    DateTime.fromISO(me?.activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
+  const atHome = status && status === "Delivered" && updatedMoreThan24HoursAgo
 
-  const handleReserve = async (navigation) => {
+  const handleReserve = async () => {
     setMutating(true)
     if (!isSignedIn) {
       showPopUp({
@@ -266,6 +272,8 @@ export const Bag = screenTrack()((props: BagProps) => {
         <BagTab
           itemCount={itemCount}
           data={data}
+          bagIsFull={bagIsFull}
+          handleReserve={handleReserve}
           pauseStatus={pauseStatus}
           items={item.data}
           removeFromBagAndSaveItem={removeFromBagAndSaveItem}
@@ -336,7 +344,7 @@ export const Bag = screenTrack()((props: BagProps) => {
           ref={flatListRef}
           ListFooterComponent={() => <Spacer pb={80} />}
         />
-        {isBagView && pauseStatus !== "paused" && (
+        {isBagView && pauseStatus !== "paused" && (!hasActiveReservation || hasActiveReservation) && atHome && (
           <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
             <Spacer mb={2} />
             <Box px={2}>
@@ -349,7 +357,7 @@ export const Bag = screenTrack()((props: BagProps) => {
                     bagIsFull,
                   })
                   if (!hasActiveReservation) {
-                    handleReserve(navigation)
+                    handleReserve()
                   } else {
                     navigation.navigate(
                       markedAsReturned

@@ -21,6 +21,7 @@ export const ACTIVE_RESERVATION = gql`
       activeReservation {
         id
         shipped
+        returnAt
         createdAt
         products {
           id

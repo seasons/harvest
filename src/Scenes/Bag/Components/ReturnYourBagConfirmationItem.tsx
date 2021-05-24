@@ -5,7 +5,7 @@ import gql from "graphql-tag"
 import React from "react"
 import styled from "styled-components/native"
 
-export const ReturnYourBagConfirmationItem_PhysicalProduct = gql`
+export const ReturnYourBagConfirmationItemFragment_PhysicalProduct = gql`
   fragment ReturnYourBagConfirmationItem on PhysicalProduct {
     id
     seasonsUID

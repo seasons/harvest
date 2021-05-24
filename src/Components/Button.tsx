@@ -2,6 +2,7 @@ import React, { Component, ComponentType, ReactNode } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
+
 import { TextCheckSVG } from "../../assets/svgs"
 import { Box, BoxProps } from "./Box"
 import { Flex } from "./Flex"
@@ -340,7 +341,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
                   {!!Icon && (
                     <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ opacity: iconOpacity }}>
                       <Icon />
-                      <Spacer mr={1} />
+                      {(children as any[]).length > 0 && <Spacer mr={1} />}
                     </Flex>
                   )}
                   <Sans color={to.color} size={size} style={{ opacity: loading ? 0 : 1 }}>

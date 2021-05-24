@@ -9,7 +9,7 @@ import { ScrollView } from "react-native"
 import { gql, useQuery } from "@apollo/client"
 
 import {
-  ReturnYourBagConfirmationItem, ReturnYourBagConfirmationItem_PhysicalProduct
+  ReturnYourBagConfirmationItem, ReturnYourBagConfirmationItemFragment_PhysicalProduct
 } from "./Components/ReturnYourBagConfirmationItem"
 
 export const RETURNED_ITEMS = gql`
@@ -26,7 +26,7 @@ export const RETURNED_ITEMS = gql`
       }
     }
   }
-  ${ReturnYourBagConfirmationItem_PhysicalProduct}
+  ${ReturnYourBagConfirmationItemFragment_PhysicalProduct}
 `
 
 export const ReturnYourBagConfirmation = screenTrack()((props) => {
