@@ -14,7 +14,7 @@ import analytics from "@segment/analytics-react-native"
 
 import AuthContext from "./AuthContext"
 import { ModalAndMainScreens } from "./Stacks"
-import { GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
+import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 

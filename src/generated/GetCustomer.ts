@@ -23,11 +23,18 @@ export interface GetCustomer_me_bag_productVariant_product_modelSize {
   display: string;
 }
 
+export interface GetCustomer_me_bag_productVariant_product_brand_logoImage {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
 export interface GetCustomer_me_bag_productVariant_product_brand {
   __typename: "Brand";
   id: string;
   name: string;
   websiteUrl: string | null;
+  logoImage: GetCustomer_me_bag_productVariant_product_brand_logoImage | null;
 }
 
 export interface GetCustomer_me_bag_productVariant_product_images {
@@ -142,7 +149,7 @@ export interface GetCustomer_me_customer {
 
 export interface GetCustomer_me {
   __typename: "Me";
-  id: string;
+  id: string | null;
   user: GetCustomer_me_user | null;
   bag: GetCustomer_me_bag[] | null;
   customer: GetCustomer_me_customer | null;

@@ -50,6 +50,21 @@ export interface CommonProductVariant_manufacturerSizes {
   bottom: CommonProductVariant_manufacturerSizes_bottom | null;
 }
 
+export interface CommonProductVariant_nextReservablePhysicalProduct_reports {
+  __typename: "PhysicalProductQualityReport";
+  id: string;
+  createdAt: any;
+  published: boolean;
+  score: number | null;
+  notes: string | null;
+}
+
+export interface CommonProductVariant_nextReservablePhysicalProduct {
+  __typename: "PhysicalProduct";
+  id: string;
+  reports: CommonProductVariant_nextReservablePhysicalProduct_reports[] | null;
+}
+
 export interface CommonProductVariant {
   __typename: "ProductVariant";
   id: string;
@@ -64,4 +79,5 @@ export interface CommonProductVariant {
   hasRestockNotification: boolean;
   price: CommonProductVariant_price;
   manufacturerSizes: CommonProductVariant_manufacturerSizes[] | null;
+  nextReservablePhysicalProduct: CommonProductVariant_nextReservablePhysicalProduct | null;
 }

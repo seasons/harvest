@@ -6,13 +6,14 @@ import styled from "styled-components/native"
 import { color } from "App/utils/color"
 import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 import { useMutation } from "@apollo/client"
-import { ADD_OR_REMOVE_FROM_LOCAL_BAG, ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { GET_PRODUCT } from "../Queries"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useNavigation } from "@react-navigation/native"
 import { CheckCircled } from "Assets/svgs"
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG } from "App/queries/clientQueries"
 
 const getSuggestedVariant = (selectedVariant, variants, fit) => {
   const selectedSizeIndex = variants?.findIndex((v) => v?.id === selectedVariant?.id)

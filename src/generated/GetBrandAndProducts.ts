@@ -15,13 +15,23 @@ export interface GetBrandAndProducts_brand_images {
   url: string | null;
 }
 
-export interface GetBrandAndProducts_brand_products_images {
+export interface GetBrandAndProducts_brand_productsAggregate_aggregate {
+  __typename: "AggregateProduct";
+  count: number;
+}
+
+export interface GetBrandAndProducts_brand_productsAggregate {
+  __typename: "ProductConnection";
+  aggregate: GetBrandAndProducts_brand_productsAggregate_aggregate;
+}
+
+export interface GetBrandAndProducts_brand_products_edges_node_images {
   __typename: "Image";
   id: string;
   url: string | null;
 }
 
-export interface GetBrandAndProducts_brand_products_variants {
+export interface GetBrandAndProducts_brand_products_edges_node_variants {
   __typename: "ProductVariant";
   id: string;
   displayShort: string | null;
@@ -33,20 +43,30 @@ export interface GetBrandAndProducts_brand_products_variants {
   isSaved: boolean;
 }
 
-export interface GetBrandAndProducts_brand_products {
+export interface GetBrandAndProducts_brand_products_edges_node {
   __typename: "Product";
   id: string;
   slug: string;
   name: string;
   description: string | null;
-  images: GetBrandAndProducts_brand_products_images[];
+  images: GetBrandAndProducts_brand_products_edges_node_images[];
   modelHeight: number | null;
   externalURL: string | null;
   retailPrice: number | null;
   status: ProductStatus | null;
   createdAt: any;
   updatedAt: any;
-  variants: GetBrandAndProducts_brand_products_variants[] | null;
+  variants: GetBrandAndProducts_brand_products_edges_node_variants[] | null;
+}
+
+export interface GetBrandAndProducts_brand_products_edges {
+  __typename: "ProductEdge";
+  node: GetBrandAndProducts_brand_products_edges_node;
+}
+
+export interface GetBrandAndProducts_brand_products {
+  __typename: "ProductConnection";
+  edges: (GetBrandAndProducts_brand_products_edges | null)[];
 }
 
 export interface GetBrandAndProducts_brand {
@@ -58,7 +78,8 @@ export interface GetBrandAndProducts_brand {
   websiteUrl: string | null;
   basedIn: string | null;
   images: GetBrandAndProducts_brand_images[] | null;
-  products: GetBrandAndProducts_brand_products[] | null;
+  productsAggregate: GetBrandAndProducts_brand_productsAggregate;
+  products: GetBrandAndProducts_brand_products;
 }
 
 export interface GetBrandAndProducts {

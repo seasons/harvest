@@ -77,7 +77,7 @@ export interface GetUser_me_customer {
 
 export interface GetUser_me {
   __typename: "Me";
-  id: string;
+  id: string | null;
   customer: GetUser_me_customer | null;
 }
 

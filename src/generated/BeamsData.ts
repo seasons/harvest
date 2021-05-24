@@ -18,7 +18,7 @@ export interface BeamsData_me_user {
 
 export interface BeamsData_me {
   __typename: "Me";
-  id: string;
+  id: string | null;
   user: BeamsData_me_user | null;
 }
 

@@ -22,11 +22,11 @@ import { GetProduct_products_largeImages } from "App/generated/GetProduct"
 import { SavedTab_Query } from "App/Scenes/Bag/BagQueries"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { SAVE_ITEM } from "./Components/SaveProductButton"
 import { useNavigation } from "@react-navigation/native"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { GetBrowseProducts_products_images } from "App/generated/GetBrowseProducts"
 import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
+import { SAVE_ITEM } from "@seasons/eclipse/src/components/SaveProductButton/queries"
 
 const screenWidth = Dimensions.get("window").width
 
