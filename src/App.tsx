@@ -43,6 +43,11 @@ export const App = () => {
       publishableKey: config.get(Env.STRIPE_KEY),
       merchantId: config.get(Env.APPLE_MERCHANT_ID),
     })
+
+    const version = DeviceInfo.getVersion()
+    const buildNumber = DeviceInfo.getBuildNumber()
+    console.log("version", version)
+    console.log("buildNumber", buildNumber)
   }, [])
 
   const checkApolloBuildCache = async () => {
