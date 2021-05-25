@@ -1,11 +1,15 @@
+import { GetBagAndSavedItems_me } from "App/generated/GetBagAndSavedItems"
 import { BottomSheetProvider } from "App/Navigation/BottomSheetContext"
 import { ErrorPopUp } from "App/Navigation/ErrorPopUp"
 import { PopUpProvider } from "App/Navigation/ErrorPopUp/PopUpProvider"
 import { NotificationsProvider } from "App/Notifications"
+import { GET_LOCAL_BAG } from "App/queries/clientQueries"
+import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { getUserSession, userSessionToIdentifyPayload } from "App/utils/auth"
 import React, { useEffect, useImperativeHandle } from "react"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
 
+import { useLazyQuery } from "@apollo/client"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import AsyncStorage from "@react-native-community/async-storage"
 import { createStackNavigator } from "@react-navigation/stack"
@@ -14,7 +18,6 @@ import analytics from "@segment/analytics-react-native"
 
 import AuthContext from "./AuthContext"
 import { ModalAndMainScreens } from "./Stacks"
-import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -29,6 +32,7 @@ export interface AuthProviderRef {
   authContext: () => {
     signIn: (session: any) => Promise<void>
     signOut: () => Promise<void>
+    updateMe: (me: GetBagAndSavedItems_me) => Promise<void>
     resetStore: () => void
     authState: any
     userSession: any
@@ -59,6 +63,11 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
               isSignedIn: false,
               userSession: null,
             }
+          case "UPDATE_ME":
+            return {
+              ...prevState,
+              me: action.me,
+            }
         }
       },
       {
@@ -67,6 +76,12 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         userSession: null,
       }
     )
+
+    const [getBag] = useLazyQuery(GET_BAG, {
+      onCompleted: (data) => {
+        dispatch({ type: "RESTORE_TOKEN", token: data.me })
+      },
+    })
 
     useEffect(() => {
       const bootstrapAsync = async () => {
@@ -85,6 +100,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
       }
 
       bootstrapAsync()
+      getBag()
     }, [])
 
     // Forward authContext to any parents holding a ref to this AuthProvider.
@@ -121,7 +137,11 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         apolloClient.resetStore()
       },
       authState,
+      updateMe: (me: GetBagAndSavedItems_me) => {
+        dispatch({ type: "UPDATE_ME", me })
+      },
       userSession: authState.userSession,
+      me: authState.me,
     }
 
     return (

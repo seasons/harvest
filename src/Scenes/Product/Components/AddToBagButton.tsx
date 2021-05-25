@@ -1,7 +1,9 @@
 import { Button } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
+import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_LOCAL_BAG } from "App/queries/clientQueries"
 import { ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
@@ -12,8 +14,6 @@ import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 
 import { GET_PRODUCT } from "../Queries"
-import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
-import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_LOCAL_BAG } from "App/queries/clientQueries"
 
 interface Props {
   setShowSizeWarning: (show: boolean) => void
@@ -31,7 +31,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
   const tracking = useTracking()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
-  const { authState } = useAuthContext()
+  const { authState, me } = useAuthContext()
   const isUserSignedIn = authState?.isSignedIn
 
   const { data: localItems } = useQuery(GET_LOCAL_BAG)
@@ -54,8 +54,8 @@ export const AddToBagButton: React.FC<Props> = (props) => {
     onCompleted: (res) => {
       setIsMutating(false)
       setAdded(true)
-      const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
-      const bagItemCount = authState?.isSignedIn ? data?.me?.bag?.length : res.addOrRemoveFromLocalBag.length
+      const itemCount = me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
+      const bagItemCount = authState?.isSignedIn ? me?.bag?.length : res.addOrRemoveFromLocalBag.length
       if (itemCount && bagItemCount && bagItemCount >= itemCount && isUserSignedIn) {
         showPopUp({
           icon: <CheckCircled />,

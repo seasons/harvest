@@ -5,6 +5,7 @@ import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
@@ -20,12 +21,14 @@ import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
 import { Box, Button, Spacer } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 
+import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import {
-  State as CreateAccountState, UserState as CreateAccountUserState
-} from "../CreateAccount/CreateAccount"
-import {
-  CHECK_ITEMS, GET_BAG, GET_LOCAL_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM,
-  ReservationHistoryTab_Query, SavedTab_Query
+  CHECK_ITEMS,
+  GET_BAG,
+  REMOVE_FROM_BAG,
+  REMOVE_FROM_BAG_AND_SAVE_ITEM,
+  ReservationHistoryTab_Query,
+  SavedTab_Query,
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 
@@ -41,7 +44,7 @@ interface BagProps {
 }
 
 export const Bag = screenTrack()((props: BagProps) => {
-  const { authState } = useAuthContext()
+  const { authState, updateMe } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
   const [itemCount, setItemCount] = useState(DEFAULT_ITEM_COUNT)
@@ -101,6 +104,8 @@ export const Bag = screenTrack()((props: BagProps) => {
         const baggedItems = me?.bag?.length || 0
         analytics.identify(userId, { bagItems: savedItems + baggedItems })
       }
+
+      updateMe(data?.me)
     }
   }, [data, setIsLoading, setItemCount])
 
@@ -344,7 +349,7 @@ export const Bag = screenTrack()((props: BagProps) => {
           ref={flatListRef}
           ListFooterComponent={() => <Spacer pb={80} />}
         />
-        {isBagView && pauseStatus !== "paused" && (!hasActiveReservation || hasActiveReservation) && atHome && (
+        {isBagView && pauseStatus !== "paused" && (!hasActiveReservation || (hasActiveReservation && atHome)) && (
           <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
             <Spacer mb={2} />
             <Box px={2}>
