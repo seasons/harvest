@@ -92,7 +92,7 @@ You're all set to start making changes in eclipse and
 ### Creating a release via CI
 
 1. Create a new build:
-   - For staging builds, run `git push origin master:staging` or create a PR to `staging`
-   - For production builds, run `git push origin master:production` or create a PR to `production`
+   - For staging builds, create a PR to `staging` from master
+   - For production builds, create a PR to `production` from master
 1. That will kick off the build process on CircleCI (Should take about ~25mins to complete)
 1. That will bump the minor version in package.json and push a commit back to github along with a release tag
