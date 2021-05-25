@@ -246,6 +246,7 @@ export const ReservationFeedbackModal: React.FC<{
               onFocus={() => scrollViewRef.current.scrollToEnd({ animated: true })}
               autoCapitalize="sentences"
               hideBottomBar
+              size="small"
               blurOnSubmit={true}
               currentValue={currViewState.review}
               style={{ height: 139, paddingLeft: 0, paddingTop: 0, borderWidth: 0 }}
