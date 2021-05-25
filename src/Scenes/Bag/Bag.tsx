@@ -42,7 +42,7 @@ interface BagProps {
 }
 
 export const Bag = screenTrack()((props: BagProps) => {
-  const { authState } = useAuthContext()
+  const { authState, updateMe } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
   const [itemCount, setItemCount] = useState(DEFAULT_ITEM_COUNT)
@@ -102,6 +102,8 @@ export const Bag = screenTrack()((props: BagProps) => {
         const baggedItems = me?.bag?.length || 0
         analytics.identify(userId, { bagItems: savedItems + baggedItems })
       }
+
+      updateMe(data?.me)
     }
   }, [data, setIsLoading, setItemCount])
 
