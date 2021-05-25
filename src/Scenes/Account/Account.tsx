@@ -72,6 +72,11 @@ export const GET_USER = gql`
           authorizationWindowClosesAt
           authorizationsCount
         }
+        membership {
+          plan {
+            itemCount
+          }
+        }
       }
     }
   }

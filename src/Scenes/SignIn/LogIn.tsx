@@ -7,10 +7,10 @@ import { color } from "App/utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
-import { useMutation } from "@apollo/client"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { checkNotifications } from "react-native-permissions"
 
+import { useMutation } from "@apollo/client"
 import AsyncStorage from "@react-native-community/async-storage"
 
 const LOG_IN = gql`
@@ -31,6 +31,11 @@ const LOG_IN = gql`
           shippingAddress {
             id
             state
+          }
+        }
+        membership {
+          plan {
+            itemCount
           }
         }
       }

@@ -42,7 +42,7 @@ interface BagProps {
 }
 
 export const Bag = screenTrack()((props: BagProps) => {
-  const { authState } = useAuthContext()
+  const { authState, updateMe } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
   const [itemCount, setItemCount] = useState(DEFAULT_ITEM_COUNT)
@@ -102,6 +102,8 @@ export const Bag = screenTrack()((props: BagProps) => {
         const baggedItems = me?.bag?.length || 0
         analytics.identify(userId, { bagItems: savedItems + baggedItems })
       }
+
+      updateMe(data?.me)
     }
   }, [data, setIsLoading, setItemCount])
 
@@ -345,7 +347,7 @@ export const Bag = screenTrack()((props: BagProps) => {
           ref={flatListRef}
           ListFooterComponent={() => <Spacer pb={80} />}
         />
-        {isBagView && pauseStatus !== "paused" && (!hasActiveReservation || hasActiveReservation) && atHome && (
+        {isBagView && pauseStatus !== "paused" && (!hasActiveReservation || (hasActiveReservation && atHome)) && (
           <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
             <Spacer mb={2} />
             <Box px={2}>
