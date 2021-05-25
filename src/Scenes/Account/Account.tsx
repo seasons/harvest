@@ -4,8 +4,17 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
 import {
-  DocumentWithText, Envelope, Instagram, LogOutSVG, ManageMembership, MapPin, MonocromeSeasonsLogo,
-  PersonalPreferences, PrivacyPolicy, SpeechBubble, Star
+  DocumentWithText,
+  Envelope,
+  Instagram,
+  LogOutSVG,
+  ManageMembership,
+  MapPin,
+  MonocromeSeasonsLogo,
+  PersonalPreferences,
+  PrivacyPolicy,
+  SpeechBubble,
+  Star,
 } from "Assets/svgs"
 import gql from "graphql-tag"
 import { DateTime } from "luxon"
@@ -17,6 +26,7 @@ import Share from "react-native-share"
 import { useQuery } from "@apollo/client"
 import { useScrollToTop } from "@react-navigation/native"
 import { AuthorizedCTA, WaitlistedCTA } from "@seasons/eclipse"
+import { useNotificationBarContext } from "@seasons/eclipse"
 
 import { State, UserState } from "../CreateAccount/CreateAccount"
 import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
@@ -89,7 +99,7 @@ export const Account = screenTrack()(({ navigation }) => {
   const tracking = useTracking()
 
   useScrollToTop(scrollViewRef)
-
+  const { hideNotificationBar } = useNotificationBarContext()
   useEffect(() => {
     const unsubscribe = navigation?.addListener("focus", () => {
       StatusBar.setBarStyle("dark-content")
@@ -249,6 +259,7 @@ export const Account = screenTrack()(({ navigation }) => {
       icon: <LogOutSVG />,
       tracking: Schema.ActionNames.LogOutTapped,
       onPress: () => {
+        hideNotificationBar()
         signOut()
       },
     },

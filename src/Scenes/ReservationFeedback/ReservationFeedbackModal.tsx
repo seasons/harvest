@@ -13,7 +13,7 @@ import { screenTrack, useTracking, Schema as TrackingSchema } from "App/utils/tr
 import { Container } from "Components/Container"
 import { ReservationFeedback_reservationFeedback_feedbacks } from "src/generated/ReservationFeedback"
 import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
-import { space } from "@seasons/eclipse"
+import { space, useNotificationBarContext } from "@seasons/eclipse"
 import { ReservationFeedbackHeader } from "./Components/ReservationFeedbackHeader"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { UPDATE_PRODUCT_RESERVATION_FEEDBACK } from "./mutations"
@@ -76,6 +76,7 @@ export const ReservationFeedbackModal: React.FC<{
     ratingValue: null,
     review: "",
   }
+  const { hideNotificationBar } = useNotificationBarContext()
   const scrollViewRef = useRef(null)
   const insets = useSafeAreaInsets()
   const tracking = useTracking()
@@ -155,6 +156,7 @@ export const ReservationFeedbackModal: React.FC<{
       },
     })
     if (onLastItem) {
+      hideNotificationBar()
       navigation.goBack()
     } else {
       setViewState([...viewState, emptyViewState])
@@ -246,6 +248,7 @@ export const ReservationFeedbackModal: React.FC<{
               onFocus={() => scrollViewRef.current.scrollToEnd({ animated: true })}
               autoCapitalize="sentences"
               hideBottomBar
+              size="small"
               blurOnSubmit={true}
               currentValue={currViewState.review}
               style={{ height: 139, paddingLeft: 0, paddingTop: 0, borderWidth: 0 }}

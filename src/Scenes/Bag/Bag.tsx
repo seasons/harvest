@@ -21,12 +21,14 @@ import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
 import { Box, Button, Spacer } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 
+import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import {
-  State as CreateAccountState, UserState as CreateAccountUserState
-} from "../CreateAccount/CreateAccount"
-import {
-  CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM, ReservationHistoryTab_Query,
-  SavedTab_Query
+  CHECK_ITEMS,
+  GET_BAG,
+  REMOVE_FROM_BAG,
+  REMOVE_FROM_BAG_AND_SAVE_ITEM,
+  ReservationHistoryTab_Query,
+  SavedTab_Query,
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 
