@@ -62,6 +62,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
               ...prevState,
               isSignedIn: false,
               userSession: null,
+              me: null,
             }
           case "UPDATE_ME":
             return {
@@ -79,7 +80,9 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
 
     const [getBag] = useLazyQuery(GET_BAG, {
       onCompleted: (data) => {
-        dispatch({ type: "RESTORE_TOKEN", token: data.me })
+        if (data?.me?.id) {
+          dispatch({ type: "RESTORE_TOKEN", token: data.me })
+        }
       },
     })
 
