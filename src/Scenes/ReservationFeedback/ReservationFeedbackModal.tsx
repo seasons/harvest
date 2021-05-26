@@ -125,7 +125,14 @@ export const ReservationFeedbackModal: React.FC<{
     }
   }, [currFeedback, setViewState, viewState, currFeedbackIndex])
 
-  if (!currFeedback || currFeedbackIndex === -1 || !currViewState) {
+  if (finished) {
+    return (
+      <Container insetsTop={false} insetsBottom={false}>
+        <CloseButton variant="light" />
+        <ReservationFeedbackFinish navigation={navigation} />
+      </Container>
+    )
+  } else if (!currFeedback || currFeedbackIndex === -1 || !currViewState) {
     return (
       <>
         <CloseButton variant="light" />
@@ -179,15 +186,6 @@ export const ReservationFeedbackModal: React.FC<{
 
   const buttonEnabled =
     Object.keys(currViewState.responses).length === currQuestions.length && currViewState.sliderMoved
-
-  if (finished) {
-    return (
-      <Container insetsTop={false} insetsBottom={false}>
-        <CloseButton variant="light" />
-        <ReservationFeedbackFinish navigation={navigation} />
-      </Container>
-    )
-  }
 
   return (
     <Container insetsTop={false} insetsBottom={false}>
