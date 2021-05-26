@@ -19,6 +19,7 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { UPDATE_PRODUCT_RESERVATION_FEEDBACK } from "./mutations"
 import { Loader } from "App/Components/Loader"
 import { Homepage_Query } from "../Home/queries/homeQueries"
+import { ReservationFeedbackFinish } from "./ReservationFeedbackFinish"
 
 const windowWidth = Dimensions.get("window").width
 
@@ -76,6 +77,7 @@ export const ReservationFeedbackModal: React.FC<{
     ratingValue: null,
     review: "",
   }
+  const [finished, setFinished] = useState(false)
   const { hideNotificationBar } = useNotificationBarContext()
   const scrollViewRef = useRef(null)
   const insets = useSafeAreaInsets()
@@ -123,7 +125,14 @@ export const ReservationFeedbackModal: React.FC<{
     }
   }, [currFeedback, setViewState, viewState, currFeedbackIndex])
 
-  if (!currFeedback || currFeedbackIndex === -1 || !currViewState) {
+  if (finished) {
+    return (
+      <Container insetsTop={false} insetsBottom={false}>
+        <CloseButton variant="light" />
+        <ReservationFeedbackFinish navigation={navigation} />
+      </Container>
+    )
+  } else if (!currFeedback || currFeedbackIndex === -1 || !currViewState) {
     return (
       <>
         <CloseButton variant="light" />
@@ -157,7 +166,7 @@ export const ReservationFeedbackModal: React.FC<{
     })
     if (onLastItem) {
       hideNotificationBar()
-      navigation.goBack()
+      setFinished(true)
     } else {
       setViewState([...viewState, emptyViewState])
       setCurrFeedbackIndex(currFeedbackIndex + 1)
@@ -207,6 +216,7 @@ export const ReservationFeedbackModal: React.FC<{
                 <Spacer mb={1} />
                 <MultiSelectionTable
                   itemWidth={itemWidth}
+                  itemHeight={48}
                   variant="grayBackground"
                   size="3"
                   padding="4px"
@@ -236,7 +246,9 @@ export const ReservationFeedbackModal: React.FC<{
           })}
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
             <Sans size="4">How would you rate it?</Sans>
-            {currViewState.sliderMoved && <Sans size="4">{currViewState.ratingValue} ⭐️</Sans>}
+            <Sans size="4" color={currViewState.sliderMoved ? "black100" : "black50"}>
+              {currViewState.sliderMoved ? `${currViewState.ratingValue} ★` : "No rating"}
+            </Sans>
           </Flex>
           <Spacer mb={1} />
           <RatingSlider viewState={viewState} setViewState={setViewState} currFeedbackIndex={currFeedbackIndex} />

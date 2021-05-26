@@ -8,14 +8,12 @@ import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { getUserSession, userSessionToIdentifyPayload } from "App/utils/auth"
 import React, { useEffect, useImperativeHandle } from "react"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
-
 import { useLazyQuery } from "@apollo/client"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import AsyncStorage from "@react-native-community/async-storage"
 import { createStackNavigator } from "@react-navigation/stack"
 import { NotificationBarProvider } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
-
 import AuthContext from "./AuthContext"
 import { ModalAndMainScreens } from "./Stacks"
 
@@ -62,6 +60,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
               ...prevState,
               isSignedIn: false,
               userSession: null,
+              me: null,
             }
           case "UPDATE_ME":
             return {
@@ -79,7 +78,9 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
 
     const [getBag] = useLazyQuery(GET_BAG, {
       onCompleted: (data) => {
-        dispatch({ type: "RESTORE_TOKEN", token: data.me })
+        if (data?.me?.id) {
+          dispatch({ type: "RESTORE_TOKEN", token: data.me })
+        }
       },
     })
 

@@ -151,9 +151,6 @@ export enum ActionNames {
 
   // Reservation Feedback
   ReservationFeedbackRatingButtonTapped = "Reservation Feedback Rating Button Tapped",
-  ReservationFeedbackHeaderTapped = "Reservation Feedback Header Tapped",
-  ReservationFeedbackHeaderProgressBarTapped = "Reservation Feedback Header Progress Bar Tapped",
-  ReservationFeedbackOptionButtonTapped = "Reservation Feedback Option Button Tapped",
   ReservationFeedbackContinueLaterButtonTapped = "Reservation Feedback Continue Later Button Tapped",
 
   // Reservation Feedback Confirmation

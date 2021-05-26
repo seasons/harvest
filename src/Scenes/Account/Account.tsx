@@ -93,7 +93,8 @@ export const GET_USER = gql`
 `
 
 export const Account = screenTrack()(({ navigation }) => {
-  const { authState, signOut } = useAuthContext()
+  const { authState, signOut, updateMe } = useAuthContext()
+  const isSignedIn = authState?.isSignedIn
   const { previousData, data = previousData, refetch } = useQuery(GET_USER)
   const scrollViewRef = React.useRef(null)
   const tracking = useTracking()
@@ -109,6 +110,12 @@ export const Account = screenTrack()(({ navigation }) => {
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe
   }, [navigation])
+
+  useEffect(() => {
+    if (data?.me?.id) {
+      updateMe(data.me)
+    }
+  }, [data, isSignedIn])
 
   if (!authState?.userSession) {
     return <GuestView navigation={navigation} />
