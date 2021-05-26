@@ -8,14 +8,12 @@ import { GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { getUserSession, userSessionToIdentifyPayload } from "App/utils/auth"
 import React, { useEffect, useImperativeHandle } from "react"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
-
 import { useLazyQuery } from "@apollo/client"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import AsyncStorage from "@react-native-community/async-storage"
 import { createStackNavigator } from "@react-navigation/stack"
 import { NotificationBarProvider } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
-
 import AuthContext from "./AuthContext"
 import { ModalAndMainScreens } from "./Stacks"
 
