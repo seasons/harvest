@@ -3,6 +3,8 @@ import Slider from "@react-native-community/slider"
 import { color } from "App/utils/color"
 import { ReservationFeedbackViewState } from "../ReservationFeedbackModal"
 
+const thumbImage = require(`../../../../assets/images/sliderThumb.png`)
+
 interface Props {
   setViewState: (v: ReservationFeedbackViewState[]) => void
   viewState: ReservationFeedbackViewState[]
@@ -17,10 +19,11 @@ export const RatingSlider: React.FC<Props> = ({ setViewState, viewState, currFee
       style={{ width: "100%", height: 40 }}
       minimumValue={0}
       maximumValue={5}
+      thumbImage={thumbImage}
+      minimumTrackTintColor={color("black100")}
       step={0.5}
       value={value}
-      thumbTintColor={sliderMoved ? color("black100") : color("black04")}
-      minimumTrackTintColor={color("black04")}
+      // thumbTintColor={sliderMoved ? color("black100") : color("black04")}
       maximumTrackTintColor={color("black04")}
       onValueChange={(v) => {
         const viewStateCopy = [...viewState]

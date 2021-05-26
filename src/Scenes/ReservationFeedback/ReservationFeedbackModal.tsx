@@ -247,7 +247,7 @@ export const ReservationFeedbackModal: React.FC<{
           <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
             <Sans size="4">How would you rate it?</Sans>
             <Sans size="4" color={currViewState.sliderMoved ? "black100" : "black50"}>
-              {currViewState.sliderMoved ? `${currViewState.ratingValue} ⭐️` : "No rating"}
+              {currViewState.sliderMoved ? `${currViewState.ratingValue} ★` : "No rating"}
             </Sans>
           </Flex>
           <Spacer mb={1} />
