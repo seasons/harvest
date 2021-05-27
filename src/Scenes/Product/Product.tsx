@@ -30,8 +30,8 @@ import { SelectionButtons } from "./Components/SelectionButtons"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
-import { GET_PRODUCT, GET_PRODUCT_ME } from "./Queries"
-import { GetProductMe } from "App/generated/GetProductMe"
+import { GET_PRODUCT, Product_NoCache_Query } from "./Queries"
+import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generated/Product_NoCache_Query"
 
 const windowHeight = Dimensions.get("window").height
 const variantPickerHeight = windowHeight / 2.5 + 50
@@ -73,7 +73,9 @@ export const Product = screenTrack({
   const [showVariantPicker, toggleShowVariantPicker] = useState(false)
   const [showSizeWarning, setShowSizeWarning] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
-  const { previousData: previousDataMe, data: dataMe = previousDataMe } = useQuery<GetProductMe>(GET_PRODUCT_ME)
+  const { previousData: previousDataMe, data: dataMe = previousDataMe } = useQuery<Product_NoCache_Query_Type>(
+    Product_NoCache_Query
+  )
 
   // If the slug is present, ignore the id. This would happen if a product is passed through a deep link.
   const slug: string = route?.params?.slug || undefined
