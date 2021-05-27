@@ -33,17 +33,13 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
   const rows = sizeData.map((size, i) => {
     const displaySize = size?.displayLong
 
-    let manufacturerSizeDisplayType
-    if (size?.manufacturerSizes?.[0]?.bottom?.type) {
-      manufacturerSizeDisplayType = size?.manufacturerSizes?.[0]?.bottom?.type
-    } else if ((manufacturerSizeDisplayType = size?.manufacturerSizes?.[0]?.top?.type)) {
-      manufacturerSizeDisplayType = size?.manufacturerSizes?.[0]?.top?.type
-    }
+    const manufacturerSizeDisplayType = size?.manufacturerSizes?.[0]?.type
+    const manufacturerSizeDisplay = size?.manufacturerSizes?.[0]?.display
 
-    const manufacturerSizeDisplay =
-      manufacturerSizeDisplayType !== "Letter" &&
+    const manufacturerSizeFullDisplay =
+      manufacturerSizeDisplay !== displaySize &&
       !!manufacturerSizeDisplayType &&
-      `${manufacturerSizeDisplayType ? manufacturerSizeDisplayType + " " : ""}${size?.manufacturerSizes?.[0]?.display}`
+      `${manufacturerSizeDisplayType ? manufacturerSizeDisplayType + " " : ""}${manufacturerSizeDisplay}`
 
     return (
       <Box key={size.id || i}>
@@ -74,7 +70,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
               )}
             </Flex>
             <Sans color="black50" size="4">
-              {size?.reservable > 0 ? manufacturerSizeDisplay : "Unavailable"}
+              {size?.reservable > 0 ? manufacturerSizeFullDisplay : "Unavailable"}
             </Sans>
           </Flex>
         </TouchableOpacity>

@@ -31,6 +31,7 @@ const commonProductVariantFragment = gql`
     manufacturerSizes {
       id
       display
+      type
       top {
         id
         letter
