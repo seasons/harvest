@@ -11,7 +11,7 @@ import { gql, useMutation } from "@apollo/client"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import * as Sentry from "@sentry/react-native"
-import { ADD_TO_BAG, GET_BAG, SavedTab_Query } from "../BagQueries"
+import { ADD_TO_BAG, GetBag_NoCache_Query, SavedTab_Query } from "../BagQueries"
 import { ListCheck } from "Assets/svgs/ListCheck"
 import { UPSERT_RESTOCK_NOTIF } from "App/Scenes/Product/Product"
 
@@ -93,7 +93,7 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagIsFull, bagItem, navigati
     awaitRefetchQueries: true,
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
       {
         query: SavedTab_Query,

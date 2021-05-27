@@ -5,7 +5,7 @@ import { ReviewOrder } from "@seasons/eclipse"
 import { Dimensions, Linking } from "react-native"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { SUBMIT_ORDER } from "../Product/Mutations"
-import { GET_BAG } from "../Bag/BagQueries"
+import { GetBag_NoCache_Query } from "../Bag/BagQueries"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 
 const windowWidth = Dimensions.get("window").width
@@ -15,7 +15,7 @@ export const Order = screenTrack()(({ route, navigation }) => {
   const [submitOrder] = useMutation(SUBMIT_ORDER, {
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
     ],
     awaitRefetchQueries: true,

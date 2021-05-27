@@ -5,8 +5,8 @@ import { color } from "App/utils"
 import { TouchableWithoutFeedback } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Schema } from "App/Navigation"
-import { GetBagAndSavedItems_me } from "App/generated/GetBagAndSavedItems"
 import gql from "graphql-tag"
+import { GetBag_NoCache_Query_me } from "App/generated/GetBag_NoCache_Query"
 
 export const DeliveryStatusFragment_Me = gql`
   fragment DeliveryStatusFragment_Me on Me {
@@ -32,7 +32,7 @@ export const DeliveryStatusFragment_Me = gql`
 `
 
 export const DeliveryStatus: React.FC<{
-  me: GetBagAndSavedItems_me
+  me: GetBag_NoCache_Query_me
   atHome: boolean
 }> = ({ me, atHome }) => {
   const activeReservation = me?.activeReservation

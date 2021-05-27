@@ -1,10 +1,9 @@
-import { GetBagAndSavedItems_me } from "App/generated/GetBagAndSavedItems"
 import { BottomSheetProvider } from "App/Navigation/BottomSheetContext"
 import { ErrorPopUp } from "App/Navigation/ErrorPopUp"
 import { PopUpProvider } from "App/Navigation/ErrorPopUp/PopUpProvider"
 import { NotificationsProvider } from "App/Notifications"
 import { GET_LOCAL_BAG } from "App/queries/clientQueries"
-import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { getUserSession, userSessionToIdentifyPayload } from "App/utils/auth"
 import React, { useEffect, useImperativeHandle } from "react"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
@@ -30,7 +29,6 @@ export interface AuthProviderRef {
   authContext: () => {
     signIn: (session: any) => Promise<void>
     signOut: () => Promise<void>
-    updateMe: (me: GetBagAndSavedItems_me) => Promise<void>
     resetStore: () => void
     authState: any
     userSession: any
@@ -60,12 +58,6 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
               ...prevState,
               isSignedIn: false,
               userSession: null,
-              me: null,
-            }
-          case "UPDATE_ME":
-            return {
-              ...prevState,
-              me: action.me,
             }
         }
       },
@@ -76,7 +68,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
       }
     )
 
-    const [getBag] = useLazyQuery(GET_BAG, {
+    const [getBag] = useLazyQuery(GetBag_NoCache_Query, {
       onCompleted: (data) => {
         if (data?.me?.id) {
           dispatch({ type: "RESTORE_TOKEN", token: data.me })
@@ -138,11 +130,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
         apolloClient.resetStore()
       },
       authState,
-      updateMe: (me: GetBagAndSavedItems_me) => {
-        dispatch({ type: "UPDATE_ME", me })
-      },
       userSession: authState.userSession,
-      me: authState.me,
     }
 
     return (

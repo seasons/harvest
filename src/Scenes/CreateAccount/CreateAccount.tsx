@@ -12,6 +12,8 @@ import { WaitlistedPane } from "./Waitlisted"
 import { CreditCardFormPane } from "./Admitted/CreditCardFormPane"
 import { CouponType } from "App/generated/globalTypes"
 import analytics from "@segment/analytics-react-native"
+import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from "App/generated/CreateAccount_NoCache_Query"
+import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
 
 interface CreateAccountProps {
   navigation: any
@@ -53,18 +55,8 @@ export enum State {
   Waitlisted = "Waitlisted",
 }
 
-export const GET_PLANS = gql`
-  query GetPlans($where: PaymentPlanWhereInput) {
-    paymentPlans(where: $where) {
-      id
-      name
-      description
-      tagline
-      price
-      planID
-      tier
-      itemCount
-    }
+export const CreateAccount_NoCache_Query = gql`
+  query CreateAccount_NoCache_Query {
     me {
       id
       customer {
@@ -105,6 +97,21 @@ export const GET_PLANS = gql`
           percentage
         }
       }
+    }
+  }
+`
+
+export const CreateAccount_Cached_Query = gql`
+  query CreateAccount_Cached_Query($where: PaymentPlanWhereInput) {
+    paymentPlans(where: $where) {
+      id
+      name
+      description
+      tagline
+      price
+      planID
+      tier
+      itemCount
     }
     faq(sectionType: PaymentPlanPage) {
       sections {
@@ -149,13 +156,17 @@ const statesFor = (userState: UserState): State[] => {
 }
 
 export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navigation, route }) => {
-  const { previousData, data = previousData } = useQuery(GET_PLANS, {
+  const { previousData, data = previousData } = useQuery<CreateAccount_Cached_Query_Type>(CreateAccount_Cached_Query, {
     variables: {
       where: { status: "active" },
     },
   })
+  const { previousData: previousDataNoCache, data: dataNoCache = previousDataNoCache } = useQuery<
+    CreateAccount_NoCache_Query_Type
+  >(CreateAccount_NoCache_Query)
   const plans = data?.paymentPlans
   const howDidYouFindOutAboutUsView = data?.howDidYouFindOutAboutUs
+  const customer = dataNoCache?.me?.customer
 
   const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const [coupon, setCoupon] = useState({
@@ -178,8 +189,8 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   }, [route, setCoupon])
 
   useEffect(() => {
-    const userId = data?.me?.customer?.user?.id
-    const cust = data?.me?.customer
+    const userId = customer?.user?.id
+    const cust = customer
     if (!!userId) {
       analytics.identify(userId, {
         status: cust?.status,
@@ -187,7 +198,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
         ...pick(cust?.admissions, ["admissable", "authorizationsCount"]),
       })
     }
-  }, [data?.me?.customer])
+  }, [customer])
 
   const initialState: State = get(route?.params, "initialState", State.CreateAccount)
   const initialUserState: UserState = get(route?.params, "initialUserState", UserState.Undetermined)
@@ -279,6 +290,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             selectedPlan={selectedPlan}
             setSelectedPlan={setSelectedPlan}
             data={data}
+            dataNoCache={dataNoCache}
             onComplete={(paymentMethod) => {
               paymentMethod === PaymentMethod.CreditCard ? setIndex(index + 1) : setIndex(index + 2)
             }}
@@ -296,7 +308,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             onRequestBack={() => {
               setPrevState()
             }}
-            customer={data?.me?.customer}
+            customer={dataNoCache?.me?.customer}
             plan={selectedPlan}
             onSubmit={() => {
               setNextState()

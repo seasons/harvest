@@ -22,12 +22,10 @@ import { default as React, useEffect } from "react"
 import { Linking, Platform, ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
 import Share from "react-native-share"
-
 import { useQuery } from "@apollo/client"
 import { useScrollToTop } from "@react-navigation/native"
 import { AuthorizedCTA, WaitlistedCTA } from "@seasons/eclipse"
 import { useNotificationBarContext } from "@seasons/eclipse"
-
 import { State, UserState } from "../CreateAccount/CreateAccount"
 import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
@@ -93,8 +91,7 @@ export const GET_USER = gql`
 `
 
 export const Account = screenTrack()(({ navigation }) => {
-  const { authState, signOut, updateMe } = useAuthContext()
-  const isSignedIn = authState?.isSignedIn
+  const { authState, signOut } = useAuthContext()
   const { previousData, data = previousData, refetch } = useQuery(GET_USER)
   const scrollViewRef = React.useRef(null)
   const tracking = useTracking()
@@ -110,12 +107,6 @@ export const Account = screenTrack()(({ navigation }) => {
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe
   }, [navigation])
-
-  useEffect(() => {
-    if (data?.me?.id) {
-      updateMe(data.me)
-    }
-  }, [data, isSignedIn])
 
   if (!authState?.userSession) {
     return <GuestView navigation={navigation} />

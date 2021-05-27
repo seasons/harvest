@@ -7,10 +7,9 @@ import { Schema, useTracking } from "App/utils/track"
 
 export interface HomeFooterProps {
   navigation: any
-  bottom?: number
 }
 
-export const HomeFooter: React.FC<HomeFooterProps> = ({ bottom = 0, navigation }) => {
+export const HomeFooter: React.FC<HomeFooterProps> = ({ navigation }) => {
   const tracking = useTracking()
 
   return (
@@ -18,7 +17,7 @@ export const HomeFooter: React.FC<HomeFooterProps> = ({ bottom = 0, navigation }
       <Spacer mt={3} />
       <LeftCorner />
       <RightCorner />
-      <Box style={{ backgroundColor: color("black100"), height: 280 + bottom, overflow: "visible" }}>
+      <Box style={{ backgroundColor: color("black100"), height: 280, overflow: "visible" }}>
         <Spacer mb={60} />
         <Flex justifyContent="center" flexDirection="column">
           <Sans size="5" color={color("white100")} style={{ textAlign: "center" }}>
@@ -44,7 +43,7 @@ export const HomeFooter: React.FC<HomeFooterProps> = ({ bottom = 0, navigation }
             </Button>
           </Flex>
         </Flex>
-        <Spacer mb={80 + bottom} />
+        <Spacer mb={80} />
         <Box style={{ height: 1000, backgroundColor: color("black100") }} />
       </Box>
     </>

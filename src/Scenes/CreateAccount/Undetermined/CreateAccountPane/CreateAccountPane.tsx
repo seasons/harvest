@@ -3,7 +3,7 @@ import { isValidEmail } from "App/helpers/regex"
 import { isWholeNumber } from "App/helpers/validation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { ADD_TO_BAG, GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { Schema, useTracking } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Text } from "Components/Typography"
@@ -134,7 +134,7 @@ export const CreateAccountPane: React.FC<CreateAccountPaneProps> = ({ onSignUp, 
           },
           refetchQueries: [
             {
-              query: GET_BAG,
+              query: GetBag_NoCache_Query,
             },
           ],
         })

@@ -117,6 +117,7 @@ export interface GetBagAndSavedItems_me_activeReservation {
   id: string;
   returnAt: any | null;
   shipped: boolean;
+  returnedAt: any | null;
   createdAt: any;
   status: ReservationStatus;
   phase: ReservationPhase;

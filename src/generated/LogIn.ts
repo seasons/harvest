@@ -32,6 +32,16 @@ export interface LogIn_login_customer_detail {
   shippingAddress: LogIn_login_customer_detail_shippingAddress | null;
 }
 
+export interface LogIn_login_customer_membership_plan {
+  __typename: "PaymentPlan";
+  itemCount: number | null;
+}
+
+export interface LogIn_login_customer_membership {
+  __typename: "CustomerMembership";
+  plan: LogIn_login_customer_membership_plan | null;
+}
+
 export interface LogIn_login_customer {
   __typename: "Customer";
   id: string;
@@ -39,6 +49,7 @@ export interface LogIn_login_customer {
   admissions: LogIn_login_customer_admissions | null;
   bagItems: LogIn_login_customer_bagItems[] | null;
   detail: LogIn_login_customer_detail | null;
+  membership: LogIn_login_customer_membership | null;
 }
 
 export interface LogIn_login_user {

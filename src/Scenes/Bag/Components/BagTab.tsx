@@ -1,15 +1,11 @@
 import { Sans, Separator } from "App/Components"
-import {
-  PauseStatus, REMOVE_SCHEDULED_PAUSE, RESUME_MEMBERSHIP
-} from "App/Components/Pause/PauseButtons"
-import { GetBagAndSavedItems } from "App/generated/GetBagAndSavedItems"
+import { PauseStatus, REMOVE_SCHEDULED_PAUSE, RESUME_MEMBERSHIP } from "App/Components/Pause/PauseButtons"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { State as CreateAccountState, UserState } from "App/Scenes/CreateAccount/CreateAccount"
 import { color } from "App/utils"
-import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
 import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
@@ -21,17 +17,18 @@ import { useNavigation } from "@react-navigation/native"
 import { Box, ProductBuyAlertTab, ProductBuyAlertTabType, Spacer } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 
-import { GET_BAG, GET_LOCAL_BAG_ITEMS } from "../BagQueries"
+import { GetBag_NoCache_Query, GET_LOCAL_BAG_ITEMS } from "../BagQueries"
 import { BagCardButton } from "./BagCardButton"
 import { BagItem } from "./BagItem"
 import { BagTabHeader } from "./BagTabHeader"
 import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
 import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
+import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
-  data: GetBagAndSavedItems
+  data: GetBag_NoCache_Query_Type
   itemCount: number
   items
   bagIsFull: boolean
@@ -50,7 +47,6 @@ export const BagTab: React.FC<{
   deleteBagItem,
   removeFromBagAndSaveItem,
 }) => {
-  const tracking = useTracking()
   const [isMutating, setIsMutating] = useState(false)
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -88,7 +84,7 @@ export const BagTab: React.FC<{
   const [resumeSubscription] = useMutation(RESUME_MEMBERSHIP, {
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
     ],
     onCompleted: () => {
@@ -112,7 +108,7 @@ export const BagTab: React.FC<{
   const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
     ],
     onCompleted: () => {

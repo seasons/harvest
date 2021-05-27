@@ -4,16 +4,15 @@ import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_LOCAL_BAG } from "App/queries/clientQueries"
-import { ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { ADD_TO_BAG, GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import { head } from "lodash"
 import React, { useState } from "react"
-
 import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
-
 import { GET_PRODUCT } from "../Queries"
+import { GetProductMe } from "App/generated/GetProductMe"
 
 interface Props {
   setShowSizeWarning: (show: boolean) => void
@@ -22,29 +21,38 @@ interface Props {
   width: number
   selectedVariant: any
   data: GetProduct
+  dataMe: GetProductMe
 }
 
-export const AddToBagButton: React.FC<Props> = (props) => {
+export const AddToBagButton: React.FC<Props> = ({
+  dataMe,
+  variantInStock,
+  width,
+  selectedVariant,
+  data,
+  setShowSizeWarning,
+  disabled,
+}) => {
   const [isMutating, setIsMutating] = useState(false)
   const [added, setAdded] = useState(false)
-  const { variantInStock, width, selectedVariant, data, setShowSizeWarning } = props
   const tracking = useTracking()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
-  const { authState, me } = useAuthContext()
+  const { authState } = useAuthContext()
   const isUserSignedIn = authState?.isSignedIn
+  const me = dataMe?.me
 
   const { data: localItems } = useQuery(GET_LOCAL_BAG)
   const [addToBag] = useMutation(isUserSignedIn ? ADD_TO_BAG : ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
       id: selectedVariant.id,
-      productID: props.data.products?.[0].id,
+      productID: data.products?.[0].id,
       variantID: selectedVariant.id,
     },
     awaitRefetchQueries: true,
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
       {
         query: GET_PRODUCT,
@@ -121,7 +129,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
   const isInBag = isUserSignedIn
     ? selectedVariant?.isInBag || added
     : !!localItems?.localBagItems?.find((item) => item.variantID === selectedVariant.id) || false
-  const disabled = !!props.disabled || isInBag || !variantInStock || isMutating
+  const _disabled = !!disabled || isInBag || !variantInStock || isMutating
 
   let text = "Add to bag"
   if (isInBag) {
@@ -134,7 +142,7 @@ export const AddToBagButton: React.FC<Props> = (props) => {
       loading={isMutating}
       showCheckMark={isInBag}
       variant="primaryBlack"
-      disabled={disabled}
+      disabled={_disabled}
       onPress={() => {
         tracking.trackEvent({
           actionName: Schema.ActionNames.ProductAddedToBag,
