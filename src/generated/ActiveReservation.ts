@@ -50,6 +50,7 @@ export interface ActiveReservation_me_activeReservation {
   __typename: "Reservation";
   id: string;
   shipped: boolean;
+  returnAt: any | null;
   createdAt: any;
   products: ActiveReservation_me_activeReservation_products[];
 }
