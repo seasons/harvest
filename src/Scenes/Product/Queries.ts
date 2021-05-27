@@ -65,8 +65,8 @@ const commonProductVariantFragment = gql`
   ${ProductConditionSectionFragment_PhysicalProductQualityReport}
 `
 
-export const GET_PRODUCT_ME = gql`
-  query GetProductMe {
+export const Product_NoCache_Query = gql`
+  query Product_NoCache_Query {
     me {
       id
       customer {
