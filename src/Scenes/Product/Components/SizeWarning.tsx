@@ -25,7 +25,7 @@ const getSuggestedVariant = (selectedVariant, variants, fit) => {
 }
 
 export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, setSelectedVariant }) => {
-  const { authState } = useAuthContext()
+  const { authState, me } = useAuthContext()
   const navigation = useNavigation()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const isUserSignedIn = authState?.isSignedIn
@@ -83,8 +83,8 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
 
   const sharedOnComplete = (res) => {
     setShowSizeWarning(false)
-    const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
-    const bagItemCount = authState?.isSignedIn ? data?.me?.bag?.length : res.addOrRemoveFromLocalBag.length
+    const itemCount = me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
+    const bagItemCount = authState?.isSignedIn ? me?.bag?.length : res.addOrRemoveFromLocalBag.length
     if (itemCount && bagItemCount && bagItemCount >= itemCount && isUserSignedIn) {
       showPopUp({
         icon: <CheckCircled />,
