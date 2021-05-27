@@ -19,6 +19,7 @@ export interface UpdateProductReservationFeedback {
 }
 
 export interface UpdateProductReservationFeedbackVariables {
+  reservationFeedbackID: string;
   productReservationID: string;
   input: ProductVariantFeedbackUpdateInput;
   responses?: any | null;

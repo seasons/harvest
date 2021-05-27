@@ -11,7 +11,7 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { CheckCircled } from "Assets/svgs"
 import * as Sentry from "@sentry/react-native"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { ADD_TO_BAG, GET_BAG } from "./BagQueries"
+import { ADD_TO_BAG, GetBag_NoCache_Query } from "./BagQueries"
 import { SaveProductButton } from "../Product/Components"
 import { Schema, useTracking, screenTrack } from "App/utils/track"
 import { Loader } from "App/Components/Loader"
@@ -221,7 +221,7 @@ export const SurpriseMe = screenTrack()(() => {
     },
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
       {
         query: GET_SURPRISE_PRODUCT_VARIANTS,

@@ -3,7 +3,7 @@ import { GetPlans_me_customer, GetPlans_paymentPlans } from "App/generated/GetPl
 import { isWholeNumber } from "App/helpers/validation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { StatePickerPopUp } from "App/Scenes/Account/EditShippingAddress/StatePickerPopup"
-import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { color } from "App/utils/color"
 import { BackArrowIcon } from "Assets/icons"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
@@ -111,7 +111,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
     },
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
       { query: GET_USER },
     ],

@@ -1,7 +1,7 @@
 import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
@@ -90,7 +90,7 @@ export const Reservation = screenTrack()((props) => {
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
     ],
     onCompleted: () => {

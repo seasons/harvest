@@ -12,14 +12,24 @@ import { useNotificationBarContext } from "@seasons/eclipse"
 import { useQuery } from "@apollo/client"
 import analytics from "@segment/analytics-react-native"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
+import { HomepageNoCache_Query, Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
+import { Homepage_Query as Homepage_Query_Type } from "App/generated/Homepage_Query"
+import { HomepageNoCache_Query as HomepageNoCache_Query_Type } from "App/generated/HomepageNoCache_Query"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const [showLoader, toggleLoader] = useState(true)
   const [fitPicsFetchCount, setFitPicsFetchCount] = useState(8)
-  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(Homepage_Query, {
-    variables: { firstFitPics: fitPicsFetchCount, skipFitPics: 0 },
-  })
+  const {
+    previousData: previousDataNoCache,
+    data: dataNoCache = previousDataNoCache,
+    refetch: refetchNoCache,
+  } = useQuery<HomepageNoCache_Query_Type>(HomepageNoCache_Query)
+  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery<Homepage_Query_Type>(
+    Homepage_Query,
+    {
+      variables: { firstFitPics: fitPicsFetchCount, skipFitPics: 0 },
+    }
+  )
   const { showNotificationBar } = useNotificationBarContext()
 
   const [showSplash, setShowSplash] = useState(true)
@@ -55,16 +65,16 @@ export const Home = screenTrack()(({ navigation, route }) => {
   useEffect(() => {
     if (!!data) {
       // do the identify call
-      const userId = data?.me?.customer?.user?.id
+      const userId = dataNoCache?.me?.customer?.user?.id
       if (!!userId) {
-        analytics.identify(userId, userSessionToIdentifyPayload(data?.me?.customer))
+        analytics.identify(userId, userSessionToIdentifyPayload(dataNoCache?.me?.customer))
       }
     }
   }, [data])
 
-  const reservationFeedback = data?.reservationFeedback
-  const shouldRequestFeedback = data?.me?.customer?.shouldRequestFeedback
-  const feedbacks = data?.reservationFeedback?.feedbacks
+  const reservationFeedback = dataNoCache?.reservationFeedback
+  const shouldRequestFeedback = dataNoCache?.me?.customer?.shouldRequestFeedback
+  const feedbacks = dataNoCache?.reservationFeedback?.feedbacks
   const incompleteFeedbackIndex = feedbacks?.findIndex((feedback) => !feedback.isCompleted)
 
   useEffect(() => {
@@ -91,6 +101,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
       variant="No Internet"
       refreshAction={() => {
         refetch()
+        refetchNoCache()
       }}
     />
   )
@@ -116,6 +127,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
       <HomeBlogContent items={data?.blogPosts} />
       <HomeBottomSheet
         data={data}
+        dataNoCache={dataNoCache}
         isFetchingMoreFitPics={isFetchingMoreFitPics}
         fetchMoreFitPics={() => {
           if (!isFetchingMoreFitPics && fitPicsReceived > 0) {

@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ViewType, HomePageSectionType, Rating, QuestionType, CustomerStatus } from "./globalTypes";
+import { ViewType, HomePageSectionType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: Homepage_Query
@@ -86,146 +86,6 @@ export interface Homepage_Query_homepage_sections {
 export interface Homepage_Query_homepage {
   __typename: "Homepage";
   sections: Homepage_Query_homepage_sections[];
-}
-
-export interface Homepage_Query_reservationFeedback_feedbacks_questions {
-  __typename: "ProductVariantFeedbackQuestion";
-  id: string;
-  options: string[];
-  question: string;
-  responses: string[];
-  type: QuestionType;
-}
-
-export interface Homepage_Query_reservationFeedback_feedbacks_variant_product_images {
-  __typename: "Image";
-  id: string;
-  url: string | null;
-}
-
-export interface Homepage_Query_reservationFeedback_feedbacks_variant_product {
-  __typename: "Product";
-  id: string;
-  name: string;
-  retailPrice: number | null;
-  images: Homepage_Query_reservationFeedback_feedbacks_variant_product_images[];
-}
-
-export interface Homepage_Query_reservationFeedback_feedbacks_variant {
-  __typename: "ProductVariant";
-  id: string;
-  product: Homepage_Query_reservationFeedback_feedbacks_variant_product;
-}
-
-export interface Homepage_Query_reservationFeedback_feedbacks {
-  __typename: "ProductVariantFeedback";
-  id: string;
-  isCompleted: boolean;
-  questions: Homepage_Query_reservationFeedback_feedbacks_questions[] | null;
-  variant: Homepage_Query_reservationFeedback_feedbacks_variant;
-}
-
-export interface Homepage_Query_reservationFeedback {
-  __typename: "ReservationFeedback";
-  id: string;
-  comment: string | null;
-  rating: Rating | null;
-  feedbacks: Homepage_Query_reservationFeedback_feedbacks[] | null;
-}
-
-export interface Homepage_Query_me_customer_bagItems {
-  __typename: "BagItem";
-  id: string;
-}
-
-export interface Homepage_Query_me_customer_admissions {
-  __typename: "CustomerAdmissionsData";
-  id: string;
-  admissable: boolean;
-  authorizationsCount: number;
-}
-
-export interface Homepage_Query_me_customer_user {
-  __typename: "User";
-  id: string;
-  createdAt: any;
-}
-
-export interface Homepage_Query_me_customer_detail_shippingAddress {
-  __typename: "Location";
-  id: string;
-  state: string | null;
-}
-
-export interface Homepage_Query_me_customer_detail {
-  __typename: "CustomerDetail";
-  id: string;
-  shippingAddress: Homepage_Query_me_customer_detail_shippingAddress | null;
-}
-
-export interface Homepage_Query_me_customer {
-  __typename: "Customer";
-  id: string;
-  status: CustomerStatus | null;
-  shouldRequestFeedback: boolean | null;
-  bagItems: Homepage_Query_me_customer_bagItems[] | null;
-  admissions: Homepage_Query_me_customer_admissions | null;
-  user: Homepage_Query_me_customer_user;
-  detail: Homepage_Query_me_customer_detail | null;
-}
-
-export interface Homepage_Query_me_savedItems_productVariant_product_modelSize {
-  __typename: "Size";
-  id: string;
-  display: string;
-}
-
-export interface Homepage_Query_me_savedItems_productVariant_product_brand {
-  __typename: "Brand";
-  id: string;
-  name: string;
-}
-
-export interface Homepage_Query_me_savedItems_productVariant_product_images {
-  __typename: "Image";
-  id: string;
-  url: string | null;
-}
-
-export interface Homepage_Query_me_savedItems_productVariant_product_variants {
-  __typename: "ProductVariant";
-  id: string;
-  reservable: number;
-  displayShort: string | null;
-}
-
-export interface Homepage_Query_me_savedItems_productVariant_product {
-  __typename: "Product";
-  id: string;
-  name: string;
-  modelSize: Homepage_Query_me_savedItems_productVariant_product_modelSize | null;
-  brand: Homepage_Query_me_savedItems_productVariant_product_brand;
-  images: Homepage_Query_me_savedItems_productVariant_product_images[];
-  variants: Homepage_Query_me_savedItems_productVariant_product_variants[] | null;
-}
-
-export interface Homepage_Query_me_savedItems_productVariant {
-  __typename: "ProductVariant";
-  id: string;
-  product: Homepage_Query_me_savedItems_productVariant_product;
-}
-
-export interface Homepage_Query_me_savedItems {
-  __typename: "BagItem";
-  id: string;
-  productVariant: Homepage_Query_me_savedItems_productVariant;
-}
-
-export interface Homepage_Query_me {
-  __typename: "Me";
-  id: string | null;
-  customer: Homepage_Query_me_customer | null;
-  savedItems: Homepage_Query_me_savedItems[] | null;
 }
 
 export interface Homepage_Query_featuredCollections_images {
@@ -533,8 +393,6 @@ export interface Homepage_Query_launches {
 export interface Homepage_Query {
   banner: Homepage_Query_banner | null;
   homepage: Homepage_Query_homepage | null;
-  reservationFeedback: Homepage_Query_reservationFeedback | null;
-  me: Homepage_Query_me | null;
   featuredCollections: (Homepage_Query_featuredCollections | null)[];
   collections: (Homepage_Query_collections | null)[];
   blogPosts: (Homepage_Query_blogPosts | null)[];

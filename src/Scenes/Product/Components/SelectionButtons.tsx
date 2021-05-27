@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react"
 import { Animated, Dimensions, TouchableWithoutFeedback, StyleSheet } from "react-native"
 import styled from "styled-components/native"
 import { VARIANT_WANT_HEIGHT } from "../Product"
+import { GetProductMe } from "App/generated/GetProductMe"
 
 interface Props {
   toggleShowVariantPicker: (show: boolean) => void
@@ -23,6 +24,7 @@ interface Props {
   hasNotification: boolean
   isMutatingNotify: boolean
   animatedScrollY: Animated.Value
+  dataMe: GetProductMe
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
@@ -81,22 +83,22 @@ const renderBuyCTA = ({ price, scrollToBuyCTA, animatedScrollY, showNotifyMeMess
   ) : null
 }
 
-export const SelectionButtons: React.FC<Props> = (props) => {
+export const SelectionButtons: React.FC<Props> = ({
+  dataMe,
+  hasNotification,
+  showNotifyMeMessage,
+  selectedVariant,
+  showVariantPicker,
+  toggleShowVariantPicker,
+  data,
+  isMutatingNotify,
+  onNotifyMe,
+  setShowSizeWarning,
+  scrollToBuyCTA,
+  animatedScrollY,
+}) => {
   const tracking = useTracking()
   const [loaded, setLoaded] = useState(false)
-  const {
-    hasNotification,
-    showNotifyMeMessage,
-    selectedVariant,
-    showVariantPicker,
-    toggleShowVariantPicker,
-    data,
-    isMutatingNotify,
-    onNotifyMe,
-    setShowSizeWarning,
-    scrollToBuyCTA,
-    animatedScrollY,
-  } = props
   const inStock = selectedVariant && selectedVariant.reservable > 0
 
   useEffect(() => {
@@ -156,6 +158,7 @@ export const SelectionButtons: React.FC<Props> = (props) => {
                 width={twoButtonWidth}
                 selectedVariant={selectedVariant}
                 data={data}
+                dataMe={dataMe}
               />
             ) : (
               <StyledButton
