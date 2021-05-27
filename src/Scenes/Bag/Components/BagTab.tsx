@@ -281,7 +281,7 @@ export const BagTab: React.FC<{
         </>
       )}
       <Separator />
-      {hasActiveReservation && <DeliveryStatus me={me} atHome={atHome} />}
+      {hasActiveReservation && status !== "Delivered" && <DeliveryStatus me={me} atHome={atHome} />}
       {paddedItems?.map((bagItem, index) => {
         if (pausedWithoutItems) {
           return null
