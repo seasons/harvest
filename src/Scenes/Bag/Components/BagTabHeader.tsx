@@ -2,7 +2,7 @@ import React from "react"
 import { Box, Sans, Flex, Spacer } from "App/Components"
 import { useNavigation } from "@react-navigation/native"
 import { DateTime } from "luxon"
-import { GetBagAndSavedItems_me } from "App/generated/GetBagAndSavedItems"
+import { GetBag_NoCache_Query_me } from "App/generated/GetBag_NoCache_Query"
 import gql from "graphql-tag"
 import { Schema, useTracking } from "App/utils/track"
 
@@ -35,7 +35,7 @@ export const BagTabHeaderFragment_Query = gql`
 `
 
 export const BagTabHeader: React.FC<{
-  me: GetBagAndSavedItems_me
+  me: GetBag_NoCache_Query_me
   atHome: boolean
   pausedWithoutItems: boolean
 }> = ({ me, atHome, pausedWithoutItems }) => {

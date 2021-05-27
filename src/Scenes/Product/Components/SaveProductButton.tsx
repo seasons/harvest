@@ -2,7 +2,7 @@ import { GET_PRODUCT } from "../Queries"
 import { Box } from "App/Components"
 import { GetProduct_products } from "App/generated/GetProduct"
 import { Schema as NavigationSchema } from "App/Navigation"
-import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { SaveIcon } from "Assets/icons"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "@apollo/client"
@@ -49,7 +49,7 @@ export const SaveProductButton: React.FC<SaveProductButtonProps> = ({
         },
       },
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
       {
         query: Homepage_Query,

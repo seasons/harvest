@@ -1,6 +1,5 @@
 import { Box, Flex, Handle } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
-import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
 import { space } from "App/utils"
@@ -16,6 +15,8 @@ import { FitPicCollectionRef } from "./FitPicCollection"
 import { HomepageBanner } from "App/Components/HomepageBanner"
 import { LaunchCalendar, LaunchCalendarFragment_Query } from "./LaunchCalendar"
 import gql from "graphql-tag"
+import { Homepage_Query as Homepage_Query_Type } from "App/generated/Homepage_Query"
+import { HomepageNoCache_Query as HomepageNoCache_Query_Type } from "App/generated/HomepageNoCache_Query"
 
 const dimensions = Dimensions.get("window")
 
@@ -49,13 +50,13 @@ export const HomeBottomSheetFragment_Query = gql`
   ${LaunchCalendarFragment_Query}
 `
 
-const sectionsFrom = (data: any, navigation) => {
+const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Query_Type, navigation) => {
   const sections = []
   if (data?.blogPosts) {
     sections.push({ type: SectionType.BlogPosts, results: data?.blogPosts })
   }
 
-  const customerStatus = data?.me?.customer?.status
+  const customerStatus = dataNoCache?.me?.customer?.status
   const customerApprovedForBanner =
     (data?.banner?.properties?.requiredCustomerStatus?.length > 0 &&
       data?.banner?.properties?.requiredCustomerStatus?.includes(customerStatus)) ||
@@ -158,8 +159,8 @@ const sectionsFrom = (data: any, navigation) => {
     })
   }
 
-  if (data?.me?.savedItems?.length) {
-    const results = data?.me?.savedItems?.map((item) => item?.productVariant?.product)
+  if (dataNoCache?.me?.savedItems?.length) {
+    const results = dataNoCache?.me?.savedItems?.map((item) => item?.productVariant?.product)
     sections.push({ type: SectionType.SavedProducts, title: "Saved for later", results })
   }
 
@@ -170,24 +171,29 @@ const sectionsFrom = (data: any, navigation) => {
 }
 
 interface HomeBottomSheetProps {
-  data: any
+  data: Homepage_Query_Type
+  dataNoCache: HomepageNoCache_Query_Type
   fetchMoreFitPics: () => void
   isFetchingMoreFitPics: boolean
 }
 
-export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMoreFitPics, isFetchingMoreFitPics }) => {
+export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({
+  data,
+  fetchMoreFitPics,
+  isFetchingMoreFitPics,
+  dataNoCache,
+}) => {
   const navigation = useNavigation()
-  const [sections, setSections] = useState(sectionsFrom(data, navigation))
+  const [sections, setSections] = useState(sectionsFrom(data, dataNoCache, navigation))
   const insets = useSafeAreaInsets()
   const [flatListHeight, setFlatListHeight] = useState(0)
   const fitPicCollectionRef: React.MutableRefObject<FitPicCollectionRef> = useRef(null)
   let [addPhotoButtonVisible, setAddPhotoButtonVisible] = useState(false)
   const innerFlatListRef = useRef(null)
   const bottomSheetRef: React.MutableRefObject<ScrollBottomSheet<string>> = useRef(null)
-  const reservationFeedback = data?.reservationFeedback
 
   useScrollToTop(innerFlatListRef)
-  useEffect(() => setSections(sectionsFrom(data, navigation)), [data, navigation])
+  useEffect(() => setSections(sectionsFrom(data, dataNoCache, navigation)), [data, navigation])
 
   const blogContentHeight = dimensions.width
   const snapPoint = 0
@@ -289,12 +295,7 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({ data, fetchMor
         keyExtractor={(item: any, i) => item.type.toString() + i}
         data={sections}
         renderItem={({ item }) => renderItem(item)}
-        ListFooterComponent={() => (
-          <HomeFooter
-            navigation={navigation}
-            bottom={reservationFeedback && reservationFeedback.rating ? RESERVATION_FEEDBACK_REMINDER_HEIGHT : 0}
-          />
-        )}
+        ListFooterComponent={() => <HomeFooter navigation={navigation} />}
         onScroll={(event) => {
           const offset = event.nativeEvent.contentOffset.y
           if (fitPicCollectionRef?.current?.getLayout()) {

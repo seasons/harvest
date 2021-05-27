@@ -11,24 +11,24 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
-import { DateTime } from "luxon"
 import React, { useEffect, useRef, useState } from "react"
 import { FlatList, RefreshControl, StatusBar, View } from "react-native"
 import { NavigationRoute, NavigationScreenProp } from "react-navigation"
-
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
 import { Box, Button, Spacer } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
-
+import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import {
-  State as CreateAccountState, UserState as CreateAccountUserState
-} from "../CreateAccount/CreateAccount"
-import {
-  CHECK_ITEMS, GET_BAG, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM, ReservationHistoryTab_Query,
-  SavedTab_Query
+  CHECK_ITEMS,
+  GetBag_NoCache_Query,
+  REMOVE_FROM_BAG,
+  REMOVE_FROM_BAG_AND_SAVE_ITEM,
+  ReservationHistoryTab_Query,
+  SavedTab_Query,
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
+import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
 
 export enum BagView {
   Bag = 0,
@@ -42,7 +42,7 @@ interface BagProps {
 }
 
 export const Bag = screenTrack()((props: BagProps) => {
-  const { authState, updateMe } = useAuthContext()
+  const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
   const [itemCount, setItemCount] = useState(DEFAULT_ITEM_COUNT)
@@ -82,7 +82,7 @@ export const Bag = screenTrack()((props: BagProps) => {
     }, [])
   )
 
-  const { previousData, data = previousData, refetch } = useQuery(GET_BAG)
+  const { previousData, data = previousData, refetch } = useQuery<GetBag_NoCache_Query_Type>(GetBag_NoCache_Query)
   const { data: localItems } = useQuery(GET_LOCAL_BAG)
 
   const me = data?.me
@@ -101,10 +101,6 @@ export const Bag = screenTrack()((props: BagProps) => {
         const savedItems = savedTabData?.me?.savedItems?.length || 0
         const baggedItems = me?.bag?.length || 0
         analytics.identify(userId, { bagItems: savedItems + baggedItems })
-      }
-
-      if (data.me?.id) {
-        updateMe(data?.me)
       }
     }
   }, [data, setIsLoading, setItemCount])
@@ -180,11 +176,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   const bagIsFull = itemCount && bagCount >= itemCount
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
-  const status = me?.activeReservation?.status
-  const updatedMoreThan24HoursAgo =
-    me?.activeReservation?.updatedAt &&
-    DateTime.fromISO(me?.activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
-  const atHome = status && status === "Delivered" && updatedMoreThan24HoursAgo
 
   const handleReserve = async () => {
     setMutating(true)
@@ -250,7 +241,7 @@ export const Bag = screenTrack()((props: BagProps) => {
         },
         refetchQueries: [
           {
-            query: GET_BAG,
+            query: GetBag_NoCache_Query,
           },
         ],
         update(cache, { data, errors }) {

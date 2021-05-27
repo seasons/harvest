@@ -48,15 +48,8 @@ export const ReservationHistoryTab_Query = gql`
   ${ReservationHistoryTabFragment_Customer}
 `
 
-export const GET_BAG = gql`
-  query GetBagAndSavedItems {
-    paymentPlans(where: { status: "active" }) {
-      id
-      planID
-      tier
-      price
-      itemCount
-    }
+export const GetBag_NoCache_Query = gql`
+  query GetBag_NoCache_Query {
     me {
       id
       customer {

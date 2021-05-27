@@ -6,7 +6,7 @@ import styled from "styled-components/native"
 import { color } from "App/utils/color"
 import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 import { useMutation } from "@apollo/client"
-import { ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { ADD_TO_BAG, GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { GET_PRODUCT } from "../Queries"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
@@ -25,7 +25,7 @@ const getSuggestedVariant = (selectedVariant, variants, fit) => {
 }
 
 export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, setSelectedVariant }) => {
-  const { authState, me } = useAuthContext()
+  const { authState } = useAuthContext()
   const navigation = useNavigation()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const isUserSignedIn = authState?.isSignedIn
@@ -38,12 +38,13 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
   const selectedSize = selectedVariant?.displayLong
   const suggestedVariant = getSuggestedVariant(selectedVariant, product.variants, productFit)
   const suggestSizeDisplay = suggestedVariant?.displayLong
+  const me = data?.me
 
   const mutationSettings = {
     awaitRefetchQueries: true,
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
       {
         query: GET_PRODUCT,

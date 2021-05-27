@@ -10,11 +10,12 @@ import { Schema } from "App/Navigation"
 import { useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { FadeTop, FadeBottom } from "Assets/svgs"
 import { imageResize } from "@seasons/eclipse/src/helpers/imageResize"
+import { Homepage_Query_blogPosts } from "App/generated/Homepage_Query"
 
 const windowWidth = Dimensions.get("window").width
 const slideHeight = windowWidth
 
-export const HomeBlogContent = ({ items }) => {
+export const HomeBlogContent: React.FC<{ items: Homepage_Query_blogPosts[] }> = ({ items }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const insets = useSafeAreaInsets()
   const tracking = useTracking()
@@ -75,7 +76,7 @@ export const HomeBlogContent = ({ items }) => {
         </Flex>
         <IndexContainer>
           <Flex flexDirection="column" p={2}>
-            {items.map((_item, index) => {
+            {items?.map((_item, index) => {
               return (
                 <Box pt={1} key={index}>
                   <Sans color={currentPage === index + 1 ? "white100" : "black25"} size="4">
