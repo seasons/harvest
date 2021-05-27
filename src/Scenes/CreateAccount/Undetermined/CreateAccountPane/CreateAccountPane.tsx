@@ -3,7 +3,7 @@ import { isValidEmail } from "App/helpers/regex"
 import { isWholeNumber } from "App/helpers/validation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { ADD_TO_BAG, GET_BAG, GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
+import { ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
 import { Schema, useTracking } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Text } from "Components/Typography"
@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 import { WebviewModal } from "./WebviewModal"
 import { color } from "App/utils"
 import { BoxPicker } from "../GetMeasurementsPane/BoxPicker"
+import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 
 const SIGN_UP = gql`
   mutation SignUp(
