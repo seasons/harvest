@@ -28,14 +28,15 @@ export const ErrorPopUp: React.FC = () => {
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     if (!mounted) {
-      setTimeout(async () => {
+      setTimeout(() => {
         setMounted(true)
         const packageVersion = packageJson.version
-        await fetch(`https://harvest-public.s3.amazonaws.com/harvest-minimum-version.json`, {
+        fetch(`https://harvest-public.s3.amazonaws.com/harvest-minimum-version.json`, {
           method: "GET",
         })
           .then((response) => response.json())
           .then((data: MinimumPackageVersionPayload) => {
+            console.log("data", data)
             if (
               !!packageVersion &&
               !!data?.minimumVersion &&
