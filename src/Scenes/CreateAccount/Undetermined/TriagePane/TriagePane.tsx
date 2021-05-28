@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react"
 import { useMutation } from "@apollo/client"
 import * as Sentry from "@sentry/react-native"
 import { TriageProgressScreen } from "./TriageProgressScreen"
-import { GET_PLANS } from "../../CreateAccount"
+import { CreateAccount_Cached_Query } from "../../CreateAccount"
 
 const TRIAGE = gql`
   mutation triage {
@@ -52,7 +52,7 @@ export const TriagePane: React.FC<TriagePaneProps> = ({ check, onTriageComplete 
     },
     refetchQueries: [
       {
-        query: GET_PLANS,
+        query: CreateAccount_Cached_Query,
         variables: { status: "Active" },
       },
     ],
