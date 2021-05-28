@@ -1,7 +1,6 @@
 import { color } from "App/utils"
 import React from "react"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-
 import { Flex } from "./Flex"
 import { Theme } from "./Theme"
 

@@ -103,6 +103,7 @@
     "react-spring": "^8.0.27",
     "react-tracking": "^7.3.0",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
+    "semver-compare": "^1.0.0",
     "styled-components": "^4.3.2",
     "styled-system": "^5.1.1",
     "tipsi-stripe": "https://github.com/ashfurrow/tipsi-stripe.git#fix-infinite-loop",
