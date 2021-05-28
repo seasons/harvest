@@ -36,7 +36,6 @@ export const ErrorPopUp: React.FC = () => {
         })
           .then((response) => response.json())
           .then((data: MinimumPackageVersionPayload) => {
-            console.log("data", data)
             if (
               !!packageVersion &&
               !!data?.minimumVersion &&
