@@ -32,12 +32,15 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
 
   const rows = sizeData.map((size, i) => {
     const displaySize = size?.displayLong
+    const displayShort = size?.displayShort
 
     const manufacturerSizeDisplayType = size?.manufacturerSizes?.[0]?.type
     const manufacturerSizeDisplay = size?.manufacturerSizes?.[0]?.display
 
     const manufacturerSizeFullDisplay =
+      manufacturerSizeDisplayType !== "Letter" &&
       manufacturerSizeDisplay !== displaySize &&
+      manufacturerSizeDisplay !== displayShort &&
       !!manufacturerSizeDisplayType &&
       `${manufacturerSizeDisplayType ? manufacturerSizeDisplayType + " " : ""}${manufacturerSizeDisplay}`
 
