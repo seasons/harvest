@@ -53,7 +53,7 @@ export const Brand = screenTrack({
       <FixedBackArrow navigation={navigation} variant="whiteTransparent" />
       <BrandPhotos images={images} currentImage={currentImage} setCurrentImage={setCurrentImage} />
       <BrandBottomSheet
-        PAGE_LENGTH={PAGE_LENGTH}
+        pageLength={PAGE_LENGTH}
         setProductCount={setProductCount}
         data={data}
         loading={loading}

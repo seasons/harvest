@@ -15,7 +15,7 @@ interface BrandBottomSheetProps {
   data: any
   loading: boolean
   fetchMore: any
-  PAGE_LENGTH: number
+  pageLength: number
   currentImage: number
   setProductCount: (count: number) => void
 }
@@ -63,7 +63,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
   data,
   loading,
   fetchMore,
-  PAGE_LENGTH,
+  pageLength,
   currentImage,
   setProductCount,
 }) => {
@@ -185,7 +185,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
                 skip: products.length,
               },
             }).then(() => {
-              setProductCount(products.length + PAGE_LENGTH)
+              setProductCount(products.length + pageLength)
             })
           }
         }}
