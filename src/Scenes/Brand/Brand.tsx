@@ -12,8 +12,9 @@ import { BrandPhotos } from "./BrandPhotos"
 export const Brand = screenTrack({
   entityType: Schema.EntityTypes.Brand,
 })((props: any) => {
+  const paginationCount = 10
   const { navigation, route, error } = props
-  const [productCount, setProductCount] = useState(10)
+  const [productCount, setProductCount] = useState(paginationCount)
   const [currentImage, setCurrentImage] = useState(1)
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -52,6 +53,7 @@ export const Brand = screenTrack({
       <FixedBackArrow navigation={navigation} variant="whiteTransparent" />
       <BrandPhotos images={images} currentImage={currentImage} setCurrentImage={setCurrentImage} />
       <BrandBottomSheet
+        paginationCount={paginationCount}
         setProductCount={setProductCount}
         data={data}
         loading={loading}

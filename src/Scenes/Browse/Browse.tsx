@@ -17,7 +17,7 @@ import { BrowseFilters, EMPTY_BROWSE_FILTERS } from "./Filters"
 import { GET_BROWSE_PRODUCTS } from "./queries/browseQueries"
 import { useScrollToTop } from "@react-navigation/native"
 
-const PAGE_LENGTH = 10
+const PAGE_LENGTH = 16
 
 export const Browse = screenTrack()((props: any) => {
   const currentFilters = props?.route?.params?.filters || EMPTY_BROWSE_FILTERS
@@ -111,6 +111,8 @@ export const Browse = screenTrack()((props: any) => {
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { filters, designers } })
   }
 
+  console.log("products?.length", products?.length)
+
   const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
 
   return (
@@ -189,8 +191,8 @@ export const Browse = screenTrack()((props: any) => {
                     variables: {
                       skip: products.length,
                     },
-                  }).then((fetchMoreResult: any) => {
-                    setProductCount(products.length + fetchMoreResult?.data?.productsConnection?.edges?.length)
+                  }).then(() => {
+                    setProductCount(products.length + PAGE_LENGTH)
                   })
                 }
               }}
