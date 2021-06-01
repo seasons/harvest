@@ -39,11 +39,11 @@ const GET_TAG = gql`
 export const Tag = screenTrack({
   entityType: Schema.EntityTypes.Tag,
 })((props: any) => {
-  const paginationCount = 10
+  const PAGE_LENGTH = 10
   const [readMoreExpanded, setReadMoreExpanded] = useState(false)
   const { navigation, route } = props
   const { tag, title, description } = route?.params?.tagData
-  const [productCount, setProductCount] = useState(paginationCount)
+  const [productCount, setProductCount] = useState(PAGE_LENGTH)
 
   const { previousData, data = previousData, loading, fetchMore } = useQuery(GET_TAG, {
     variables: {
@@ -103,7 +103,7 @@ export const Tag = screenTrack({
                 skip: products.length,
               },
             }).then((fetchMoreResult: any) => {
-              setProductCount(products.length + paginationCount)
+              setProductCount(products.length + PAGE_LENGTH)
             })
           }
         }}
