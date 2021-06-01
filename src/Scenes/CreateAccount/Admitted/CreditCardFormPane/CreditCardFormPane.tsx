@@ -19,6 +19,7 @@ import { PAYMENT_CHECKOUT } from "../ChoosePlanPane/ChoosePlanPane"
 import { calcFinalPrice } from "../ChoosePlanPane/utils"
 import { GET_USER } from "App/Scenes/Account/Account"
 import { CreditCardFormAddressFields } from "./CreditCardFormAddressFields"
+import { GET_NOTIFICATION_BAR } from "@seasons/eclipse"
 
 const windowDimensions = Dimensions.get("window")
 
@@ -109,11 +110,13 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
       showPopUp(popUpData)
       setIsMutating(false)
     },
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
         query: GetBag_NoCache_Query,
       },
       { query: GET_USER },
+      { query: GET_NOTIFICATION_BAR },
     ],
   })
 

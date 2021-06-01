@@ -29,6 +29,7 @@ import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMet
 import { OverlaySpinner } from "App/Components/OverlaySpinner"
 import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from "App/generated/CreateAccount_NoCache_Query"
 import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
+import { GET_NOTIFICATION_BAR } from "@seasons/eclipse"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout(
@@ -122,11 +123,13 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       showPopUp(popUpData)
       setIsMutating(false)
     },
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
         query: GetBag_NoCache_Query,
       },
       { query: GET_USER },
+      { query: GET_NOTIFICATION_BAR },
     ],
   })
 
@@ -158,6 +161,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       showPopUp(popUpData)
       setIsMutating(false)
     },
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
         query: GetBag_NoCache_Query,
@@ -165,6 +169,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       {
         query: GET_MEMBERSHIP_INFO,
       },
+      { query: GET_NOTIFICATION_BAR },
     ],
   })
 
