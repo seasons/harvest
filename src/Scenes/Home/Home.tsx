@@ -17,9 +17,9 @@ import { Homepage_Query as Homepage_Query_Type } from "App/generated/Homepage_Qu
 import { HomepageNoCache_Query as HomepageNoCache_Query_Type } from "App/generated/HomepageNoCache_Query"
 
 export const Home = screenTrack()(({ navigation, route }) => {
-  const fitPicPageLength = 8
+  const PAGE_LENGTH = 8
   const [showLoader, toggleLoader] = useState(true)
-  const [fitPicsFetchCount, setFitPicsFetchCount] = useState(fitPicPageLength)
+  const [fitPicsFetchCount, setFitPicsFetchCount] = useState(PAGE_LENGTH)
   const {
     previousData: previousDataNoCache,
     data: dataNoCache = previousDataNoCache,
@@ -135,7 +135,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
             fetchMore({
               variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
             }).then(() => {
-              setFitPicsFetchCount(data?.fitPics?.length + fitPicPageLength)
+              setFitPicsFetchCount(data?.fitPics?.length + PAGE_LENGTH)
             })
           }
         }}
