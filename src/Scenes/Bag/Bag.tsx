@@ -357,11 +357,7 @@ export const Bag = screenTrack()((props: BagProps) => {
                     bagIsFull,
                   })
                   if (!hasActiveReservation) {
-                    if (me?.customer.shouldPayForNextReservation) {
-                      setShowBagCostWarning(true)
-                    } else {
-                      handleReserve()
-                    }
+                    handleReserve()
                   } else {
                     navigation.navigate(
                       markedAsReturned
