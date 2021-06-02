@@ -1,7 +1,7 @@
 import { Box, Flex, Sans } from "App/Components"
+import { FadeInImage } from "App/Components/FadeInImage"
 import React from "react"
 import styled from "styled-components/native"
-import { FadeInImage } from "App/Components/FadeInImage"
 
 export const CurrentRotationItem = ({ physicalProduct }) => {
   const productVariant = physicalProduct.productVariant

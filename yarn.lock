@@ -3052,10 +3052,10 @@
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
 
-"@seasons/eclipse@^1.2.41":
-  version "1.2.41"
-  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.2.41.tgz#7b1297816c68a5e0ed205740e1b7901e04446edd"
-  integrity sha512-7hlNrJrPPrJXTTR/Yy9aLnnIYdIyMSx5EsQ86eM6M/Smt2ypXitU8A6aMmT/a2mAjQ6SLVPHFDLPG2t+2dO32w==
+"@seasons/eclipse@^1.2.46":
+  version "1.2.46"
+  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.2.46.tgz#6cc6844b1882dd041afad7b87730972795509570"
+  integrity sha512-B+WpY/gqWzRVxJ2+42JkE0cG2HcSbi/sAFtGgcE/NQxahcuc4w+vR6xCu4sgQPkBcD8Dv1GsxGPgYn6s5cttOg==
   dependencies:
     dripsy "^1.4.6"
 
@@ -15631,6 +15631,11 @@ select@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/select/-/select-1.1.2.tgz#0e7350acdec80b1108528786ec1d4418d11b396d"
   integrity sha1-DnNQrN7ICxEIUoeG7B1EGNEbOW0=
+
+semver-compare@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/semver-compare/-/semver-compare-1.0.0.tgz#0dee216a1c941ab37e9efb1788f6afc5ff5537fc"
+  integrity sha1-De4hahyUGrN+nvsXiPavxf9VN/w=
 
 "semver@2 || 3 || 4 || 5", semver@^5.1.0, semver@^5.4.1, semver@^5.5.0, semver@^5.6.0, semver@^5.7.0, semver@^5.7.1:
   version "5.7.1"

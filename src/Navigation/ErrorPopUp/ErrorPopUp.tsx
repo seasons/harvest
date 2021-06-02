@@ -9,6 +9,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 import { useKeyboard } from "@react-native-community/hooks"
+import packageJson from "../../../package.json"
+import { Linking } from "react-native"
+
+interface MinimumPackageVersionPayload {
+  minimumVersion: string
+}
+
+const semverCompare = require("semver-compare")
 
 const windowDimensions = Dimensions.get("window")
 const windowHeight = windowDimensions.height
@@ -16,12 +24,33 @@ const twoButtonWidth = windowDimensions.width / 2 - (space(2) + space(0.5))
 
 export const ErrorPopUp: React.FC = () => {
   const insets = useSafeAreaInsets()
-  const { popUpState } = usePopUpContext()
+  const { popUpState, showPopUp } = usePopUpContext()
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
-    setTimeout(() => {
-      setMounted(true)
-    })
+    if (!mounted) {
+      setTimeout(() => {
+        setMounted(true)
+        const packageVersion = packageJson.version
+        fetch(`https://harvest-public.s3.amazonaws.com/harvest-minimum-version.json`, {
+          method: "GET",
+        })
+          .then((response) => response.json())
+          .then((data: MinimumPackageVersionPayload) => {
+            if (
+              !!packageVersion &&
+              !!data?.minimumVersion &&
+              semverCompare(packageVersion, data?.minimumVersion) === -1
+            ) {
+              showPopUp({
+                title: "New app update available",
+                note: "Get the latest app update with new features, bug fixes, and performance improvements.",
+                buttonText: "Update now",
+                onClose: () => Linking.openURL("itms-apps://apps.apple.com/id/app/id1483089476"),
+              })
+            }
+          })
+      })
+    }
   }, [])
 
   const keyboard = useKeyboard()

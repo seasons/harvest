@@ -1,6 +1,6 @@
 {
   "name": "harvest",
-  "version": "1.30.6",
+  "version": "1.30.7",
   "engines": {
     "node": ">=12.x.x"
   },
@@ -40,7 +40,7 @@
     "@react-navigation/bottom-tabs": "^5.7.2",
     "@react-navigation/native": "^5.7.1",
     "@react-navigation/stack": "^5.7.1",
-    "@seasons/eclipse": "^1.2.41",
+    "@seasons/eclipse": "^1.2.46",
     "@segment/analytics-react-native": "^1.4.1",
     "@segment/analytics-react-native-google-analytics": "^1.4.1",
     "@segment/analytics-react-native-mixpanel": "^1.4.1",
@@ -103,6 +103,7 @@
     "react-spring": "^8.0.27",
     "react-tracking": "^7.3.0",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
+    "semver-compare": "^1.0.0",
     "styled-components": "^4.3.2",
     "styled-system": "^5.1.1",
     "tipsi-stripe": "https://github.com/ashfurrow/tipsi-stripe.git#fix-infinite-loop",
