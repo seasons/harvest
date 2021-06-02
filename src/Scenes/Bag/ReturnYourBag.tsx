@@ -65,6 +65,10 @@ export const ReturnYourBag = () => {
     return <Loader />
   }
 
+  const date = activeReservation.returnAt
+    ? DateTime.fromISO(activeReservation.returnAt)
+    : DateTime.fromISO(activeReservation.createdAt).plus({ month: 1 })
+
   return (
     <Container insetsTop={true}>
       <Box style={{ flex: 1 }}>
@@ -79,9 +83,9 @@ export const ReturnYourBag = () => {
               </Sans>
               <Spacer mt="1" />
               <Sans size="5" color="black50">
-                Heads up, it looks like you don’t have have a free swap until{" "}
+                Heads up, it looks like you don’t have a free swap until{" "}
                 <Sans size="5" style={{ textDecorationLine: "underline" }}>
-                  {DateTime.fromISO(activeReservation.returnAt).toLocaleString(DateTime.DATE_FULL)}
+                  {date.toLocaleString(DateTime.DATE_FULL)}
                 </Sans>
                 . Return your items early & place a new order for only $35
               </Sans>
