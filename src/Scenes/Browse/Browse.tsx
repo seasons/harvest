@@ -58,6 +58,7 @@ export const Browse = screenTrack()((props: any) => {
       tops: filters.topSizeFilters,
       bottoms: filters.bottomSizeFilters,
       available: filters.availableOnly,
+      forSaleOnly: filters.forSaleOnly,
       brandNames: filters.designerFilters,
       categoryName: currentCategory,
       first: productCount,

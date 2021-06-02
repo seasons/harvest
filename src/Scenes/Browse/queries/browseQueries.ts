@@ -11,6 +11,7 @@ export const GET_BROWSE_PRODUCTS = gql`
     $tops: [String]
     $bottoms: [String]
     $available: Boolean
+    $forSaleOnly: Boolean
   ) {
     categories(where: { visible: true }, orderBy: updatedAt_ASC) {
       id
@@ -32,6 +33,7 @@ export const GET_BROWSE_PRODUCTS = gql`
       colors: $colors
       bottoms: $bottoms
       availableOnly: $available
+      forSaleOnly: $forSaleOnly
       brands: $brandNames
       orderBy: $orderBy
       where: { status: Available }
@@ -46,6 +48,7 @@ export const GET_BROWSE_PRODUCTS = gql`
       colors: $colors
       bottoms: $bottoms
       availableOnly: $available
+      forSaleOnly: $forSaleOnly
       brands: $brandNames
       orderBy: $orderBy
       first: $first
