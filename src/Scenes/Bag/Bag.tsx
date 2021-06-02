@@ -1,5 +1,8 @@
 import { Loader } from "App/Components/Loader"
 import { PauseStatus } from "App/Components/Pause/PauseButtons"
+import {
+  GetBag_NoCache_Query as GetBag_NoCache_Query_Type
+} from "App/generated/GetBag_NoCache_Query"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -14,21 +17,21 @@ import { assign, fill } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
 import { FlatList, RefreshControl, StatusBar, View } from "react-native"
 import { NavigationRoute, NavigationScreenProp } from "react-navigation"
+
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
 import { Box, Button, Spacer } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
-import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
+
 import {
-  CHECK_ITEMS,
-  GetBag_NoCache_Query,
-  REMOVE_FROM_BAG,
-  REMOVE_FROM_BAG_AND_SAVE_ITEM,
-  ReservationHistoryTab_Query,
-  SavedTab_Query,
+  State as CreateAccountState, UserState as CreateAccountUserState
+} from "../CreateAccount/CreateAccount"
+import {
+  CHECK_ITEMS, GetBag_NoCache_Query, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM,
+  ReservationHistoryTab_Query, SavedTab_Query
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
-import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
+import { BagCostWarning } from "./Components/BagCostWarning"
 
 export enum BagView {
   Bag = 0,
@@ -84,6 +87,7 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const { previousData, data = previousData, refetch } = useQuery<GetBag_NoCache_Query_Type>(GetBag_NoCache_Query)
   const { data: localItems } = useQuery(GET_LOCAL_BAG)
+  const [showBagCostWarning, setShowBagCostWarning] = useState(false)
 
   const me = data?.me
   const customerStatus = me?.customer?.status
@@ -340,7 +344,7 @@ export const Bag = screenTrack()((props: BagProps) => {
           ref={flatListRef}
           ListFooterComponent={() => <Spacer pb={80} />}
         />
-        {isBagView && pauseStatus !== "paused" && (
+        {isBagView && pauseStatus !== "paused" && me?.activeReservation?.status === "Delivered" && (
           <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
             <Spacer mb={2} />
             <Box px={2}>
@@ -353,7 +357,11 @@ export const Bag = screenTrack()((props: BagProps) => {
                     bagIsFull,
                   })
                   if (!hasActiveReservation) {
-                    handleReserve()
+                    if (me?.customer.shouldPayForNextReservation) {
+                      setShowBagCostWarning(true)
+                    } else {
+                      handleReserve()
+                    }
                   } else {
                     navigation.navigate(
                       markedAsReturned
@@ -369,6 +377,7 @@ export const Bag = screenTrack()((props: BagProps) => {
                 {hasActiveReservation ? (markedAsReturned ? "Return Instructions" : "Return Bag") : "Reserve"}
               </Button>
             </Box>
+            <BagCostWarning show={showBagCostWarning} setShow={setShowBagCostWarning} />
             <Spacer mb={2} />
           </FadeBottom2>
         )}

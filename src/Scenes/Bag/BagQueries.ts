@@ -55,6 +55,7 @@ export const GetBag_NoCache_Query = gql`
       customer {
         id
         status
+        shouldPayForNextReservation
         invoices {
           id
           subscriptionId
