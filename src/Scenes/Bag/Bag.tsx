@@ -305,6 +305,61 @@ export const Bag = screenTrack()((props: BagProps) => {
     sections = [{ data: reservationItems }]
   }
 
+  const PrimaryCTA = () => {
+    if (!isBagView && pauseStatus !== "paused") {
+      return null
+    }
+
+    let button = null
+
+    let handlePress = () => {
+      tracking.trackEvent({
+        actionName: TrackSchema.ActionNames.ReserveButtonTapped,
+        actionType: TrackSchema.ActionTypes.Tap,
+        bagIsFull,
+      })
+      if (!hasActiveReservation) {
+        handleReserve()
+      } else {
+        navigation.navigate(
+          markedAsReturned
+            ? NavigationSchema.PageNames.ReturnYourBagConfirmation
+            : NavigationSchema.PageNames.ReturnYourBag
+        )
+      }
+    }
+
+    if (hasActiveReservation) {
+      if (me?.activeReservation?.status === "Delivered") {
+        button = (
+          <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
+            {markedAsReturned ? "Return Instructions" : "Return Bag"}
+          </Button>
+        )
+      }
+    } else {
+      button = (
+        <Button
+          block
+          onPress={handlePress}
+          disabled={!bagIsFull || isMutating}
+          loading={isMutating}
+          variant="primaryBlack"
+        >
+          Reserve
+        </Button>
+      )
+    }
+
+    return (
+      <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
+        <Spacer mb={2} />
+        <Box px={2}>{button}</Box>
+        <Spacer mb={2} />
+      </FadeBottom2>
+    )
+  }
+
   return (
     <Container insetsBottom={false}>
       <View pointerEvents={bottomSheetBackdropIsVisible ? "none" : "auto"} style={{ flexDirection: "column", flex: 1 }}>
@@ -344,39 +399,8 @@ export const Bag = screenTrack()((props: BagProps) => {
           ref={flatListRef}
           ListFooterComponent={() => <Spacer pb={80} />}
         />
-        {isBagView && pauseStatus !== "paused" && me?.activeReservation?.status === "Delivered" && (
-          <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-            <Spacer mb={2} />
-            <Box px={2}>
-              <Button
-                block
-                onPress={() => {
-                  tracking.trackEvent({
-                    actionName: TrackSchema.ActionNames.ReserveButtonTapped,
-                    actionType: TrackSchema.ActionTypes.Tap,
-                    bagIsFull,
-                  })
-                  if (!hasActiveReservation) {
-                    handleReserve()
-                  } else {
-                    navigation.navigate(
-                      markedAsReturned
-                        ? NavigationSchema.PageNames.ReturnYourBagConfirmation
-                        : NavigationSchema.PageNames.ReturnYourBag
-                    )
-                  }
-                }}
-                disabled={!bagIsFull || isMutating}
-                loading={isMutating}
-                variant={hasActiveReservation ? "primaryWhite" : "primaryBlack"}
-              >
-                {hasActiveReservation ? (markedAsReturned ? "Return Instructions" : "Return Bag") : "Reserve"}
-              </Button>
-            </Box>
-            <BagCostWarning show={showBagCostWarning} setShow={setShowBagCostWarning} />
-            <Spacer mb={2} />
-          </FadeBottom2>
-        )}
+        <PrimaryCTA />
+        <BagCostWarning show={showBagCostWarning} setShow={setShowBagCostWarning} />
       </View>
     </Container>
   )
