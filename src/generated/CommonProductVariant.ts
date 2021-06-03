@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { LetterSize, BottomSizeType } from "./globalTypes";
+import { SizeType, LetterSize, BottomSizeType } from "./globalTypes";
 
 // ====================================================
 // GraphQL fragment: CommonProductVariant
@@ -46,6 +46,7 @@ export interface CommonProductVariant_manufacturerSizes {
   __typename: "Size";
   id: string;
   display: string;
+  type: SizeType | null;
   top: CommonProductVariant_manufacturerSizes_top | null;
   bottom: CommonProductVariant_manufacturerSizes_bottom | null;
 }

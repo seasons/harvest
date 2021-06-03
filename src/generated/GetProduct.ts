@@ -83,6 +83,7 @@ export interface GetProduct_products_brand_products_variants_manufacturerSizes {
   __typename: "Size";
   id: string;
   display: string;
+  type: SizeType | null;
   top: GetProduct_products_brand_products_variants_manufacturerSizes_top | null;
   bottom: GetProduct_products_brand_products_variants_manufacturerSizes_bottom | null;
 }
@@ -218,6 +219,7 @@ export interface GetProduct_products_variants_manufacturerSizes {
   __typename: "Size";
   id: string;
   display: string;
+  type: SizeType | null;
   top: GetProduct_products_variants_manufacturerSizes_top | null;
   bottom: GetProduct_products_variants_manufacturerSizes_bottom | null;
 }

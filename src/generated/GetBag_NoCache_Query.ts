@@ -73,6 +73,7 @@ export interface GetBag_NoCache_Query_me_customer {
   __typename: "Customer";
   id: string;
   status: CustomerStatus | null;
+  shouldPayForNextReservation: boolean | null;
   invoices: (GetBag_NoCache_Query_me_customer_invoices | null)[] | null;
   user: GetBag_NoCache_Query_me_customer_user;
   detail: GetBag_NoCache_Query_me_customer_detail | null;
