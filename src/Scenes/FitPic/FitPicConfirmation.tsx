@@ -1,8 +1,6 @@
 import { ReactNativeFile } from "apollo-upload-client"
 import { setupApolloClient } from "App/Apollo"
-import {
-  Button, Container, FixedBackArrow, Flex, Sans, Spacer, TextInput, Toggle
-} from "App/Components"
+import { Button, Container, FixedBackArrow, Flex, Sans, Spacer, TextInput, Toggle } from "App/Components"
 import { TextInputRef } from "App/Components/TextInput"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { space } from "App/utils"
@@ -11,7 +9,7 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
 import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, Image, KeyboardAvoidingView, ScrollView, View } from "react-native"
-
+import Rate, { AndroidMarket } from "react-native-rate"
 import { ApolloClient, ApolloProvider, useMutation, useQuery } from "@apollo/client"
 import { Box } from "@seasons/eclipse"
 
@@ -73,6 +71,17 @@ const FitPicConfirmationView = screenTrack()(({ route, navigation }) => {
         onClose: () => {
           hidePopUp()
           navigation.goBack()
+          const options = {
+            AppleAppID: "1483089476",
+            preferredAndroidMarket: AndroidMarket.Google,
+            preferInApp: true,
+            openAppStoreIfInAppFails: false,
+          }
+          Rate.rate(options, (success) => {
+            if (success) {
+              // this technically only tells us if the user successfully went to the Review Page. Whether they actually did anything, we do not know.
+            }
+          })
         },
       })
     },
