@@ -3,54 +3,11 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ProductWhereInput, CustomerStatus, ProductFit, ProductType, LetterSize, BottomSizeType } from "./globalTypes";
+import { ProductWhereInput, ProductFit, SizeType, ProductType, LetterSize, BottomSizeType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetProduct
 // ====================================================
-
-export interface GetProduct_me_customer_user {
-  __typename: "User";
-  id: string;
-}
-
-export interface GetProduct_me_customer_membership_plan {
-  __typename: "PaymentPlan";
-  id: string;
-  itemCount: number | null;
-}
-
-export interface GetProduct_me_customer_membership {
-  __typename: "CustomerMembership";
-  id: string;
-  plan: GetProduct_me_customer_membership_plan | null;
-}
-
-export interface GetProduct_me_customer {
-  __typename: "Customer";
-  id: string;
-  status: CustomerStatus | null;
-  user: GetProduct_me_customer_user;
-  membership: GetProduct_me_customer_membership | null;
-}
-
-export interface GetProduct_me_bag {
-  __typename: "BagItem";
-  id: string;
-}
-
-export interface GetProduct_me_savedItems {
-  __typename: "BagItem";
-  id: string;
-}
-
-export interface GetProduct_me {
-  __typename: "Me";
-  id: string;
-  customer: GetProduct_me_customer | null;
-  bag: GetProduct_me_bag[] | null;
-  savedItems: GetProduct_me_savedItems[] | null;
-}
 
 export interface GetProduct_products_category {
   __typename: "Category";
@@ -62,6 +19,7 @@ export interface GetProduct_products_modelSize {
   __typename: "Size";
   id: string;
   display: string;
+  type: SizeType | null;
 }
 
 export interface GetProduct_products_color {
@@ -125,8 +83,24 @@ export interface GetProduct_products_brand_products_variants_manufacturerSizes {
   __typename: "Size";
   id: string;
   display: string;
+  type: SizeType | null;
   top: GetProduct_products_brand_products_variants_manufacturerSizes_top | null;
   bottom: GetProduct_products_brand_products_variants_manufacturerSizes_bottom | null;
+}
+
+export interface GetProduct_products_brand_products_variants_nextReservablePhysicalProduct_reports {
+  __typename: "PhysicalProductQualityReport";
+  id: string;
+  createdAt: any;
+  published: boolean;
+  score: number | null;
+  notes: string | null;
+}
+
+export interface GetProduct_products_brand_products_variants_nextReservablePhysicalProduct {
+  __typename: "PhysicalProduct";
+  id: string;
+  reports: GetProduct_products_brand_products_variants_nextReservablePhysicalProduct_reports[] | null;
 }
 
 export interface GetProduct_products_brand_products_variants {
@@ -143,6 +117,7 @@ export interface GetProduct_products_brand_products_variants {
   hasRestockNotification: boolean;
   price: GetProduct_products_brand_products_variants_price;
   manufacturerSizes: GetProduct_products_brand_products_variants_manufacturerSizes[] | null;
+  nextReservablePhysicalProduct: GetProduct_products_brand_products_variants_nextReservablePhysicalProduct | null;
 }
 
 export interface GetProduct_products_brand_products {
@@ -154,6 +129,14 @@ export interface GetProduct_products_brand_products {
   variants: GetProduct_products_brand_products_variants[] | null;
 }
 
+export interface GetProduct_products_brand_logoImage {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+  height: number | null;
+  width: number | null;
+}
+
 export interface GetProduct_products_brand {
   __typename: "Brand";
   id: string;
@@ -163,6 +146,7 @@ export interface GetProduct_products_brand {
   since: any | null;
   websiteUrl: string | null;
   products: GetProduct_products_brand_products[] | null;
+  logoImage: GetProduct_products_brand_logoImage | null;
 }
 
 export interface GetProduct_products_largeImages {
@@ -192,6 +176,8 @@ export interface GetProduct_products_variants_internalSize_top {
 export interface GetProduct_products_variants_internalSize {
   __typename: "Size";
   id: string;
+  display: string;
+  type: SizeType | null;
   bottom: GetProduct_products_variants_internalSize_bottom | null;
   top: GetProduct_products_variants_internalSize_top | null;
 }
@@ -233,16 +219,32 @@ export interface GetProduct_products_variants_manufacturerSizes {
   __typename: "Size";
   id: string;
   display: string;
+  type: SizeType | null;
   top: GetProduct_products_variants_manufacturerSizes_top | null;
   bottom: GetProduct_products_variants_manufacturerSizes_bottom | null;
 }
 
+export interface GetProduct_products_variants_nextReservablePhysicalProduct_reports {
+  __typename: "PhysicalProductQualityReport";
+  id: string;
+  createdAt: any;
+  published: boolean;
+  score: number | null;
+  notes: string | null;
+}
+
+export interface GetProduct_products_variants_nextReservablePhysicalProduct {
+  __typename: "PhysicalProduct";
+  id: string;
+  reports: GetProduct_products_variants_nextReservablePhysicalProduct_reports[] | null;
+}
+
 export interface GetProduct_products_variants {
   __typename: "ProductVariant";
-  internalSize: GetProduct_products_variants_internalSize | null;
   id: string;
-  displayLong: string | null;
   displayShort: string | null;
+  internalSize: GetProduct_products_variants_internalSize | null;
+  displayLong: string | null;
   total: number;
   reservable: number;
   nonReservable: number;
@@ -252,6 +254,7 @@ export interface GetProduct_products_variants {
   hasRestockNotification: boolean;
   price: GetProduct_products_variants_price;
   manufacturerSizes: GetProduct_products_variants_manufacturerSizes[] | null;
+  nextReservablePhysicalProduct: GetProduct_products_variants_nextReservablePhysicalProduct | null;
 }
 
 export interface GetProduct_products {
@@ -276,7 +279,6 @@ export interface GetProduct_products {
 }
 
 export interface GetProduct {
-  me: GetProduct_me | null;
   products: (GetProduct_products | null)[];
 }
 

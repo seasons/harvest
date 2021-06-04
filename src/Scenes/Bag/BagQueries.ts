@@ -1,4 +1,5 @@
 import gql from "graphql-tag"
+
 import { BagItemFragment } from "./Components/BagItem"
 import { BagTabHeaderFragment_Query } from "./Components/BagTabHeader"
 import { DeliveryStatusFragment_Me } from "./Components/DeliveryStatus"
@@ -8,15 +9,6 @@ import { SavedItemsTabFragment_Me } from "./Components/SavedItemsTab"
 export const CHECK_ITEMS = gql`
   mutation CheckItemsAvailability($items: [ID!]!) {
     checkItemsAvailability(items: $items)
-  }
-`
-
-export const GET_LOCAL_BAG = gql`
-  query GetLocalBag {
-    localBagItems @client {
-      productID
-      variantID
-    }
   }
 `
 
@@ -56,20 +48,14 @@ export const ReservationHistoryTab_Query = gql`
   ${ReservationHistoryTabFragment_Customer}
 `
 
-export const GET_BAG = gql`
-  query GetBagAndSavedItems {
-    paymentPlans(where: { status: "active" }) {
-      id
-      planID
-      tier
-      price
-      itemCount
-    }
+export const GetBag_NoCache_Query = gql`
+  query GetBag_NoCache_Query {
     me {
       id
       customer {
         id
         status
+        shouldPayForNextReservation
         invoices {
           id
           subscriptionId
@@ -114,6 +100,7 @@ export const GET_BAG = gql`
         id
         returnAt
         shipped
+        returnedAt
         createdAt
         status
         phase
@@ -137,15 +124,6 @@ export const GET_BAG = gql`
   ${BagTabHeaderFragment_Query}
   ${DeliveryStatusFragment_Me}
   ${BagItemFragment}
-`
-
-export const ADD_OR_REMOVE_FROM_LOCAL_BAG = gql`
-  mutation AddOrRemoveFromLocalBag($productID: ID!, $variantID: ID!) {
-    addOrRemoveFromLocalBag(productID: $productID, variantID: $variantID) @client {
-      productID
-      variantID
-    }
-  }
 `
 
 export const ADD_TO_BAG = gql`

@@ -1,32 +1,37 @@
-import { Box } from "App/Components"
 import { ErrorScreen } from "App/Components/ErrorScreen"
 import { Loader } from "App/Components/Loader"
-import { RESERVATION_FEEDBACK_REMINDER_HEIGHT } from "App/helpers/constants"
 import { Schema } from "App/Navigation"
 import { NetworkContext } from "App/NetworkProvider"
-import { color } from "App/utils"
 import { userSessionToIdentifyPayload } from "App/utils/auth"
 import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
 import React, { useContext, useEffect, useState } from "react"
 import { StatusBar } from "react-native"
 import SplashScreen from "react-native-splash-screen"
-import styled from "styled-components/native"
-
+import { useNotificationBarContext } from "@seasons/eclipse"
 import { useQuery } from "@apollo/client"
 import analytics from "@segment/analytics-react-native"
-
-import { ReservationFeedbackPopUp, ReservationFeedbackReminder } from "../ReservationFeedback/Components"
 import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
+import { HomepageNoCache_Query, Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
+import { Homepage_Query as Homepage_Query_Type } from "App/generated/Homepage_Query"
+import { HomepageNoCache_Query as HomepageNoCache_Query_Type } from "App/generated/HomepageNoCache_Query"
 
 export const Home = screenTrack()(({ navigation, route }) => {
+  const PAGE_LENGTH = 8
   const [showLoader, toggleLoader] = useState(true)
-  const [showReservationFeedbackPopUp, setShowReservationFeedbackPopUp] = useState(true)
-  const [fitPicsFetchCount, setFitPicsFetchCount] = useState(8)
-  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery(Homepage_Query, {
-    variables: { firstFitPics: fitPicsFetchCount, skipFitPics: 0 },
-  })
+  const [fitPicsFetchCount, setFitPicsFetchCount] = useState(PAGE_LENGTH)
+  const {
+    previousData: previousDataNoCache,
+    data: dataNoCache = previousDataNoCache,
+    refetch: refetchNoCache,
+  } = useQuery<HomepageNoCache_Query_Type>(HomepageNoCache_Query)
+  const { loading, error, previousData, data = previousData, refetch, fetchMore } = useQuery<Homepage_Query_Type>(
+    Homepage_Query,
+    {
+      variables: { firstFitPics: fitPicsFetchCount, skipFitPics: 0 },
+    }
+  )
+  const { showNotificationBar } = useNotificationBarContext()
 
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
@@ -61,18 +66,43 @@ export const Home = screenTrack()(({ navigation, route }) => {
   useEffect(() => {
     if (!!data) {
       // do the identify call
-      const userId = data?.me?.customer?.user?.id
+      const userId = dataNoCache?.me?.customer?.user?.id
       if (!!userId) {
-        analytics.identify(userId, userSessionToIdentifyPayload(data?.me?.customer))
+        analytics.identify(userId, userSessionToIdentifyPayload(dataNoCache?.me?.customer))
       }
     }
   }, [data])
+
+  const reservationFeedback = dataNoCache?.reservationFeedback
+  const shouldRequestFeedback = dataNoCache?.me?.customer?.shouldRequestFeedback
+  const feedbacks = dataNoCache?.reservationFeedback?.feedbacks
+  const incompleteFeedbackIndex = feedbacks?.findIndex((feedback) => !feedback.isCompleted)
+
+  useEffect(() => {
+    const goToReservationFeedbackScreen = () => {
+      navigation.navigate("Modal", {
+        screen: Schema.PageNames.ReservationFeedbackModal,
+      })
+    }
+    if (reservationFeedback) {
+      const subtitle = `Reviewing ${incompleteFeedbackIndex + 1} of ${feedbacks?.length} items`
+      showNotificationBar({
+        title: "Share feedback on your last order",
+        subtitle,
+        onClickBanner: goToReservationFeedbackScreen,
+      })
+      if (shouldRequestFeedback && reservationFeedback) {
+        goToReservationFeedbackScreen()
+      }
+    }
+  }, [shouldRequestFeedback, reservationFeedback, incompleteFeedbackIndex])
 
   const NoInternetComponent = (
     <ErrorScreen
       variant="No Internet"
       refreshAction={() => {
         refetch()
+        refetchNoCache()
       }}
     />
   )
@@ -88,25 +118,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
     return <Loader />
   }
 
-  const reservationFeedback = data?.reservationFeedback
-  const shouldRequestFeedback = data?.me?.customer?.shouldRequestFeedback
-
-  const goToReservationFeedbackScreen = () => {
-    navigation.navigate("Modal", {
-      screen: Schema.PageNames.ReservationFeedbackModal,
-      params: { reservationFeedback },
-    })
-  }
-
-  const onSelectedReviewRating = () => {
-    setShowReservationFeedbackPopUp(false)
-    goToReservationFeedbackScreen()
-  }
-
-  const onPressReservationFeedbackReminder = () => {
-    goToReservationFeedbackScreen()
-  }
-
   const isFetchingMoreFitPics = loading && fitPicsReceived < totalFitPics
 
   return !network?.isConnected && !data ? (
@@ -117,43 +128,18 @@ export const Home = screenTrack()(({ navigation, route }) => {
       <HomeBlogContent items={data?.blogPosts} />
       <HomeBottomSheet
         data={data}
+        dataNoCache={dataNoCache}
         isFetchingMoreFitPics={isFetchingMoreFitPics}
         fetchMoreFitPics={() => {
           if (!isFetchingMoreFitPics && fitPicsReceived > 0) {
             fetchMore({
               variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
-            }).then((fetchMoreResult) => {
-              setFitPicsFetchCount(data?.fitPics?.length + fetchMoreResult?.data?.fitPics.length)
+            }).then(() => {
+              setFitPicsFetchCount(data?.fitPics?.length + PAGE_LENGTH)
             })
           }
         }}
       />
-      {reservationFeedback &&
-        shouldRequestFeedback &&
-        (reservationFeedback.rating ? (
-          <ReservationFeedbackReminderWrapper>
-            <ReservationFeedbackReminder
-              reservationFeedback={reservationFeedback}
-              onPress={onPressReservationFeedbackReminder}
-            />
-          </ReservationFeedbackReminderWrapper>
-        ) : (
-          <ReservationFeedbackPopUp
-            reservationFeedback={reservationFeedback}
-            show={showReservationFeedbackPopUp}
-            onSelectedRating={onSelectedReviewRating}
-          />
-        ))}
     </Container>
   )
 })
-
-const ReservationFeedbackReminderWrapper = styled(Box)`
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  background: ${color("white100")};
-  width: 100%;
-  height: ${RESERVATION_FEEDBACK_REMINDER_HEIGHT};
-  z-index: 100;
-`

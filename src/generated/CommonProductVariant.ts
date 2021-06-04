@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { LetterSize, BottomSizeType } from "./globalTypes";
+import { SizeType, LetterSize, BottomSizeType } from "./globalTypes";
 
 // ====================================================
 // GraphQL fragment: CommonProductVariant
@@ -46,8 +46,24 @@ export interface CommonProductVariant_manufacturerSizes {
   __typename: "Size";
   id: string;
   display: string;
+  type: SizeType | null;
   top: CommonProductVariant_manufacturerSizes_top | null;
   bottom: CommonProductVariant_manufacturerSizes_bottom | null;
+}
+
+export interface CommonProductVariant_nextReservablePhysicalProduct_reports {
+  __typename: "PhysicalProductQualityReport";
+  id: string;
+  createdAt: any;
+  published: boolean;
+  score: number | null;
+  notes: string | null;
+}
+
+export interface CommonProductVariant_nextReservablePhysicalProduct {
+  __typename: "PhysicalProduct";
+  id: string;
+  reports: CommonProductVariant_nextReservablePhysicalProduct_reports[] | null;
 }
 
 export interface CommonProductVariant {
@@ -64,4 +80,5 @@ export interface CommonProductVariant {
   hasRestockNotification: boolean;
   price: CommonProductVariant_price;
   manufacturerSizes: CommonProductVariant_manufacturerSizes[] | null;
+  nextReservablePhysicalProduct: CommonProductVariant_nextReservablePhysicalProduct | null;
 }

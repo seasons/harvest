@@ -18,6 +18,8 @@ export enum DisplayState {
   Inactive = "inactive",
 }
 
+type TextInputSizes = "default" | "small"
+
 export type TextInputVariant = "light" | "dark"
 export const defaultVariant: TextInputVariant = "light"
 
@@ -100,6 +102,7 @@ export interface TextInputProps {
   ref?: MutableRefObject<typeof TextInput>
   secureTextEntry?: boolean
   style?: ViewStyle
+  size?: TextInputSizes
   textContentType?:
     | "none"
     | "URL"
@@ -148,6 +151,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       onFocus,
       onBlur,
       placeholder,
+      size = "default",
       secureTextEntry,
       style,
       textContentType,
@@ -204,7 +208,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
         <TouchableWithoutFeedback onPress={() => textInputRef?.current?.focus?.()}>
           <Box>
             {!!headerText && (
-              <Sans size="3" color={placeholderColor}>
+              <Sans size={size === "default" ? "3" : "2"} color={placeholderColor}>
                 {headerText}
               </Sans>
             )}
@@ -229,7 +233,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
           style={{
             color: variantColors.active.color,
             fontFamily: fontFamily.sans.medium.toString(),
-            fontSize: themeProps.typeSizes[4].fontSize,
+            fontSize: themeProps.typeSizes[size === "default" ? 4 : 3].fontSize,
             ...style,
             textAlignVertical: "center",
           }}

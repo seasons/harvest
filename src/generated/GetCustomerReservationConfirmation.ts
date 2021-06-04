@@ -112,7 +112,7 @@ export interface GetCustomerReservationConfirmation_me_customer {
 
 export interface GetCustomerReservationConfirmation_me {
   __typename: "Me";
-  id: string;
+  id: string | null;
   user: GetCustomerReservationConfirmation_me_user | null;
   customer: GetCustomerReservationConfirmation_me_customer | null;
 }

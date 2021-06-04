@@ -9,7 +9,6 @@ import { linkTo } from "@storybook/addon-links"
 import { storiesOf } from "@storybook/react-native"
 
 import Welcome from "./Welcome"
-import { ReservationFeedbackConfirmation } from "App/Scenes/ReservationFeedback"
 
 const apolloClient = new ApolloClient({
   uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/",
@@ -23,16 +22,6 @@ storiesOf("Create Account", module).add("Triage", () => {
     <ApolloProvider client={apolloClient}>
       <SafeAreaProvider>
         <TriageProgressScreen start={true} done={() => {}} />
-      </SafeAreaProvider>
-    </ApolloProvider>
-  )
-})
-
-storiesOf("Reservation Feedback Flow", module).add("Confirmation", () => {
-  return (
-    <ApolloProvider client={apolloClient}>
-      <SafeAreaProvider>
-        <ReservationFeedbackConfirmation navigation={null} route={{ name: "ReservationConfirmation" }} />
       </SafeAreaProvider>
     </ApolloProvider>
   )

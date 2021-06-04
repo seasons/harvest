@@ -52,56 +52,8 @@ const CustomerTraitsFragment_Customer = gql`
   }
 `
 
-export const Homepage_Query = gql`
-  query Homepage_Query($firstFitPics: Int!, $skipFitPics: Int) {
-    banner: view(viewID: "Banner") {
-      id
-      title
-      caption
-      type
-      properties
-    }
-    homepage {
-      sections {
-        id
-        title
-        type
-        tagData {
-          id
-          tagName
-          description
-        }
-        results {
-          ... on Category {
-            id
-            slug
-            name
-            image
-          }
-          ... on Product {
-            id
-            slug
-            name
-            images(size: Thumb) {
-              id
-              url
-            }
-            brand {
-              id
-              name
-            }
-            variants {
-              id
-              reservable
-              internalSize {
-                id
-                display
-              }
-            }
-          }
-        }
-      }
-    }
+export const HomepageNoCache_Query = gql`
+  query HomepageNoCache_Query {
     reservationFeedback {
       id
       comment
@@ -161,6 +113,60 @@ export const Homepage_Query = gql`
               id
               reservable
               displayShort
+            }
+          }
+        }
+      }
+    }
+  }
+  ${CustomerTraitsFragment_Customer}
+`
+
+export const Homepage_Query = gql`
+  query Homepage_Query($firstFitPics: Int!, $skipFitPics: Int) {
+    banner: view(viewID: "Banner") {
+      id
+      title
+      caption
+      type
+      properties
+    }
+    homepage {
+      sections {
+        id
+        title
+        type
+        tagData {
+          id
+          tagName
+          description
+        }
+        results {
+          ... on Category {
+            id
+            slug
+            name
+            image
+          }
+          ... on Product {
+            id
+            slug
+            name
+            images(size: Thumb) {
+              id
+              url
+            }
+            brand {
+              id
+              name
+            }
+            variants {
+              id
+              reservable
+              internalSize {
+                id
+                display
+              }
             }
           }
         }
@@ -293,6 +299,5 @@ export const Homepage_Query = gql`
     ...HomeBottomSheetFragment_Query
   }
   ${HomePageProductFragment_Product}
-  ${CustomerTraitsFragment_Customer}
   ${HomeBottomSheetFragment_Query}
 `

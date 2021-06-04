@@ -63,6 +63,16 @@ export interface GetUser_me_customer_admissions {
   authorizationsCount: number;
 }
 
+export interface GetUser_me_customer_membership_plan {
+  __typename: "PaymentPlan";
+  itemCount: number | null;
+}
+
+export interface GetUser_me_customer_membership {
+  __typename: "CustomerMembership";
+  plan: GetUser_me_customer_membership_plan | null;
+}
+
 export interface GetUser_me_customer {
   __typename: "Customer";
   id: string;
@@ -73,11 +83,12 @@ export interface GetUser_me_customer {
   detail: GetUser_me_customer_detail | null;
   authorizedAt: any | null;
   admissions: GetUser_me_customer_admissions | null;
+  membership: GetUser_me_customer_membership | null;
 }
 
 export interface GetUser_me {
   __typename: "Me";
-  id: string;
+  id: string | null;
   customer: GetUser_me_customer | null;
 }
 

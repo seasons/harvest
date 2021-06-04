@@ -17,8 +17,8 @@ import { Dimensions, Linking, ScrollView, TouchableOpacity } from "react-native"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
 import { PlanButton } from "./PlanButton"
-import { GET_BAG } from "App/Scenes/Bag/BagQueries"
-import { GetPlans, GetPlans_paymentPlans } from "App/generated/GetPlans"
+import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
+import { GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { ChevronIcon } from "Assets/icons"
 import { Coupon, PaymentMethod } from "../../CreateAccount"
 import { PopUp } from "App/Components/PopUp"
@@ -27,6 +27,9 @@ import { calcFinalPrice } from "./utils"
 import { GET_USER } from "App/Scenes/Account/Account"
 import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMethods"
 import { OverlaySpinner } from "App/Components/OverlaySpinner"
+import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from "App/generated/CreateAccount_NoCache_Query"
+import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
+import { GET_NOTIFICATION_BAR } from "@seasons/eclipse"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout(
@@ -56,7 +59,8 @@ interface ChoosePlanPaneProps {
   selectedPlan: GetPlans_paymentPlans
   setSelectedPlan: (plan: GetPlans_paymentPlans) => void
   headerText: String
-  data: GetPlans
+  data: CreateAccount_Cached_Query_Type
+  dataNoCache: CreateAccount_NoCache_Query_Type
   coupon?: Coupon
   source: "CreateAccountModal" | "UpdatePaymentPlanModal"
   onMountScrollToFaqSection?: boolean
@@ -68,13 +72,14 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   onComplete,
   headerText,
   data,
+  dataNoCache,
   setSelectedPlan,
   selectedPlan,
   coupon: appliedCoupon,
   source,
   onMountScrollToFaqSection,
 }) => {
-  const coupon = setCoupon(appliedCoupon, data?.me?.customer?.coupon)
+  const coupon = setCoupon(appliedCoupon, dataNoCache?.me?.customer?.coupon)
 
   const plans = data?.paymentPlans
   const faqSections = data?.faq?.sections
@@ -118,11 +123,13 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       showPopUp(popUpData)
       setIsMutating(false)
     },
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
       { query: GET_USER },
+      { query: GET_NOTIFICATION_BAR },
     ],
   })
 
@@ -154,13 +161,15 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       showPopUp(popUpData)
       setIsMutating(false)
     },
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
       {
         query: GET_MEMBERSHIP_INFO,
       },
+      { query: GET_NOTIFICATION_BAR },
     ],
   })
 
@@ -179,7 +188,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       setTiers(planTiers)
     }
 
-    const customerPlan = data?.me?.customer?.membership?.plan
+    const customerPlan = dataNoCache?.me?.customer?.membership?.plan
     const initialPlan = customerPlan ? plans?.find((plan) => plan.id === customerPlan.id) : plans?.[0]
     const initialTab = 0
 
@@ -271,7 +280,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     if (source === "CreateAccountModal") {
       setOpenPopUp(true)
     } else {
-      if (selectedPlan.id === data?.me?.customer?.membership?.plan?.id) {
+      if (selectedPlan.id === dataNoCache?.me?.customer?.membership?.plan?.id) {
         showPopUp({
           title: "Select a new plan",
           note: "You're already subscribed to this plan. Select a new plan to update.",

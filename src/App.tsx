@@ -11,7 +11,7 @@ import * as Sentry from "@sentry/react-native"
 import { setupApolloClient } from "./Apollo"
 import { NetworkProvider } from "./NetworkProvider"
 import { config, Env } from "./utils/config"
-import { GET_LOCAL_BAG } from "./Scenes/Bag/BagQueries"
+import { GET_LOCAL_BAG } from "./queries/clientQueries"
 
 enableScreens()
 

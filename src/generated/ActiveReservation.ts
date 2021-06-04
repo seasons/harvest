@@ -50,13 +50,14 @@ export interface ActiveReservation_me_activeReservation {
   __typename: "Reservation";
   id: string;
   shipped: boolean;
+  returnAt: any | null;
   createdAt: any;
   products: ActiveReservation_me_activeReservation_products[];
 }
 
 export interface ActiveReservation_me {
   __typename: "Me";
-  id: string;
+  id: string | null;
   activeReservation: ActiveReservation_me_activeReservation | null;
 }
 

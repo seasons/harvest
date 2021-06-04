@@ -31,6 +31,7 @@ const commonProductVariantFragment = gql`
     manufacturerSizes {
       id
       display
+      type
       top {
         id
         letter
@@ -63,6 +64,34 @@ const commonProductVariantFragment = gql`
   }
   ${ProductBuyCTAFragment_ProductVariant}
   ${ProductConditionSectionFragment_PhysicalProductQualityReport}
+`
+
+export const Product_NoCache_Query = gql`
+  query Product_NoCache_Query {
+    me {
+      id
+      customer {
+        id
+        status
+        user {
+          id
+        }
+        membership {
+          id
+          plan {
+            id
+            itemCount
+          }
+        }
+      }
+      bag {
+        id
+      }
+      savedItems {
+        id
+      }
+    }
+  }
 `
 
 export const GET_PRODUCT = gql`

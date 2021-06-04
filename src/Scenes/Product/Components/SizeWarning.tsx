@@ -6,13 +6,14 @@ import styled from "styled-components/native"
 import { color } from "App/utils/color"
 import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 import { useMutation } from "@apollo/client"
-import { ADD_OR_REMOVE_FROM_LOCAL_BAG, ADD_TO_BAG, GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { ADD_TO_BAG, GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { GET_PRODUCT } from "../Queries"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useNavigation } from "@react-navigation/native"
 import { CheckCircled } from "Assets/svgs"
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG } from "App/queries/clientQueries"
 
 const getSuggestedVariant = (selectedVariant, variants, fit) => {
   const selectedSizeIndex = variants?.findIndex((v) => v?.id === selectedVariant?.id)
@@ -37,12 +38,13 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
   const selectedSize = selectedVariant?.displayLong
   const suggestedVariant = getSuggestedVariant(selectedVariant, product.variants, productFit)
   const suggestSizeDisplay = suggestedVariant?.displayLong
+  const me = data?.me
 
   const mutationSettings = {
     awaitRefetchQueries: true,
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
       {
         query: GET_PRODUCT,
@@ -82,8 +84,8 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
 
   const sharedOnComplete = (res) => {
     setShowSizeWarning(false)
-    const itemCount = data?.me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
-    const bagItemCount = authState?.isSignedIn ? data?.me?.bag?.length : res.addOrRemoveFromLocalBag.length
+    const itemCount = me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
+    const bagItemCount = authState?.isSignedIn ? me?.bag?.length : res.addOrRemoveFromLocalBag.length
     if (itemCount && bagItemCount && bagItemCount >= itemCount && isUserSignedIn) {
       showPopUp({
         icon: <CheckCircled />,

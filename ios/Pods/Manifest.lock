@@ -220,6 +220,8 @@ PODS:
     - React
   - react-native-safe-area-context (3.1.4):
     - React
+  - react-native-slider (3.0.3):
+    - React
   - react-native-splash-screen (3.2.0):
     - React
   - react-native-view-shot (3.1.2):
@@ -388,6 +390,7 @@ DEPENDENCIES:
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pusher-push-notifications (from `../node_modules/react-native-pusher-push-notifications`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-view-shot (from `../node_modules/react-native-view-shot`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -489,6 +492,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-pusher-push-notifications"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
   react-native-view-shot:
@@ -589,6 +594,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: 38a1e0b3e89b48e4b5833ed475d8df5f049f6f90
   react-native-pusher-push-notifications: 2ed16a965a4ade4d2e51ecc632b47a7f41e7f7c6
   react-native-safe-area-context: eb91fe1fb3f7b87d9c30a7f0808407d8569d539d
+  react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-view-shot: 4475fde003fe8a210053d1f98fb9e06c1d834e1c
   react-native-webview: 6edf4d6f71b9161fc3e96083726a538ee395304d

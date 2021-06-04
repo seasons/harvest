@@ -147,21 +147,16 @@ export enum ActionNames {
   CloseOrderConfirmationTapped = "Close Order Confirmation Tapped",
 
   // Reservation Confirmation
+  ReservationFeedbackOptionButtonTapped = "Reservation Feedback Option Button Tapped",
   ReservationConfirmationDoneButtonTapped = "Reservation Confirmation Done Button Tapped",
 
   // Reservation Feedback
   ReservationFeedbackRatingButtonTapped = "Reservation Feedback Rating Button Tapped",
-  ReservationFeedbackHeaderTapped = "Reservation Feedback Header Tapped",
-  ReservationFeedbackHeaderProgressBarTapped = "Reservation Feedback Header Progress Bar Tapped",
-  ReservationFeedbackOptionButtonTapped = "Reservation Feedback Option Button Tapped",
   ReservationFeedbackContinueLaterButtonTapped = "Reservation Feedback Continue Later Button Tapped",
 
   // Reservation Feedback Confirmation
   ReservationFeedbackConfirmationSkipButtonTapped = "Reservation Feedback Confirmation Skip Button Tapped",
   ReservationFeedbackConfirmationSubmitButtonTapped = "Reservation Feedback Confirmation Submit Button Tapped",
-
-  // Reservation Feedback Finish
-  ReservationFeedbackFinishButtonTapped = "Reservation Feedback Finish Button Tapped",
 
   // Account
   MembershipInfoTapped = "Membership Info Tapped",

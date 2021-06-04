@@ -7,11 +7,12 @@ import { color } from "App/utils"
 import { Text } from "Components/Typography"
 import gql from "graphql-tag"
 import React, { useState } from "react"
-import { useMutation } from "@apollo/client"
 import { Keyboard, TouchableWithoutFeedback } from "react-native"
 import { checkNotifications } from "react-native-permissions"
 
+import { useMutation } from "@apollo/client"
 import AsyncStorage from "@react-native-community/async-storage"
+import { GET_USER } from "../Account/Account"
 
 const LOG_IN = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -31,6 +32,11 @@ const LOG_IN = gql`
           shippingAddress {
             id
             state
+          }
+        }
+        membership {
+          plan {
+            itemCount
           }
         }
       }
@@ -65,6 +71,11 @@ export const LogIn: React.FC<LogInProps> = (props) => {
   const { init } = useNotificationsContext()
 
   const [login] = useMutation(LOG_IN, {
+    refetchQueries: [
+      {
+        query: GET_USER,
+      },
+    ],
     onCompleted: () => {
       setIsMutating(false)
     },

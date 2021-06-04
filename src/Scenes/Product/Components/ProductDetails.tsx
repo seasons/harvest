@@ -36,9 +36,12 @@ export const ProductDetails: React.FC<{
     }
   }
 
-  const modelDetailValue = `Model is ${modelHeightDisplay(product.modelHeight)} in a ${
-    product.modelSize.type === "WxL" ? "WxL " : ""
-  }${product.modelSize.display}`
+  const modelDetailValue =
+    !!product.modelSize &&
+    !!product.modelHeight &&
+    `Model is ${modelHeightDisplay(product.modelHeight)} in a ${product.modelSize.type === "WxL" ? "WxL " : ""}${
+      product.modelSize.display
+    }`
   return (
     <Box pt={2} px={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between" alignItems="flex-start">

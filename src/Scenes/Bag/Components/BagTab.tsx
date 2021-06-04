@@ -1,39 +1,52 @@
-import { useNavigation } from "@react-navigation/native"
-import * as Sentry from "@sentry/react-native"
-import { Box, Sans, Separator, Spacer } from "App/Components"
+import { Sans, Separator } from "App/Components"
 import { PauseStatus, REMOVE_SCHEDULED_PAUSE, RESUME_MEMBERSHIP } from "App/Components/Pause/PauseButtons"
-import { GetBagAndSavedItems } from "App/generated/GetBagAndSavedItems"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
-import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { State as CreateAccountState, UserState } from "App/Scenes/CreateAccount/CreateAccount"
 import { color } from "App/utils"
+import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
-import { Schema as NavSchema } from "App/Navigation"
 import React, { useEffect, useState } from "react"
-import { useLazyQuery, useMutation } from "@apollo/client"
 import { Linking } from "react-native"
-import { GET_BAG, GET_LOCAL_BAG_ITEMS } from "../BagQueries"
+
+import { useLazyQuery, useMutation } from "@apollo/client"
+import { useNavigation } from "@react-navigation/native"
+import { Box, ProductBuyAlertTab, ProductBuyAlertTabType, Spacer } from "@seasons/eclipse"
+import * as Sentry from "@sentry/react-native"
+
+import { GetBag_NoCache_Query, GET_LOCAL_BAG_ITEMS } from "../BagQueries"
+import { BagCardButton } from "./BagCardButton"
 import { BagItem } from "./BagItem"
+import { BagTabHeader } from "./BagTabHeader"
+import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
 import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
-import { BagCardButton } from "./BagCardButton"
-import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
-import { ProductBuyAlertTab, ProductBuyAlertTabType } from "@seasons/eclipse"
-import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
-import { UserState, State as CreateAccountState } from "App/Scenes/CreateAccount/CreateAccount"
-import { BagTabHeader } from "./BagTabHeader"
+import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
-  data: GetBagAndSavedItems
+  data: GetBag_NoCache_Query_Type
   itemCount: number
   items
+  bagIsFull: boolean
   setItemCount: (count: number) => void
+  handleReserve: () => void
   deleteBagItem
   removeFromBagAndSaveItem
-}> = ({ pauseStatus, items, deleteBagItem, removeFromBagAndSaveItem, data, itemCount, setItemCount }) => {
+}> = ({
+  pauseStatus,
+  data,
+  itemCount,
+  items,
+  bagIsFull,
+  setItemCount,
+  handleReserve,
+  deleteBagItem,
+  removeFromBagAndSaveItem,
+}) => {
   const [isMutating, setIsMutating] = useState(false)
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -71,11 +84,11 @@ export const BagTab: React.FC<{
   const [resumeSubscription] = useMutation(RESUME_MEMBERSHIP, {
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
     ],
     onCompleted: () => {
-      navigation.navigate("Modal", { screen: NavSchema.PageNames.ResumeConfirmation })
+      navigation.navigate("Modal", { screen: NavigationSchema.PageNames.ResumeConfirmation })
       setIsMutating(false)
     },
     onError: (err) => {
@@ -95,7 +108,7 @@ export const BagTab: React.FC<{
   const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
     ],
     onCompleted: () => {
@@ -187,7 +200,6 @@ export const BagTab: React.FC<{
   const pauseType = pauseRequest?.pauseType
   const withOrWithoutDisplay = pauseType === "WithoutItems" ? "without items" : "with items"
   const pausedWithoutItems = isPaused && pauseType === "WithoutItems"
-
   const status = activeReservation?.status
   const updatedMoreThan24HoursAgo =
     activeReservation?.updatedAt && DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
@@ -265,7 +277,7 @@ export const BagTab: React.FC<{
         </>
       )}
       <Separator />
-      {hasActiveReservation && <DeliveryStatus me={me} atHome={atHome} />}
+      {hasActiveReservation && status !== "Delivered" && <DeliveryStatus me={me} atHome={atHome} />}
       {paddedItems?.map((bagItem, index) => {
         if (pausedWithoutItems) {
           return null
@@ -350,7 +362,6 @@ export const BagTab: React.FC<{
           </>
         )
       }
-
       {!isPaused && (
         <BagCardButton
           Icon={Stylist}

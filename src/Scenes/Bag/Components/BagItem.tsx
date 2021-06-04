@@ -15,8 +15,9 @@ import styled from "styled-components/native"
 
 import { useMutation } from "@apollo/client"
 
-import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_BAG } from "../BagQueries"
+import { GetBag_NoCache_Query } from "../BagQueries"
 import { Check } from "Assets/svgs"
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG } from "App/queries/clientQueries"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -116,7 +117,7 @@ export const BagItem: React.FC<BagItemProps> = ({
     awaitRefetchQueries: true,
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
       {
         query: GET_PRODUCT,
@@ -143,7 +144,7 @@ export const BagItem: React.FC<BagItemProps> = ({
         awaitRefetchQueries: true,
         refetchQueries: [
           {
-            query: GET_BAG,
+            query: GetBag_NoCache_Query,
           },
           {
             query: GET_PRODUCT,
@@ -257,7 +258,7 @@ export const BagItem: React.FC<BagItemProps> = ({
                     },
                     refetchQueries: [
                       {
-                        query: GET_BAG,
+                        query: GetBag_NoCache_Query,
                       },
                       {
                         query: GET_PRODUCT,

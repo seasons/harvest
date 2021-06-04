@@ -2,19 +2,19 @@ import { BottomSheetProvider } from "App/Navigation/BottomSheetContext"
 import { ErrorPopUp } from "App/Navigation/ErrorPopUp"
 import { PopUpProvider } from "App/Navigation/ErrorPopUp/PopUpProvider"
 import { NotificationsProvider } from "App/Notifications"
+import { GET_LOCAL_BAG } from "App/queries/clientQueries"
+import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { getUserSession, userSessionToIdentifyPayload } from "App/utils/auth"
 import React, { useEffect, useImperativeHandle } from "react"
 import RNPusherPushNotifications from "react-native-pusher-push-notifications"
-
+import { useLazyQuery } from "@apollo/client"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import AsyncStorage from "@react-native-community/async-storage"
 import { createStackNavigator } from "@react-navigation/stack"
 import { NotificationBarProvider } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
-
 import AuthContext from "./AuthContext"
 import { ModalAndMainScreens } from "./Stacks"
-import { GET_LOCAL_BAG } from "App/Scenes/Bag/BagQueries"
 
 // For docs on auth see: https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
 
@@ -68,6 +68,14 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
       }
     )
 
+    const [getBag] = useLazyQuery(GetBag_NoCache_Query, {
+      onCompleted: (data) => {
+        if (data?.me?.id) {
+          dispatch({ type: "RESTORE_TOKEN", token: data.me })
+        }
+      },
+    })
+
     useEffect(() => {
       const bootstrapAsync = async () => {
         try {
@@ -85,6 +93,7 @@ export const AuthProvider = React.forwardRef<AuthProviderRef, AuthProviderProps>
       }
 
       bootstrapAsync()
+      getBag()
     }, [])
 
     // Forward authContext to any parents holding a ref to this AuthProvider.

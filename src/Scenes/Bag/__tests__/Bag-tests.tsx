@@ -7,14 +7,14 @@ import React from "react"
 import { MockedProvider } from "@apollo/client/testing"
 
 import { Bag } from "../"
-import { GET_BAG } from "../BagQueries"
+import { GetBag_NoCache_Query } from "../BagQueries"
 import { BagItem } from "../Components/BagItem"
 import { BagFixture } from "./__fixtures__/BagFixture"
 
 const mocks = [
   {
     request: {
-      query: GET_BAG,
+      query: GetBag_NoCache_Query,
     },
     result: {
       data: {

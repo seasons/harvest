@@ -22,6 +22,7 @@ export interface BrowseFilters {
   designerFilters: any[]
   colorFilters: any[]
   availableOnly: boolean
+  forSaleOnly: boolean
 }
 
 const DESIGNER_ITEM_HEIGHT = 60
@@ -31,6 +32,7 @@ export const EMPTY_BROWSE_FILTERS = {
   designerFilters: [],
   colorFilters: [],
   availableOnly: false,
+  forSaleOnly: false,
 }
 
 export const Filters = screenTrack()((props: any) => {
@@ -121,13 +123,31 @@ export const Filters = screenTrack()((props: any) => {
     }
   }, [designers])
 
-  const onChangeToggle = async (newValue) => {
+  const onChangeAvailableToggle = async (newValue) => {
     if (isMutatingToggle) {
       return
     }
     setFilters({
       ...filters,
       availableOnly: newValue,
+    })
+    setIsMutatingToggle(true)
+    tracking.trackEvent({
+      actionName: Schema.ActionNames.AvailableFilterToggled,
+      actionType: Schema.ActionTypes.Tap,
+      newValue,
+    })
+
+    setIsMutatingToggle(false)
+  }
+
+  const onChangeForSaleToggle = async (newValue) => {
+    if (isMutatingToggle) {
+      return
+    }
+    setFilters({
+      ...filters,
+      forSaleOnly: newValue,
     })
     setIsMutatingToggle(true)
     tracking.trackEvent({
@@ -156,7 +176,7 @@ export const Filters = screenTrack()((props: any) => {
     if (currentView === FilterView.Sizes) {
       return (
         <>
-          <Flex flexDirection="row" justifyContent="space-between" alignItems="center" py={4} px={2}>
+          <Flex flexDirection="row" justifyContent="space-between" alignItems="center" pt={4} pb={2} px={2}>
             <Box>
               <Sans size="4">Available now</Sans>
               <Sans size="4" color="black50">
@@ -165,8 +185,21 @@ export const Filters = screenTrack()((props: any) => {
             </Box>
             <Toggle
               disabled={false}
-              onChange={(newValue) => onChangeToggle(newValue)}
+              onChange={(newValue) => onChangeAvailableToggle(newValue)}
               selected={filters.availableOnly}
+            />
+          </Flex>
+          <Flex flexDirection="row" justifyContent="space-between" alignItems="center" pt={2} pb={4} px={2}>
+            <Box>
+              <Sans size="4">For sale</Sans>
+              <Sans size="4" color="black50">
+                Styles currently for sale used and new
+              </Sans>
+            </Box>
+            <Toggle
+              disabled={false}
+              onChange={(newValue) => onChangeForSaleToggle(newValue)}
+              selected={filters.forSaleOnly}
             />
           </Flex>
           <Box px={2}>

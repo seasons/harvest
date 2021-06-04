@@ -7,6 +7,23 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum AppRoute {
+  AccountStack = "AccountStack",
+  BagStack = "BagStack",
+  Brand = "Brand",
+  Browse = "Browse",
+  CurrentRotation = "CurrentRotation",
+  Faq = "Faq",
+  Home = "Home",
+  Modal = "Modal",
+  PaymentAndShipping = "PaymentAndShipping",
+  PersonalPreferences = "PersonalPreferences",
+  Product = "Product",
+  ProductRequest = "ProductRequest",
+  Reservation = "Reservation",
+  Webview = "Webview",
+}
+
 export enum BagItemStatus {
   Added = "Added",
   Received = "Received",
@@ -102,6 +119,7 @@ export enum CustomerStatus {
   Deactivated = "Deactivated",
   Invited = "Invited",
   Paused = "Paused",
+  PaymentFailed = "PaymentFailed",
   Suspended = "Suspended",
   Waitlisted = "Waitlisted",
 }
@@ -127,15 +145,18 @@ export enum EmailId {
   FreeToReserve = "FreeToReserve",
   Paused = "Paused",
   PriorityAccess = "PriorityAccess",
+  RecommendedItemsNurture = "RecommendedItemsNurture",
   ReferralConfirmation = "ReferralConfirmation",
   ReservationConfirmation = "ReservationConfirmation",
   ReservationReturnConfirmation = "ReservationReturnConfirmation",
   ResumeConfirmation = "ResumeConfirmation",
   ResumeReminder = "ResumeReminder",
   ReturnReminder = "ReturnReminder",
+  ReturnToGoodStanding = "ReturnToGoodStanding",
   Rewaitlisted = "Rewaitlisted",
   SubmittedEmail = "SubmittedEmail",
   TwentyFourHourAuthorizationFollowup = "TwentyFourHourAuthorizationFollowup",
+  UnpaidMembership = "UnpaidMembership",
   Waitlisted = "Waitlisted",
   WelcomeToSeasons = "WelcomeToSeasons",
 }
@@ -209,6 +230,17 @@ export enum LocationType {
   Warehouse = "Warehouse",
 }
 
+export enum NotificationBarID {
+  AuthorizedReminder = "AuthorizedReminder",
+  PastDueInvoice = "PastDueInvoice",
+  TestDismissable = "TestDismissable",
+}
+
+export enum NotificationBarIcon {
+  Chevron = "Chevron",
+  CloseX = "CloseX",
+}
+
 export enum OnboardingStep {
   SetMeasurements = "SetMeasurements",
   SetShippingAddress = "SetShippingAddress",
@@ -232,7 +264,6 @@ export enum OrderStatus {
 }
 
 export enum OrderType {
-  External = "External",
   New = "New",
   Used = "Used",
 }
@@ -428,7 +459,9 @@ export enum ReservationStatus {
   Cancelled = "Cancelled",
   Completed = "Completed",
   Delivered = "Delivered",
+  Hold = "Hold",
   Packed = "Packed",
+  Picked = "Picked",
   Queued = "Queued",
   Received = "Received",
   Shipped = "Shipped",
@@ -456,6 +489,14 @@ export enum ShippingCode {
   UPSSelect = "UPSSelect",
 }
 
+export enum SizeType {
+  EU = "EU",
+  JP = "JP",
+  Letter = "Letter",
+  US = "US",
+  WxL = "WxL",
+}
+
 export enum SmsStatus {
   Accepted = "Accepted",
   Delivered = "Delivered",
@@ -469,6 +510,12 @@ export enum SmsStatus {
   Sending = "Sending",
   Sent = "Sent",
   Undelivered = "Undelivered",
+}
+
+export enum SyncTimingType {
+  Drip = "Drip",
+  Impact = "Impact",
+  Next = "Next",
 }
 
 export enum TriageCustomerStatus {
@@ -506,6 +553,7 @@ export enum UserVerificationStatus {
 export enum ViewType {
   Banner = "Banner",
   Referral = "Referral",
+  Select = "Select",
 }
 
 export enum WarehouseLocationType {
@@ -794,6 +842,33 @@ export interface BottomSizeWhereUniqueInput {
   id?: string | null;
 }
 
+export interface BrandCreateInput {
+  id?: string | null;
+  slug: string;
+  brandCode: string;
+  description?: string | null;
+  isPrimaryBrand?: boolean | null;
+  logo?: any | null;
+  name: string;
+  designer?: string | null;
+  basedIn?: string | null;
+  since?: any | null;
+  tier: BrandTier;
+  published?: boolean | null;
+  featured?: boolean | null;
+  websiteUrl?: string | null;
+  styles?: BrandCreatestylesInput | null;
+  logoImage?: ImageCreateOneInput | null;
+  products?: ProductCreateManyWithoutBrandInput | null;
+  images?: ImageCreateManyInput | null;
+  shopifyShop?: ShopifyShopCreateOneInput | null;
+}
+
+export interface BrandCreateOneInput {
+  create?: BrandCreateInput | null;
+  connect?: BrandWhereUniqueInput | null;
+}
+
 export interface BrandCreateOneWithoutProductsInput {
   create?: BrandCreateWithoutProductsInput | null;
   connect?: BrandWhereUniqueInput | null;
@@ -814,8 +889,44 @@ export interface BrandCreateWithoutProductsInput {
   published?: boolean | null;
   featured?: boolean | null;
   websiteUrl?: string | null;
+  styles?: BrandCreatestylesInput | null;
+  logoImage?: ImageCreateOneInput | null;
   images?: ImageCreateManyInput | null;
-  externalShopifyIntegration?: ExternalShopifyIntegrationCreateOneInput | null;
+  shopifyShop?: ShopifyShopCreateOneInput | null;
+}
+
+export interface BrandCreatestylesInput {
+  set?: CustomerStyle[] | null;
+}
+
+export interface BrandUpdateDataInput {
+  slug?: string | null;
+  brandCode?: string | null;
+  description?: string | null;
+  isPrimaryBrand?: boolean | null;
+  logo?: any | null;
+  name?: string | null;
+  designer?: string | null;
+  basedIn?: string | null;
+  since?: any | null;
+  tier?: BrandTier | null;
+  published?: boolean | null;
+  featured?: boolean | null;
+  websiteUrl?: string | null;
+  styles?: BrandUpdatestylesInput | null;
+  logoImage?: ImageUpdateOneInput | null;
+  products?: ProductUpdateManyWithoutBrandInput | null;
+  images?: ImageUpdateManyInput | null;
+  shopifyShop?: ShopifyShopUpdateOneInput | null;
+}
+
+export interface BrandUpdateOneInput {
+  create?: BrandCreateInput | null;
+  connect?: BrandWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: BrandUpdateDataInput | null;
+  upsert?: BrandUpsertNestedInput | null;
 }
 
 export interface BrandUpdateOneRequiredWithoutProductsInput {
@@ -839,8 +950,19 @@ export interface BrandUpdateWithoutProductsDataInput {
   published?: boolean | null;
   featured?: boolean | null;
   websiteUrl?: string | null;
+  styles?: BrandUpdatestylesInput | null;
+  logoImage?: ImageUpdateOneInput | null;
   images?: ImageUpdateManyInput | null;
-  externalShopifyIntegration?: ExternalShopifyIntegrationUpdateOneInput | null;
+  shopifyShop?: ShopifyShopUpdateOneInput | null;
+}
+
+export interface BrandUpdatestylesInput {
+  set?: CustomerStyle[] | null;
+}
+
+export interface BrandUpsertNestedInput {
+  update: BrandUpdateDataInput;
+  create: BrandCreateInput;
 }
 
 export interface BrandUpsertWithoutProductsInput {
@@ -998,13 +1120,14 @@ export interface BrandWhereInput {
   updatedAt_lte?: any | null;
   updatedAt_gt?: any | null;
   updatedAt_gte?: any | null;
+  logoImage?: ImageWhereInput | null;
   products_every?: ProductWhereInput | null;
   products_some?: ProductWhereInput | null;
   products_none?: ProductWhereInput | null;
   images_every?: ImageWhereInput | null;
   images_some?: ImageWhereInput | null;
   images_none?: ImageWhereInput | null;
-  externalShopifyIntegration?: ExternalShopifyIntegrationWhereInput | null;
+  shopifyShop?: ShopifyShopWhereInput | null;
 }
 
 export interface BrandWhereUniqueInput {
@@ -1462,6 +1585,7 @@ export interface CustomerAdmissionsDataCreateWithoutCustomerInput {
   allAccessEnabled?: boolean | null;
   authorizationsCount: number;
   authorizationWindowClosesAt?: any | null;
+  subscribedAt?: any | null;
 }
 
 export interface CustomerAdmissionsDataUpdateOneWithoutCustomerInput {
@@ -1480,6 +1604,7 @@ export interface CustomerAdmissionsDataUpdateWithoutCustomerDataInput {
   allAccessEnabled?: boolean | null;
   authorizationsCount?: number | null;
   authorizationWindowClosesAt?: any | null;
+  subscribedAt?: any | null;
 }
 
 export interface CustomerAdmissionsDataUpsertWithoutCustomerInput {
@@ -1523,6 +1648,8 @@ export interface CustomerCreateWithoutReferreesInput {
   emailedProducts?: ProductCreateManyInput | null;
   admissions?: CustomerAdmissionsDataCreateOneWithoutCustomerInput | null;
   utm?: UTMDataCreateOneWithoutCustomerInput | null;
+  notificationBarReceipts?: CustomerNotificationBarReceiptCreateManyWithoutCustomerInput | null;
+  impactSyncTimings?: SyncTimingCreateManyInput | null;
 }
 
 export interface CustomerCreateWithoutReferrerInput {
@@ -1542,6 +1669,8 @@ export interface CustomerCreateWithoutReferrerInput {
   emailedProducts?: ProductCreateManyInput | null;
   admissions?: CustomerAdmissionsDataCreateOneWithoutCustomerInput | null;
   utm?: UTMDataCreateOneWithoutCustomerInput | null;
+  notificationBarReceipts?: CustomerNotificationBarReceiptCreateManyWithoutCustomerInput | null;
+  impactSyncTimings?: SyncTimingCreateManyInput | null;
 }
 
 export interface CustomerCreateWithoutReservationsInput {
@@ -1561,6 +1690,8 @@ export interface CustomerCreateWithoutReservationsInput {
   emailedProducts?: ProductCreateManyInput | null;
   admissions?: CustomerAdmissionsDataCreateOneWithoutCustomerInput | null;
   utm?: UTMDataCreateOneWithoutCustomerInput | null;
+  notificationBarReceipts?: CustomerNotificationBarReceiptCreateManyWithoutCustomerInput | null;
+  impactSyncTimings?: SyncTimingCreateManyInput | null;
 }
 
 export interface CustomerDetailCreateInput {
@@ -1583,6 +1714,7 @@ export interface CustomerDetailCreateInput {
   phoneOS?: string | null;
   insureShipment?: boolean | null;
   instagramHandle?: string | null;
+  discoveryReference?: string | null;
   impactId?: string | null;
   weight?: CustomerDetailCreateweightInput | null;
   topSizes?: CustomerDetailCreatetopSizesInput | null;
@@ -1632,6 +1764,7 @@ export interface CustomerDetailUpdateDataInput {
   phoneOS?: string | null;
   insureShipment?: boolean | null;
   instagramHandle?: string | null;
+  discoveryReference?: string | null;
   impactId?: string | null;
   weight?: CustomerDetailUpdateweightInput | null;
   topSizes?: CustomerDetailUpdatetopSizesInput | null;
@@ -1756,6 +1889,118 @@ export interface CustomerMembershipUpsertWithoutCustomerInput {
 }
 
 export interface CustomerMembershipWhereUniqueInput {
+  id?: string | null;
+}
+
+export interface CustomerNotificationBarReceiptCreateManyWithoutCustomerInput {
+  create?: CustomerNotificationBarReceiptCreateWithoutCustomerInput[] | null;
+  connect?: CustomerNotificationBarReceiptWhereUniqueInput[] | null;
+}
+
+export interface CustomerNotificationBarReceiptCreateWithoutCustomerInput {
+  id?: string | null;
+  notificationBarId: NotificationBarID;
+  viewCount?: number | null;
+  clickCount?: number | null;
+}
+
+export interface CustomerNotificationBarReceiptScalarWhereInput {
+  AND?: CustomerNotificationBarReceiptScalarWhereInput[] | null;
+  OR?: CustomerNotificationBarReceiptScalarWhereInput[] | null;
+  NOT?: CustomerNotificationBarReceiptScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  notificationBarId?: NotificationBarID | null;
+  notificationBarId_not?: NotificationBarID | null;
+  notificationBarId_in?: NotificationBarID[] | null;
+  notificationBarId_not_in?: NotificationBarID[] | null;
+  viewCount?: number | null;
+  viewCount_not?: number | null;
+  viewCount_in?: number[] | null;
+  viewCount_not_in?: number[] | null;
+  viewCount_lt?: number | null;
+  viewCount_lte?: number | null;
+  viewCount_gt?: number | null;
+  viewCount_gte?: number | null;
+  clickCount?: number | null;
+  clickCount_not?: number | null;
+  clickCount_in?: number[] | null;
+  clickCount_not_in?: number[] | null;
+  clickCount_lt?: number | null;
+  clickCount_lte?: number | null;
+  clickCount_gt?: number | null;
+  clickCount_gte?: number | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+}
+
+export interface CustomerNotificationBarReceiptUpdateManyDataInput {
+  notificationBarId?: NotificationBarID | null;
+  viewCount?: number | null;
+  clickCount?: number | null;
+}
+
+export interface CustomerNotificationBarReceiptUpdateManyWithWhereNestedInput {
+  where: CustomerNotificationBarReceiptScalarWhereInput;
+  data: CustomerNotificationBarReceiptUpdateManyDataInput;
+}
+
+export interface CustomerNotificationBarReceiptUpdateManyWithoutCustomerInput {
+  create?: CustomerNotificationBarReceiptCreateWithoutCustomerInput[] | null;
+  connect?: CustomerNotificationBarReceiptWhereUniqueInput[] | null;
+  set?: CustomerNotificationBarReceiptWhereUniqueInput[] | null;
+  disconnect?: CustomerNotificationBarReceiptWhereUniqueInput[] | null;
+  delete?: CustomerNotificationBarReceiptWhereUniqueInput[] | null;
+  update?: CustomerNotificationBarReceiptUpdateWithWhereUniqueWithoutCustomerInput[] | null;
+  updateMany?: CustomerNotificationBarReceiptUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: CustomerNotificationBarReceiptScalarWhereInput[] | null;
+  upsert?: CustomerNotificationBarReceiptUpsertWithWhereUniqueWithoutCustomerInput[] | null;
+}
+
+export interface CustomerNotificationBarReceiptUpdateWithWhereUniqueWithoutCustomerInput {
+  where: CustomerNotificationBarReceiptWhereUniqueInput;
+  data: CustomerNotificationBarReceiptUpdateWithoutCustomerDataInput;
+}
+
+export interface CustomerNotificationBarReceiptUpdateWithoutCustomerDataInput {
+  notificationBarId?: NotificationBarID | null;
+  viewCount?: number | null;
+  clickCount?: number | null;
+}
+
+export interface CustomerNotificationBarReceiptUpsertWithWhereUniqueWithoutCustomerInput {
+  where: CustomerNotificationBarReceiptWhereUniqueInput;
+  update: CustomerNotificationBarReceiptUpdateWithoutCustomerDataInput;
+  create: CustomerNotificationBarReceiptCreateWithoutCustomerInput;
+}
+
+export interface CustomerNotificationBarReceiptWhereUniqueInput {
   id?: string | null;
 }
 
@@ -1901,6 +2146,8 @@ export interface CustomerUpdateWithoutReferreesDataInput {
   emailedProducts?: ProductUpdateManyInput | null;
   admissions?: CustomerAdmissionsDataUpdateOneWithoutCustomerInput | null;
   utm?: UTMDataUpdateOneWithoutCustomerInput | null;
+  notificationBarReceipts?: CustomerNotificationBarReceiptUpdateManyWithoutCustomerInput | null;
+  impactSyncTimings?: SyncTimingUpdateManyInput | null;
 }
 
 export interface CustomerUpdateWithoutReferrerDataInput {
@@ -1919,6 +2166,8 @@ export interface CustomerUpdateWithoutReferrerDataInput {
   emailedProducts?: ProductUpdateManyInput | null;
   admissions?: CustomerAdmissionsDataUpdateOneWithoutCustomerInput | null;
   utm?: UTMDataUpdateOneWithoutCustomerInput | null;
+  notificationBarReceipts?: CustomerNotificationBarReceiptUpdateManyWithoutCustomerInput | null;
+  impactSyncTimings?: SyncTimingUpdateManyInput | null;
 }
 
 export interface CustomerUpdateWithoutReservationsDataInput {
@@ -1937,6 +2186,8 @@ export interface CustomerUpdateWithoutReservationsDataInput {
   emailedProducts?: ProductUpdateManyInput | null;
   admissions?: CustomerAdmissionsDataUpdateOneWithoutCustomerInput | null;
   utm?: UTMDataUpdateOneWithoutCustomerInput | null;
+  notificationBarReceipts?: CustomerNotificationBarReceiptUpdateManyWithoutCustomerInput | null;
+  impactSyncTimings?: SyncTimingUpdateManyInput | null;
 }
 
 export interface CustomerUpsertWithWhereUniqueWithoutReferrerInput {
@@ -2089,109 +2340,6 @@ export interface EmailReceiptWhereInput {
 
 export interface EmailReceiptWhereUniqueInput {
   id?: string | null;
-}
-
-export interface ExternalShopifyIntegrationCreateInput {
-  id?: string | null;
-  shopName: string;
-  enabled: boolean;
-  accessToken?: string | null;
-  nonce?: string | null;
-}
-
-export interface ExternalShopifyIntegrationCreateOneInput {
-  create?: ExternalShopifyIntegrationCreateInput | null;
-  connect?: ExternalShopifyIntegrationWhereUniqueInput | null;
-}
-
-export interface ExternalShopifyIntegrationUpdateDataInput {
-  shopName?: string | null;
-  enabled?: boolean | null;
-  accessToken?: string | null;
-  nonce?: string | null;
-}
-
-export interface ExternalShopifyIntegrationUpdateOneInput {
-  create?: ExternalShopifyIntegrationCreateInput | null;
-  connect?: ExternalShopifyIntegrationWhereUniqueInput | null;
-  disconnect?: boolean | null;
-  delete?: boolean | null;
-  update?: ExternalShopifyIntegrationUpdateDataInput | null;
-  upsert?: ExternalShopifyIntegrationUpsertNestedInput | null;
-}
-
-export interface ExternalShopifyIntegrationUpsertNestedInput {
-  update: ExternalShopifyIntegrationUpdateDataInput;
-  create: ExternalShopifyIntegrationCreateInput;
-}
-
-export interface ExternalShopifyIntegrationWhereInput {
-  AND?: ExternalShopifyIntegrationWhereInput[] | null;
-  OR?: ExternalShopifyIntegrationWhereInput[] | null;
-  NOT?: ExternalShopifyIntegrationWhereInput[] | null;
-  id?: string | null;
-  id_not?: string | null;
-  id_in?: string[] | null;
-  id_not_in?: string[] | null;
-  id_lt?: string | null;
-  id_lte?: string | null;
-  id_gt?: string | null;
-  id_gte?: string | null;
-  id_contains?: string | null;
-  id_not_contains?: string | null;
-  id_starts_with?: string | null;
-  id_not_starts_with?: string | null;
-  id_ends_with?: string | null;
-  id_not_ends_with?: string | null;
-  shopName?: string | null;
-  shopName_not?: string | null;
-  shopName_in?: string[] | null;
-  shopName_not_in?: string[] | null;
-  shopName_lt?: string | null;
-  shopName_lte?: string | null;
-  shopName_gt?: string | null;
-  shopName_gte?: string | null;
-  shopName_contains?: string | null;
-  shopName_not_contains?: string | null;
-  shopName_starts_with?: string | null;
-  shopName_not_starts_with?: string | null;
-  shopName_ends_with?: string | null;
-  shopName_not_ends_with?: string | null;
-  enabled?: boolean | null;
-  enabled_not?: boolean | null;
-  accessToken?: string | null;
-  accessToken_not?: string | null;
-  accessToken_in?: string[] | null;
-  accessToken_not_in?: string[] | null;
-  accessToken_lt?: string | null;
-  accessToken_lte?: string | null;
-  accessToken_gt?: string | null;
-  accessToken_gte?: string | null;
-  accessToken_contains?: string | null;
-  accessToken_not_contains?: string | null;
-  accessToken_starts_with?: string | null;
-  accessToken_not_starts_with?: string | null;
-  accessToken_ends_with?: string | null;
-  accessToken_not_ends_with?: string | null;
-  nonce?: string | null;
-  nonce_not?: string | null;
-  nonce_in?: string[] | null;
-  nonce_not_in?: string[] | null;
-  nonce_lt?: string | null;
-  nonce_lte?: string | null;
-  nonce_gt?: string | null;
-  nonce_gte?: string | null;
-  nonce_contains?: string | null;
-  nonce_not_contains?: string | null;
-  nonce_starts_with?: string | null;
-  nonce_not_starts_with?: string | null;
-  nonce_ends_with?: string | null;
-  nonce_not_ends_with?: string | null;
-}
-
-export interface ExternalShopifyIntegrationWhereUniqueInput {
-  id?: string | null;
-  shopName?: string | null;
 }
 
 export interface FitPicCreateManyWithoutUserInput {
@@ -2491,6 +2639,7 @@ export interface ImageCreateInput {
   id?: string | null;
   caption?: string | null;
   url: string;
+  alt?: string | null;
   height?: number | null;
   width?: number | null;
   title?: string | null;
@@ -2552,6 +2701,20 @@ export interface ImageScalarWhereInput {
   url_not_starts_with?: string | null;
   url_ends_with?: string | null;
   url_not_ends_with?: string | null;
+  alt?: string | null;
+  alt_not?: string | null;
+  alt_in?: string[] | null;
+  alt_not_in?: string[] | null;
+  alt_lt?: string | null;
+  alt_lte?: string | null;
+  alt_gt?: string | null;
+  alt_gte?: string | null;
+  alt_contains?: string | null;
+  alt_not_contains?: string | null;
+  alt_starts_with?: string | null;
+  alt_not_starts_with?: string | null;
+  alt_ends_with?: string | null;
+  alt_not_ends_with?: string | null;
   height?: number | null;
   height_not?: number | null;
   height_in?: number[] | null;
@@ -2603,6 +2766,7 @@ export interface ImageScalarWhereInput {
 export interface ImageUpdateDataInput {
   caption?: string | null;
   url?: string | null;
+  alt?: string | null;
   height?: number | null;
   width?: number | null;
   title?: string | null;
@@ -2611,6 +2775,7 @@ export interface ImageUpdateDataInput {
 export interface ImageUpdateManyDataInput {
   caption?: string | null;
   url?: string | null;
+  alt?: string | null;
   height?: number | null;
   width?: number | null;
   title?: string | null;
@@ -2631,6 +2796,15 @@ export interface ImageUpdateManyInput {
 export interface ImageUpdateManyWithWhereNestedInput {
   where: ImageScalarWhereInput;
   data: ImageUpdateManyDataInput;
+}
+
+export interface ImageUpdateOneInput {
+  create?: ImageCreateInput | null;
+  connect?: ImageWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: ImageUpdateDataInput | null;
+  upsert?: ImageUpsertNestedInput | null;
 }
 
 export interface ImageUpdateOneRequiredInput {
@@ -2702,6 +2876,20 @@ export interface ImageWhereInput {
   url_not_starts_with?: string | null;
   url_ends_with?: string | null;
   url_not_ends_with?: string | null;
+  alt?: string | null;
+  alt_not?: string | null;
+  alt_in?: string[] | null;
+  alt_not_in?: string[] | null;
+  alt_lt?: string | null;
+  alt_lte?: string | null;
+  alt_gt?: string | null;
+  alt_gte?: string | null;
+  alt_contains?: string | null;
+  alt_not_contains?: string | null;
+  alt_starts_with?: string | null;
+  alt_not_starts_with?: string | null;
+  alt_ends_with?: string | null;
+  alt_not_ends_with?: string | null;
   height?: number | null;
   height_not?: number | null;
   height_in?: number[] | null;
@@ -3852,7 +4040,14 @@ export interface PhysicalProductQualityReportCreateWithoutPhysicalProductInput {
   id?: string | null;
   damageType?: PhysicalProductDamageType | null;
   notes?: string | null;
+  score?: number | null;
+  published?: boolean | null;
+  damageTypes?: PhysicalProductQualityReportCreatedamageTypesInput | null;
   user: UserCreateOneInput;
+}
+
+export interface PhysicalProductQualityReportCreatedamageTypesInput {
+  set?: PhysicalProductDamageType[] | null;
 }
 
 export interface PhysicalProductQualityReportScalarWhereInput {
@@ -3891,6 +4086,14 @@ export interface PhysicalProductQualityReportScalarWhereInput {
   notes_not_starts_with?: string | null;
   notes_ends_with?: string | null;
   notes_not_ends_with?: string | null;
+  score?: number | null;
+  score_not?: number | null;
+  score_in?: number[] | null;
+  score_not_in?: number[] | null;
+  score_lt?: number | null;
+  score_lte?: number | null;
+  score_gt?: number | null;
+  score_gte?: number | null;
   createdAt?: any | null;
   createdAt_not?: any | null;
   createdAt_in?: any[] | null;
@@ -3907,11 +4110,16 @@ export interface PhysicalProductQualityReportScalarWhereInput {
   updatedAt_lte?: any | null;
   updatedAt_gt?: any | null;
   updatedAt_gte?: any | null;
+  published?: boolean | null;
+  published_not?: boolean | null;
 }
 
 export interface PhysicalProductQualityReportUpdateManyDataInput {
   damageType?: PhysicalProductDamageType | null;
   notes?: string | null;
+  score?: number | null;
+  published?: boolean | null;
+  damageTypes?: PhysicalProductQualityReportUpdatedamageTypesInput | null;
 }
 
 export interface PhysicalProductQualityReportUpdateManyWithWhereNestedInput {
@@ -3939,7 +4147,14 @@ export interface PhysicalProductQualityReportUpdateWithWhereUniqueWithoutPhysica
 export interface PhysicalProductQualityReportUpdateWithoutPhysicalProductDataInput {
   damageType?: PhysicalProductDamageType | null;
   notes?: string | null;
+  score?: number | null;
+  published?: boolean | null;
+  damageTypes?: PhysicalProductQualityReportUpdatedamageTypesInput | null;
   user?: UserUpdateOneRequiredInput | null;
+}
+
+export interface PhysicalProductQualityReportUpdatedamageTypesInput {
+  set?: PhysicalProductDamageType[] | null;
 }
 
 export interface PhysicalProductQualityReportUpsertWithWhereUniqueWithoutPhysicalProductInput {
@@ -3984,6 +4199,14 @@ export interface PhysicalProductQualityReportWhereInput {
   notes_not_starts_with?: string | null;
   notes_ends_with?: string | null;
   notes_not_ends_with?: string | null;
+  score?: number | null;
+  score_not?: number | null;
+  score_in?: number[] | null;
+  score_not_in?: number[] | null;
+  score_lt?: number | null;
+  score_lte?: number | null;
+  score_gt?: number | null;
+  score_gte?: number | null;
   createdAt?: any | null;
   createdAt_not?: any | null;
   createdAt_in?: any[] | null;
@@ -4000,6 +4223,8 @@ export interface PhysicalProductQualityReportWhereInput {
   updatedAt_lte?: any | null;
   updatedAt_gt?: any | null;
   updatedAt_gte?: any | null;
+  published?: boolean | null;
+  published_not?: boolean | null;
   user?: UserWhereInput | null;
   physicalProduct?: PhysicalProductWhereInput | null;
 }
@@ -4407,6 +4632,7 @@ export interface ProductCreateInput {
   type?: ProductType | null;
   innerMaterials?: ProductCreateinnerMaterialsInput | null;
   outerMaterials?: ProductCreateouterMaterialsInput | null;
+  styles?: ProductCreatestylesInput | null;
   brand: BrandCreateOneWithoutProductsInput;
   category: CategoryCreateOneWithoutProductsInput;
   color: ColorCreateOneInput;
@@ -4427,6 +4653,11 @@ export interface ProductCreateManyInput {
   connect?: ProductWhereUniqueInput[] | null;
 }
 
+export interface ProductCreateManyWithoutBrandInput {
+  create?: ProductCreateWithoutBrandInput[] | null;
+  connect?: ProductWhereUniqueInput[] | null;
+}
+
 export interface ProductCreateManyWithoutCategoryInput {
   create?: ProductCreateWithoutCategoryInput[] | null;
   connect?: ProductWhereUniqueInput[] | null;
@@ -4435,6 +4666,37 @@ export interface ProductCreateManyWithoutCategoryInput {
 export interface ProductCreateOneWithoutVariantsInput {
   create?: ProductCreateWithoutVariantsInput | null;
   connect?: ProductWhereUniqueInput | null;
+}
+
+export interface ProductCreateWithoutBrandInput {
+  id?: string | null;
+  architecture?: ProductArchitecture | null;
+  description?: string | null;
+  externalURL?: string | null;
+  buyNewEnabled?: boolean | null;
+  name: string;
+  photographyStatus?: PhotographyStatus | null;
+  productFit?: ProductFit | null;
+  publishedAt?: any | null;
+  retailPrice?: number | null;
+  slug: string;
+  status?: ProductStatus | null;
+  type?: ProductType | null;
+  innerMaterials?: ProductCreateinnerMaterialsInput | null;
+  outerMaterials?: ProductCreateouterMaterialsInput | null;
+  styles?: ProductCreatestylesInput | null;
+  category: CategoryCreateOneWithoutProductsInput;
+  color: ColorCreateOneInput;
+  functions?: ProductFunctionCreateManyInput | null;
+  images?: ImageCreateManyInput | null;
+  materialCategory?: ProductMaterialCategoryCreateOneWithoutProductsInput | null;
+  model?: ProductModelCreateOneWithoutProductsInput | null;
+  modelSize?: SizeCreateOneInput | null;
+  season?: ProductSeasonCreateOneInput | null;
+  secondaryColor?: ColorCreateOneInput | null;
+  tags?: TagCreateManyWithoutProductsInput | null;
+  tier?: ProductTierCreateOneInput | null;
+  variants?: ProductVariantCreateManyWithoutProductInput | null;
 }
 
 export interface ProductCreateWithoutCategoryInput {
@@ -4453,6 +4715,7 @@ export interface ProductCreateWithoutCategoryInput {
   type?: ProductType | null;
   innerMaterials?: ProductCreateinnerMaterialsInput | null;
   outerMaterials?: ProductCreateouterMaterialsInput | null;
+  styles?: ProductCreatestylesInput | null;
   brand: BrandCreateOneWithoutProductsInput;
   color: ColorCreateOneInput;
   functions?: ProductFunctionCreateManyInput | null;
@@ -4483,6 +4746,7 @@ export interface ProductCreateWithoutVariantsInput {
   type?: ProductType | null;
   innerMaterials?: ProductCreateinnerMaterialsInput | null;
   outerMaterials?: ProductCreateouterMaterialsInput | null;
+  styles?: ProductCreatestylesInput | null;
   brand: BrandCreateOneWithoutProductsInput;
   category: CategoryCreateOneWithoutProductsInput;
   color: ColorCreateOneInput;
@@ -4503,6 +4767,10 @@ export interface ProductCreateinnerMaterialsInput {
 
 export interface ProductCreateouterMaterialsInput {
   set?: string[] | null;
+}
+
+export interface ProductCreatestylesInput {
+  set?: CustomerStyle[] | null;
 }
 
 export interface ProductFunctionCreateInput {
@@ -5080,6 +5348,7 @@ export interface ProductUpdateDataInput {
   type?: ProductType | null;
   innerMaterials?: ProductUpdateinnerMaterialsInput | null;
   outerMaterials?: ProductUpdateouterMaterialsInput | null;
+  styles?: ProductUpdatestylesInput | null;
   brand?: BrandUpdateOneRequiredWithoutProductsInput | null;
   category?: CategoryUpdateOneRequiredWithoutProductsInput | null;
   color?: ColorUpdateOneRequiredInput | null;
@@ -5110,6 +5379,7 @@ export interface ProductUpdateManyDataInput {
   type?: ProductType | null;
   innerMaterials?: ProductUpdateinnerMaterialsInput | null;
   outerMaterials?: ProductUpdateouterMaterialsInput | null;
+  styles?: ProductUpdatestylesInput | null;
 }
 
 export interface ProductUpdateManyInput {
@@ -5127,6 +5397,18 @@ export interface ProductUpdateManyInput {
 export interface ProductUpdateManyWithWhereNestedInput {
   where: ProductScalarWhereInput;
   data: ProductUpdateManyDataInput;
+}
+
+export interface ProductUpdateManyWithoutBrandInput {
+  create?: ProductCreateWithoutBrandInput[] | null;
+  connect?: ProductWhereUniqueInput[] | null;
+  set?: ProductWhereUniqueInput[] | null;
+  disconnect?: ProductWhereUniqueInput[] | null;
+  delete?: ProductWhereUniqueInput[] | null;
+  update?: ProductUpdateWithWhereUniqueWithoutBrandInput[] | null;
+  updateMany?: ProductUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: ProductScalarWhereInput[] | null;
+  upsert?: ProductUpsertWithWhereUniqueWithoutBrandInput[] | null;
 }
 
 export interface ProductUpdateManyWithoutCategoryInput {
@@ -5153,9 +5435,44 @@ export interface ProductUpdateWithWhereUniqueNestedInput {
   data: ProductUpdateDataInput;
 }
 
+export interface ProductUpdateWithWhereUniqueWithoutBrandInput {
+  where: ProductWhereUniqueInput;
+  data: ProductUpdateWithoutBrandDataInput;
+}
+
 export interface ProductUpdateWithWhereUniqueWithoutCategoryInput {
   where: ProductWhereUniqueInput;
   data: ProductUpdateWithoutCategoryDataInput;
+}
+
+export interface ProductUpdateWithoutBrandDataInput {
+  architecture?: ProductArchitecture | null;
+  description?: string | null;
+  externalURL?: string | null;
+  buyNewEnabled?: boolean | null;
+  name?: string | null;
+  photographyStatus?: PhotographyStatus | null;
+  productFit?: ProductFit | null;
+  publishedAt?: any | null;
+  retailPrice?: number | null;
+  slug?: string | null;
+  status?: ProductStatus | null;
+  type?: ProductType | null;
+  innerMaterials?: ProductUpdateinnerMaterialsInput | null;
+  outerMaterials?: ProductUpdateouterMaterialsInput | null;
+  styles?: ProductUpdatestylesInput | null;
+  category?: CategoryUpdateOneRequiredWithoutProductsInput | null;
+  color?: ColorUpdateOneRequiredInput | null;
+  functions?: ProductFunctionUpdateManyInput | null;
+  images?: ImageUpdateManyInput | null;
+  materialCategory?: ProductMaterialCategoryUpdateOneWithoutProductsInput | null;
+  model?: ProductModelUpdateOneWithoutProductsInput | null;
+  modelSize?: SizeUpdateOneInput | null;
+  season?: ProductSeasonUpdateOneInput | null;
+  secondaryColor?: ColorUpdateOneInput | null;
+  tags?: TagUpdateManyWithoutProductsInput | null;
+  tier?: ProductTierUpdateOneInput | null;
+  variants?: ProductVariantUpdateManyWithoutProductInput | null;
 }
 
 export interface ProductUpdateWithoutCategoryDataInput {
@@ -5173,6 +5490,7 @@ export interface ProductUpdateWithoutCategoryDataInput {
   type?: ProductType | null;
   innerMaterials?: ProductUpdateinnerMaterialsInput | null;
   outerMaterials?: ProductUpdateouterMaterialsInput | null;
+  styles?: ProductUpdatestylesInput | null;
   brand?: BrandUpdateOneRequiredWithoutProductsInput | null;
   color?: ColorUpdateOneRequiredInput | null;
   functions?: ProductFunctionUpdateManyInput | null;
@@ -5202,6 +5520,7 @@ export interface ProductUpdateWithoutVariantsDataInput {
   type?: ProductType | null;
   innerMaterials?: ProductUpdateinnerMaterialsInput | null;
   outerMaterials?: ProductUpdateouterMaterialsInput | null;
+  styles?: ProductUpdatestylesInput | null;
   brand?: BrandUpdateOneRequiredWithoutProductsInput | null;
   category?: CategoryUpdateOneRequiredWithoutProductsInput | null;
   color?: ColorUpdateOneRequiredInput | null;
@@ -5224,10 +5543,20 @@ export interface ProductUpdateouterMaterialsInput {
   set?: string[] | null;
 }
 
+export interface ProductUpdatestylesInput {
+  set?: CustomerStyle[] | null;
+}
+
 export interface ProductUpsertWithWhereUniqueNestedInput {
   where: ProductWhereUniqueInput;
   update: ProductUpdateDataInput;
   create: ProductCreateInput;
+}
+
+export interface ProductUpsertWithWhereUniqueWithoutBrandInput {
+  where: ProductWhereUniqueInput;
+  update: ProductUpdateWithoutBrandDataInput;
+  create: ProductCreateWithoutBrandInput;
 }
 
 export interface ProductUpsertWithWhereUniqueWithoutCategoryInput {
@@ -5260,7 +5589,7 @@ export interface ProductVariantCreateInput {
   manufacturerSizes?: SizeCreateManyInput | null;
   product: ProductCreateOneWithoutVariantsInput;
   price?: ProductVariantPriceCreateOneInput | null;
-  shopifyProductVariant?: ShopifyProductVariantCreateOneInput | null;
+  shopifyProductVariant?: ShopifyProductVariantCreateOneWithoutProductVariantInput | null;
   physicalProducts?: PhysicalProductCreateManyWithoutProductVariantInput | null;
 }
 
@@ -5302,7 +5631,7 @@ export interface ProductVariantCreateWithoutColorInput {
   manufacturerSizes?: SizeCreateManyInput | null;
   product: ProductCreateOneWithoutVariantsInput;
   price?: ProductVariantPriceCreateOneInput | null;
-  shopifyProductVariant?: ShopifyProductVariantCreateOneInput | null;
+  shopifyProductVariant?: ShopifyProductVariantCreateOneWithoutProductVariantInput | null;
   physicalProducts?: PhysicalProductCreateManyWithoutProductVariantInput | null;
 }
 
@@ -5325,7 +5654,7 @@ export interface ProductVariantCreateWithoutPhysicalProductsInput {
   manufacturerSizes?: SizeCreateManyInput | null;
   product: ProductCreateOneWithoutVariantsInput;
   price?: ProductVariantPriceCreateOneInput | null;
-  shopifyProductVariant?: ShopifyProductVariantCreateOneInput | null;
+  shopifyProductVariant?: ShopifyProductVariantCreateOneWithoutProductVariantInput | null;
 }
 
 export interface ProductVariantCreateWithoutProductInput {
@@ -5346,20 +5675,8 @@ export interface ProductVariantCreateWithoutProductInput {
   internalSize?: SizeCreateOneInput | null;
   manufacturerSizes?: SizeCreateManyInput | null;
   price?: ProductVariantPriceCreateOneInput | null;
-  shopifyProductVariant?: ShopifyProductVariantCreateOneInput | null;
+  shopifyProductVariant?: ShopifyProductVariantCreateOneWithoutProductVariantInput | null;
   physicalProducts?: PhysicalProductCreateManyWithoutProductVariantInput | null;
-}
-
-export interface ProductVariantFeedbackCreateWithoutReservationFeedbackInput {
-  id?: string | null;
-  isCompleted: boolean;
-  questions?: ProductVariantFeedbackQuestionCreateManyWithoutVariantFeedbackInput | null;
-  variant: ProductVariantCreateOneInput;
-}
-
-export interface ProductVariantFeedbackQuestionCreateManyWithoutVariantFeedbackInput {
-  create?: ProductVariantFeedbackQuestionCreateWithoutVariantFeedbackInput[] | null;
-  connect?: ProductVariantFeedbackQuestionWhereUniqueInput[] | null;
 }
 
 export interface ProductVariantFeedbackQuestionCreateWithoutVariantFeedbackInput {
@@ -5470,68 +5787,13 @@ export interface ProductVariantFeedbackQuestionWhereUniqueInput {
   id?: string | null;
 }
 
-export interface ProductVariantFeedbackScalarWhereInput {
-  AND?: ProductVariantFeedbackScalarWhereInput[] | null;
-  OR?: ProductVariantFeedbackScalarWhereInput[] | null;
-  NOT?: ProductVariantFeedbackScalarWhereInput[] | null;
-  id?: string | null;
-  id_not?: string | null;
-  id_in?: string[] | null;
-  id_not_in?: string[] | null;
-  id_lt?: string | null;
-  id_lte?: string | null;
-  id_gt?: string | null;
-  id_gte?: string | null;
-  id_contains?: string | null;
-  id_not_contains?: string | null;
-  id_starts_with?: string | null;
-  id_not_starts_with?: string | null;
-  id_ends_with?: string | null;
-  id_not_ends_with?: string | null;
+export interface ProductVariantFeedbackUpdateInput {
   isCompleted?: boolean | null;
-  isCompleted_not?: boolean | null;
-}
-
-export interface ProductVariantFeedbackUpdateManyDataInput {
-  isCompleted?: boolean | null;
-}
-
-export interface ProductVariantFeedbackUpdateManyWithWhereNestedInput {
-  where: ProductVariantFeedbackScalarWhereInput;
-  data: ProductVariantFeedbackUpdateManyDataInput;
-}
-
-export interface ProductVariantFeedbackUpdateManyWithoutReservationFeedbackInput {
-  create?: ProductVariantFeedbackCreateWithoutReservationFeedbackInput[] | null;
-  connect?: ProductVariantFeedbackWhereUniqueInput[] | null;
-  set?: ProductVariantFeedbackWhereUniqueInput[] | null;
-  disconnect?: ProductVariantFeedbackWhereUniqueInput[] | null;
-  delete?: ProductVariantFeedbackWhereUniqueInput[] | null;
-  update?: ProductVariantFeedbackUpdateWithWhereUniqueWithoutReservationFeedbackInput[] | null;
-  updateMany?: ProductVariantFeedbackUpdateManyWithWhereNestedInput[] | null;
-  deleteMany?: ProductVariantFeedbackScalarWhereInput[] | null;
-  upsert?: ProductVariantFeedbackUpsertWithWhereUniqueWithoutReservationFeedbackInput[] | null;
-}
-
-export interface ProductVariantFeedbackUpdateWithWhereUniqueWithoutReservationFeedbackInput {
-  where: ProductVariantFeedbackWhereUniqueInput;
-  data: ProductVariantFeedbackUpdateWithoutReservationFeedbackDataInput;
-}
-
-export interface ProductVariantFeedbackUpdateWithoutReservationFeedbackDataInput {
-  isCompleted?: boolean | null;
+  rating?: number | null;
+  review?: string | null;
   questions?: ProductVariantFeedbackQuestionUpdateManyWithoutVariantFeedbackInput | null;
+  reservationFeedback?: ReservationFeedbackUpdateOneRequiredWithoutFeedbacksInput | null;
   variant?: ProductVariantUpdateOneRequiredInput | null;
-}
-
-export interface ProductVariantFeedbackUpsertWithWhereUniqueWithoutReservationFeedbackInput {
-  where: ProductVariantFeedbackWhereUniqueInput;
-  update: ProductVariantFeedbackUpdateWithoutReservationFeedbackDataInput;
-  create: ProductVariantFeedbackCreateWithoutReservationFeedbackInput;
-}
-
-export interface ProductVariantFeedbackWhereUniqueInput {
-  id?: string | null;
 }
 
 export interface ProductVariantPriceCreateInput {
@@ -5762,7 +6024,7 @@ export interface ProductVariantUpdateDataInput {
   manufacturerSizes?: SizeUpdateManyInput | null;
   product?: ProductUpdateOneRequiredWithoutVariantsInput | null;
   price?: ProductVariantPriceUpdateOneInput | null;
-  shopifyProductVariant?: ShopifyProductVariantUpdateOneInput | null;
+  shopifyProductVariant?: ShopifyProductVariantUpdateOneWithoutProductVariantInput | null;
   physicalProducts?: PhysicalProductUpdateManyWithoutProductVariantInput | null;
 }
 
@@ -5851,7 +6113,7 @@ export interface ProductVariantUpdateWithoutColorDataInput {
   manufacturerSizes?: SizeUpdateManyInput | null;
   product?: ProductUpdateOneRequiredWithoutVariantsInput | null;
   price?: ProductVariantPriceUpdateOneInput | null;
-  shopifyProductVariant?: ShopifyProductVariantUpdateOneInput | null;
+  shopifyProductVariant?: ShopifyProductVariantUpdateOneWithoutProductVariantInput | null;
   physicalProducts?: PhysicalProductUpdateManyWithoutProductVariantInput | null;
 }
 
@@ -5873,7 +6135,7 @@ export interface ProductVariantUpdateWithoutPhysicalProductsDataInput {
   manufacturerSizes?: SizeUpdateManyInput | null;
   product?: ProductUpdateOneRequiredWithoutVariantsInput | null;
   price?: ProductVariantPriceUpdateOneInput | null;
-  shopifyProductVariant?: ShopifyProductVariantUpdateOneInput | null;
+  shopifyProductVariant?: ShopifyProductVariantUpdateOneWithoutProductVariantInput | null;
 }
 
 export interface ProductVariantUpdateWithoutProductDataInput {
@@ -5893,7 +6155,7 @@ export interface ProductVariantUpdateWithoutProductDataInput {
   internalSize?: SizeUpdateOneInput | null;
   manufacturerSizes?: SizeUpdateManyInput | null;
   price?: ProductVariantPriceUpdateOneInput | null;
-  shopifyProductVariant?: ShopifyProductVariantUpdateOneInput | null;
+  shopifyProductVariant?: ShopifyProductVariantUpdateOneWithoutProductVariantInput | null;
   physicalProducts?: PhysicalProductUpdateManyWithoutProductVariantInput | null;
 }
 
@@ -6724,15 +6986,20 @@ export interface ReservationCreateInput {
   phase: ReservationPhase;
   shipped: boolean;
   status: ReservationStatus;
+  returnedAt?: any | null;
   shippedAt?: any | null;
   receivedAt?: any | null;
   reminderSentAt?: any | null;
   statusUpdatedAt?: any | null;
+  completedAt?: any | null;
+  cancelledAt?: any | null;
   user: UserCreateOneInput;
   customer: CustomerCreateOneWithoutReservationsInput;
   sentPackage?: PackageCreateOneInput | null;
   returnedPackage?: PackageCreateOneInput | null;
   products?: PhysicalProductCreateManyInput | null;
+  newProducts?: PhysicalProductCreateManyInput | null;
+  returnedProducts?: PhysicalProductCreateManyInput | null;
   packageEvents?: PackageTransitEventCreateManyWithoutReservationInput | null;
   receipt?: ReservationReceiptCreateOneWithoutReservationInput | null;
   lastLocation?: LocationCreateOneInput | null;
@@ -6742,6 +7009,11 @@ export interface ReservationCreateInput {
 export interface ReservationCreateManyWithoutCustomerInput {
   create?: ReservationCreateWithoutCustomerInput[] | null;
   connect?: ReservationWhereUniqueInput[] | null;
+}
+
+export interface ReservationCreateOneInput {
+  create?: ReservationCreateInput | null;
+  connect?: ReservationWhereUniqueInput | null;
 }
 
 export interface ReservationCreateOneWithoutPackageEventsInput {
@@ -6755,14 +7027,19 @@ export interface ReservationCreateWithoutCustomerInput {
   phase: ReservationPhase;
   shipped: boolean;
   status: ReservationStatus;
+  returnedAt?: any | null;
   shippedAt?: any | null;
   receivedAt?: any | null;
   reminderSentAt?: any | null;
   statusUpdatedAt?: any | null;
+  completedAt?: any | null;
+  cancelledAt?: any | null;
   user: UserCreateOneInput;
   sentPackage?: PackageCreateOneInput | null;
   returnedPackage?: PackageCreateOneInput | null;
   products?: PhysicalProductCreateManyInput | null;
+  newProducts?: PhysicalProductCreateManyInput | null;
+  returnedProducts?: PhysicalProductCreateManyInput | null;
   packageEvents?: PackageTransitEventCreateManyWithoutReservationInput | null;
   receipt?: ReservationReceiptCreateOneWithoutReservationInput | null;
   lastLocation?: LocationCreateOneInput | null;
@@ -6775,27 +7052,56 @@ export interface ReservationCreateWithoutPackageEventsInput {
   phase: ReservationPhase;
   shipped: boolean;
   status: ReservationStatus;
+  returnedAt?: any | null;
   shippedAt?: any | null;
   receivedAt?: any | null;
   reminderSentAt?: any | null;
   statusUpdatedAt?: any | null;
+  completedAt?: any | null;
+  cancelledAt?: any | null;
   user: UserCreateOneInput;
   customer: CustomerCreateOneWithoutReservationsInput;
   sentPackage?: PackageCreateOneInput | null;
   returnedPackage?: PackageCreateOneInput | null;
   products?: PhysicalProductCreateManyInput | null;
+  newProducts?: PhysicalProductCreateManyInput | null;
+  returnedProducts?: PhysicalProductCreateManyInput | null;
   receipt?: ReservationReceiptCreateOneWithoutReservationInput | null;
   lastLocation?: LocationCreateOneInput | null;
   shippingOption?: ShippingOptionCreateOneInput | null;
 }
 
-export interface ReservationFeedbackUpdateInput {
+export interface ReservationFeedbackCreateWithoutFeedbacksInput {
+  id?: string | null;
   comment?: string | null;
   rating?: Rating | null;
   respondedAt?: any | null;
-  feedbacks?: ProductVariantFeedbackUpdateManyWithoutReservationFeedbackInput | null;
+  user: UserCreateOneInput;
+  reservation: ReservationCreateOneInput;
+}
+
+export interface ReservationFeedbackUpdateOneRequiredWithoutFeedbacksInput {
+  create?: ReservationFeedbackCreateWithoutFeedbacksInput | null;
+  connect?: ReservationFeedbackWhereUniqueInput | null;
+  update?: ReservationFeedbackUpdateWithoutFeedbacksDataInput | null;
+  upsert?: ReservationFeedbackUpsertWithoutFeedbacksInput | null;
+}
+
+export interface ReservationFeedbackUpdateWithoutFeedbacksDataInput {
+  comment?: string | null;
+  rating?: Rating | null;
+  respondedAt?: any | null;
   user?: UserUpdateOneRequiredInput | null;
   reservation?: ReservationUpdateOneRequiredInput | null;
+}
+
+export interface ReservationFeedbackUpsertWithoutFeedbacksInput {
+  update: ReservationFeedbackUpdateWithoutFeedbacksDataInput;
+  create: ReservationFeedbackCreateWithoutFeedbacksInput;
+}
+
+export interface ReservationFeedbackWhereUniqueInput {
+  id?: string | null;
 }
 
 export interface ReservationReceiptCreateOneWithoutReservationInput {
@@ -6959,6 +7265,14 @@ export interface ReservationScalarWhereInput {
   status_not?: ReservationStatus | null;
   status_in?: ReservationStatus[] | null;
   status_not_in?: ReservationStatus[] | null;
+  returnedAt?: any | null;
+  returnedAt_not?: any | null;
+  returnedAt_in?: any[] | null;
+  returnedAt_not_in?: any[] | null;
+  returnedAt_lt?: any | null;
+  returnedAt_lte?: any | null;
+  returnedAt_gt?: any | null;
+  returnedAt_gte?: any | null;
   shippedAt?: any | null;
   shippedAt_not?: any | null;
   shippedAt_in?: any[] | null;
@@ -6991,6 +7305,22 @@ export interface ReservationScalarWhereInput {
   statusUpdatedAt_lte?: any | null;
   statusUpdatedAt_gt?: any | null;
   statusUpdatedAt_gte?: any | null;
+  completedAt?: any | null;
+  completedAt_not?: any | null;
+  completedAt_in?: any[] | null;
+  completedAt_not_in?: any[] | null;
+  completedAt_lt?: any | null;
+  completedAt_lte?: any | null;
+  completedAt_gt?: any | null;
+  completedAt_gte?: any | null;
+  cancelledAt?: any | null;
+  cancelledAt_not?: any | null;
+  cancelledAt_in?: any[] | null;
+  cancelledAt_not_in?: any[] | null;
+  cancelledAt_lt?: any | null;
+  cancelledAt_lte?: any | null;
+  cancelledAt_gt?: any | null;
+  cancelledAt_gte?: any | null;
   createdAt?: any | null;
   createdAt_not?: any | null;
   createdAt_in?: any[] | null;
@@ -7014,15 +7344,20 @@ export interface ReservationUpdateDataInput {
   phase?: ReservationPhase | null;
   shipped?: boolean | null;
   status?: ReservationStatus | null;
+  returnedAt?: any | null;
   shippedAt?: any | null;
   receivedAt?: any | null;
   reminderSentAt?: any | null;
   statusUpdatedAt?: any | null;
+  completedAt?: any | null;
+  cancelledAt?: any | null;
   user?: UserUpdateOneRequiredInput | null;
   customer?: CustomerUpdateOneRequiredWithoutReservationsInput | null;
   sentPackage?: PackageUpdateOneInput | null;
   returnedPackage?: PackageUpdateOneInput | null;
   products?: PhysicalProductUpdateManyInput | null;
+  newProducts?: PhysicalProductUpdateManyInput | null;
+  returnedProducts?: PhysicalProductUpdateManyInput | null;
   packageEvents?: PackageTransitEventUpdateManyWithoutReservationInput | null;
   receipt?: ReservationReceiptUpdateOneWithoutReservationInput | null;
   lastLocation?: LocationUpdateOneInput | null;
@@ -7034,10 +7369,13 @@ export interface ReservationUpdateManyDataInput {
   phase?: ReservationPhase | null;
   shipped?: boolean | null;
   status?: ReservationStatus | null;
+  returnedAt?: any | null;
   shippedAt?: any | null;
   receivedAt?: any | null;
   reminderSentAt?: any | null;
   statusUpdatedAt?: any | null;
+  completedAt?: any | null;
+  cancelledAt?: any | null;
 }
 
 export interface ReservationUpdateManyWithWhereNestedInput {
@@ -7083,14 +7421,19 @@ export interface ReservationUpdateWithoutCustomerDataInput {
   phase?: ReservationPhase | null;
   shipped?: boolean | null;
   status?: ReservationStatus | null;
+  returnedAt?: any | null;
   shippedAt?: any | null;
   receivedAt?: any | null;
   reminderSentAt?: any | null;
   statusUpdatedAt?: any | null;
+  completedAt?: any | null;
+  cancelledAt?: any | null;
   user?: UserUpdateOneRequiredInput | null;
   sentPackage?: PackageUpdateOneInput | null;
   returnedPackage?: PackageUpdateOneInput | null;
   products?: PhysicalProductUpdateManyInput | null;
+  newProducts?: PhysicalProductUpdateManyInput | null;
+  returnedProducts?: PhysicalProductUpdateManyInput | null;
   packageEvents?: PackageTransitEventUpdateManyWithoutReservationInput | null;
   receipt?: ReservationReceiptUpdateOneWithoutReservationInput | null;
   lastLocation?: LocationUpdateOneInput | null;
@@ -7102,15 +7445,20 @@ export interface ReservationUpdateWithoutPackageEventsDataInput {
   phase?: ReservationPhase | null;
   shipped?: boolean | null;
   status?: ReservationStatus | null;
+  returnedAt?: any | null;
   shippedAt?: any | null;
   receivedAt?: any | null;
   reminderSentAt?: any | null;
   statusUpdatedAt?: any | null;
+  completedAt?: any | null;
+  cancelledAt?: any | null;
   user?: UserUpdateOneRequiredInput | null;
   customer?: CustomerUpdateOneRequiredWithoutReservationsInput | null;
   sentPackage?: PackageUpdateOneInput | null;
   returnedPackage?: PackageUpdateOneInput | null;
   products?: PhysicalProductUpdateManyInput | null;
+  newProducts?: PhysicalProductUpdateManyInput | null;
+  returnedProducts?: PhysicalProductUpdateManyInput | null;
   receipt?: ReservationReceiptUpdateOneWithoutReservationInput | null;
   lastLocation?: LocationUpdateOneInput | null;
   shippingOption?: ShippingOptionUpdateOneInput | null;
@@ -7495,38 +7843,199 @@ export interface ShippingOptionWhereUniqueInput {
   id?: string | null;
 }
 
-export interface ShopifyProductVariantCreateInput {
-  id?: string | null;
-  externalId?: string | null;
-  cachedPrice?: number | null;
-  cachedAvailableForSale?: boolean | null;
-  cacheExpiresAt?: any | null;
-}
-
-export interface ShopifyProductVariantCreateOneInput {
-  create?: ShopifyProductVariantCreateInput | null;
+export interface ShopifyProductVariantCreateOneWithoutProductVariantInput {
+  create?: ShopifyProductVariantCreateWithoutProductVariantInput | null;
   connect?: ShopifyProductVariantWhereUniqueInput | null;
 }
 
-export interface ShopifyProductVariantUpdateDataInput {
+export interface ShopifyProductVariantCreateWithoutProductVariantInput {
+  id?: string | null;
   externalId?: string | null;
+  displayName?: string | null;
+  title?: string | null;
   cachedPrice?: number | null;
   cachedAvailableForSale?: boolean | null;
   cacheExpiresAt?: any | null;
+  selectedOptions?: ShopifyProductVariantSelectedOptionCreateManyInput | null;
+  shop?: ShopifyShopCreateOneInput | null;
+  brand?: BrandCreateOneInput | null;
+  image?: ImageCreateOneInput | null;
 }
 
-export interface ShopifyProductVariantUpdateOneInput {
-  create?: ShopifyProductVariantCreateInput | null;
+export interface ShopifyProductVariantSelectedOptionCreateInput {
+  id?: string | null;
+  name: string;
+  value: string;
+}
+
+export interface ShopifyProductVariantSelectedOptionCreateManyInput {
+  create?: ShopifyProductVariantSelectedOptionCreateInput[] | null;
+  connect?: ShopifyProductVariantSelectedOptionWhereUniqueInput[] | null;
+}
+
+export interface ShopifyProductVariantSelectedOptionScalarWhereInput {
+  AND?: ShopifyProductVariantSelectedOptionScalarWhereInput[] | null;
+  OR?: ShopifyProductVariantSelectedOptionScalarWhereInput[] | null;
+  NOT?: ShopifyProductVariantSelectedOptionScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  name?: string | null;
+  name_not?: string | null;
+  name_in?: string[] | null;
+  name_not_in?: string[] | null;
+  name_lt?: string | null;
+  name_lte?: string | null;
+  name_gt?: string | null;
+  name_gte?: string | null;
+  name_contains?: string | null;
+  name_not_contains?: string | null;
+  name_starts_with?: string | null;
+  name_not_starts_with?: string | null;
+  name_ends_with?: string | null;
+  name_not_ends_with?: string | null;
+  value?: string | null;
+  value_not?: string | null;
+  value_in?: string[] | null;
+  value_not_in?: string[] | null;
+  value_lt?: string | null;
+  value_lte?: string | null;
+  value_gt?: string | null;
+  value_gte?: string | null;
+  value_contains?: string | null;
+  value_not_contains?: string | null;
+  value_starts_with?: string | null;
+  value_not_starts_with?: string | null;
+  value_ends_with?: string | null;
+  value_not_ends_with?: string | null;
+}
+
+export interface ShopifyProductVariantSelectedOptionUpdateDataInput {
+  name?: string | null;
+  value?: string | null;
+}
+
+export interface ShopifyProductVariantSelectedOptionUpdateManyDataInput {
+  name?: string | null;
+  value?: string | null;
+}
+
+export interface ShopifyProductVariantSelectedOptionUpdateManyInput {
+  create?: ShopifyProductVariantSelectedOptionCreateInput[] | null;
+  connect?: ShopifyProductVariantSelectedOptionWhereUniqueInput[] | null;
+  set?: ShopifyProductVariantSelectedOptionWhereUniqueInput[] | null;
+  disconnect?: ShopifyProductVariantSelectedOptionWhereUniqueInput[] | null;
+  delete?: ShopifyProductVariantSelectedOptionWhereUniqueInput[] | null;
+  update?: ShopifyProductVariantSelectedOptionUpdateWithWhereUniqueNestedInput[] | null;
+  updateMany?: ShopifyProductVariantSelectedOptionUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: ShopifyProductVariantSelectedOptionScalarWhereInput[] | null;
+  upsert?: ShopifyProductVariantSelectedOptionUpsertWithWhereUniqueNestedInput[] | null;
+}
+
+export interface ShopifyProductVariantSelectedOptionUpdateManyWithWhereNestedInput {
+  where: ShopifyProductVariantSelectedOptionScalarWhereInput;
+  data: ShopifyProductVariantSelectedOptionUpdateManyDataInput;
+}
+
+export interface ShopifyProductVariantSelectedOptionUpdateWithWhereUniqueNestedInput {
+  where: ShopifyProductVariantSelectedOptionWhereUniqueInput;
+  data: ShopifyProductVariantSelectedOptionUpdateDataInput;
+}
+
+export interface ShopifyProductVariantSelectedOptionUpsertWithWhereUniqueNestedInput {
+  where: ShopifyProductVariantSelectedOptionWhereUniqueInput;
+  update: ShopifyProductVariantSelectedOptionUpdateDataInput;
+  create: ShopifyProductVariantSelectedOptionCreateInput;
+}
+
+export interface ShopifyProductVariantSelectedOptionWhereInput {
+  AND?: ShopifyProductVariantSelectedOptionWhereInput[] | null;
+  OR?: ShopifyProductVariantSelectedOptionWhereInput[] | null;
+  NOT?: ShopifyProductVariantSelectedOptionWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  name?: string | null;
+  name_not?: string | null;
+  name_in?: string[] | null;
+  name_not_in?: string[] | null;
+  name_lt?: string | null;
+  name_lte?: string | null;
+  name_gt?: string | null;
+  name_gte?: string | null;
+  name_contains?: string | null;
+  name_not_contains?: string | null;
+  name_starts_with?: string | null;
+  name_not_starts_with?: string | null;
+  name_ends_with?: string | null;
+  name_not_ends_with?: string | null;
+  value?: string | null;
+  value_not?: string | null;
+  value_in?: string[] | null;
+  value_not_in?: string[] | null;
+  value_lt?: string | null;
+  value_lte?: string | null;
+  value_gt?: string | null;
+  value_gte?: string | null;
+  value_contains?: string | null;
+  value_not_contains?: string | null;
+  value_starts_with?: string | null;
+  value_not_starts_with?: string | null;
+  value_ends_with?: string | null;
+  value_not_ends_with?: string | null;
+}
+
+export interface ShopifyProductVariantSelectedOptionWhereUniqueInput {
+  id?: string | null;
+}
+
+export interface ShopifyProductVariantUpdateOneWithoutProductVariantInput {
+  create?: ShopifyProductVariantCreateWithoutProductVariantInput | null;
   connect?: ShopifyProductVariantWhereUniqueInput | null;
   disconnect?: boolean | null;
   delete?: boolean | null;
-  update?: ShopifyProductVariantUpdateDataInput | null;
-  upsert?: ShopifyProductVariantUpsertNestedInput | null;
+  update?: ShopifyProductVariantUpdateWithoutProductVariantDataInput | null;
+  upsert?: ShopifyProductVariantUpsertWithoutProductVariantInput | null;
 }
 
-export interface ShopifyProductVariantUpsertNestedInput {
-  update: ShopifyProductVariantUpdateDataInput;
-  create: ShopifyProductVariantCreateInput;
+export interface ShopifyProductVariantUpdateWithoutProductVariantDataInput {
+  externalId?: string | null;
+  displayName?: string | null;
+  title?: string | null;
+  cachedPrice?: number | null;
+  cachedAvailableForSale?: boolean | null;
+  cacheExpiresAt?: any | null;
+  selectedOptions?: ShopifyProductVariantSelectedOptionUpdateManyInput | null;
+  shop?: ShopifyShopUpdateOneInput | null;
+  brand?: BrandUpdateOneInput | null;
+  image?: ImageUpdateOneInput | null;
+}
+
+export interface ShopifyProductVariantUpsertWithoutProductVariantInput {
+  update: ShopifyProductVariantUpdateWithoutProductVariantDataInput;
+  create: ShopifyProductVariantCreateWithoutProductVariantInput;
 }
 
 export interface ShopifyProductVariantWhereInput {
@@ -7561,6 +8070,34 @@ export interface ShopifyProductVariantWhereInput {
   externalId_not_starts_with?: string | null;
   externalId_ends_with?: string | null;
   externalId_not_ends_with?: string | null;
+  displayName?: string | null;
+  displayName_not?: string | null;
+  displayName_in?: string[] | null;
+  displayName_not_in?: string[] | null;
+  displayName_lt?: string | null;
+  displayName_lte?: string | null;
+  displayName_gt?: string | null;
+  displayName_gte?: string | null;
+  displayName_contains?: string | null;
+  displayName_not_contains?: string | null;
+  displayName_starts_with?: string | null;
+  displayName_not_starts_with?: string | null;
+  displayName_ends_with?: string | null;
+  displayName_not_ends_with?: string | null;
+  title?: string | null;
+  title_not?: string | null;
+  title_in?: string[] | null;
+  title_not_in?: string[] | null;
+  title_lt?: string | null;
+  title_lte?: string | null;
+  title_gt?: string | null;
+  title_gte?: string | null;
+  title_contains?: string | null;
+  title_not_contains?: string | null;
+  title_starts_with?: string | null;
+  title_not_starts_with?: string | null;
+  title_ends_with?: string | null;
+  title_not_ends_with?: string | null;
   cachedPrice?: number | null;
   cachedPrice_not?: number | null;
   cachedPrice_in?: number[] | null;
@@ -7579,6 +8116,13 @@ export interface ShopifyProductVariantWhereInput {
   cacheExpiresAt_lte?: any | null;
   cacheExpiresAt_gt?: any | null;
   cacheExpiresAt_gte?: any | null;
+  selectedOptions_every?: ShopifyProductVariantSelectedOptionWhereInput | null;
+  selectedOptions_some?: ShopifyProductVariantSelectedOptionWhereInput | null;
+  selectedOptions_none?: ShopifyProductVariantSelectedOptionWhereInput | null;
+  productVariant?: ProductVariantWhereInput | null;
+  shop?: ShopifyShopWhereInput | null;
+  brand?: BrandWhereInput | null;
+  image?: ImageWhereInput | null;
 }
 
 export interface ShopifyProductVariantWhereUniqueInput {
@@ -7586,11 +8130,125 @@ export interface ShopifyProductVariantWhereUniqueInput {
   externalId?: string | null;
 }
 
+export interface ShopifyShopCreateInput {
+  id?: string | null;
+  shopName: string;
+  enabled: boolean;
+  accessToken?: string | null;
+  scope?: ShopifyShopCreatescopeInput | null;
+}
+
+export interface ShopifyShopCreateOneInput {
+  create?: ShopifyShopCreateInput | null;
+  connect?: ShopifyShopWhereUniqueInput | null;
+}
+
+export interface ShopifyShopCreatescopeInput {
+  set?: string[] | null;
+}
+
+export interface ShopifyShopUpdateDataInput {
+  shopName?: string | null;
+  enabled?: boolean | null;
+  accessToken?: string | null;
+  scope?: ShopifyShopUpdatescopeInput | null;
+}
+
+export interface ShopifyShopUpdateOneInput {
+  create?: ShopifyShopCreateInput | null;
+  connect?: ShopifyShopWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: ShopifyShopUpdateDataInput | null;
+  upsert?: ShopifyShopUpsertNestedInput | null;
+}
+
+export interface ShopifyShopUpdatescopeInput {
+  set?: string[] | null;
+}
+
+export interface ShopifyShopUpsertNestedInput {
+  update: ShopifyShopUpdateDataInput;
+  create: ShopifyShopCreateInput;
+}
+
+export interface ShopifyShopWhereInput {
+  AND?: ShopifyShopWhereInput[] | null;
+  OR?: ShopifyShopWhereInput[] | null;
+  NOT?: ShopifyShopWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  shopName?: string | null;
+  shopName_not?: string | null;
+  shopName_in?: string[] | null;
+  shopName_not_in?: string[] | null;
+  shopName_lt?: string | null;
+  shopName_lte?: string | null;
+  shopName_gt?: string | null;
+  shopName_gte?: string | null;
+  shopName_contains?: string | null;
+  shopName_not_contains?: string | null;
+  shopName_starts_with?: string | null;
+  shopName_not_starts_with?: string | null;
+  shopName_ends_with?: string | null;
+  shopName_not_ends_with?: string | null;
+  enabled?: boolean | null;
+  enabled_not?: boolean | null;
+  accessToken?: string | null;
+  accessToken_not?: string | null;
+  accessToken_in?: string[] | null;
+  accessToken_not_in?: string[] | null;
+  accessToken_lt?: string | null;
+  accessToken_lte?: string | null;
+  accessToken_gt?: string | null;
+  accessToken_gte?: string | null;
+  accessToken_contains?: string | null;
+  accessToken_not_contains?: string | null;
+  accessToken_starts_with?: string | null;
+  accessToken_not_starts_with?: string | null;
+  accessToken_ends_with?: string | null;
+  accessToken_not_ends_with?: string | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+}
+
+export interface ShopifyShopWhereUniqueInput {
+  id?: string | null;
+  shopName?: string | null;
+}
+
 export interface SizeCreateInput {
   id?: string | null;
   slug: string;
   productType?: ProductType | null;
   display: string;
+  type?: SizeType | null;
   top?: TopSizeCreateOneInput | null;
   bottom?: BottomSizeCreateOneInput | null;
 }
@@ -7655,12 +8313,17 @@ export interface SizeScalarWhereInput {
   display_not_starts_with?: string | null;
   display_ends_with?: string | null;
   display_not_ends_with?: string | null;
+  type?: SizeType | null;
+  type_not?: SizeType | null;
+  type_in?: SizeType[] | null;
+  type_not_in?: SizeType[] | null;
 }
 
 export interface SizeUpdateDataInput {
   slug?: string | null;
   productType?: ProductType | null;
   display?: string | null;
+  type?: SizeType | null;
   top?: TopSizeUpdateOneInput | null;
   bottom?: BottomSizeUpdateOneInput | null;
 }
@@ -7669,6 +8332,7 @@ export interface SizeUpdateManyDataInput {
   slug?: string | null;
   productType?: ProductType | null;
   display?: string | null;
+  type?: SizeType | null;
 }
 
 export interface SizeUpdateManyInput {
@@ -7763,6 +8427,10 @@ export interface SizeWhereInput {
   display_not_starts_with?: string | null;
   display_ends_with?: string | null;
   display_not_ends_with?: string | null;
+  type?: SizeType | null;
+  type_not?: SizeType | null;
+  type_in?: SizeType[] | null;
+  type_not_in?: SizeType[] | null;
   top?: TopSizeWhereInput | null;
   bottom?: BottomSizeWhereInput | null;
 }
@@ -8124,6 +8792,124 @@ export interface SubmitOrderInput {
   orderID: string;
 }
 
+export interface SyncTimingCreateInput {
+  id?: string | null;
+  type: SyncTimingType;
+  syncedAt: any;
+  detail?: string | null;
+}
+
+export interface SyncTimingCreateManyInput {
+  create?: SyncTimingCreateInput[] | null;
+  connect?: SyncTimingWhereUniqueInput[] | null;
+}
+
+export interface SyncTimingScalarWhereInput {
+  AND?: SyncTimingScalarWhereInput[] | null;
+  OR?: SyncTimingScalarWhereInput[] | null;
+  NOT?: SyncTimingScalarWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  type?: SyncTimingType | null;
+  type_not?: SyncTimingType | null;
+  type_in?: SyncTimingType[] | null;
+  type_not_in?: SyncTimingType[] | null;
+  syncedAt?: any | null;
+  syncedAt_not?: any | null;
+  syncedAt_in?: any[] | null;
+  syncedAt_not_in?: any[] | null;
+  syncedAt_lt?: any | null;
+  syncedAt_lte?: any | null;
+  syncedAt_gt?: any | null;
+  syncedAt_gte?: any | null;
+  detail?: string | null;
+  detail_not?: string | null;
+  detail_in?: string[] | null;
+  detail_not_in?: string[] | null;
+  detail_lt?: string | null;
+  detail_lte?: string | null;
+  detail_gt?: string | null;
+  detail_gte?: string | null;
+  detail_contains?: string | null;
+  detail_not_contains?: string | null;
+  detail_starts_with?: string | null;
+  detail_not_starts_with?: string | null;
+  detail_ends_with?: string | null;
+  detail_not_ends_with?: string | null;
+  createdAt?: any | null;
+  createdAt_not?: any | null;
+  createdAt_in?: any[] | null;
+  createdAt_not_in?: any[] | null;
+  createdAt_lt?: any | null;
+  createdAt_lte?: any | null;
+  createdAt_gt?: any | null;
+  createdAt_gte?: any | null;
+  updatedAt?: any | null;
+  updatedAt_not?: any | null;
+  updatedAt_in?: any[] | null;
+  updatedAt_not_in?: any[] | null;
+  updatedAt_lt?: any | null;
+  updatedAt_lte?: any | null;
+  updatedAt_gt?: any | null;
+  updatedAt_gte?: any | null;
+}
+
+export interface SyncTimingUpdateDataInput {
+  type?: SyncTimingType | null;
+  syncedAt?: any | null;
+  detail?: string | null;
+}
+
+export interface SyncTimingUpdateManyDataInput {
+  type?: SyncTimingType | null;
+  syncedAt?: any | null;
+  detail?: string | null;
+}
+
+export interface SyncTimingUpdateManyInput {
+  create?: SyncTimingCreateInput[] | null;
+  connect?: SyncTimingWhereUniqueInput[] | null;
+  set?: SyncTimingWhereUniqueInput[] | null;
+  disconnect?: SyncTimingWhereUniqueInput[] | null;
+  delete?: SyncTimingWhereUniqueInput[] | null;
+  update?: SyncTimingUpdateWithWhereUniqueNestedInput[] | null;
+  updateMany?: SyncTimingUpdateManyWithWhereNestedInput[] | null;
+  deleteMany?: SyncTimingScalarWhereInput[] | null;
+  upsert?: SyncTimingUpsertWithWhereUniqueNestedInput[] | null;
+}
+
+export interface SyncTimingUpdateManyWithWhereNestedInput {
+  where: SyncTimingScalarWhereInput;
+  data: SyncTimingUpdateManyDataInput;
+}
+
+export interface SyncTimingUpdateWithWhereUniqueNestedInput {
+  where: SyncTimingWhereUniqueInput;
+  data: SyncTimingUpdateDataInput;
+}
+
+export interface SyncTimingUpsertWithWhereUniqueNestedInput {
+  where: SyncTimingWhereUniqueInput;
+  update: SyncTimingUpdateDataInput;
+  create: SyncTimingCreateInput;
+}
+
+export interface SyncTimingWhereUniqueInput {
+  id?: string | null;
+}
+
 export interface TagCreateManyWithoutProductsInput {
   create?: TagCreateWithoutProductsInput[] | null;
   connect?: TagWhereUniqueInput[] | null;
@@ -8472,6 +9258,7 @@ export interface UserCreateInput {
   pushNotification?: UserPushNotificationCreateOneInput | null;
   smsReceipts?: SmsReceiptCreateManyInput | null;
   fitPics?: FitPicCreateManyWithoutUserInput | null;
+  deviceData?: UserDeviceDataCreateOneInput | null;
 }
 
 export interface UserCreateManyWithoutPushNotificationsInput {
@@ -8500,10 +9287,77 @@ export interface UserCreateWithoutPushNotificationsInput {
   pushNotification?: UserPushNotificationCreateOneInput | null;
   smsReceipts?: SmsReceiptCreateManyInput | null;
   fitPics?: FitPicCreateManyWithoutUserInput | null;
+  deviceData?: UserDeviceDataCreateOneInput | null;
 }
 
 export interface UserCreaterolesInput {
   set?: UserRole[] | null;
+}
+
+export interface UserDeviceDataCreateInput {
+  id?: string | null;
+  iOSVersion?: string | null;
+}
+
+export interface UserDeviceDataCreateOneInput {
+  create?: UserDeviceDataCreateInput | null;
+  connect?: UserDeviceDataWhereUniqueInput | null;
+}
+
+export interface UserDeviceDataUpdateDataInput {
+  iOSVersion?: string | null;
+}
+
+export interface UserDeviceDataUpdateOneInput {
+  create?: UserDeviceDataCreateInput | null;
+  connect?: UserDeviceDataWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: UserDeviceDataUpdateDataInput | null;
+  upsert?: UserDeviceDataUpsertNestedInput | null;
+}
+
+export interface UserDeviceDataUpsertNestedInput {
+  update: UserDeviceDataUpdateDataInput;
+  create: UserDeviceDataCreateInput;
+}
+
+export interface UserDeviceDataWhereInput {
+  AND?: UserDeviceDataWhereInput[] | null;
+  OR?: UserDeviceDataWhereInput[] | null;
+  NOT?: UserDeviceDataWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  iOSVersion?: string | null;
+  iOSVersion_not?: string | null;
+  iOSVersion_in?: string[] | null;
+  iOSVersion_not_in?: string[] | null;
+  iOSVersion_lt?: string | null;
+  iOSVersion_lte?: string | null;
+  iOSVersion_gt?: string | null;
+  iOSVersion_gte?: string | null;
+  iOSVersion_contains?: string | null;
+  iOSVersion_not_contains?: string | null;
+  iOSVersion_starts_with?: string | null;
+  iOSVersion_not_starts_with?: string | null;
+  iOSVersion_ends_with?: string | null;
+  iOSVersion_not_ends_with?: string | null;
+}
+
+export interface UserDeviceDataWhereUniqueInput {
+  id?: string | null;
 }
 
 export interface UserPushNotificationCreateInput {
@@ -8835,6 +9689,7 @@ export interface UserUpdateDataInput {
   pushNotification?: UserPushNotificationUpdateOneInput | null;
   smsReceipts?: SmsReceiptUpdateManyInput | null;
   fitPics?: FitPicUpdateManyWithoutUserInput | null;
+  deviceData?: UserDeviceDataUpdateOneInput | null;
 }
 
 export interface UserUpdateManyDataInput {
@@ -8903,6 +9758,7 @@ export interface UserUpdateWithoutPushNotificationsDataInput {
   pushNotification?: UserPushNotificationUpdateOneInput | null;
   smsReceipts?: SmsReceiptUpdateManyInput | null;
   fitPics?: FitPicUpdateManyWithoutUserInput | null;
+  deviceData?: UserDeviceDataUpdateOneInput | null;
 }
 
 export interface UserUpdaterolesInput {
@@ -9041,6 +9897,7 @@ export interface UserWhereInput {
   fitPics_every?: FitPicWhereInput | null;
   fitPics_some?: FitPicWhereInput | null;
   fitPics_none?: FitPicWhereInput | null;
+  deviceData?: UserDeviceDataWhereInput | null;
 }
 
 export interface UserWhereUniqueInput {

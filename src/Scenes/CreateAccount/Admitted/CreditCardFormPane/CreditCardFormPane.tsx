@@ -3,7 +3,7 @@ import { GetPlans_me_customer, GetPlans_paymentPlans } from "App/generated/GetPl
 import { isWholeNumber } from "App/helpers/validation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { StatePickerPopUp } from "App/Scenes/Account/EditShippingAddress/StatePickerPopup"
-import { GET_BAG } from "App/Scenes/Bag/BagQueries"
+import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { color } from "App/utils/color"
 import { BackArrowIcon } from "Assets/icons"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
@@ -19,6 +19,7 @@ import { PAYMENT_CHECKOUT } from "../ChoosePlanPane/ChoosePlanPane"
 import { calcFinalPrice } from "../ChoosePlanPane/utils"
 import { GET_USER } from "App/Scenes/Account/Account"
 import { CreditCardFormAddressFields } from "./CreditCardFormAddressFields"
+import { GET_NOTIFICATION_BAR } from "@seasons/eclipse"
 
 const windowDimensions = Dimensions.get("window")
 
@@ -109,11 +110,13 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
       showPopUp(popUpData)
       setIsMutating(false)
     },
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
-        query: GET_BAG,
+        query: GetBag_NoCache_Query,
       },
       { query: GET_USER },
+      { query: GET_NOTIFICATION_BAR },
     ],
   })
 

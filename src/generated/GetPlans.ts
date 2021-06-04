@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PaymentPlanWhereInput, PaymentPlanTier, CustomerStatus, CouponType } from "./globalTypes";
+import { PaymentPlanWhereInput, PaymentPlanTier, CustomerStatus, CouponType, ViewType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetPlans
@@ -21,9 +21,25 @@ export interface GetPlans_paymentPlans {
   itemCount: number | null;
 }
 
+export interface GetPlans_me_customer_detail_shippingAddress {
+  __typename: "Location";
+  id: string;
+  city: string | null;
+  state: string | null;
+  zipCode: string;
+}
+
+export interface GetPlans_me_customer_detail {
+  __typename: "CustomerDetail";
+  id: string;
+  shippingAddress: GetPlans_me_customer_detail_shippingAddress | null;
+}
+
 export interface GetPlans_me_customer_user {
   __typename: "User";
   id: string;
+  firstName: string;
+  lastName: string;
 }
 
 export interface GetPlans_me_customer_membership_plan {
@@ -59,6 +75,7 @@ export interface GetPlans_me_customer {
   __typename: "Customer";
   id: string;
   status: CustomerStatus | null;
+  detail: GetPlans_me_customer_detail | null;
   user: GetPlans_me_customer_user;
   membership: GetPlans_me_customer_membership | null;
   admissions: GetPlans_me_customer_admissions | null;
@@ -67,7 +84,7 @@ export interface GetPlans_me_customer {
 
 export interface GetPlans_me {
   __typename: "Me";
-  id: string;
+  id: string | null;
   customer: GetPlans_me_customer | null;
 }
 
@@ -88,10 +105,20 @@ export interface GetPlans_faq {
   sections: GetPlans_faq_sections[];
 }
 
+export interface GetPlans_howDidYouFindOutAboutUs {
+  __typename: "View";
+  id: string;
+  title: string;
+  caption: string | null;
+  type: ViewType | null;
+  properties: any | null;
+}
+
 export interface GetPlans {
   paymentPlans: (GetPlans_paymentPlans | null)[] | null;
   me: GetPlans_me | null;
   faq: GetPlans_faq | null;
+  howDidYouFindOutAboutUs: GetPlans_howDidYouFindOutAboutUs | null;
 }
 
 export interface GetPlansVariables {
