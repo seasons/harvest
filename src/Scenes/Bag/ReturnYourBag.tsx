@@ -24,7 +24,7 @@ const RETURN_ITEMS = gql`
 `
 
 export const ReturnYourBag = () => {
-  const { previousData, data = previousData, loading } = useQuery(ACTIVE_RESERVATION)
+  const { previousData, data = previousData } = useQuery(ACTIVE_RESERVATION)
   const navigation = useNavigation()
   const [selectedItems, setSelectedItems] = useState({})
   const [returnItems] = useMutation(RETURN_ITEMS, {
@@ -61,7 +61,7 @@ export const ReturnYourBag = () => {
     )
   }
 
-  if (loading) {
+  if (!data) {
     return <Loader />
   }
 
@@ -71,8 +71,8 @@ export const ReturnYourBag = () => {
 
   return (
     <Container insetsTop={true}>
+      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Box style={{ flex: 1 }}>
-        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <FlatList
           data={activeReservation ? activeReservation.products : []}
           ListHeaderComponent={() => (
@@ -82,15 +82,15 @@ export const ReturnYourBag = () => {
                 Return your items
               </Sans>
               <Spacer mt="1" />
-              <Sans size="5" color="black50">
+              <Sans size="4" color="black50">
                 Heads up, it looks like you don’t have a free swap until{" "}
-                <Sans size="5" style={{ textDecorationLine: "underline" }}>
+                <Sans size="4" style={{ textDecorationLine: "underline" }}>
                   {date.toLocaleString(DateTime.DATE_FULL)}
                 </Sans>
                 . Return your items early & place a new order for only $35
               </Sans>
               <Box mt={4} mb={1}>
-                <Sans size="5">Which items are you returning?</Sans>
+                <Sans size="4">Which items are you returning?</Sans>
               </Box>
               <Separator />
             </Box>
