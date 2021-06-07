@@ -183,17 +183,16 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
 
   useEffect(() => {
     if (plans && plans.length > 0) {
-      setSelectedPlan(plans?.[0])
+      const threeItemPlan = plans?.find((p) => p.itemCount === 3)
       const planTiers = uniq(plans?.map((plan) => plan.tier))
+      const customerPlan = dataNoCache?.me?.customer?.membership?.plan
+      const initialPlan = customerPlan ? plans?.find((plan) => plan.id === customerPlan.id) : threeItemPlan
+      const initialTab = 0
+
       setTiers(planTiers)
+      setCurrentView(initialTab)
+      setSelectedPlan(initialPlan)
     }
-
-    const customerPlan = dataNoCache?.me?.customer?.membership?.plan
-    const initialPlan = customerPlan ? plans?.find((plan) => plan.id === customerPlan.id) : plans?.[0]
-    const initialTab = 0
-
-    setCurrentView(initialTab)
-    setSelectedPlan(initialPlan)
   }, [plans])
 
   const onAddCreditCard = () => {
