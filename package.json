@@ -24,7 +24,8 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "postversion": "yarn build:fastlane",
-    "build:fastlane": "fastlane ios beta"
+    "build:fastlane": "fastlane ios beta",
+    "generate-queries-json": "persistgraphql src --js --extension=tsx"
   },
   "dependencies": {
     "@apollo/client": "^3.3.7",
@@ -64,6 +65,7 @@
     "lodash": "^4.17.15",
     "luxon": "^1.21.1",
     "node-fetch": "^2.6.0",
+    "persistgraphql": "https://github.com/seasons/persistgraphql.git",
     "querystring": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -144,6 +146,7 @@
     "redux-devtools-extension": "^2.13.8",
     "remote-redux-devtools": "^0.5.16",
     "snapshot-diff": "0.2.2",
+    "ts-node": "^10.0.0",
     "typescript": "~3.9.2",
     "waait": "^1.0.5"
   },

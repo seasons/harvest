@@ -1,17 +1,19 @@
-import { TriageProgressScreen } from "App/Scenes/CreateAccount/Undetermined/TriagePane/TriageProgressScreen"
+import {
+  TriageProgressScreen
+} from "App/Scenes/CreateAccount/Undetermined/TriagePane/TriageProgressScreen"
 import { config, Env } from "App/utils/config"
 import React from "react"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 
-import { ApolloClient, InMemoryCache } from "@apollo/client"
-import { ApolloProvider } from "@apollo/client"
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client"
 import { linkTo } from "@storybook/addon-links"
 import { storiesOf } from "@storybook/react-native"
 
 import Welcome from "./Welcome"
 
 const apolloClient = new ApolloClient({
-  uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/",
+  // uri: config.get(Env.MONSOON_ENDPOINT) || "http://localhost:4000/",
+  uri: "http://localhost:4000/",
   cache: new InMemoryCache(),
 })
 
