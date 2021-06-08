@@ -30,6 +30,7 @@ import { OverlaySpinner } from "App/Components/OverlaySpinner"
 import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from "App/generated/CreateAccount_NoCache_Query"
 import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
 import { GET_NOTIFICATION_BAR } from "@seasons/eclipse"
+import ConfettiCannon from "react-native-confetti-cannon"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout(
@@ -322,6 +323,11 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       <CloseButton variant="light" />
       <Container insetsBottom={false} insetsTop={false}>
         <Box style={{ flex: 1 }}>
+          {source === "CreateAccountModal" && (
+            <ConfettiWrapper pointerEvents="none">
+              <ConfettiCannon count={150} origin={{ x: 0, y: 0 }} autoStart explosionSpeed={0} />
+            </ConfettiWrapper>
+          )}
           <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
             <Spacer mb={5} />
             <Spacer mb={4} />
@@ -483,4 +489,13 @@ const setCoupon = (appliedCoupon: Coupon, returnedCoupon): Coupon => {
 
 const ColoredButton = styled(Button)`
   background-color: ${(p: any) => p.backgroundColor};
+`
+
+const ConfettiWrapper = styled(Box)`
+  z-index: 300;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  top: 0;
 `
