@@ -176,7 +176,7 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
     <PopUp show={show}>
       <Spacer mb={4} />
       <Sans size="4" style={{ textAlign: "center" }}>
-        {`Heads up, this ${category} `}
+        {`Heads up, this `}
         <Text style={{ textDecorationLine: "underline" }}>{runsSmall ? "runs small" : "runs big"}</Text>
       </Sans>
       <Spacer mb={2} />
