@@ -106,7 +106,7 @@ const TabsStack = ({ currentScreen }) => {
         safeAreaInset: { bottom: "never" },
       }}
       tabBar={(props) => {
-        let showNotifBar = false
+        let showNotifBar
         switch (currentScreen) {
           case "Home":
           case "Browse":
