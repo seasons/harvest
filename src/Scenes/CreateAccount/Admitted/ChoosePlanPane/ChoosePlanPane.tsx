@@ -325,7 +325,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
         <Box style={{ flex: 1 }}>
           {source === "CreateAccountModal" && (
             <ConfettiWrapper pointerEvents="none">
-              <ConfettiCannon count={150} origin={{ x: 0, y: 0 }} autoStart explosionSpeed={200} />
+              <ConfettiCannon count={150} origin={{ x: 0, y: 0 }} autoStart explosionSpeed={0} />
             </ConfettiWrapper>
           )}
           <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
