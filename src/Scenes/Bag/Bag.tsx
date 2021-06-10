@@ -352,11 +352,13 @@ export const Bag = screenTrack()((props: BagProps) => {
     }
 
     return (
-      <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-        <Spacer mb={2} />
-        <Box px={2}>{button}</Box>
-        <Spacer mb={2} />
-      </FadeBottom2>
+      button && (
+        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
+          <Spacer mb={2} />
+          <Box px={2}>{button}</Box>
+          <Spacer mb={2} />
+        </FadeBottom2>
+      )
     )
   }
 
