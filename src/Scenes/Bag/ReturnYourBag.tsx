@@ -24,7 +24,7 @@ const RETURN_ITEMS = gql`
 `
 
 export const ReturnYourBag = () => {
-  const { previousData, data = previousData, loading } = useQuery(ACTIVE_RESERVATION)
+  const { previousData, data = previousData } = useQuery(ACTIVE_RESERVATION)
   const navigation = useNavigation()
   const [selectedItems, setSelectedItems] = useState({})
   const [returnItems] = useMutation(RETURN_ITEMS, {
@@ -61,18 +61,37 @@ export const ReturnYourBag = () => {
     )
   }
 
-  if (loading) {
+  if (!data) {
     return <Loader />
   }
 
-  const date = activeReservation.returnAt
-    ? DateTime.fromISO(activeReservation.returnAt)
-    : DateTime.fromISO(activeReservation.createdAt).plus({ month: 1 })
+  const subscription = data?.me?.customer?.membership?.subscription
+
+  const reservationCreationDate = activeReservation?.createdAt
+  const currentTermStart = subscription?.currentTermStart
+
+  const currentTermEndDateTime = DateTime.fromISO(subscription?.currentTermEnd)
+  const nextSwapDate = currentTermEndDateTime.plus({ day: 1 })
+
+  const subtitle =
+    reservationCreationDate < currentTermStart ? (
+      <Sans size="4" color="black50">
+        Heads up, it looks like you don’t have a free swap until{" "}
+        <Sans size="4" style={{ textDecorationLine: "underline" }}>
+          {`${nextSwapDate.weekdayLong}, ${nextSwapDate.monthLong} ${nextSwapDate.day}`}
+        </Sans>
+        . Return your items early & place a new order for only $35
+      </Sans>
+    ) : (
+      <Sans size="4" color="black50">
+        Select which items you're returning below
+      </Sans>
+    )
 
   return (
     <Container insetsTop={true}>
+      <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Box style={{ flex: 1 }}>
-        <FixedBackArrow navigation={navigation} variant="whiteBackground" />
         <FlatList
           data={activeReservation ? activeReservation.products : []}
           ListHeaderComponent={() => (
@@ -82,15 +101,9 @@ export const ReturnYourBag = () => {
                 Return your items
               </Sans>
               <Spacer mt="1" />
-              <Sans size="5" color="black50">
-                Heads up, it looks like you don’t have a free swap until{" "}
-                <Sans size="5" style={{ textDecorationLine: "underline" }}>
-                  {date.toLocaleString(DateTime.DATE_FULL)}
-                </Sans>
-                . Return your items early & place a new order for only $35
-              </Sans>
+              {subtitle}
               <Box mt={4} mb={1}>
-                <Sans size="5">Which items are you returning?</Sans>
+                <Sans size="4">Which items are you returning?</Sans>
               </Box>
               <Separator />
             </Box>
