@@ -18,6 +18,14 @@ export const ACTIVE_RESERVATION = gql`
   query ActiveReservation {
     me {
       id
+      customer {
+        membership {
+          subscription {
+            currentTermStart
+            currentTermEnd
+          }
+        }
+      }
       activeReservation {
         id
         shipped
