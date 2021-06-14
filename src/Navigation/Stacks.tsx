@@ -114,8 +114,6 @@ const TabsStack = ({ currentScreen }) => {
             break
         }
 
-        console.log("showNotifBar", showNotifBar)
-
         return (
           <>
             {showNotifBar && <NotificationBar onClickBanner={onClickNotificationBar} />}
