@@ -44,7 +44,6 @@ export const ProductMeasurements: React.FC<{
   const topSizes = internalSize?.top
   const bottomSizes = internalSize?.bottom
   const accessorySizes = internalSize?.accessory
-  console.log("internalSize", internalSize)
 
   const waistByLengthDisplay =
     displayShort !== internalSize?.display && internalSize?.type === "WxL" && internalSize?.display

@@ -494,6 +494,7 @@ export enum SizeType {
   JP = "JP",
   Letter = "Letter",
   US = "US",
+  Universal = "Universal",
   WxL = "WxL",
 }
 
@@ -560,6 +561,86 @@ export enum WarehouseLocationType {
   Bin = "Bin",
   Conveyor = "Conveyor",
   Rail = "Rail",
+}
+
+export interface AccessorySizeCreateInput {
+  id?: string | null;
+  bridge?: number | null;
+  length?: number | null;
+  width?: number | null;
+}
+
+export interface AccessorySizeCreateOneInput {
+  create?: AccessorySizeCreateInput | null;
+  connect?: AccessorySizeWhereUniqueInput | null;
+}
+
+export interface AccessorySizeUpdateDataInput {
+  bridge?: number | null;
+  length?: number | null;
+  width?: number | null;
+}
+
+export interface AccessorySizeUpdateOneInput {
+  create?: AccessorySizeCreateInput | null;
+  connect?: AccessorySizeWhereUniqueInput | null;
+  disconnect?: boolean | null;
+  delete?: boolean | null;
+  update?: AccessorySizeUpdateDataInput | null;
+  upsert?: AccessorySizeUpsertNestedInput | null;
+}
+
+export interface AccessorySizeUpsertNestedInput {
+  update: AccessorySizeUpdateDataInput;
+  create: AccessorySizeCreateInput;
+}
+
+export interface AccessorySizeWhereInput {
+  AND?: AccessorySizeWhereInput[] | null;
+  OR?: AccessorySizeWhereInput[] | null;
+  NOT?: AccessorySizeWhereInput[] | null;
+  id?: string | null;
+  id_not?: string | null;
+  id_in?: string[] | null;
+  id_not_in?: string[] | null;
+  id_lt?: string | null;
+  id_lte?: string | null;
+  id_gt?: string | null;
+  id_gte?: string | null;
+  id_contains?: string | null;
+  id_not_contains?: string | null;
+  id_starts_with?: string | null;
+  id_not_starts_with?: string | null;
+  id_ends_with?: string | null;
+  id_not_ends_with?: string | null;
+  bridge?: number | null;
+  bridge_not?: number | null;
+  bridge_in?: number[] | null;
+  bridge_not_in?: number[] | null;
+  bridge_lt?: number | null;
+  bridge_lte?: number | null;
+  bridge_gt?: number | null;
+  bridge_gte?: number | null;
+  length?: number | null;
+  length_not?: number | null;
+  length_in?: number[] | null;
+  length_not_in?: number[] | null;
+  length_lt?: number | null;
+  length_lte?: number | null;
+  length_gt?: number | null;
+  length_gte?: number | null;
+  width?: number | null;
+  width_not?: number | null;
+  width_in?: number[] | null;
+  width_not_in?: number[] | null;
+  width_lt?: number | null;
+  width_lte?: number | null;
+  width_gt?: number | null;
+  width_gte?: number | null;
+}
+
+export interface AccessorySizeWhereUniqueInput {
+  id?: string | null;
 }
 
 export interface AddressInput {
@@ -1143,6 +1224,7 @@ export interface CategoryCreateInput {
   image?: any | null;
   description?: string | null;
   visible?: boolean | null;
+  productType?: ProductType | null;
   products?: ProductCreateManyWithoutCategoryInput | null;
   children?: CategoryCreateManyInput | null;
 }
@@ -1169,6 +1251,7 @@ export interface CategoryCreateWithoutProductsInput {
   image?: any | null;
   description?: string | null;
   visible?: boolean | null;
+  productType?: ProductType | null;
   children?: CategoryCreateManyInput | null;
 }
 
@@ -1242,6 +1325,10 @@ export interface CategoryScalarWhereInput {
   updatedAt_lte?: any | null;
   updatedAt_gt?: any | null;
   updatedAt_gte?: any | null;
+  productType?: ProductType | null;
+  productType_not?: ProductType | null;
+  productType_in?: ProductType[] | null;
+  productType_not_in?: ProductType[] | null;
 }
 
 export interface CategoryUpdateDataInput {
@@ -1250,6 +1337,7 @@ export interface CategoryUpdateDataInput {
   image?: any | null;
   description?: string | null;
   visible?: boolean | null;
+  productType?: ProductType | null;
   products?: ProductUpdateManyWithoutCategoryInput | null;
   children?: CategoryUpdateManyInput | null;
 }
@@ -1260,6 +1348,7 @@ export interface CategoryUpdateManyDataInput {
   image?: any | null;
   description?: string | null;
   visible?: boolean | null;
+  productType?: ProductType | null;
 }
 
 export interface CategoryUpdateManyInput {
@@ -1304,6 +1393,7 @@ export interface CategoryUpdateWithoutProductsDataInput {
   image?: any | null;
   description?: string | null;
   visible?: boolean | null;
+  productType?: ProductType | null;
   children?: CategoryUpdateManyInput | null;
 }
 
@@ -1393,6 +1483,10 @@ export interface CategoryWhereInput {
   updatedAt_lte?: any | null;
   updatedAt_gt?: any | null;
   updatedAt_gte?: any | null;
+  productType?: ProductType | null;
+  productType_not?: ProductType | null;
+  productType_in?: ProductType[] | null;
+  productType_not_in?: ProductType[] | null;
   products_every?: ProductWhereInput | null;
   products_some?: ProductWhereInput | null;
   products_none?: ProductWhereInput | null;
@@ -8251,6 +8345,7 @@ export interface SizeCreateInput {
   type?: SizeType | null;
   top?: TopSizeCreateOneInput | null;
   bottom?: BottomSizeCreateOneInput | null;
+  accessory?: AccessorySizeCreateOneInput | null;
 }
 
 export interface SizeCreateManyInput {
@@ -8326,6 +8421,7 @@ export interface SizeUpdateDataInput {
   type?: SizeType | null;
   top?: TopSizeUpdateOneInput | null;
   bottom?: BottomSizeUpdateOneInput | null;
+  accessory?: AccessorySizeUpdateOneInput | null;
 }
 
 export interface SizeUpdateManyDataInput {
@@ -8433,6 +8529,7 @@ export interface SizeWhereInput {
   type_not_in?: SizeType[] | null;
   top?: TopSizeWhereInput | null;
   bottom?: BottomSizeWhereInput | null;
+  accessory?: AccessorySizeWhereInput | null;
 }
 
 export interface SizeWhereUniqueInput {
