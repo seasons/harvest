@@ -56,8 +56,6 @@ export const HomepageNoCache_Query = gql`
   query HomepageNoCache_Query {
     reservationFeedback {
       id
-      comment
-      rating
       feedbacks {
         id
         isCompleted

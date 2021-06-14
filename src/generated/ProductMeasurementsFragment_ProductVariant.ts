@@ -18,6 +18,14 @@ export interface ProductMeasurementsFragment_ProductVariant_internalSize_bottom 
   inseam: number | null;
 }
 
+export interface ProductMeasurementsFragment_ProductVariant_internalSize_accessory {
+  __typename: "AccessorySize";
+  id: string;
+  bridge: number | null;
+  length: number | null;
+  width: number | null;
+}
+
 export interface ProductMeasurementsFragment_ProductVariant_internalSize_top {
   __typename: "TopSize";
   id: string;
@@ -33,6 +41,7 @@ export interface ProductMeasurementsFragment_ProductVariant_internalSize {
   display: string;
   type: SizeType | null;
   bottom: ProductMeasurementsFragment_ProductVariant_internalSize_bottom | null;
+  accessory: ProductMeasurementsFragment_ProductVariant_internalSize_accessory | null;
   top: ProductMeasurementsFragment_ProductVariant_internalSize_top | null;
 }
 
