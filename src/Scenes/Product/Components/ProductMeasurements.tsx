@@ -19,6 +19,12 @@ export const ProductMeasurementsFragment_ProductVariant = gql`
         hem
         inseam
       }
+      accessory {
+        id
+        bridge
+        length
+        width
+      }
       top {
         id
         length
@@ -37,23 +43,11 @@ export const ProductMeasurements: React.FC<{
   const displayShort = selectedVariant?.displayShort
   const topSizes = internalSize?.top
   const bottomSizes = internalSize?.bottom
+  const accessorySizes = internalSize?.accessory
+  console.log("internalSize", internalSize)
 
   const waistByLengthDisplay =
     displayShort !== internalSize?.display && internalSize?.type === "WxL" && internalSize?.display
-
-  if (
-    !selectedVariant?.displayLong &&
-    !topSizes?.length &&
-    !topSizes?.sleeve &&
-    !topSizes?.shoulder &&
-    !topSizes?.chest &&
-    !bottomSizes?.waist &&
-    !bottomSizes?.rise &&
-    !bottomSizes?.hem &&
-    !bottomSizes?.inseam
-  ) {
-    return null
-  }
 
   return (
     <Box px={2} mb={3}>
@@ -73,6 +67,10 @@ export const ProductMeasurements: React.FC<{
       {!!bottomSizes?.rise && <ProductInfoItem detailType="Rise" detailValue={`${bottomSizes?.rise}"`} />}
       {!!bottomSizes?.hem && <ProductInfoItem detailType="Hem" detailValue={`${bottomSizes?.hem}"`} />}
       {!!bottomSizes?.inseam && <ProductInfoItem detailType="Inseam" detailValue={`${bottomSizes?.inseam}"`} />}
+
+      {!!accessorySizes?.length && <ProductInfoItem detailType="Length" detailValue={`${accessorySizes?.length}`} />}
+      {!!accessorySizes?.bridge && <ProductInfoItem detailType="Bridge" detailValue={`${accessorySizes?.bridge}`} />}
+      {!!accessorySizes?.width && <ProductInfoItem detailType="Width" detailValue={`${accessorySizes?.width}`} />}
     </Box>
   )
 }

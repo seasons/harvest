@@ -32,11 +32,6 @@ import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
 import { ReferralView } from "App/Scenes/ReferralView"
 import { Reservation, ReservationConfirmation, ShareReservationToIG } from "App/Scenes/Reservation"
-import {
-  ReservationFeedback,
-  ReservationFeedbackConfirmation,
-  ReservationFeedbackFinish,
-} from "App/Scenes/ReservationFeedback"
 import { ReservationFeedbackModal } from "App/Scenes/ReservationFeedback/ReservationFeedbackModal"
 import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn } from "App/Scenes/SignIn"
 import { Tag } from "App/Scenes/Tag"
@@ -118,6 +113,8 @@ const TabsStack = ({ currentScreen }) => {
             showNotifBar = false
             break
         }
+
+        console.log("showNotifBar", showNotifBar)
 
         return (
           <>
