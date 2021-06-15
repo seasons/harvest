@@ -24,7 +24,7 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
   }
 
   const imageURL = product?.images?.[0]?.url
-  const variantSize = variantToUse?.displayLong?.toLowerCase()
+  const variantSize = variantToUse?.displayLong
 
   return (
     <Box key={product.id}>

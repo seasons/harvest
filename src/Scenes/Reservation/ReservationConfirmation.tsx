@@ -73,7 +73,6 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
                 }
                 variants {
                   id
-                  size
                   displayShort
                   displayLong
                 }

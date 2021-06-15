@@ -161,10 +161,7 @@ export const Homepage_Query = gql`
             variants {
               id
               reservable
-              internalSize {
-                id
-                display
-              }
+              displayShort
             }
           }
         }

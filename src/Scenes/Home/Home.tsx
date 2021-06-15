@@ -43,7 +43,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
     if (!loading && showSplash) {
       setShowSplash(false)
       setTimeout(() => {
-        toggleLoader(loading)
+        toggleLoader(false)
         SplashScreen.hide()
       }, 100)
     }
@@ -101,6 +101,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
     <ErrorScreen
       variant="No Internet"
       refreshAction={() => {
+        console.log("refresh 1")
         refetch()
         refetchNoCache()
       }}
