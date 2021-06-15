@@ -115,8 +115,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
     console.error("error /home/index.tsx: ", error)
   }
 
-  console.log("data", data)
-
   if (showLoader || !data) {
     return <Loader />
   }
@@ -135,7 +133,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
         isFetchingMoreFitPics={isFetchingMoreFitPics}
         fetchMoreFitPics={() => {
           if (!isFetchingMoreFitPics && fitPicsReceived > 0) {
-            console.log("fetchingMore")
             fetchMore({
               variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
             }).then(() => {
