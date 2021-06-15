@@ -111,8 +111,8 @@ export const BagItem: React.FC<BagItemProps> = ({
 
   const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
-      productID: product.id,
-      variantID: variantToUse.id,
+      productID: product?.id,
+      variantID: variantToUse?.id,
     },
     awaitRefetchQueries: true,
     refetchQueries: [

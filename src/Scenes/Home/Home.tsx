@@ -43,7 +43,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
     if (!loading && showSplash) {
       setShowSplash(false)
       setTimeout(() => {
-        toggleLoader(loading)
+        toggleLoader(false)
         SplashScreen.hide()
       }, 100)
     }
@@ -101,6 +101,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
     <ErrorScreen
       variant="No Internet"
       refreshAction={() => {
+        console.log("refresh 1")
         refetch()
         refetchNoCache()
       }}
@@ -113,6 +114,8 @@ export const Home = screenTrack()(({ navigation, route }) => {
     }
     console.error("error /home/index.tsx: ", error)
   }
+
+  console.log("data", data)
 
   if (showLoader || !data) {
     return <Loader />
@@ -132,6 +135,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
         isFetchingMoreFitPics={isFetchingMoreFitPics}
         fetchMoreFitPics={() => {
           if (!isFetchingMoreFitPics && fitPicsReceived > 0) {
+            console.log("fetchingMore")
             fetchMore({
               variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
             }).then(() => {
