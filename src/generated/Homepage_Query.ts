@@ -49,17 +49,11 @@ export interface Homepage_Query_homepage_sections_results_Product_brand {
   name: string;
 }
 
-export interface Homepage_Query_homepage_sections_results_Product_variants_internalSize {
-  __typename: "Size";
-  id: string;
-  display: string;
-}
-
 export interface Homepage_Query_homepage_sections_results_Product_variants {
   __typename: "ProductVariant";
   id: string;
   reservable: number;
-  internalSize: Homepage_Query_homepage_sections_results_Product_variants_internalSize | null;
+  displayShort: string | null;
 }
 
 export interface Homepage_Query_homepage_sections_results_Product {

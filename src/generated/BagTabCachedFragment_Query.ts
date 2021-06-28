@@ -4,16 +4,16 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GetBag_Cached_Query
+// GraphQL fragment: BagTabCachedFragment_Query
 // ====================================================
 
-export interface GetBag_Cached_Query_paymentPlans {
+export interface BagTabCachedFragment_Query_paymentPlans {
   __typename: "PaymentPlan";
   id: string;
   itemCount: number | null;
 }
 
-export interface GetBag_Cached_Query {
+export interface BagTabCachedFragment_Query {
   __typename: "Query";
-  paymentPlans: (GetBag_Cached_Query_paymentPlans | null)[] | null;
+  paymentPlans: (BagTabCachedFragment_Query_paymentPlans | null)[] | null;
 }

@@ -1666,6 +1666,30 @@ export interface CreateDraftedOrderInput {
   productVariantID: string;
 }
 
+export interface CreateVariantInput {
+  sku: string;
+  weight?: number | null;
+  length?: number | null;
+  bridge?: number | null;
+  width?: number | null;
+  sleeve?: number | null;
+  shoulder?: number | null;
+  chest?: number | null;
+  neck?: number | null;
+  internalSizeName: string;
+  internalSizeType?: SizeType | null;
+  manufacturerSizeNames?: string[] | null;
+  manufacturerSizeType?: SizeType | null;
+  waist?: number | null;
+  rise?: number | null;
+  hem?: number | null;
+  inseam?: number | null;
+  total: number;
+  physicalProducts: UpsertPhysicalProductInput[];
+  price?: ProductVariantPriceInput | null;
+  shopifyProductVariant?: ShopifyProductVariantInput | null;
+}
+
 export interface CustomerAdmissionsDataCreateOneWithoutCustomerInput {
   create?: CustomerAdmissionsDataCreateWithoutCustomerInput | null;
   connect?: CustomerAdmissionsDataWhereUniqueInput | null;
@@ -4072,6 +4096,11 @@ export interface PhysicalProductPriceCreateOneInput {
   connect?: PhysicalProductPriceWhereUniqueInput | null;
 }
 
+export interface PhysicalProductPriceInput {
+  buyUsedPrice?: number | null;
+  buyUsedEnabled: boolean;
+}
+
 export interface PhysicalProductPriceUpdateDataInput {
   buyUsedEnabled?: boolean | null;
   buyUsedPrice?: number | null;
@@ -4711,35 +4740,36 @@ export interface PhysicalProductWhereUniqueInput {
 }
 
 export interface ProductCreateInput {
-  id?: string | null;
-  architecture?: ProductArchitecture | null;
-  description?: string | null;
-  externalURL?: string | null;
+  architecture?: string | null;
+  internalSizeType?: SizeType | null;
+  brandID: string;
   buyNewEnabled?: boolean | null;
+  buyUsedEnabled: boolean;
+  buyUsedPrice: number;
+  categoryID: string;
+  colorCode: string;
+  description: string;
+  functions: string[];
+  images: any[];
+  innerMaterials: string[];
+  materialCategorySlug?: string | null;
+  modelID?: string | null;
+  modelSizeDisplay?: string | null;
+  modelSizeName?: string | null;
+  modelSizeType?: SizeType | null;
+  externalURL?: string | null;
   name: string;
-  photographyStatus?: PhotographyStatus | null;
+  outerMaterials: string[];
   productFit?: ProductFit | null;
-  publishedAt?: any | null;
-  retailPrice?: number | null;
-  slug: string;
-  status?: ProductStatus | null;
-  type?: ProductType | null;
-  innerMaterials?: ProductCreateinnerMaterialsInput | null;
-  outerMaterials?: ProductCreateouterMaterialsInput | null;
-  styles?: ProductCreatestylesInput | null;
-  brand: BrandCreateOneWithoutProductsInput;
-  category: CategoryCreateOneWithoutProductsInput;
-  color: ColorCreateOneInput;
-  functions?: ProductFunctionCreateManyInput | null;
-  images?: ImageCreateManyInput | null;
-  materialCategory?: ProductMaterialCategoryCreateOneWithoutProductsInput | null;
-  model?: ProductModelCreateOneWithoutProductsInput | null;
-  modelSize?: SizeCreateOneInput | null;
-  season?: ProductSeasonCreateOneInput | null;
-  secondaryColor?: ColorCreateOneInput | null;
-  tags?: TagCreateManyWithoutProductsInput | null;
-  tier?: ProductTierCreateOneInput | null;
-  variants?: ProductVariantCreateManyWithoutProductInput | null;
+  retailPrice: number;
+  season?: UpsertSeasonInput | null;
+  photographyStatus?: PhotographyStatus | null;
+  secondaryColorCode?: string | null;
+  status: ProductStatus;
+  tags: string[];
+  type: ProductType;
+  variants: CreateVariantInput[];
+  styles?: CustomerStyle[] | null;
 }
 
 export interface ProductCreateManyInput {
@@ -5898,6 +5928,12 @@ export interface ProductVariantPriceCreateInput {
 export interface ProductVariantPriceCreateOneInput {
   create?: ProductVariantPriceCreateInput | null;
   connect?: ProductVariantPriceWhereUniqueInput | null;
+}
+
+export interface ProductVariantPriceInput {
+  buyUsedPrice?: number | null;
+  buyUsedEnabled: boolean;
+  buyNewEnabled: boolean;
 }
 
 export interface ProductVariantPriceUpdateDataInput {
@@ -7956,6 +7992,10 @@ export interface ShopifyProductVariantCreateWithoutProductVariantInput {
   image?: ImageCreateOneInput | null;
 }
 
+export interface ShopifyProductVariantInput {
+  externalId?: string | null;
+}
+
 export interface ShopifyProductVariantSelectedOptionCreateInput {
   id?: string | null;
   name: string;
@@ -9336,6 +9376,24 @@ export interface UTMDataUpsertWithoutCustomerInput {
 
 export interface UTMDataWhereUniqueInput {
   id?: string | null;
+}
+
+export interface UpsertPhysicalProductInput {
+  dateOrdered?: any | null;
+  dateReceived?: any | null;
+  inventoryStatus: InventoryStatus;
+  productStatus: PhysicalProductStatus;
+  seasonsUID: string;
+  unitCost?: number | null;
+  price?: PhysicalProductPriceInput | null;
+}
+
+export interface UpsertSeasonInput {
+  wearableSeasons?: string[] | null;
+  internalSeasonSeasonCode?: string | null;
+  internalSeasonYear?: number | null;
+  vendorSeasonSeasonCode?: string | null;
+  vendorSeasonYear?: number | null;
 }
 
 export interface UserCreateInput {
