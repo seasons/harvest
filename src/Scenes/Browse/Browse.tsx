@@ -114,8 +114,6 @@ export const Browse = screenTrack()((props: any) => {
 
   const reachedEnd = products?.length >= data?.productsConnection?.aggregate?.count
 
-  console.log("data?.productsConnection?.aggregate?.count", data?.productsConnection?.aggregate?.count)
-
   return (
     <>
       <Container insetsBottom={false}>

@@ -39,8 +39,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
   const totalFitPics = data?.fitPicsConnection?.aggregate?.count ?? 0
   const fitPicsReceived = data?.fitPicsConnection?.edges?.length ?? 0
 
-  console.log("totalFitPics", totalFitPics)
-
   useEffect(() => {
     if (!loading && showSplash) {
       setShowSplash(false)
