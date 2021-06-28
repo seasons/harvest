@@ -112,7 +112,9 @@ export const Browse = screenTrack()((props: any) => {
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { filters, designers } })
   }
 
-  const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
+  const reachedEnd = products?.length >= data?.productsConnection?.aggregate?.count
+
+  console.log("data?.productsConnection?.aggregate?.count", data?.productsConnection?.aggregate?.count)
 
   return (
     <>

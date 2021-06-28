@@ -164,8 +164,8 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
     sections.push({ type: SectionType.SavedProducts, title: "Saved for later", results })
   }
 
-  if (data?.fitPics?.length) {
-    sections.push({ type: SectionType.FitPics, results: data?.fitPics })
+  if (data?.fitPicsConnection?.edges?.length > 0) {
+    sections.push({ type: SectionType.FitPics, results: data?.fitPicsConnection.edges })
   }
   return sections
 }
