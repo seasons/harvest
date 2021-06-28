@@ -36,8 +36,8 @@ export const Home = screenTrack()(({ navigation, route }) => {
   const [showSplash, setShowSplash] = useState(true)
   const network = useContext(NetworkContext)
 
-  const totalFitPics = data?.fitPicsCount?.aggregate?.count ?? 0
-  const fitPicsReceived = data?.fitPics?.length ?? 0
+  const totalFitPics = data?.fitPicsConnection?.aggregate?.count ?? 0
+  const fitPicsReceived = data?.fitPicsConnection?.edges?.length ?? 0
 
   useEffect(() => {
     if (!loading && showSplash) {
@@ -136,7 +136,7 @@ export const Home = screenTrack()(({ navigation, route }) => {
             fetchMore({
               variables: { firstFitPics: 8, skipFitPics: fitPicsReceived },
             }).then(() => {
-              setFitPicsFetchCount(data?.fitPics?.length + PAGE_LENGTH)
+              setFitPicsFetchCount(data?.fitPicsConnection?.edges?.length + PAGE_LENGTH)
             })
           }
         }}

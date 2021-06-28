@@ -68,7 +68,6 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_pro
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_variants {
   __typename: "ProductVariant";
   id: string;
-  size: string | null;
   displayShort: string | null;
   displayLong: string | null;
 }

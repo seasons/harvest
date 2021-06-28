@@ -87,7 +87,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
 
   const snapPoints = hasImages ? [topSnapPoint, secondSnapPoint] : [topSnapPoint]
   const initialSnapPoint = hasImages ? 1 : 0
-  const aggregateCount = data?.brand?.productsAggregate?.aggregate?.count
+  const aggregateCount = data?.brand?.products?.aggregate?.count
 
   const metaData = []
   if (brand?.basedIn) {

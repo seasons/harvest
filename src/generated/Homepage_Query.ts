@@ -49,17 +49,11 @@ export interface Homepage_Query_homepage_sections_results_Product_brand {
   name: string;
 }
 
-export interface Homepage_Query_homepage_sections_results_Product_variants_internalSize {
-  __typename: "Size";
-  id: string;
-  display: string;
-}
-
 export interface Homepage_Query_homepage_sections_results_Product_variants {
   __typename: "ProductVariant";
   id: string;
   reservable: number;
-  internalSize: Homepage_Query_homepage_sections_results_Product_variants_internalSize | null;
+  displayShort: string | null;
 }
 
 export interface Homepage_Query_homepage_sections_results_Product {
@@ -273,83 +267,95 @@ export interface Homepage_Query_justAddedBottoms {
   variants: Homepage_Query_justAddedBottoms_variants[] | null;
 }
 
-export interface Homepage_Query_fitPicsCount_aggregate {
+export interface Homepage_Query_fitPicsConnection_aggregate {
   __typename: "AggregateFitPic";
   count: number;
 }
 
-export interface Homepage_Query_fitPicsCount {
-  __typename: "FitPicConnection";
-  aggregate: Homepage_Query_fitPicsCount_aggregate;
-}
-
-export interface Homepage_Query_fitPics_location {
+export interface Homepage_Query_fitPicsConnection_edges_node_location {
   __typename: "Location";
   id: string;
   city: string | null;
   state: string | null;
 }
 
-export interface Homepage_Query_fitPics_image {
+export interface Homepage_Query_fitPicsConnection_edges_node_image {
   __typename: "Image";
   id: string;
   url: string | null;
 }
 
-export interface Homepage_Query_fitPics_user_customer_detail {
+export interface Homepage_Query_fitPicsConnection_edges_node_user_customer_detail {
   __typename: "CustomerDetail";
   instagramHandle: string | null;
 }
 
-export interface Homepage_Query_fitPics_user_customer {
+export interface Homepage_Query_fitPicsConnection_edges_node_user_customer {
   __typename: "Customer";
-  detail: Homepage_Query_fitPics_user_customer_detail | null;
+  detail: Homepage_Query_fitPicsConnection_edges_node_user_customer_detail | null;
 }
 
-export interface Homepage_Query_fitPics_user {
+export interface Homepage_Query_fitPicsConnection_edges_node_user {
   __typename: "User";
   id: string;
-  customer: Homepage_Query_fitPics_user_customer | null;
+  customer: Homepage_Query_fitPicsConnection_edges_node_user_customer | null;
 }
 
-export interface Homepage_Query_fitPics_products_brand {
+export interface Homepage_Query_fitPicsConnection_edges_node_products_brand {
   __typename: "Brand";
   id: string;
   name: string;
 }
 
-export interface Homepage_Query_fitPics_products_images {
+export interface Homepage_Query_fitPicsConnection_edges_node_products_images {
   __typename: "Image";
   id: string;
   url: string | null;
 }
 
-export interface Homepage_Query_fitPics_products_variants {
+export interface Homepage_Query_fitPicsConnection_edges_node_products_variants {
   __typename: "ProductVariant";
   id: string;
 }
 
-export interface Homepage_Query_fitPics_products {
+export interface Homepage_Query_fitPicsConnection_edges_node_products {
   __typename: "Product";
   id: string;
   slug: string;
   name: string;
   isSaved: boolean | null;
-  brand: Homepage_Query_fitPics_products_brand;
-  images: Homepage_Query_fitPics_products_images[];
-  variants: Homepage_Query_fitPics_products_variants[] | null;
+  brand: Homepage_Query_fitPicsConnection_edges_node_products_brand;
+  images: Homepage_Query_fitPicsConnection_edges_node_products_images[];
+  variants: Homepage_Query_fitPicsConnection_edges_node_products_variants[] | null;
 }
 
-export interface Homepage_Query_fitPics {
+export interface Homepage_Query_fitPicsConnection_edges_node {
   __typename: "FitPic";
   id: string;
   author: string;
-  location: Homepage_Query_fitPics_location | null;
-  image: Homepage_Query_fitPics_image;
+  location: Homepage_Query_fitPicsConnection_edges_node_location | null;
+  image: Homepage_Query_fitPicsConnection_edges_node_image;
   includeInstagramHandle: boolean;
-  user: Homepage_Query_fitPics_user;
-  products: Homepage_Query_fitPics_products[] | null;
+  user: Homepage_Query_fitPicsConnection_edges_node_user;
+  products: Homepage_Query_fitPicsConnection_edges_node_products[] | null;
   createdAt: any;
+}
+
+export interface Homepage_Query_fitPicsConnection_edges {
+  __typename: "FitPicEdge";
+  /**
+   * The item at the end of the edge.
+   */
+  node: Homepage_Query_fitPicsConnection_edges_node;
+}
+
+export interface Homepage_Query_fitPicsConnection {
+  __typename: "FitPicConnection";
+  aggregate: Homepage_Query_fitPicsConnection_aggregate;
+  /**
+   * A list of edges.
+   */
+  edges: (Homepage_Query_fitPicsConnection_edges | null)[];
 }
 
 export interface Homepage_Query_featuredBrands {
@@ -400,8 +406,7 @@ export interface Homepage_Query {
   justAddedOuterwear: (Homepage_Query_justAddedOuterwear | null)[];
   justAddedTops: (Homepage_Query_justAddedTops | null)[];
   justAddedBottoms: (Homepage_Query_justAddedBottoms | null)[];
-  fitPicsCount: Homepage_Query_fitPicsCount;
-  fitPics: Homepage_Query_fitPics[];
+  fitPicsConnection: Homepage_Query_fitPicsConnection;
   __typename: "Query";
   featuredBrands: (Homepage_Query_featuredBrands | null)[];
   launches: (Homepage_Query_launches | null)[];

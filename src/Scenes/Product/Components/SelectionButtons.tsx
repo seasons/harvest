@@ -41,7 +41,7 @@ const renderBuyCTA = ({ price, scrollToBuyCTA, animatedScrollY, showNotifyMeMess
     cta = (
       <UnderlinedSans size="4" onPress={scrollToBuyCTA}>
         {" "}
-        Buy used for{" "}
+        Buy for{" "}
         {(price.buyUsedPrice / 100).toLocaleString("en-US", {
           style: "currency",
           currency: "USD",
