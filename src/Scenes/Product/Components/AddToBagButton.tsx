@@ -92,7 +92,7 @@ export const AddToBagButton: React.FC<Props> = ({
             onClose: () => hidePopUp(),
           })
         } else if (err.toString().includes("Bag is full")) {
-          if (localItems?.localBagItems?.length < 6 || dataMe?.me?.bag?.length < 6) {
+          if (dataMe?.me?.bag?.length < 6) {
             showPopUp({
               title: "Want another item?",
               note: "Upgrade your plan to add more slots",
