@@ -86,18 +86,12 @@ export interface GetBrowseProducts_productsConnection_edges_node {
 
 export interface GetBrowseProducts_productsConnection_edges {
   __typename: "ProductEdge";
-  /**
-   * The item at the end of the edge.
-   */
   node: GetBrowseProducts_productsConnection_edges_node;
 }
 
 export interface GetBrowseProducts_productsConnection {
   __typename: "ProductConnection";
   aggregate: GetBrowseProducts_productsConnection_aggregate;
-  /**
-   * A list of edges.
-   */
   edges: (GetBrowseProducts_productsConnection_edges | null)[];
 }
 
