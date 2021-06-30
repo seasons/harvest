@@ -1,6 +1,6 @@
 import { Box, Button, CloseButton, Container, Flex, Sans, SectionHeader, Spacer } from "App/Components"
 import React, { useState } from "react"
-import { useMutation } from "@apollo/client"
+import { useMutation, useQuery } from "@apollo/client"
 import gql from "graphql-tag"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { screenTrack } from "App/utils/track"
@@ -10,6 +10,8 @@ import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/Membershi
 import { Schema } from "App/Navigation"
 import * as Sentry from "@sentry/react-native"
 import { DateTime } from "luxon"
+import { PauseReasonPupUp, PauseReasonPupUpFragment_Query } from "./PauseReasonPopUp"
+import { PauseModal_Query as PauseModal_Query_Type } from "App/generated/PauseModal_Query"
 
 const viewWidth = Dimensions.get("window").width
 
@@ -19,17 +21,28 @@ enum PauseType {
 }
 
 const PAUSE_MEMBERSHIP = gql`
-  mutation PauseSubscription($subscriptionID: String!, $pauseType: PauseType) {
-    pauseSubscription(subscriptionID: $subscriptionID, pauseType: $pauseType)
+  mutation PauseSubscription($subscriptionID: String!, $pauseType: PauseType, $reasonID: ID) {
+    pauseSubscription(subscriptionID: $subscriptionID, pauseType: $pauseType, reasonID: $reasonID)
   }
+`
+
+const PauseModal_Query = gql`
+  query PauseModal_Query {
+    ...PauseReasonPupUpFragment_Query
+  }
+  ${PauseReasonPupUpFragment_Query}
 `
 
 export const PauseModal = screenTrack()(({ navigation, route }) => {
   const customer = route?.params?.customer
-  const [viewState, setViewState] = useState(null)
+  const [showReasonPopUp, setShowReasonPopUp] = useState(false)
+  const [reasonID, setReasonID] = useState(null)
+  const [pauseType, setPauseType] = useState(null)
   const [withItemsMutating, setWithItemsMutating] = useState(false)
   const [withoutItemsMutating, setWithoutItemsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
+
+  const { previousData, data = previousData } = useQuery<PauseModal_Query_Type>(PauseModal_Query)
 
   const nextBilling = customer?.membership?.subscription?.nextBillingAt
   const billingDate = nextBilling && DateTime.fromISO(nextBilling).toFormat("LLLL d")
@@ -37,6 +50,8 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
     style: "currency",
     currency: "USD",
   })
+
+  console.log("data", data)
 
   const checkLines = [
     "Extend or resume anytime",
@@ -55,7 +70,7 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
       navigation.navigate("Modal", {
         screen: Schema.PageNames.PauseConfirmation,
         params: {
-          viewState,
+          viewState: pauseType,
           billingDate,
         },
       })
@@ -87,11 +102,13 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
     },
   })
 
-  const onPause = (pauseType: PauseType) => {
+  const onPause = () => {
+    setShowReasonPopUp(false)
     pauseSubscription({
       variables: {
         subscriptionID: customer?.membership.subscriptionId,
         pauseType,
+        reasonID,
       },
     })
   }
@@ -142,8 +159,8 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
                 return
               }
               setWithItemsMutating(true)
-              setViewState(PauseType.WithItems)
-              onPause(PauseType.WithItems)
+              setShowReasonPopUp(true)
+              setPauseType(PauseType.WithItems)
             }}
           >
             Pause with items
@@ -163,8 +180,8 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
                 return
               }
               setWithoutItemsMutating(true)
-              setViewState(PauseType.WithoutItems)
-              onPause(PauseType.WithoutItems)
+              setShowReasonPopUp(true)
+              setPauseType(PauseType.WithoutItems)
             }}
           >
             Pause without items
@@ -176,6 +193,14 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
           <Spacer mb={60} />
         </Flex>
       </ScrollView>
+      <PauseReasonPupUp
+        onSubmit={onPause}
+        reasonID={reasonID}
+        show={showReasonPopUp}
+        pauseReasons={data?.pauseReasons}
+        setReasonID={setReasonID}
+        setShowReasonPopUp={setShowReasonPopUp}
+      />
     </Container>
   )
 })
