@@ -12,6 +12,7 @@ import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { GET_PRODUCT } from "../Queries"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { GetProductMe } from "App/generated/GetProductMe"
 
 interface Props {
@@ -91,12 +92,30 @@ export const AddToBagButton: React.FC<Props> = ({
             onClose: () => hidePopUp(),
           })
         } else if (err.toString().includes("Bag is full")) {
-          showPopUp({
-            title: "Your bag is full",
-            note: "Remove one or more items from your bag to continue adding this item.",
-            buttonText: "Got It",
-            onClose: () => hidePopUp(),
-          })
+          if (localItems?.localBagItems?.length < 6 || dataMe?.me?.bag?.length < 6) {
+            showPopUp({
+              title: "Want another item?",
+              note: "Upgrade your plan to add more slots",
+              buttonText: "Upgrade plan",
+              onClose: () => {
+                navigation.navigate(NavigationSchema.StackNames.Modal, {
+                  screen: NavigationSchema.PageNames.UpdatePaymentPlanModal,
+                })
+                hidePopUp()
+              },
+              secondaryButtonText: "Got It",
+              secondaryButtonOnPress: () => {
+                hidePopUp()
+              },
+            })
+          } else {
+            showPopUp({
+              title: "Your bag is full",
+              note: "Remove one or more items from your bag to continue adding this item.",
+              buttonText: "Got It",
+              onClose: () => hidePopUp(),
+            })
+          }
         } else {
           showPopUp({
             title: "Oops, sorry!",
