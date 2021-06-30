@@ -51,8 +51,6 @@ export const PauseModal = screenTrack()(({ navigation, route }) => {
     currency: "USD",
   })
 
-  console.log("data", data)
-
   const checkLines = [
     "Extend or resume anytime",
     "Buy items anytime with a member discount",
