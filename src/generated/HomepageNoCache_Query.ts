@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Rating, QuestionType, CustomerStatus } from "./globalTypes";
+import { QuestionType, CustomerStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: HomepageNoCache_Query
@@ -49,8 +49,6 @@ export interface HomepageNoCache_Query_reservationFeedback_feedbacks {
 export interface HomepageNoCache_Query_reservationFeedback {
   __typename: "ReservationFeedback";
   id: string;
-  comment: string | null;
-  rating: Rating | null;
   feedbacks: HomepageNoCache_Query_reservationFeedback_feedbacks[] | null;
 }
 

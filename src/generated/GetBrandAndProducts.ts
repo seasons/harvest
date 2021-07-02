@@ -15,14 +15,9 @@ export interface GetBrandAndProducts_brand_images {
   url: string | null;
 }
 
-export interface GetBrandAndProducts_brand_productsAggregate_aggregate {
+export interface GetBrandAndProducts_brand_products_aggregate {
   __typename: "AggregateProduct";
   count: number;
-}
-
-export interface GetBrandAndProducts_brand_productsAggregate {
-  __typename: "ProductConnection";
-  aggregate: GetBrandAndProducts_brand_productsAggregate_aggregate;
 }
 
 export interface GetBrandAndProducts_brand_products_edges_node_images {
@@ -66,6 +61,7 @@ export interface GetBrandAndProducts_brand_products_edges {
 
 export interface GetBrandAndProducts_brand_products {
   __typename: "ProductConnection";
+  aggregate: GetBrandAndProducts_brand_products_aggregate;
   edges: (GetBrandAndProducts_brand_products_edges | null)[];
 }
 
@@ -78,7 +74,6 @@ export interface GetBrandAndProducts_brand {
   websiteUrl: string | null;
   basedIn: string | null;
   images: GetBrandAndProducts_brand_images[] | null;
-  productsAggregate: GetBrandAndProducts_brand_productsAggregate;
   products: GetBrandAndProducts_brand_products;
 }
 

@@ -1,8 +1,7 @@
 import { Loader } from "App/Components/Loader"
 import { PauseStatus } from "App/Components/Pause/PauseButtons"
-import {
-  GetBag_NoCache_Query as GetBag_NoCache_Query_Type
-} from "App/generated/GetBag_NoCache_Query"
+import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
+import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -23,12 +22,15 @@ import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
 import { Box, Button, Spacer } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 
+import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import {
-  State as CreateAccountState, UserState as CreateAccountUserState
-} from "../CreateAccount/CreateAccount"
-import {
-  CHECK_ITEMS, GetBag_NoCache_Query, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM,
-  ReservationHistoryTab_Query, SavedTab_Query
+  CHECK_ITEMS,
+  GetBag_NoCache_Query,
+  REMOVE_FROM_BAG,
+  REMOVE_FROM_BAG_AND_SAVE_ITEM,
+  ReservationHistoryTab_Query,
+  SavedTab_Query,
+  GetBag_Cached_Query,
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { BagCostWarning } from "./Components/BagCostWarning"
@@ -86,6 +88,9 @@ export const Bag = screenTrack()((props: BagProps) => {
   )
 
   const { previousData, data = previousData, refetch } = useQuery<GetBag_NoCache_Query_Type>(GetBag_NoCache_Query)
+  const { previousData: cachedPreviousData, data: cachedData = cachedPreviousData } = useQuery<
+    GetBag_Cached_Query_Type
+  >(GetBag_Cached_Query)
   const { data: localItems } = useQuery(GET_LOCAL_BAG)
   const [showBagCostWarning, setShowBagCostWarning] = useState(false)
 
@@ -272,18 +277,18 @@ export const Bag = screenTrack()((props: BagProps) => {
         <BagTab
           itemCount={itemCount}
           data={data}
-          bagIsFull={bagIsFull}
-          handleReserve={handleReserve}
           pauseStatus={pauseStatus}
           items={item.data}
           removeFromBagAndSaveItem={removeFromBagAndSaveItem}
           deleteBagItem={deleteBagItem}
           setItemCount={setItemCount}
+          cachedData={cachedData}
         />
       )
     } else if (isSavedView) {
       return (
         <SavedItemsTab
+          itemCount={itemCount}
           items={item.data}
           bagIsFull={bagIsFull}
           hasActiveReservation={hasActiveReservation}
