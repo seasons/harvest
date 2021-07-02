@@ -343,12 +343,18 @@ export interface Homepage_Query_fitPicsConnection_edges_node {
 
 export interface Homepage_Query_fitPicsConnection_edges {
   __typename: "FitPicEdge";
+  /**
+   * The item at the end of the edge.
+   */
   node: Homepage_Query_fitPicsConnection_edges_node;
 }
 
 export interface Homepage_Query_fitPicsConnection {
   __typename: "FitPicConnection";
   aggregate: Homepage_Query_fitPicsConnection_aggregate;
+  /**
+   * A list of edges.
+   */
   edges: (Homepage_Query_fitPicsConnection_edges | null)[];
 }
 

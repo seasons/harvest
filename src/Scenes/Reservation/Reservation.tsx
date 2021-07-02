@@ -15,6 +15,7 @@ import { ReservationItem } from "./Components/ReservationItem"
 import { useNavigation } from "@react-navigation/native"
 import { ShippingOption } from "../Order/Components"
 import { SectionHeader } from "App/Components/SectionHeader"
+import { DateTime } from "luxon"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions, $shippingCode: ShippingCode) {
@@ -28,6 +29,7 @@ const GET_CUSTOMER = gql`
   query GetCustomer {
     me {
       id
+      nextFreeSwapDate
       user {
         id
         firstName
@@ -119,12 +121,16 @@ export const Reservation = screenTrack()((props) => {
     },
   })
 
-  const customer = data?.me?.customer
-  const address = data?.me?.customer?.detail?.shippingAddress
-  const allAccessEnabled = data?.me?.customer?.admissions?.allAccessEnabled
+  const me = data?.me
+  const customer = me?.customer
+  const address = me?.customer?.detail?.shippingAddress
+  const allAccessEnabled = me?.customer?.admissions?.allAccessEnabled
+
+  const nextFreeSwapDate = me?.nextFreeSwapDate
+  const swapAvailable = nextFreeSwapDate <= DateTime.local().setZone("America/New_York")
 
   const phoneNumber = customer?.detail?.phoneNumber
-  const items = data?.me?.bag
+  const items = me?.bag
 
   if (!customer || !items || !address) {
     return (
@@ -176,6 +182,19 @@ export const Reservation = screenTrack()((props) => {
                 <Sans size="4" color="black50">
                   {`${address.city}, ${address.state} ${address.zipCode}`}
                 </Sans>
+              </Box>
+            )}
+            {!swapAvailable && (
+              <Box mb={4}>
+                <SectionHeader title="Order summary" />
+                <Flex mt={2} flexDirection="row" width="100%" justifyContent="space-between">
+                  <Sans size="4" color="black50">
+                    Early swap
+                  </Sans>
+                  <Sans size="4" color="black50">
+                    $30
+                  </Sans>
+                </Flex>
               </Box>
             )}
             {shippingOptions?.length > 0 && !allAccessEnabled && (

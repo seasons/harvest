@@ -9,6 +9,7 @@ import { useQuery } from "@apollo/client"
 import { ScrollView, TouchableWithoutFeedback } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
 import { ReservationItem } from "./Components/ReservationItem"
+import { DateTime } from "luxon"
 
 enum Option {
   ShareToIG = "Share to IG",
@@ -19,6 +20,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
     me {
       id
+      nextFreeSwapDate
       user {
         id
         firstName
@@ -105,6 +107,8 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const address = customer?.detail?.shippingAddress
   const reservation = customer?.reservations?.[0]
   const items = reservation?.products
+  const nextFreeSwapDate = data?.me?.nextFreeSwapDate
+  const swapAvailable = nextFreeSwapDate <= DateTime.local().setZone("America/New_York").toISO()
 
   const SectionHeader = ({ title, content = null, bottomSpacing = 1, hideSeparator = false }) => {
     return (
@@ -242,6 +246,26 @@ export const ReservationConfirmation = screenTrack()((props) => {
               }
             />
           </Box>
+          {!swapAvailable && (
+            <Box pt={1}>
+              <SectionHeader
+                title="Order summary"
+                bottomSpacing={3}
+                content={
+                  <>
+                    <Flex flexDirection="row" width="100%" justifyContent="space-between">
+                      <Sans size="4" color="black50">
+                        Early swap
+                      </Sans>
+                      <Sans size="4" color="black50">
+                        $30
+                      </Sans>
+                    </Flex>
+                  </>
+                }
+              />
+            </Box>
+          )}
           <Box pt={1}>
             <SectionHeader
               title="Shipping"
