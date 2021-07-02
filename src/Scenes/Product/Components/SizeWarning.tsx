@@ -14,6 +14,7 @@ import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useNavigation } from "@react-navigation/native"
 import { CheckCircled } from "Assets/svgs"
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG } from "App/queries/clientQueries"
+import { Spinner } from "App/Components/Spinner"
 
 const getSuggestedVariant = (selectedVariant, variants, fit) => {
   const selectedSizeIndex = variants?.findIndex((v) => v?.id === selectedVariant?.id)
@@ -203,11 +204,17 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
             </Box>
             <MiddleSeperator />
             <Box style={{ width: "49%" }}>
-              <TouchableWithoutFeedback onPress={onSecondaryPress}>
-                <Sans size="4" style={{ textAlign: "center", textDecorationLine: "underline", width: "100%" }}>
-                  {`Add ${selectedSize}`}
-                </Sans>
-              </TouchableWithoutFeedback>
+              {isMutatingSecondaryButton ? (
+                <Flex width="100%" height={25} justifyContent="center" flexDirection="row" alignItems="center">
+                  <Spinner />
+                </Flex>
+              ) : (
+                <TouchableWithoutFeedback onPress={onSecondaryPress}>
+                  <Sans size="4" style={{ textAlign: "center", textDecorationLine: "underline", width: "100%" }}>
+                    {`Add ${selectedSize}`}
+                  </Sans>
+                </TouchableWithoutFeedback>
+              )}
             </Box>
           </Flex>
         ) : (

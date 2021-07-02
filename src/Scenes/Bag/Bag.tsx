@@ -288,6 +288,7 @@ export const Bag = screenTrack()((props: BagProps) => {
     } else if (isSavedView) {
       return (
         <SavedItemsTab
+          itemCount={itemCount}
           items={item.data}
           bagIsFull={bagIsFull}
           hasActiveReservation={hasActiveReservation}
