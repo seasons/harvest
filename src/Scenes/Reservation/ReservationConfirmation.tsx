@@ -9,7 +9,7 @@ import { useQuery } from "@apollo/client"
 import { ScrollView, TouchableWithoutFeedback } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
 import { ReservationItem } from "./Components/ReservationItem"
-import { DateTime } from "luxon"
+import { ReservationLineItems } from "./ReservationLineItems"
 
 enum Option {
   ShareToIG = "Share to IG",
@@ -20,7 +20,6 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
     me {
       id
-      nextFreeSwapDate
       user {
         id
         firstName
@@ -53,6 +52,12 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
               id
               displayText
             }
+          }
+          lineItems {
+            id
+            name
+            price
+            taxPrice
           }
           products {
             id
@@ -107,8 +112,6 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const address = customer?.detail?.shippingAddress
   const reservation = customer?.reservations?.[0]
   const items = reservation?.products
-  const nextFreeSwapDate = data?.me?.nextFreeSwapDate
-  const swapAvailable = nextFreeSwapDate <= DateTime.local().setZone("America/New_York").toISO()
 
   const SectionHeader = ({ title, content = null, bottomSpacing = 1, hideSeparator = false }) => {
     return (
@@ -120,7 +123,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
           {content && <Box ml="auto">{content}</Box>}
         </Flex>
         <Spacer mb={bottomSpacing} />
-        {!hideSeparator && <Separator color={color("black04")} />}
+        {!hideSeparator && <Separator />}
       </>
     )
   }
@@ -131,6 +134,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const shippingOption = reservation?.shippingOption
   const shippingDisplayText = shippingOption?.shippingMethod?.displayText
   const externalCost = shippingOption?.externalCost
+  const lineItems = reservation?.lineItems
 
   const shareToIG = async () => {
     props.navigation.navigate("Modal", { screen: "ShareReservationToIGModal", params: { reservationID } })
@@ -246,25 +250,11 @@ export const ReservationConfirmation = screenTrack()((props) => {
               }
             />
           </Box>
-          {!swapAvailable && (
-            <Box pt={1}>
-              <SectionHeader
-                title="Order summary"
-                bottomSpacing={3}
-                content={
-                  <>
-                    <Flex flexDirection="row" width="100%" justifyContent="space-between">
-                      <Sans size="4" color="black50">
-                        Early swap
-                      </Sans>
-                      <Sans size="4" color="black50">
-                        $30
-                      </Sans>
-                    </Flex>
-                  </>
-                }
-              />
-            </Box>
+          {lineItems?.length > 0 && (
+            <>
+              <Spacer mb={2} />
+              <ReservationLineItems lineItems={lineItems} />
+            </>
           )}
           <Box pt={1}>
             <SectionHeader

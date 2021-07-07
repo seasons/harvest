@@ -6,7 +6,7 @@ import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { Schema as NavigationSchema } from "App/Navigation"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "@apollo/client"
 import * as Sentry from "@sentry/react-native"
 import { ScrollView } from "react-native"
@@ -16,11 +16,23 @@ import { useNavigation } from "@react-navigation/native"
 import { ShippingOption } from "../Order/Components"
 import { SectionHeader } from "App/Components/SectionHeader"
 import { DateTime } from "luxon"
+import { ReservationLineItems } from "./ReservationLineItems"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions, $shippingCode: ShippingCode) {
     reserveItems(items: $items, options: $options, shippingCode: $shippingCode) {
       id
+    }
+  }
+`
+
+const DrafReservationLineItems = gql`
+  mutation DraftReservationLineItems($hasFreeSwap: Boolean) {
+    draftReservationLineItems(hasFreeSwap: $hasFreeSwap) {
+      id
+      name
+      price
+      taxPrice
     }
   }
 `
@@ -84,6 +96,7 @@ const GET_CUSTOMER = gql`
 
 export const Reservation = screenTrack()((props) => {
   const [isMutating, setIsMutating] = useState(false)
+  const [lineItems, setLineItems] = useState([])
   const tracking = useTracking()
   const navigation = useNavigation()
   const { previousData, data = previousData } = useQuery(GET_CUSTOMER)
@@ -120,6 +133,10 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
   })
+  const [getReservationLineItems] = useMutation(DrafReservationLineItems, {
+    onCompleted: () => {},
+    onError: (err) => {},
+  })
 
   const me = data?.me
   const customer = me?.customer
@@ -128,6 +145,21 @@ export const Reservation = screenTrack()((props) => {
 
   const nextFreeSwapDate = me?.nextFreeSwapDate
   const swapAvailable = nextFreeSwapDate <= DateTime.local().setZone("America/New_York")
+
+  useEffect(() => {
+    const getLineItems = async () => {
+      const { data: resData } = await getReservationLineItems({
+        variables: {
+          hasFreeSwap: false,
+        },
+      })
+      console.log("resData?.draftReservationLineItems", resData?.draftReservationLineItems)
+      setLineItems(resData?.draftReservationLineItems || [])
+    }
+    if (!swapAvailable && lineItems?.length === 0) {
+      getLineItems()
+    }
+  }, [swapAvailable])
 
   const phoneNumber = customer?.detail?.phoneNumber
   const items = me?.bag
@@ -142,6 +174,8 @@ export const Reservation = screenTrack()((props) => {
   }
 
   const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
+  let taxTotal = 0
+  let total = 0
 
   return (
     <>
@@ -184,19 +218,7 @@ export const Reservation = screenTrack()((props) => {
                 </Sans>
               </Box>
             )}
-            {!swapAvailable && (
-              <Box mb={4}>
-                <SectionHeader title="Order summary" />
-                <Flex mt={2} flexDirection="row" width="100%" justifyContent="space-between">
-                  <Sans size="4" color="black50">
-                    Early swap
-                  </Sans>
-                  <Sans size="4" color="black50">
-                    $30
-                  </Sans>
-                </Flex>
-              </Box>
-            )}
+            {lineItems?.length > 0 && <ReservationLineItems lineItems={lineItems} />}
             {shippingOptions?.length > 0 && !allAccessEnabled && (
               <Box mb={4}>
                 <SectionHeader title="Select shipping" />
