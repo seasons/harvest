@@ -153,7 +153,6 @@ export const Reservation = screenTrack()((props) => {
           hasFreeSwap: false,
         },
       })
-      console.log("resData?.draftReservationLineItems", resData?.draftReservationLineItems)
       setLineItems(resData?.draftReservationLineItems || [])
     }
     if (!swapAvailable && lineItems?.length === 0) {
