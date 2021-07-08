@@ -4,16 +4,16 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: PauseModal_Query
+// GraphQL fragment: PauseReasonPupUpFragment_Query
 // ====================================================
 
-export interface PauseModal_Query_pauseReasons {
+export interface PauseReasonPupUpFragment_Query_pauseReasons {
   __typename: "PauseReason";
   id: string;
   reason: string;
 }
 
-export interface PauseModal_Query {
+export interface PauseReasonPupUpFragment_Query {
   __typename: "Query";
-  pauseReasons: (PauseModal_Query_pauseReasons | null)[] | null;
+  pauseReasons: (PauseReasonPupUpFragment_Query_pauseReasons | null)[] | null;
 }

@@ -40,7 +40,6 @@ export interface GetBag_NoCache_Query_me_customer_membership_subscription {
   id: string;
   nextBillingAt: any | null;
   currentTermStart: any;
-  currentTermEnd: any;
 }
 
 export interface GetBag_NoCache_Query_me_customer_membership_plan {
@@ -205,6 +204,7 @@ export interface GetBag_NoCache_Query_me {
   customer: GetBag_NoCache_Query_me_customer | null;
   activeReservation: GetBag_NoCache_Query_me_activeReservation | null;
   bag: GetBag_NoCache_Query_me_bag[] | null;
+  nextFreeSwapDate: any | null;
 }
 
 export interface GetBag_NoCache_Query {

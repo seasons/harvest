@@ -10,6 +10,7 @@ export const BagTabHeaderFragment_Query = gql`
   fragment BagTabHeaderFragment_Query on Query {
     me {
       id
+      nextFreeSwapDate
       activeReservation {
         id
         createdAt
@@ -22,11 +23,6 @@ export const BagTabHeaderFragment_Query = gql`
           plan {
             id
             tier
-          }
-          subscription {
-            id
-            currentTermStart
-            currentTermEnd
           }
         }
       }
@@ -44,19 +40,17 @@ export const BagTabHeader: React.FC<{
 
   const activeReservation = me?.activeReservation
   const hasActiveReservation = !!activeReservation
-  const subscription = me?.customer?.membership?.subscription
 
-  const reservationCreationDate = activeReservation?.createdAt
-  const currentTermStart = subscription?.currentTermStart
-
-  const currentTermEndDateTime = DateTime.fromISO(subscription?.currentTermEnd)
-  const nextSwapDate = currentTermEndDateTime.plus({ day: 1 })
+  const nextFreeSwapDate = me?.nextFreeSwapDate
+  const nextFreeSwapDateToLuxon = DateTime.fromISO(nextFreeSwapDate)
+  const swapAvailable = nextFreeSwapDate <= DateTime.local().setZone("America/New_York").toISO()
+  const nextFreeSwapText = `You get a free swap ${nextFreeSwapDateToLuxon.weekdayLong}, ${nextFreeSwapDateToLuxon.monthLong} ${nextFreeSwapDateToLuxon.day}`
 
   let atHomeText
-  if (reservationCreationDate < currentTermStart) {
+  if (swapAvailable) {
     atHomeText = "You have a swap available"
   } else {
-    atHomeText = `You get a free swap ${nextSwapDate.weekdayLong}, ${nextSwapDate.monthLong} ${nextSwapDate.day}`
+    atHomeText = nextFreeSwapText
   }
 
   let returnReminder
@@ -83,8 +77,10 @@ export const BagTabHeader: React.FC<{
     subTitle = atHomeText
   } else if (hasActiveReservation && !!returnReminder) {
     subTitle = returnReminder
-  } else {
+  } else if (swapAvailable) {
     subTitle = "Reserve your order below"
+  } else {
+    subTitle = `Reserve your order below. ${nextFreeSwapText}.`
   }
 
   const showSubTitle =
