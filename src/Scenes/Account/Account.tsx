@@ -258,6 +258,9 @@ export const Account = screenTrack()(({ navigation }) => {
       tracking: Schema.ActionNames.LogOutTapped,
       onPress: () => {
         hideNotificationBar()
+        navigation.reset({
+          routes: [{ name: "Home" }, { name: "Browse" }, { name: "Account" }, { name: "Bag" }],
+        })
         signOut()
       },
     },
