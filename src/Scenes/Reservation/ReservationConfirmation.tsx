@@ -236,6 +236,12 @@ export const ReservationConfirmation = screenTrack()((props) => {
           </Box>
           <OptionSections options={[Option.ShareToIG, Option.ReferAndEarn]} />
           <Spacer pb={4} />
+          {lineItems?.length > 0 && (
+            <>
+              <ReservationLineItems lineItems={lineItems} />
+              <Spacer mb={2} />
+            </>
+          )}
           <Box>
             <SectionHeader
               title="Order number"
@@ -250,12 +256,6 @@ export const ReservationConfirmation = screenTrack()((props) => {
               }
             />
           </Box>
-          {lineItems?.length > 0 && (
-            <>
-              <Spacer mb={2} />
-              <ReservationLineItems lineItems={lineItems} />
-            </>
-          )}
           <Box pt={1}>
             <SectionHeader
               title="Shipping"

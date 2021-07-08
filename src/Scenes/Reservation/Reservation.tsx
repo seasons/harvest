@@ -133,10 +133,7 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
   })
-  const [getReservationLineItems] = useMutation(DrafReservationLineItems, {
-    onCompleted: () => {},
-    onError: (err) => {},
-  })
+  const [getReservationLineItems] = useMutation(DrafReservationLineItems)
 
   const me = data?.me
   const customer = me?.customer
