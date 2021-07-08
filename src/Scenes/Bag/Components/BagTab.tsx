@@ -318,7 +318,7 @@ export const BagTab: React.FC<{
       <Spacer mb={3} />
       {!pausedWithoutItems && <Separator />}
       <Spacer mb={3} />
-      {!hasActiveReservation && itemCount && itemCount < maxPlanItemCount && !isPaused && (
+      {itemCount && itemCount < maxPlanItemCount && !isPaused && (
         <>
           <BagCardButton Icon={AddSlot} title="Add a slot" caption="Reserve another item" onPress={onAddSlot} />
           <Spacer mb={3} />
