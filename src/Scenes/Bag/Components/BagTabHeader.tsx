@@ -1,10 +1,17 @@
-import React from "react"
+import React, { useState } from "react"
 import { Box, Sans, Flex, Spacer } from "App/Components"
 import { useNavigation } from "@react-navigation/native"
 import { DateTime } from "luxon"
 import { GetBag_NoCache_Query_me } from "App/generated/GetBag_NoCache_Query"
 import gql from "graphql-tag"
 import { Schema, useTracking } from "App/utils/track"
+import { ReservationPhase } from "App/generated/globalTypes"
+import { DeliveryStatus } from "./DeliveryStatus"
+import { Text, TouchableOpacity } from "react-native"
+import { color } from "App/utils/color"
+import { useMutation } from "@apollo/client"
+import { Spinner } from "App/Components/Spinner"
+import { GetBag_NoCache_Query } from "../BagQueries"
 
 export const BagTabHeaderFragment_Query = gql`
   fragment BagTabHeaderFragment_Query on Query {
@@ -34,34 +41,45 @@ export const BagTabHeaderFragment_Query = gql`
   }
 `
 
-export const BagTabHeader: React.FC<{
-  me: GetBag_NoCache_Query_me
-  atHome: boolean
-  pausedWithoutItems: boolean
-}> = ({ me, atHome, pausedWithoutItems }) => {
-  const tracking = useTracking()
-  const navigation = useNavigation()
+const getHeaderText = (status: string, phase: ReservationPhase, atHome: boolean) => {
+  if (atHome) {
+    return "At home"
+  }
+  switch (status) {
+    case "Queued":
+    case "Picked":
+    case "Packed":
+      return "Order being prepared"
+    case "Shipped":
+      if (phase === "CustomerToBusiness") {
+        return "Your return is on the way"
+      } else {
+        return "Your order is on the way"
+      }
+    case "Delivered":
+      return "Your order was delivered"
+    case "Hold":
+      return "Your order is on hold"
+    default:
+      return "Your bag"
+  }
+}
 
-  const activeReservation = me?.activeReservation
-  const hasActiveReservation = !!activeReservation
-  const subscription = me?.customer?.membership?.subscription
-
-  const reservationCreationDate = activeReservation?.createdAt
-  const currentTermStart = subscription?.currentTermStart
-
-  const currentTermEndDateTime = DateTime.fromISO(subscription?.currentTermEnd)
-  const nextSwapDate = currentTermEndDateTime.plus({ day: 1 })
+const getSubHeaderText = (me, activeReservation, atHome) => {
+  const nextSwapDate = me.nextFreeSwapDate
+  const nextSwapDateLuxon = DateTime.fromISO(nextSwapDate)
+  const swapAvailable = nextSwapDate < DateTime.local().toISO()
 
   let atHomeText
-  if (reservationCreationDate < currentTermStart) {
+  if (swapAvailable) {
     atHomeText = "You have a swap available"
   } else {
-    atHomeText = `You get a free swap ${nextSwapDate.weekdayLong}, ${nextSwapDate.monthLong} ${nextSwapDate.day}`
+    atHomeText = `You get a free swap ${nextSwapDateLuxon.weekdayLong}, ${nextSwapDateLuxon.monthLong} ${nextSwapDateLuxon.day}`
   }
 
   let returnReminder
   if (
-    hasActiveReservation &&
+    !!activeReservation &&
     me?.customer?.membership?.plan?.tier === "Essential" &&
     !!me?.activeReservation?.returnAt
   ) {
@@ -69,31 +87,54 @@ export const BagTabHeader: React.FC<{
     returnReminder = `Return by ${luxonDate.weekdayLong}, ${luxonDate.monthLong} ${luxonDate.day}`
   }
 
-  let title
+  let subHeaderText
   if (atHome) {
-    title = "At home"
-  } else if (hasActiveReservation) {
-    title = "Current rotation"
+    subHeaderText = atHomeText
+  } else if (!!activeReservation && !!returnReminder) {
+    subHeaderText = returnReminder
   } else {
-    title = "My bag"
+    subHeaderText = "Reserve your order below"
   }
+  return subHeaderText
+}
 
-  let subTitle
-  if (atHome) {
-    subTitle = atHomeText
-  } else if (hasActiveReservation && !!returnReminder) {
-    subTitle = returnReminder
-  } else {
-    subTitle = "Reserve your order below"
+const CANCEL_RETURN = gql`
+  mutation CancelReturn {
+    cancelReturn {
+      id
+    }
   }
+`
 
-  const showSubTitle =
-    ((hasActiveReservation && !!returnReminder) || !hasActiveReservation || atHome) && !pausedWithoutItems
+export const BagTabHeader: React.FC<{
+  me: GetBag_NoCache_Query_me
+  atHome: boolean
+  pausedWithoutItems: boolean
+}> = ({ me, atHome, pausedWithoutItems }) => {
+  const tracking = useTracking()
+  const navigation = useNavigation()
+  const [cancelingReturn, setCancelingReturn] = useState(false)
+  const [cancelReturn] = useMutation(CANCEL_RETURN, {
+    onCompleted: () => {
+      setCancelingReturn(false)
+    },
+    onError: (e) => {
+      setCancelingReturn(false)
+    },
+  })
+
+  const activeReservation = me?.activeReservation
+  const status = activeReservation?.status
+  const subHeaderText = getSubHeaderText(me, activeReservation, atHome)
+  const markedAsReturned = !!activeReservation?.returnedAt
+
+  const showDeliveryStatus = !!activeReservation && !atHome && !markedAsReturned
+  const showSubHeaderText = !markedAsReturned && !showDeliveryStatus && !!subHeaderText
 
   return (
-    <Box px={2} pt={4}>
-      <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
-        <Sans size="5">{title}</Sans>
+    <Box pt={4}>
+      <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap" px={2}>
+        <Sans size="5">{getHeaderText(status, activeReservation?.phase, atHome)}</Sans>
         <Sans
           size="5"
           style={{ textDecorationLine: "underline" }}
@@ -108,10 +149,44 @@ export const BagTabHeader: React.FC<{
           FAQ
         </Sans>
       </Flex>
-      {showSubTitle && (
-        <Sans size="4" color="black50">
-          {subTitle}
-        </Sans>
+      {showDeliveryStatus && (
+        <Box px={1.5}>
+          <DeliveryStatus me={me} atHome={atHome} />
+        </Box>
+      )}
+      {showSubHeaderText && (
+        <Box px={2}>
+          <Sans size="4" color="black50">
+            {subHeaderText}
+          </Sans>
+        </Box>
+      )}
+      {markedAsReturned && (
+        <Box px={2}>
+          <Sans size="4" color="black50">
+            Your bag will update after UPS scans the return label. Second thoughts?{" "}
+            {cancelingReturn ? (
+              <Flex flexDirection="row" width={130} height={20} justifyContent="center" alignItems="center">
+                <Spinner size="small" />
+              </Flex>
+            ) : (
+              <Sans
+                size="4"
+                onPress={() => {
+                  setCancelingReturn(true)
+                  cancelReturn({
+                    awaitRefetchQueries: true,
+                    refetchQueries: [{ query: GetBag_NoCache_Query }],
+                  })
+                }}
+                color="black50"
+                style={{ textDecorationLine: "underline" }}
+              >
+                Cancel your return
+              </Sans>
+            )}
+          </Sans>
+        </Box>
       )}
       <Spacer mb={3} />
     </Box>
