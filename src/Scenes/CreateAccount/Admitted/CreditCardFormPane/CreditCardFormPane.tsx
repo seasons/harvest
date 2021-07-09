@@ -195,7 +195,7 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
 
   const disabled = !billingComplete || !shippingComplete || !creditCardComplete
 
-  const description = plan?.description.split("\n")?.[0]
+  const description = plan?.description?.split("\n")?.[0] ?? ""
   const originalPrice = plan?.price
   const finalPrice = calcFinalPrice(originalPrice, coupon)
   const isDiscounted = originalPrice !== finalPrice && !!finalPrice

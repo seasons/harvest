@@ -141,7 +141,7 @@ export const Reservation = screenTrack()((props) => {
   const allAccessEnabled = me?.customer?.admissions?.allAccessEnabled
 
   const nextFreeSwapDate = me?.nextFreeSwapDate
-  const swapAvailable = nextFreeSwapDate <= DateTime.local().setZone("America/New_York")
+  const swapNotAvailable = nextFreeSwapDate?.length > 0 && nextFreeSwapDate > DateTime.local()
 
   useEffect(() => {
     const getLineItems = async () => {
@@ -152,10 +152,10 @@ export const Reservation = screenTrack()((props) => {
       })
       setLineItems(resData?.draftReservationLineItems || [])
     }
-    if (!swapAvailable && lineItems?.length === 0) {
+    if (swapNotAvailable === true && lineItems?.length === 0) {
       getLineItems()
     }
-  }, [swapAvailable])
+  }, [swapNotAvailable])
 
   const phoneNumber = customer?.detail?.phoneNumber
   const items = me?.bag

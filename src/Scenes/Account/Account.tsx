@@ -23,7 +23,7 @@ import { Linking, Platform, ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
 import Share from "react-native-share"
 import { useQuery } from "@apollo/client"
-import { useScrollToTop } from "@react-navigation/native"
+import { useNavigation, useScrollToTop } from "@react-navigation/native"
 import { AuthorizedCTA, WaitlistedCTA } from "@seasons/eclipse"
 import { useNotificationBarContext } from "@seasons/eclipse"
 import { State, UserState } from "../CreateAccount/CreateAccount"
@@ -90,11 +90,12 @@ export const GET_USER = gql`
   }
 `
 
-export const Account = screenTrack()(({ navigation }) => {
+export const Account = screenTrack()(() => {
   const { authState, signOut } = useAuthContext()
   const { previousData, data = previousData, refetch } = useQuery(GET_USER)
   const scrollViewRef = React.useRef(null)
   const tracking = useTracking()
+  const navigation = useNavigation()
 
   useScrollToTop(scrollViewRef)
   const { hideNotificationBar } = useNotificationBarContext()
@@ -258,9 +259,6 @@ export const Account = screenTrack()(({ navigation }) => {
       tracking: Schema.ActionNames.LogOutTapped,
       onPress: () => {
         hideNotificationBar()
-        navigation.reset({
-          routes: [{ name: "Home" }, { name: "Browse" }, { name: "Account" }, { name: "Bag" }],
-        })
         signOut()
       },
     },
