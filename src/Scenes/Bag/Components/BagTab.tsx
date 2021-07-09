@@ -55,7 +55,6 @@ export const BagTab: React.FC<{
   const activeReservation = me?.activeReservation
   const hasActiveReservation = !!activeReservation
   const maxPlanItemCount = cachedData?.paymentPlans?.[0]?.itemCount || 6
-  console.log("me", me)
   const customerPlanItemCount = me?.customer?.membership?.plan?.itemCount
 
   const [getLocalBag, { data: localItems }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
@@ -205,8 +204,6 @@ export const BagTab: React.FC<{
   const updatedMoreThan24HoursAgo =
     activeReservation?.updatedAt && DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
   const atHome = status && status === "Delivered" && updatedMoreThan24HoursAgo
-
-  console.log("customerPlanItemCount", customerPlanItemCount)
 
   return (
     <Box>
