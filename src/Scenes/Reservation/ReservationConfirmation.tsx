@@ -9,6 +9,7 @@ import { useQuery } from "@apollo/client"
 import { ScrollView, TouchableWithoutFeedback } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
 import { ReservationItem } from "./Components/ReservationItem"
+import { ReservationLineItems } from "./ReservationLineItems"
 
 enum Option {
   ShareToIG = "Share to IG",
@@ -51,6 +52,12 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
               id
               displayText
             }
+          }
+          lineItems {
+            id
+            name
+            price
+            taxPrice
           }
           products {
             id
@@ -116,7 +123,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
           {content && <Box ml="auto">{content}</Box>}
         </Flex>
         <Spacer mb={bottomSpacing} />
-        {!hideSeparator && <Separator color={color("black04")} />}
+        {!hideSeparator && <Separator />}
       </>
     )
   }
@@ -127,6 +134,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const shippingOption = reservation?.shippingOption
   const shippingDisplayText = shippingOption?.shippingMethod?.displayText
   const externalCost = shippingOption?.externalCost
+  const lineItems = reservation?.lineItems
 
   const shareToIG = async () => {
     props.navigation.navigate("Modal", { screen: "ShareReservationToIGModal", params: { reservationID } })
@@ -228,6 +236,12 @@ export const ReservationConfirmation = screenTrack()((props) => {
           </Box>
           <OptionSections options={[Option.ShareToIG, Option.ReferAndEarn]} />
           <Spacer pb={4} />
+          {lineItems?.length > 0 && (
+            <>
+              <ReservationLineItems lineItems={lineItems} />
+              <Spacer mb={2} />
+            </>
+          )}
           <Box>
             <SectionHeader
               title="Order number"

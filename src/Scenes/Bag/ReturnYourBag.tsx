@@ -81,7 +81,7 @@ export const ReturnYourBag = () => {
         <Sans size="4" style={{ textDecorationLine: "underline" }}>
           {`${nextSwapDate.weekdayLong}, ${nextSwapDate.monthLong} ${nextSwapDate.day}`}
         </Sans>
-        . Return your items early & place a new order for only $35
+        . Return your items early & place a new order for only $30
       </Sans>
     ) : (
       <Sans size="4" color="black50">
