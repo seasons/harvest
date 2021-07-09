@@ -7,8 +7,6 @@ import gql from "graphql-tag"
 import { Schema, useTracking } from "App/utils/track"
 import { ReservationPhase } from "App/generated/globalTypes"
 import { DeliveryStatus } from "./DeliveryStatus"
-import { Text, TouchableOpacity } from "react-native"
-import { color } from "App/utils/color"
 import { useMutation } from "@apollo/client"
 import { Spinner } from "App/Components/Spinner"
 import { GetBag_NoCache_Query } from "../BagQueries"
@@ -47,9 +45,11 @@ const getHeaderText = (status: string, phase: ReservationPhase, atHome: boolean)
   }
   switch (status) {
     case "Queued":
+      return "We've got your order"
     case "Picked":
-    case "Packed":
       return "Order being prepared"
+    case "Packed":
+      return "Your order ready to ship"
     case "Shipped":
       if (phase === "CustomerToBusiness") {
         return "Your return is on the way"
@@ -70,29 +70,17 @@ const getSubHeaderText = (me, activeReservation, atHome) => {
   const nextSwapDateLuxon = DateTime.fromISO(nextSwapDate)
   const swapAvailable = nextSwapDate < DateTime.local().toISO()
 
-  let atHomeText
+  let swapText
   if (swapAvailable) {
-    atHomeText = "You have a swap available"
+    swapText = "You have a swap available"
   } else {
-    atHomeText = `You get a free swap ${nextSwapDateLuxon.weekdayLong}, ${nextSwapDateLuxon.monthLong} ${nextSwapDateLuxon.day}`
-  }
-
-  let returnReminder
-  if (
-    !!activeReservation &&
-    me?.customer?.membership?.plan?.tier === "Essential" &&
-    !!me?.activeReservation?.returnAt
-  ) {
-    const luxonDate = DateTime.fromISO(me?.activeReservation?.returnAt)
-    returnReminder = `Return by ${luxonDate.weekdayLong}, ${luxonDate.monthLong} ${luxonDate.day}`
+    swapText = `You get a free swap ${nextSwapDateLuxon.weekdayLong}, ${nextSwapDateLuxon.monthLong} ${nextSwapDateLuxon.day}`
   }
 
   let subHeaderText
   if (atHome) {
-    subHeaderText = atHomeText
-  } else if (!!activeReservation && !!returnReminder) {
-    subHeaderText = returnReminder
-  } else {
+    subHeaderText = swapText
+  } else if (!activeReservation) {
     subHeaderText = "Reserve your order below"
   }
   return subHeaderText
