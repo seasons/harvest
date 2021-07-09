@@ -16,6 +16,7 @@ import { Sans, Spacer } from "@seasons/eclipse"
 import { BrowseFilters, EMPTY_BROWSE_FILTERS } from "./Filters"
 import { GET_BROWSE_PRODUCTS } from "./queries/browseQueries"
 import { useScrollToTop } from "@react-navigation/native"
+import { CloseXIcon } from "Assets/icons"
 
 const PAGE_LENGTH = 16
 
@@ -129,7 +130,9 @@ export const Browse = screenTrack()((props: any) => {
                 }}
               >
                 <Flex flexWrap="nowrap" flexDirection="row" alignItems="center" px="12px" py="6px">
-                  <SelectBox active={filters.availableOnly} />
+                  <SelectBox active={filters.availableOnly}>
+                    <SelectX />
+                  </SelectBox>
                   <Spacer mr={1} />
                   <Sans size="4">Available now</Sans>
                 </Flex>
@@ -211,20 +214,16 @@ export const Browse = screenTrack()((props: any) => {
   )
 })
 
+const SelectX = styled(CloseXIcon)`
+  top: 1;
+  right: -1;
+`
+
 const SelectBox = styled(Box)<{ active: boolean }>`
   height: 16;
   width: 16;
+  position: relative;
   background-color: ${(p) => (p.active ? color("black100") : color("white100"))};
   border-width: 1;
   border-color: ${color("black100")};
-`
-
-const Overlay = styled(Box)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  z-index: 200;
 `
