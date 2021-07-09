@@ -77,8 +77,8 @@ export const DeliveryStatus: React.FC<{
     } else if (status === "Shipped") {
       statusText = "Shipped"
       step = 2
-    } else if (status === "Packed") {
-      statusText = "Order being prepared"
+    } else if (status === "Packed" || status === "Picked") {
+      statusText = "Order received"
       step = 1
     } else if (status === "Queued") {
       statusText = "Order received"
@@ -90,18 +90,18 @@ export const DeliveryStatus: React.FC<{
 
   return (
     <Box>
-      <Box px={2} pt={3}>
+      <Box pt={3} px={0.5}>
         <Sans size="4">Status</Sans>
       </Box>
       <Spacer mb={1} />
-      <Flex flexDirection="row" flexWrap="nowrap" px={1.5} width="100%">
+      <Flex flexDirection="row" flexWrap="nowrap" width="100%">
         {[...Array(3)].map((_pip, index) => {
           const backgroundColor = index < step ? statusColor : color("black10")
           return <Pip backgroundColor={backgroundColor} mx={0.5} key={index} />
         })}
       </Flex>
       <Spacer mb={1} />
-      <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" px={2}>
+      <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" px={0.5}>
         <Flex flexDirection="row" flexWrap="nowrap" alignItems="center">
           <GreenDot statusColor={statusColor} />
           <Spacer mr={1} />
