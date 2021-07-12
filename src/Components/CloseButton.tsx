@@ -11,7 +11,8 @@ export type CloseButtonVariant = "light" | "dark"
 export const CloseButton: React.FC<{
   variant?: CloseButtonVariant
   overrides?: any
-}> = ({ variant, overrides = {} }) => {
+  onClose?: () => void
+}> = ({ onClose, variant, overrides = {} }) => {
   const navigation = useNavigation()
 
   const borderColor = variant === "light" ? color("black10") : color("black100")
@@ -20,7 +21,12 @@ export const CloseButton: React.FC<{
 
   return (
     <Wrapper style={{ right: overrides.right ?? 20 }}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity
+        onPress={() => {
+          onClose?.()
+          navigation.goBack()
+        }}
+      >
         <Circle
           variant={variant}
           style={{
