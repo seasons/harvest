@@ -22,7 +22,6 @@ import { BagCardButton } from "./BagCardButton"
 import { BagItem } from "./BagItem"
 import { BagTabHeader } from "./BagTabHeader"
 import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
-import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
 import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
 import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
@@ -56,6 +55,7 @@ export const BagTab: React.FC<{
   const activeReservation = me?.activeReservation
   const hasActiveReservation = !!activeReservation
   const maxPlanItemCount = cachedData?.paymentPlans?.[0]?.itemCount || 6
+  const customerPlanItemCount = me?.customer?.membership?.plan?.itemCount
 
   const [getLocalBag, { data: localItems }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
     variables: {
@@ -277,7 +277,6 @@ export const BagTab: React.FC<{
         </>
       )}
       <Separator />
-      {hasActiveReservation && status !== "Delivered" && <DeliveryStatus me={me} atHome={atHome} />}
       {paddedItems?.map((bagItem, index) => {
         if (pausedWithoutItems) {
           return null
@@ -318,7 +317,7 @@ export const BagTab: React.FC<{
       <Spacer mb={3} />
       {!pausedWithoutItems && <Separator />}
       <Spacer mb={3} />
-      {!hasActiveReservation && itemCount && itemCount < maxPlanItemCount && !isPaused && (
+      {customerPlanItemCount && customerPlanItemCount < maxPlanItemCount && !isPaused && (
         <>
           <BagCardButton Icon={AddSlot} title="Add a slot" caption="Reserve another item" onPress={onAddSlot} />
           <Spacer mb={3} />

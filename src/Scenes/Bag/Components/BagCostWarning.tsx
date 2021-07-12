@@ -39,11 +39,11 @@ export const BagCostWarning = ({ show, setShow }) => {
       <Spacer mb={3} />
       <Box px={2}>
         <Button block loading={isMutatingCTA} onPress={onCTAPress}>
-          Ship now for $35
+          Ship now for $30
         </Button>
         <Spacer mb={2} />
         <Sans size="3" style={{ textAlign: "center" }} color="black50">
-          You’ve already placed an order this month. Get an extra shipment now for $35 or wait until April 24.
+          You’ve already placed an order this month. Get an extra shipment now for $30 or wait until April 24.
         </Sans>
         <Spacer mb={3} />
 
