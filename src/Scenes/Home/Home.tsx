@@ -15,6 +15,8 @@ import { HomeBlogContent, HomeBottomSheet } from "./Components"
 import { HomepageNoCache_Query, Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
 import { Homepage_Query as Homepage_Query_Type } from "App/generated/Homepage_Query"
 import { HomepageNoCache_Query as HomepageNoCache_Query_Type } from "App/generated/HomepageNoCache_Query"
+import AsyncStorage from "@react-native-community/async-storage"
+import { DateTime } from "luxon"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const PAGE_LENGTH = 8
@@ -79,22 +81,28 @@ export const Home = screenTrack()(({ navigation, route }) => {
   const incompleteFeedbackIndex = feedbacks?.findIndex((feedback) => !feedback.isCompleted)
 
   useEffect(() => {
-    const goToReservationFeedbackScreen = () => {
-      navigation.navigate("Modal", {
-        screen: Schema.PageNames.ReservationFeedbackModal,
-      })
-    }
-    if (reservationFeedback) {
-      const subtitle = `Reviewing ${incompleteFeedbackIndex + 1} of ${feedbacks?.length} items`
-      showNotificationBar({
-        title: "Share feedback on your last order",
-        subtitle,
-        onClickBanner: goToReservationFeedbackScreen,
-      })
-      if (shouldRequestFeedback && reservationFeedback) {
-        goToReservationFeedbackScreen()
+    const showReservationFeedback = async () => {
+      const feedbackDismissDate = await AsyncStorage.getItem("feedbackDismissDate")
+      const greaterThanOneHourSinceRequest =
+        feedbackDismissDate && DateTime.fromISO(feedbackDismissDate) < DateTime.local().minus({ hours: 1 })
+      const goToReservationFeedbackScreen = () => {
+        navigation.navigate("Modal", {
+          screen: Schema.PageNames.ReservationFeedbackModal,
+        })
+      }
+      if (reservationFeedback) {
+        const subtitle = `Reviewing ${incompleteFeedbackIndex + 1} of ${feedbacks?.length} items`
+        showNotificationBar({
+          title: "Share feedback on your last order",
+          subtitle,
+          onClickBanner: goToReservationFeedbackScreen,
+        })
+        if (shouldRequestFeedback && reservationFeedback && (greaterThanOneHourSinceRequest || !feedbackDismissDate)) {
+          goToReservationFeedbackScreen()
+        }
       }
     }
+    showReservationFeedback()
   }, [shouldRequestFeedback, reservationFeedback, incompleteFeedbackIndex])
 
   const NoInternetComponent = (

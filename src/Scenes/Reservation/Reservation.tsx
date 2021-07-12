@@ -141,7 +141,7 @@ export const Reservation = screenTrack()((props) => {
   const allAccessEnabled = me?.customer?.admissions?.allAccessEnabled
 
   const nextFreeSwapDate = me?.nextFreeSwapDate
-  const swapNotAvailable = nextFreeSwapDate?.length > 0 && nextFreeSwapDate > DateTime.local()
+  const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()
 
   useEffect(() => {
     const getLineItems = async () => {
@@ -170,8 +170,6 @@ export const Reservation = screenTrack()((props) => {
   }
 
   const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
-  let taxTotal = 0
-  let total = 0
 
   return (
     <>

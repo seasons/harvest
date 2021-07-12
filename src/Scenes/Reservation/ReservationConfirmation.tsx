@@ -247,9 +247,9 @@ export const ReservationConfirmation = screenTrack()((props) => {
               title="Order number"
               content={
                 <>
-                  {!!reservation.reservationNumber && (
+                  {!!reservation?.reservationNumber && (
                     <Sans size="4" color="black100" textAlign="right" ml="auto">
-                      {reservation.reservationNumber}
+                      {reservation?.reservationNumber}
                     </Sans>
                   )}
                 </>
