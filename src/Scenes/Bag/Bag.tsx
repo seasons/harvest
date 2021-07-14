@@ -34,6 +34,8 @@ import {
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { BagCostWarning } from "./Components/BagCostWarning"
+import { DateTime } from "luxon"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export enum BagView {
   Bag = 0,
@@ -48,6 +50,7 @@ interface BagProps {
 
 export const Bag = screenTrack()((props: BagProps) => {
   const { authState } = useAuthContext()
+  const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
   const [itemCount, setItemCount] = useState(DEFAULT_ITEM_COUNT)
@@ -121,6 +124,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS, {
     onCompleted: (res) => {
       setMutating(false)
+      setShowBagCostWarning(false)
       if (res.checkItemsAvailability) {
         navigation.navigate(NavigationSchema.StackNames.BagStack, { screen: NavigationSchema.PageNames.Reservation })
       }
@@ -150,6 +154,7 @@ export const Bag = screenTrack()((props: BagProps) => {
           })
         }
       }
+      setShowBagCostWarning(false)
       setMutating(false)
     },
   })
@@ -185,6 +190,24 @@ export const Bag = screenTrack()((props: BagProps) => {
   const bagIsFull = itemCount && bagCount >= itemCount
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
+  const nextFreeSwapDate = me?.nextFreeSwapDate
+  const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()
+
+  const handleCheckItems = async () => {
+    await checkItemsAvailability({
+      variables: {
+        items: items.map((item) => item.variantID),
+      },
+      refetchQueries: [
+        {
+          query: GetBag_NoCache_Query,
+        },
+      ],
+      update(cache, { data, errors }) {
+        console.log(data, errors)
+      },
+    })
+  }
 
   const handleReserve = async () => {
     setMutating(true)
@@ -244,19 +267,11 @@ export const Bag = screenTrack()((props: BagProps) => {
         setMutating(false)
         return
       }
-      await checkItemsAvailability({
-        variables: {
-          items: items.map((item) => item.variantID),
-        },
-        refetchQueries: [
-          {
-            query: GetBag_NoCache_Query,
-          },
-        ],
-        update(cache, { data, errors }) {
-          console.log(data, errors)
-        },
-      })
+      if (swapNotAvailable) {
+        setShowBagCostWarning(true)
+        return
+      }
+      await handleCheckItems()
     }
     setMutating(false)
   }
@@ -368,8 +383,11 @@ export const Bag = screenTrack()((props: BagProps) => {
   }
 
   return (
-    <Container insetsBottom={false}>
-      <View pointerEvents={bottomSheetBackdropIsVisible ? "none" : "auto"} style={{ flexDirection: "column", flex: 1 }}>
+    <Container insetsBottom={false} insetsTop={false}>
+      <View
+        pointerEvents={bottomSheetBackdropIsVisible ? "none" : "auto"}
+        style={{ flexDirection: "column", flex: 1, paddingTop: insets?.top }}
+      >
         <TabBar
           spaceEvenly
           tabs={["Bag", "Saved", "History"]}
@@ -407,7 +425,15 @@ export const Bag = screenTrack()((props: BagProps) => {
           ListFooterComponent={() => <Spacer pb={80} />}
         />
         <PrimaryCTA />
-        <BagCostWarning show={showBagCostWarning} setShow={setShowBagCostWarning} />
+        <BagCostWarning
+          onCancel={() => {
+            setShowBagCostWarning(false)
+            setMutating(false)
+          }}
+          nextFreeSwapDate={nextFreeSwapDate}
+          show={showBagCostWarning}
+          onCTAPress={async () => await handleCheckItems()}
+        />
       </View>
     </Container>
   )
