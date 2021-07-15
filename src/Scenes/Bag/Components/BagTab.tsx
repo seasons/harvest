@@ -55,7 +55,7 @@ export const BagTab: React.FC<{
   const activeReservation = me?.activeReservation
   const hasActiveReservation = !!activeReservation
   const maxPlanItemCount = cachedData?.paymentPlans?.[0]?.itemCount || 6
-  const customerPlanItemCount = me?.customer?.membership?.plan?.itemCount
+  const customerPlanItemCount = me?.customer?.membership?.plan?.itemCount || items.length
 
   const [getLocalBag, { data: localItems }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
     variables: {
