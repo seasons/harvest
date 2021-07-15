@@ -207,7 +207,7 @@ export const BagTab: React.FC<{
 
   return (
     <Box>
-      <BagTabHeader atHome={atHome} me={me} pausedWithoutItems={pausedWithoutItems} />
+      <BagTabHeader atHome={atHome} me={me} />
       {showPendingMessage && (
         <>
           <Box px={2}>
