@@ -1,4 +1,4 @@
-import { Box, Flex, Sans } from "App/Components"
+import { Box, Flex, Sans, Spacer } from "App/Components"
 import { SectionHeader } from "App/Components/SectionHeader"
 import React from "react"
 
@@ -7,24 +7,23 @@ export const ReservationLineItems = ({ lineItems }) => {
   let total = 0
 
   return (
-    <>
+    <Box>
+      <SectionHeader title="Order summary" />
+      <Spacer mb={1} />
       {lineItems?.length > 0 && (
         <Box mb={4}>
           {lineItems.map((lineItem, index) => {
             taxTotal = taxTotal + lineItem.taxPrice
             total = lineItem.taxPrice + total + lineItem.price
             return (
-              <Box key={index}>
-                <SectionHeader title="Order summary" />
-                <Flex flexDirection="row" width="100%" justifyContent="space-between" mt={2}>
-                  <Sans size="4" color="black50">
-                    {lineItem.name}
-                  </Sans>
-                  <Sans size="4" color="black50">
-                    {`$${lineItem.price / 100}`}
-                  </Sans>
-                </Flex>
-              </Box>
+              <Flex flexDirection="row" width="100%" justifyContent="space-between" key={index}>
+                <Sans size="4" color="black50">
+                  {lineItem.name}
+                </Sans>
+                <Sans size="4" color="black50">
+                  {`$${lineItem.price / 100}`}
+                </Sans>
+              </Flex>
             )
           })}
           {taxTotal > 0 && (
@@ -49,6 +48,6 @@ export const ReservationLineItems = ({ lineItems }) => {
           )}
         </Box>
       )}
-    </>
+    </Box>
   )
 }
