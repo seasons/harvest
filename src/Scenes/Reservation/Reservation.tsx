@@ -189,9 +189,6 @@ export const Reservation = screenTrack()((props) => {
     )
   }
 
-  console.log("shippingOptions", shippingOptions)
-  console.log("allAccessEnabled", allAccessEnabled)
-
   return (
     <>
       <Container insetsTop insetsBottom={false} backgroundColor="white100">
