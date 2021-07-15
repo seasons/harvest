@@ -157,6 +157,26 @@ export const Reservation = screenTrack()((props) => {
     }
   }, [swapNotAvailable])
 
+  const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
+
+  useEffect(() => {
+    if (shippingOptions?.length > 0) {
+      const selectedShippingOption = shippingOptions[shippingOptionIndex]
+      if (selectedShippingOption?.externalCost > 0) {
+        setLineItems([
+          ...lineItems,
+          {
+            name: "Shipping",
+            price: selectedShippingOption?.externalCost,
+            taxPrice: 0,
+          },
+        ])
+      } else {
+        setLineItems(lineItems.filter((item) => item.name !== "Shipping"))
+      }
+    }
+  }, [shippingOptionIndex, setLineItems, shippingOptions])
+
   const phoneNumber = customer?.detail?.phoneNumber
   const items = me?.bag
 
@@ -168,8 +188,6 @@ export const Reservation = screenTrack()((props) => {
       </>
     )
   }
-
-  const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
 
   return (
     <>
@@ -213,7 +231,7 @@ export const Reservation = screenTrack()((props) => {
               </Box>
             )}
             {lineItems?.length > 0 && <ReservationLineItems lineItems={lineItems} />}
-            {shippingOptions?.length > 0 && !allAccessEnabled && (
+            {shippingOptions?.length > 0 && (
               <Box mb={4}>
                 <SectionHeader title="Select shipping" />
                 {shippingOptions.map((option, index) => {

@@ -288,24 +288,10 @@ export const ReservationConfirmation = screenTrack()((props) => {
                   )}
                 </>
               }
-              hideSeparator={!externalCost}
+              hideSeparator
               bottomSpacing={4}
             />
           </Box>
-          {!!externalCost && externalCost !== 0 && (
-            <Box pt={1}>
-              <SectionHeader
-                title="Order total"
-                content={
-                  <Sans size="4" color="black100" ml="auto" textAlign="right">
-                    ${externalCost / 100}
-                  </Sans>
-                }
-                hideSeparator
-                bottomSpacing={4}
-              />
-            </Box>
-          )}
           <Box mb={5}>
             <SectionHeader title="Items" />
             <Box mt={1} mb={4}>

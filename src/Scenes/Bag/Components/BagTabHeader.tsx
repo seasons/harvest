@@ -66,19 +66,15 @@ const getSubHeaderText = (me, activeReservation, atHome) => {
   const nextSwapDateLuxon = DateTime.fromISO(nextSwapDate)
   const swapAvailable = nextSwapDate < DateTime.local().toISO()
 
-  let swapText
-  if (swapAvailable) {
-    swapText = "You have a swap available"
-  } else {
-    swapText = `You get a free swap ${nextSwapDateLuxon.weekdayLong}, ${nextSwapDateLuxon.monthLong} ${nextSwapDateLuxon.day}`
-  }
-
   let subHeaderText
-  if (atHome) {
-    subHeaderText = swapText
+  if (atHome && swapAvailable) {
+    subHeaderText = "You have a swap available"
+  } else if (atHome) {
+    subHeaderText = `You get a free swap ${nextSwapDateLuxon.weekdayLong}, ${nextSwapDateLuxon.monthLong} ${nextSwapDateLuxon.day}`
   } else if (!activeReservation) {
     subHeaderText = "Reserve your order below"
   }
+
   return subHeaderText
 }
 
@@ -93,8 +89,7 @@ const CANCEL_RETURN = gql`
 export const BagTabHeader: React.FC<{
   me: GetBag_NoCache_Query_me
   atHome: boolean
-  pausedWithoutItems: boolean
-}> = ({ me, atHome, pausedWithoutItems }) => {
+}> = ({ me, atHome }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
   const [cancelingReturn, setCancelingReturn] = useState(false)
@@ -119,6 +114,7 @@ export const BagTabHeader: React.FC<{
     <Box pt={4}>
       <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap" px={2}>
         <Sans size="5">{getHeaderText(status, activeReservation?.phase, atHome)}</Sans>
+        <Spacer mb={0.5} />
         <Sans
           size="5"
           style={{ textDecorationLine: "underline" }}
