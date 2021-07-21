@@ -48,6 +48,7 @@ export const PauseButtons: React.FC<{
   const resumeDate =
     customer?.membership?.pauseRequests?.[0]?.resumeDate &&
     DateTime.fromISO(customer?.membership?.pauseRequests?.[0]?.resumeDate)
+  const resumeDateDateDisplay = resumeDate.toFormat("EEEE LLLL d")
 
   const resumeDatePlusOneMonth = resumeDate && resumeDate.plus({ months: 1 })
   const pauseExtendDateDisplay = (!!resumeDatePlusOneMonth && resumeDatePlusOneMonth.toFormat("LLLL d")) || ""
@@ -65,7 +66,7 @@ export const PauseButtons: React.FC<{
       setIsMutating(false)
       navigation.navigate("Modal", {
         screen: Schema.PageNames.ExtendPauseConfirmation,
-        params: { dueDate: pauseExtendDateDisplay },
+        params: { dueDate: resumeDateDateDisplay },
       })
     },
     onError: (err) => {
@@ -212,7 +213,7 @@ export const PauseButtons: React.FC<{
             <Sans size="4">
               Your membership is paused until{" "}
               <Sans size="4" style={{ textDecorationLine: "underline" }}>
-                {DateTime.fromISO(resumeDate).toFormat("EEEE LLLL d")}
+                {resumeDateDateDisplay}
               </Sans>
               .
             </Sans>
