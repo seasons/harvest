@@ -81,7 +81,7 @@ export const ReturnYourBagConfirmation = screenTrack()((props) => {
             <Box my={3}>
               <Sans size="4">Step 1.</Sans>
               <Sans size="4" color="black50">
-                Place the items your returning in the bag with the hangers included.
+                Place the items you're returning in the bag with the hangers included.
               </Sans>
               <Spacer mt={3} />
 
@@ -97,8 +97,8 @@ export const ReturnYourBagConfirmation = screenTrack()((props) => {
               </Sans>
               <Spacer mt={4} />
               <Sans size="4" color="black50">
-                Once we’ve receive and process your items, we’ll send you a confirmation and your bag will be reset for
-                you to place your next order.
+                Once we’ve received and processed your items, we’ll send you a confirmation and your bag will be reset
+                for you to place your next order.
               </Sans>
               <Spacer mt={"80px"} />
             </Box>
