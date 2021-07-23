@@ -356,10 +356,15 @@ PODS:
   - Sentry (4.4.3):
     - Sentry/Core (= 4.4.3)
   - Sentry/Core (4.4.3)
-  - Stripe (14.0.1)
-  - tipsi-stripe (7.5.0):
+  - Stripe (21.7.0):
+    - Stripe/Stripe3DS2 (= 21.7.0)
+    - StripeCore (= 21.7.0)
+  - stripe-react-native (0.1.5):
     - React
-    - Stripe (~> 14.0.0)
+    - Stripe (~> 21.7.0)
+  - Stripe/Stripe3DS2 (21.7.0):
+    - StripeCore (= 21.7.0)
+  - StripeCore (21.7.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -422,7 +427,7 @@ DEPENDENCIES:
   - RNShare (from `../node_modules/react-native-share`)
   - RNSharedElement (from `../node_modules/react-native-shared-element`)
   - RNSVG (from `../node_modules/react-native-svg`)
-  - tipsi-stripe (from `../node_modules/tipsi-stripe`)
+  - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -440,6 +445,7 @@ SPEC REPOS:
     - Segment-Mixpanel
     - Sentry
     - Stripe
+    - StripeCore
 
 EXTERNAL SOURCES:
   A0Auth0:
@@ -556,8 +562,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-shared-element"
   RNSVG:
     :path: "../node_modules/react-native-svg"
-  tipsi-stripe:
-    :path: "../node_modules/tipsi-stripe"
+  stripe-react-native:
+    :path: "../node_modules/@stripe/stripe-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -631,10 +637,11 @@ SPEC CHECKSUMS:
   Segment-GoogleAnalytics: 3252a00441ea31fef75c16cc7794f4bf3765c7ba
   Segment-Mixpanel: 18c35e15fa95ee61ee2254577cf2c968db42e68a
   Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390
-  Stripe: 4305b646743612854819fb5d5cf67aaeb93577c0
-  tipsi-stripe: 8aaaa6f5e4cfea5c35be3affbb616c4e6cfafa5f
+  Stripe: 90596971ef49bade169f68bc59369a796b30a045
+  stripe-react-native: f1b034cb702aa214078d9441b0a4313ac00c020d
+  StripeCore: c09b492efc3b269a6ff875ad738ca366db97e03b
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
 
-PODFILE CHECKSUM: 9e0795e2eec9efefdbd7d26c303c64bb279abe13
+PODFILE CHECKSUM: e48fe3c94445fa00dd6d5288383f2570d35ccf91
 
 COCOAPODS: 1.10.1

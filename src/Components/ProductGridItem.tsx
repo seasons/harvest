@@ -1,11 +1,12 @@
-import { useNavigation } from "@react-navigation/native"
 import { Box, FadeInImage, Flex, Sans, Spacer, VariantSizes } from "App/Components"
+import { GetProduct_products } from "App/generated/GetProduct"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { SaveProductButton } from "App/Scenes/Product/Components"
 import { Schema, useTracking } from "App/utils/track"
 import React, { RefObject } from "react"
 import { Dimensions, TouchableWithoutFeedback } from "react-native"
-import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
-import { GetProduct_products } from "App/generated/GetProduct"
+
+import { useNavigation } from "@react-navigation/native"
 
 const ProductGridItemComponent: React.FC<{
   flatListRef?: RefObject<any>
@@ -21,6 +22,8 @@ const ProductGridItemComponent: React.FC<{
   const image = product?.images?.[0]?.url
   const productName = product?.name
   const brandName = product?.brand?.name
+
+  console.log("Browse image: ", image)
 
   return (
     <TouchableWithoutFeedback

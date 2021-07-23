@@ -1,21 +1,22 @@
-import { Box, Container, FixedBackArrow, Sans, Spacer, Separator, Flex } from "App/Components"
+import { Box, Container, FixedBackArrow, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { PopUp } from "App/Components/PopUp"
+import { Schema as NavigationSchema } from "App/Navigation"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { color } from "App/utils"
+import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
+import { FlatList, Keyboard, TouchableOpacity } from "react-native"
+
 import { useMutation, useQuery } from "@apollo/client"
-import { FlatList, Keyboard } from "react-native"
-import { Schema as TrackSchema, useTracking, screenTrack } from "App/utils/track"
-import { color } from "App/utils"
-import { Schema as NavigationSchema } from "App/Navigation"
-import { TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import { getAdjustedInvoiceTotal, formatInvoiceDate } from "./utils"
-import { PopUp } from "App/Components/PopUp"
-import stripe from "tipsi-stripe"
 import * as Sentry from "@sentry/react-native"
+import { isApplePaySupported, useApplePay, useStripe } from "@stripe/stripe-react-native"
+
 import { PaymentMethods } from "./PaymentMethods"
-import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GET_PAYMENT_DATA } from "./queries"
+import { formatInvoiceDate, getAdjustedInvoiceTotal } from "./utils"
 
 export const createShippingAddress = (shippingAddress) => {
   const addressArray = []
@@ -133,6 +134,30 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
     return unsubscribe
   }, [navigation])
 
+  const { presentApplePay, confirmApplePayPayment, isApplePaySupported } = useApplePay({
+    // onShippingMethodSelected: (shippingMethod, handler) => {
+    //   console.log('shippingMethod', shippingMethod);
+    //   // Update cart summary based on selected shipping method.
+    //   const updatedCart = [
+    //     cart[0],
+    //     { label: shippingMethod.label, amount: shippingMethod.amount },
+    //     {
+    //       label: 'Total',
+    //       amount: (
+    //         parseFloat(cart[0].amount) + parseFloat(shippingMethod.amount)
+    //       ).toFixed(2),
+    //     },
+    //   ];
+    //   setCart(updatedCart);
+    //   handler(updatedCart);
+    // },
+    // onShippingContactSelected: (shippingContact, handler) => {
+    //   console.log('shippingContact', shippingContact);
+    //   // Make modifications to cart here e.g. adding tax.
+    //   handler(cart);
+    // },
+  })
+
   const [applePayUpdatePayment] = useMutation(PAYMENT_UPDATE, {
     onCompleted: () => {
       setIsMutating(false)
@@ -244,48 +269,48 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
       actionName: TrackSchema.ActionNames.ApplePayTapped,
       actionType: TrackSchema.ActionTypes.Tap,
     })
-    const applePaySupportedOnDevice = await stripe.deviceSupportsApplePay()
-    if (applePaySupportedOnDevice) {
-      const canMakeApplePayment = await stripe.canMakeApplePayPayments()
-      if (canMakeApplePayment) {
-        // Customer has a payment card set up
-        try {
-          const token = await stripe.paymentRequestWithNativePay(
-            {
-              requiredBillingAddressFields: ["all"],
-            },
-            [
-              {
-                label: "SZNS Inc.",
-                amount: `${paymentPlan.price / 100}.00`,
-              },
-            ]
-          )
-          applePayUpdatePayment({
-            variables: {
-              planID: paymentPlan.planID,
-              token,
-              tokenType: "apple_pay",
-            },
-            awaitRefetchQueries: true,
-          })
-          // You should complete the operation by calling
-          stripe.completeApplePayRequest()
-          setOpenPopUp(false)
-          // setShowApplePaySuccess(true)
-        } catch (error) {
-          console.log("error", error)
-          stripe.cancelApplePayRequest()
-          setIsMutating(false)
-          setOpenPopUp(false)
-        }
-      } else {
-        // Customer hasn't set up apple pay on this device so we request payment setup
-        stripe.openApplePaySetup()
-        setIsMutating(false)
-        setOpenPopUp(false)
-      }
+
+    if (isApplePaySupported) {
+      // const canMakeApplePayment = await stripe.canMakeApplePayPayments()
+      // if (canMakeApplePayment) {
+      //   // Customer has a payment card set up
+      //   try {
+      //     const token = await stripe.paymentRequestWithNativePay(
+      //       {
+      //         requiredBillingAddressFields: ["all"],
+      //       },
+      //       [
+      //         {
+      //           label: "SZNS Inc.",
+      //           amount: `${paymentPlan.price / 100}.00`,
+      //         },
+      //       ]
+      //     )
+      //     applePayUpdatePayment({
+      //       variables: {
+      //         planID: paymentPlan.planID,
+      //         token,
+      //         tokenType: "apple_pay",
+      //       },
+      //       awaitRefetchQueries: true,
+      //     })
+      //     // You should complete the operation by calling
+      //     stripe.completeApplePayRequest()
+      //     setOpenPopUp(false)
+      //     // setShowApplePaySuccess(true)
+      //   } catch (error) {
+      //     console.log("error", error)
+      //     stripe.cancelApplePayRequest()
+      //     setIsMutating(false)
+      //     setOpenPopUp(false)
+      // }
+    } else {
+      // Customer hasn't set up apple pay on this device so we request payment setup
+      // stripe.openApplePaySetup()
+      setIsMutating(false)
+      setOpenPopUp(false)
     }
+    // }
   }
 
   const onAddCreditCard = () => {

@@ -4,14 +4,16 @@ import { Platform } from "react-native"
 import DeviceInfo from "react-native-device-info"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { enableScreens } from "react-native-screens"
-import stripe from "tipsi-stripe"
+
 import { ApolloProvider } from "@apollo/client"
 import AsyncStorage from "@react-native-community/async-storage"
 import * as Sentry from "@sentry/react-native"
+import { initStripe } from "@stripe/stripe-react-native"
+
 import { setupApolloClient } from "./Apollo"
 import { NetworkProvider } from "./NetworkProvider"
-import { config, Env } from "./utils/config"
 import { GET_LOCAL_BAG } from "./queries/clientQueries"
+import { config, Env } from "./utils/config"
 
 enableScreens()
 
@@ -39,9 +41,10 @@ export const App = () => {
     }
     loadClient()
 
-    stripe.setOptions({
+    initStripe({
       publishableKey: config.get(Env.STRIPE_KEY),
-      merchantId: config.get(Env.APPLE_MERCHANT_ID),
+      merchantIdentifier: config.get(Env.APPLE_MERCHANT_ID),
+      urlScheme: "seasons://",
     })
   }, [])
 

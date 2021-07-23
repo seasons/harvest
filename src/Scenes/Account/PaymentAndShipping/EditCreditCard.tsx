@@ -1,4 +1,6 @@
-import { Box, Button, Container, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput } from "App/Components"
+import {
+  Box, Button, Container, FixedBackArrow, Flex, Sans, Separator, Spacer, TextInput
+} from "App/Components"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { color } from "App/utils/color"
@@ -9,10 +11,12 @@ import { String } from "aws-sdk/clients/augmentedairuntime"
 import React, { useEffect, useState } from "react"
 import { Dimensions, KeyboardAvoidingView, ScrollView } from "react-native"
 import styled from "styled-components"
-import stripe, { PaymentCardTextField } from "tipsi-stripe"
+
 import { useMutation, useQuery } from "@apollo/client"
 import { useNotificationBarContext } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
+// import stripe, { PaymentCardTextField } from "tipsi-stripe"
+import { CardField, useStripe } from "@stripe/stripe-react-native"
 
 import { PAYMENT_UPDATE } from "./PaymentAndShipping"
 import { GET_PAYMENT_DATA } from "./queries"
@@ -31,6 +35,7 @@ const singleButtonWidth = windowWidth - 42
 const buttonWidth = singleButtonWidth / 2
 
 const PaymentForm = ({ setBillingAddress, isMutating, handleFieldParamsChange, billingAddress }) => {
+  const stripe = useStripe()
   const address1 = billingAddress?.address1
   const address2 = billingAddress?.address2
   const city = billingAddress?.city
@@ -47,7 +52,7 @@ const PaymentForm = ({ setBillingAddress, isMutating, handleFieldParamsChange, b
           Card number, Expiration date & CIV
         </Sans>
       </Flex>
-      <PaymentField
+      {/* <PaymentField
         cursorColor={color("black50")}
         textErrorColor={color("black50")}
         placeholderColor={color("black50")}
@@ -56,6 +61,27 @@ const PaymentForm = ({ setBillingAddress, isMutating, handleFieldParamsChange, b
         cvcPlaceholder="3-digits"
         disabled={isMutating}
         onParamsChange={handleFieldParamsChange}
+      /> */}
+      <CardField
+        postalCodeEnabled={true}
+        placeholder={{
+          number: "4242 4242 4242 4242",
+        }}
+        cardStyle={{
+          backgroundColor: "#FFFFFF",
+          textColor: "#000000",
+        }}
+        style={{
+          width: "100%",
+          height: 50,
+          marginVertical: 30,
+        }}
+        onCardChange={(cardDetails) => {
+          console.log("cardDetails", cardDetails)
+        }}
+        onFocus={(focusedField) => {
+          console.log("focusField", focusedField)
+        }}
       />
       <Separator />
       <Spacer mb={4} />
@@ -115,6 +141,7 @@ export const EditCreditCard: React.FC<{
   }
 
   const tracking = useTracking()
+  const stripe = useStripe()
 
   const { hideNotificationBar } = useNotificationBarContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -224,17 +251,17 @@ export const EditCreditCard: React.FC<{
           // addressCountry: "Test Country",
           addressZip: zipCode,
         }
-        const token = await stripe.createTokenWithCard(params)
+        // const token = await stripe.createTokenWithCard(params)
         updateCreditCard({
           variables: {
             planID: paymentPlan.planID,
-            token,
+            // token,
             tokenType: "card",
           },
           awaitRefetchQueries: true,
         })
         // You should complete the operation by calling
-        stripe.completeApplePayRequest()
+        // stripe.completeApplePayRequest()
         hideNotificationBar()
       } catch (error) {
         const popUpData = {
@@ -324,7 +351,7 @@ export const EditCreditCard: React.FC<{
   )
 })
 
-const PaymentField = styled(PaymentCardTextField)`
-  color: ${color("black100")};
-  font-size: 16px;
-`
+// const PaymentField = styled(PaymentCardTextField)`
+//   color: ${color("black100")};
+//   font-size: 16px;
+// `

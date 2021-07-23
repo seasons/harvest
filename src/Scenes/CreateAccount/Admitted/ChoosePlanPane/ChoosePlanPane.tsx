@@ -1,36 +1,41 @@
-import { Box, Button, Container, Flex, Sans, Spacer, Separator, CloseButton } from "App/Components"
+import { Box, Button, CloseButton, Container, Flex, Sans, Separator, Spacer } from "App/Components"
+import { OverlaySpinner } from "App/Components/OverlaySpinner"
+import { PopUp } from "App/Components/PopUp"
+import { themeProps } from "App/Components/Theme"
+import {
+  CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type
+} from "App/generated/CreateAccount_Cached_Query"
+import {
+  CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type
+} from "App/generated/CreateAccount_NoCache_Query"
+import { GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { useNavigation } from "@react-navigation/native"
-import * as Sentry from "@sentry/react-native"
+import { GET_USER } from "App/Scenes/Account/Account"
 import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
+import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMethods"
+import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { color } from "App/utils"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
+import { ChevronIcon } from "Assets/icons"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { ListCheck } from "Assets/svgs/ListCheck"
 import { TabBar } from "Components/TabBar"
 import gql from "graphql-tag"
 import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
-import { useMutation } from "@apollo/client"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Dimensions, Linking, ScrollView, TouchableOpacity } from "react-native"
-import styled from "styled-components"
-import stripe from "tipsi-stripe"
-import { PlanButton } from "./PlanButton"
-import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
-import { GetPlans_paymentPlans } from "App/generated/GetPlans"
-import { ChevronIcon } from "Assets/icons"
-import { Coupon, PaymentMethod } from "../../CreateAccount"
-import { PopUp } from "App/Components/PopUp"
-import { themeProps } from "App/Components/Theme"
-import { calcFinalPrice } from "./utils"
-import { GET_USER } from "App/Scenes/Account/Account"
-import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMethods"
-import { OverlaySpinner } from "App/Components/OverlaySpinner"
-import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from "App/generated/CreateAccount_NoCache_Query"
-import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
-import { GET_NOTIFICATION_BAR } from "@seasons/eclipse"
 import ConfettiCannon from "react-native-confetti-cannon"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import styled from "styled-components"
+
+import { useMutation } from "@apollo/client"
+import { useNavigation } from "@react-navigation/native"
+import { GET_NOTIFICATION_BAR } from "@seasons/eclipse"
+import * as Sentry from "@sentry/react-native"
+
+import { Coupon, PaymentMethod } from "../../CreateAccount"
+import { PlanButton } from "./PlanButton"
+import { calcFinalPrice } from "./utils"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout(
@@ -205,57 +210,57 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   }
 
   const onApplePay = async () => {
-    if (isMutating) {
-      return
-    }
-    setIsMutating(true)
-    tracking.trackEvent({
-      actionName: TrackSchema.ActionNames.ApplePayTapped,
-      actionType: TrackSchema.ActionTypes.Tap,
-    })
-    const applePaySupportedOnDevice = await stripe.deviceSupportsApplePay()
-    if (applePaySupportedOnDevice) {
-      const canMakeApplePayment = await stripe.canMakeApplePayPayments()
-      if (canMakeApplePayment) {
-        // Customer has a payment card set up
-        try {
-          setShowLoadingOverlay(true)
-          const finalPrice = calcFinalPrice(selectedPlan.price, coupon)
-          const token = await stripe.paymentRequestWithNativePay(
-            {
-              requiredBillingAddressFields: ["all"],
-            },
-            [
-              {
-                label: `SZNS, Inc.`,
-                amount: `${finalPrice / 100}.00`,
-              },
-            ]
-          )
-          setOpenPopUp(false)
-          applePayCheckout({
-            variables: {
-              planID: selectedPlan.planID,
-              token,
-              tokenType: "apple_pay",
-              couponID: coupon?.couponCode,
-            },
-            awaitRefetchQueries: true,
-          })
-          // You should complete the operation by calling
-          stripe.completeApplePayRequest()
-        } catch (error) {
-          setShowLoadingOverlay(false)
-          console.log("error", error)
-          stripe.cancelApplePayRequest()
-          setIsMutating(false)
-        }
-      } else {
-        // Customer hasn't set up apple pay on this device so we request payment setup
-        stripe.openApplePaySetup()
-        setIsMutating(false)
-      }
-    }
+    // if (isMutating) {
+    //   return
+    // }
+    // setIsMutating(true)
+    // tracking.trackEvent({
+    //   actionName: TrackSchema.ActionNames.ApplePayTapped,
+    //   actionType: TrackSchema.ActionTypes.Tap,
+    // })
+    // const applePaySupportedOnDevice = await stripe.deviceSupportsApplePay()
+    // if (applePaySupportedOnDevice) {
+    //   const canMakeApplePayment = await stripe.canMakeApplePayPayments()
+    //   if (canMakeApplePayment) {
+    //     // Customer has a payment card set up
+    //     try {
+    //       setShowLoadingOverlay(true)
+    //       const finalPrice = calcFinalPrice(selectedPlan.price, coupon)
+    //       const token = await stripe.paymentRequestWithNativePay(
+    //         {
+    //           requiredBillingAddressFields: ["all"],
+    //         },
+    //         [
+    //           {
+    //             label: `SZNS, Inc.`,
+    //             amount: `${finalPrice / 100}.00`,
+    //           },
+    //         ]
+    //       )
+    //       setOpenPopUp(false)
+    //       applePayCheckout({
+    //         variables: {
+    //           planID: selectedPlan.planID,
+    //           token,
+    //           tokenType: "apple_pay",
+    //           couponID: coupon?.couponCode,
+    //         },
+    //         awaitRefetchQueries: true,
+    //       })
+    //       // You should complete the operation by calling
+    //       stripe.completeApplePayRequest()
+    //     } catch (error) {
+    //       setShowLoadingOverlay(false)
+    //       console.log("error", error)
+    //       stripe.cancelApplePayRequest()
+    //       setIsMutating(false)
+    //     }
+    //   } else {
+    //     // Customer hasn't set up apple pay on this device so we request payment setup
+    //     stripe.openApplePaySetup()
+    //     setIsMutating(false)
+    //   }
+    // }
   }
 
   const onChoosePlanUpdate = () => {
