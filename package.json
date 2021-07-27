@@ -107,7 +107,7 @@
     "semver-compare": "^1.0.0",
     "styled-components": "^4.3.2",
     "styled-system": "^5.1.1",
-    "tipsi-stripe": "https://github.com/ashfurrow/tipsi-stripe.git#fix-infinite-loop",
+    "tipsi-stripe": "9.1.4",
     "unfetch": "^4.1.0"
   },
   "devDependencies": {
