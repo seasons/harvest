@@ -56,17 +56,11 @@ export interface GetCollection_collection_products_edges_node {
 
 export interface GetCollection_collection_products_edges {
   __typename: "ProductEdge";
-  /**
-   * The item at the end of the edge.
-   */
   node: GetCollection_collection_products_edges_node;
 }
 
 export interface GetCollection_collection_products {
   __typename: "ProductConnection";
-  /**
-   * A list of edges.
-   */
   edges: (GetCollection_collection_products_edges | null)[];
 }
 
