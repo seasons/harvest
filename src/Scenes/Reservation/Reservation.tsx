@@ -138,7 +138,6 @@ export const Reservation = screenTrack()((props) => {
   const me = data?.me
   const customer = me?.customer
   const address = me?.customer?.detail?.shippingAddress
-  const allAccessEnabled = me?.customer?.admissions?.allAccessEnabled
 
   const nextFreeSwapDate = me?.nextFreeSwapDate
   const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()

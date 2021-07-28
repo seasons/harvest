@@ -49,8 +49,7 @@ export const SavedItemRow = ({ bagItem, deleteBagItem, bagIsFull, hasActiveReser
 
     deleteBagItem({
       variables: {
-        id: variant.id,
-        saved: true,
+        itemID: bagItem?.id,
       },
       awaitRefetchQueries: true,
       refetchQueries: [

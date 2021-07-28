@@ -71,7 +71,7 @@ interface BagItemProps {
   bagItem: any
   index?: number
   navigation?: any
-  removeItemFromBag?: Function
+  deleteBagItem?: Function
   removeFromBagAndSaveItem?: Function
   onShowBuyBottomSheet: () => void
 }
@@ -80,7 +80,7 @@ export const BagItem: React.FC<BagItemProps> = ({
   bagItem,
   index,
   navigation,
-  removeItemFromBag,
+  deleteBagItem,
   removeFromBagAndSaveItem,
   onShowBuyBottomSheet,
 }) => {
@@ -107,7 +107,8 @@ export const BagItem: React.FC<BagItemProps> = ({
   const purchased = bagItem?.productVariant?.purchased
 
   const variantSize = variantToUse?.displayShort
-  const variantId = bagItem.variantID
+  const variantId = bagItem?.variantID
+  const bagItemID = bagItem?.id
 
   const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
@@ -251,10 +252,9 @@ export const BagItem: React.FC<BagItemProps> = ({
                 if (!authState.isSignedIn) {
                   removeFromLocalBag()
                 } else {
-                  removeItemFromBag({
+                  deleteBagItem({
                     variables: {
-                      id: variantId,
-                      saved: false,
+                      itemID: bagItemID,
                     },
                     refetchQueries: [
                       {
