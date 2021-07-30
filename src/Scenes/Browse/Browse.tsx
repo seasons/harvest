@@ -145,6 +145,14 @@ export const Browse = screenTrack()((props: any) => {
                 </Flex>
               </TouchableOpacity>
             </Flex>
+            <Box height={56}>
+                <CategoryPicker
+                  items={categoryItems}
+                  onCategoryPress={onCategoryPress}
+                  currentCategory={currentCategory}
+                  initialScrollIndex={routeCategoryIdx}
+                />
+             </Box>
             <FlatList
               contentContainerStyle={
                 products?.length
@@ -200,14 +208,7 @@ export const Browse = screenTrack()((props: any) => {
               }}
             />
           </Box>
-          <Box height={56}>
-            <CategoryPicker
-              items={categoryItems}
-              onCategoryPress={onCategoryPress}
-              currentCategory={currentCategory}
-              initialScrollIndex={routeCategoryIdx}
-            />
-          </Box>
+          
         </Flex>
       </Container>
     </>
