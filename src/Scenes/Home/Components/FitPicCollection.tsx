@@ -1,11 +1,11 @@
 import { Box, FadeInImage, Flex, Sans, Spacer } from "App/Components"
+import { Homepage_Query_fitPicsConnection_edges } from "App/generated/Homepage_Query"
 import React, { useEffect, useImperativeHandle, useRef, useState } from "react"
 import { Dimensions, findNodeHandle, TouchableWithoutFeedback, View } from "react-native"
 import { SharedElement } from "react-navigation-shared-element"
-import { Homepage_fitPics as FitPics } from "src/generated/Homepage"
 
 export interface FitPicCollectionProps {
-  items: FitPics[]
+  items: Homepage_Query_fitPicsConnection_edges[]
   navigation: any
   // The parent against which to measure this view's layout.
   parentRef: React.MutableRefObject<any>
@@ -41,17 +41,18 @@ export const FitPicCollection = React.forwardRef<FitPicCollectionRef, FitPicColl
 
     const onPress = (index: number) => navigation.navigate("FitPicDetail", { item: items[index] })
 
-    const renderItem = (item: FitPics, index: number) => {
+    const renderItem = (item, index: number) => {
+      const fitPic = item.node
       const imageWidth = (screenWidth - 3) / 2
       const imageHeight = imageWidth * (5 / 4)
 
       return (
         <TouchableWithoutFeedback onPress={() => onPress(index)} key={index}>
           <Box mb="3px">
-            <SharedElement id={`fitpic.photo.${item.id}`}>
+            <SharedElement id={`fitpic.photo.${fitPic.id}`}>
               <FadeInImage
                 source={{
-                  uri: item?.image?.url || "",
+                  uri: fitPic?.image?.url || "",
                 }}
                 style={{ width: imageWidth, height: imageHeight }}
               />

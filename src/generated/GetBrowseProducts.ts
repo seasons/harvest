@@ -30,14 +30,9 @@ export interface GetBrowseProducts_brands {
   name: string;
 }
 
-export interface GetBrowseProducts_productsCount_aggregate {
+export interface GetBrowseProducts_productsConnection_aggregate {
   __typename: "AggregateProduct";
   count: number;
-}
-
-export interface GetBrowseProducts_productsCount {
-  __typename: "ProductConnection";
-  aggregate: GetBrowseProducts_productsCount_aggregate;
 }
 
 export interface GetBrowseProducts_productsConnection_edges_node_images {
@@ -91,18 +86,24 @@ export interface GetBrowseProducts_productsConnection_edges_node {
 
 export interface GetBrowseProducts_productsConnection_edges {
   __typename: "ProductEdge";
+  /**
+   * The item at the end of the edge.
+   */
   node: GetBrowseProducts_productsConnection_edges_node;
 }
 
 export interface GetBrowseProducts_productsConnection {
   __typename: "ProductConnection";
+  aggregate: GetBrowseProducts_productsConnection_aggregate;
+  /**
+   * A list of edges.
+   */
   edges: (GetBrowseProducts_productsConnection_edges | null)[];
 }
 
 export interface GetBrowseProducts {
   categories: (GetBrowseProducts_categories | null)[];
   brands: (GetBrowseProducts_brands | null)[];
-  productsCount: GetBrowseProducts_productsCount;
   productsConnection: GetBrowseProducts_productsConnection;
 }
 
@@ -116,4 +117,5 @@ export interface GetBrowseProductsVariables {
   tops?: (string | null)[] | null;
   bottoms?: (string | null)[] | null;
   available?: boolean | null;
+  forSaleOnly?: boolean | null;
 }

@@ -9,6 +9,7 @@ import { useQuery } from "@apollo/client"
 import { ScrollView, TouchableWithoutFeedback } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
 import { ReservationItem } from "./Components/ReservationItem"
+import { ReservationLineItems } from "./ReservationLineItems"
 
 enum Option {
   ShareToIG = "Share to IG",
@@ -52,6 +53,12 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
               displayText
             }
           }
+          lineItems {
+            id
+            name
+            price
+            taxPrice
+          }
           products {
             id
             productVariant {
@@ -73,7 +80,6 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
                 }
                 variants {
                   id
-                  size
                   displayShort
                   displayLong
                 }
@@ -117,7 +123,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
           {content && <Box ml="auto">{content}</Box>}
         </Flex>
         <Spacer mb={bottomSpacing} />
-        {!hideSeparator && <Separator color={color("black04")} />}
+        {!hideSeparator && <Separator />}
       </>
     )
   }
@@ -128,6 +134,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const shippingOption = reservation?.shippingOption
   const shippingDisplayText = shippingOption?.shippingMethod?.displayText
   const externalCost = shippingOption?.externalCost
+  const lineItems = reservation?.lineItems
 
   const shareToIG = async () => {
     props.navigation.navigate("Modal", { screen: "ShareReservationToIGModal", params: { reservationID } })
@@ -229,14 +236,20 @@ export const ReservationConfirmation = screenTrack()((props) => {
           </Box>
           <OptionSections options={[Option.ShareToIG, Option.ReferAndEarn]} />
           <Spacer pb={4} />
+          {lineItems?.length > 0 && (
+            <>
+              <ReservationLineItems lineItems={lineItems} />
+              <Spacer mb={2} />
+            </>
+          )}
           <Box>
             <SectionHeader
               title="Order number"
               content={
                 <>
-                  {!!reservation.reservationNumber && (
+                  {!!reservation?.reservationNumber && (
                     <Sans size="4" color="black100" textAlign="right" ml="auto">
-                      {reservation.reservationNumber}
+                      {reservation?.reservationNumber}
                     </Sans>
                   )}
                 </>
@@ -275,24 +288,10 @@ export const ReservationConfirmation = screenTrack()((props) => {
                   )}
                 </>
               }
-              hideSeparator={!externalCost}
+              hideSeparator
               bottomSpacing={4}
             />
           </Box>
-          {!!externalCost && externalCost !== 0 && (
-            <Box pt={1}>
-              <SectionHeader
-                title="Order total"
-                content={
-                  <Sans size="4" color="black100" ml="auto" textAlign="right">
-                    ${externalCost / 100}
-                  </Sans>
-                }
-                hideSeparator
-                bottomSpacing={4}
-              />
-            </Box>
-          )}
           <Box mb={5}>
             <SectionHeader title="Items" />
             <Box mt={1} mb={4}>

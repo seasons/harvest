@@ -1,6 +1,7 @@
 import gql from "graphql-tag"
 
 import { BagItemFragment } from "./Components/BagItem"
+import { BagTabCachedFragment_Query } from "./Components/BagTab"
 import { BagTabHeaderFragment_Query } from "./Components/BagTabHeader"
 import { DeliveryStatusFragment_Me } from "./Components/DeliveryStatus"
 import { ReservationHistoryTabFragment_Customer } from "./Components/ReservationHistoryTab"
@@ -48,10 +49,18 @@ export const ReservationHistoryTab_Query = gql`
   ${ReservationHistoryTabFragment_Customer}
 `
 
+export const GetBag_Cached_Query = gql`
+  query GetBag_Cached_Query {
+    ...BagTabCachedFragment_Query
+  }
+  ${BagTabCachedFragment_Query}
+`
+
 export const GetBag_NoCache_Query = gql`
   query GetBag_NoCache_Query {
     me {
       id
+      nextFreeSwapDate
       customer {
         id
         status

@@ -1,8 +1,7 @@
 import { Loader } from "App/Components/Loader"
 import { PauseStatus } from "App/Components/Pause/PauseButtons"
-import {
-  GetBag_NoCache_Query as GetBag_NoCache_Query_Type
-} from "App/generated/GetBag_NoCache_Query"
+import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
+import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -23,15 +22,20 @@ import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
 import { Box, Button, Spacer } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 
+import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import {
-  State as CreateAccountState, UserState as CreateAccountUserState
-} from "../CreateAccount/CreateAccount"
-import {
-  CHECK_ITEMS, GetBag_NoCache_Query, REMOVE_FROM_BAG, REMOVE_FROM_BAG_AND_SAVE_ITEM,
-  ReservationHistoryTab_Query, SavedTab_Query
+  CHECK_ITEMS,
+  GetBag_NoCache_Query,
+  REMOVE_FROM_BAG,
+  REMOVE_FROM_BAG_AND_SAVE_ITEM,
+  ReservationHistoryTab_Query,
+  SavedTab_Query,
+  GetBag_Cached_Query,
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { BagCostWarning } from "./Components/BagCostWarning"
+import { DateTime } from "luxon"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export enum BagView {
   Bag = 0,
@@ -46,6 +50,7 @@ interface BagProps {
 
 export const Bag = screenTrack()((props: BagProps) => {
   const { authState } = useAuthContext()
+  const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
   const [itemCount, setItemCount] = useState(DEFAULT_ITEM_COUNT)
@@ -86,6 +91,9 @@ export const Bag = screenTrack()((props: BagProps) => {
   )
 
   const { previousData, data = previousData, refetch } = useQuery<GetBag_NoCache_Query_Type>(GetBag_NoCache_Query)
+  const { previousData: cachedPreviousData, data: cachedData = cachedPreviousData } = useQuery<
+    GetBag_Cached_Query_Type
+  >(GetBag_Cached_Query)
   const { data: localItems } = useQuery(GET_LOCAL_BAG)
   const [showBagCostWarning, setShowBagCostWarning] = useState(false)
 
@@ -116,6 +124,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS, {
     onCompleted: (res) => {
       setMutating(false)
+      setShowBagCostWarning(false)
       if (res.checkItemsAvailability) {
         navigation.navigate(NavigationSchema.StackNames.BagStack, { screen: NavigationSchema.PageNames.Reservation })
       }
@@ -145,6 +154,7 @@ export const Bag = screenTrack()((props: BagProps) => {
           })
         }
       }
+      setShowBagCostWarning(false)
       setMutating(false)
     },
   })
@@ -180,6 +190,24 @@ export const Bag = screenTrack()((props: BagProps) => {
   const bagIsFull = itemCount && bagCount >= itemCount
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
+  const nextFreeSwapDate = me?.nextFreeSwapDate
+  const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()
+
+  const handleCheckItems = async () => {
+    await checkItemsAvailability({
+      variables: {
+        items: items.map((item) => item.variantID),
+      },
+      refetchQueries: [
+        {
+          query: GetBag_NoCache_Query,
+        },
+      ],
+      update(cache, { data, errors }) {
+        console.log(data, errors)
+      },
+    })
+  }
 
   const handleReserve = async () => {
     setMutating(true)
@@ -239,19 +267,11 @@ export const Bag = screenTrack()((props: BagProps) => {
         setMutating(false)
         return
       }
-      await checkItemsAvailability({
-        variables: {
-          items: items.map((item) => item.variantID),
-        },
-        refetchQueries: [
-          {
-            query: GetBag_NoCache_Query,
-          },
-        ],
-        update(cache, { data, errors }) {
-          console.log(data, errors)
-        },
-      })
+      if (swapNotAvailable) {
+        setShowBagCostWarning(true)
+        return
+      }
+      await handleCheckItems()
     }
     setMutating(false)
   }
@@ -272,18 +292,18 @@ export const Bag = screenTrack()((props: BagProps) => {
         <BagTab
           itemCount={itemCount}
           data={data}
-          bagIsFull={bagIsFull}
-          handleReserve={handleReserve}
           pauseStatus={pauseStatus}
           items={item.data}
           removeFromBagAndSaveItem={removeFromBagAndSaveItem}
           deleteBagItem={deleteBagItem}
           setItemCount={setItemCount}
+          cachedData={cachedData}
         />
       )
     } else if (isSavedView) {
       return (
         <SavedItemsTab
+          itemCount={itemCount}
           items={item.data}
           bagIsFull={bagIsFull}
           hasActiveReservation={hasActiveReservation}
@@ -352,17 +372,22 @@ export const Bag = screenTrack()((props: BagProps) => {
     }
 
     return (
-      <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-        <Spacer mb={2} />
-        <Box px={2}>{button}</Box>
-        <Spacer mb={2} />
-      </FadeBottom2>
+      button && (
+        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
+          <Spacer mb={2} />
+          <Box px={2}>{button}</Box>
+          <Spacer mb={2} />
+        </FadeBottom2>
+      )
     )
   }
 
   return (
-    <Container insetsBottom={false}>
-      <View pointerEvents={bottomSheetBackdropIsVisible ? "none" : "auto"} style={{ flexDirection: "column", flex: 1 }}>
+    <Container insetsBottom={false} insetsTop={false}>
+      <View
+        pointerEvents={bottomSheetBackdropIsVisible ? "none" : "auto"}
+        style={{ flexDirection: "column", flex: 1, paddingTop: insets?.top }}
+      >
         <TabBar
           spaceEvenly
           tabs={["Bag", "Saved", "History"]}
@@ -400,7 +425,15 @@ export const Bag = screenTrack()((props: BagProps) => {
           ListFooterComponent={() => <Spacer pb={80} />}
         />
         <PrimaryCTA />
-        <BagCostWarning show={showBagCostWarning} setShow={setShowBagCostWarning} />
+        <BagCostWarning
+          onCancel={() => {
+            setShowBagCostWarning(false)
+            setMutating(false)
+          }}
+          nextFreeSwapDate={nextFreeSwapDate}
+          show={showBagCostWarning}
+          onCTAPress={async () => await handleCheckItems()}
+        />
       </View>
     </Container>
   )

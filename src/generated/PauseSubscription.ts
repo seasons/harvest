@@ -16,4 +16,5 @@ export interface PauseSubscription {
 export interface PauseSubscriptionVariables {
   subscriptionID: string;
   pauseType?: PauseType | null;
+  reasonID?: string | null;
 }

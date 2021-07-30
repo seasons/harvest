@@ -3052,10 +3052,10 @@
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
 
-"@seasons/eclipse@^1.2.46":
-  version "1.2.46"
-  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.2.46.tgz#6cc6844b1882dd041afad7b87730972795509570"
-  integrity sha512-B+WpY/gqWzRVxJ2+42JkE0cG2HcSbi/sAFtGgcE/NQxahcuc4w+vR6xCu4sgQPkBcD8Dv1GsxGPgYn6s5cttOg==
+"@seasons/eclipse@^1.2.48":
+  version "1.2.48"
+  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.2.48.tgz#614b9839d3d09d10b2c199e84b44877bc4b1a8be"
+  integrity sha512-gG8+Zt/Csf9lBJpxAaVfqLHDddBS3VY2vb2qET/u6a2KNAIxUzjN6HaKdyz7Dp9qv/qtLZvy8NsA1oZmGaJiGw==
   dependencies:
     dripsy "^1.4.6"
 
@@ -14764,6 +14764,11 @@ react-native-auth0@^2.1.0:
     jsbn "^1.1.0"
     jwt-decode "^2.2.0"
     url "^0.11.0"
+
+react-native-confetti-cannon@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/react-native-confetti-cannon/-/react-native-confetti-cannon-1.5.2.tgz#ca1a05edd2a64b080ea8b6238c49277908e1f123"
+  integrity sha512-IZuWjlW7QsdxEGNnvpD6W+7iKCCQhnd5BvuNvMtirU7Nxm8WS2N6LPGMBz1ZYDuusG+GRZkoXXTNCdoAAGpCTg==
 
 react-native-config@^0.12.0:
   version "0.12.0"

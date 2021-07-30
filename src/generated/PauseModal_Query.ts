@@ -4,16 +4,16 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GetBag_Cached_Query
+// GraphQL query operation: PauseModal_Query
 // ====================================================
 
-export interface GetBag_Cached_Query_paymentPlans {
-  __typename: "PaymentPlan";
+export interface PauseModal_Query_pauseReasons {
+  __typename: "PauseReason";
   id: string;
-  itemCount: number | null;
+  reason: string;
 }
 
-export interface GetBag_Cached_Query {
+export interface PauseModal_Query {
   __typename: "Query";
-  paymentPlans: (GetBag_Cached_Query_paymentPlans | null)[] | null;
+  pauseReasons: (PauseModal_Query_pauseReasons | null)[] | null;
 }

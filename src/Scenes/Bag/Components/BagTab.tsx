@@ -11,7 +11,7 @@ import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
 import React, { useEffect, useState } from "react"
 import { Linking } from "react-native"
-
+import gql from "graphql-tag"
 import { useLazyQuery, useMutation } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { Box, ProductBuyAlertTab, ProductBuyAlertTabType, Spacer } from "@seasons/eclipse"
@@ -22,31 +22,29 @@ import { BagCardButton } from "./BagCardButton"
 import { BagItem } from "./BagItem"
 import { BagTabHeader } from "./BagTabHeader"
 import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
-import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
 import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
+import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
+
+export const BagTabCachedFragment_Query = gql`
+  fragment BagTabCachedFragment_Query on Query {
+    paymentPlans(where: { status: "active" }, orderBy: itemCount_DESC) {
+      id
+      itemCount
+    }
+  }
+`
 
 export const BagTab: React.FC<{
   pauseStatus: PauseStatus
   data: GetBag_NoCache_Query_Type
   itemCount: number
+  cachedData: GetBag_Cached_Query_Type
   items
-  bagIsFull: boolean
   setItemCount: (count: number) => void
-  handleReserve: () => void
   deleteBagItem
   removeFromBagAndSaveItem
-}> = ({
-  pauseStatus,
-  data,
-  itemCount,
-  items,
-  bagIsFull,
-  setItemCount,
-  handleReserve,
-  deleteBagItem,
-  removeFromBagAndSaveItem,
-}) => {
+}> = ({ cachedData, pauseStatus, data, itemCount, items, setItemCount, deleteBagItem, removeFromBagAndSaveItem }) => {
   const [isMutating, setIsMutating] = useState(false)
   const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -56,6 +54,8 @@ export const BagTab: React.FC<{
   const me = data?.me
   const activeReservation = me?.activeReservation
   const hasActiveReservation = !!activeReservation
+  const maxPlanItemCount = cachedData?.paymentPlans?.[0]?.itemCount || 6
+  const customerPlanItemCount = me?.customer?.membership?.plan?.itemCount || items.length
 
   const [getLocalBag, { data: localItems }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
     variables: {
@@ -207,7 +207,7 @@ export const BagTab: React.FC<{
 
   return (
     <Box>
-      <BagTabHeader atHome={atHome} me={me} pausedWithoutItems={pausedWithoutItems} />
+      <BagTabHeader atHome={atHome} me={me} />
       {showPendingMessage && (
         <>
           <Box px={2}>
@@ -277,7 +277,6 @@ export const BagTab: React.FC<{
         </>
       )}
       <Separator />
-      {hasActiveReservation && status !== "Delivered" && <DeliveryStatus me={me} atHome={atHome} />}
       {paddedItems?.map((bagItem, index) => {
         if (pausedWithoutItems) {
           return null
@@ -318,7 +317,7 @@ export const BagTab: React.FC<{
       <Spacer mb={3} />
       {!pausedWithoutItems && <Separator />}
       <Spacer mb={3} />
-      {!hasActiveReservation && itemCount && itemCount < 3 && !isPaused && (
+      {customerPlanItemCount && customerPlanItemCount < maxPlanItemCount && !isPaused && (
         <>
           <BagCardButton Icon={AddSlot} title="Add a slot" caption="Reserve another item" onPress={onAddSlot} />
           <Spacer mb={3} />

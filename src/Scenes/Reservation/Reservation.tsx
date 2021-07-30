@@ -6,7 +6,7 @@ import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { Schema as NavigationSchema } from "App/Navigation"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "@apollo/client"
 import * as Sentry from "@sentry/react-native"
 import { ScrollView } from "react-native"
@@ -15,6 +15,8 @@ import { ReservationItem } from "./Components/ReservationItem"
 import { useNavigation } from "@react-navigation/native"
 import { ShippingOption } from "../Order/Components"
 import { SectionHeader } from "App/Components/SectionHeader"
+import { DateTime } from "luxon"
+import { ReservationLineItems } from "./ReservationLineItems"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions, $shippingCode: ShippingCode) {
@@ -24,10 +26,22 @@ const RESERVE_ITEMS = gql`
   }
 `
 
+const DrafReservationLineItems = gql`
+  mutation DraftReservationLineItems($hasFreeSwap: Boolean) {
+    draftReservationLineItems(hasFreeSwap: $hasFreeSwap) {
+      id
+      name
+      price
+      taxPrice
+    }
+  }
+`
+
 const GET_CUSTOMER = gql`
   query GetCustomer {
     me {
       id
+      nextFreeSwapDate
       user {
         id
         firstName
@@ -82,6 +96,7 @@ const GET_CUSTOMER = gql`
 
 export const Reservation = screenTrack()((props) => {
   const [isMutating, setIsMutating] = useState(false)
+  const [lineItems, setLineItems] = useState([])
   const tracking = useTracking()
   const navigation = useNavigation()
   const { previousData, data = previousData } = useQuery(GET_CUSTOMER)
@@ -118,13 +133,52 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
   })
+  const [getReservationLineItems] = useMutation(DrafReservationLineItems)
 
-  const customer = data?.me?.customer
-  const address = data?.me?.customer?.detail?.shippingAddress
-  const allAccessEnabled = data?.me?.customer?.admissions?.allAccessEnabled
+  const me = data?.me
+  const customer = me?.customer
+  const address = me?.customer?.detail?.shippingAddress
+  const allAccessEnabled = me?.customer?.admissions?.allAccessEnabled
+
+  const nextFreeSwapDate = me?.nextFreeSwapDate
+  const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()
+
+  useEffect(() => {
+    const getLineItems = async () => {
+      const { data: resData } = await getReservationLineItems({
+        variables: {
+          hasFreeSwap: false,
+        },
+      })
+      setLineItems(resData?.draftReservationLineItems || [])
+    }
+    if (swapNotAvailable === true && lineItems?.length === 0) {
+      getLineItems()
+    }
+  }, [swapNotAvailable])
+
+  const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
+
+  useEffect(() => {
+    if (shippingOptions?.length > 0) {
+      const selectedShippingOption = shippingOptions[shippingOptionIndex]
+      if (selectedShippingOption?.externalCost > 0) {
+        setLineItems([
+          ...lineItems,
+          {
+            name: "Shipping",
+            price: selectedShippingOption?.externalCost,
+            taxPrice: 0,
+          },
+        ])
+      } else {
+        setLineItems(lineItems.filter((item) => item.name !== "Shipping"))
+      }
+    }
+  }, [shippingOptionIndex, setLineItems, shippingOptions])
 
   const phoneNumber = customer?.detail?.phoneNumber
-  const items = data?.me?.bag
+  const items = me?.bag
 
   if (!customer || !items || !address) {
     return (
@@ -134,8 +188,6 @@ export const Reservation = screenTrack()((props) => {
       </>
     )
   }
-
-  const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
 
   return (
     <>
@@ -178,7 +230,8 @@ export const Reservation = screenTrack()((props) => {
                 </Sans>
               </Box>
             )}
-            {shippingOptions?.length > 0 && !allAccessEnabled && (
+            {lineItems?.length > 0 && <ReservationLineItems lineItems={lineItems} />}
+            {shippingOptions?.length > 0 && (
               <Box mb={4}>
                 <SectionHeader title="Select shipping" />
                 {shippingOptions.map((option, index) => {

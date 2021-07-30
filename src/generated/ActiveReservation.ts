@@ -9,6 +9,22 @@ import { InventoryStatus, PhysicalProductStatus } from "./globalTypes";
 // GraphQL query operation: ActiveReservation
 // ====================================================
 
+export interface ActiveReservation_me_customer_membership_subscription {
+  __typename: "CustomerMembershipSubscriptionData";
+  currentTermStart: any;
+  currentTermEnd: any;
+}
+
+export interface ActiveReservation_me_customer_membership {
+  __typename: "CustomerMembership";
+  subscription: ActiveReservation_me_customer_membership_subscription | null;
+}
+
+export interface ActiveReservation_me_customer {
+  __typename: "Customer";
+  membership: ActiveReservation_me_customer_membership | null;
+}
+
 export interface ActiveReservation_me_activeReservation_products_productVariant_product_brand {
   __typename: "Brand";
   id: string;
@@ -58,6 +74,7 @@ export interface ActiveReservation_me_activeReservation {
 export interface ActiveReservation_me {
   __typename: "Me";
   id: string | null;
+  customer: ActiveReservation_me_customer | null;
   activeReservation: ActiveReservation_me_activeReservation | null;
 }
 

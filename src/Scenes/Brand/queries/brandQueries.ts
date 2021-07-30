@@ -13,12 +13,10 @@ export const GET_BRAND = gql`
         id
         url
       }
-      productsAggregate: productsConnection(where: { status: Available }) {
+      products: productsConnection(first: $first, skip: $skip, orderBy: $orderBy, where: { status: Available }) {
         aggregate {
           count
         }
-      }
-      products: productsConnection(first: $first, skip: $skip, orderBy: $orderBy, where: { status: Available }) {
         edges {
           node {
             id

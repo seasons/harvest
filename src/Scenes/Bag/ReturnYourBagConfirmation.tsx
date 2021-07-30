@@ -9,7 +9,8 @@ import { ScrollView } from "react-native"
 import { gql, useQuery } from "@apollo/client"
 
 import {
-  ReturnYourBagConfirmationItem, ReturnYourBagConfirmationItemFragment_PhysicalProduct
+  ReturnYourBagConfirmationItem,
+  ReturnYourBagConfirmationItemFragment_PhysicalProduct,
 } from "./Components/ReturnYourBagConfirmationItem"
 
 export const RETURNED_ITEMS = gql`
@@ -31,9 +32,9 @@ export const RETURNED_ITEMS = gql`
 
 export const ReturnYourBagConfirmation = screenTrack()((props) => {
   const tracking = useTracking()
-  const { previousData, data = previousData, loading } = useQuery(RETURNED_ITEMS)
+  const { previousData, data = previousData } = useQuery(RETURNED_ITEMS)
 
-  if (loading) {
+  if (!data) {
     return <Loader />
   }
 
@@ -45,19 +46,17 @@ export const ReturnYourBagConfirmation = screenTrack()((props) => {
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <Spacer mb={52} />
           <CheckCircled />
-          <Box my={4}>
+          <Box my={5}>
             <Sans size="7" color="black100">
               Let’s pack up your items
             </Sans>
-            <Spacer mb={2} />
-            <Sans size="5" color="black50" lineHeight={28}>
+            <Spacer mb={1} />
+            <Sans size="4" color="black50" lineHeight={28}>
               Your order summary and return instructions are below. Contact us if you have any questions!
             </Sans>
           </Box>
-          <Spacer pb={4} />
-
-          <Box mb={3}>
-            <Sans size="5">Items</Sans>
+          <Box mb={5}>
+            <Sans size="4">Items</Sans>
             <Spacer mb={1} />
             <Separator />
             <Box mt={1}>
@@ -79,27 +78,27 @@ export const ReturnYourBagConfirmation = screenTrack()((props) => {
               How to return your bag
             </Sans>
 
-            <Box my={4}>
+            <Box my={3}>
               <Sans size="4">Step 1.</Sans>
               <Sans size="4" color="black50">
-                Place the items your returning in the bag with the hangers included.
+                Place the items you're returning in the bag with the hangers included.
               </Sans>
-              <Spacer mt={4} />
+              <Spacer mt={3} />
 
               <Sans size="4">Step 2.</Sans>
               <Sans size="4" color="black50">
                 Insert the return shipping label into the front sleeve on the outside of the bag.
               </Sans>
-              <Spacer mt={4} />
+              <Spacer mt={3} />
 
               <Sans size="4">Step 3.</Sans>
               <Sans size="4" color="black50">
                 Drop off at your nearest UPS pick-up location.
               </Sans>
-              <Spacer mt={6} />
+              <Spacer mt={4} />
               <Sans size="4" color="black50">
-                Once we’ve receive and process your items, we’ll send you a confirmation and your bag will be reset for
-                you to place your next order.
+                Once we’ve received and processed your items, we’ll send you a confirmation and your bag will be reset
+                for you to place your next order.
               </Sans>
               <Spacer mt={"80px"} />
             </Box>

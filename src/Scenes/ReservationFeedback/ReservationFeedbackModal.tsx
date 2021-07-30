@@ -9,6 +9,7 @@ import { ImageRail } from "App/Scenes/Product/Components"
 import { color } from "App/utils"
 import styled from "styled-components/native"
 import gql from "graphql-tag"
+import AsyncStorage from "@react-native-community/async-storage"
 import { screenTrack, useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { Container } from "Components/Container"
 import { ReservationFeedback_reservationFeedback_feedbacks } from "src/generated/ReservationFeedback"
@@ -20,6 +21,7 @@ import { UPDATE_PRODUCT_RESERVATION_FEEDBACK } from "./mutations"
 import { Loader } from "App/Components/Loader"
 import { Homepage_Query } from "../Home/queries/homeQueries"
 import { ReservationFeedbackFinish } from "./ReservationFeedbackFinish"
+import { DateTime } from "luxon"
 
 const windowWidth = Dimensions.get("window").width
 
@@ -174,9 +176,10 @@ export const ReservationFeedbackModal: React.FC<{
     }
   }
 
-  const handleLeftButton = () => {
+  const handleLeftButton = async () => {
     Keyboard.dismiss()
     if (currFeedbackIndex === 0) {
+      await AsyncStorage.setItem("feedbackDismissDate", DateTime.local().toISO())
       navigation.goBack()
     } else if (currFeedbackIndex > 0) {
       setCurrFeedbackIndex(currFeedbackIndex - 1)
@@ -189,7 +192,10 @@ export const ReservationFeedbackModal: React.FC<{
 
   return (
     <Container insetsTop={false} insetsBottom={false}>
-      <CloseButton variant="light" />
+      <CloseButton
+        variant="light"
+        onClose={async () => await AsyncStorage.setItem("feedbackDismissDate", DateTime.local().toISO())}
+      />
       <ScrollView ref={scrollViewRef}>
         <Box px={2} width={windowWidth}>
           <ReservationFeedbackHeader />

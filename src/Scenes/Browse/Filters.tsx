@@ -31,7 +31,7 @@ export const EMPTY_BROWSE_FILTERS = {
   topSizeFilters: [],
   designerFilters: [],
   colorFilters: [],
-  availableOnly: false,
+  availableOnly: true,
   forSaleOnly: false,
 }
 
