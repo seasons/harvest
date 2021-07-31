@@ -25,12 +25,14 @@
     "build-storybook": "build-storybook",
     "postversion": "yarn build:fastlane",
     "build:fastlane": "fastlane ios beta",
-    "generate-queries-json": "persistgraphql src --js --extension=tsx"
+    "generate-queries-json": "persistgraphql src data/complete.queryMap.json --js --extension=tsx",
+    "update-monsoon": "node scripts/update-monsoon.js"
   },
   "dependencies": {
     "@apollo/client": "^3.3.7",
     "@expo/react-native-action-sheet": "^3.8.0",
     "@material-ui/core": "^4.11.1",
+    "@octokit/rest": "^18.7.2",
     "@react-native-community/async-storage": "~1.12.0",
     "@react-native-community/cameraroll": "^4.0.1",
     "@react-native-community/clipboard": "^1.5.0",
