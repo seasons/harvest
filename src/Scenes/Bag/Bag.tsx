@@ -188,8 +188,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   const bagCount = addedProducts.length
   const bagIsFull = planItemCount && bagCount >= planItemCount
 
-  console.log("addedProducts", addedProducts)
-
   const reservationItems = reservationTabData?.me?.customer?.reservations
   const nextFreeSwapDate = me?.nextFreeSwapDate
   const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()
