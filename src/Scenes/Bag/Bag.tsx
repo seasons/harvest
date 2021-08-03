@@ -322,8 +322,8 @@ export const Bag = screenTrack()((props: BagProps) => {
     }
   }
 
-  const bagItemsWithEmptyItems =
-    (planItemCount && assign(fill(new Array(planItemCount), { variantID: "", productID: "" }), addedProducts)) || []
+  const bagItemsWithEmptyItems = assign(fill(new Array(planItemCount), { variantID: "", productID: "" }), addedProducts)
+
   let sections
   if (isBagView) {
     sections = [
