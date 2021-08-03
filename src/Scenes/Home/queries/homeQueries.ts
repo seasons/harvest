@@ -228,6 +228,15 @@ export const Homepage_Query = gql`
       id
       ...HomePageProductFragment_Product
     }
+    justAddedAccessories: products(
+      first: 16
+      category: "accessories"
+      orderBy: publishedAt_DESC
+      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }, { tags_none: { name: "Vintage" } }] }
+    ) {
+      id
+      ...HomePageProductFragment_Product
+    }
     justAddedTops: products(
       first: 8
       category: "tops"

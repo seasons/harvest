@@ -266,6 +266,35 @@ export interface Homepage_Query_justAddedBottoms {
   images: Homepage_Query_justAddedBottoms_images[];
   variants: Homepage_Query_justAddedBottoms_variants[] | null;
 }
+export interface Homepage_Query_justAddedAccessories_brand {
+  __typename: "Brand";
+  id: string;
+  slug: string;
+  name: string;
+}
+
+export interface Homepage_Query_justAddedAccessories_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
+export interface Homepage_Query_justAddedAccessories_variants {
+  __typename: "ProductVariant";
+  id: string;
+  reservable: number;
+  displayShort: string | null;
+}
+
+export interface Homepage_Query_justAddedAccessories {
+  __typename: "Product";
+  id: string;
+  slug: string;
+  name: string;
+  brand: Homepage_Query_justAddedAccessories_brand;
+  images: Homepage_Query_justAddedAccessories_images[];
+  variants: Homepage_Query_justAddedAccessories_variants[] | null;
+}
 
 export interface Homepage_Query_fitPicsConnection_aggregate {
   __typename: "AggregateFitPic";
@@ -400,6 +429,8 @@ export interface Homepage_Query {
   justAddedOuterwear: (Homepage_Query_justAddedOuterwear | null)[];
   justAddedTops: (Homepage_Query_justAddedTops | null)[];
   justAddedBottoms: (Homepage_Query_justAddedBottoms | null)[];
+  //Accessories
+  justAddedAccessories: (Homepage_Query_justAddedAccessories | null)[]
   fitPicsConnection: Homepage_Query_fitPicsConnection;
   __typename: "Query";
   featuredBrands: (Homepage_Query_featuredBrands | null)[];

@@ -107,6 +107,7 @@ export const Product = screenTrack({
     stock: 0,
     isInBag: false,
     hasRestockNotification: null,
+    nextReservablePhysicalProduct: null
   })
 
   const [addRecentlyViewedItem] = useMutation(ADD_VIEWED_PRODUCT, {
@@ -381,7 +382,7 @@ export const Product = screenTrack({
       flatListRef.current?.scrollToOffset({ offset: py - (windowHeight / 2 - 80), animated: true })
     })
   }
-
+  
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "productBackground"} />
