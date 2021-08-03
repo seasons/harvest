@@ -291,6 +291,37 @@ export interface Homepage_justAddedOuterwear {
   variants: Homepage_justAddedOuterwear_variants[] | null;
 }
 
+
+export interface Homepage_justAddedAccessories_brand {
+  __typename: "Brand";
+  id: string;
+  slug: string;
+  name: string;
+}
+
+export interface Homepage_justAddedAccessories_images {
+  __typename: "Image";
+  id: string;
+  url: string | null;
+}
+
+export interface Homepage_justAddedAccessories_variants {
+  __typename: "ProductVariant";
+  id: string;
+  reservable: number;
+  displayShort: string | null;
+}
+
+export interface Homepage_justAddedAccessories {
+  __typename: "Product";
+  id: string;
+  slug: string;
+  name: string;
+  brand: Homepage_justAddedAccessories_brand;
+  images: Homepage_justAddedAccessories_images[];
+  variants: Homepage_justAddedAccessories_variants[] | null;
+}
+
 export interface Homepage_justAddedTops_modelSize {
   __typename: "Size";
   id: string;
@@ -447,6 +478,7 @@ export interface Homepage {
   me: Homepage_me | null;
   blogPosts: Homepage_blogPosts[];
   archivalProducts: (Homepage_archivalProducts | null)[];
+  justAddedAccessories: (Homepage_justAddedAccessories | null)[];
   justAddedOuterwear: (Homepage_justAddedOuterwear | null)[];
   justAddedTops: (Homepage_justAddedTops | null)[];
   justAddedBottoms: (Homepage_justAddedBottoms | null)[];
