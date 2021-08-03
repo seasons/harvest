@@ -284,7 +284,7 @@ export const BagTab: React.FC<{
         const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
         const spacing = isReserved ? "7px" : 2
         return bagItem?.productID?.length > 0 ? (
-          <Box key={bagItem.productID} px={2}>
+          <Box key={bagItem.id} px={2}>
             {index !== 0 && (
               <>
                 <Spacer mb={spacing} />
@@ -293,7 +293,7 @@ export const BagTab: React.FC<{
             )}
             <Spacer mb={index === 0 ? 3 : spacing} />
             <BagItem
-              removeItemFromBag={deleteBagItem}
+              deleteBagItem={deleteBagItem}
               removeFromBagAndSaveItem={removeFromBagAndSaveItem}
               index={index}
               bagItem={bagItem}

@@ -56,18 +56,12 @@ export interface GetBrandAndProducts_brand_products_edges_node {
 
 export interface GetBrandAndProducts_brand_products_edges {
   __typename: "ProductEdge";
-  /**
-   * The item at the end of the edge.
-   */
   node: GetBrandAndProducts_brand_products_edges_node;
 }
 
 export interface GetBrandAndProducts_brand_products {
   __typename: "ProductConnection";
   aggregate: GetBrandAndProducts_brand_products_aggregate;
-  /**
-   * A list of edges.
-   */
   edges: (GetBrandAndProducts_brand_products_edges | null)[];
 }
 
