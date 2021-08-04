@@ -3,26 +3,25 @@ import React, { useState, useEffect } from "react"
 import { FlatList } from "react-native"
 import { ProductGridItemSkeleton } from "./ProductGridItemSkeleton"
 
-export const MoreFromBrand: React.FC<{
-  brandName: string
+export const RelatedProducts: React.FC<{
   flatListRef: React.RefObject<any>
-}> = ({ products, brandName, flatListRef }) => {
+}> = ({ products, flatListRef }) => {
   const [items, setItems] = useState(new Array(2).fill({ id: "" }))
+
 
   useEffect(() => {
     if (products) {
-      setItems(products)
+      setItems(products.slice(0, 15))
     }
   }, [products])
   return (
     <>
-      {brandName && (
-        <Box pl={2} py={1}>
-          <Sans color="black" size="5">
-            More from {brandName}
-          </Sans>
-        </Box>
-      )}
+      
+    <Box pl={2} py={1}>
+        <Sans color="black" size="5">
+        Related Products
+        </Sans>
+    </Box>
       <Box ml={2}>
         <FlatList
           data={items}

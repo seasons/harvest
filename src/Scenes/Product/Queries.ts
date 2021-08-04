@@ -105,6 +105,23 @@ export const GET_PRODUCT = gql`
       category {
         id
         name
+        products(first: 5, orderBy: createdAt_DESC, where: { AND: [{ NOT: [$where] }, { status: Available }] }) {
+          id
+          slug
+          name
+          type
+          images(size: Thumb) {
+            id
+            url
+          }
+          brand {
+            id
+            name
+          }
+          variants {
+            ...CommonProductVariant
+          }
+        }
       }
       description
       retailPrice
