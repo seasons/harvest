@@ -294,7 +294,6 @@ export const Product = screenTrack({
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
       case "relatedProducts":
-        
         return <RelatedProducts flatListRef={flatListRef} products = {relatedProducts}/>
       case "moreLikeThis":
         return <MoreFromBrand flatListRef={flatListRef} products={brandProducts} brandName={product.brand.name} />
@@ -389,7 +388,6 @@ export const Product = screenTrack({
     })
   }
 
-  console.log(product)
   
   return (
     <Container insetsTop={false} insetsBottom={false}>
