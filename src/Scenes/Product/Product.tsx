@@ -253,7 +253,7 @@ export const Product = screenTrack({
   const viewWidth = Dimensions.get("window").width
   const images = product?.largeImages
   const imageWidth = viewWidth
-  const relatedProducts = product?.category?.products
+  const relatedProducts = product?.relatedProducts
   const physicalProductQualityReport = (selectedVariant?.nextReservablePhysicalProduct?.reports || []).reduce(
     (agg, report) => {
       if (!agg) {
