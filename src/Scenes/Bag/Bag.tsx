@@ -14,7 +14,7 @@ import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
-import { FlatList, RefreshControl, StatusBar, View } from "react-native"
+import { FlatList, RefreshControl, StatusBar, View, Dimensions } from "react-native"
 import { NavigationRoute, NavigationScreenProp } from "react-navigation"
 
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
@@ -36,6 +36,7 @@ import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { BagCostWarning } from "./Components/BagCostWarning"
 import { DateTime } from "luxon"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import styled from "styled-components/native"
 
 export enum BagView {
   Bag = 0,
@@ -64,6 +65,8 @@ export const Bag = screenTrack()((props: BagProps) => {
   const routeTab = route?.params?.tab
   const isSignedIn = authState.isSignedIn
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+  const windowDimensions = Dimensions.get("window")
+  const windowWidth = windowDimensions.width
 
   useScrollToTop(flatListRef)
 
@@ -192,7 +195,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const reservationItems = reservationTabData?.me?.customer?.reservations
   const nextFreeSwapDate = me?.nextFreeSwapDate
   const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()
-
+ 
   const handleCheckItems = async () => {
     await checkItemsAvailability({
       variables: {
@@ -351,10 +354,16 @@ export const Bag = screenTrack()((props: BagProps) => {
 
     if (hasActiveReservation) {
       if (me?.activeReservation?.status === "Delivered") {
+        const returnLabelUrl = me.activeReservation.returnedPackage.shippingLabel.trackingURL
         button = (
-          <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
-            {markedAsReturned ? "Return Instructions" : "Return Bag"}
-          </Button>
+          <ButtonBox>
+            <Button width={(windowWidth /2) - 20} onPress={() => navigation.navigate("Webview", { uri: returnLabelUrl })} disabled={isMutating} loading={isMutating} variant="primaryWhite" >
+              Return label
+            </Button>
+            <Button width={(windowWidth /2) - 20} onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryBlack">
+              {markedAsReturned ? "How to return" : "Return Bag"}
+            </Button>
+          </ButtonBox>
         )
       }
     } else {
@@ -438,3 +447,10 @@ export const Bag = screenTrack()((props: BagProps) => {
     </Container>
   )
 })
+
+const ButtonBox = styled(Box)`
+display: flex;
+flex-direction: row
+justify-content: space-between
+`
+
