@@ -2,8 +2,10 @@ import { Box, ProductGridItem, Sans } from "App/Components"
 import React, { useState, useEffect } from "react"
 import { FlatList } from "react-native"
 import { ProductGridItemSkeleton } from "./ProductGridItemSkeleton"
+import { GetProduct_product_brand_products } from "App/generated/GetProduct"
 
 export const MoreFromBrand: React.FC<{
+  products: GetProduct_product_brand_products[]
   brandName: string
   flatListRef: React.RefObject<any>
 }> = ({ products, brandName, flatListRef }) => {
@@ -14,6 +16,7 @@ export const MoreFromBrand: React.FC<{
       setItems(products)
     }
   }, [products])
+  
   return (
     <>
       {brandName && (
