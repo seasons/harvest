@@ -109,7 +109,6 @@ export const Home = screenTrack()(({ navigation, route }) => {
     <ErrorScreen
       variant="No Internet"
       refreshAction={() => {
-        console.log("refresh 1")
         refetch()
         refetchNoCache()
       }}
