@@ -104,6 +104,7 @@ const TabsStack = ({ currentScreen }) => {
         let showNotifBar
         switch (currentScreen) {
           case "Home":
+          case "HomeStack":
           case "Browse":
           case "Account":
             showNotifBar = true

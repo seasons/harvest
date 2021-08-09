@@ -26,11 +26,11 @@ import { State as CreateAccountState, UserState as CreateAccountUserState } from
 import {
   CHECK_ITEMS,
   GetBag_NoCache_Query,
-  REMOVE_FROM_BAG,
   REMOVE_FROM_BAG_AND_SAVE_ITEM,
   ReservationHistoryTab_Query,
   SavedTab_Query,
   GetBag_Cached_Query,
+  DELETE_BAG_ITEM,
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { BagCostWarning } from "./Components/BagCostWarning"
@@ -53,7 +53,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
-  const [itemCount, setItemCount] = useState(DEFAULT_ITEM_COUNT)
+  const [planItemCount, setPlanItemCount] = useState(DEFAULT_ITEM_COUNT)
   const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const flatListRef = useRef(null)
@@ -103,9 +103,9 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   useEffect(() => {
     if (data) {
-      const dataItemCount = data?.me?.customer?.membership?.plan?.itemCount
-      if (!!dataItemCount && dataItemCount !== itemCount && isSignedIn) {
-        setItemCount(dataItemCount)
+      const _planItemCount = data?.me?.customer?.membership?.plan?.itemCount
+      if (!!_planItemCount && _planItemCount !== planItemCount && isSignedIn) {
+        setPlanItemCount(_planItemCount)
       }
       setIsLoading(false)
       const userId = me?.customer?.user?.id
@@ -115,9 +115,9 @@ export const Bag = screenTrack()((props: BagProps) => {
         analytics.identify(userId, { bagItems: savedItems + baggedItems })
       }
     }
-  }, [data, setIsLoading, setItemCount])
+  }, [data, setIsLoading, setPlanItemCount])
 
-  const [deleteBagItem] = useMutation(REMOVE_FROM_BAG)
+  const [deleteBagItem] = useMutation(DELETE_BAG_ITEM)
 
   const [removeFromBagAndSaveItem] = useMutation(REMOVE_FROM_BAG_AND_SAVE_ITEM)
 
@@ -169,7 +169,7 @@ export const Bag = screenTrack()((props: BagProps) => {
     setRefreshing(false)
   }
 
-  const items = !isSignedIn
+  const addedProducts = !isSignedIn
     ? localItems?.localBagItems || []
     : me?.bag?.map((item) => ({
         ...item,
@@ -179,15 +179,14 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const savedItems = savedTabData?.me?.savedItems
 
-  const bagItems = (itemCount && assign(fill(new Array(itemCount), { variantID: "", productID: "" }), items)) || []
   const hasActiveReservation = !!me?.activeReservation
 
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
 
   const isBagView = BagView.Bag == currentView
   const isSavedView = BagView.Saved == currentView
-  const bagCount = items.length
-  const bagIsFull = itemCount && bagCount >= itemCount
+  const bagCount = addedProducts.length
+  const bagIsFull = planItemCount && bagCount >= planItemCount
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
   const nextFreeSwapDate = me?.nextFreeSwapDate
@@ -196,7 +195,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const handleCheckItems = async () => {
     await checkItemsAvailability({
       variables: {
-        items: items.map((item) => item.variantID),
+        items: addedProducts.map((item) => item.variantID),
       },
       refetchQueries: [
         {
@@ -239,10 +238,12 @@ export const Bag = screenTrack()((props: BagProps) => {
           })
         },
       })
-    } else if (bagCount > itemCount) {
+    } else if (bagCount > planItemCount) {
       showPopUp({
         title: "You must remove some items first",
-        note: `Your plan has ${itemCount} ${itemCount === 1 ? "slot" : "slots"} but your bag has ${bagCount} items.`,
+        note: `Your plan has ${planItemCount} ${
+          planItemCount === 1 ? "slot" : "slots"
+        } but your bag has ${bagCount} items.`,
         buttonText: "Got it",
         onClose: () => hidePopUp(),
       })
@@ -280,6 +281,11 @@ export const Bag = screenTrack()((props: BagProps) => {
   const pausePending = pauseRequest?.pausePending
   let pauseStatus: PauseStatus = "active"
 
+  const hasActiveReservationAndBagRoom =
+    hasActiveReservation &&
+    planItemCount > me?.activeReservation?.products?.length &&
+    ["Queued", "Picked", "Packed", "Delivered", "Received", "Shipped"].includes(me?.activeReservation?.status)
+
   if (customerStatus === "Paused") {
     pauseStatus = "paused"
   } else if (pausePending) {
@@ -290,20 +296,20 @@ export const Bag = screenTrack()((props: BagProps) => {
     if (isBagView) {
       return (
         <BagTab
-          itemCount={itemCount}
+          itemCount={planItemCount}
           data={data}
           pauseStatus={pauseStatus}
           items={item.data}
           removeFromBagAndSaveItem={removeFromBagAndSaveItem}
           deleteBagItem={deleteBagItem}
-          setItemCount={setItemCount}
+          setItemCount={setPlanItemCount}
           cachedData={cachedData}
         />
       )
     } else if (isSavedView) {
       return (
         <SavedItemsTab
-          itemCount={itemCount}
+          itemCount={planItemCount}
           items={item.data}
           bagIsFull={bagIsFull}
           hasActiveReservation={hasActiveReservation}
@@ -316,9 +322,19 @@ export const Bag = screenTrack()((props: BagProps) => {
     }
   }
 
+  const bagItemsWithEmptyItems = assign(fill(new Array(planItemCount), { variantID: "", productID: "" }), addedProducts)
+
   let sections
   if (isBagView) {
-    sections = [{ data: bagItems }]
+    sections = [
+      {
+        data: bagItemsWithEmptyItems?.sort((a, b) => {
+          const aWeight = a.status === "Reserved" ? 1 : 0
+          const bWeight = b.status === "Reserved" ? 1 : 0
+          return aWeight - bWeight
+        }),
+      },
+    ]
   } else if (isSavedView) {
     sections = [{ data: savedItems }]
   } else {
@@ -338,7 +354,7 @@ export const Bag = screenTrack()((props: BagProps) => {
         actionType: TrackSchema.ActionTypes.Tap,
         bagIsFull,
       })
-      if (!hasActiveReservation) {
+      if (!hasActiveReservation || hasActiveReservationAndBagRoom) {
         handleReserve()
       } else {
         navigation.navigate(
@@ -349,7 +365,19 @@ export const Bag = screenTrack()((props: BagProps) => {
       }
     }
 
-    if (hasActiveReservation) {
+    if (hasActiveReservationAndBagRoom) {
+      button = (
+        <Button
+          block
+          onPress={handlePress}
+          disabled={!bagIsFull || isMutating}
+          loading={isMutating}
+          variant="primaryBlack"
+        >
+          Reserve
+        </Button>
+      )
+    } else if (hasActiveReservation) {
       if (me?.activeReservation?.status === "Delivered") {
         button = (
           <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">

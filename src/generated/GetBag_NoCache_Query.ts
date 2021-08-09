@@ -79,6 +79,11 @@ export interface GetBag_NoCache_Query_me_customer {
   membership: GetBag_NoCache_Query_me_customer_membership | null;
 }
 
+export interface GetBag_NoCache_Query_me_activeReservation_products {
+  __typename: "PhysicalProduct";
+  id: string;
+}
+
 export interface GetBag_NoCache_Query_me_activeReservation_returnedPackage_shippingLabel {
   __typename: "Label";
   id: string;
@@ -113,6 +118,7 @@ export interface GetBag_NoCache_Query_me_activeReservation {
   status: ReservationStatus;
   phase: ReservationPhase;
   updatedAt: any;
+  products: GetBag_NoCache_Query_me_activeReservation_products[];
   returnedPackage: GetBag_NoCache_Query_me_activeReservation_returnedPackage | null;
   sentPackage: GetBag_NoCache_Query_me_activeReservation_sentPackage | null;
 }
@@ -201,10 +207,10 @@ export interface GetBag_NoCache_Query_me_bag {
 export interface GetBag_NoCache_Query_me {
   __typename: "Me";
   id: string | null;
+  nextFreeSwapDate: any | null;
   customer: GetBag_NoCache_Query_me_customer | null;
   activeReservation: GetBag_NoCache_Query_me_activeReservation | null;
   bag: GetBag_NoCache_Query_me_bag[] | null;
-  nextFreeSwapDate: any | null;
 }
 
 export interface GetBag_NoCache_Query {

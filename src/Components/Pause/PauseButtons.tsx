@@ -207,12 +207,12 @@ export const PauseButtons: React.FC<{
             <Spacer mb={2} />
           </>
         )}
-        {pauseStatus === "paused" && (
+        {pauseStatus === "paused" && !!resumeDate && (
           <>
             <Sans size="4">
               Your membership is paused until{" "}
               <Sans size="4" style={{ textDecorationLine: "underline" }}>
-                {DateTime.fromISO(resumeDate).toFormat("EEEE LLLL d")}
+                {resumeDate?.toFormat("EEEE LLLL d")}
               </Sans>
               .
             </Sans>
@@ -223,8 +223,8 @@ export const PauseButtons: React.FC<{
               </Sans>
             )}
             {!pauseDateCanExtend && (
-              <Sans size="4" color="black50">{`You can extend this again after ${DateTime.fromISO(resumeDate)
-                .minus({ months: 1 })
+              <Sans size="4" color="black50">{`You can extend this again after ${resumeDate
+                ?.minus({ months: 1 })
                 .toFormat("EEEE LLLL d")}.`}</Sans>
             )}
             <Spacer mb={2} />
