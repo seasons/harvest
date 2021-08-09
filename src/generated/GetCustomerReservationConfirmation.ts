@@ -47,6 +47,14 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations_shi
   shippingMethod: GetCustomerReservationConfirmation_me_customer_reservations_shippingOption_shippingMethod | null;
 }
 
+export interface GetCustomerReservationConfirmation_me_customer_reservations_lineItems {
+  __typename: "OrderLineItem";
+  id: string;
+  name: string | null;
+  price: number;
+  taxPrice: number | null;
+}
+
 export interface GetCustomerReservationConfirmation_me_customer_reservations_products_productVariant_product_modelSize {
   __typename: "Size";
   id: string;
@@ -99,6 +107,7 @@ export interface GetCustomerReservationConfirmation_me_customer_reservations {
   id: string;
   reservationNumber: number;
   shippingOption: GetCustomerReservationConfirmation_me_customer_reservations_shippingOption | null;
+  lineItems: (GetCustomerReservationConfirmation_me_customer_reservations_lineItems | null)[] | null;
   products: GetCustomerReservationConfirmation_me_customer_reservations_products[];
 }
 
