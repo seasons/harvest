@@ -106,8 +106,9 @@ export const BagTabHeader: React.FC<{
   const status = activeReservation?.status
   const subHeaderText = getSubHeaderText(me, activeReservation, atHome)
   const markedAsReturned = !!activeReservation?.returnedAt
+  const showDeliveryStatus = !!activeReservation && !atHome
+  const showMarkedAsReturnedInfo = markedAsReturned && !showDeliveryStatus
 
-  const showDeliveryStatus = !!activeReservation && !atHome && !markedAsReturned
   const showSubHeaderText = !markedAsReturned && !showDeliveryStatus && !!subHeaderText
 
   return (
@@ -141,7 +142,7 @@ export const BagTabHeader: React.FC<{
           </Sans>
         </Box>
       )}
-      {markedAsReturned && (
+      {showMarkedAsReturnedInfo && (
         <Box px={2}>
           <Sans size="4" color="black50">
             Your bag will update after UPS scans the return label. Second thoughts?{" "}
@@ -152,9 +153,9 @@ export const BagTabHeader: React.FC<{
             ) : (
               <Sans
                 size="4"
-                onPress={() => {
+                onPress={async () => {
                   setCancelingReturn(true)
-                  cancelReturn({
+                  await cancelReturn({
                     awaitRefetchQueries: true,
                     refetchQueries: [{ query: GetBag_NoCache_Query }],
                   })
