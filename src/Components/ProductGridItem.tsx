@@ -12,15 +12,20 @@ const ProductGridItemComponent: React.FC<{
   product: GetProduct_products
   addLeftSpacing?: boolean
   showBrandName?: boolean
+  retailPrice: number
+  rentalPrice: number
 }> = ({ flatListRef, product, addLeftSpacing, showBrandName }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
   const itemWidth = Dimensions.get("window").width / 2 - 2
-  const imageHeight = itemWidth * PRODUCT_ASPECT_RATIO
+  const imageHeight = itemWidth * PRODUCT_ASPECT_RATIO + 10
   const image = product?.images?.[0]?.url
   const productName = product?.name
   const brandName = product?.brand?.name
+  const retailPrice = product?.retailPrice
+  const rentalPrice = product?.rentalPrice? product?.rentalPrice : 40
+
 
   return (
     <TouchableWithoutFeedback
@@ -50,6 +55,11 @@ const ProductGridItemComponent: React.FC<{
                 {!!showBrandName && brandName !== "Vintage" ? brandName : productName}
               </Sans>
             )}
+            <Sans size="2"
+              style={{color: "grey"}}
+            >
+              ${rentalPrice} per mo | ${retailPrice} retail
+            </Sans>
             <VariantSizes size="2" variants={product?.variants} />
           </Box>
           <Box mt={0.5}>

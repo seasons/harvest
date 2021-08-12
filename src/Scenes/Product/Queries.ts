@@ -127,6 +127,9 @@ export const GET_PRODUCT = gql`
       }
       description
       retailPrice
+      # wholesalePrice
+      # recoupment
+      # rentalPrice
       modelSize {
         id
         display
