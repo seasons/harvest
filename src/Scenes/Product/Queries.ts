@@ -116,6 +116,10 @@ export const GET_PRODUCT = gql`
         color{
           id
         }
+        retailPrice
+        # wholesalePrice
+        # recoupment
+        # rentalPrice
         variants {
           ...CommonProductVariant
         }
@@ -161,6 +165,10 @@ export const GET_PRODUCT = gql`
             id
             name
           }
+          retailPrice
+          # wholesalePrice
+          # recoupment
+          # rentalPrice
           variants {
             ...CommonProductVariant
           }
