@@ -216,5 +216,3 @@ const CategoryBox = styled(Flex)`
   height: 75;
   padding-top: 10px;
 `
-
-`
