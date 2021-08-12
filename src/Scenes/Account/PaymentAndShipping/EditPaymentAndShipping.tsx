@@ -1,4 +1,5 @@
 import gql from "graphql-tag"
+import { color, space } from "App/utils"
 import React, { useState } from "react"
 import { useMutation } from "@apollo/client"
 import { Dimensions, Keyboard, KeyboardAvoidingView } from "react-native"
@@ -7,13 +8,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Container, Flex, FixedBackArrow, Sans, Spacer, TextInput } from "App/Components"
 import { GetUserPaymentData_me_customer_detail_shippingAddress } from "src/generated/getUserPaymentData"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { space } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import * as Sentry from "@sentry/react-native"
 import analytics from "@segment/analytics-react-native"
 import { GET_PAYMENT_DATA } from "./queries"
 
-const UPDATE_PHONE_AND_SHIPPING = gql`
+export const UPDATE_PHONE_AND_SHIPPING = gql`
   mutation updatePaymentAndShipping($shippingAddress: AddressInput!, $phoneNumber: String!) {
     updatePaymentAndShipping(shippingAddress: $shippingAddress, phoneNumber: $phoneNumber)
   }
@@ -44,7 +44,7 @@ export const EditPaymentAndShipping: React.FC<{
     onError: (error) => {
       let popUpData = {
         buttonText: "Got it",
-        note: "Make sure your shipping and billing address are both valid.",
+        note: "Please make sure your address is valid. If you're having trouble contact us.",
         title: "Something went wrong!",
         onClose: () => hidePopUp(),
       }
@@ -61,6 +61,63 @@ export const EditPaymentAndShipping: React.FC<{
           note: "Please check if your billing address looks valid. If you're having trouble contact us.",
           buttonText: "Close",
           onClose: hidePopUp,
+        }
+      }
+      if (error.message === "Need to Suggest Address") {
+        const suggestedAddress = error.graphQLErrors?.[0]?.extensions?.suggestedAddress
+        if (!!suggestedAddress) {
+          popUpData = {
+            buttonText: "Use address",
+            //@ts-ignore
+            component: (
+              <>
+                <Spacer mt={2} />
+                <Sans size="5" color={color("black100")}>
+                  We suggest using this Address
+                </Sans>
+                <Spacer mb={2} />
+                <Sans size="4" color={color("black50")}>
+                  {suggestedAddress.street1}
+                </Sans>
+                {!!suggestedAddress.street2 ? (
+                  <>
+                    <Sans size="4" color={color("black50")}>
+                      {suggestedAddress.street2}
+                    </Sans>
+                  </>
+                ) : null}
+                <Sans size="4" color={color("black50")}>
+                  {suggestedAddress.city}, {suggestedAddress.state} {suggestedAddress.zip.split("-")?.[0]}
+                </Sans>
+                <Spacer mb={2} />
+                <Sans size="4" color={color("black50")}>
+                  The address you entered is not recognized by UPS. Please use the suggested address above or enter a
+                  different one.
+                </Sans>
+              </>
+            ),
+            secondaryButtonText: "Close",
+            secondaryButtonOnPress: () => hidePopUp(),
+            onClose: () => {
+              setShippingAddress({
+                address1: suggestedAddress.street1,
+                address2: suggestedAddress.street2,
+                city: suggestedAddress.city,
+                state: suggestedAddress.state,
+                zipCode: suggestedAddress.zip,
+              })
+              handleSaveBtnPressed({
+                shippingAddressOveride: {
+                  street1: suggestedAddress.street1,
+                  street2: suggestedAddress.street2,
+                  city: suggestedAddress.city,
+                  state: suggestedAddress.state,
+                  postalCode: suggestedAddress.zip,
+                },
+              })
+              hidePopUp()
+            },
+          }
         }
       }
       Sentry.captureException(error)
@@ -84,18 +141,20 @@ export const EditPaymentAndShipping: React.FC<{
     zipCode: shippingZipCode,
   } = shippingAddress
 
-  const handleSaveBtnPressed = async () => {
+  const handleSaveBtnPressed = async ({ shippingAddressOveride }) => {
     setIsMutating(true)
     const result = await updatePaymentAndShipping({
       variables: {
         phoneNumber,
-        shippingAddress: {
-          city: shippingCity,
-          postalCode: shippingZipCode,
-          state: shippingState,
-          street1: shippingAddress1,
-          street2: shippingAddress2,
-        },
+        shippingAddress: !!shippingAddressOveride
+          ? shippingAddressOveride
+          : {
+              city: shippingCity,
+              postalCode: shippingZipCode,
+              state: shippingState,
+              street1: shippingAddress1,
+              street2: shippingAddress2,
+            },
       },
       refetchQueries: [
         {
