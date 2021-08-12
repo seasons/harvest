@@ -1,8 +1,18 @@
-import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
+import {
+  Box,
+  Container,
+  FixedBackArrow,
+  FixedButton,
+  Flex,
+  Sans,
+  Separator,
+  Spacer,
+  SuggestedAddressPopupComponent,
+} from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
-import { color, space } from "App/utils"
+import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import { Schema as NavigationSchema } from "App/Navigation"
@@ -138,33 +148,7 @@ export const Reservation = screenTrack()((props) => {
           popUpData = {
             buttonText: "Use address",
             //@ts-ignore
-            component: (
-              <>
-                <Spacer mt={2} />
-                <Sans size="5" color={color("black100")}>
-                  We suggest using this Address
-                </Sans>
-                <Spacer mb={2} />
-                <Sans size="4" color={color("black50")}>
-                  {suggestedAddress.street1}
-                </Sans>
-                {!!suggestedAddress.street2 ? (
-                  <>
-                    <Sans size="4" color={color("black50")}>
-                      {suggestedAddress.street2}
-                    </Sans>
-                  </>
-                ) : null}
-                <Sans size="4" color={color("black50")}>
-                  {suggestedAddress.city}, {suggestedAddress.state} {suggestedAddress.zip.split("-")?.[0]}
-                </Sans>
-                <Spacer mb={2} />
-                <Sans size="4" color={color("black50")}>
-                  The address you entered is not recognized by UPS. In order to place your reservation, please use the
-                  suggested address above or tap edit to enter a different value.
-                </Sans>
-              </>
-            ),
+            component: <SuggestedAddressPopupComponent suggestedAddress={suggestedAddress} type="Reservation" />,
             secondaryButtonText: "Close",
             secondaryButtonOnPress: () => hidePopUp(),
             onClose: () => {

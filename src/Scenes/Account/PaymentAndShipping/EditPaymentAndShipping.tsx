@@ -1,11 +1,21 @@
 import gql from "graphql-tag"
-import { color, space } from "App/utils"
+import { space } from "App/utils"
 import React, { useState } from "react"
 import { useMutation } from "@apollo/client"
 import { Dimensions, Keyboard, KeyboardAvoidingView } from "react-native"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Box, Button, Container, Flex, FixedBackArrow, Sans, Spacer, TextInput } from "App/Components"
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  FixedBackArrow,
+  Sans,
+  Spacer,
+  TextInput,
+  SuggestedAddressPopupComponent,
+} from "App/Components"
 import { GetUserPaymentData_me_customer_detail_shippingAddress } from "src/generated/getUserPaymentData"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { screenTrack } from "App/utils/track"
@@ -69,33 +79,7 @@ export const EditPaymentAndShipping: React.FC<{
           popUpData = {
             buttonText: "Use address",
             //@ts-ignore
-            component: (
-              <>
-                <Spacer mt={2} />
-                <Sans size="5" color={color("black100")}>
-                  We suggest using this Address
-                </Sans>
-                <Spacer mb={2} />
-                <Sans size="4" color={color("black50")}>
-                  {suggestedAddress.street1}
-                </Sans>
-                {!!suggestedAddress.street2 ? (
-                  <>
-                    <Sans size="4" color={color("black50")}>
-                      {suggestedAddress.street2}
-                    </Sans>
-                  </>
-                ) : null}
-                <Sans size="4" color={color("black50")}>
-                  {suggestedAddress.city}, {suggestedAddress.state} {suggestedAddress.zip.split("-")?.[0]}
-                </Sans>
-                <Spacer mb={2} />
-                <Sans size="4" color={color("black50")}>
-                  The address you entered is not recognized by UPS. Please use the suggested address above or enter a
-                  different one.
-                </Sans>
-              </>
-            ),
+            component: <SuggestedAddressPopupComponent suggestedAddress={suggestedAddress} type="Shipping" />,
             secondaryButtonText: "Close",
             secondaryButtonOnPress: () => hidePopUp(),
             onClose: () => {
