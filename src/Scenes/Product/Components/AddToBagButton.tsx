@@ -14,6 +14,8 @@ import { useNavigation } from "@react-navigation/native"
 import { GET_PRODUCT } from "../Queries"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { GetProductMe } from "App/generated/GetProductMe"
+import {Text} from 'react-native'
+import styled from "styled-components/native"
 
 interface Props {
   setShowSizeWarning: (show: boolean) => void
@@ -162,6 +164,9 @@ export const AddToBagButton: React.FC<Props> = ({
       showCheckMark={isInBag}
       variant="primaryBlack"
       disabled={_disabled}
+      borderRadius={10}
+      height={55}
+      
       onPress={() => {
         tracking.trackEvent({
           actionName: Schema.ActionNames.ProductAddedToBag,
@@ -169,8 +174,17 @@ export const AddToBagButton: React.FC<Props> = ({
         })
         handleReserve()
       }}
-    >
-      {text}
+    > 
+    <ButtonText>
+        {text}
+    </ButtonText>
     </Button>
   )
 }
+
+const ButtonText = styled(Text)`
+  font-size: 16px;
+  flex-wrap: nowrap;
+  display: flex;
+  flex-direction: row;
+`

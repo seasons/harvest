@@ -291,7 +291,7 @@ export interface GetProduct_products {
   color: GetProduct_products_color;
   secondaryColor: GetProduct_products_secondaryColor | null;
   brand: GetProduct_products_brand;
-  realtedProducts: GetProduct_relatedProducts
+  relatedProducts: GetProduct_relatedProducts
   outerMaterials: string[];
   innerMaterials: string[];
   largeImages: GetProduct_products_largeImages[];

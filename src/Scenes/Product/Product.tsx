@@ -254,6 +254,7 @@ export const Product = screenTrack({
   const images = product?.largeImages
   const imageWidth = viewWidth
   const relatedProducts = product?.relatedProducts
+  const productType = product?.category?.productType
   const physicalProductQualityReport = (selectedVariant?.nextReservablePhysicalProduct?.reports || []).reduce(
     (agg, report) => {
       if (!agg) {
@@ -427,18 +428,22 @@ export const Product = screenTrack({
         setShowSizeWarning={setShowSizeWarning}
         scrollToBuyCTA={scrollToBuyCTA}
         animatedScrollY={animatedScrollYRef.current}
+        retailPrice={product.retailPrice}
+        monthlyRental={product?.rentalPrice ? product?.rentalPrice: 40}
+        productType={productType}
       />
       {showNotifyMeMessage && (
-        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
-          <Spacer pb={2} />
-          <Flex p={2} flexDirection="row" flexWrap="nowrap" justifyContent="center">
-            <Sans size="4">{notifyButtonText}</Sans>
-          </Flex>
-          <Spacer pb={1} />
-        </FadeBottom2>
-      )}
+       <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
+        <Spacer pb={2} />
+        <Flex p={2} flexDirection="row" flexWrap="nowrap" justifyContent="center">
+          <Sans size="4">{notifyButtonText}</Sans>
+        </Flex>
+       <Spacer pb={1} />
+     </FadeBottom2>      
+     )}
       <AnimatedOverlay pointerEvents={showVariantPicker ? "auto" : "none"} opacity={pickerTransition.overlayOpacity} />
-      <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
+      {productType === "Accessory" ? null : (
+        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
         <VariantPicker
           variantPickerHeight={variantPickerHeight}
           product={product}
@@ -449,6 +454,7 @@ export const Product = screenTrack({
           toggleShowVariantPicker={toggleShowVariantPicker}
         />
       </AnimatedVariantPicker>
+      )}
       <SizeWarning
         show={showSizeWarning}
         data={data}

@@ -102,6 +102,7 @@ export const ProductDetails: React.FC<{
       )}
       {!!product.brand && <ProductInfoItem detailType="Brand" detailValue={product.brand.name} />}
       {!!product.retailPrice && <ProductInfoItem detailType="Retail price" detailValue={"$" + product.retailPrice} />}
+      {!!(product.rentalPrice || 40) && <ProductInfoItem detailType="Monthly Rental" detailValue={"$" + (product.rentalPrice || 40)} />}
     </Box>
   )
 }

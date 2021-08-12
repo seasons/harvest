@@ -1,4 +1,4 @@
-import { Button, Flex, Sans, Spacer } from "App/Components"
+import { Box, Button, Flex, Sans, Spacer } from "App/Components"
 import { GetProduct, GetProduct_products_brand_products_variants } from "App/generated/GetProduct"
 import { AddToBagButton } from "App/Scenes/Product/Components"
 import { color, space } from "App/utils"
@@ -7,7 +7,7 @@ import { DownChevronIcon } from "Assets/icons"
 import { WhiteListCheck } from "Assets/svgs/WhiteListCheck"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import React, { useEffect, useState } from "react"
-import { Animated, Dimensions, TouchableWithoutFeedback, StyleSheet } from "react-native"
+import { Animated, Dimensions, TouchableWithoutFeedback, StyleSheet, Text } from "react-native"
 import styled from "styled-components/native"
 import { VARIANT_WANT_HEIGHT } from "../Product"
 import { GetProductMe } from "App/generated/GetProductMe"
@@ -25,9 +25,13 @@ interface Props {
   isMutatingNotify: boolean
   animatedScrollY: Animated.Value
   dataMe: GetProductMe
+  retailPrice: number
+  monthlyRental: number
+  productType: string
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
+const oneButtonWidth = twoButtonWidth / 2
 const buyCtaHeight = space(2) + space(3) + 20
 
 const renderBuyCTA = ({ price, scrollToBuyCTA, animatedScrollY, showNotifyMeMessage }) => {
@@ -39,7 +43,7 @@ const renderBuyCTA = ({ price, scrollToBuyCTA, animatedScrollY, showNotifyMeMess
   let cta
   if (price && price.buyUsedEnabled && price.buyUsedPrice) {
     cta = (
-      <UnderlinedSans size="4" onPress={scrollToBuyCTA}>
+      <UnderlinedSans size="5" onPress={scrollToBuyCTA}>
         {" "}
         Buy for{" "}
         {(price.buyUsedPrice / 100).toLocaleString("en-US", {
@@ -50,7 +54,7 @@ const renderBuyCTA = ({ price, scrollToBuyCTA, animatedScrollY, showNotifyMeMess
     )
   } else if (price && price.buyNewEnabled && price.buyNewPrice && price.buyNewAvailableForSale) {
     cta = (
-      <UnderlinedSans size="4" onPress={scrollToBuyCTA}>
+      <UnderlinedSans size="5" onPress={scrollToBuyCTA}>
         Buy new for{" "}
         {(price.buyNewPrice / 100).toLocaleString("en-US", {
           style: "currency",
@@ -96,6 +100,9 @@ export const SelectionButtons: React.FC<Props> = ({
   setShowSizeWarning,
   scrollToBuyCTA,
   animatedScrollY,
+  retailPrice,
+  monthlyRental,
+  productType
 }) => {
   const tracking = useTracking()
   const [loaded, setLoaded] = useState(false)
@@ -117,45 +124,63 @@ export const SelectionButtons: React.FC<Props> = ({
     scrollToBuyCTA,
     animatedScrollY,
     showNotifyMeMessage,
-  })
+  }) 
   const selectionButtonsTopOffset = BuyCTA
-    ? animatedScrollY.interpolate({
-        inputRange: [0, 50, 100, 101],
-        outputRange: [0, 0, buyCtaHeight - space(2), buyCtaHeight - space(2)],
-      })
-    : buyCtaHeight - space(2)
+  ? animatedScrollY.interpolate({
+      inputRange: [0, 50, 100, 101],
+      outputRange: [0, 0, buyCtaHeight - space(2), buyCtaHeight - space(2)],
+    })
+  : buyCtaHeight - space(2)
 
   return (
     <Wrapper style={{ bottom: showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0 }}>
-      <Flex flexDirection="column">
-        <Animated.View style={{ transform: [{ translateY: selectionButtonsTopOffset }], zIndex: 30 }}>
-          <Flex px={2} paddingBottom={2} justifyContent="space-between" flexWrap="nowrap" flexDirection="row">
-            <TouchableWithoutFeedback
-              onPress={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.SizeButtonTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                })
-                toggleShowVariantPicker(!showVariantPicker)
-              }}
-            >
-              <VariantSelectionButton>
-                <Flex px={2} style={{ width: "100%" }} flexDirection="row" justifyContent="center">
-                  <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
-                    <Sans size="4" color="black">
-                      {selectedVariant?.displayLong}
-                    </Sans>
-                    <Spacer mr={1} />
-                    <DownChevronIcon color={color("black")} rotate={showVariantPicker} />
+      <Flex flexDirection="column" >
+        <Animated.View style={{zIndex: 30 }}>
+          <SelectionBox >
+
+            <RateSection>
+              <Flex flexDirection="row">
+                <MonthlyRate>
+                  ${monthlyRental}
+                </MonthlyRate>
+                <PerMonth> / month</PerMonth>
+              </Flex>
+              
+              <RetailPrice>
+                Retail ${retailPrice}
+              </RetailPrice>
+            </RateSection>
+
+            <Flex flexDirection="row"justifyContent="space-between" width={230}>
+
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  tracking.trackEvent({
+                    actionName: Schema.ActionNames.SizeButtonTapped,
+                    actionType: Schema.ActionTypes.Tap,
+                  })
+                  toggleShowVariantPicker(!showVariantPicker)
+                }}
+                >
+                {productType === "Accessory" ? <Box></Box> :(
+                <VariantSelectionButton>
+                  <Flex px={2} style={{ width: "100%" }} flexDirection="row" justifyContent="center">
+                    <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
+                      <Sans size="4" color="black">
+                        {selectedVariant?.displayShort}
+                      </Sans>
+                      <Spacer mr={1} />
+                      <DownChevronIcon color={color("black")} rotate={showVariantPicker} />
+                    </Flex>
                   </Flex>
-                </Flex>
-              </VariantSelectionButton>
-            </TouchableWithoutFeedback>
+                </VariantSelectionButton>
+              )}
+              </TouchableWithoutFeedback>
             {inStock ? (
               <AddToBagButton
                 setShowSizeWarning={setShowSizeWarning}
                 variantInStock={inStock}
-                width={twoButtonWidth}
+                width={twoButtonWidth - 45}
                 selectedVariant={selectedVariant}
                 data={data}
                 dataMe={dataMe}
@@ -163,28 +188,33 @@ export const SelectionButtons: React.FC<Props> = ({
             ) : (
               <StyledButton
                 Icon={hasNotification ? WhiteListCheck : null}
-                width={twoButtonWidth}
+                width={twoButtonWidth - 45}
                 onPress={onNotifyMe}
                 loading={isMutatingNotify}
+                borderRadius={10}
+                height={55}
               >
-                Notify me
+                <Text>
+                  Notify me
+                </Text>
               </StyledButton>
             )}
-          </Flex>
+            </Flex>
+          </SelectionBox>
         </Animated.View>
-        {BuyCTA}
+            {BuyCTA}
       </Flex>
     </Wrapper>
   )
 }
 
 const VariantSelectionButton = styled.View`
-  height: 48;
-  border: 1px solid ${color("black")};
+  height: 55;
+  border: 1px solid ${color("lightgrey")};
   border-width: 1;
-  border-radius: 28;
+  border-radius: 10;
   background-color: white;
-  width: ${twoButtonWidth};
+  width: ${oneButtonWidth - 20};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -194,7 +224,7 @@ const VariantSelectionButton = styled.View`
 const Wrapper = styled.View`
   position: absolute;
   left: 0;
-  height: ${48 + buyCtaHeight};
+  height: ${40 + buyCtaHeight};
   width: 100%;
   z-index: 1;
 `
@@ -209,4 +239,39 @@ const StyledButton = styled(Button)`
 
 const UnderlinedSans = styled(Sans)`
   text-decoration: underline;
+`
+
+const MonthlyRate = styled(Text)`
+  font-size: 20;
+  font-weight: 500;
+`
+
+const PerMonth = styled(Text)`
+  color: #7e7c7c;
+  padding-top: 1%;
+  font-size: 15;
+`
+
+const RetailPrice = styled(Text)`
+  color: #7e7c7c;
+  font-size: 15;
+`
+const SelectionBox = styled(Flex)`
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  background-color: white;
+  height: 100%;
+  padding: 4%;
+  border: 1px lightgrey;
+`
+
+const RateSection = styled(Flex)`
+  padding-top: 1%;
+  padding-bottom: 0;
+  height: 75%
+`
+
+const NotifyText = styled(Text)`
+  font-size: 16px;
 `
