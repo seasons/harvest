@@ -31,7 +31,7 @@ export const SuggestedAddressPopupComponent = ({
         </>
       ) : null}
       <Sans size="4" color={color("black50")}>
-        {suggestedAddress.city}, {suggestedAddress.state} {suggestedAddress.zip.split("-")?.[0]}
+        {suggestedAddress.city}, {suggestedAddress.state} {suggestedAddress.zip}
       </Sans>
       <Spacer mb={2} />
       <Sans size="4" color={color("black50")}>
