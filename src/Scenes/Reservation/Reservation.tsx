@@ -1,4 +1,14 @@
-import { Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
+import {
+  Box,
+  Container,
+  FixedBackArrow,
+  FixedButton,
+  Flex,
+  Sans,
+  Separator,
+  Spacer,
+  SuggestedAddressPopupComponent,
+} from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
@@ -17,6 +27,7 @@ import { ShippingOption } from "../Order/Components"
 import { SectionHeader } from "App/Components/SectionHeader"
 import { DateTime } from "luxon"
 import { ReservationLineItems } from "./ReservationLineItems"
+import { UPDATE_PHONE_AND_SHIPPING } from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions, $shippingCode: ShippingCode) {
@@ -102,6 +113,19 @@ export const Reservation = screenTrack()((props) => {
   const { previousData, data = previousData } = useQuery(GET_CUSTOMER)
   const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
   const { showPopUp, hidePopUp } = usePopUpContext()
+  const [updatePhoneAndShippingAddress] = useMutation(UPDATE_PHONE_AND_SHIPPING, {
+    onError: (error) => {
+      let popUpData = {
+        buttonText: "Got it",
+        note: "Please make sure your address is valid. If you're having trouble contact us.",
+        title: "Something went wrong!",
+        onClose: () => hidePopUp(),
+      }
+      Sentry.captureException(error)
+      showPopUp(popUpData)
+      console.log("Error Reservation.tsx: ", error)
+    },
+  })
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
       {
@@ -111,25 +135,44 @@ export const Reservation = screenTrack()((props) => {
     onCompleted: () => {
       setIsMutating(false)
     },
-    onError: (err) => {
-      if (err.graphQLErrors?.[0]?.message.includes("Address Validation Error")) {
-        showPopUp({
-          title: "Sorry!",
-          note:
-            "UPS could not validate your shipping address, please double check your shipping address is valid in your account details.",
-          buttonText: "Close",
-          onClose: () => hidePopUp(),
-        })
-      } else {
-        Sentry.captureException(err)
-        showPopUp({
-          title: "Sorry!",
-          note: "We couldn't process your order because of an unexpected error, please try again later",
-          buttonText: "Close",
-          onClose: () => hidePopUp(),
-        })
+    onError: (error) => {
+      let popUpData = {
+        title: "Sorry!",
+        note: "We couldn't process your order because of an unexpected error, please try again later",
+        buttonText: "Close",
+        onClose: () => hidePopUp(),
       }
-      console.log("Error reservation.tsx: ", err)
+      if (error.message === "Need to Suggest Address") {
+        const suggestedAddress = error.graphQLErrors?.[0]?.extensions?.suggestedAddress
+        if (!!suggestedAddress) {
+          popUpData = {
+            buttonText: "Use address",
+            //@ts-ignore
+            component: <SuggestedAddressPopupComponent suggestedAddress={suggestedAddress} type="Reservation" />,
+            secondaryButtonText: "Close",
+            secondaryButtonOnPress: () => hidePopUp(),
+            onClose: () => {
+              updatePhoneAndShippingAddress({
+                variables: {
+                  phoneNumber,
+                  shippingAddress: {
+                    street1: suggestedAddress.street1,
+                    street2: suggestedAddress.street2,
+                    city: suggestedAddress.city,
+                    state: suggestedAddress.state,
+                    postalCode: suggestedAddress.zip,
+                  },
+                },
+                refetchQueries: [{ query: GET_CUSTOMER }],
+              })
+              hidePopUp()
+            },
+          }
+        }
+      }
+      Sentry.captureException(error)
+      showPopUp(popUpData)
+      console.log("Error reservation.tsx: ", error)
       setIsMutating(false)
     },
   })
