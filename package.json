@@ -1,6 +1,6 @@
 {
   "name": "harvest",
-  "version": "1.38.0",
+  "version": "1.39.0",
   "engines": {
     "node": ">=12.x.x"
   },
@@ -24,12 +24,15 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "postversion": "yarn build:fastlane",
-    "build:fastlane": "fastlane ios beta"
+    "build:fastlane": "fastlane ios beta",
+    "generate-queries-json": "persistgraphql src data/complete.queryMap.json --js --extension=tsx",
+    "update-monsoon": "node scripts/update-monsoon.js"
   },
   "dependencies": {
     "@apollo/client": "^3.3.7",
     "@expo/react-native-action-sheet": "^3.8.0",
     "@material-ui/core": "^4.11.1",
+    "@octokit/rest": "^18.7.2",
     "@react-native-community/async-storage": "~1.12.0",
     "@react-native-community/cameraroll": "^4.0.1",
     "@react-native-community/clipboard": "^1.5.0",
@@ -40,7 +43,7 @@
     "@react-navigation/bottom-tabs": "^5.7.2",
     "@react-navigation/native": "^5.7.1",
     "@react-navigation/stack": "^5.7.1",
-    "@seasons/eclipse": "^1.2.48",
+    "@seasons/eclipse": "^1.2.50",
     "@segment/analytics-react-native": "^1.4.1",
     "@segment/analytics-react-native-google-analytics": "^1.4.1",
     "@segment/analytics-react-native-mixpanel": "^1.4.1",
@@ -64,6 +67,7 @@
     "lodash": "^4.17.15",
     "luxon": "^1.21.1",
     "node-fetch": "^2.6.0",
+    "persistgraphql": "https://github.com/seasons/persistgraphql.git",
     "querystring": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -145,6 +149,7 @@
     "redux-devtools-extension": "^2.13.8",
     "remote-redux-devtools": "^0.5.16",
     "snapshot-diff": "0.2.2",
+    "ts-node": "^10.0.0",
     "typescript": "~3.9.2",
     "waait": "^1.0.5"
   },

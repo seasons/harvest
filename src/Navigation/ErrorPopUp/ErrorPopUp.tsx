@@ -90,6 +90,26 @@ export const ErrorPopUp: React.FC = () => {
     return null
   }
 
+  const content = (
+    <Box>
+      {!!data?.icon && <Box mt={2}>{data?.icon}</Box>}
+      <Spacer mt={2} />
+      <Box>
+        <Sans size="5" color={colors?.primaryText}>
+          {data?.title}
+        </Sans>
+        {data?.note && (
+          <>
+            <Spacer mb={0.5} />
+            <Sans size="4" color={colors?.secondaryText}>
+              {data?.note}
+            </Sans>
+          </>
+        )}
+      </Box>
+    </Box>
+  )
+
   return (
     <Theme>
       {show && (
@@ -117,21 +137,7 @@ export const ErrorPopUp: React.FC = () => {
               color={colors?.backgroundColor || color("white100")}
             >
               <Box p={2} onLayout={onLayout} pb={insets?.bottom}>
-                {!!data?.icon && <Box mt={2}>{data?.icon}</Box>}
-                <Spacer mt={2} />
-                <Box>
-                  <Sans size="5" color={colors?.primaryText}>
-                    {data?.title}
-                  </Sans>
-                  {data?.note && (
-                    <>
-                      <Spacer mb={0.5} />
-                      <Sans size="4" color={colors?.secondaryText}>
-                        {data?.note}
-                      </Sans>
-                    </>
-                  )}
-                </Box>
+                {data?.component ? data.component : content}
                 <Spacer mb={3} />
                 <Separator color={colors?.separator} />
                 <Flex flexDirection="row">

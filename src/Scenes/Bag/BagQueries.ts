@@ -114,6 +114,9 @@ export const GetBag_NoCache_Query = gql`
         status
         phase
         updatedAt
+        products {
+          id
+        }
       }
       bag {
         id
@@ -143,11 +146,9 @@ export const ADD_TO_BAG = gql`
   }
 `
 
-export const REMOVE_FROM_BAG = gql`
-  mutation RemoveFromBag($id: ID!, $saved: Boolean!) {
-    removeFromBag(item: $id, saved: $saved) {
-      id
-    }
+export const DELETE_BAG_ITEM = gql`
+  mutation deleteBagItem($itemID: ID!) {
+    deleteBagItem(itemID: $itemID)
   }
 `
 
