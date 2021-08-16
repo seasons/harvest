@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client"
 import { useFocusEffect } from "@react-navigation/native"
-import { Box, Flex, ProductGridItem } from "App/Components"
+import { Box, Flex } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
@@ -11,7 +11,7 @@ import { BrowseEmptyState } from "./BrowseEmptyState"
 import { CategoryPicker } from "./CategoryPicker"
 import { ProductGridItemSkeleton } from "../Product/Components"
 import { GetBrowseProducts } from "App/generated/GetBrowseProducts"
-import { color, Sans, Spacer } from "@seasons/eclipse"
+import { color, Sans, Spacer, ProductGridItem } from "@seasons/eclipse"
 import { BrowseFilters, EMPTY_BROWSE_FILTERS } from "./Filters"
 import { GET_BROWSE_PRODUCTS } from "./queries/browseQueries"
 import { useScrollToTop } from "@react-navigation/native"
@@ -169,7 +169,7 @@ export const Browse = screenTrack()((props: any) => {
                 return (
                   <Box key={node?.id + index}>
                     {node?.id ? (
-                      <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0} />
+                      <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0} authState/>
                     ) : (
                       <ProductGridItemSkeleton addLeftSpacing={index % numColumns !== 0} />
                     )}

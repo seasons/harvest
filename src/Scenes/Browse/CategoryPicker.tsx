@@ -2,6 +2,7 @@ import React from "react"
 import { Sans, Skeleton, Spacer, Box, Flex } from "App/Components"
 import { TouchableOpacity, ScrollView } from "react-native"
 import styled from "styled-components/native"
+import { color } from "App/utils"
 
 type Props = {
   items: { slug: string; name: string }[]
@@ -61,7 +62,7 @@ export const CategoryPicker: React.FC<Props> = ({ items, onCategoryPress, curren
               {!!item.name ? (
                 <TouchableOpacity onPress={() => onCategoryPress(item)}>
                   <Category mr={1} selected={selected}>
-                    <Sans size="4" style={{ color: selected ? "white" :  "black"}}>
+                    <Sans size="4" style={{ color: selected ? color("white100") :  color("black100")}}>
                       {item.name}
                     </Sans>
                   </Category>
@@ -92,11 +93,11 @@ const Category = styled(Box)<{ selected: boolean }>`
   ${(p) =>
     p.selected &&
     `
-    backgroundColor: black
-    border: 1px black
+    background-color: ${color("black100")}
+    border: 1px ${color("black100")}
     
   `};
-  border: 1px lightgrey;
+  border: 1px ${color("black25")};
   border-radius: 8px;
   padding-top: 5px;
   padding-bottom: 5px;

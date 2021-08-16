@@ -193,7 +193,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const reservationItems = reservationTabData?.me?.customer?.reservations
   const nextFreeSwapDate = me?.nextFreeSwapDate
   const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()
- 
+
   const handleCheckItems = async () => {
     await checkItemsAvailability({
       variables: {
@@ -381,26 +381,39 @@ export const Bag = screenTrack()((props: BagProps) => {
       )
     } else if (hasActiveReservation) {
       if (me?.activeReservation?.status === "Delivered") {
-        if(markedAsReturned){
+        if (markedAsReturned) {
           const returnLabelUrl = me?.activeReservation?.returnedPackage?.shippingLabel?.trackingURL
           button = (
-            <Flex flexDirection='row' justifyContent='space-between'>
-              <Button width={(windowWidth /2) - 20} onPress={() => navigation.navigate("Webview", { uri: returnLabelUrl })} disabled={isMutating} loading={isMutating} variant="primaryWhite" >
-                Return label
-              </Button>
-              <Button width={(windowWidth /2) - 20} onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryBlack">
+            <Flex flexDirection="row" justifyContent="space-between">
+              {returnLabelUrl && (
+                <Button
+                  width={windowWidth / 2 - 20}
+                  onPress={() => navigation.navigate("Webview", { uri: returnLabelUrl })}
+                  disabled={isMutating}
+                  loading={isMutating}
+                  variant="primaryWhite"
+                >
+                  Return label
+                </Button>
+              )}
+              <Button
+                width={windowWidth / 2 - 20}
+                onPress={handlePress}
+                disabled={isMutating}
+                loading={isMutating}
+                variant="primaryBlack"
+              >
                 How to return
               </Button>
             </Flex>
           )
-        }else{
+        } else {
           button = (
             <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
               Return bag
             </Button>
           )
         }
-        
       }
     } else {
       button = (
@@ -483,6 +496,3 @@ export const Bag = screenTrack()((props: BagProps) => {
     </Container>
   )
 })
-
-
-

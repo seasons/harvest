@@ -1,4 +1,4 @@
-import { Button } from "App/Components"
+import { Button, Sans } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
@@ -14,8 +14,7 @@ import { useNavigation } from "@react-navigation/native"
 import { GET_PRODUCT } from "../Queries"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { GetProductMe } from "App/generated/GetProductMe"
-import {Text} from 'react-native'
-import styled from "styled-components/native"
+import { color } from "styled-system"
 
 interface Props {
   setShowSizeWarning: (show: boolean) => void
@@ -175,16 +174,9 @@ export const AddToBagButton: React.FC<Props> = ({
         handleReserve()
       }}
     > 
-    <ButtonText>
+    <Sans size="4" color={color("white100")}>
         {text}
-    </ButtonText>
+    </Sans>
     </Button>
   )
 }
-
-const ButtonText = styled(Text)`
-  font-size: 16px;
-  flex-wrap: nowrap;
-  display: flex;
-  flex-direction: row;
-`

@@ -32,7 +32,7 @@ import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT, Product_NoCache_Query } from "./Queries"
 import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generated/Product_NoCache_Query"
-import { RelatedProducts } from "./Components/RelatedProdcuts"
+import { RelatedProducts } from "./Components/RelatedProducts"
 
 const windowHeight = Dimensions.get("window").height
 const variantPickerHeight = windowHeight / 2.5 + 50
@@ -295,7 +295,7 @@ export const Product = screenTrack({
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
       case "relatedProducts":
-        return <RelatedProducts flatListRef={flatListRef} products = {relatedProducts}/>
+        return <RelatedProducts flatListRef={flatListRef} products={relatedProducts} />
       case "moreLikeThis":
         return <MoreFromBrand flatListRef={flatListRef} products={brandProducts} brandName={product.brand.name} />
       case "buy":
@@ -346,7 +346,6 @@ export const Product = screenTrack({
     "aboutTheBrand",
     "relatedProducts",
     "moreLikeThis",
-    
   ]
   const url = `https://www.wearseasons.com/product/${product.slug}`
   const title = product.name
@@ -389,7 +388,6 @@ export const Product = screenTrack({
     })
   }
 
-  
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "productBackground"} />
@@ -429,31 +427,31 @@ export const Product = screenTrack({
         scrollToBuyCTA={scrollToBuyCTA}
         animatedScrollY={animatedScrollYRef.current}
         retailPrice={product.retailPrice}
-        monthlyRental={product?.rentalPrice ? product?.rentalPrice: 40}
+        monthlyRental={product?.rentalPrice}
         productType={productType}
       />
       {showNotifyMeMessage && (
-       <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
-        <Spacer pb={2} />
-        <Flex p={2} flexDirection="row" flexWrap="nowrap" justifyContent="center">
-          <Sans size="4">{notifyButtonText}</Sans>
-        </Flex>
-       <Spacer pb={1} />
-     </FadeBottom2>      
-     )}
+        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
+          <Spacer pb={2} />
+          <Flex p={2} flexDirection="row" flexWrap="nowrap" justifyContent="center">
+            <Sans size="4">{notifyButtonText}</Sans>
+          </Flex>
+          <Spacer pb={1} />
+        </FadeBottom2>
+      )}
       <AnimatedOverlay pointerEvents={showVariantPicker ? "auto" : "none"} opacity={pickerTransition.overlayOpacity} />
       {productType === "Accessory" ? null : (
         <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
-        <VariantPicker
-          variantPickerHeight={variantPickerHeight}
-          product={product}
-          setSelectedVariant={setSelectedVariant}
-          selectedVariant={selectedVariant}
-          height={variantPickerHeight}
-          navigation={navigation}
-          toggleShowVariantPicker={toggleShowVariantPicker}
-        />
-      </AnimatedVariantPicker>
+          <VariantPicker
+            variantPickerHeight={variantPickerHeight}
+            product={product}
+            setSelectedVariant={setSelectedVariant}
+            selectedVariant={selectedVariant}
+            height={variantPickerHeight}
+            navigation={navigation}
+            toggleShowVariantPicker={toggleShowVariantPicker}
+          />
+        </AnimatedVariantPicker>
       )}
       <SizeWarning
         show={showSizeWarning}

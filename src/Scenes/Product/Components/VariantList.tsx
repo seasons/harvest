@@ -45,47 +45,44 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
       manufacturerSizeDisplay !== displayShort &&
       !!manufacturerSizeDisplayType &&
       `${manufacturerSizeDisplayType ? manufacturerSizeDisplayType + " " : ""}${manufacturerSizeDisplay}`
-    
-      const buttonColors = size?.reservable > 0 ? {sizeColor: "black100", backgroundColor: "white"} 
-      : {sizeColor: "black50", backgroundColor: "lightgrey"}
+
+    const buttonColors =
+      size?.reservable > 0
+        ? { sizeColor: "black100", backgroundColor: "white100" }
+        : { sizeColor: "black50", backgroundColor: "black25" }
     return (
       <Flex key={size.id || i} paddingBottom={1.5}>
-        <Flex>
-          <Flex>
-            {/* <Spacer mr={1} /> */}
-            {displaySize && (
-              <TouchableOpacity
-                onPress={() => {
-                  tracking.trackEvent({
-                    actionName: Schema.ActionNames.ProductVariantSelected,
-                    actionType: Schema.ActionTypes.Tap,
-                    size: displaySize,
-                    variantID: size?.id,
-                  })
-                  setSelectedVariant(size)
-                  onSizeSelected(size)
-                }}
-              >
-                <StyledBox style={{backgroundColor: buttonColors.backgroundColor}}>
-                  <Flex alignItems="center" paddingTop={1.5}>
-                    <Sans color={color(buttonColors.sizeColor)} size="5">
-                      {displaySize}
-                    </Sans>
-                    <Sans color="black50" size="3">
-                      {manufacturerSizeFullDisplay}
-                    </Sans>
-                  </Flex>
-                </StyledBox>
-              </TouchableOpacity>
-            )}
-          </Flex>
-        </Flex>
+        {displaySize && (
+          <TouchableOpacity
+            onPress={() => {
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.ProductVariantSelected,
+                actionType: Schema.ActionTypes.Tap,
+                size: displaySize,
+                variantID: size?.id,
+              })
+              setSelectedVariant(size)
+              onSizeSelected(size)
+            }}
+          >
+            <StyledBox style={{ backgroundColor: color(buttonColors.backgroundColor) }} pb={2}>
+              <Flex alignItems="center" paddingTop={1.5}>
+                <Sans color={color(buttonColors.sizeColor)} size="5">
+                  {displaySize}
+                </Sans>
+                <Sans color={color("black50")} size="3">
+                  {manufacturerSizeFullDisplay}
+                </Sans>
+              </Flex>
+            </StyledBox>
+          </TouchableOpacity>
+        )}
       </Flex>
     )
   })
 
   return (
-    <Flex alignItems="center" paddingBottom={10}>
+    <Flex alignItems="center" pb={1}>
       <Box style={{ minHeight: variantPickerHeight - 60, width: "100%", padding: space(1) }}>
         <Flex flexDirection="row" flexWrap="wrap" justifyContent="space-between" paddingTop={2}>
           {rows}
@@ -97,9 +94,8 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
 }
 
 const StyledBox = styled(Box)`
-  border: 1px lightgrey;
+  border: 1px ${color("black25")};
   border-radius: 7;
   width: 115;
   height: 75;
-  padding-bottom: 20;
 `

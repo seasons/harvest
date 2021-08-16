@@ -102,7 +102,7 @@ export const SelectionButtons: React.FC<Props> = ({
   animatedScrollY,
   retailPrice,
   monthlyRental,
-  productType
+  productType,
 }) => {
   const tracking = useTracking()
   const [loaded, setLoaded] = useState(false)
@@ -124,35 +124,29 @@ export const SelectionButtons: React.FC<Props> = ({
     scrollToBuyCTA,
     animatedScrollY,
     showNotifyMeMessage,
-  }) 
+  })
   const selectionButtonsTopOffset = BuyCTA
-  ? animatedScrollY.interpolate({
-      inputRange: [0, 50, 100, 101],
-      outputRange: [0, 0, buyCtaHeight - space(2), buyCtaHeight - space(2)],
-    })
-  : buyCtaHeight - space(2)
+    ? animatedScrollY.interpolate({
+        inputRange: [0, 50, 100, 101],
+        outputRange: [0, 0, buyCtaHeight - space(2), buyCtaHeight - space(2)],
+      })
+    : buyCtaHeight - space(2)
 
   return (
     <Wrapper style={{ bottom: showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0 }}>
-      <Flex flexDirection="column" >
-        <Animated.View style={{zIndex: 30 }}>
-          <SelectionBox >
-
+      <Flex flexDirection="column">
+        <Animated.View style={{ zIndex: 30 }}>
+          <SelectionBox>
             <RateSection>
               <Flex flexDirection="row">
-                <MonthlyRate>
-                  ${monthlyRental}
-                </MonthlyRate>
-                <PerMonth> / month</PerMonth>
+                <Sans size="4">${monthlyRental}</Sans>
+                <Sans size="4"> / month</Sans>
               </Flex>
-              
-              <RetailPrice>
-                Retail ${retailPrice}
-              </RetailPrice>
+
+              <Sans size="4" color={color("black50")}>Retail ${retailPrice}</Sans>
             </RateSection>
 
-            <Flex flexDirection="row"justifyContent="space-between" width={230}>
-
+            <Flex flexDirection="row" justifyContent="space-between" width={230}>
               <TouchableWithoutFeedback
                 onPress={() => {
                   tracking.trackEvent({
@@ -161,48 +155,48 @@ export const SelectionButtons: React.FC<Props> = ({
                   })
                   toggleShowVariantPicker(!showVariantPicker)
                 }}
-                >
-                {productType === "Accessory" ? <Box></Box> :(
-                <VariantSelectionButton>
-                  <Flex px={2} style={{ width: "100%" }} flexDirection="row" justifyContent="center">
-                    <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
-                      <Sans size="4" color="black">
-                        {selectedVariant?.displayShort}
-                      </Sans>
-                      <Spacer mr={1} />
-                      <DownChevronIcon color={color("black")} rotate={showVariantPicker} />
-                    </Flex>
-                  </Flex>
-                </VariantSelectionButton>
-              )}
-              </TouchableWithoutFeedback>
-            {inStock ? (
-              <AddToBagButton
-                setShowSizeWarning={setShowSizeWarning}
-                variantInStock={inStock}
-                width={twoButtonWidth - 45}
-                selectedVariant={selectedVariant}
-                data={data}
-                dataMe={dataMe}
-              />
-            ) : (
-              <StyledButton
-                Icon={hasNotification ? WhiteListCheck : null}
-                width={twoButtonWidth - 45}
-                onPress={onNotifyMe}
-                loading={isMutatingNotify}
-                borderRadius={10}
-                height={55}
               >
-                <Text>
-                  Notify me
-                </Text>
-              </StyledButton>
-            )}
+                {productType === "Accessory" ? (
+                  <Box></Box>
+                ) : (
+                  <VariantSelectionButton>
+                    <Flex px={2} style={{ width: "100%" }} flexDirection="row" justifyContent="center">
+                      <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
+                        <Sans size="4" color={color("black100")}>
+                          {selectedVariant?.displayShort}
+                        </Sans>
+                        <Spacer mr={1} />
+                        <DownChevronIcon color={color("black100")} rotate={showVariantPicker} />
+                      </Flex>
+                    </Flex>
+                  </VariantSelectionButton>
+                )}
+              </TouchableWithoutFeedback>
+              {inStock ? (
+                <AddToBagButton
+                  setShowSizeWarning={setShowSizeWarning}
+                  variantInStock={inStock}
+                  width={twoButtonWidth - 45}
+                  selectedVariant={selectedVariant}
+                  data={data}
+                  dataMe={dataMe}
+                />
+              ) : (
+                <StyledButton
+                  Icon={hasNotification ? WhiteListCheck : null}
+                  width={twoButtonWidth - 45}
+                  onPress={onNotifyMe}
+                  loading={isMutatingNotify}
+                  borderRadius={10}
+                  height={55}
+                >
+                  <Sans size="5" color={color("white100")}>Notify me</Sans>
+                </StyledButton>
+              )}
             </Flex>
           </SelectionBox>
         </Animated.View>
-            {BuyCTA}
+        {BuyCTA}
       </Flex>
     </Wrapper>
   )
@@ -210,10 +204,10 @@ export const SelectionButtons: React.FC<Props> = ({
 
 const VariantSelectionButton = styled.View`
   height: 55;
-  border: 1px solid ${color("lightgrey")};
+  border: 1px solid ${color("black25")};
   border-width: 1;
   border-radius: 10;
-  background-color: white;
+  background-color: ${color("white100")};
   width: ${oneButtonWidth - 20};
   display: flex;
   align-items: center;
@@ -241,37 +235,20 @@ const UnderlinedSans = styled(Sans)`
   text-decoration: underline;
 `
 
-const MonthlyRate = styled(Text)`
-  font-size: 20;
-  font-weight: 500;
-`
 
-const PerMonth = styled(Text)`
-  color: #7e7c7c;
-  padding-top: 1%;
-  font-size: 15;
-`
 
-const RetailPrice = styled(Text)`
-  color: #7e7c7c;
-  font-size: 15;
-`
 const SelectionBox = styled(Flex)`
   justify-content: space-between;
   flex-wrap: nowrap;
   flex-direction: row;
-  background-color: white;
+  background-color: ${color("white100")};
   height: 100%;
   padding: 4%;
-  border: 1px lightgrey;
+  border: 1px ${color("black25")};
 `
 
 const RateSection = styled(Flex)`
   padding-top: 1%;
   padding-bottom: 0;
-  height: 75%
-`
-
-const NotifyText = styled(Text)`
-  font-size: 16px;
+  height: 75%;
 `

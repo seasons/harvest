@@ -1,7 +1,6 @@
 import { Box, Button, Flex, Sans, Separator } from "App/Components"
 import { color, space } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
-import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import React from "react"
 import { ScrollView } from "react-native"
 import styled from "styled-components/native"
@@ -16,9 +15,9 @@ export const VariantPicker = (props) => {
       <FixedButtonWrapper px={2}>
         <Button
           variant="primaryWhite"
-          width="31%"
+          width="200"
           borderRadius={7}
-          borderColor="white"
+          borderColor={color("white100")}
           onPress={() => {
             tracking.trackEvent({
               actionName: Schema.ActionNames.SizePickerCancelTapped,
@@ -27,7 +26,7 @@ export const VariantPicker = (props) => {
             toggleShowVariantPicker(false)
           }}
         >
-          <Sans size="5" style={{textDecorationLine:"underline"}}>
+          <Sans size="5" style={{ textDecorationLine: "underline" }} color={color("black100")}>
             Cancel
           </Sans>
         </Button>
@@ -38,7 +37,7 @@ export const VariantPicker = (props) => {
             Select size
           </Sans>
         </Flex>
-        <Separator color="lightgrey"/>
+        <Separator color={color("black25")} />
         <StyledScrollview>
           <Box px={2}>
             <VariantList
@@ -57,10 +56,8 @@ export const VariantPicker = (props) => {
   )
 }
 
-
-
-const VariantPickerFlex= styled(Flex)`
-  background-color: white;
+const VariantPickerFlex = styled(Flex)`
+  background-color: ${color("white100")};
   top: 15;
   border-radius: 25;
   padding-top: 15;
@@ -72,7 +69,7 @@ const FixedButtonWrapper = styled(Box)`
   bottom: ${space(2)};
   width: 100%;
   z-index: 100;
-  align-items: center
+  align-items: center;
 `
 
 const StyledScrollview = styled(ScrollView)`
