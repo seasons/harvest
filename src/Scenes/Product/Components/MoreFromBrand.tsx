@@ -1,4 +1,5 @@
-import { Box, ProductGridItem, Sans } from "App/Components"
+import { Box, Sans } from "App/Components"
+import { ProductGridItem } from "@seasons/eclipse"
 import React, { useState, useEffect } from "react"
 import { FlatList } from "react-native"
 import { ProductGridItemSkeleton } from "./ProductGridItemSkeleton"
