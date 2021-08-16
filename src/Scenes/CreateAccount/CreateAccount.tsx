@@ -106,21 +106,16 @@ export const CreateAccount_Cached_Query = gql`
     paymentPlans(where: $where) {
       id
       name
-      description
-      tagline
+      features {
+        id
+        title
+        caption
+      }
+      caption
       price
       planID
       tier
       itemCount
-    }
-    faq(sectionType: PaymentPlanPage) {
-      sections {
-        title
-        subsections {
-          title
-          text
-        }
-      }
     }
     howDidYouFindOutAboutUs: view(viewID: "HowDidYouFindOutAboutUs") {
       id
@@ -226,98 +221,98 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   const paneForState = (state: State) => {
     let pane
 
-    switch (state) {
-      case State.CreateAccount:
-        pane = (
-          <CreateAccountPane
-            onSignUp={() => {
-              setNextState()
-            }}
-            howDidYouFindOutAboutUsView={howDidYouFindOutAboutUsView}
-          />
-        )
-        break
-      case State.SendCode:
-        pane = (
-          <SendCodePane
-            focus={currentState === State.SendCode}
-            onSendCode={(phoneNumber) => {
-              setPhoneNumber(phoneNumber)
-              setNextState()
-            }}
-          />
-        )
-        break
-      case State.VerifyCode:
-        pane = (
-          <VerifyCodePane
-            focus={currentState === State.VerifyCode}
-            onRequestBack={() => {
-              setPrevState()
-            }}
-            onVerifyPhone={() => {
-              setNextState()
-            }}
-            phoneNumber={phoneNumber}
-          />
-        )
-        break
-      case State.GetMeasurements:
-        pane = (
-          <GetMeasurementsPane
-            onGetMeasurements={() => {
-              setNextState()
-            }}
-          />
-        )
-        break
-      case State.Triage:
-        pane = (
-          <TriagePane
-            check={currentState === State.Triage}
-            onTriageComplete={(userAdmitted) => {
-              setUserState(userAdmitted ? UserState.Admitted : UserState.Waitlisted)
-              setTimeout(() => {
-                setNextState()
-              }, 100)
-            }}
-          />
-        )
-        break
-      case State.ChoosePlan:
-        pane = (
-          <ChoosePlanPane
-            selectedPlan={selectedPlan}
-            setSelectedPlan={setSelectedPlan}
-            data={data}
-            dataNoCache={dataNoCache}
-            onComplete={(paymentMethod) => {
-              paymentMethod === PaymentMethod.CreditCard ? setIndex(index + 1) : setIndex(index + 2)
-            }}
-            headerText={"You're in.\nLet's choose your plan"}
-            source="CreateAccountModal"
-            coupon={coupon}
-            onMountScrollToFaqSection={route?.params?.onMountScrollToFaqSection}
-          />
-        )
-        break
-      case State.CreditCardForm:
-        pane = (
-          <CreditCardFormPane
-            currentState={currentState}
-            onRequestBack={() => {
-              setPrevState()
-            }}
-            customer={dataNoCache?.me?.customer}
-            plan={selectedPlan}
-            onSubmit={() => {
-              setNextState()
-            }}
-            coupon={coupon}
-          />
-        )
-        break
-    }
+    // switch (state) {
+    //   case State.CreateAccount:
+    //     pane = (
+    //       <CreateAccountPane
+    //         onSignUp={() => {
+    //           setNextState()
+    //         }}
+    //         howDidYouFindOutAboutUsView={howDidYouFindOutAboutUsView}
+    //       />
+    //     )
+    //     break
+    //   case State.SendCode:
+    //     pane = (
+    //       <SendCodePane
+    //         focus={currentState === State.SendCode}
+    //         onSendCode={(phoneNumber) => {
+    //           setPhoneNumber(phoneNumber)
+    //           setNextState()
+    //         }}
+    //       />
+    //     )
+    //     break
+    //   case State.VerifyCode:
+    //     pane = (
+    //       <VerifyCodePane
+    //         focus={currentState === State.VerifyCode}
+    //         onRequestBack={() => {
+    //           setPrevState()
+    //         }}
+    //         onVerifyPhone={() => {
+    //           setNextState()
+    //         }}
+    //         phoneNumber={phoneNumber}
+    //       />
+    //     )
+    //     break
+    //   case State.GetMeasurements:
+    //     pane = (
+    //       <GetMeasurementsPane
+    //         onGetMeasurements={() => {
+    //           setNextState()
+    //         }}
+    //       />
+    //     )
+    //     break
+    //   case State.Triage:
+    //     pane = (
+    //       <TriagePane
+    //         check={currentState === State.Triage}
+    //         onTriageComplete={(userAdmitted) => {
+    //           setUserState(userAdmitted ? UserState.Admitted : UserState.Waitlisted)
+    //           setTimeout(() => {
+    //             setNextState()
+    //           }, 100)
+    //         }}
+    //       />
+    //     )
+    //     break
+    //   case State.ChoosePlan:
+    pane = (
+      <ChoosePlanPane
+        selectedPlan={selectedPlan}
+        setSelectedPlan={setSelectedPlan}
+        data={data}
+        dataNoCache={dataNoCache}
+        onComplete={(paymentMethod) => {
+          paymentMethod === PaymentMethod.CreditCard ? setIndex(index + 1) : setIndex(index + 2)
+        }}
+        headerText={"You're in. Let's choose your plan"}
+        source="CreateAccountModal"
+        coupon={coupon}
+        onMountScrollToFaqSection={route?.params?.onMountScrollToFaqSection}
+      />
+    )
+    //     break
+    //   case State.CreditCardForm:
+    //     pane = (
+    //       <CreditCardFormPane
+    //         currentState={currentState}
+    //         onRequestBack={() => {
+    //           setPrevState()
+    //         }}
+    //         customer={dataNoCache?.me?.customer}
+    //         plan={selectedPlan}
+    //         onSubmit={() => {
+    //           setNextState()
+    //         }}
+    //         coupon={coupon}
+    //       />
+    //     )
+    //     break
+    // }
     return (
       <Box key={state.toString()} width={windowWidth}>
         {pane}

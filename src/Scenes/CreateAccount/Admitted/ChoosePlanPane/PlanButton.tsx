@@ -17,7 +17,7 @@ interface PlanButtonProps {
 
 export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor, coupon }) => {
   const tracking = useTracking()
-  const { price, itemCount } = plan
+  const { price, name, caption } = plan
   const finalPrice = calcFinalPrice(price, coupon)
   const PriceText = ({ originalPrice, finalPrice }) => {
     originalPrice /= 100
@@ -25,27 +25,19 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
     const isDiscounted = originalPrice !== finalPrice && !!finalPrice
     return isDiscounted ? (
       <Text>
-        <Sans color="black100" size="3">
-          This month
-        </Sans>
-        <Sans color="black100" size="4">
-          {" "}
+        <Sans color="black100" size="5">
           ${finalPrice}
         </Sans>
-        <Sans color="black100" size="4">
+        <Sans color="black100" size="5">
           {" "}
         </Sans>
-        <Sans color="black50" size="4" style={{ textDecorationLine: "line-through", textDecorationStyle: "solid" }}>
+        <Sans color="black50" size="5" style={{ textDecorationLine: "line-through", textDecorationStyle: "solid" }}>
           ${originalPrice}
         </Sans>
       </Text>
     ) : (
       <Text>
-        <Sans color="black50" size="3">
-          Per month
-        </Sans>
-        <Sans color="black100" size="4">
-          {" "}
+        <Sans color="black100" size="5">
           ${originalPrice}
         </Sans>
       </Text>
@@ -63,37 +55,34 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
   }
 
   return (
-    <PlanSelectionBorder width="100%" p={0.5} selected={selected} selectedColor={selectedColor}>
-      <TouchableOpacity onPress={() => onPress(plan)}>
-        <StyledFlex
-          alignItems="center"
-          flexDirection="row"
-          width="100%"
-          height={48}
-          px={2}
-          justifyContent="space-between"
-        >
-          <Sans color="black100" size="4">
-            {itemCount} items
-          </Sans>
-          <PriceText originalPrice={price} finalPrice={finalPrice} />
-        </StyledFlex>
-      </TouchableOpacity>
-    </PlanSelectionBorder>
+    <TouchableOpacity onPress={() => onPress(plan)}>
+      <StyledFlex
+        alignItems="center"
+        flexDirection="row"
+        width="100%"
+        height={72}
+        mb={1}
+        px={2}
+        justifyContent="space-between"
+        selected={selected}
+      >
+        <Sans color="black100" size="5">
+          {name}
+        </Sans>
+        <Sans size="2" color="black50">
+          {caption}
+        </Sans>
+        <PriceText originalPrice={price} finalPrice={finalPrice} />
+      </StyledFlex>
+    </TouchableOpacity>
   )
 }
 
-const StyledFlex = styled(Flex)`
-  border-radius: 28;
+const StyledFlex = styled(Flex)<{ selected: boolean }>`
+  border-radius: 8;
   background-color: ${color("black04")};
   z-index: 10;
   elevation: 6;
-`
-
-const PlanSelectionBorder = styled(Flex)<{ selected: boolean; selectedColor: string }>`
-  border-radius: 28;
-  border-color: ${(p) => (p.selected ? p.selectedColor : color("white100"))};
+  border-color: ${(p) => (p.selected ? color("black100") : color("white100"))};
   border-width: 1px;
-  background: ${color("white100")};
-  z-index: 0;
 `

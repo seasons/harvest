@@ -83,7 +83,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   const coupon = setCoupon(appliedCoupon, dataNoCache?.me?.customer?.coupon)
 
   const plans = data?.paymentPlans
-  const faqSections = data?.faq?.sections
   const [openPopUp, setOpenPopUp] = useState(false)
   const [showLoadingOverlay, setShowLoadingOverlay] = useState(false)
   const insets = useSafeAreaInsets()
@@ -302,17 +301,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     navigation.navigate("Modal", { screen: "ApplyPromoCode", params: { source } })
   }
 
-  const onFaqSectionHeaderLayout = (event) => {
-    if (onMountScrollToFaqSection && scrollViewRef.current) {
-      const { x, y } = event.nativeEvent.layout
-      // layout event y does not include section header top margin,
-      // manually subtract so that we don't overshoot the component.
-      const scrollDestY = y - themeProps.space["4"]
-      scrollViewRef.current.scrollTo({ x, y: scrollDestY, animated: false })
-    }
-  }
-
-  const descriptionLines = selectedPlan?.description?.split("\n") || []
+  const features = selectedPlan?.features
   const planColors = ["#000", "#e6b759"]
   const currentColor = planColors[currentView] || "black"
 
@@ -336,20 +325,19 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                 {headerText}
               </Sans>
               <Spacer mb={1} />
-              <Sans color="black50" size="4">
-                What's included in your membership
-              </Sans>
-              <Spacer mb={1} />
             </Box>
             <Flex flexDirection="column">
-              {descriptionLines.map((line) => {
+              {features?.map((feature) => {
                 return (
                   <Flex flexDirection="row" pb={1} px={1} alignItems="center" key={line} width="100%">
                     <Box mx={1} mr={1.5}>
                       <ListCheck />
                     </Box>
-                    <Sans color="black50" size="4" style={{ width: viewWidth - 75 }}>
-                      {line}
+                    <Sans size="4" color="black100">
+                      {`${feature.title}: `}
+                      <Sans size="4" color="black50">
+                        {feature.caption}
+                      </Sans>
                     </Sans>
                   </Flex>
                 )
@@ -395,41 +383,13 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                   </Box>
                 )
               })}
-            <Spacer mb={2} />
-            <Separator />
-            {!!faqSections?.length &&
-              faqSections.map((section, index) => (
-                <Box mt={4} key={index} px={2} onLayout={onFaqSectionHeaderLayout}>
-                  <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-                    <Sans size="4">{section.title}</Sans>
-                    <ChevronIcon rotateDeg="90deg" color={color("black100")} />
-                  </Flex>
-                  <Spacer mb={4} />
-                  {section.subsections.map((subSection) => {
-                    return (
-                      <Box key={subSection.title}>
-                        <Sans size="4">{subSection.title}</Sans>
-                        <Spacer mb={1} />
-                        <Separator />
-                        <Spacer mb={1} />
-                        <Sans size="4" color="black50">
-                          {subSection.text}
-                        </Sans>
-                        <Spacer mb={4} />
-                      </Box>
-                    )
-                  })}
-                </Box>
-              ))}
-            <Spacer mb={1} />
+            <Spacer mb={3} />
             <Box px={2}>
-              <Button
-                block
-                variant="primaryWhite"
-                onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership question"`)}
-              >
-                Contact us
-              </Button>
+              <Sans size="2" color="black50">
+                Cancel for any reason within your first 24 hours to receive a full refund. Free shipping and dry
+                cleaning are only included on one order per month. Questions about membership? Contact us at
+                membership@seasons.nyc
+              </Sans>
             </Box>
             <Spacer pb={160} />
           </ScrollView>
