@@ -142,7 +142,7 @@ export const Browse = screenTrack()((props: any) => {
                 </Flex>
               </TouchableOpacity>
             </Flex>
-            <CategoryBox>
+            <CategoryBox pt={1.5} >
               <CategoryPicker
                 items={categoryItems}
                 onCategoryPress={onCategoryPress}
@@ -169,7 +169,7 @@ export const Browse = screenTrack()((props: any) => {
                 return (
                   <Box key={node?.id + index}>
                     {node?.id ? (
-                      <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0} authState/>
+                      <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0}/>
                     ) : (
                       <ProductGridItemSkeleton addLeftSpacing={index % numColumns !== 0} />
                     )}
@@ -214,5 +214,4 @@ export const Browse = screenTrack()((props: any) => {
 
 const CategoryBox = styled(Flex)`
   height: 75;
-  padding-top: 10px;
 `

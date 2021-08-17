@@ -11,6 +11,7 @@ import { Animated, Dimensions, TouchableWithoutFeedback, StyleSheet, Text } from
 import styled from "styled-components/native"
 import { VARIANT_WANT_HEIGHT } from "../Product"
 import { GetProductMe } from "App/generated/GetProductMe"
+import { BORDER_RADIUS } from "App/helpers/constants"
 
 interface Props {
   toggleShowVariantPicker: (show: boolean) => void
@@ -142,8 +143,9 @@ export const SelectionButtons: React.FC<Props> = ({
                 <Sans size="4">${monthlyRental}</Sans>
                 <Sans size="4"> / month</Sans>
               </Flex>
-
-              <Sans size="4" color={color("black50")}>Retail ${retailPrice}</Sans>
+              <Sans size="4" color={color("black50")}>
+                Retail ${retailPrice}
+              </Sans>
             </RateSection>
 
             <Flex flexDirection="row" justifyContent="space-between" width={230}>
@@ -159,7 +161,7 @@ export const SelectionButtons: React.FC<Props> = ({
                 {productType === "Accessory" ? (
                   <Box></Box>
                 ) : (
-                  <VariantSelectionButton>
+                  <VariantSelectionButton borderRadius={BORDER_RADIUS}>
                     <Flex px={2} style={{ width: "100%" }} flexDirection="row" justifyContent="center">
                       <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
                         <Sans size="4" color={color("black100")}>
@@ -187,10 +189,12 @@ export const SelectionButtons: React.FC<Props> = ({
                   width={twoButtonWidth - 45}
                   onPress={onNotifyMe}
                   loading={isMutatingNotify}
-                  borderRadius={10}
+                  borderRadius={BORDER_RADIUS}
                   height={55}
                 >
-                  <Sans size="5" color={color("white100")}>Notify me</Sans>
+                  <Sans size="5" color={color("white100")}>
+                    Notify me
+                  </Sans>
                 </StyledButton>
               )}
             </Flex>
@@ -206,7 +210,6 @@ const VariantSelectionButton = styled.View`
   height: 55;
   border: 1px solid ${color("black25")};
   border-width: 1;
-  border-radius: 10;
   background-color: ${color("white100")};
   width: ${oneButtonWidth - 20};
   display: flex;
@@ -235,20 +238,17 @@ const UnderlinedSans = styled(Sans)`
   text-decoration: underline;
 `
 
-
-
 const SelectionBox = styled(Flex)`
   justify-content: space-between;
   flex-wrap: nowrap;
   flex-direction: row;
   background-color: ${color("white100")};
   height: 100%;
-  padding: 4%;
+  padding: ${space(2)}px;
   border: 1px ${color("black25")};
 `
 
 const RateSection = styled(Flex)`
-  padding-top: 1%;
-  padding-bottom: 0;
+  padding: ${space(1)}px;
   height: 75%;
 `

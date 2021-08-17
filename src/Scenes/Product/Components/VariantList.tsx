@@ -51,7 +51,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
         ? { sizeColor: "black100", backgroundColor: "white100" }
         : { sizeColor: "black50", backgroundColor: "black25" }
     return (
-      <Flex key={size.id || i} paddingBottom={1.5}>
+      <Flex key={size.id || i} pb={1} pr={.5}>
         {displaySize && (
           <TouchableOpacity
             onPress={() => {
@@ -65,8 +65,8 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
               onSizeSelected(size)
             }}
           >
-            <StyledBox style={{ backgroundColor: color(buttonColors.backgroundColor) }} pb={2}>
-              <Flex alignItems="center" paddingTop={1.5}>
+            <StyledBox style={{ backgroundColor: color(buttonColors.backgroundColor) }}>
+              <Flex alignItems="center" pt={1.5}>
                 <Sans color={color(buttonColors.sizeColor)} size="5">
                   {displaySize}
                 </Sans>
@@ -84,7 +84,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
   return (
     <Flex alignItems="center" pb={1}>
       <Box style={{ minHeight: variantPickerHeight - 60, width: "100%", padding: space(1) }}>
-        <Flex flexDirection="row" flexWrap="wrap" justifyContent="space-between" paddingTop={2}>
+        <Flex flexDirection="row" flexWrap="wrap" justifyContent="flex-start" pt={3} >
           {rows}
         </Flex>
         <Box pb="180px" />

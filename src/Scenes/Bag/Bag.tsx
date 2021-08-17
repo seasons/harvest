@@ -397,7 +397,7 @@ export const Bag = screenTrack()((props: BagProps) => {
                 </Button>
               )}
               <Button
-                width={windowWidth / 2 - 20}
+                width={returnLabelUrl ? windowWidth / 2 - 20 : windowWidth - 20}
                 onPress={handlePress}
                 disabled={isMutating}
                 loading={isMutating}

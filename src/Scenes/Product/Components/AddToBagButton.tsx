@@ -1,6 +1,6 @@
 import { Button, Sans } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
-import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
+import { BORDER_RADIUS, DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_LOCAL_BAG } from "App/queries/clientQueries"
@@ -163,7 +163,7 @@ export const AddToBagButton: React.FC<Props> = ({
       showCheckMark={isInBag}
       variant="primaryBlack"
       disabled={_disabled}
-      borderRadius={10}
+      borderRadius={BORDER_RADIUS}
       height={55}
       
       onPress={() => {
