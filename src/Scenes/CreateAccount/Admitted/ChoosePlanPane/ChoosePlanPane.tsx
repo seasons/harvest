@@ -1,9 +1,8 @@
-import { Box, Button, Container, Flex, Sans, Spacer, Separator, CloseButton } from "App/Components"
+import { Box, Button, Container, Flex, Sans, Spacer, Separator, CloseButton, FadeInImage } from "App/Components"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useNavigation } from "@react-navigation/native"
 import * as Sentry from "@sentry/react-native"
 import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
-import { color } from "App/utils"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { ListCheck } from "Assets/svgs/ListCheck"
@@ -13,16 +12,14 @@ import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
 import { useMutation } from "@apollo/client"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Dimensions, Linking, ScrollView, TouchableOpacity } from "react-native"
+import { Dimensions, ScrollView, TouchableOpacity } from "react-native"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
 import { PlanButton } from "./PlanButton"
 import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { GetPlans_paymentPlans } from "App/generated/GetPlans"
-import { ChevronIcon } from "Assets/icons"
 import { Coupon, PaymentMethod } from "../../CreateAccount"
 import { PopUp } from "App/Components/PopUp"
-import { themeProps } from "App/Components/Theme"
 import { calcFinalPrice } from "./utils"
 import { GET_USER } from "App/Scenes/Account/Account"
 import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMethods"
@@ -30,7 +27,7 @@ import { OverlaySpinner } from "App/Components/OverlaySpinner"
 import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from "App/generated/CreateAccount_NoCache_Query"
 import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
 import { GET_NOTIFICATION_BAR } from "@seasons/eclipse"
-import ConfettiCannon from "react-native-confetti-cannon"
+import { Loader } from "App/Components/Loader"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout(
@@ -50,6 +47,11 @@ const PLAN_UPDATE = gql`
   }
 `
 
+const windowWidth = Dimensions.get("window").width
+const imageHeight = windowWidth / 1.79
+const imageURL =
+  "https://seasons-s3.imgix.net/harvest/plan-select-header.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb"
+
 export enum PaneType {
   Update = 0,
   Create = 1,
@@ -64,10 +66,7 @@ interface ChoosePlanPaneProps {
   dataNoCache: CreateAccount_NoCache_Query_Type
   coupon?: Coupon
   source: "CreateAccountModal" | "UpdatePaymentPlanModal"
-  onMountScrollToFaqSection?: boolean
 }
-
-const viewWidth = Dimensions.get("window").width
 
 export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   onComplete,
@@ -78,7 +77,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   selectedPlan,
   coupon: appliedCoupon,
   source,
-  onMountScrollToFaqSection,
 }) => {
   const coupon = setCoupon(appliedCoupon, dataNoCache?.me?.customer?.coupon)
 
@@ -88,8 +86,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   const insets = useSafeAreaInsets()
   const tracking = useTracking()
   const navigation = useNavigation()
-  const [currentView, setCurrentView] = useState(0)
-  const [tiers, setTiers] = useState([])
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const scrollViewRef = React.useRef(null)
@@ -173,27 +169,17 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     ],
   })
 
-  useEffect(() => {
-    // Update the selected plan if you switch tabs
-    const newSelectedPlan =
-      plans?.filter((plan) => plan.tier === tiers?.[currentView] && plan.itemCount === selectedPlan?.itemCount) ||
-      plans?.filter((plan) => plan.tier === tiers?.[currentView])?.[0]
-    setSelectedPlan(newSelectedPlan?.[0])
-  }, [currentView, setSelectedPlan])
+  const sortedPlans = plans?.slice()?.sort((a, b) => b.price - a.price)
+  const lowestPlanPrice = sortedPlans?.map((plan) => plan.price)?.reduce((a, b) => Math.min(a, b))
 
   useEffect(() => {
-    if (plans && plans.length > 0) {
-      const threeItemPlan = plans?.find((p) => p.itemCount === 3)
-      const planTiers = uniq(plans?.map((plan) => plan.tier))
+    if (sortedPlans && sortedPlans.length > 0 && !selectedPlan) {
       const customerPlan = dataNoCache?.me?.customer?.membership?.plan
-      const initialPlan = customerPlan ? plans?.find((plan) => plan.id === customerPlan.id) : threeItemPlan
-      const initialTab = 0
+      const initialPlan = customerPlan ? sortedPlans?.find((plan) => plan.id === customerPlan.id) : sortedPlans[0]
 
-      setTiers(planTiers)
-      setCurrentView(initialTab)
       setSelectedPlan(initialPlan)
     }
-  }, [plans])
+  }, [sortedPlans, selectedPlan])
 
   const onAddCreditCard = () => {
     tracking.trackEvent({
@@ -302,40 +288,42 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   }
 
   const features = selectedPlan?.features
-  const planColors = ["#000", "#e6b759"]
-  const currentColor = planColors[currentView] || "black"
 
-  const tabs = tiers.map((t) => (t === "Essential" ? "Monthly" : t))
+  if (!sortedPlans) {
+    return (
+      <>
+        <CloseButton variant="gray" />
+        <Container insetsBottom={false} insetsTop={false}>
+          <Loader />
+        </Container>
+      </>
+    )
+  }
 
   return (
     <>
-      <CloseButton variant="light" />
+      <CloseButton variant="gray" />
       <Container insetsBottom={false} insetsTop={false}>
         <Box style={{ flex: 1 }}>
-          {source === "CreateAccountModal" && (
-            <ConfettiWrapper pointerEvents="none">
-              <ConfettiCannon count={150} origin={{ x: 0, y: 0 }} autoStart explosionSpeed={0} />
-            </ConfettiWrapper>
-          )}
           <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
-            <Spacer mb={5} />
+            <FadeInImage source={{ uri: imageURL }} style={{ width: windowWidth, height: imageHeight }} />
             <Spacer mb={4} />
-            <Box p={2}>
+            <Box px={2}>
               <Sans color="black100" size="7">
                 {headerText}
               </Sans>
-              <Spacer mb={1} />
+              <Spacer mb={2} />
             </Box>
             <Flex flexDirection="column">
-              {features?.map((feature) => {
+              {features?.map((feature, index) => {
                 return (
-                  <Flex flexDirection="row" pb={1} px={1} alignItems="center" key={line} width="100%">
+                  <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
                     <Box mx={1} mr={1.5}>
                       <ListCheck />
                     </Box>
-                    <Sans size="4" color="black100">
+                    <Sans size="3" color="black100">
                       {`${feature.title}: `}
-                      <Sans size="4" color="black50">
+                      <Sans size="3" color="black50">
                         {feature.caption}
                       </Sans>
                     </Sans>
@@ -343,46 +331,22 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                 )
               })}
             </Flex>
-            <Spacer mb={1} />
-            {tabs.length > 1 && (
-              <>
-                <TabBar
-                  tabColor={currentColor}
-                  spaceEvenly
-                  tabs={tabs}
-                  strikethroughTabs={[]}
-                  activeTab={currentView}
-                  goToPage={(page) => {
-                    tracking.trackEvent({
-                      actionName:
-                        page === 0
-                          ? TrackSchema.ActionNames.Tier0PlanTabTapped
-                          : TrackSchema.ActionNames.Tier1PlanTabTapped,
-                      actionType: TrackSchema.ActionTypes.Tap,
-                    })
-                    setCurrentView(page as number)
-                  }}
-                />
-              </>
-            )}
             <Spacer mb={2} />
-            {plans
-              ?.filter((plan) => plan.tier === tiers?.[currentView])
-              ?.sort((a, b) => b.itemCount - a.itemCount)
-              ?.map((plan) => {
-                return (
-                  <Box key={plan.id} px={2}>
-                    <PlanButton
-                      plan={plan}
-                      key={plan.id}
-                      shouldSelect={setSelectedPlan}
-                      selected={selectedPlan?.id === plan.id}
-                      selectedColor={currentColor}
-                      coupon={coupon}
-                    />
-                  </Box>
-                )
-              })}
+            {sortedPlans?.map((plan) => {
+              console.log("plan", plan)
+              return (
+                <Box key={plan.id} px={2}>
+                  <PlanButton
+                    lowestPlanPrice={lowestPlanPrice}
+                    plan={plan}
+                    key={plan.id}
+                    shouldSelect={setSelectedPlan}
+                    selected={selectedPlan?.id === plan.id}
+                    coupon={coupon}
+                  />
+                </Box>
+              )
+            })}
             <Spacer mb={3} />
             <Box px={2}>
               <Sans size="2" color="black50">
@@ -397,16 +361,9 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
 
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
           <Box p={2} style={{ alignItems: "center" }}>
-            <ColoredButton
-              block
-              disabled={!selectedPlan}
-              loading={isMutating}
-              onPress={onChoosePlan}
-              variant="primaryBlack"
-              backgroundColor={currentColor}
-            >
+            <Button block disabled={!selectedPlan} loading={isMutating} onPress={onChoosePlan} variant="primaryBlack">
               Choose plan
-            </ColoredButton>
+            </Button>
             {source === "CreateAccountModal" && (
               <>
                 <Spacer mt={2} />
@@ -446,16 +403,3 @@ const setCoupon = (appliedCoupon: Coupon, returnedCoupon): Coupon => {
   }
   return coupon
 }
-
-const ColoredButton = styled(Button)`
-  background-color: ${(p: any) => p.backgroundColor};
-`
-
-const ConfettiWrapper = styled(Box)`
-  z-index: 300;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  top: 0;
-`

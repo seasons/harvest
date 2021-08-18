@@ -106,11 +106,7 @@ export const CreateAccount_Cached_Query = gql`
     paymentPlans(where: $where) {
       id
       name
-      features {
-        id
-        title
-        caption
-      }
+      features
       caption
       price
       planID
@@ -162,7 +158,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   const plans = data?.paymentPlans
   const howDidYouFindOutAboutUsView = data?.howDidYouFindOutAboutUs
   const customer = dataNoCache?.me?.customer
-
+  console.log("data", data)
   const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const [coupon, setCoupon] = useState({
     discountAmount: 0,
@@ -292,7 +288,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
         headerText={"You're in. Let's choose your plan"}
         source="CreateAccountModal"
         coupon={coupon}
-        onMountScrollToFaqSection={route?.params?.onMountScrollToFaqSection}
       />
     )
     //     break
