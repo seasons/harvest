@@ -333,7 +333,6 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
             </Flex>
             <Spacer mb={2} />
             {sortedPlans?.map((plan) => {
-              console.log("plan", plan)
               return (
                 <Box key={plan.id} px={2}>
                   <PlanButton
