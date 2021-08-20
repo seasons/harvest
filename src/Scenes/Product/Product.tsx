@@ -32,6 +32,7 @@ import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT, Product_NoCache_Query } from "./Queries"
 import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generated/Product_NoCache_Query"
+import { RelatedProducts } from "./Components/RelatedProducts"
 
 const windowHeight = Dimensions.get("window").height
 const variantPickerHeight = windowHeight / 2.5 + 50
@@ -249,10 +250,11 @@ export const Product = screenTrack({
   }, [selectedVariant])
 
   const brandProducts = product?.brand?.products
-
   const viewWidth = Dimensions.get("window").width
   const images = product?.largeImages
   const imageWidth = viewWidth
+  const relatedProducts = product?.relatedProducts
+  const productType = product?.category?.productType
   const physicalProductQualityReport = (selectedVariant?.nextReservablePhysicalProduct?.reports || []).reduce(
     (agg, report) => {
       if (!agg) {
@@ -292,6 +294,8 @@ export const Product = screenTrack({
         return <ProductMeasurements selectedVariant={selectedVariant} />
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
+      case "relatedProducts":
+        return <RelatedProducts flatListRef={flatListRef} products={relatedProducts} />
       case "moreLikeThis":
         return <MoreFromBrand flatListRef={flatListRef} products={brandProducts} brandName={product.brand.name} />
       case "buy":
@@ -340,6 +344,7 @@ export const Product = screenTrack({
     "productMeasurements",
     "condition",
     "aboutTheBrand",
+    "relatedProducts",
     "moreLikeThis",
   ]
   const url = `https://www.wearseasons.com/product/${product.slug}`
@@ -382,7 +387,7 @@ export const Product = screenTrack({
       flatListRef.current?.scrollToOffset({ offset: py - (windowHeight / 2 - 80), animated: true })
     })
   }
-  
+
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "productBackground"} />
@@ -421,6 +426,9 @@ export const Product = screenTrack({
         setShowSizeWarning={setShowSizeWarning}
         scrollToBuyCTA={scrollToBuyCTA}
         animatedScrollY={animatedScrollYRef.current}
+        retailPrice={product.retailPrice}
+        monthlyRental={product?.rentalPrice}
+        productType={productType}
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
@@ -432,17 +440,19 @@ export const Product = screenTrack({
         </FadeBottom2>
       )}
       <AnimatedOverlay pointerEvents={showVariantPicker ? "auto" : "none"} opacity={pickerTransition.overlayOpacity} />
-      <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
-        <VariantPicker
-          variantPickerHeight={variantPickerHeight}
-          product={product}
-          setSelectedVariant={setSelectedVariant}
-          selectedVariant={selectedVariant}
-          height={variantPickerHeight}
-          navigation={navigation}
-          toggleShowVariantPicker={toggleShowVariantPicker}
-        />
-      </AnimatedVariantPicker>
+      {productType === "Accessory" ? null : (
+        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
+          <VariantPicker
+            variantPickerHeight={variantPickerHeight}
+            product={product}
+            setSelectedVariant={setSelectedVariant}
+            selectedVariant={selectedVariant}
+            height={variantPickerHeight}
+            navigation={navigation}
+            toggleShowVariantPicker={toggleShowVariantPicker}
+          />
+        </AnimatedVariantPicker>
+      )}
       <SizeWarning
         show={showSizeWarning}
         data={data}

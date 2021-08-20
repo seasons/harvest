@@ -102,9 +102,29 @@ export const GET_PRODUCT = gql`
       name
       productFit
       modelHeight
+      relatedProducts(take: 10) {
+        id
+        type
+        images(size: Thumb) {
+          id
+          url
+        }
+        brand {
+          id
+          name
+        }
+        color {
+          id
+        }
+        retailPrice
+        variants {
+          ...CommonProductVariant
+        }
+      }
       category {
         id
         name
+        productType
       }
       description
       retailPrice
@@ -139,6 +159,7 @@ export const GET_PRODUCT = gql`
             id
             name
           }
+          retailPrice
           variants {
             ...CommonProductVariant
           }

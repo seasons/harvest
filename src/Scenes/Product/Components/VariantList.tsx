@@ -1,10 +1,12 @@
-import { Box, Flex, Radio, Sans, Separator, Spacer } from "App/Components"
+import { space } from "@seasons/eclipse"
+import { Box, Flex, Sans } from "App/Components"
 import { GetProduct_products_variants } from "App/generated/GetProduct"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { find } from "lodash"
 import React, { useEffect, useState } from "react"
 import { TouchableOpacity } from "react-native"
+import styled from "styled-components/native"
 
 export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelected, product, variantPickerHeight }) => {
   const variants: GetProduct_products_variants[] = product?.variants
@@ -44,49 +46,56 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
       !!manufacturerSizeDisplayType &&
       `${manufacturerSizeDisplayType ? manufacturerSizeDisplayType + " " : ""}${manufacturerSizeDisplay}`
 
+    const buttonColors =
+      size?.reservable > 0
+        ? { sizeColor: "black100", backgroundColor: "white100" }
+        : { sizeColor: "black50", backgroundColor: "black25" }
     return (
-      <Box key={size.id || i}>
-        <TouchableOpacity
-          onPress={() => {
-            tracking.trackEvent({
-              actionName: Schema.ActionNames.ProductVariantSelected,
-              actionType: Schema.ActionTypes.Tap,
-              size: displaySize,
-              variantID: size?.id,
-            })
-            setSelectedVariant(size)
-            onSizeSelected(size)
-          }}
-        >
-          <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap" my={2}>
-            <Flex flexDirection="row" alignItems="center">
-              <Radio
-                selected={!!selectedVariant?.id && selectedVariant.id === size.id}
-                pointerEventsNone
-                activeColor={color("white100")}
-              />
-              <Spacer mr={1} />
-              {displaySize && (
-                <Sans color={size?.reservable > 0 ? color("white100") : color("black50")} size="4">
+      <Flex key={size.id || i} pb={1} pr={.5}>
+        {displaySize && (
+          <TouchableOpacity
+            onPress={() => {
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.ProductVariantSelected,
+                actionType: Schema.ActionTypes.Tap,
+                size: displaySize,
+                variantID: size?.id,
+              })
+              setSelectedVariant(size)
+              onSizeSelected(size)
+            }}
+          >
+            <StyledBox style={{ backgroundColor: color(buttonColors.backgroundColor) }}>
+              <Flex alignItems="center" pt={1.5}>
+                <Sans color={color(buttonColors.sizeColor)} size="5">
                   {displaySize}
                 </Sans>
-              )}
-            </Flex>
-            <Sans color="black50" size="4">
-              {size?.reservable > 0 ? manufacturerSizeFullDisplay : "Unavailable"}
-            </Sans>
-          </Flex>
-        </TouchableOpacity>
-        <Separator color={color("black85")} />
-      </Box>
+                <Sans color={color("black50")} size="3">
+                  {manufacturerSizeFullDisplay}
+                </Sans>
+              </Flex>
+            </StyledBox>
+          </TouchableOpacity>
+        )}
+      </Flex>
     )
   })
 
   return (
-    <Box style={{ minHeight: variantPickerHeight - 60 }}>
-      <Separator color={color("black85")} />
-      {rows}
-      <Box pb="180px" />
-    </Box>
+    <Flex alignItems="center" pb={1}>
+      <Box style={{ minHeight: variantPickerHeight - 60, width: "100%", padding: space(1) }}>
+        <Flex flexDirection="row" flexWrap="wrap" justifyContent="flex-start" pt={3} >
+          {rows}
+        </Flex>
+        <Box pb="180px" />
+      </Box>
+    </Flex>
   )
 }
+
+const StyledBox = styled(Box)`
+  border: 1px ${color("black25")};
+  border-radius: 7;
+  width: 115;
+  height: 75;
+`

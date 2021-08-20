@@ -14,12 +14,12 @@ import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
-import { FlatList, RefreshControl, StatusBar, View } from "react-native"
+import { FlatList, RefreshControl, StatusBar, View, Dimensions } from "react-native"
 import { NavigationRoute, NavigationScreenProp } from "react-navigation"
 
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
-import { Box, Button, Spacer } from "@seasons/eclipse"
+import { Box, Button, Spacer, Flex } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
@@ -64,6 +64,8 @@ export const Bag = screenTrack()((props: BagProps) => {
   const routeTab = route?.params?.tab
   const isSignedIn = authState.isSignedIn
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+  const windowDimensions = Dimensions.get("window")
+  const windowWidth = windowDimensions.width
 
   useScrollToTop(flatListRef)
 
@@ -379,11 +381,39 @@ export const Bag = screenTrack()((props: BagProps) => {
       )
     } else if (hasActiveReservation) {
       if (me?.activeReservation?.status === "Delivered") {
-        button = (
-          <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
-            {markedAsReturned ? "Return Instructions" : "Return Bag"}
-          </Button>
-        )
+        if (markedAsReturned) {
+          const returnLabelUrl = me?.activeReservation?.returnedPackage?.shippingLabel?.trackingURL
+          button = (
+            <Flex flexDirection="row" justifyContent="space-between">
+              {returnLabelUrl && (
+                <Button
+                  width={windowWidth / 2 - 20}
+                  onPress={() => navigation.navigate("Webview", { uri: returnLabelUrl })}
+                  disabled={isMutating}
+                  loading={isMutating}
+                  variant="primaryWhite"
+                >
+                  Return label
+                </Button>
+              )}
+              <Button
+                width={returnLabelUrl ? windowWidth / 2 - 20 : windowWidth - 20}
+                onPress={handlePress}
+                disabled={isMutating}
+                loading={isMutating}
+                variant="primaryBlack"
+              >
+                How to return
+              </Button>
+            </Flex>
+          )
+        } else {
+          button = (
+            <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
+              Return bag
+            </Button>
+          )
+        }
       }
     } else {
       button = (
