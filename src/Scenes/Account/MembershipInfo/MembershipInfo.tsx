@@ -62,8 +62,8 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
   const plan = customer?.membership?.plan
-
-  const itemCount = plan?.itemCount
+  const payPeriod = plan?.planID === "access-yearly" ? "year" : "month"
+  const isPaused = customer?.status === "Paused"
 
   if (!plan) {
     return (
@@ -95,7 +95,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
               <SectionHeader title="What you pay" />
               <Spacer mb={1} />
               <Sans size="4" color={color("black50")}>
-                {`${itemCount} items, $${plan.price / 100}`} / per month
+                {`$${plan.price / 100} / per ${payPeriod}`}
               </Sans>
             </>
           )}
@@ -115,31 +115,9 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
             </>
           )}
           <Spacer mb={4} />
-          <SectionHeader title={canChangePlan ? "Change your plan" : "Cancel membership"} />
+          <SectionHeader title={canChangePlan || isPaused ? "Update your plan" : "Cancel membership"} />
           <Spacer mb={2} />
-          {canChangePlan && (
-            <>
-              <Button
-                variant="secondaryWhite"
-                onPress={() => navigation.navigate("Modal", { screen: Schema.PageNames.UpdatePaymentPlanModal })}
-                block
-              >
-                View membership options
-              </Button>
-              <Spacer mb={2} />
-            </>
-          )}
-          <Button
-            variant="secondaryWhite"
-            onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
-            block
-          >
-            Contact us
-          </Button>
-          <Spacer mb={2} />
-          <Sans size="4" color={color("black50")}>
-            If you’d like to cancel your membership, contact us using the button above. We’re happy to help with this.
-          </Sans>
+          <PauseButtons customer={customer} />
         </Box>
       </ScrollView>
     </Container>
