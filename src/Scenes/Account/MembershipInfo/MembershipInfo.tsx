@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 import React from "react"
 import { useQuery } from "@apollo/client"
-import { ScrollView } from "react-native"
+import { Linking, ScrollView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Container, FixedBackArrow, Sans, SectionHeader, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
@@ -38,6 +38,7 @@ export const GET_MEMBERSHIP_INFO = gql`
           }
           plan {
             id
+            planID
             price
             description
             itemCount
@@ -75,6 +76,10 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
 
   const whatsIncluded = plan?.description?.split("\n")
 
+  // For now since we don't support downgrading on Access plans
+  // only show change plan if they can upgrade only or change to Access
+  const canChangePlan = plan.planID !== "access-yearly"
+
   return (
     <Container insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
@@ -110,19 +115,31 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
             </>
           )}
           <Spacer mb={4} />
-          <SectionHeader title="Change your plan" />
+          <SectionHeader title={canChangePlan ? "Change your plan" : "Cancel membership"} />
           <Spacer mb={2} />
+          {canChangePlan && (
+            <>
+              <Button
+                variant="secondaryWhite"
+                onPress={() => navigation.navigate("Modal", { screen: Schema.PageNames.UpdatePaymentPlanModal })}
+                block
+              >
+                View membership options
+              </Button>
+              <Spacer mb={2} />
+            </>
+          )}
           <Button
             variant="secondaryWhite"
-            onPress={() => navigation.navigate("Modal", { screen: Schema.PageNames.UpdatePaymentPlanModal })}
+            onPress={() => Linking.openURL(`mailto:membership@seasons.nyc?subject="Membership"`)}
             block
           >
-            View membership options
+            Contact us
           </Button>
-          <Spacer mb={4} />
-          <SectionHeader title="Pause or cancel" />
           <Spacer mb={2} />
-          <PauseButtons customer={customer} />
+          <Sans size="4" color={color("black50")}>
+            If you’d like to cancel your membership, contact us using the button above. We’re happy to help with this.
+          </Sans>
         </Box>
       </ScrollView>
     </Container>

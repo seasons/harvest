@@ -13,6 +13,8 @@ import { GetMembershipInfo_me_customer } from "App/generated/GetMembershipInfo"
 import { color } from "App/utils"
 import * as Sentry from "@sentry/react-native"
 
+// FIXME: We may be deprecating pauses, in which case this file can be deleted
+
 export type PauseStatus = "active" | "pending" | "paused"
 
 export const RESUME_MEMBERSHIP = gql`
@@ -48,7 +50,7 @@ export const PauseButtons: React.FC<{
   const resumeDate =
     customer?.membership?.pauseRequests?.[0]?.resumeDate &&
     DateTime.fromISO(customer?.membership?.pauseRequests?.[0]?.resumeDate)
-  const resumeDateDateDisplay = resumeDate.toFormat("EEEE LLLL d")
+  const resumeDateDateDisplay = resumeDate?.toFormat("EEEE LLLL d")
 
   const resumeDatePlusOneMonth = resumeDate && resumeDate.plus({ months: 1 })
   const pauseExtendDateDisplay = (!!resumeDatePlusOneMonth && resumeDatePlusOneMonth.toFormat("LLLL d")) || ""
