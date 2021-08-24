@@ -12,7 +12,7 @@ export const VariantPicker = (props) => {
 
   return (
     <Flex style={{ flex: 1, height: height + 28, position: "relative" }}>
-      <FixedButtonWrapper px={2}>
+      <FixedButtonWrapper px={2} pb={3}>
         <Button
           variant="primaryWhite"
           width="200"
@@ -37,7 +37,7 @@ export const VariantPicker = (props) => {
             Select size
           </Sans>
         </Flex>
-        <Separator color={color("black25")} />
+        <Separator color={color("black10")} />
         <StyledScrollview>
           <Box px={2}>
             <VariantList

@@ -35,7 +35,7 @@ import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generat
 import { RelatedProducts } from "./Components/RelatedProducts"
 
 const windowHeight = Dimensions.get("window").height
-const variantPickerHeight = windowHeight / 2.5 + 50
+const variantPickerHeight = windowHeight
 export const VARIANT_WANT_HEIGHT = 52
 export enum OrderType {
   BUY_USED = "Used",
@@ -90,6 +90,7 @@ export const Product = screenTrack({
     },
   })
   const product: GetProduct_products = head(data?.products)
+  const height = product?.variants?.length > 3? variantPickerHeight/2.5 : variantPickerHeight/3
 
   const pickerTransition = useSpring({
     translateY: showVariantPicker ? 0 : variantPickerHeight,
@@ -388,6 +389,17 @@ export const Product = screenTrack({
     })
   }
 
+  const VariantPickerWrapper = styled(Box)`
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: ${height};
+    z-index: 4;
+  `
+  const AnimatedVariantPicker = animated(VariantPickerWrapper)
+  const AnimatedOverlay = animated(Overlay)
+
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "productBackground"} />
@@ -464,15 +476,6 @@ export const Product = screenTrack({
   )
 })
 
-const VariantPickerWrapper = styled(Box)`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: ${variantPickerHeight};
-  z-index: 4;
-`
-
 const Overlay = styled(Box)`
   position: absolute;
   background-color: rgba(0, 0, 0, 0.6);
@@ -489,5 +492,4 @@ const ShareButtonWrapper = styled(Box)`
   z-index: 2000;
 `
 
-const AnimatedVariantPicker = animated(VariantPickerWrapper)
-const AnimatedOverlay = animated(Overlay)
+

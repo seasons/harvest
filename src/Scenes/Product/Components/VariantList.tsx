@@ -12,6 +12,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
   const variants: GetProduct_products_variants[] = product?.variants
   const [sizeData, setSizeData] = useState([])
   const tracking = useTracking()
+  // const height = product?.variants.length >= 3 ? variantPickerHeight / 3 : variantPickerHeight / 2.5
 
   useEffect(() => {
     updateSizeData()
@@ -48,10 +49,18 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
 
     const buttonColors =
       size?.reservable > 0
-        ? { sizeColor: "black100", backgroundColor: "white100" }
-        : { sizeColor: "black50", backgroundColor: "black25" }
+        ? { sizeColor: "black100", backgroundColor: "white100", textColor: "black50" }
+        : { sizeColor: "black35", backgroundColor: "black04", textColor: "black35" }
+
+    const StyledBox = styled(Box)`
+      border: 1px ${size.reservable > 0? color("black10") : color("black04")};
+      background-color: ${color(buttonColors.backgroundColor)};
+      border-radius: 7;
+      width: 122;
+      height: 75;
+    `
     return (
-      <Flex key={size.id || i} pb={1} pr={.5}>
+      <Flex key={size.id || i} pb={1} pr={1}>
         {displaySize && (
           <TouchableOpacity
             onPress={() => {
@@ -65,12 +74,12 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
               onSizeSelected(size)
             }}
           >
-            <StyledBox style={{ backgroundColor: color(buttonColors.backgroundColor) }}>
-              <Flex alignItems="center" pt={1.5}>
+            <StyledBox>
+              <Flex alignItems="center" pt={1.5} >
                 <Sans color={color(buttonColors.sizeColor)} size="5">
                   {displaySize}
                 </Sans>
-                <Sans color={color("black50")} size="3">
+                <Sans color={color(buttonColors.textColor)} size="3">
                   {manufacturerSizeFullDisplay}
                 </Sans>
               </Flex>
@@ -83,8 +92,8 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
 
   return (
     <Flex alignItems="center" pb={1}>
-      <Box style={{ minHeight: variantPickerHeight - 60, width: "100%", padding: space(1) }}>
-        <Flex flexDirection="row" flexWrap="wrap" justifyContent="flex-start" pt={3} >
+      <Box style={{ minHeight: variantPickerHeight + 60, width: "110%", padding: space(1)}}>
+        <Flex flexDirection="row" flexWrap="wrap" justifyContent="flex-start" pt={1.5} pl={1.5}>
           {rows}
         </Flex>
         <Box pb="180px" />
@@ -92,10 +101,3 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
     </Flex>
   )
 }
-
-const StyledBox = styled(Box)`
-  border: 1px ${color("black25")};
-  border-radius: 7;
-  width: 115;
-  height: 75;
-`
