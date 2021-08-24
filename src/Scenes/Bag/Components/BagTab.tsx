@@ -1,5 +1,11 @@
 import { Sans, Separator } from "App/Components"
-import { PauseStatus, REMOVE_SCHEDULED_PAUSE, RESUME_MEMBERSHIP } from "App/Components/Pause/PauseButtons"
+import {
+  PauseStatus, REMOVE_SCHEDULED_PAUSE, RESUME_MEMBERSHIP
+} from "App/Components/Pause/PauseButtons"
+import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
+import {
+  GetBag_NoCache_Query as GetBag_NoCache_Query_Type
+} from "App/generated/GetBag_NoCache_Query"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
@@ -7,24 +13,23 @@ import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { State as CreateAccountState, UserState } from "App/Scenes/CreateAccount/CreateAccount"
 import { color } from "App/utils"
 import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
+import gql from "graphql-tag"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
 import React, { useEffect, useState } from "react"
 import { Linking } from "react-native"
-import gql from "graphql-tag"
+
 import { useLazyQuery, useMutation } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { Box, ProductBuyAlertTab, ProductBuyAlertTabType, Spacer } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 
-import { GetBag_NoCache_Query, GET_LOCAL_BAG_ITEMS } from "../BagQueries"
+import { GET_LOCAL_BAG_ITEMS, GetBag_NoCache_Query } from "../BagQueries"
 import { BagCardButton } from "./BagCardButton"
 import { BagItem } from "./BagItem"
 import { BagTabHeader } from "./BagTabHeader"
 import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
 import { EmptyBagItem } from "./EmptyBagItem"
-import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
-import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
 
 export const BagTabCachedFragment_Query = gql`
   fragment BagTabCachedFragment_Query on Query {
@@ -317,14 +322,7 @@ export const BagTab: React.FC<{
       <Spacer mb={3} />
       {!pausedWithoutItems && <Separator />}
       <Spacer mb={3} />
-      {customerPlanItemCount && customerPlanItemCount < maxPlanItemCount && !isPaused && (
-        <>
-          <BagCardButton Icon={AddSlot} title="Add a slot" caption="Reserve another item" onPress={onAddSlot} />
-          <Spacer mb={3} />
-          <Separator />
-          <Spacer mb={3} />
-        </>
-      )}
+
       {hasActiveReservation && !isPaused && (
         <>
           <BagCardButton
