@@ -7,7 +7,7 @@ export const CloseXSVG: React.FC<{ variant: CloseButtonVariant }> = ({ variant }
   <Svg width={12} height={12}>
     <G
       transform="rotate(45 9.414 4.586)"
-      fill={variant && variant === "light" ? color("black100") : color("white100")}
+      fill={variant && (variant === "light" || variant === "gray") ? color("black100") : color("white100")}
       fillRule="evenodd"
     >
       <Rect x={7} width={2} height={16} rx={1} />
