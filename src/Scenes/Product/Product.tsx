@@ -2,6 +2,9 @@ import { Box, Container, FixedBackArrow, Flex, Sans, Spacer, VariantSizes } from
 import { Loader } from "App/Components/Loader"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
+import {
+  Product_NoCache_Query as Product_NoCache_Query_Type
+} from "App/generated/Product_NoCache_Query"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
@@ -16,23 +19,21 @@ import { Animated, Dimensions, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
+
 import { useMutation, useQuery } from "@apollo/client"
 import {
-  ProductConditionSection,
-  ProductConditionSectionFragment_PhysicalProductQualityReport,
-  ProductBuyCTA,
-  ProductBuyCTAFragment_Product,
-  ProductBuyCTAFragment_ProductVariant,
+  ProductBuyCTA, ProductBuyCTAFragment_Product, ProductBuyCTAFragment_ProductVariant,
+  ProductConditionSection, ProductConditionSectionFragment_PhysicalProductQualityReport
 } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
+
 import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
-import { SelectionButtons } from "./Components/SelectionButtons"
+import { ProductBottomBar } from "./Components/ProductBottomBar"
+import { RelatedProducts } from "./Components/RelatedProducts"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT, Product_NoCache_Query } from "./Queries"
-import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generated/Product_NoCache_Query"
-import { RelatedProducts } from "./Components/RelatedProducts"
 
 const windowHeight = Dimensions.get("window").height
 const variantPickerHeight = windowHeight / 2.5 + 50
@@ -108,7 +109,7 @@ export const Product = screenTrack({
     stock: 0,
     isInBag: false,
     hasRestockNotification: null,
-    nextReservablePhysicalProduct: null
+    nextReservablePhysicalProduct: null,
   })
 
   const [addRecentlyViewedItem] = useMutation(ADD_VIEWED_PRODUCT, {
@@ -413,7 +414,7 @@ export const Product = screenTrack({
           useNativeDriver: true,
         })}
       />
-      <SelectionButtons
+      <ProductBottomBar
         showNotifyMeMessage={showNotifyMeMessage}
         toggleShowVariantPicker={toggleShowVariantPicker}
         showVariantPicker={showVariantPicker}

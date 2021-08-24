@@ -1,17 +1,18 @@
 import { Box, Button, Flex, Sans, Spacer } from "App/Components"
 import { GetProduct, GetProduct_products_brand_products_variants } from "App/generated/GetProduct"
+import { GetProductMe } from "App/generated/GetProductMe"
+import { BORDER_RADIUS } from "App/helpers/constants"
 import { AddToBagButton } from "App/Scenes/Product/Components"
 import { color, space } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { DownChevronIcon } from "Assets/icons"
-import { WhiteListCheck } from "Assets/svgs/WhiteListCheck"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import { WhiteListCheck } from "Assets/svgs/WhiteListCheck"
 import React, { useEffect, useState } from "react"
-import { Animated, Dimensions, TouchableWithoutFeedback, StyleSheet, Text } from "react-native"
+import { Animated, Dimensions, StyleSheet, Text, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
+
 import { VARIANT_WANT_HEIGHT } from "../Product"
-import { GetProductMe } from "App/generated/GetProductMe"
-import { BORDER_RADIUS } from "App/helpers/constants"
 
 interface Props {
   toggleShowVariantPicker: (show: boolean) => void
@@ -88,7 +89,7 @@ const renderBuyCTA = ({ price, scrollToBuyCTA, animatedScrollY, showNotifyMeMess
   ) : null
 }
 
-export const SelectionButtons: React.FC<Props> = ({
+export const ProductBottomBar: React.FC<Props> = ({
   dataMe,
   hasNotification,
   showNotifyMeMessage,
