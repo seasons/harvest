@@ -1,11 +1,11 @@
 import gql from "graphql-tag"
 
-import { ProductMeasurementsFragment_ProductVariant } from "./Components/ProductMeasurements"
 import {
-  ProductBuyCTAFragment_Product,
-  ProductBuyCTAFragment_ProductVariant,
-  ProductConditionSectionFragment_PhysicalProductQualityReport,
+  ProductBuyCTAFragment_Product, ProductBuyCTAFragment_ProductVariant,
+  ProductConditionSectionFragment_PhysicalProductQualityReport
 } from "@seasons/eclipse"
+
+import { ProductMeasurementsFragment_ProductVariant } from "./Components/ProductMeasurements"
 
 const commonProductVariantFragment = gql`
   fragment CommonProductVariant on ProductVariant {
@@ -117,6 +117,7 @@ export const GET_PRODUCT = gql`
           id
         }
         retailPrice
+        rentalPrice
         variants {
           ...CommonProductVariant
         }
@@ -128,6 +129,7 @@ export const GET_PRODUCT = gql`
       }
       description
       retailPrice
+      rentalPrice
       modelSize {
         id
         display
@@ -159,6 +161,7 @@ export const GET_PRODUCT = gql`
             id
             name
           }
+          rentalPrice
           retailPrice
           variants {
             ...CommonProductVariant
