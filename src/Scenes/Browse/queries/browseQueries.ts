@@ -60,6 +60,7 @@ export const GET_BROWSE_PRODUCTS = gql`
           modelHeight
           externalURL
           retailPrice
+          rentalPrice
           status
           type
           createdAt
