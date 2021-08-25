@@ -36,7 +36,7 @@ import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT, Product_NoCache_Query } from "./Queries"
 
 const windowHeight = Dimensions.get("window").height
-const variantPickerHeight = windowHeight / 2.5 + 50
+
 export const VARIANT_WANT_HEIGHT = 52
 export enum OrderType {
   BUY_USED = "Used",
@@ -91,9 +91,10 @@ export const Product = screenTrack({
     },
   })
   const product: GetProduct_products = head(data?.products)
+  const variantPickerHeight = product?.variants?.length > 3? windowHeight/2.5 : windowHeight/3
 
   const pickerTransition = useSpring({
-    translateY: showVariantPicker ? 0 : variantPickerHeight,
+    translateY: showVariantPicker ? 0 : windowHeight,
     overlayOpacity: showVariantPicker ? 1 : 0,
   })
   const [hasNotification, setHasNotification] = useState(false)
@@ -442,13 +443,11 @@ export const Product = screenTrack({
       )}
       <AnimatedOverlay pointerEvents={showVariantPicker ? "auto" : "none"} opacity={pickerTransition.overlayOpacity} />
       {productType === "Accessory" ? null : (
-        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
+        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }} variantPickerHeight={variantPickerHeight}>
           <VariantPicker
-            variantPickerHeight={variantPickerHeight}
             product={product}
             setSelectedVariant={setSelectedVariant}
             selectedVariant={selectedVariant}
-            height={variantPickerHeight}
             navigation={navigation}
             toggleShowVariantPicker={toggleShowVariantPicker}
           />
@@ -465,15 +464,6 @@ export const Product = screenTrack({
   )
 })
 
-const VariantPickerWrapper = styled(Box)`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: ${variantPickerHeight};
-  z-index: 4;
-`
-
 const Overlay = styled(Box)`
   position: absolute;
   background-color: rgba(0, 0, 0, 0.6);
@@ -489,6 +479,14 @@ const ShareButtonWrapper = styled(Box)`
   right: 7;
   z-index: 2000;
 `
-
+const VariantPickerWrapper = styled(Box)<{variantPickerHeight: any}>`
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+height: ${p => p.variantPickerHeight};
+z-index: 4;
+`
 const AnimatedVariantPicker = animated(VariantPickerWrapper)
 const AnimatedOverlay = animated(Overlay)
+
