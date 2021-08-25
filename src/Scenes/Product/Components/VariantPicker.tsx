@@ -8,10 +8,10 @@ import { VariantList } from "./VariantList"
 
 export const VariantPicker = (props) => {
   const tracking = useTracking()
-  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, height, product, variantPickerHeight } = props
+  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, variantPickerHeight, product, windowHeight } = props
 
   return (
-    <Flex style={{ flex: 1, height: height + 28, position: "relative" }}>
+    <Flex style={{ flex: 1,  position: "relative" }}>
       <FixedButtonWrapper px={2} pb={3}>
         <Button
           variant="primaryWhite"
@@ -41,7 +41,7 @@ export const VariantPicker = (props) => {
         <StyledScrollview>
           <Box px={2}>
             <VariantList
-              variantPickerHeight={variantPickerHeight}
+              
               product={product}
               setSelectedVariant={setSelectedVariant}
               selectedVariant={selectedVariant}

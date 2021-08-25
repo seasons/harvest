@@ -8,11 +8,10 @@ import React, { useEffect, useState } from "react"
 import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 
-export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelected, product, variantPickerHeight }) => {
+export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelected, product }) => {
   const variants: GetProduct_products_variants[] = product?.variants
   const [sizeData, setSizeData] = useState([])
   const tracking = useTracking()
-  // const height = product?.variants.length >= 3 ? variantPickerHeight / 3 : variantPickerHeight / 2.5
 
   useEffect(() => {
     updateSizeData()
@@ -50,15 +49,8 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
     const buttonColors =
       size?.reservable > 0
         ? { sizeColor: "black100", backgroundColor: "white100", textColor: "black50" }
-        : { sizeColor: "black35", backgroundColor: "black04", textColor: "black35" }
+        : { sizeColor: "black25", backgroundColor: "black04", textColor: "black25" }
 
-    const StyledBox = styled(Box)`
-      border: 1px ${size.reservable > 0? color("black10") : color("black04")};
-      background-color: ${color(buttonColors.backgroundColor)};
-      border-radius: 7;
-      width: 122;
-      height: 75;
-    `
     return (
       <Flex key={size.id || i} pb={1} pr={1}>
         {displaySize && (
@@ -74,8 +66,8 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
               onSizeSelected(size)
             }}
           >
-            <StyledBox>
-              <Flex alignItems="center" pt={1.5} >
+            <StyledBox reservable={size?.reservable > 0} backgroundColor={buttonColors.backgroundColor}>
+              <Flex alignItems="center" pt={1.5}>
                 <Sans color={color(buttonColors.sizeColor)} size="5">
                   {displaySize}
                 </Sans>
@@ -92,7 +84,7 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
 
   return (
     <Flex alignItems="center" pb={1}>
-      <Box style={{ minHeight: variantPickerHeight + 60, width: "110%", padding: space(1)}}>
+      <Box style={{ padding: space(1), flex: 1}} width={425}>
         <Flex flexDirection="row" flexWrap="wrap" justifyContent="flex-start" pt={1.5} pl={1.5}>
           {rows}
         </Flex>
@@ -101,3 +93,11 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
     </Flex>
   )
 }
+
+const StyledBox = styled(Box)<{ reservable: boolean; backgroundColor: string }>`
+  border: 1px ${p => p.reservable ? color("black10") : color("black04")};
+  background-color: ${p => color(p.backgroundColor)};
+  border-radius: 7;
+  width: 122;
+  height: 75;
+`
