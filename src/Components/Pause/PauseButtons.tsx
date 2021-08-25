@@ -48,7 +48,7 @@ export const PauseButtons: React.FC<{
   const resumeDate =
     customer?.membership?.pauseRequests?.[0]?.resumeDate &&
     DateTime.fromISO(customer?.membership?.pauseRequests?.[0]?.resumeDate)
-  const resumeDateDateDisplay = resumeDate.toFormat("EEEE LLLL d")
+  const resumeDateDateDisplay = resumeDate?.toFormat("EEEE LLLL d")
 
   const resumeDatePlusOneMonth = resumeDate && resumeDate.plus({ months: 1 })
   const pauseExtendDateDisplay = (!!resumeDatePlusOneMonth && resumeDatePlusOneMonth.toFormat("LLLL d")) || ""
