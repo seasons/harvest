@@ -28,7 +28,6 @@ export const themeProps = {
     black100: "#000",
     black85: "#252525",
     black50: "#7F7F7F",
-    black35: "#acacac",
     black25: "#BFBFBF",
     black20: "#CCCCCC",
     black10: "#E5E5E5",
