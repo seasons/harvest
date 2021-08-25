@@ -106,21 +106,12 @@ export const CreateAccount_Cached_Query = gql`
     paymentPlans(where: $where) {
       id
       name
-      description
-      tagline
+      features
+      caption
       price
       planID
       tier
       itemCount
-    }
-    faq(sectionType: PaymentPlanPage) {
-      sections {
-        title
-        subsections {
-          title
-          text
-        }
-      }
     }
     howDidYouFindOutAboutUs: view(viewID: "HowDidYouFindOutAboutUs") {
       id
@@ -167,7 +158,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
   const plans = data?.paymentPlans
   const howDidYouFindOutAboutUsView = data?.howDidYouFindOutAboutUs
   const customer = dataNoCache?.me?.customer
-
   const [selectedPlan, setSelectedPlan] = useState(plans?.[0])
   const [coupon, setCoupon] = useState({
     discountAmount: 0,
@@ -294,10 +284,9 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             onComplete={(paymentMethod) => {
               paymentMethod === PaymentMethod.CreditCard ? setIndex(index + 1) : setIndex(index + 2)
             }}
-            headerText={"You're in.\nLet's choose your plan"}
+            headerText="You're in. Let's choose your plan"
             source="CreateAccountModal"
             coupon={coupon}
-            onMountScrollToFaqSection={route?.params?.onMountScrollToFaqSection}
           />
         )
         break

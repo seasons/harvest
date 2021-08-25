@@ -6,7 +6,7 @@ import styled from "styled-components/native"
 import { CloseXSVG } from "../../assets/svgs"
 import { Box } from "./Box"
 
-export type CloseButtonVariant = "light" | "dark"
+export type CloseButtonVariant = "light" | "dark" | "gray"
 
 export const CloseButton: React.FC<{
   variant?: CloseButtonVariant
@@ -15,9 +15,24 @@ export const CloseButton: React.FC<{
 }> = ({ onClose, variant, overrides = {} }) => {
   const navigation = useNavigation()
 
-  const borderColor = variant === "light" ? color("black10") : color("black100")
-  const backgroundColor = variant === "light" ? color("white100") : color("black85")
   const borderWidth = variant === "light" ? 1 : 0
+  let borderColor
+  let backgroundColor
+
+  switch (variant) {
+    case "dark":
+      borderColor = color("black100")
+      backgroundColor = color("black85")
+      break
+    case "gray":
+      borderColor = color("black50")
+      backgroundColor = color("black50")
+      break
+    default:
+      borderColor = color("black10")
+      backgroundColor = color("white100")
+      break
+  }
 
   return (
     <Wrapper style={{ right: overrides.right ?? 20 }}>

@@ -324,7 +324,6 @@ export const Account = screenTrack()(() => {
                 params: {
                   initialState: State.ChoosePlan,
                   initialUserState: UserState.Admitted,
-                  onMountScrollToFaqSection: true,
                 },
               })
             }}
