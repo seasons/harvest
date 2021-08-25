@@ -1,7 +1,5 @@
 import { Sans, Separator } from "App/Components"
-import {
-  PauseStatus, REMOVE_SCHEDULED_PAUSE, RESUME_MEMBERSHIP
-} from "App/Components/Pause/PauseButtons"
+import { PauseStatus, RESUME_MEMBERSHIP } from "App/Components/Pause/PauseButtons"
 import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
 import {
   GetBag_NoCache_Query as GetBag_NoCache_Query_Type
@@ -10,21 +8,20 @@ import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { State as CreateAccountState, UserState } from "App/Scenes/CreateAccount/CreateAccount"
 import { color } from "App/utils"
-import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
+import { DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
 import gql from "graphql-tag"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Linking } from "react-native"
 
-import { useLazyQuery, useMutation } from "@apollo/client"
+import { useMutation } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { Box, ProductBuyAlertTab, ProductBuyAlertTabType, Spacer } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 
-import { GET_LOCAL_BAG_ITEMS, GetBag_NoCache_Query } from "../BagQueries"
+import { GetBag_NoCache_Query } from "../BagQueries"
 import { BagCardButton } from "./BagCardButton"
 import { BagItem } from "./BagItem"
 import { BagTabHeader } from "./BagTabHeader"
@@ -41,6 +38,7 @@ export const BagTabCachedFragment_Query = gql`
 `
 
 export const BagTab: React.FC<{
+  bagItems
   pauseStatus: PauseStatus
   data: GetBag_NoCache_Query_Type
   itemCount: number
@@ -49,9 +47,8 @@ export const BagTab: React.FC<{
   setItemCount: (count: number) => void
   deleteBagItem
   removeFromBagAndSaveItem
-}> = ({ cachedData, pauseStatus, data, itemCount, items, setItemCount, deleteBagItem, removeFromBagAndSaveItem }) => {
+}> = ({ bagItems, pauseStatus, data, itemCount, deleteBagItem, removeFromBagAndSaveItem }) => {
   const [isMutating, setIsMutating] = useState(false)
-  const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { bottomSheetSetProps, bottomSheetSnapToIndex } = useBottomSheetContext()
   const navigation = useNavigation()
@@ -59,33 +56,11 @@ export const BagTab: React.FC<{
   const me = data?.me
   const activeReservation = me?.activeReservation
   const hasActiveReservation = !!activeReservation
-  const maxPlanItemCount = cachedData?.paymentPlans?.[0]?.itemCount || 6
-  const customerPlanItemCount = me?.customer?.membership?.plan?.itemCount || items.length
 
-  const [getLocalBag, { data: localItems }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
-    variables: {
-      ids: items?.map((i) => i.productID),
-    },
-  })
+  const paddedItems =
+    assign(fill(new Array(Math.max(itemCount, bagItems.length + 1)), { variantID: "", productID: "" }), bagItems) || []
 
-  const isSignedIn = authState.isSignedIn
-
-  const bagItems = !isSignedIn
-    ? localItems?.products.map((item, i) => ({
-        ...items?.[i],
-        productVariant: item.variants[0],
-        status: "Added",
-      }))
-    : items
-
-  const paddedItems = assign(fill(new Array(itemCount), { variantID: "", productID: "" }), bagItems) || []
-
-  useEffect(() => {
-    if (!isSignedIn) {
-      getLocalBag()
-    }
-  }, [items])
-
+  console.log("Bag items", bagItems)
   const [resumeSubscription] = useMutation(RESUME_MEMBERSHIP, {
     refetchQueries: [
       {
@@ -109,55 +84,6 @@ export const BagTab: React.FC<{
       setIsMutating(false)
     },
   })
-
-  const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
-    refetchQueries: [
-      {
-        query: GetBag_NoCache_Query,
-      },
-    ],
-    onCompleted: () => {
-      setIsMutating(false)
-      const popUpData = {
-        title: "Got it!",
-        note: "Your membership is no longer scheduled to be paused.",
-        buttonText: "Close",
-        onClose: () => hidePopUp(),
-      }
-      showPopUp(popUpData)
-    },
-    onError: (err) => {
-      const popUpData = {
-        title: "Oops!",
-        note: "There was an error canceling the pause on your membership, please contact us.",
-        buttonText: "Close",
-        onClose: () => hidePopUp(),
-      }
-      Sentry.captureException(err)
-      console.log("err", err)
-      showPopUp(popUpData)
-      setIsMutating(false)
-    },
-  })
-
-  const onAddSlot = () => {
-    const userStatus = data?.me?.customer?.status
-    if (!!userStatus && userStatus === "Authorized") {
-      // If user is authorized send them to plan creation
-      navigation.navigate("Modal", {
-        screen: NavigationSchema.PageNames.CreateAccountModal,
-        params: { initialState: CreateAccountState.ChoosePlan, initialUserState: UserState.Admitted },
-      })
-    } else if (
-      !!userStatus &&
-      (userStatus === "Active" || userStatus === "Paused" || userStatus === "Deactivated" || userStatus === "Suspended")
-    ) {
-      navigation.navigate("Modal", { screen: NavigationSchema.PageNames.UpdatePaymentPlanModal })
-    } else {
-      // If user isn't signed in or isnt active or authorized
-      setItemCount(itemCount + 1)
-    }
-  }
 
   const onShowBuyBottomSheet = (bagItem) => {
     const price = bagItem?.productVariant?.price || {
@@ -233,12 +159,12 @@ export const BagTab: React.FC<{
                     return
                   }
                   setIsMutating(true)
-                  const subscriptionId = me?.customer?.invoices?.[0]?.subscriptionId || ""
-                  await removeScheduledPause({
-                    variables: {
-                      subscriptionID: subscriptionId,
-                    },
-                  })
+                  // const subscriptionId = me?.customer?.invoices?.[0]?.subscriptionId || ""
+                  // await removeScheduledPause({
+                  //   variables: {
+                  //     subscriptionID: subscriptionId,
+                  //   },
+                  // })
                 }}
               >
                 here
@@ -341,24 +267,6 @@ export const BagTab: React.FC<{
           <Spacer mb={3} />
         </>
       )}
-      {
-        // FIXME: Add this back when the query is optimized
-        isSignedIn && !isPaused && false && (
-          <>
-            <BagCardButton
-              Icon={SurpriseMe}
-              title="Surprise me"
-              caption="Discover styles in your size"
-              onPress={() => {
-                navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
-              }}
-            />
-            <Spacer mb={3} />
-            <Separator />
-            <Spacer mb={3} />
-          </>
-        )
-      }
       {!isPaused && (
         <BagCardButton
           Icon={Stylist}
