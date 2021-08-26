@@ -1,9 +1,19 @@
+import { Button } from "App/Components"
 import React from "react"
 
-import { Box, Button, Flex, Sans, Separator } from "@seasons/eclipse"
+import { Box, Flex, Sans, Separator } from "@seasons/eclipse"
 
 export const BagBottomBar = ({ bagItems }) => {
   console.log(bagItems)
+
+  if (!bagItems || bagItems.length === 0) {
+    return null
+  }
+
+  const rentalPrices = bagItems.map((b) => b.productVariant?.product?.rentalPrice) || []
+  const totalRentalPrice = rentalPrices.reduce((acc, curr) => acc + curr, 0)
+
+  console.log("Rental price", rentalPrices, totalRentalPrice)
 
   return (
     <>
@@ -15,7 +25,7 @@ export const BagBottomBar = ({ bagItems }) => {
               Estimated total
             </Sans>
             <Flex flexDirection="row" alignItems="center">
-              <Sans size="8">${120}</Sans>
+              <Sans size="7">${totalRentalPrice}</Sans>
               <Sans size="4" color="black50" mx={1} my={1}>
                 + Tax
               </Sans>
@@ -23,7 +33,7 @@ export const BagBottomBar = ({ bagItems }) => {
           </Box>
 
           <Box>
-            <Button>Reserve</Button>
+            <Button variant="primaryBlack">Reserve</Button>
           </Box>
         </Flex>
       </Box>
