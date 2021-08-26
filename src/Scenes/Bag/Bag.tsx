@@ -360,7 +360,7 @@ export const Bag = screenTrack()((props: BagProps) => {
     }
 
     if (hasActiveReservationAndBagRoom) {
-      button = <BagBottomBar bagItems={bagItems} />
+      button = <BagBottomBar bagItems={bagItems} onReserve={handlePress} />
     } else if (hasActiveReservation) {
       if (me?.activeReservation?.status === "Delivered") {
         if (markedAsReturned) {
@@ -398,7 +398,7 @@ export const Bag = screenTrack()((props: BagProps) => {
         }
       }
     } else {
-      button = <BagBottomBar bagItems={bagItems} />
+      button = <BagBottomBar bagItems={bagItems} onReserve={handlePress} />
     }
 
     return (

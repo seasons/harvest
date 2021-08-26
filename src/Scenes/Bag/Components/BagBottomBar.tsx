@@ -3,17 +3,18 @@ import React from "react"
 
 import { Box, Flex, Sans, Separator } from "@seasons/eclipse"
 
-export const BagBottomBar = ({ bagItems }) => {
-  console.log(bagItems)
+interface BagBottomBarProps {
+  bagItems: { productVariant: any }[]
+  onReserve: () => void
+}
 
+export const BagBottomBar: React.FC<BagBottomBarProps> = ({ bagItems, onReserve }) => {
   if (!bagItems || bagItems.length === 0) {
     return null
   }
 
   const rentalPrices = bagItems.map((b) => b.productVariant?.product?.rentalPrice) || []
   const totalRentalPrice = rentalPrices.reduce((acc, curr) => acc + curr, 0)
-
-  console.log("Rental price", rentalPrices, totalRentalPrice)
 
   return (
     <>
@@ -33,7 +34,9 @@ export const BagBottomBar = ({ bagItems }) => {
           </Box>
 
           <Box>
-            <Button variant="primaryBlack">Reserve</Button>
+            <Button variant="primaryBlack" onPress={onReserve}>
+              Reserve
+            </Button>
           </Box>
         </Flex>
       </Box>

@@ -5,11 +5,10 @@ import {
   GetBag_NoCache_Query as GetBag_NoCache_Query_Type
 } from "App/generated/GetBag_NoCache_Query"
 import { Schema as NavigationSchema } from "App/Navigation"
-import { useAuthContext } from "App/Navigation/AuthContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { color } from "App/utils"
-import { DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
+import { DarkInstagram, Stylist } from "Assets/svgs"
 import gql from "graphql-tag"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
