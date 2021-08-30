@@ -57,7 +57,7 @@ export const BagTab: React.FC<{
   const hasActiveReservation = !!activeReservation
 
   const paddedItems =
-    assign(fill(new Array(Math.max(itemCount, bagItems.length + 1)), { variantID: "", productID: "" }), bagItems) || []
+    assign(fill(new Array(Math.min(itemCount, bagItems.length + 1)), { variantID: "", productID: "" }), bagItems) || []
 
   console.log("Bag items", bagItems)
   const [resumeSubscription] = useMutation(RESUME_MEMBERSHIP, {

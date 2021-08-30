@@ -13,8 +13,6 @@ export const useLocalBag = () => {
   const { data: getLocalBagData } = useQuery(GET_LOCAL_BAG)
   const ids = getLocalBagData?.localBagItems
 
-  console.log("ids", ids)
-
   const [getLocalBag, { data, refetch }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
     variables: {
       ids: ids?.map((i) => i.productID),
@@ -68,8 +66,6 @@ export const useBag = () => {
   const isSignedIn = authState.isSignedIn
   const { bagItems: localItems } = useLocalBag()
   const { bagItems: remoteItems, data, refetch } = useRemoteBag()
-
-  console.log(localItems)
 
   const bagItems = !isSignedIn ? localItems : remoteItems
 
