@@ -28,6 +28,7 @@ import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from 
 import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
 import { GET_NOTIFICATION_BAR } from "@seasons/eclipse"
 import { Loader } from "App/Components/Loader"
+import { color } from "App/utils"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout(
@@ -48,10 +49,9 @@ const PLAN_UPDATE = gql`
 `
 
 const windowWidth = Dimensions.get("window").width
-const imageHeight = windowWidth / 1.79
+const imageHeight = Dimensions.get("window").height - 55
 const imageURL =
-  "https://seasons-s3.imgix.net/harvest/plan-select-header.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb"
-
+  "https://seasons-s3.imgix.net/harvest/Seasons+-+Choose+Plan+-+Background+-2.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb"
 export enum PaneType {
   Update = 0,
   Create = 1,
@@ -61,7 +61,6 @@ interface ChoosePlanPaneProps {
   onComplete?: (method: PaymentMethod) => void
   selectedPlan: GetPlans_paymentPlans
   setSelectedPlan: (plan: GetPlans_paymentPlans) => void
-  headerText: String
   data: CreateAccount_Cached_Query_Type
   dataNoCache: CreateAccount_NoCache_Query_Type
   coupon?: Coupon
@@ -70,7 +69,6 @@ interface ChoosePlanPaneProps {
 
 export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   onComplete,
-  headerText,
   data,
   dataNoCache,
   setSelectedPlan,
@@ -302,65 +300,89 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
 
   return (
     <>
-      <CloseButton variant="gray" />
+      <CloseButton variant="light" />
       <Container insetsBottom={false} insetsTop={false}>
         <Box style={{ flex: 1 }}>
           <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
             <FadeInImage source={{ uri: imageURL }} style={{ width: windowWidth, height: imageHeight }} />
-            <Spacer mb={4} />
-            <Box px={2}>
-              <Sans color="black100" size="7">
-                {headerText}
-              </Sans>
+            <Box style={{ position: "absolute", width: "100%" }} pt={5}>
+              <Spacer mb={4} />
+              <Box px={2}>
+                <Sans color={color("black100")} size="7">
+                  You're in.
+                </Sans>
+                <Sans color={color("black100")} size="7">
+                  Let's choose your plan
+                </Sans>
+                <Spacer mb={2} />
+              </Box>
+              <Flex flexDirection="column" pt={3} pb={2}>
+                {features?.features &&
+                  features?.features.map((feature, index) => {
+                    return (
+                      <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
+                        <Box mx={1} mr={1.5}>
+                          <ListCheck feature={true} />
+                        </Box>
+                        <Sans size="4" color={color("black100")}>
+                          {feature.caption}
+                        </Sans>
+                        <Spacer mb={2} />
+                      </Flex>
+                    )
+                  })}
+                {features?.strikeThroughFeatures &&
+                  features.strikeThroughFeatures.map((feature, index) => {
+                    return (
+                      <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
+                        <Box mx={1} mr={1.5}>
+                          <ListCheck feature={false} />
+                        </Box>
+                        <Sans size="4" color={color("black50")} style={{ textDecorationLine: "line-through" }}>
+                          {feature.caption}
+                        </Sans>
+                        <Spacer mb={2} />
+                      </Flex>
+                    )
+                  })}
+              </Flex>
               <Spacer mb={2} />
-            </Box>
-            <Flex flexDirection="column">
-              {features?.map((feature, index) => {
+              {sortedPlans?.map((plan) => {
                 return (
-                  <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
-                    <Box mx={1} mr={1.5}>
-                      <ListCheck />
-                    </Box>
-                    <Sans size="3" color="black100">
-                      {`${feature.title}: `}
-                      <Sans size="3" color="black50">
-                        {feature.caption}
-                      </Sans>
-                    </Sans>
-                  </Flex>
+                  <Box key={plan.id} px={2}>
+                    <PlanButton
+                      lowestPlanPrice={lowestPlanPrice}
+                      plan={plan}
+                      key={plan.id}
+                      shouldSelect={setSelectedPlan}
+                      selected={selectedPlan?.id === plan.id}
+                      coupon={coupon}
+                    />
+                  </Box>
                 )
               })}
-            </Flex>
-            <Spacer mb={2} />
-            {sortedPlans?.map((plan) => {
-              return (
-                <Box key={plan.id} px={2}>
-                  <PlanButton
-                    lowestPlanPrice={lowestPlanPrice}
-                    plan={plan}
-                    key={plan.id}
-                    shouldSelect={setSelectedPlan}
-                    selected={selectedPlan?.id === plan.id}
-                    coupon={coupon}
-                  />
-                </Box>
-              )
-            })}
-            <Spacer mb={3} />
-            <Box px={2}>
-              <Sans size="2" color="black50">
-                Cancel for any reason within your first 24 hours to receive a full refund. Free shipping and dry
-                cleaning are only included on one order per month. Questions about membership? Contact us at
-                membership@seasons.nyc
-              </Sans>
+              <Spacer mb={3} />
+              <Box px={2}>
+                <Sans size="3" color={color("black50")}>
+                  Cancel for any reason within your first 24 hours for a full refund. Free shipping and dry cleaning are
+                  only included on one order per month. Questions? Contact us membership@seasons.nyc
+                </Sans>
+              </Box>
+              <Spacer pb={150} />
             </Box>
-            <Spacer pb={160} />
           </ScrollView>
         </Box>
 
-        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
+        <Box width="100%" style={{ position: "absolute", bottom: 0 }}>
           <Box p={2} style={{ alignItems: "center" }}>
-            <Button block disabled={!selectedPlan} loading={isMutating} onPress={onChoosePlan} variant="primaryBlack">
+            <Button
+              block
+              disabled={!selectedPlan}
+              loading={isMutating}
+              onPress={onChoosePlan}
+              variant="primaryBlack"
+              height={50}
+            >
               Choose plan
             </Button>
             {source === "CreateAccountModal" && (
@@ -375,7 +397,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
             )}
             <Box style={{ height: insets.bottom }} />
           </Box>
-        </FadeBottom2>
+        </Box>
       </Container>
 
       <PopUp show={openPopUp}>

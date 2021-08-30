@@ -28,6 +28,10 @@ export const CloseButton: React.FC<{
       borderColor = color("black50")
       backgroundColor = color("black50")
       break
+    case "light":
+      borderColor = color("black25")
+      backgroundColor = color("black25")
+      break
     default:
       borderColor = color("black10")
       backgroundColor = color("white100")
@@ -65,8 +69,8 @@ const Wrapper = styled(Box)`
 
 const Circle = styled(Box)<{ variant: string }>`
   border-radius: 100;
-  height: 40;
-  width: 40;
+  height: 50;
+  width: 50;
   display: flex;
   align-items: center;
   justify-content: center;
