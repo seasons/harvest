@@ -317,34 +317,32 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                 <Spacer mb={2} />
               </Box>
               <Flex flexDirection="column" pt={3} pb={2}>
-                {features?.features &&
-                  features?.features.map((feature, index) => {
-                    return (
-                      <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
-                        <Box mx={1} mr={1.5}>
-                          <ListCheck feature={true} />
-                        </Box>
-                        <Sans size="4" color={color("black100")}>
-                          {feature.caption}
-                        </Sans>
-                        <Spacer mb={2} />
-                      </Flex>
-                    )
-                  })}
-                {features?.strikeThroughFeatures &&
-                  features.strikeThroughFeatures.map((feature, index) => {
-                    return (
-                      <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
-                        <Box mx={1} mr={1.5}>
-                          <ListCheck feature={false} />
-                        </Box>
-                        <Sans size="4" color={color("black50")} style={{ textDecorationLine: "line-through" }}>
-                          {feature.caption}
-                        </Sans>
-                        <Spacer mb={2} />
-                      </Flex>
-                    )
-                  })}
+                {features?.features?.map((feature, index) => {
+                  return (
+                    <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
+                      <Box mx={1} mr={1.5}>
+                        <ListCheck feature={true} />
+                      </Box>
+                      <Sans size="4" color={color("black100")}>
+                        {feature}
+                      </Sans>
+                      <Spacer mb={2} />
+                    </Flex>
+                  )
+                })}
+                {features?.strikeThroughFeatures?.map((feature, index) => {
+                  return (
+                    <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
+                      <Box mx={1} mr={1.5}>
+                        <ListCheck feature={false} />
+                      </Box>
+                      <Sans size="4" color={color("black50")} style={{ textDecorationLine: "line-through" }}>
+                        {feature}
+                      </Sans>
+                      <Spacer mb={2} />
+                    </Flex>
+                  )
+                })}
               </Flex>
               <Spacer mb={2} />
               {sortedPlans?.map((plan) => {
@@ -363,7 +361,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
               })}
               <Spacer mb={3} />
               <Box px={2}>
-                <Sans size="3" color={color("black50")}>
+                <Sans size="3" color="black50">
                   Cancel for any reason within your first 24 hours for a full refund. Free shipping and dry cleaning are
                   only included on one order per month. Questions? Contact us membership@seasons.nyc
                 </Sans>

@@ -69,8 +69,8 @@ const Wrapper = styled(Box)`
 
 const Circle = styled(Box)<{ variant: string }>`
   border-radius: 100;
-  height: 50;
-  width: 50;
+  height: 40;
+  width: 40;
   display: flex;
   align-items: center;
   justify-content: center;

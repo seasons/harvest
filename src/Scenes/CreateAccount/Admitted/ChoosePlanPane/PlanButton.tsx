@@ -53,8 +53,8 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ lowestPlanPrice, shouldS
       planName: plan?.name,
     })
   }
-
-  const planDiscount = 20
+  const monthlyPrice = plan.price / 12
+  const planDiscount = 100 - (monthlyPrice / lowestPlanPrice) * 100
   const showYearlyDiscount = plan.planID === "access-yearly" && selected && planDiscount
   return (
     <TouchableOpacity onPress={() => onPress(plan)}>
