@@ -59,7 +59,6 @@ export const BagTab: React.FC<{
   const paddedItems =
     assign(fill(new Array(Math.min(itemCount, bagItems.length + 1)), { variantID: "", productID: "" }), bagItems) || []
 
-  console.log("Bag items", bagItems)
   const [resumeSubscription] = useMutation(RESUME_MEMBERSHIP, {
     refetchQueries: [
       {
@@ -138,41 +137,6 @@ export const BagTab: React.FC<{
   return (
     <Box>
       <BagTabHeader atHome={atHome} me={me} />
-      {showPendingMessage && (
-        <>
-          <Box px={2}>
-            <Separator color={color("black10")} />
-          </Box>
-          <Box px={2} py={3}>
-            <Sans size="4" color="black50">
-              {`Your membership is scheduled to be paused ${withOrWithoutDisplay} on ${DateTime.fromISO(
-                pauseRequest.pauseDate
-              ).toFormat("EEEE LLLL dd")}.${
-                pauseType === "WithoutItems" ? " Please return your order before this date." : ""
-              } To continue it tap `}
-              <Sans
-                size="4"
-                style={{ textDecorationLine: "underline" }}
-                onPress={async () => {
-                  if (isMutating) {
-                    return
-                  }
-                  setIsMutating(true)
-                  // const subscriptionId = me?.customer?.invoices?.[0]?.subscriptionId || ""
-                  // await removeScheduledPause({
-                  //   variables: {
-                  //     subscriptionID: subscriptionId,
-                  //   },
-                  // })
-                }}
-              >
-                here
-              </Sans>
-              .
-            </Sans>
-          </Box>
-        </>
-      )}
       {isPaused && (
         <>
           <Box px={2}>
