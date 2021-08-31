@@ -10,7 +10,6 @@ import {
   UPDATE_PHONE_AND_SHIPPING
 } from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
 import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
-import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
@@ -57,16 +56,13 @@ const GET_CUSTOMER = gql`
         name
         price
         taxPrice
+        recordType
       }
       customer {
         id
         admissions {
           id
           allAccessEnabled
-        }
-        billingInfo {
-          brand
-          last_digits
         }
         detail {
           id
@@ -92,6 +88,7 @@ const GET_CUSTOMER = gql`
         }
         billingInfo {
           id
+          brand
           last_digits
         }
       }

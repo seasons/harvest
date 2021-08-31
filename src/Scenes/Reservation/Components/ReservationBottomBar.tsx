@@ -13,7 +13,8 @@ interface ReservationBottomBarProps {
 }
 
 export const ReservationBottomBar: React.FC<ReservationBottomBarProps> = ({ lineItems, onReserve, buttonProps }) => {
-  const total = lineItems.reduce((acc, curr) => acc + curr.taxPrice + curr.price, 0)
+  const totalLineItem = lineItems.filter((l) => l.recordType === "Total")?.[0]
+  const total = totalLineItem.price
 
   return (
     <Wrapper pb={2}>
