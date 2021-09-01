@@ -317,7 +317,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                 <Spacer mb={2} />
               </Box>
               <Flex flexDirection="column" pt={3} pb={2}>
-                {features?.features?.map((feature, index) => {
+                {features?.included?.map((feature, index) => {
                   return (
                     <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
                       <Box mx={1} mr={1.5}>
@@ -330,7 +330,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                     </Flex>
                   )
                 })}
-                {features?.strikeThroughFeatures?.map((feature, index) => {
+                {features?.excluded?.map((feature, index) => {
                   return (
                     <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
                       <Box mx={1} mr={1.5}>
