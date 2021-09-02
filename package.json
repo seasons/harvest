@@ -1,6 +1,6 @@
 {
   "name": "harvest",
-  "version": "1.43.0",
+  "version": "1.43.1",
   "engines": {
     "node": ">=12.x.x"
   },
@@ -132,6 +132,7 @@
     "@types/storybook__react": "^5.2.1",
     "@types/styled-components": "^5.1.2",
     "@types/styled-system": "^5.1.1",
+    "apollo": "^2.33.6",
     "babel-jest": "^25.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-module-resolver": "^3.2.0",
