@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 import React from "react"
 import { useQuery } from "@apollo/client"
-import { ScrollView } from "react-native"
+import { Linking, ScrollView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Box, Button, Container, FixedBackArrow, Sans, SectionHeader, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
@@ -38,6 +38,7 @@ export const GET_MEMBERSHIP_INFO = gql`
           }
           plan {
             id
+            planID
             price
             description
             itemCount
@@ -61,8 +62,8 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const firstName = data?.me?.user?.firstName
   const lastName = data?.me?.user?.lastName
   const plan = customer?.membership?.plan
-
-  const itemCount = plan?.itemCount
+  const payPeriod = plan?.planID === "access-yearly" ? "year" : "month"
+  const isPaused = customer?.status === "Paused"
 
   if (!plan) {
     return (
@@ -74,6 +75,10 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   }
 
   const whatsIncluded = plan?.description?.split("\n")
+
+  // For now since we don't support downgrading on Access plans
+  // only show change plan if they can upgrade only or change to Access
+  const canChangePlan = plan.planID !== "access-yearly"
 
   return (
     <Container insetsBottom={false}>
@@ -90,7 +95,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
               <SectionHeader title="What you pay" />
               <Spacer mb={1} />
               <Sans size="4" color={color("black50")}>
-                {`${itemCount} items, $${plan.price / 100}`} / per month
+                {`$${plan.price / 100} / per ${payPeriod}`}
               </Sans>
             </>
           )}
@@ -110,17 +115,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
             </>
           )}
           <Spacer mb={4} />
-          <SectionHeader title="Change your plan" />
-          <Spacer mb={2} />
-          <Button
-            variant="secondaryWhite"
-            onPress={() => navigation.navigate("Modal", { screen: Schema.PageNames.UpdatePaymentPlanModal })}
-            block
-          >
-            View membership options
-          </Button>
-          <Spacer mb={4} />
-          <SectionHeader title="Pause or cancel" />
+          <SectionHeader title={canChangePlan || isPaused ? "Update your plan" : "Cancel membership"} />
           <Spacer mb={2} />
           <PauseButtons customer={customer} />
         </Box>

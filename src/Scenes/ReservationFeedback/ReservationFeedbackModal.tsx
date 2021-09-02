@@ -9,6 +9,7 @@ import { ImageRail } from "App/Scenes/Product/Components"
 import { color } from "App/utils"
 import styled from "styled-components/native"
 import gql from "graphql-tag"
+import AsyncStorage from "@react-native-community/async-storage"
 import { screenTrack, useTracking, Schema as TrackingSchema } from "App/utils/track"
 import { Container } from "Components/Container"
 import { ReservationFeedback_reservationFeedback_feedbacks } from "src/generated/ReservationFeedback"
@@ -18,8 +19,9 @@ import { ReservationFeedbackHeader } from "./Components/ReservationFeedbackHeade
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { UPDATE_PRODUCT_RESERVATION_FEEDBACK } from "./mutations"
 import { Loader } from "App/Components/Loader"
-import { Homepage_Query } from "../Home/queries/homeQueries"
+import { HomepageNoCache_Query } from "../Home/queries/homeQueries"
 import { ReservationFeedbackFinish } from "./ReservationFeedbackFinish"
+import { DateTime } from "luxon"
 
 const windowWidth = Dimensions.get("window").width
 
@@ -86,8 +88,7 @@ export const ReservationFeedbackModal: React.FC<{
   const [updateProductReservationFeedback] = useMutation(UPDATE_PRODUCT_RESERVATION_FEEDBACK, {
     refetchQueries: [
       {
-        query: Homepage_Query,
-        variables: { firstFitPics: 8, skipFitPics: 0 },
+        query: HomepageNoCache_Query,
       },
     ],
     awaitRefetchQueries: true,
@@ -107,6 +108,7 @@ export const ReservationFeedbackModal: React.FC<{
 
   const currFeedback: ReservationFeedback_reservationFeedback_feedbacks = feedbacks?.[currFeedbackIndex]
   const currViewState = viewState[currFeedbackIndex]
+  const currentResponsesAsArray = currViewState && Object.keys(currViewState?.responses)
 
   useEffect(() => {
     if (currFeedback?.isCompleted && viewState[currFeedbackIndex].sliderMoved === false) {
@@ -152,11 +154,17 @@ export const ReservationFeedbackModal: React.FC<{
 
   const handleOnSubmit = () => {
     Keyboard.dismiss()
+    const responses = {}
+    // Ensure only responses from current questions are being passed
+    currQuestions.forEach((q) => {
+      responses[q.id] = currViewState?.responses?.[q.id] ?? null
+    })
+
     updateProductReservationFeedback({
       variables: {
         reservationFeedbackID: data.reservationFeedback.id,
         productReservationID: currFeedback.id,
-        responses: currViewState.responses,
+        responses,
         input: {
           isCompleted: true,
           rating: currViewState.ratingValue,
@@ -174,9 +182,10 @@ export const ReservationFeedbackModal: React.FC<{
     }
   }
 
-  const handleLeftButton = () => {
+  const handleLeftButton = async () => {
     Keyboard.dismiss()
     if (currFeedbackIndex === 0) {
+      await AsyncStorage.setItem("feedbackDismissDate", DateTime.local().toISO())
       navigation.goBack()
     } else if (currFeedbackIndex > 0) {
       setCurrFeedbackIndex(currFeedbackIndex - 1)
@@ -184,12 +193,14 @@ export const ReservationFeedbackModal: React.FC<{
     }
   }
 
-  const buttonEnabled =
-    Object.keys(currViewState.responses).length === currQuestions.length && currViewState.sliderMoved
+  const buttonEnabled = currentResponsesAsArray?.length >= currQuestions?.length && currViewState?.sliderMoved
 
   return (
     <Container insetsTop={false} insetsBottom={false}>
-      <CloseButton variant="light" />
+      <CloseButton
+        variant="light"
+        onClose={async () => await AsyncStorage.setItem("feedbackDismissDate", DateTime.local().toISO())}
+      />
       <ScrollView ref={scrollViewRef}>
         <Box px={2} width={windowWidth}>
           <ReservationFeedbackHeader />

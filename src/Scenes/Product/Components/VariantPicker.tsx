@@ -1,7 +1,6 @@
-import { Box, Button, Flex, Sans } from "App/Components"
+import { Box, Button, Flex, Sans, Separator } from "App/Components"
 import { color, space } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
-import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import React from "react"
 import { ScrollView } from "react-native"
 import styled from "styled-components/native"
@@ -9,16 +8,16 @@ import { VariantList } from "./VariantList"
 
 export const VariantPicker = (props) => {
   const tracking = useTracking()
-  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, height, product, variantPickerHeight } = props
+  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, variantPickerHeight, product, windowHeight } = props
 
   return (
-    <Flex style={{ flex: 1, height: height + 28, position: "relative" }}>
-      <LeftCorner />
-      <RightCorner />
-      <FixedButtonWrapper px={2}>
+    <Flex style={{ flex: 1,  position: "relative" }}>
+      <FixedButtonWrapper px={2} pb={3}>
         <Button
-          variant="secondaryBlack"
-          width="100%"
+          variant="primaryWhite"
+          width="200"
+          borderRadius={7}
+          borderColor={color("white100")}
           onPress={() => {
             tracking.trackEvent({
               actionName: Schema.ActionNames.SizePickerCancelTapped,
@@ -27,19 +26,22 @@ export const VariantPicker = (props) => {
             toggleShowVariantPicker(false)
           }}
         >
-          Cancel
+          <Sans size="5" style={{ textDecorationLine: "underline" }} color={color("black100")}>
+            Cancel
+          </Sans>
         </Button>
       </FixedButtonWrapper>
-      <Box style={{ backgroundColor: color("black100"), top: 28 }}>
+      <VariantPickerFlex>
         <Flex justifyContent="center" flexDirection="row" p={2}>
-          <Sans size="4" color={color("white100")}>
+          <Sans size="5" color={color("black100")}>
             Select size
           </Sans>
         </Flex>
+        <Separator color={color("black10")} />
         <StyledScrollview>
           <Box px={2}>
             <VariantList
-              variantPickerHeight={variantPickerHeight}
+              
               product={product}
               setSelectedVariant={setSelectedVariant}
               selectedVariant={selectedVariant}
@@ -49,21 +51,16 @@ export const VariantPicker = (props) => {
             />
           </Box>
         </StyledScrollview>
-      </Box>
+      </VariantPickerFlex>
     </Flex>
   )
 }
 
-const LeftCorner = styled(LeftTabCorner)`
-  position: absolute;
-  top: 0;
-  left: 0;
-`
-
-const RightCorner = styled(RightTabCorner)`
-  position: absolute;
-  top: 0;
-  right: 0;
+const VariantPickerFlex = styled(Flex)`
+  background-color: ${color("white100")};
+  top: 15;
+  border-radius: 25;
+  padding-top: 15;
 `
 
 const FixedButtonWrapper = styled(Box)`
@@ -72,6 +69,7 @@ const FixedButtonWrapper = styled(Box)`
   bottom: ${space(2)};
   width: 100%;
   z-index: 100;
+  align-items: center;
 `
 
 const StyledScrollview = styled(ScrollView)`

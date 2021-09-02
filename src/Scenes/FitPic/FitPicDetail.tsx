@@ -39,7 +39,7 @@ export const FitPicDetail: React.FC<FitPicDetailProps> = screenTrack()(({ route,
     },
   })
 
-  const item = route?.params?.item as FitPic
+  const item = route?.params?.item?.node as FitPic
   if (!item) {
     return null
   }

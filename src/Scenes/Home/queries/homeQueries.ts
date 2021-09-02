@@ -56,8 +56,6 @@ export const HomepageNoCache_Query = gql`
   query HomepageNoCache_Query {
     reservationFeedback {
       id
-      comment
-      rating
       feedbacks {
         id
         isCompleted
@@ -163,10 +161,7 @@ export const Homepage_Query = gql`
             variants {
               id
               reservable
-              internalSize {
-                id
-                display
-              }
+              displayShort
             }
           }
         }
@@ -233,6 +228,15 @@ export const Homepage_Query = gql`
       id
       ...HomePageProductFragment_Product
     }
+    justAddedAccessories: products(
+      first: 16
+      category: "accessories"
+      orderBy: publishedAt_DESC
+      where: { AND: [{ variants_some: { id_not: null } }, { status: Available }, { tags_none: { name: "Vintage" } }] }
+    ) {
+      id
+      ...HomePageProductFragment_Product
+    }
     justAddedTops: products(
       first: 8
       category: "tops"
@@ -251,50 +255,52 @@ export const Homepage_Query = gql`
       id
       ...HomePageProductFragment_Product
     }
-    fitPicsCount: fitPicsConnection(where: { status: Published }) {
+    fitPicsConnection(first: $firstFitPics, skip: $skipFitPics, orderBy: createdAt_DESC, where: { status: Published }) {
       aggregate {
         count
       }
-    }
-    fitPics(first: $firstFitPics, skip: $skipFitPics, orderBy: createdAt_DESC, where: { status: Published }) {
-      id
-      author
-      location {
-        id
-        city
-        state
-      }
-      image(size: Medium) {
-        id
-        url
-      }
-      includeInstagramHandle
-      user {
-        id
-        customer {
-          detail {
-            instagramHandle
+      edges {
+        node {
+          id
+          author
+          location {
+            id
+            city
+            state
           }
+          image(size: Medium) {
+            id
+            url
+          }
+          includeInstagramHandle
+          user {
+            id
+            customer {
+              detail {
+                instagramHandle
+              }
+            }
+          }
+          products {
+            id
+            slug
+            name
+            isSaved
+            brand {
+              id
+              name
+            }
+            images {
+              id
+              url
+            }
+            variants(first: 1) {
+              id
+            }
+          }
+          createdAt
         }
       }
-      products {
-        id
-        slug
-        name
-        isSaved
-        brand {
-          id
-          name
-        }
-        images {
-          id
-          url
-        }
-        variants(first: 1) {
-          id
-        }
-      }
-      createdAt
     }
     ...HomeBottomSheetFragment_Query
   }

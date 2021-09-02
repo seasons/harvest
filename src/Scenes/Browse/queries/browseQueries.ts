@@ -27,21 +27,6 @@ export const GET_BROWSE_PRODUCTS = gql`
       slug
       name
     }
-    productsCount: productsConnection(
-      category: $categoryName
-      tops: $tops
-      colors: $colors
-      bottoms: $bottoms
-      availableOnly: $available
-      forSaleOnly: $forSaleOnly
-      brands: $brandNames
-      orderBy: $orderBy
-      where: { status: Available }
-    ) {
-      aggregate {
-        count
-      }
-    }
     productsConnection(
       category: $categoryName
       tops: $tops
@@ -55,6 +40,9 @@ export const GET_BROWSE_PRODUCTS = gql`
       skip: $skip
       where: { status: Available }
     ) {
+      aggregate {
+        count
+      }
       edges {
         node {
           id
@@ -72,6 +60,7 @@ export const GET_BROWSE_PRODUCTS = gql`
           modelHeight
           externalURL
           retailPrice
+          rentalPrice
           status
           type
           createdAt

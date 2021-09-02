@@ -1,6 +1,6 @@
-import { Button } from "App/Components"
+import { Button, Sans } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
-import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
+import { BORDER_RADIUS, DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_LOCAL_BAG } from "App/queries/clientQueries"
@@ -12,7 +12,9 @@ import React, { useState } from "react"
 import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { GET_PRODUCT } from "../Queries"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { GetProductMe } from "App/generated/GetProductMe"
+import { color } from "styled-system"
 
 interface Props {
   setShowSizeWarning: (show: boolean) => void
@@ -91,12 +93,30 @@ export const AddToBagButton: React.FC<Props> = ({
             onClose: () => hidePopUp(),
           })
         } else if (err.toString().includes("Bag is full")) {
-          showPopUp({
-            title: "Your bag is full",
-            note: "Remove one or more items from your bag to continue adding this item.",
-            buttonText: "Got It",
-            onClose: () => hidePopUp(),
-          })
+          if (dataMe?.me?.bag?.length < 6) {
+            showPopUp({
+              title: "Want another item?",
+              note: "Upgrade your plan to add more slots",
+              buttonText: "Upgrade plan",
+              onClose: () => {
+                navigation.navigate(NavigationSchema.StackNames.Modal, {
+                  screen: NavigationSchema.PageNames.UpdatePaymentPlanModal,
+                })
+                hidePopUp()
+              },
+              secondaryButtonText: "Got It",
+              secondaryButtonOnPress: () => {
+                hidePopUp()
+              },
+            })
+          } else {
+            showPopUp({
+              title: "Your bag is full",
+              note: "Remove one or more items from your bag to continue adding this item.",
+              buttonText: "Got It",
+              onClose: () => hidePopUp(),
+            })
+          }
         } else {
           showPopUp({
             title: "Oops, sorry!",
@@ -143,6 +163,9 @@ export const AddToBagButton: React.FC<Props> = ({
       showCheckMark={isInBag}
       variant="primaryBlack"
       disabled={_disabled}
+      borderRadius={BORDER_RADIUS}
+      height={55}
+      
       onPress={() => {
         tracking.trackEvent({
           actionName: Schema.ActionNames.ProductAddedToBag,
@@ -150,8 +173,10 @@ export const AddToBagButton: React.FC<Props> = ({
         })
         handleReserve()
       }}
-    >
-      {text}
+    > 
+    <Sans size="4" color={color("white100")}>
+        {text}
+    </Sans>
     </Button>
   )
 }

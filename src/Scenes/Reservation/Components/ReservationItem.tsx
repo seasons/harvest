@@ -1,11 +1,13 @@
 import { Box, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { Schema, useTracking } from "App/utils/track"
 import { head } from "lodash"
 import React from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+
+import { ProductPriceText } from "@seasons/eclipse"
 
 interface ReservationItemProps {
   bagItem: any
@@ -24,7 +26,7 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
   }
 
   const imageURL = product?.images?.[0]?.url
-  const variantSize = variantToUse?.displayLong?.toLowerCase()
+  const variantSize = variantToUse?.displayShort
 
   return (
     <Box key={product.id}>
@@ -43,13 +45,11 @@ export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index
         <ReservationItemContainer flexDirection="row">
           <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
             <Box>
-              <Sans size="4">{index + 1}</Sans>
-              <Sans size="4">{product.brand.name}</Sans>
-              <Sans size="4" color="black50">
-                {product.name}
-              </Sans>
+              <Sans size="3">{`${index + 1}. ${product.brand.name}`}</Sans>
+              <ProductPriceText size="3" product={product} />
+
               {!!variantSize && (
-                <Sans size="4" color="black50">
+                <Sans size="3" color="black50">
                   Size {variantSize}
                 </Sans>
               )}

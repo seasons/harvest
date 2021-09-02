@@ -22,18 +22,10 @@ export interface BagTabHeaderFragment_Query_me_customer_membership_plan {
   tier: PaymentPlanTier | null;
 }
 
-export interface BagTabHeaderFragment_Query_me_customer_membership_subscription {
-  __typename: "CustomerMembershipSubscriptionData";
-  id: string;
-  currentTermStart: any;
-  currentTermEnd: any;
-}
-
 export interface BagTabHeaderFragment_Query_me_customer_membership {
   __typename: "CustomerMembership";
   id: string;
   plan: BagTabHeaderFragment_Query_me_customer_membership_plan | null;
-  subscription: BagTabHeaderFragment_Query_me_customer_membership_subscription | null;
 }
 
 export interface BagTabHeaderFragment_Query_me_customer {
@@ -45,6 +37,7 @@ export interface BagTabHeaderFragment_Query_me_customer {
 export interface BagTabHeaderFragment_Query_me {
   __typename: "Me";
   id: string | null;
+  nextFreeSwapDate: any | null;
   activeReservation: BagTabHeaderFragment_Query_me_activeReservation | null;
   customer: BagTabHeaderFragment_Query_me_customer | null;
 }

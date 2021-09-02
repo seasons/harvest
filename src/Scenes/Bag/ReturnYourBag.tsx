@@ -14,6 +14,7 @@ import { Button, Flex, Loader } from "@seasons/eclipse"
 
 import { ReturnYourBagItem } from "./Components/ReturnYourBagItem"
 import { ACTIVE_RESERVATION } from "./CurrentRotation"
+import { GetBag_NoCache_Query } from "./BagQueries"
 
 const RETURN_ITEMS = gql`
   mutation ReturnItems($items: [ID!]!) {
@@ -80,7 +81,7 @@ export const ReturnYourBag = () => {
         <Sans size="4" style={{ textDecorationLine: "underline" }}>
           {`${nextSwapDate.weekdayLong}, ${nextSwapDate.monthLong} ${nextSwapDate.day}`}
         </Sans>
-        . Return your items early & place a new order for only $35
+        . Return your items early & place a new order for only $30
       </Sans>
     ) : (
       <Sans size="4" color="black50">
@@ -95,7 +96,7 @@ export const ReturnYourBag = () => {
         <FlatList
           data={activeReservation ? activeReservation.products : []}
           ListHeaderComponent={() => (
-            <Box pt={3} pb={1} px={2}>
+            <Box pb={1} px={2}>
               <Spacer mb={80} />
               <Sans size="7" color="black">
                 Return your items
@@ -140,6 +141,8 @@ export const ReturnYourBag = () => {
                   variables: {
                     items: Object.keys(selectedItems),
                   },
+                  awaitRefetchQueries: true,
+                  refetchQueries: [{ query: GetBag_NoCache_Query }],
                 })
               }}
             >

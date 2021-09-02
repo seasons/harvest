@@ -96,7 +96,7 @@ export const Radio: React.FC<RadioProps> = (props) => {
  */
 export const BorderedRadio = styled(Box)<RadioProps>`
   padding: ${space(2)}px;
-  border: 1px solid ${color("black50")};
+  border: 1px solid ${color("black100")};
   transition: background-color 0.14s ease-in-out;
   :not(:first-child) {
     border-top-left-radius: 0;
@@ -127,7 +127,7 @@ const InnerCircle = styled(Box)<{ activeColor: string }>`
 const RadioButton = styled(Box)<RadioToggleProps>`
   ${borders};
   ${styledSpace};
-  border-color: ${color("black10")};
+  border-color: ${(p) => (p.selected ? color("black100") : color("black50"))};
   border-width: 1;
   width: 24;
   height: 24;

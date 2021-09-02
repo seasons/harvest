@@ -1,32 +1,12 @@
 import { Box, Button, Flex, Sans, Separator, Spacer } from "App/Components"
 import { PopUp } from "App/Components/PopUp"
-import { useAuthContext } from "App/Navigation/AuthContext"
+import { space } from "App/utils/space"
+import { DateTime } from "luxon"
 import React, { useState } from "react"
 import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 
-import { useNavigation } from "@react-navigation/native"
-
-export const BagCostWarning = ({ show, setShow }) => {
-  const navigation = useNavigation()
-
+export const BagCostWarning = ({ show, onCTAPress, onCancel, nextFreeSwapDate }) => {
   const [isMutatingCTA, setIsMutatingCTA] = useState(false)
-
-  const CancelButton = () => {
-    return (
-      <TouchableWithoutFeedback onPress={() => setShow(false)}>
-        <Sans size="4" style={{ textAlign: "center", textDecorationLine: "underline", width: "100%" }}>
-          Cancel
-        </Sans>
-      </TouchableWithoutFeedback>
-    )
-  }
-
-  const onCTAPress = () => {
-    if (isMutatingCTA) {
-      return
-    }
-    setIsMutatingCTA(true)
-  }
 
   return (
     <PopUp show={show}>
@@ -38,20 +18,42 @@ export const BagCostWarning = ({ show, setShow }) => {
       <Separator />
       <Spacer mb={3} />
       <Box px={2}>
-        <Button block loading={isMutatingCTA} onPress={onCTAPress}>
-          Ship now for $35
+        <Button
+          block
+          loading={isMutatingCTA}
+          onPress={async () => {
+            if (isMutatingCTA) {
+              return
+            }
+            setIsMutatingCTA(true)
+            await onCTAPress()
+            setIsMutatingCTA(false)
+          }}
+        >
+          Ship now for $30
         </Button>
         <Spacer mb={2} />
         <Sans size="3" style={{ textAlign: "center" }} color="black50">
-          You’ve already placed an order this month. Get an extra shipment now for $35 or wait until April 24.
+          You’ve already placed an order this month. Get an extra shipment now for{" "}
+          <Sans size="3" color="black50" style={{ textDecorationLine: "underline" }}>
+            $30
+          </Sans>{" "}
+          or wait until{" "}
+          <Sans size="3" color="black50" style={{ textDecorationLine: "underline" }}>{`${DateTime.fromISO(
+            nextFreeSwapDate
+          ).toFormat("LLLL d")}.`}</Sans>
         </Sans>
         <Spacer mb={3} />
 
         <Flex flexDirection="row" justifyContent="center">
-          <CancelButton />
+          <TouchableWithoutFeedback onPress={onCancel}>
+            <Sans size="4" style={{ textAlign: "center", textDecorationLine: "underline", width: "100%" }}>
+              Cancel
+            </Sans>
+          </TouchableWithoutFeedback>
         </Flex>
       </Box>
-      <Spacer mb={4} />
+      <Spacer mb={space(4) + 100} />
     </PopUp>
   )
 }

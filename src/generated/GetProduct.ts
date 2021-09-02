@@ -13,6 +13,7 @@ export interface GetProduct_products_category {
   __typename: "Category";
   id: string;
   name: string;
+  products: GetProduct_relatedProducts[] | null
 }
 
 export interface GetProduct_products_modelSize {
@@ -129,14 +130,6 @@ export interface GetProduct_products_brand_products {
   variants: GetProduct_products_brand_products_variants[] | null;
 }
 
-export interface GetProduct_products_brand_logoImage {
-  __typename: "Image";
-  id: string;
-  url: string | null;
-  height: number | null;
-  width: number | null;
-}
-
 export interface GetProduct_products_brand {
   __typename: "Brand";
   id: string;
@@ -146,7 +139,25 @@ export interface GetProduct_products_brand {
   since: any | null;
   websiteUrl: string | null;
   products: GetProduct_products_brand_products[] | null;
-  logoImage: GetProduct_products_brand_logoImage | null;
+}
+
+export interface GetProduct_relatedProducts{
+  __typename: "Product";
+  id: string;
+  slug: string;
+  name: string;
+  logo: any | null;
+  since: any | null;
+  websiteUrl: string | null;
+  products: GetProducts_products_relatedProducts
+}
+
+export interface GetProducts_products_relatedProducts {
+  id: string;
+  type: ProductType | null;
+  images: GetProduct_products_brand_products_images[];
+  brand: GetProduct_products_brand_products_brand;
+  variants: GetProduct_products_brand_products_variants[] | null;
 }
 
 export interface GetProduct_products_largeImages {
@@ -164,6 +175,14 @@ export interface GetProduct_products_variants_internalSize_bottom {
   inseam: number | null;
 }
 
+export interface GetProduct_products_variants_internalSize_accessory {
+  __typename: "AccessorySize";
+  id: string;
+  bridge: number | null;
+  length: number | null;
+  width: number | null;
+}
+
 export interface GetProduct_products_variants_internalSize_top {
   __typename: "TopSize";
   id: string;
@@ -179,6 +198,7 @@ export interface GetProduct_products_variants_internalSize {
   display: string;
   type: SizeType | null;
   bottom: GetProduct_products_variants_internalSize_bottom | null;
+  accessory: GetProduct_products_variants_internalSize_accessory | null;
   top: GetProduct_products_variants_internalSize_top | null;
 }
 
@@ -271,6 +291,7 @@ export interface GetProduct_products {
   color: GetProduct_products_color;
   secondaryColor: GetProduct_products_secondaryColor | null;
   brand: GetProduct_products_brand;
+  relatedProducts: GetProduct_relatedProducts
   outerMaterials: string[];
   innerMaterials: string[];
   largeImages: GetProduct_products_largeImages[];

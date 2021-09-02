@@ -17,6 +17,7 @@ import { LaunchCalendar, LaunchCalendarFragment_Query } from "./LaunchCalendar"
 import gql from "graphql-tag"
 import { Homepage_Query as Homepage_Query_Type } from "App/generated/Homepage_Query"
 import { HomepageNoCache_Query as HomepageNoCache_Query_Type } from "App/generated/HomepageNoCache_Query"
+import { AccessoriesRail } from "./AccessoriesRail"
 
 const dimensions = Dimensions.get("window")
 
@@ -33,6 +34,7 @@ enum SectionType {
   Banner = "Banner",
   FeaturedCollections = "FeaturedCollections",
   LaunchCalendar = "LaunchCalendar",
+
 }
 
 export const HomeBottomSheetFragment_Query = gql`
@@ -55,7 +57,7 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
   if (data?.blogPosts) {
     sections.push({ type: SectionType.BlogPosts, results: data?.blogPosts })
   }
-
+ 
   const customerStatus = dataNoCache?.me?.customer?.status
   const customerApprovedForBanner =
     (data?.banner?.properties?.requiredCustomerStatus?.length > 0 &&
@@ -67,7 +69,7 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
       banner: data.banner,
     })
   }
-
+  
   if (data?.justAddedTops?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
   }
@@ -79,6 +81,9 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
   }
   if (data?.justAddedOuterwear?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedOuterwear, title: "Just added outerwear" })
+  }
+  if (data?.justAddedAccessories?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedAccessories, title: "Just added accessories" })
   }
   if (data?.homepage?.sections?.length) {
     sections.push(
@@ -164,8 +169,8 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
     sections.push({ type: SectionType.SavedProducts, title: "Saved for later", results })
   }
 
-  if (data?.fitPics?.length) {
-    sections.push({ type: SectionType.FitPics, results: data?.fitPics })
+  if (data?.fitPicsConnection?.edges?.length > 0) {
+    sections.push({ type: SectionType.FitPics, results: data?.fitPicsConnection.edges })
   }
   return sections
 }
@@ -240,7 +245,13 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({
           />
         )
       case SectionType.Products:
-        return <ProductsRail title={item.title} items={item.results} />
+        const accessories = item.title === "Just added accessories" ? item.title : null
+        switch(accessories){
+          case "Just added accessories":
+            return <AccessoriesRail title ={item.title} items={item.results}/>
+          default:
+            return <ProductsRail title={item.title} items={item.results} />
+        }
       case SectionType.Categories:
         return <CategoriesRail title={item.title} items={item.results} />
       case SectionType.SavedProducts:

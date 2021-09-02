@@ -23,7 +23,7 @@ export const SectionHeader: React.FC<{ title: string; rightText?: string; onPres
           <>
             {!!onPressRightText ? (
               <TouchableOpacity onPress={onPressRightText}>
-                <Sans size="4" color="black" style={{ textDecorationLine: "underline" }}>
+                <Sans size="4" color="blue">
                   {rightText}
                 </Sans>
               </TouchableOpacity>

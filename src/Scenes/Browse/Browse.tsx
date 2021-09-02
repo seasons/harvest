@@ -1,18 +1,17 @@
 import { useQuery } from "@apollo/client"
 import { useFocusEffect } from "@react-navigation/native"
-import { Box, Flex, ProductGridItem } from "App/Components"
+import { Box, Flex } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
-import { color } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
 import React, { useEffect, useRef, useState } from "react"
-import { FlatList, StatusBar, TouchableOpacity } from "react-native"
+import { FlatList, StatusBar, Switch, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 import { BrowseEmptyState } from "./BrowseEmptyState"
 import { CategoryPicker } from "./CategoryPicker"
 import { ProductGridItemSkeleton } from "../Product/Components"
 import { GetBrowseProducts } from "App/generated/GetBrowseProducts"
-import { Sans, Spacer } from "@seasons/eclipse"
+import { color, Sans, Spacer, ProductGridItem } from "@seasons/eclipse"
 import { BrowseFilters, EMPTY_BROWSE_FILTERS } from "./Filters"
 import { GET_BROWSE_PRODUCTS } from "./queries/browseQueries"
 import { useScrollToTop } from "@react-navigation/native"
@@ -112,7 +111,7 @@ export const Browse = screenTrack()((props: any) => {
     props.navigation.navigate("Modal", { screen: "FiltersModal", params: { filters, designers } })
   }
 
-  const reachedEnd = products?.length >= data?.productsCount?.aggregate?.count
+  const reachedEnd = products?.length >= data?.productsConnection?.aggregate?.count
 
   return (
     <>
@@ -120,28 +119,37 @@ export const Browse = screenTrack()((props: any) => {
         <Flex flexDirection="column" style={{ flex: 1 }}>
           <Box style={{ flex: 1, flexGrow: 1 }}>
             <Flex justifyContent="space-between" width="100%" flexWrap="nowrap" flexDirection="row" alignItems="center">
-              <TouchableOpacity
-                onPress={() => {
-                  setFilters({
-                    ...filters,
-                    availableOnly: !filters.availableOnly,
-                  })
-                }}
-              >
-                <Flex flexWrap="nowrap" flexDirection="row" alignItems="center" px="12px" py="6px">
-                  <SelectBox active={filters.availableOnly} />
-                  <Spacer mr={1} />
-                  <Sans size="4">Available now</Sans>
-                </Flex>
-              </TouchableOpacity>
+              <Flex flexWrap="nowrap" flexDirection="row" alignItems="center" px="12px" py="6px">
+                <Switch
+                  trackColor={{ true: color("black100"), false: color("white100") }}
+                  value={filters.availableOnly}
+                  onValueChange={(value) => {
+                    setFilters({
+                      ...filters,
+                      availableOnly: !filters.availableOnly,
+                    })
+                  }}
+                  style={{ transform: [{ scaleX: .5 }, { scaleY: .5 }] }}
+                />
+                <Spacer  />
+                <Sans size="4">Available now</Sans>
+              </Flex>
               <TouchableOpacity onPress={onFilterBtnPress}>
-                <Flex px="12px" py="6px">
+                <Flex px="12px" py="6px" justifyContent="space-between">
                   <Sans size="4" style={{ textDecorationLine: "underline" }}>
                     {filtersButtonText}
                   </Sans>
                 </Flex>
               </TouchableOpacity>
             </Flex>
+            <CategoryBox pt={1.5} >
+              <CategoryPicker
+                items={categoryItems}
+                onCategoryPress={onCategoryPress}
+                currentCategory={currentCategory}
+                initialScrollIndex={routeCategoryIdx}
+              />
+            </CategoryBox>
             <FlatList
               contentContainerStyle={
                 products?.length
@@ -161,7 +169,7 @@ export const Browse = screenTrack()((props: any) => {
                 return (
                   <Box key={node?.id + index}>
                     {node?.id ? (
-                      <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0} />
+                      <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0}/>
                     ) : (
                       <ProductGridItemSkeleton addLeftSpacing={index % numColumns !== 0} />
                     )}
@@ -197,34 +205,13 @@ export const Browse = screenTrack()((props: any) => {
               }}
             />
           </Box>
-          <Box height={56}>
-            <CategoryPicker
-              items={categoryItems}
-              onCategoryPress={onCategoryPress}
-              currentCategory={currentCategory}
-              initialScrollIndex={routeCategoryIdx}
-            />
-          </Box>
+          
         </Flex>
       </Container>
     </>
   )
 })
 
-const SelectBox = styled(Box)<{ active: boolean }>`
-  height: 16;
-  width: 16;
-  background-color: ${(p) => (p.active ? color("black100") : color("white100"))};
-  border-width: 1;
-  border-color: ${color("black100")};
-`
-
-const Overlay = styled(Box)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  z-index: 200;
+const CategoryBox = styled(Flex)`
+  height: 75;
 `

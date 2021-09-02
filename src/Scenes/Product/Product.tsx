@@ -2,6 +2,9 @@ import { Box, Container, FixedBackArrow, Flex, Sans, Spacer, VariantSizes } from
 import { Loader } from "App/Components/Loader"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
+import {
+  Product_NoCache_Query as Product_NoCache_Query_Type
+} from "App/generated/Product_NoCache_Query"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
@@ -16,25 +19,24 @@ import { Animated, Dimensions, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
+
 import { useMutation, useQuery } from "@apollo/client"
 import {
-  ProductConditionSection,
-  ProductConditionSectionFragment_PhysicalProductQualityReport,
-  ProductBuyCTA,
-  ProductBuyCTAFragment_Product,
-  ProductBuyCTAFragment_ProductVariant,
+  ProductBuyCTA, ProductBuyCTAFragment_Product, ProductBuyCTAFragment_ProductVariant,
+  ProductConditionSection, ProductConditionSectionFragment_PhysicalProductQualityReport
 } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
+
 import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
-import { SelectionButtons } from "./Components/SelectionButtons"
+import { ProductBottomBar } from "./Components/ProductBottomBar"
+import { RelatedProducts } from "./Components/RelatedProducts"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT, Product_NoCache_Query } from "./Queries"
-import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generated/Product_NoCache_Query"
 
 const windowHeight = Dimensions.get("window").height
-const variantPickerHeight = windowHeight / 2.5 + 50
+
 export const VARIANT_WANT_HEIGHT = 52
 export enum OrderType {
   BUY_USED = "Used",
@@ -89,9 +91,10 @@ export const Product = screenTrack({
     },
   })
   const product: GetProduct_products = head(data?.products)
+  const variantPickerHeight = product?.variants?.length > 3? windowHeight/2.5 : windowHeight/3
 
   const pickerTransition = useSpring({
-    translateY: showVariantPicker ? 0 : variantPickerHeight,
+    translateY: showVariantPicker ? 0 : windowHeight,
     overlayOpacity: showVariantPicker ? 1 : 0,
   })
   const [hasNotification, setHasNotification] = useState(false)
@@ -107,6 +110,7 @@ export const Product = screenTrack({
     stock: 0,
     isInBag: false,
     hasRestockNotification: null,
+    nextReservablePhysicalProduct: null,
   })
 
   const [addRecentlyViewedItem] = useMutation(ADD_VIEWED_PRODUCT, {
@@ -248,10 +252,11 @@ export const Product = screenTrack({
   }, [selectedVariant])
 
   const brandProducts = product?.brand?.products
-
   const viewWidth = Dimensions.get("window").width
   const images = product?.largeImages
   const imageWidth = viewWidth
+  const relatedProducts = product?.relatedProducts
+  const productType = product?.category?.productType
   const physicalProductQualityReport = (selectedVariant?.nextReservablePhysicalProduct?.reports || []).reduce(
     (agg, report) => {
       if (!agg) {
@@ -291,6 +296,8 @@ export const Product = screenTrack({
         return <ProductMeasurements selectedVariant={selectedVariant} />
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
+      case "relatedProducts":
+        return <RelatedProducts flatListRef={flatListRef} products={relatedProducts} />
       case "moreLikeThis":
         return <MoreFromBrand flatListRef={flatListRef} products={brandProducts} brandName={product.brand.name} />
       case "buy":
@@ -339,6 +346,7 @@ export const Product = screenTrack({
     "productMeasurements",
     "condition",
     "aboutTheBrand",
+    "relatedProducts",
     "moreLikeThis",
   ]
   const url = `https://www.wearseasons.com/product/${product.slug}`
@@ -407,7 +415,7 @@ export const Product = screenTrack({
           useNativeDriver: true,
         })}
       />
-      <SelectionButtons
+      <ProductBottomBar
         showNotifyMeMessage={showNotifyMeMessage}
         toggleShowVariantPicker={toggleShowVariantPicker}
         showVariantPicker={showVariantPicker}
@@ -420,6 +428,9 @@ export const Product = screenTrack({
         setShowSizeWarning={setShowSizeWarning}
         scrollToBuyCTA={scrollToBuyCTA}
         animatedScrollY={animatedScrollYRef.current}
+        retailPrice={product.retailPrice}
+        monthlyRental={product?.rentalPrice}
+        productType={productType}
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
@@ -431,17 +442,17 @@ export const Product = screenTrack({
         </FadeBottom2>
       )}
       <AnimatedOverlay pointerEvents={showVariantPicker ? "auto" : "none"} opacity={pickerTransition.overlayOpacity} />
-      <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
-        <VariantPicker
-          variantPickerHeight={variantPickerHeight}
-          product={product}
-          setSelectedVariant={setSelectedVariant}
-          selectedVariant={selectedVariant}
-          height={variantPickerHeight}
-          navigation={navigation}
-          toggleShowVariantPicker={toggleShowVariantPicker}
-        />
-      </AnimatedVariantPicker>
+      {productType === "Accessory" ? null : (
+        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }} variantPickerHeight={variantPickerHeight}>
+          <VariantPicker
+            product={product}
+            setSelectedVariant={setSelectedVariant}
+            selectedVariant={selectedVariant}
+            navigation={navigation}
+            toggleShowVariantPicker={toggleShowVariantPicker}
+          />
+        </AnimatedVariantPicker>
+      )}
       <SizeWarning
         show={showSizeWarning}
         data={data}
@@ -452,15 +463,6 @@ export const Product = screenTrack({
     </Container>
   )
 })
-
-const VariantPickerWrapper = styled(Box)`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: ${variantPickerHeight};
-  z-index: 4;
-`
 
 const Overlay = styled(Box)`
   position: absolute;
@@ -477,6 +479,14 @@ const ShareButtonWrapper = styled(Box)`
   right: 7;
   z-index: 2000;
 `
-
+const VariantPickerWrapper = styled(Box)<{variantPickerHeight: any}>`
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+height: ${p => p.variantPickerHeight};
+z-index: 4;
+`
 const AnimatedVariantPicker = animated(VariantPickerWrapper)
 const AnimatedOverlay = animated(Overlay)
+

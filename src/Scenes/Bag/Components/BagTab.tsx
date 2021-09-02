@@ -1,54 +1,53 @@
 import { Sans, Separator } from "App/Components"
-import { PauseStatus, REMOVE_SCHEDULED_PAUSE, RESUME_MEMBERSHIP } from "App/Components/Pause/PauseButtons"
+import { PauseStatus, RESUME_MEMBERSHIP } from "App/Components/Pause/PauseButtons"
+import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
+import {
+  GetBag_NoCache_Query as GetBag_NoCache_Query_Type
+} from "App/generated/GetBag_NoCache_Query"
 import { Schema as NavigationSchema } from "App/Navigation"
-import { useAuthContext } from "App/Navigation/AuthContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { State as CreateAccountState, UserState } from "App/Scenes/CreateAccount/CreateAccount"
 import { color } from "App/utils"
-import { AddSlot, DarkInstagram, Stylist, SurpriseMe } from "Assets/svgs"
+import { DarkInstagram, Stylist } from "Assets/svgs"
+import gql from "graphql-tag"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Linking } from "react-native"
 
-import { useLazyQuery, useMutation } from "@apollo/client"
+import { useMutation } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { Box, ProductBuyAlertTab, ProductBuyAlertTabType, Spacer } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 
-import { GetBag_NoCache_Query, GET_LOCAL_BAG_ITEMS } from "../BagQueries"
+import { GetBag_NoCache_Query } from "../BagQueries"
 import { BagCardButton } from "./BagCardButton"
 import { BagItem } from "./BagItem"
 import { BagTabHeader } from "./BagTabHeader"
 import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
-import { DeliveryStatus } from "./DeliveryStatus"
 import { EmptyBagItem } from "./EmptyBagItem"
-import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
+
+export const BagTabCachedFragment_Query = gql`
+  fragment BagTabCachedFragment_Query on Query {
+    paymentPlans(where: { status: "active" }, orderBy: itemCount_DESC) {
+      id
+      itemCount
+    }
+  }
+`
 
 export const BagTab: React.FC<{
+  bagItems
   pauseStatus: PauseStatus
   data: GetBag_NoCache_Query_Type
   itemCount: number
+  cachedData: GetBag_Cached_Query_Type
   items
-  bagIsFull: boolean
   setItemCount: (count: number) => void
-  handleReserve: () => void
   deleteBagItem
   removeFromBagAndSaveItem
-}> = ({
-  pauseStatus,
-  data,
-  itemCount,
-  items,
-  bagIsFull,
-  setItemCount,
-  handleReserve,
-  deleteBagItem,
-  removeFromBagAndSaveItem,
-}) => {
+}> = ({ bagItems, pauseStatus, data, itemCount, deleteBagItem, removeFromBagAndSaveItem }) => {
   const [isMutating, setIsMutating] = useState(false)
-  const { authState } = useAuthContext()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { bottomSheetSetProps, bottomSheetSnapToIndex } = useBottomSheetContext()
   const navigation = useNavigation()
@@ -57,29 +56,8 @@ export const BagTab: React.FC<{
   const activeReservation = me?.activeReservation
   const hasActiveReservation = !!activeReservation
 
-  const [getLocalBag, { data: localItems }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
-    variables: {
-      ids: items?.map((i) => i.productID),
-    },
-  })
-
-  const isSignedIn = authState.isSignedIn
-
-  const bagItems = !isSignedIn
-    ? localItems?.products.map((item, i) => ({
-        ...items?.[i],
-        productVariant: item.variants[0],
-        status: "Added",
-      }))
-    : items
-
-  const paddedItems = assign(fill(new Array(itemCount), { variantID: "", productID: "" }), bagItems) || []
-
-  useEffect(() => {
-    if (!isSignedIn) {
-      getLocalBag()
-    }
-  }, [items])
+  const paddedItems =
+    assign(fill(new Array(Math.min(itemCount, bagItems.length + 1)), { variantID: "", productID: "" }), bagItems) || []
 
   const [resumeSubscription] = useMutation(RESUME_MEMBERSHIP, {
     refetchQueries: [
@@ -104,55 +82,6 @@ export const BagTab: React.FC<{
       setIsMutating(false)
     },
   })
-
-  const [removeScheduledPause] = useMutation(REMOVE_SCHEDULED_PAUSE, {
-    refetchQueries: [
-      {
-        query: GetBag_NoCache_Query,
-      },
-    ],
-    onCompleted: () => {
-      setIsMutating(false)
-      const popUpData = {
-        title: "Got it!",
-        note: "Your membership is no longer scheduled to be paused.",
-        buttonText: "Close",
-        onClose: () => hidePopUp(),
-      }
-      showPopUp(popUpData)
-    },
-    onError: (err) => {
-      const popUpData = {
-        title: "Oops!",
-        note: "There was an error canceling the pause on your membership, please contact us.",
-        buttonText: "Close",
-        onClose: () => hidePopUp(),
-      }
-      Sentry.captureException(err)
-      console.log("err", err)
-      showPopUp(popUpData)
-      setIsMutating(false)
-    },
-  })
-
-  const onAddSlot = () => {
-    const userStatus = data?.me?.customer?.status
-    if (!!userStatus && userStatus === "Authorized") {
-      // If user is authorized send them to plan creation
-      navigation.navigate("Modal", {
-        screen: NavigationSchema.PageNames.CreateAccountModal,
-        params: { initialState: CreateAccountState.ChoosePlan, initialUserState: UserState.Admitted },
-      })
-    } else if (
-      !!userStatus &&
-      (userStatus === "Active" || userStatus === "Paused" || userStatus === "Deactivated" || userStatus === "Suspended")
-    ) {
-      navigation.navigate("Modal", { screen: NavigationSchema.PageNames.UpdatePaymentPlanModal })
-    } else {
-      // If user isn't signed in or isnt active or authorized
-      setItemCount(itemCount + 1)
-    }
-  }
 
   const onShowBuyBottomSheet = (bagItem) => {
     const price = bagItem?.productVariant?.price || {
@@ -207,42 +136,7 @@ export const BagTab: React.FC<{
 
   return (
     <Box>
-      <BagTabHeader atHome={atHome} me={me} pausedWithoutItems={pausedWithoutItems} />
-      {showPendingMessage && (
-        <>
-          <Box px={2}>
-            <Separator color={color("black10")} />
-          </Box>
-          <Box px={2} py={3}>
-            <Sans size="4" color="black50">
-              {`Your membership is scheduled to be paused ${withOrWithoutDisplay} on ${DateTime.fromISO(
-                pauseRequest.pauseDate
-              ).toFormat("EEEE LLLL dd")}.${
-                pauseType === "WithoutItems" ? " Please return your order before this date." : ""
-              } To continue it tap `}
-              <Sans
-                size="4"
-                style={{ textDecorationLine: "underline" }}
-                onPress={async () => {
-                  if (isMutating) {
-                    return
-                  }
-                  setIsMutating(true)
-                  const subscriptionId = me?.customer?.invoices?.[0]?.subscriptionId || ""
-                  await removeScheduledPause({
-                    variables: {
-                      subscriptionID: subscriptionId,
-                    },
-                  })
-                }}
-              >
-                here
-              </Sans>
-              .
-            </Sans>
-          </Box>
-        </>
-      )}
+      <BagTabHeader atHome={atHome} me={me} />
       {isPaused && (
         <>
           <Box px={2}>
@@ -277,7 +171,6 @@ export const BagTab: React.FC<{
         </>
       )}
       <Separator />
-      {hasActiveReservation && status !== "Delivered" && <DeliveryStatus me={me} atHome={atHome} />}
       {paddedItems?.map((bagItem, index) => {
         if (pausedWithoutItems) {
           return null
@@ -285,7 +178,7 @@ export const BagTab: React.FC<{
         const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
         const spacing = isReserved ? "7px" : 2
         return bagItem?.productID?.length > 0 ? (
-          <Box key={bagItem.productID} px={2}>
+          <Box key={bagItem.id} px={2}>
             {index !== 0 && (
               <>
                 <Spacer mb={spacing} />
@@ -294,7 +187,7 @@ export const BagTab: React.FC<{
             )}
             <Spacer mb={index === 0 ? 3 : spacing} />
             <BagItem
-              removeItemFromBag={deleteBagItem}
+              deleteBagItem={deleteBagItem}
               removeFromBagAndSaveItem={removeFromBagAndSaveItem}
               index={index}
               bagItem={bagItem}
@@ -318,14 +211,7 @@ export const BagTab: React.FC<{
       <Spacer mb={3} />
       {!pausedWithoutItems && <Separator />}
       <Spacer mb={3} />
-      {!hasActiveReservation && itemCount && itemCount < 3 && !isPaused && (
-        <>
-          <BagCardButton Icon={AddSlot} title="Add a slot" caption="Reserve another item" onPress={onAddSlot} />
-          <Spacer mb={3} />
-          <Separator />
-          <Spacer mb={3} />
-        </>
-      )}
+
       {hasActiveReservation && !isPaused && (
         <>
           <BagCardButton
@@ -344,24 +230,6 @@ export const BagTab: React.FC<{
           <Spacer mb={3} />
         </>
       )}
-      {
-        // FIXME: Add this back when the query is optimized
-        isSignedIn && !isPaused && false && (
-          <>
-            <BagCardButton
-              Icon={SurpriseMe}
-              title="Surprise me"
-              caption="Discover styles in your size"
-              onPress={() => {
-                navigation.navigate("Modal", { screen: NavigationSchema.PageNames.SurpriseMe })
-              }}
-            />
-            <Spacer mb={3} />
-            <Separator />
-            <Spacer mb={3} />
-          </>
-        )
-      }
       {!isPaused && (
         <BagCardButton
           Icon={Stylist}

@@ -28,7 +28,7 @@ export const SavedItemRowFragment_BagItem = gql`
   ${SavedItemFragment_BagItem}
 `
 
-export const SavedItemRow = ({ bagItem, deleteBagItem, bagIsFull, hasActiveReservation }) => {
+export const SavedItemRow = ({ bagItem, deleteBagItem, bagIsFull, hasActiveReservation, planItemCount }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
@@ -49,8 +49,7 @@ export const SavedItemRow = ({ bagItem, deleteBagItem, bagIsFull, hasActiveReser
 
     deleteBagItem({
       variables: {
-        id: variant.id,
-        saved: true,
+        itemID: bagItem?.id,
       },
       awaitRefetchQueries: true,
       refetchQueries: [
@@ -98,6 +97,7 @@ export const SavedItemRow = ({ bagItem, deleteBagItem, bagIsFull, hasActiveReser
             bagIsFull={bagIsFull}
             navigation={navigation}
             bagItem={bagItem}
+            planItemCount={planItemCount}
           />
         </Box>
         <RemoveWrapper alignItems="center" justifyContent="center">
