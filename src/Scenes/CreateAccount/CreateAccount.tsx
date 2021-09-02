@@ -106,7 +106,10 @@ export const CreateAccount_Cached_Query = gql`
     paymentPlans(where: $where) {
       id
       name
-      features
+      features{
+        included
+        excluded
+      }
       caption
       price
       planID
@@ -284,7 +287,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             onComplete={(paymentMethod) => {
               paymentMethod === PaymentMethod.CreditCard ? setIndex(index + 1) : setIndex(index + 2)
             }}
-            headerText="You're in. Let's choose your plan"
             source="CreateAccountModal"
             coupon={coupon}
           />
