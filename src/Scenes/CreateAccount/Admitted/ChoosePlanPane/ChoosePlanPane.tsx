@@ -1,34 +1,41 @@
-import { Box, Button, Container, Flex, Sans, Spacer, Separator, CloseButton, FadeInImage } from "App/Components"
+import {
+  Box, Button, CloseButton, Container, FadeInImage, Flex, Sans, Spacer
+} from "App/Components"
+import { Loader } from "App/Components/Loader"
+import { OverlaySpinner } from "App/Components/OverlaySpinner"
+import { PopUp } from "App/Components/PopUp"
+import {
+  CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type
+} from "App/generated/CreateAccount_Cached_Query"
+import {
+  CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type
+} from "App/generated/CreateAccount_NoCache_Query"
+import { GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { useNavigation } from "@react-navigation/native"
-import * as Sentry from "@sentry/react-native"
+import { GET_USER } from "App/Scenes/Account/Account"
 import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
+import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMethods"
+import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
+import { color } from "App/utils"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
-import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { ListCheck } from "Assets/svgs/ListCheck"
 import { TabBar } from "Components/TabBar"
 import gql from "graphql-tag"
 import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
-import { useMutation } from "@apollo/client"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Dimensions, ScrollView, TouchableOpacity } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
-import { PlanButton } from "./PlanButton"
-import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
-import { GetPlans_paymentPlans } from "App/generated/GetPlans"
-import { Coupon, PaymentMethod } from "../../CreateAccount"
-import { PopUp } from "App/Components/PopUp"
-import { calcFinalPrice } from "./utils"
-import { GET_USER } from "App/Scenes/Account/Account"
-import { PaymentMethods } from "App/Scenes/Account/PaymentAndShipping/PaymentMethods"
-import { OverlaySpinner } from "App/Components/OverlaySpinner"
-import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from "App/generated/CreateAccount_NoCache_Query"
-import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
+
+import { useMutation } from "@apollo/client"
+import { useNavigation } from "@react-navigation/native"
 import { GET_NOTIFICATION_BAR } from "@seasons/eclipse"
-import { Loader } from "App/Components/Loader"
-import { color } from "App/utils"
+import * as Sentry from "@sentry/react-native"
+
+import { Coupon, PaymentMethod } from "../../CreateAccount"
+import { PlanButton } from "./PlanButton"
+import { calcFinalPrice } from "./utils"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout(
