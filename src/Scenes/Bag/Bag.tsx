@@ -277,6 +277,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const hasActiveReservationAndBagRoom =
     hasActiveReservation &&
     planItemCount > me?.activeReservation?.products?.length &&
+    bagItems.some((a) => a.status === "Added") &&
     ["Queued", "Picked", "Packed", "Delivered", "Received", "Shipped"].includes(me?.activeReservation?.status)
 
   if (customerStatus === "Paused") {
@@ -366,7 +367,7 @@ export const Bag = screenTrack()((props: BagProps) => {
         if (markedAsReturned) {
           const returnLabelUrl = me?.activeReservation?.returnedPackage?.shippingLabel?.trackingURL
           button = (
-            <Flex flexDirection="row" justifyContent="space-between">
+            <Flex flexDirection="row" justifyContent="space-between" mx={2}>
               {returnLabelUrl && (
                 <Button
                   width={windowWidth / 2 - 20}
@@ -391,9 +392,11 @@ export const Bag = screenTrack()((props: BagProps) => {
           )
         } else {
           button = (
-            <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
-              Return bag
-            </Button>
+            <Box mx={2}>
+              <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
+                Return bag
+              </Button>
+            </Box>
           )
         }
       }

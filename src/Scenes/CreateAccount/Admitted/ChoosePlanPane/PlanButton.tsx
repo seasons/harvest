@@ -1,11 +1,12 @@
 import { Box, Flex, Radio, Sans, Spacer } from "App/Components"
 import { color } from "App/utils/color"
+import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import React from "react"
 import { Text, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
+
 import { Coupon } from "../../CreateAccount"
 import { calcFinalPrice } from "./utils"
-import { Schema as TrackSchema, useTracking } from "App/utils/track"
 
 interface PlanButtonProps {
   shouldSelect: (plan: any) => void
@@ -27,9 +28,6 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ lowestPlanPrice, shouldS
       <Text>
         <Sans color="black100" size="5">
           ${finalPrice}
-        </Sans>
-        <Sans color="black100" size="5">
-          {" "}
         </Sans>
         <Sans color="black50" size="5" style={{ textDecorationLine: "line-through", textDecorationStyle: "solid" }}>
           ${originalPrice}
@@ -69,7 +67,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ lowestPlanPrice, shouldS
         selected={selected}
       >
         {showYearlyDiscount && (
-          <PlanDiscount pl={1} pt={.5} width={65} height={27}>
+          <PlanDiscount pl={1} pt={0.5} width={65} height={27}>
             <Sans size="3" color="black100">
               {planDiscount}% Off
             </Sans>
