@@ -106,7 +106,7 @@ export const CreateAccount_Cached_Query = gql`
     paymentPlans(where: $where) {
       id
       name
-      features{
+      features {
         included
         excluded
       }
