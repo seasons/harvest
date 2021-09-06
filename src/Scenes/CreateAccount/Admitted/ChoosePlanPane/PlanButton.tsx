@@ -1,11 +1,12 @@
 import { Box, Flex, Radio, Sans, Spacer } from "App/Components"
 import { color } from "App/utils/color"
+import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import React from "react"
 import { Text, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
+
 import { Coupon } from "../../CreateAccount"
 import { calcFinalPrice } from "./utils"
-import { Schema as TrackSchema, useTracking } from "App/utils/track"
 
 interface PlanButtonProps {
   shouldSelect: (plan: any) => void
@@ -27,9 +28,6 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ lowestPlanPrice, shouldS
       <Text>
         <Sans color="black100" size="5">
           ${finalPrice}
-        </Sans>
-        <Sans color="black100" size="5">
-          {" "}
         </Sans>
         <Sans color="black50" size="5" style={{ textDecorationLine: "line-through", textDecorationStyle: "solid" }}>
           ${originalPrice}
@@ -53,26 +51,24 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ lowestPlanPrice, shouldS
       planName: plan?.name,
     })
   }
-
   const monthlyPrice = plan.price / 12
   const planDiscount = 100 - (monthlyPrice / lowestPlanPrice) * 100
   const showYearlyDiscount = plan.planID === "access-yearly" && selected && planDiscount
-
   return (
     <TouchableOpacity onPress={() => onPress(plan)}>
       <StyledFlex
         alignItems="center"
         flexDirection="row"
         width="100%"
-        height={72}
+        height={82}
         mb={1}
         px={2}
         justifyContent="space-between"
         selected={selected}
       >
         {showYearlyDiscount && (
-          <PlanDiscount px={0.5}>
-            <Sans size="3" color="white100">
+          <PlanDiscount pl={1} pt={0.5} width={65} height={27}>
+            <Sans size="3" color="black100">
               {planDiscount}% Off
             </Sans>
           </PlanDiscount>
@@ -97,7 +93,8 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ lowestPlanPrice, shouldS
 
 const StyledFlex = styled(Flex)<{ selected: boolean }>`
   border-radius: 8;
-  background-color: ${color("black04")};
+  background-color: ${color("white100")};
+  box-shadow: 0px 0px 10px ${color("black10")};
   z-index: 10;
   elevation: 6;
   border-color: ${(p) => (p.selected ? color("black100") : color("white100"))};
@@ -107,8 +104,8 @@ const StyledFlex = styled(Flex)<{ selected: boolean }>`
 
 const PlanDiscount = styled(Box)`
   position: absolute;
-  top: -10;
+  top: -15;
   right: 20;
   border-radius: 4;
-  background-color: ${color("black100")};
+  background-color: ${color("peach")};
 `

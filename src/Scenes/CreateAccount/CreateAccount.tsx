@@ -287,7 +287,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
             onComplete={(paymentMethod) => {
               paymentMethod === PaymentMethod.CreditCard ? setIndex(index + 1) : setIndex(index + 2)
             }}
-            headerText="You're in. Let's choose your plan"
             source="CreateAccountModal"
             coupon={coupon}
           />

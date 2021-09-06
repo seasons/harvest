@@ -38,6 +38,7 @@ export const themeProps = {
     lightGreen: "#01b06c",
     blue100: "#2442EC",
     blue: "#2B50DF",
+    peach: "#F6E3D0",
     productBackgroundColor: "#E9E9EB",
   },
 

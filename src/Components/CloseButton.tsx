@@ -28,6 +28,10 @@ export const CloseButton: React.FC<{
       borderColor = color("black50")
       backgroundColor = color("black50")
       break
+    case "light":
+      borderColor = color("black25")
+      backgroundColor = color("black25")
+      break
     default:
       borderColor = color("black10")
       backgroundColor = color("white100")

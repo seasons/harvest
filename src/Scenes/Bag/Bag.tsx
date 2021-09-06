@@ -1,41 +1,38 @@
 import { Loader } from "App/Components/Loader"
 import { PauseStatus } from "App/Components/Pause/PauseButtons"
-import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
 import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
 import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
+import { DateTime } from "luxon"
 import React, { useEffect, useRef, useState } from "react"
-import { FlatList, RefreshControl, StatusBar, View, Dimensions } from "react-native"
+import { Dimensions, FlatList, RefreshControl, StatusBar, View } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { NavigationRoute, NavigationScreenProp } from "react-navigation"
 
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
-import { Box, Button, Spacer, Flex } from "@seasons/eclipse"
+import { Box, Button, Flex, Spacer } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 
-import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import {
-  CHECK_ITEMS,
-  GetBag_NoCache_Query,
-  REMOVE_FROM_BAG_AND_SAVE_ITEM,
-  ReservationHistoryTab_Query,
-  SavedTab_Query,
-  GetBag_Cached_Query,
-  DELETE_BAG_ITEM,
+  State as CreateAccountState, UserState as CreateAccountUserState
+} from "../CreateAccount/CreateAccount"
+import {
+  CHECK_ITEMS, DELETE_BAG_ITEM, GetBag_Cached_Query, GetBag_NoCache_Query,
+  REMOVE_FROM_BAG_AND_SAVE_ITEM, ReservationHistoryTab_Query, SavedTab_Query
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
+import { BagBottomBar } from "./Components/BagBottomBar"
 import { BagCostWarning } from "./Components/BagCostWarning"
-import { DateTime } from "luxon"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { useBag } from "./useBag"
 
 export enum BagView {
   Bag = 0,
@@ -64,6 +61,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const routeTab = route?.params?.tab
   const isSignedIn = authState.isSignedIn
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+
   const windowDimensions = Dimensions.get("window")
   const windowWidth = windowDimensions.width
 
@@ -92,11 +90,11 @@ export const Bag = screenTrack()((props: BagProps) => {
     }, [])
   )
 
-  const { previousData, data = previousData, refetch } = useQuery<GetBag_NoCache_Query_Type>(GetBag_NoCache_Query)
   const { previousData: cachedPreviousData, data: cachedData = cachedPreviousData } = useQuery<
     GetBag_Cached_Query_Type
   >(GetBag_Cached_Query)
-  const { data: localItems } = useQuery(GET_LOCAL_BAG)
+
+  const { data, bagItems, refetch } = useBag()
   const [showBagCostWarning, setShowBagCostWarning] = useState(false)
 
   const me = data?.me
@@ -161,23 +159,11 @@ export const Bag = screenTrack()((props: BagProps) => {
     },
   })
 
-  if (isLoading) {
-    return <Loader />
-  }
-
   const onRefresh = () => {
     setRefreshing(true)
     refetch()
     setRefreshing(false)
   }
-
-  const addedProducts = !isSignedIn
-    ? localItems?.localBagItems || []
-    : me?.bag?.map((item) => ({
-        ...item,
-        variantID: item.productVariant.id,
-        productID: item.productVariant.product.id,
-      })) || []
 
   const savedItems = savedTabData?.me?.savedItems
 
@@ -187,7 +173,8 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const isBagView = BagView.Bag == currentView
   const isSavedView = BagView.Saved == currentView
-  const bagCount = addedProducts.length
+
+  const bagCount = bagItems.length
   const bagIsFull = planItemCount && bagCount >= planItemCount
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
@@ -197,7 +184,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const handleCheckItems = async () => {
     await checkItemsAvailability({
       variables: {
-        items: addedProducts.map((item) => item.variantID),
+        items: bagItems.map((item) => item.variantID),
       },
       refetchQueries: [
         {
@@ -279,6 +266,10 @@ export const Bag = screenTrack()((props: BagProps) => {
     setMutating(false)
   }
 
+  if (isLoading) {
+    return <Loader />
+  }
+
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
   const pausePending = pauseRequest?.pausePending
   let pauseStatus: PauseStatus = "active"
@@ -286,6 +277,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const hasActiveReservationAndBagRoom =
     hasActiveReservation &&
     planItemCount > me?.activeReservation?.products?.length &&
+    bagItems.some((a) => a.status === "Added") &&
     ["Queued", "Picked", "Packed", "Delivered", "Received", "Shipped"].includes(me?.activeReservation?.status)
 
   if (customerStatus === "Paused") {
@@ -298,6 +290,7 @@ export const Bag = screenTrack()((props: BagProps) => {
     if (isBagView) {
       return (
         <BagTab
+          bagItems={bagItems}
           itemCount={planItemCount}
           data={data}
           pauseStatus={pauseStatus}
@@ -324,7 +317,7 @@ export const Bag = screenTrack()((props: BagProps) => {
     }
   }
 
-  const bagItemsWithEmptyItems = assign(fill(new Array(planItemCount), { variantID: "", productID: "" }), addedProducts)
+  const bagItemsWithEmptyItems = assign(fill(new Array(planItemCount), { variantID: "", productID: "" }), bagItems)
 
   let sections
   if (isBagView) {
@@ -368,23 +361,13 @@ export const Bag = screenTrack()((props: BagProps) => {
     }
 
     if (hasActiveReservationAndBagRoom) {
-      button = (
-        <Button
-          block
-          onPress={handlePress}
-          disabled={!bagIsFull || isMutating}
-          loading={isMutating}
-          variant="primaryBlack"
-        >
-          Reserve
-        </Button>
-      )
+      button = <BagBottomBar bagItems={bagItems} onReserve={handlePress} />
     } else if (hasActiveReservation) {
       if (me?.activeReservation?.status === "Delivered") {
         if (markedAsReturned) {
           const returnLabelUrl = me?.activeReservation?.returnedPackage?.shippingLabel?.trackingURL
           button = (
-            <Flex flexDirection="row" justifyContent="space-between">
+            <Flex flexDirection="row" justifyContent="space-between" mx={2}>
               {returnLabelUrl && (
                 <Button
                   width={windowWidth / 2 - 20}
@@ -409,31 +392,23 @@ export const Bag = screenTrack()((props: BagProps) => {
           )
         } else {
           button = (
-            <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
-              Return bag
-            </Button>
+            <Box mx={2}>
+              <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
+                Return bag
+              </Button>
+            </Box>
           )
         }
       }
     } else {
-      button = (
-        <Button
-          block
-          onPress={handlePress}
-          disabled={!bagIsFull || isMutating}
-          loading={isMutating}
-          variant="primaryBlack"
-        >
-          Reserve
-        </Button>
-      )
+      button = <BagBottomBar bagItems={bagItems} onReserve={handlePress} />
     }
 
     return (
       button && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
           <Spacer mb={2} />
-          <Box px={2}>{button}</Box>
+          <Box>{button}</Box>
           <Spacer mb={2} />
         </FadeBottom2>
       )
