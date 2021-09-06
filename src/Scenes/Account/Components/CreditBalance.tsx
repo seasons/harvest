@@ -6,13 +6,13 @@ export const CreditBalanceFragment_Customer = gql`
   fragment CreditBalanceFragment_Customer on Customer {
     membership {
       id
-      creditBalance
+      adjustedCreditBalance
     }
   }
 `
 
 export const CreditBalance = ({ membership }) => {
-  const credits = membership?.creditBalance
+  const credits = membership?.adjustedCreditBalance
 
   if (typeof credits !== "number") {
     return null
