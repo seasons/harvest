@@ -206,7 +206,7 @@ export const Homepage_Query = gql`
         url
       }
     }
-    upcomingProducts: products(first: 10, orderBy: publishedAt_DESC) {
+    upcomingProducts: products(first: 10, orderBy: publishedAt_DESC, where: { status: Upcoming }) {
       id
       slug
       name
