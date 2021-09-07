@@ -323,11 +323,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   if (isBagView) {
     sections = [
       {
-        data: bagItemsWithEmptyItems?.sort((a, b) => {
-          const aWeight = a.status === "Reserved" ? 1 : 0
-          const bWeight = b.status === "Reserved" ? 1 : 0
-          return aWeight - bWeight
-        }),
+        data: bagItemsWithEmptyItems,
       },
     ]
   } else if (isSavedView) {

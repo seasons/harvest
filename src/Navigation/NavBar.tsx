@@ -2,10 +2,10 @@ import { Box, Flex } from "App/Components"
 import { color, space } from "App/utils"
 import { LeftTabCorner, RightTabCorner } from "Assets/svgs"
 import React from "react"
+import { Image } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-import { Image } from "react-native"
 
 export const NavBar = ({ state, navigation, currentScreen }) => {
   const insets = useSafeAreaInsets()
@@ -56,17 +56,22 @@ export const NavBar = ({ state, navigation, currentScreen }) => {
   })
 
   const animation = useSpring({
-    translateY: hideNav ? trayHeight : 0,
-    spacerHeight: hideNav ? insets.bottom : trayHeight,
+    translateY: hideNav ? trayHeight + 28 : 0,
+    spacerHeight: hideNav ? 0 : trayHeight,
+    opacity: hideNav ? 0 : 1,
     config: { mass: 1, tension: 450, friction: 50 },
   })
 
   return (
     <>
-      <AnimatedTray style={{ height: trayHeight, transform: [{ translateY: animation.translateY }] }}>
+      <AnimatedTray
+        style={{ height: trayHeight, transform: [{ translateY: animation.translateY }], opacity: animation.opacity }}
+      >
         <MainTabs>{tabs}</MainTabs>
       </AnimatedTray>
-      <AnimatedSpacer style={{ backgroundColor: color("black100"), height: animation.spacerHeight }}>
+      <AnimatedSpacer
+        style={{ backgroundColor: color("black100"), height: animation.spacerHeight, opacity: animation.opacity }}
+      >
         <LeftCorner />
         <RightCorner />
       </AnimatedSpacer>
