@@ -3438,7 +3438,7 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@seasons/eclipse@^1.2.50":
+"@seasons/eclipse@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.4.0.tgz#2d12d09bc32fe402b4d1e8ef344909e1475c5c03"
   integrity sha512-y5g2NUdC4QEnCshoKBXix/fQ2CsIvGhetGtP4SFjcf+pbbUzYkUIxmq5CQEAHIkOFhlp74uyrQUWN9oke4r/PQ==
