@@ -191,8 +191,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   const bagIsFull = planItemCount && bagCount >= planItemCount
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
-  const nextFreeSwapDate = me?.nextFreeSwapDate
-  const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()
 
   const handleCheckItems = async () => {
     await checkItemsAvailability({
@@ -268,10 +266,6 @@ export const Bag = screenTrack()((props: BagProps) => {
           },
         })
         setMutating(false)
-        return
-      }
-      if (swapNotAvailable) {
-        setShowBagCostWarning(true)
         return
       }
       await handleCheckItems()
@@ -483,15 +477,6 @@ export const Bag = screenTrack()((props: BagProps) => {
           ListFooterComponent={() => <Spacer pb={80} />}
         />
         <PrimaryCTA />
-        <BagCostWarning
-          onCancel={() => {
-            setShowBagCostWarning(false)
-            setMutating(false)
-          }}
-          nextFreeSwapDate={nextFreeSwapDate}
-          show={showBagCostWarning}
-          onCTAPress={async () => await handleCheckItems()}
-        />
       </View>
     </Container>
   )
