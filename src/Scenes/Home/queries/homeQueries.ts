@@ -129,44 +129,6 @@ export const Homepage_Query = gql`
       type
       properties
     }
-    homepage {
-      sections {
-        id
-        title
-        type
-        tagData {
-          id
-          tagName
-          description
-        }
-        results {
-          ... on Category {
-            id
-            slug
-            name
-            image
-          }
-          ... on Product {
-            id
-            slug
-            name
-            images(size: Thumb) {
-              id
-              url
-            }
-            brand {
-              id
-              name
-            }
-            variants {
-              id
-              reservable
-              displayShort
-            }
-          }
-        }
-      }
-    }
     featuredCollections: collections(orderBy: updatedAt_DESC, where: { published: true }, first: 5) {
       id
       slug
