@@ -2,7 +2,7 @@ import React, { Component, ComponentType, ReactNode } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
-
+import { BlurView, VibrancyView } from "@react-native-community/blur"
 import { TextCheckSVG } from "../../assets/svgs"
 import { Box, BoxProps } from "./Box"
 import { Flex } from "./Flex"
@@ -50,6 +50,7 @@ export type ButtonVariant =
   | "tertiaryBlack"
   | "tertiaryWhite"
   | "primaryGray"
+  | "blur"
 export type ButtonSize = "small" | "large"
 
 /** Default button size */
@@ -192,6 +193,18 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: black50,
         },
       }
+    case "blur":
+      return {
+        default: {
+          borderColor: "rgba(0,0,0,0)",
+          color: black100,
+        },
+        pressed: {
+          borderColor: black100,
+          color: white100,
+        },
+      }
+
     default:
       return {
         default: {
@@ -249,6 +262,8 @@ export class Button extends Component<ButtonProps, ButtonState> {
     switch (this.props.size) {
       case "small":
         return { height: 32, size: "3", px: 21 }
+      case "large":
+        return { height: 64, size: "4", px: 30 }
       default:
         return { height: 48, size: "4", px: 30 }
     }
@@ -311,6 +326,42 @@ export class Button extends Component<ButtonProps, ButtonState> {
     } else if (disabled) {
       iconOpacity = 0.5
     }
+
+    const Children = () => {
+      return (
+        <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ position: "relative" }}>
+          {!!Icon && (
+            <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ opacity: iconOpacity }}>
+              <Icon />
+              {(children as any[]).length > 0 && <Spacer mr={1} />}
+            </Flex>
+          )}
+          <Sans color={to.color} size={size} style={{ opacity: loading ? 0 : 1 }}>
+            {children}
+          </Sans>
+          {showCheckMark && (
+            <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ opacity: loading ? 0 : 1 }}>
+              <Spacer mr={0.5} />
+              <TextCheckSVG color={to.color} />
+            </Flex>
+          )}
+          {loading && (
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              width="100%"
+              height="100%"
+              style={{
+                position: "absolute",
+              }}
+            >
+              <Spinner size={this.props.size} color={this.spinnerColor as any} />
+            </Flex>
+          )}
+        </Flex>
+      )
+    }
+
     return (
       <Spring native from={from} to={to}>
         {(props) => (
@@ -331,48 +382,36 @@ export class Button extends Component<ButtonProps, ButtonState> {
             disabled={disabled}
           >
             <Flex flexDirection="row">
-              <AnimatedContainer
-                disabled={disabled}
-                {...rest}
-                style={{ ...props, ...overridenBg, ...overridenBorderColor, borderRadius, height: buttonHeight }}
-                px={px}
-              >
-                <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ position: "relative" }}>
-                  {!!Icon && (
-                    <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ opacity: iconOpacity }}>
-                      <Icon />
-                      {(children as any[]).length > 0 && <Spacer mr={1} />}
-                    </Flex>
-                  )}
-                  <Sans color={to.color} size={size} style={{ opacity: loading ? 0 : 1 }}>
-                    {children}
-                  </Sans>
-                  {showCheckMark && (
-                    <Flex
-                      flexDirection="row"
-                      flexWrap="nowrap"
-                      alignItems="center"
-                      style={{ opacity: loading ? 0 : 1 }}
-                    >
-                      <Spacer mr={0.5} />
-                      <TextCheckSVG color={to.color} />
-                    </Flex>
-                  )}
-                  {loading && (
-                    <Flex
-                      alignItems="center"
-                      justifyContent="center"
-                      width="100%"
-                      height="100%"
-                      style={{
-                        position: "absolute",
-                      }}
-                    >
-                      <Spinner size={this.props.size} color={this.spinnerColor as any} />
-                    </Flex>
-                  )}
-                </Flex>
-              </AnimatedContainer>
+              {this.props.variant === "blur" ? (
+                <BlurView
+                  blurType="light"
+                  blurAmount={50}
+                  reducedTransparencyFallbackColor="white"
+                  style={{
+                    borderRadius,
+                    height: buttonHeight,
+                    width: this.props.height ? this.props.height : this.props.block ? "100%" : "auto",
+                  }}
+                >
+                  <AnimatedContainer
+                    disabled={disabled}
+                    {...rest}
+                    style={{ borderRadius, height: buttonHeight }}
+                    px={px}
+                  >
+                    <Children />
+                  </AnimatedContainer>
+                </BlurView>
+              ) : (
+                <AnimatedContainer
+                  disabled={disabled}
+                  {...rest}
+                  style={{ ...props, ...overridenBg, ...overridenBorderColor, borderRadius, height: buttonHeight }}
+                  px={px}
+                >
+                  <Children />
+                </AnimatedContainer>
+              )}
             </Flex>
           </TouchableWithoutFeedback>
         )}
@@ -387,7 +426,7 @@ const Container = styled(Box)<ButtonProps>`
   position: relative;
   flex-wrap: nowrap;
   flex-direction: row;
-  border-width: 1;
+  border-width: ${(p) => (p.variant === "blur" ? 0 : 1)};
   border-radius: 28;
   width: ${(p) => {
     if (p.width) {
