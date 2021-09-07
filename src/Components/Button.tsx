@@ -51,10 +51,10 @@ export type ButtonVariant =
   | "tertiaryWhite"
   | "primaryGray"
   | "blur"
-export type ButtonSize = "small" | "large"
+export type ButtonSize = "small" | "medium" | "large"
 
 /** Default button size */
-export const defaultSize: ButtonSize = "large"
+export const defaultSize: ButtonSize = "medium"
 export const defaultVariant: ButtonVariant = "primaryBlack"
 
 /**
