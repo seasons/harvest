@@ -48,8 +48,8 @@ export const CategoryPicker: React.FC<Props> = ({ items, onCategoryPress, curren
       ref={scrollViewRef}
       contentContainerStyle={{
         padding: 0,
-        paddingLeft: 20,
-        paddingRight: 20,
+        paddingLeft: 16,
+        paddingRight: 16,
         paddingTop: 0,
       }}
       showsHorizontalScrollIndicator={false}
@@ -90,6 +90,7 @@ const Root = styled(ScrollView)`
 `
 
 const Category = styled(Box)<{ selected: boolean }>`
+    border: 1px ${color("black25")};
   ${(p) =>
     p.selected &&
     `
@@ -97,7 +98,6 @@ const Category = styled(Box)<{ selected: boolean }>`
     border: 1px ${color("black100")}
     
   `};
-  border: 1px ${color("black25")};
   border-radius: 8px;
   padding-top: 5px;
   padding-bottom: 5px;

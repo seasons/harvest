@@ -213,5 +213,5 @@ export const Browse = screenTrack()((props: any) => {
 })
 
 const CategoryBox = styled(Flex)`
-  height: 75;
+  height: 55;
 `
