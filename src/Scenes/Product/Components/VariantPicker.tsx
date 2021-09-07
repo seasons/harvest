@@ -6,12 +6,11 @@ import { ScrollView } from "react-native"
 import styled from "styled-components/native"
 import { VariantList } from "./VariantList"
 
-export const VariantPicker = (props) => {
+export const VariantPicker = ({ selectedVariant, setSelectedVariant, toggleShowVariantPicker, product }) => {
   const tracking = useTracking()
-  const { selectedVariant, setSelectedVariant, toggleShowVariantPicker, variantPickerHeight, product, windowHeight } = props
 
   return (
-    <Flex style={{ flex: 1,  position: "relative" }}>
+    <Flex style={{ flex: 1, position: "relative", height: 300 }}>
       <FixedButtonWrapper px={2} pb={3}>
         <Button
           variant="primaryWhite"
@@ -39,17 +38,14 @@ export const VariantPicker = (props) => {
         </Flex>
         <Separator color={color("black10")} />
         <StyledScrollview>
-          <Box px={2}>
-            <VariantList
-              
-              product={product}
-              setSelectedVariant={setSelectedVariant}
-              selectedVariant={selectedVariant}
-              onSizeSelected={() => {
-                toggleShowVariantPicker(false)
-              }}
-            />
-          </Box>
+          <VariantList
+            product={product}
+            setSelectedVariant={setSelectedVariant}
+            selectedVariant={selectedVariant}
+            onSizeSelected={() => {
+              toggleShowVariantPicker(false)
+            }}
+          />
         </StyledScrollview>
       </VariantPickerFlex>
     </Flex>
@@ -61,6 +57,7 @@ const VariantPickerFlex = styled(Flex)`
   top: 15;
   border-radius: 25;
   padding-top: 15;
+  height: 250;
 `
 
 const FixedButtonWrapper = styled(Box)`

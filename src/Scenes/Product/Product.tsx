@@ -2,9 +2,7 @@ import { Box, Container, FixedBackArrow, Flex, Sans, Spacer, VariantSizes } from
 import { Loader } from "App/Components/Loader"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
-import {
-  Product_NoCache_Query as Product_NoCache_Query_Type
-} from "App/generated/Product_NoCache_Query"
+import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generated/Product_NoCache_Query"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
@@ -22,8 +20,11 @@ import styled from "styled-components/native"
 
 import { useMutation, useQuery } from "@apollo/client"
 import {
-  ProductBuyCTA, ProductBuyCTAFragment_Product, ProductBuyCTAFragment_ProductVariant,
-  ProductConditionSection, ProductConditionSectionFragment_PhysicalProductQualityReport
+  ProductBuyCTA,
+  ProductBuyCTAFragment_Product,
+  ProductBuyCTAFragment_ProductVariant,
+  ProductConditionSection,
+  ProductConditionSectionFragment_PhysicalProductQualityReport,
 } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 
@@ -91,7 +92,7 @@ export const Product = screenTrack({
     },
   })
   const product: GetProduct_products = head(data?.products)
-  const variantPickerHeight = product?.variants?.length > 3? windowHeight/2.5 : windowHeight/3
+  const variantPickerHeight = product?.variants?.length > 3 ? windowHeight / 2.5 : windowHeight / 3
 
   const pickerTransition = useSpring({
     translateY: showVariantPicker ? 0 : windowHeight,
@@ -443,12 +444,14 @@ export const Product = screenTrack({
       )}
       <AnimatedOverlay pointerEvents={showVariantPicker ? "auto" : "none"} opacity={pickerTransition.overlayOpacity} />
       {productType === "Accessory" ? null : (
-        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }} variantPickerHeight={variantPickerHeight}>
+        <AnimatedVariantPicker
+          style={{ transform: [{ translateY: pickerTransition.translateY }] }}
+          variantPickerHeight={variantPickerHeight}
+        >
           <VariantPicker
             product={product}
             setSelectedVariant={setSelectedVariant}
             selectedVariant={selectedVariant}
-            navigation={navigation}
             toggleShowVariantPicker={toggleShowVariantPicker}
           />
         </AnimatedVariantPicker>
@@ -479,14 +482,13 @@ const ShareButtonWrapper = styled(Box)`
   right: 7;
   z-index: 2000;
 `
-const VariantPickerWrapper = styled(Box)<{variantPickerHeight: any}>`
-position: absolute;
-bottom: 0;
-left: 0;
-width: 100%;
-height: ${p => p.variantPickerHeight};
-z-index: 4;
+const VariantPickerWrapper = styled(Box)<{ variantPickerHeight: any }>`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 250;
+  z-index: 4;
 `
 const AnimatedVariantPicker = animated(VariantPickerWrapper)
 const AnimatedOverlay = animated(Overlay)
-

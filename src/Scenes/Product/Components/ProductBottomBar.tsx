@@ -146,7 +146,7 @@ export const ProductBottomBar: React.FC<Props> = ({
               </Sans>
             </RateSection>
 
-            <Flex flexDirection="row" justifyContent="space-between" width={230}>
+            <Flex flexDirection="row" justifyContent="flex-end">
               <TouchableWithoutFeedback
                 onPress={() => {
                   tracking.trackEvent({
@@ -159,7 +159,7 @@ export const ProductBottomBar: React.FC<Props> = ({
                 {productType === "Accessory" ? (
                   <Box></Box>
                 ) : (
-                  <VariantSelectionButton borderRadius={BORDER_RADIUS}>
+                  <VariantSelectionButton>
                     <Flex px={2} style={{ width: "100%" }} flexDirection="row" justifyContent="center">
                       <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
                         <Sans size="4" color={color("black100")}>
@@ -172,11 +172,11 @@ export const ProductBottomBar: React.FC<Props> = ({
                   </VariantSelectionButton>
                 )}
               </TouchableWithoutFeedback>
+              <Spacer mr={1} />
               {inStock ? (
                 <AddToBagButton
                   setShowSizeWarning={setShowSizeWarning}
                   variantInStock={inStock}
-                  width={twoButtonWidth - 45}
                   selectedVariant={selectedVariant}
                   data={data}
                   dataMe={dataMe}
@@ -184,11 +184,11 @@ export const ProductBottomBar: React.FC<Props> = ({
               ) : (
                 <StyledButton
                   Icon={hasNotification ? WhiteListCheck : null}
-                  width={twoButtonWidth - 45}
                   onPress={onNotifyMe}
                   loading={isMutatingNotify}
                   borderRadius={BORDER_RADIUS}
                   height={55}
+                  width={129}
                 >
                   <Sans size="5" color={color("white100")}>
                     Notify me
@@ -214,6 +214,7 @@ const VariantSelectionButton = styled.View`
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  border-radius: ${BORDER_RADIUS};
 `
 
 const Wrapper = styled.View`

@@ -2,7 +2,7 @@ import React, { Component, ComponentType, ReactNode } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
-import { BlurView, VibrancyView } from "@react-native-community/blur"
+import { BlurView } from "@react-native-community/blur"
 import { TextCheckSVG } from "../../assets/svgs"
 import { Box, BoxProps } from "./Box"
 import { Flex } from "./Flex"
@@ -98,8 +98,8 @@ export function getColorsForVariant(variant: ButtonVariant) {
           color: black100,
         },
         disabled: {
-          backgroundColor: black10,
-          borderColor: black10,
+          backgroundColor: black04,
+          borderColor: black04,
           color: black50,
         },
       }
@@ -265,7 +265,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
       case "large":
         return { height: 64, size: "4", px: 30 }
       default:
-        return { height: 48, size: "4", px: 30 }
+        return { height: 48, size: "4", px: 24 }
     }
   }
 
