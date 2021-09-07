@@ -6,7 +6,7 @@ import FastImage from "react-native-fast-image"
 import styled from "styled-components/native"
 
 interface FadeInImageProps extends ImageProps {
-  radius?: boolean
+  radius?: number
 }
 
 export const FadeInImage: React.FC<FadeInImageProps> = (props) => {
@@ -19,8 +19,8 @@ export const FadeInImage: React.FC<FadeInImageProps> = (props) => {
   )
 }
 
-const Container = styled(View)<{ radius: boolean }>`
+const Container = styled(View)<{ radius: number }>`
   background-color: ${color("black04")};
   overflow: hidden;
-  border-radius: ${(p) => (p.radius ? 15 : 0)};
+  border-radius: ${(p) => (p.radius ? p.radius : 0)};
 `

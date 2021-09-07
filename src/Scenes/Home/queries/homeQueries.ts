@@ -206,6 +206,15 @@ export const Homepage_Query = gql`
         url
       }
     }
+    upcomingProducts: products(first: 10, orderBy: publishedAt_DESC) {
+      id
+      slug
+      name
+      images(size: Thumb) {
+        id
+        url
+      }
+    }
     archivalProducts: products(
       where: { AND: [{ tags_some: { name: "Vintage" } }, { status: Available }] }
       first: 10
