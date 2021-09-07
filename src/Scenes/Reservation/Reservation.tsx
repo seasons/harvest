@@ -185,6 +185,7 @@ export const Reservation = screenTrack()((props) => {
   const nextFreeSwapDate = me?.nextFreeSwapDate
   const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()
 
+  // TODO: Is this still needed?
   useEffect(() => {
     const getLineItems = async () => {
       const { data: resData } = await getReservationLineItems({
