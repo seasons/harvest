@@ -1,9 +1,11 @@
-import { Box, Flex, Radio, Sans, Spacer } from "App/Components"
+import { Box, Flex, Radio, Spacer } from "App/Components"
 import { color } from "App/utils/color"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import React from "react"
-import { Text, TouchableOpacity } from "react-native"
+import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
+
+import { Sans } from "@seasons/eclipse"
 
 import { Coupon } from "../../CreateAccount"
 import { calcFinalPrice } from "./utils"
@@ -20,25 +22,26 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ lowestPlanPrice, shouldS
   const tracking = useTracking()
   const { price, name, caption } = plan
   const finalPrice = calcFinalPrice(price, coupon)
+
   const PriceText = ({ originalPrice, finalPrice }) => {
     originalPrice /= 100
     finalPrice /= 100
     const isDiscounted = originalPrice !== finalPrice && !!finalPrice
     return isDiscounted ? (
-      <Text>
+      <>
         <Sans color="black100" size="5">
           ${finalPrice}
         </Sans>
         <Sans color="black50" size="5" style={{ textDecorationLine: "line-through", textDecorationStyle: "solid" }}>
           ${originalPrice}
         </Sans>
-      </Text>
+      </>
     ) : (
-      <Text>
+      <>
         <Sans color="black100" size="5">
           ${originalPrice}
         </Sans>
-      </Text>
+      </>
     )
   }
 
@@ -51,9 +54,11 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ lowestPlanPrice, shouldS
       planName: plan?.name,
     })
   }
+
   const monthlyPrice = plan.price / 12
-  const planDiscount = 100 - (monthlyPrice / lowestPlanPrice) * 100
-  const showYearlyDiscount = plan.planID === "access-yearly" && selected && planDiscount
+  const planDiscount = Math.floor(100 - (monthlyPrice / lowestPlanPrice) * 100)
+  const showYearlyDiscount = plan.planID === "access-yearly" && selected
+
   return (
     <TouchableOpacity onPress={() => onPress(plan)}>
       <StyledFlex
@@ -66,15 +71,15 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ lowestPlanPrice, shouldS
         justifyContent="space-between"
         selected={selected}
       >
-        {showYearlyDiscount && (
-          <PlanDiscount pl={1} pt={0.5} width={65} height={27}>
+        {!!showYearlyDiscount && (
+          <PlanDiscount px={1} py={0.5}>
             <Sans size="3" color="black100">
-              {planDiscount}% Off
+              {`${planDiscount}% Off`}
             </Sans>
           </PlanDiscount>
         )}
         <Flex flexDirection="row">
-          <Radio selected={selected} pointerEvents="none" />
+          <Radio selected={selected} />
           <Spacer mr={1} />
           <Flex flexDirection="column">
             <Sans color="black100" size="5">
@@ -107,5 +112,7 @@ const PlanDiscount = styled(Box)`
   top: -15;
   right: 20;
   border-radius: 4;
+  width: 65px;
+  height: 27px;
   background-color: ${color("peach")};
 `
