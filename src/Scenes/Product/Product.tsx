@@ -332,7 +332,6 @@ export const Product = screenTrack({
             }
           />
         )
-
       default:
         return null
     }
