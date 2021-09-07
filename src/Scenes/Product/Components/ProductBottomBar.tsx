@@ -127,12 +127,6 @@ export const ProductBottomBar: React.FC<Props> = ({
     animatedScrollY,
     showNotifyMeMessage,
   })
-  const selectionButtonsTopOffset = BuyCTA
-    ? animatedScrollY.interpolate({
-        inputRange: [0, 50, 100, 101],
-        outputRange: [0, 0, buyCtaHeight - space(2), buyCtaHeight - space(2)],
-      })
-    : buyCtaHeight - space(2)
 
   return (
     <Wrapper style={{ bottom: showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0 }}>
@@ -140,11 +134,14 @@ export const ProductBottomBar: React.FC<Props> = ({
         <Animated.View style={{ zIndex: 30 }}>
           <SelectionBox>
             <RateSection>
-              <Flex flexDirection="row">
-                <Sans size="4">${monthlyRental}</Sans>
-                <Sans size="4"> / month</Sans>
+              <Flex flexDirection="row" alignItems="flex-end">
+                <Sans size="5">${monthlyRental}</Sans>
+                <Sans size="3" color="black50">
+                  {" "}
+                  / month
+                </Sans>
               </Flex>
-              <Sans size="4" color={color("black50")}>
+              <Sans size="3" color={color("black50")}>
                 Retail ${retailPrice}
               </Sans>
             </RateSection>

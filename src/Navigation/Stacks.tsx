@@ -106,7 +106,6 @@ const TabsStack = ({ currentScreen }) => {
           case "Home":
           case "HomeStack":
           case "Browse":
-          case "Account":
             showNotifBar = true
             break
           default:
