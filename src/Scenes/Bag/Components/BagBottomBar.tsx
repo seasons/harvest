@@ -27,7 +27,7 @@ export const BagBottomBar: React.FC<BagBottomBarProps> = ({ bagItems, onReserve 
             </Sans>
             <Flex flexDirection="row" alignItems="center">
               <Sans size="7">${totalRentalPrice}</Sans>
-              <Sans size="4" color="black50" mx={1} my={1}>
+              <Sans size="4" color="black50" mx={1}>
                 + Tax
               </Sans>
             </Flex>
