@@ -3174,6 +3174,13 @@
   dependencies:
     deep-assign "^3.0.0"
 
+"@react-native-community/blur@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/blur/-/blur-3.6.0.tgz#31c9e0f2770519c9b5c4f99418f192246f0d4db8"
+  integrity sha512-GtDBhpX2pQcjl4VopOC8FktrVufrEfYRwVeMQ2WWckqKIv2BdwvlvWvj88L1WmEdBr9UNcm3rtgz+d+YXkmirA==
+  dependencies:
+    prop-types "^15.5.10"
+
 "@react-native-community/cameraroll@^4.0.1":
   version "4.0.1"
   resolved "https://registry.npmjs.org/@react-native-community/cameraroll/-/cameraroll-4.0.1.tgz#8466f99a476e6b833ecd5efff045f74a4224459b"
@@ -3438,10 +3445,10 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@seasons/eclipse@^1.4.0":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.4.2.tgz#1ec866cbc67e9ad4c1d84d957c1bac098cb2d16b"
-  integrity sha512-w+iyIao6hGlERZSarKYZ0DX/pnuJhkV2IInn/B/Lc/FKRL97JJBENtCkeGMT8JZJ1UiOYF7vjY5xdy56vrWp/Q==
+"@seasons/eclipse@1.4.3":
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.4.3.tgz#f0e78f17c01afe09b1c43cbfa83e22d9665e0468"
+  integrity sha512-hTPxSbsuIzyGT3EJ+EuY6+fPUADfQKqSOMWtfs0RniVCp1tHFDFLawJyeqrFeROExgutGxJ5u1AM4F33tiahRw==
   dependencies:
     dripsy "^1.4.6"
 

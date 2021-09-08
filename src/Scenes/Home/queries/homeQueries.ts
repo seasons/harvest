@@ -129,6 +129,7 @@ export const Homepage_Query = gql`
       type
       properties
     }
+    # FIXME: Homepage query is only returning recently viewed, lets move it to a field resolver of its own
     homepage {
       sections {
         id
@@ -140,12 +141,6 @@ export const Homepage_Query = gql`
           description
         }
         results {
-          ... on Category {
-            id
-            slug
-            name
-            image
-          }
           ... on Product {
             id
             slug
@@ -202,6 +197,15 @@ export const Homepage_Query = gql`
       name
       category
       image {
+        id
+        url
+      }
+    }
+    upcomingProducts: products(first: 10, orderBy: publishedAt_DESC, where: { status: Upcoming }) {
+      id
+      slug
+      name
+      images(size: Thumb) {
         id
         url
       }

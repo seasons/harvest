@@ -1,15 +1,9 @@
-import {
-  Box, Button, CloseButton, Container, FadeInImage, Flex, Sans, Spacer
-} from "App/Components"
+import { Box, Button, CloseButton, Container, FadeInImage, Flex, Sans, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { OverlaySpinner } from "App/Components/OverlaySpinner"
 import { PopUp } from "App/Components/PopUp"
-import {
-  CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type
-} from "App/generated/CreateAccount_Cached_Query"
-import {
-  CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type
-} from "App/generated/CreateAccount_NoCache_Query"
+import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
+import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from "App/generated/CreateAccount_NoCache_Query"
 import { GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GET_USER } from "App/Scenes/Account/Account"
@@ -23,7 +17,7 @@ import { TabBar } from "Components/TabBar"
 import gql from "graphql-tag"
 import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
-import { Dimensions, ScrollView, TouchableOpacity } from "react-native"
+import { Dimensions, ScrollView, TouchableOpacity, Linking, Text, ImageBackground } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
@@ -310,72 +304,81 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
       <CloseButton variant="light" />
       <Container insetsBottom={false} insetsTop={false}>
         <Box style={{ flex: 1 }}>
-          <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
-            <FadeInImage source={{ uri: imageURL }} style={{ width: windowWidth, height: imageHeight }} />
-            <Box style={{ position: "absolute", width: "100%" }} pt={5}>
-              <Spacer mb={4} />
-              <Box px={2}>
-                <Sans color={color("black100")} size="7">
-                  You're in.
-                </Sans>
-                <Sans color={color("black100")} size="7">
-                  Let's choose your plan
-                </Sans>
+          <ImageBackground
+            resizeMode="cover"
+            source={{ uri: imageURL }}
+            style={{ width: windowWidth, height: imageHeight }}
+          >
+            <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
+              <Box style={{ position: "absolute", width: "100%" }} pt={5}>
+                <Spacer mb={4} />
+                <Box px={2}>
+                  <Sans color={color("black100")} size="7">
+                    You're in.
+                  </Sans>
+                  <Sans color={color("black100")} size="7">
+                    Let's choose your plan
+                  </Sans>
+                  <Spacer mb={2} />
+                </Box>
+                <Flex flexDirection="column" pt={3} pb={2}>
+                  {features?.included?.map((feature, index) => {
+                    return (
+                      <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
+                        <Box mx={1} mr={1.5}>
+                          <ListCheck feature={true} />
+                        </Box>
+                        <Sans size="3" color={color("black100")}>
+                          {feature}
+                        </Sans>
+                      </Flex>
+                    )
+                  })}
+                  {features?.excluded?.map((feature, index) => {
+                    return (
+                      <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
+                        <Box mx={1} mr={1.5}>
+                          <ListCheck feature={false} />
+                        </Box>
+                        <Sans size="3" color={color("black50")} style={{ textDecorationLine: "line-through" }}>
+                          {feature}
+                        </Sans>
+                      </Flex>
+                    )
+                  })}
+                </Flex>
                 <Spacer mb={2} />
-              </Box>
-              <Flex flexDirection="column" pt={3} pb={2}>
-                {features?.included?.map((feature, index) => {
+                {sortedPlans?.map((plan) => {
                   return (
-                    <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
-                      <Box mx={1} mr={1.5}>
-                        <ListCheck feature={true} />
-                      </Box>
-                      <Sans size="4" color={color("black100")}>
-                        {feature}
-                      </Sans>
-                      <Spacer mb={2} />
-                    </Flex>
+                    <Box key={plan.id} px={2}>
+                      <PlanButton
+                        lowestPlanPrice={lowestPlanPrice}
+                        plan={plan}
+                        key={plan.id}
+                        shouldSelect={setSelectedPlan}
+                        selected={selectedPlan?.id === plan.id}
+                        coupon={coupon}
+                      />
+                    </Box>
                   )
                 })}
-                {features?.excluded?.map((feature, index) => {
-                  return (
-                    <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
-                      <Box mx={1} mr={1.5}>
-                        <ListCheck feature={false} />
-                      </Box>
-                      <Sans size="4" color={color("black50")} style={{ textDecorationLine: "line-through" }}>
-                        {feature}
-                      </Sans>
-                      <Spacer mb={2} />
-                    </Flex>
-                  )
-                })}
-              </Flex>
-              <Spacer mb={2} />
-              {sortedPlans?.map((plan) => {
-                return (
-                  <Box key={plan.id} px={2}>
-                    <PlanButton
-                      lowestPlanPrice={lowestPlanPrice}
-                      plan={plan}
-                      key={plan.id}
-                      shouldSelect={setSelectedPlan}
-                      selected={selectedPlan?.id === plan.id}
-                      coupon={coupon}
-                    />
-                  </Box>
-                )
-              })}
-              <Spacer mb={3} />
-              <Box px={2}>
-                <Sans size="3" color="black50">
-                  Cancel for any reason within your first 24 hours for a full refund. Free shipping and dry cleaning are
-                  only included on one order per month. Questions? Contact us membership@seasons.nyc
-                </Sans>
+                <Spacer mb={3} />
+                <Box px={2}>
+                  <Sans size="3" color="black50">
+                    Cancel for any reason within 24 hours for a full refund. Free shipping & dry cleaning are only
+                    included on one order per month. Have a question?{" "}
+                    <Text
+                      style={{ textDecorationLine: "underline" }}
+                      onPress={() => Linking.openURL(`mailto:membership@seasons.nyc`)}
+                    >
+                      Contact us
+                    </Text>
+                  </Sans>
+                </Box>
+                <Spacer pb={150} />
               </Box>
-              <Spacer pb={150} />
-            </Box>
-          </ScrollView>
+            </ScrollView>
+          </ImageBackground>
         </Box>
 
         <Box width="100%" style={{ position: "absolute", bottom: 0 }}>

@@ -19,17 +19,61 @@ interface CategoriesRailProps {
   }>
 }
 
-const tileAspectRatio = 120 / 169
-const tileWidth = 169
+const tileAspectRatio = 185 / 230
+const tileWidth = 230
 
-export const CategoriesRail: React.FC<CategoriesRailProps> = ({ items, title }) => {
+const categories = [
+  {
+    name: "Shirts",
+    slug: "shirts",
+    image: "https://seasons-s3.imgix.net/categories/Category-Shirts.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
+  },
+  {
+    name: "Shorts",
+    slug: "shorts",
+    image: "https://seasons-s3.imgix.net/categories/Category-Shorts.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
+  },
+  {
+    name: "Pants",
+    slug: "pants",
+    image: "https://seasons-s3.imgix.net/categories/Category-Pants.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
+  },
+  {
+    name: "Tees",
+    slug: "tees",
+    image: "https://seasons-s3.imgix.net/categories/Category-Tees.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
+  },
+  {
+    name: "Jackets",
+    slug: "jackets",
+    image: "https://seasons-s3.imgix.net/categories/Category-Jackets.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
+  },
+  {
+    name: "Knits",
+    slug: "knits",
+    image: "https://seasons-s3.imgix.net/categories/Category-Knits.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
+  },
+  {
+    name: "Accessories",
+    slug: "accessories",
+    image:
+      "https://seasons-s3.imgix.net/categories/Category-Accessories.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
+  },
+  {
+    name: "Hoodies & Sweatshirts",
+    slug: "hoodies-and-sweatshirts",
+    image: "https://seasons-s3.imgix.net/categories/Category-Hoodies.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
+  },
+]
+
+export const CategoriesRail: React.FC<CategoriesRailProps> = () => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
   return (
     <Box pl={2} mb={3}>
       <Flex flexDirection="row" justifyContent="space-between" pr={2}>
-        <Sans size="4">{title}</Sans>
+        <Sans size="4">Discover</Sans>
         <TouchableOpacity
           onPress={() => {
             tracking.trackEvent({
@@ -43,20 +87,19 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ items, title }) 
           }}
         >
           <Sans size="4" style={{ textDecorationLine: "underline" }}>
-            View all
+            See all
           </Sans>
         </TouchableOpacity>
       </Flex>
       <Spacer mb={1} />
       <Box>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {chunk(items, 2).map((rowGroup, index, arr) => (
+          {chunk(categories, 2).map((rowGroup, index, arr) => (
             <Box key={index}>
               <Flex flexDirection="column">
-                {rowGroup.map((item) => {
-                  const uri = item?.image?.[0]?.url || ""
+                {rowGroup.map((item, index) => {
                   return (
-                    <Animatable.View animation="fadeIn" duration={300} key={item.id}>
+                    <Animatable.View animation="fadeIn" duration={300} key={index}>
                       <TouchableWithoutFeedback
                         onPress={() => {
                           navigation.navigate(Schema.StackNames.BrowseStack, {
@@ -69,11 +112,12 @@ export const CategoriesRail: React.FC<CategoriesRailProps> = ({ items, title }) 
                       >
                         <Box mr={0.5} mb={0.5} style={{ width: tileWidth }} position="relative">
                           <FadeInImage
-                            source={{ uri }}
+                            source={{ uri: item.image }}
                             style={{ width: tileWidth, height: tileWidth * tileAspectRatio }}
+                            radius={6}
                           />
-                          <Box position="absolute" bottom="1" left="1">
-                            <Sans size="2">{item.name}</Sans>
+                          <Box position="absolute" bottom="0" left="0" p={2}>
+                            <Sans size="3">{item.name}</Sans>
                           </Box>
                         </Box>
                       </TouchableWithoutFeedback>

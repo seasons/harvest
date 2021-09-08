@@ -59,7 +59,7 @@ export const fontFamily: FontFamilyProps = {
     bold: "ProximaNova-Bold",
   },
   display: {
-    regular: "Apercu-Mono",
+    regular: "NBAkademieProRegular",
   },
 }
 
@@ -205,7 +205,7 @@ export interface DisplayProps extends Partial<TextProps> {
   onPress?: () => void
 }
 
-export const Display: React.SFC<DisplayProps> = (props) => {
+export const Display: React.FC<DisplayProps> = (props) => {
   const { size, numberOfLines } = props
   const color = props.color ? colorHelper(props.color) : colorHelper("black")
   return (
@@ -220,7 +220,7 @@ export const Display: React.SFC<DisplayProps> = (props) => {
 }
 
 export const LogoText = styled.Text`
-  font-family: "Apercu-Mono";
+  font-family: "NBAkademieProRegular";
   font-size: 20;
   letter-spacing: 2;
   line-height: 24;
