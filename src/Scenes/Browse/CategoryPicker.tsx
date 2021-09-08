@@ -45,7 +45,7 @@ export const CategoryPicker: React.FC<Props> = ({ items, onCategoryPress, curren
 
   return (
     <Root ref={scrollViewRef} showsHorizontalScrollIndicator={false} horizontal>
-      {items.map((item, index) => {
+      {items?.map((item, index) => {
         const selected = currentCategory == item.slug
         return (
           <Box key={index} onLayout={handleItemLayout(index)}>

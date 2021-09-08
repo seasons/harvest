@@ -105,8 +105,6 @@ export const BagTabHeader: React.FC<{
     },
   })
 
-  console.log("me", me)
-
   const activeReservation = me?.activeReservation
   const status = activeReservation?.status
   const subHeaderText = getSubHeaderText(me, activeReservation, atHome)

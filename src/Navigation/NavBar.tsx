@@ -7,8 +7,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 
-export const NAV_HEIGHT = 100
-
 export const NavBar = ({ state, navigation, currentScreen }) => {
   const insets = useSafeAreaInsets()
   const hideNav = ["Product", "FitPicDetail"].includes(currentScreen)
