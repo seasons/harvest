@@ -44,7 +44,7 @@ const GET_CUSTOMER = gql`
         lastName
         email
       }
-      bag {
+      bag(status: Added) {
         id
         productVariant {
           id
@@ -55,7 +55,6 @@ const GET_CUSTOMER = gql`
         id
         name
         price
-        taxPrice
         recordType
       }
       customer {
