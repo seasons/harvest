@@ -385,7 +385,7 @@ export class Button extends Component<ButtonProps, ButtonState> {
               {this.props.variant === "blur" ? (
                 <BlurView
                   blurType="light"
-                  blurAmount={50}
+                  blurAmount={60}
                   reducedTransparencyFallbackColor="white"
                   style={{
                     borderRadius,

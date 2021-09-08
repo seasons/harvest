@@ -59,7 +59,7 @@ export const fontFamily: FontFamilyProps = {
     bold: "ProximaNova-Bold",
   },
   display: {
-    regular: "NBAK-Regular",
+    regular: "NBAkademieProRegular",
   },
 }
 
@@ -220,7 +220,7 @@ export const Display: React.FC<DisplayProps> = (props) => {
 }
 
 export const LogoText = styled.Text`
-  font-family: "NBAK-Regular";
+  font-family: "NBAkademieProRegular";
   font-size: 20;
   letter-spacing: 2;
   line-height: 24;
