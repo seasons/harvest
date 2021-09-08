@@ -1,4 +1,4 @@
-import { Box, Container, FixedBackArrow, Flex, Sans, Spacer, VariantSizes } from "App/Components"
+import { Box, Container, FixedBackArrow, Flex, ProductCarousel, Sans, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
@@ -28,9 +28,8 @@ import {
 } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 
-import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
+import { ImageRail, ProductDetails, ProductMeasurements } from "./Components"
 import { ProductBottomBar } from "./Components/ProductBottomBar"
-import { RelatedProducts } from "./Components/RelatedProducts"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
@@ -298,9 +297,21 @@ export const Product = screenTrack({
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
       case "relatedProducts":
-        return <RelatedProducts flatListRef={flatListRef} products={relatedProducts} />
+        return (
+          <Box pb={2} pt={1}>
+            <ProductCarousel title="Related Products" flatListRef={flatListRef} products={relatedProducts} />
+          </Box>
+        )
       case "moreLikeThis":
-        return <MoreFromBrand flatListRef={flatListRef} products={brandProducts} brandName={product.brand.name} />
+        return (
+          <Box pb={2} pt={1}>
+            <ProductCarousel
+              title={`More from ${product?.brand?.name}`}
+              flatListRef={flatListRef}
+              products={brandProducts}
+            />
+          </Box>
+        )
       case "buy":
         return (
           <ProductBuyCTA
