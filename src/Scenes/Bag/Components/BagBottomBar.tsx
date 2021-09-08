@@ -1,7 +1,7 @@
 import { Button } from "App/Components"
 import React from "react"
-
 import { Box, Flex, Sans, Separator } from "@seasons/eclipse"
+import { color } from "App/utils"
 
 interface BagBottomBarProps {
   bagItems: { productVariant: any }[]
@@ -19,7 +19,7 @@ export const BagBottomBar: React.FC<BagBottomBarProps> = ({ bagItems, onReserve 
   return (
     <>
       <Separator />
-      <Box height={80} pt={2} px={2}>
+      <Box height={80} pt={2} px={2} style={{ backgroundColor: color("white100") }}>
         <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
           <Box>
             <Sans size="4" color="black50">
