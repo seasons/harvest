@@ -292,10 +292,10 @@ export const Product = screenTrack({
             TextComponent={() => <VariantSizes size="4" variants={product?.variants ?? []} />}
           />
         )
-      case "productMeasurements":
-        return <ProductMeasurements selectedVariant={selectedVariant} />
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
+      case "productMeasurements":
+        return <ProductMeasurements selectedVariant={selectedVariant} />
       case "relatedProducts":
         return (
           <Box pb={2} pt={1}>
