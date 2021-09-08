@@ -207,7 +207,6 @@ export const ProductBottomBar: React.FC<Props> = ({
 const VariantSelectionButton = styled.View`
   height: 55;
   border: 1px solid ${color("black25")};
-  border-width: 1;
   background-color: ${color("white100")};
   width: ${oneButtonWidth - 20};
   display: flex;
@@ -244,7 +243,8 @@ const SelectionBox = styled(Flex)`
   background-color: ${color("white100")};
   height: 100%;
   padding: ${space(2)}px;
-  border: 1px ${color("black25")};
+  border-top-width: 1px;
+  border-color: ${color("black10")};
 `
 
 const RateSection = styled(Flex)`
