@@ -83,7 +83,7 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large
           }}
         >
           <Sans size="4" style={{ textDecorationLine: "underline" }}>
-            View all
+            See all
           </Sans>
         </TouchableOpacity>
       </Flex>

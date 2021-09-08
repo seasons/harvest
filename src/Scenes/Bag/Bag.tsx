@@ -22,12 +22,15 @@ import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
 import { Box, Button, Flex, Spacer } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 
+import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import {
-  State as CreateAccountState, UserState as CreateAccountUserState
-} from "../CreateAccount/CreateAccount"
-import {
-  CHECK_ITEMS, DELETE_BAG_ITEM, GetBag_Cached_Query, GetBag_NoCache_Query,
-  REMOVE_FROM_BAG_AND_SAVE_ITEM, ReservationHistoryTab_Query, SavedTab_Query
+  CHECK_ITEMS,
+  DELETE_BAG_ITEM,
+  GetBag_Cached_Query,
+  GetBag_NoCache_Query,
+  REMOVE_FROM_BAG_AND_SAVE_ITEM,
+  ReservationHistoryTab_Query,
+  SavedTab_Query,
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { BagBottomBar } from "./Components/BagBottomBar"
@@ -166,9 +169,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   }
 
   const savedItems = savedTabData?.me?.savedItems
-
   const hasActiveReservation = !!me?.activeReservation
-
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
 
   const isBagView = BagView.Bag == currentView

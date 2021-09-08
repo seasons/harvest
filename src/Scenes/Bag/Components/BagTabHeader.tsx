@@ -62,12 +62,15 @@ const getHeaderText = (status: string, phase: ReservationPhase, atHome: boolean)
 }
 
 const getSubHeaderText = (me, activeReservation, atHome) => {
-  const nextSwapDate = me.nextFreeSwapDate
+  const nextSwapDate = me?.nextFreeSwapDate
   const nextSwapDateLuxon = DateTime.fromISO(nextSwapDate)
   const swapAvailable = nextSwapDate < DateTime.local().toISO()
+  const hasItems = me?.bag?.length > 0
 
   let subHeaderText
-  if (atHome && swapAvailable) {
+  if (!hasItems) {
+    subHeaderText = "Added items will appear below"
+  } else if (atHome && swapAvailable) {
     subHeaderText = "You have a swap available"
   } else if (atHome) {
     subHeaderText = `You get a free swap ${nextSwapDateLuxon.weekdayLong}, ${nextSwapDateLuxon.monthLong} ${nextSwapDateLuxon.day}`

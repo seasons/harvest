@@ -62,7 +62,7 @@ export const BrandsRail: React.FC<BrandsRailProps> = ({ items, title }) => {
           }}
         >
           <Sans size="4" style={{ textDecorationLine: "underline" }}>
-            View all
+            See all
           </Sans>
         </TouchableOpacity>
       </Flex>

@@ -53,7 +53,7 @@ export const ProductsRail: React.FC<{
           <TouchableOpacity onPress={onViewAll}>
             <Box px={2}>
               <Sans size="4" style={{ textDecorationLine: "underline" }}>
-                View all
+                See all
               </Sans>
             </Box>
           </TouchableOpacity>
