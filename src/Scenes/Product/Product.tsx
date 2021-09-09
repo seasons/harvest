@@ -1,10 +1,8 @@
-import { Box, Container, FixedBackArrow, Flex, Sans, Spacer, VariantSizes } from "App/Components"
+import { Box, Container, FixedBackArrow, Flex, ProductCarousel, Sans, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
-import {
-  Product_NoCache_Query as Product_NoCache_Query_Type
-} from "App/generated/Product_NoCache_Query"
+import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generated/Product_NoCache_Query"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
@@ -22,21 +20,23 @@ import styled from "styled-components/native"
 
 import { useMutation, useQuery } from "@apollo/client"
 import {
-  ProductBuyCTA, ProductBuyCTAFragment_Product, ProductBuyCTAFragment_ProductVariant,
-  ProductConditionSection, ProductConditionSectionFragment_PhysicalProductQualityReport
+  ProductBuyCTA,
+  ProductBuyCTAFragment_Product,
+  ProductBuyCTAFragment_ProductVariant,
+  ProductConditionSection,
+  ProductConditionSectionFragment_PhysicalProductQualityReport,
 } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 
-import { ImageRail, MoreFromBrand, ProductDetails, ProductMeasurements } from "./Components"
+import { ImageRail, ProductDetails, ProductMeasurements } from "./Components"
 import { ProductBottomBar } from "./Components/ProductBottomBar"
-import { RelatedProducts } from "./Components/RelatedProducts"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT, Product_NoCache_Query } from "./Queries"
 
 const windowHeight = Dimensions.get("window").height
-const variantPickerHeight = windowHeight / 2.5 + 50
+
 export const VARIANT_WANT_HEIGHT = 52
 export enum OrderType {
   BUY_USED = "Used",
@@ -91,9 +91,10 @@ export const Product = screenTrack({
     },
   })
   const product: GetProduct_products = head(data?.products)
+  const variantPickerHeight = product?.variants?.length > 3 ? windowHeight / 2.5 : windowHeight / 3
 
   const pickerTransition = useSpring({
-    translateY: showVariantPicker ? 0 : variantPickerHeight,
+    translateY: showVariantPicker ? 0 : windowHeight,
     overlayOpacity: showVariantPicker ? 1 : 0,
   })
   const [hasNotification, setHasNotification] = useState(false)
@@ -291,14 +292,26 @@ export const Product = screenTrack({
             TextComponent={() => <VariantSizes size="4" variants={product?.variants ?? []} />}
           />
         )
-      case "productMeasurements":
-        return <ProductMeasurements selectedVariant={selectedVariant} />
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
+      case "productMeasurements":
+        return <ProductMeasurements selectedVariant={selectedVariant} />
       case "relatedProducts":
-        return <RelatedProducts flatListRef={flatListRef} products={relatedProducts} />
+        return (
+          <Box pb={2} pt={1}>
+            <ProductCarousel title="Related Products" flatListRef={flatListRef} products={relatedProducts} />
+          </Box>
+        )
       case "moreLikeThis":
-        return <MoreFromBrand flatListRef={flatListRef} products={brandProducts} brandName={product.brand.name} />
+        return (
+          <Box pb={2} pt={1}>
+            <ProductCarousel
+              title={`More from ${product?.brand?.name}`}
+              flatListRef={flatListRef}
+              products={brandProducts}
+            />
+          </Box>
+        )
       case "buy":
         return (
           <ProductBuyCTA
@@ -330,7 +343,6 @@ export const Product = screenTrack({
             }
           />
         )
-
       default:
         return null
     }
@@ -442,14 +454,14 @@ export const Product = screenTrack({
       )}
       <AnimatedOverlay pointerEvents={showVariantPicker ? "auto" : "none"} opacity={pickerTransition.overlayOpacity} />
       {productType === "Accessory" ? null : (
-        <AnimatedVariantPicker style={{ transform: [{ translateY: pickerTransition.translateY }] }}>
+        <AnimatedVariantPicker
+          style={{ transform: [{ translateY: pickerTransition.translateY }] }}
+          variantPickerHeight={variantPickerHeight}
+        >
           <VariantPicker
-            variantPickerHeight={variantPickerHeight}
             product={product}
             setSelectedVariant={setSelectedVariant}
             selectedVariant={selectedVariant}
-            height={variantPickerHeight}
-            navigation={navigation}
             toggleShowVariantPicker={toggleShowVariantPicker}
           />
         </AnimatedVariantPicker>
@@ -464,15 +476,6 @@ export const Product = screenTrack({
     </Container>
   )
 })
-
-const VariantPickerWrapper = styled(Box)`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: ${variantPickerHeight};
-  z-index: 4;
-`
 
 const Overlay = styled(Box)`
   position: absolute;
@@ -489,6 +492,13 @@ const ShareButtonWrapper = styled(Box)`
   right: 7;
   z-index: 2000;
 `
-
+const VariantPickerWrapper = styled(Box)<{ variantPickerHeight: any }>`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 250;
+  z-index: 4;
+`
 const AnimatedVariantPicker = animated(VariantPickerWrapper)
 const AnimatedOverlay = animated(Overlay)

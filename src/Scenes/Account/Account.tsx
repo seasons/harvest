@@ -30,6 +30,7 @@ import { State, UserState } from "../CreateAccount/CreateAccount"
 import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
+import { CreditBalance, CreditBalanceFragment_Customer } from "./Components/CreditBalance"
 
 export const GET_USER = gql`
   query GetUser {
@@ -80,14 +81,11 @@ export const GET_USER = gql`
           authorizationWindowClosesAt
           authorizationsCount
         }
-        membership {
-          plan {
-            itemCount
-          }
-        }
+        ...CreditBalanceFragment_Customer
       }
     }
   }
+  ${CreditBalanceFragment_Customer}
 `
 
 export const Account = screenTrack()(() => {
@@ -382,6 +380,7 @@ export const Account = screenTrack()(() => {
               </Box>
             )}
           </Box>
+          <CreditBalance membership={customer?.membership} />
           <InsetSeparator />
           <Box px={2} py={4}>
             {!customer ? <ListSkeleton /> : renderBody()}

@@ -1,6 +1,6 @@
 {
   "name": "harvest",
-  "version": "1.40.0",
+  "version": "1.44.5",
   "engines": {
     "node": ">=12.x.x"
   },
@@ -34,6 +34,7 @@
     "@material-ui/core": "^4.11.1",
     "@octokit/rest": "^18.7.2",
     "@react-native-community/async-storage": "~1.12.0",
+    "@react-native-community/blur": "^3.6.0",
     "@react-native-community/cameraroll": "^4.0.1",
     "@react-native-community/clipboard": "^1.5.0",
     "@react-native-community/masked-view": "0.1.10",
@@ -43,7 +44,7 @@
     "@react-navigation/bottom-tabs": "^5.7.2",
     "@react-navigation/native": "^5.7.1",
     "@react-navigation/stack": "^5.7.1",
-    "@seasons/eclipse": "^1.2.50",
+    "@seasons/eclipse": "1.4.3",
     "@segment/analytics-react-native": "^1.4.1",
     "@segment/analytics-react-native-google-analytics": "^1.4.1",
     "@segment/analytics-react-native-mixpanel": "^1.4.1",
@@ -132,6 +133,7 @@
     "@types/storybook__react": "^5.2.1",
     "@types/styled-components": "^5.1.2",
     "@types/styled-system": "^5.1.1",
+    "apollo": "^2.33.6",
     "babel-jest": "^25.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-module-resolver": "^3.2.0",

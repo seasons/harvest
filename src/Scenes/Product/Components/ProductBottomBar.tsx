@@ -127,12 +127,6 @@ export const ProductBottomBar: React.FC<Props> = ({
     animatedScrollY,
     showNotifyMeMessage,
   })
-  const selectionButtonsTopOffset = BuyCTA
-    ? animatedScrollY.interpolate({
-        inputRange: [0, 50, 100, 101],
-        outputRange: [0, 0, buyCtaHeight - space(2), buyCtaHeight - space(2)],
-      })
-    : buyCtaHeight - space(2)
 
   return (
     <Wrapper style={{ bottom: showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0 }}>
@@ -140,16 +134,19 @@ export const ProductBottomBar: React.FC<Props> = ({
         <Animated.View style={{ zIndex: 30 }}>
           <SelectionBox>
             <RateSection>
-              <Flex flexDirection="row">
-                <Sans size="4">${monthlyRental}</Sans>
-                <Sans size="4"> / month</Sans>
+              <Flex flexDirection="row" alignItems="flex-end">
+                <Sans size="5">${monthlyRental}</Sans>
+                <Sans size="3" color="black50">
+                  {" "}
+                  / month
+                </Sans>
               </Flex>
-              <Sans size="4" color={color("black50")}>
+              <Sans size="3" color={color("black50")}>
                 Retail ${retailPrice}
               </Sans>
             </RateSection>
 
-            <Flex flexDirection="row" justifyContent="space-between" width={230}>
+            <Flex flexDirection="row" justifyContent="flex-end">
               <TouchableWithoutFeedback
                 onPress={() => {
                   tracking.trackEvent({
@@ -162,7 +159,7 @@ export const ProductBottomBar: React.FC<Props> = ({
                 {productType === "Accessory" ? (
                   <Box></Box>
                 ) : (
-                  <VariantSelectionButton borderRadius={BORDER_RADIUS}>
+                  <VariantSelectionButton>
                     <Flex px={2} style={{ width: "100%" }} flexDirection="row" justifyContent="center">
                       <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap">
                         <Sans size="4" color={color("black100")}>
@@ -175,11 +172,11 @@ export const ProductBottomBar: React.FC<Props> = ({
                   </VariantSelectionButton>
                 )}
               </TouchableWithoutFeedback>
+              <Spacer mr={1} />
               {inStock ? (
                 <AddToBagButton
                   setShowSizeWarning={setShowSizeWarning}
                   variantInStock={inStock}
-                  width={twoButtonWidth - 45}
                   selectedVariant={selectedVariant}
                   data={data}
                   dataMe={dataMe}
@@ -187,11 +184,11 @@ export const ProductBottomBar: React.FC<Props> = ({
               ) : (
                 <StyledButton
                   Icon={hasNotification ? WhiteListCheck : null}
-                  width={twoButtonWidth - 45}
                   onPress={onNotifyMe}
                   loading={isMutatingNotify}
                   borderRadius={BORDER_RADIUS}
                   height={55}
+                  width={129}
                 >
                   <Sans size="5" color={color("white100")}>
                     Notify me
@@ -210,13 +207,13 @@ export const ProductBottomBar: React.FC<Props> = ({
 const VariantSelectionButton = styled.View`
   height: 55;
   border: 1px solid ${color("black25")};
-  border-width: 1;
   background-color: ${color("white100")};
   width: ${oneButtonWidth - 20};
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  border-radius: ${BORDER_RADIUS};
 `
 
 const Wrapper = styled.View`
@@ -246,7 +243,8 @@ const SelectionBox = styled(Flex)`
   background-color: ${color("white100")};
   height: 100%;
   padding: ${space(2)}px;
-  border: 1px ${color("black25")};
+  border-top-width: 1px;
+  border-color: ${color("black10")};
 `
 
 const RateSection = styled(Flex)`

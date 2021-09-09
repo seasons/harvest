@@ -20,7 +20,7 @@ interface Props {
   setShowSizeWarning: (show: boolean) => void
   disabled?: Boolean
   variantInStock: Boolean
-  width: number
+  width?: number
   selectedVariant: any
   data: GetProduct
   dataMe: GetProductMe
@@ -165,7 +165,6 @@ export const AddToBagButton: React.FC<Props> = ({
       disabled={_disabled}
       borderRadius={BORDER_RADIUS}
       height={55}
-      
       onPress={() => {
         tracking.trackEvent({
           actionName: Schema.ActionNames.ProductAddedToBag,
@@ -173,10 +172,10 @@ export const AddToBagButton: React.FC<Props> = ({
         })
         handleReserve()
       }}
-    > 
-    <Sans size="4" color={color("white100")}>
+    >
+      <Sans size="4" color={color("white100")}>
         {text}
-    </Sans>
+      </Sans>
     </Button>
   )
 }

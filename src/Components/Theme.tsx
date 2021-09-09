@@ -38,6 +38,7 @@ export const themeProps = {
     lightGreen: "#01b06c",
     blue100: "#2442EC",
     blue: "#2B50DF",
+    peach: "#F6E3D0",
     productBackgroundColor: "#E9E9EB",
   },
 
@@ -82,6 +83,11 @@ export const themeProps = {
     "7": {
       fontSize: 24,
       lineHeight: 32,
+    },
+    /** Equivalent to 28px size / 36px line-height  */
+    "8": {
+      fontSize: 28,
+      lineHeight: 36,
     },
     "9": {
       fontSize: 32,

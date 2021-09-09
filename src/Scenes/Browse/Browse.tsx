@@ -118,8 +118,16 @@ export const Browse = screenTrack()((props: any) => {
       <Container insetsBottom={false}>
         <Flex flexDirection="column" style={{ flex: 1 }}>
           <Box style={{ flex: 1, flexGrow: 1 }}>
-            <Flex justifyContent="space-between" width="100%" flexWrap="nowrap" flexDirection="row" alignItems="center">
-              <Flex flexWrap="nowrap" flexDirection="row" alignItems="center" px="12px" py="6px">
+            <Flex
+              pl={0.5}
+              pr={2}
+              justifyContent="space-between"
+              width="100%"
+              flexWrap="nowrap"
+              flexDirection="row"
+              alignItems="center"
+            >
+              <Flex flexWrap="nowrap" flexDirection="row" justifyContent="space-between" alignItems="center" py={0.5}>
                 <Switch
                   trackColor={{ true: color("black100"), false: color("white100") }}
                   value={filters.availableOnly}
@@ -129,20 +137,20 @@ export const Browse = screenTrack()((props: any) => {
                       availableOnly: !filters.availableOnly,
                     })
                   }}
-                  style={{ transform: [{ scaleX: .5 }, { scaleY: .5 }] }}
+                  style={{ transform: [{ scaleX: 0.5 }, { scaleY: 0.5 }] }}
                 />
-                <Spacer  />
+                <Spacer />
                 <Sans size="4">Available now</Sans>
               </Flex>
               <TouchableOpacity onPress={onFilterBtnPress}>
-                <Flex px="12px" py="6px" justifyContent="space-between">
+                <Flex py={0.5} justifyContent="space-between">
                   <Sans size="4" style={{ textDecorationLine: "underline" }}>
                     {filtersButtonText}
                   </Sans>
                 </Flex>
               </TouchableOpacity>
             </Flex>
-            <CategoryBox pt={1.5} >
+            <CategoryBox pt={1.5}>
               <CategoryPicker
                 items={categoryItems}
                 onCategoryPress={onCategoryPress}
@@ -169,7 +177,7 @@ export const Browse = screenTrack()((props: any) => {
                 return (
                   <Box key={node?.id + index}>
                     {node?.id ? (
-                      <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0}/>
+                      <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0} />
                     ) : (
                       <ProductGridItemSkeleton addLeftSpacing={index % numColumns !== 0} />
                     )}
@@ -205,7 +213,6 @@ export const Browse = screenTrack()((props: any) => {
               }}
             />
           </Box>
-          
         </Flex>
       </Container>
     </>
@@ -213,5 +220,5 @@ export const Browse = screenTrack()((props: any) => {
 })
 
 const CategoryBox = styled(Flex)`
-  height: 75;
+  height: 55;
 `

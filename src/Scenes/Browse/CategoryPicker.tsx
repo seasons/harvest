@@ -44,38 +44,28 @@ export const CategoryPicker: React.FC<Props> = ({ items, onCategoryPress, curren
   }
 
   return (
-    <Root
-      ref={scrollViewRef}
-      contentContainerStyle={{
-        padding: 0,
-        paddingLeft: 20,
-        paddingRight: 20,
-        paddingTop: 0,
-      }}
-      showsHorizontalScrollIndicator={false}
-      horizontal
-    >
-        {items.map((item, index) => {
-          const selected = currentCategory == item.slug
-          return (
-            <Box key={index} onLayout={handleItemLayout(index)}>
-              {!!item.name ? (
-                <TouchableOpacity onPress={() => onCategoryPress(item)}>
-                  <Category mr={1} selected={selected}>
-                    <Sans size="4" style={{ color: selected ? color("white100") :  color("black100")}}>
-                      {item.name}
-                    </Sans>
-                  </Category>
-                </TouchableOpacity>
-              ) : (
-                <Box mr={4}>
-                  <Spacer mb="5px" />
-                  <Skeleton width={50} height={15} />
-                </Box>
-              )}
-            </Box>
-          )
-        })}
+    <Root ref={scrollViewRef} showsHorizontalScrollIndicator={false} horizontal>
+      {items?.map((item, index) => {
+        const selected = currentCategory == item.slug
+        return (
+          <Box key={index} onLayout={handleItemLayout(index)}>
+            {!!item.name ? (
+              <TouchableOpacity onPress={() => onCategoryPress(item)}>
+                <Category ml={index === 0 ? 2 : 0} mr={index === items.length - 1 ? 2 : 1} selected={selected}>
+                  <Sans size="4" style={{ color: selected ? color("white100") : color("black100") }}>
+                    {item.name}
+                  </Sans>
+                </Category>
+              </TouchableOpacity>
+            ) : (
+              <Box mr={4}>
+                <Spacer mb="5px" />
+                <Skeleton width={50} height={15} />
+              </Box>
+            )}
+          </Box>
+        )
+      })}
     </Root>
   )
 }
@@ -90,6 +80,7 @@ const Root = styled(ScrollView)`
 `
 
 const Category = styled(Box)<{ selected: boolean }>`
+  border: 1px ${color("black25")};
   ${(p) =>
     p.selected &&
     `
@@ -97,10 +88,9 @@ const Category = styled(Box)<{ selected: boolean }>`
     border: 1px ${color("black100")}
     
   `};
-  border: 1px ${color("black25")};
-  border-radius: 8px;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-left: 10px;
   padding-right: 10px;
+  border-radius: 8px;
 `

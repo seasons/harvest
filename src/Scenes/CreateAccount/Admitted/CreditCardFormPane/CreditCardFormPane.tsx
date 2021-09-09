@@ -256,6 +256,27 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
               </Flex>
               <Spacer mb={4} />
               <Sans color="black100" size="4">
+                Payment information
+              </Sans>
+              <Spacer mb={2} />
+              <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start">
+                <Sans color="black50" size="3">
+                  Card number, Expiration date & CIV
+                </Sans>
+              </Flex>
+              <PaymentField
+                cursorColor={color("black50")}
+                textErrorColor={color("black50")}
+                placeholderColor={color("black50")}
+                numberPlaceholder="16 digits"
+                expirationPlaceholder="MM / YY"
+                cvcPlaceholder="3-digits"
+                disabled={isMutating}
+                onParamsChange={handleFieldParamsChange}
+              />
+              <Separator color={expYear && cvc && expMonth && cardNumber ? color("black100") : color("black10")} />
+              <Spacer mb={4} />
+              <Sans color="black100" size="4">
                 Shipping address
               </Sans>
               <Spacer mb={2} />
@@ -285,27 +306,6 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
                   />
                 </>
               )}
-              <Spacer mb={4} />
-              <Sans color="black100" size="4">
-                Payment information
-              </Sans>
-              <Spacer mb={2} />
-              <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start">
-                <Sans color="black50" size="3">
-                  Card number, Expiration date & CIV
-                </Sans>
-              </Flex>
-              <PaymentField
-                cursorColor={color("black50")}
-                textErrorColor={color("black50")}
-                placeholderColor={color("black50")}
-                numberPlaceholder="16 digits"
-                expirationPlaceholder="MM / YY"
-                cvcPlaceholder="3-digits"
-                disabled={isMutating}
-                onParamsChange={handleFieldParamsChange}
-              />
-              <Separator />
             </Box>
             <Spacer pb={160} />
           </ScrollView>
@@ -321,7 +321,6 @@ export const CreditCardFormPane: React.FC<CreditCardFormPaneProps> = ({
                     disabled={disabled}
                     loading={isMutating}
                     onPress={handleOnSubmit}
-                    size="large"
                     variant="primaryBlack"
                   >
                     Submit payment

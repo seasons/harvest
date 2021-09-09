@@ -1,21 +1,15 @@
-import { space } from "@seasons/eclipse"
-import { Box, Flex, Sans } from "App/Components"
+import { Button, Flex } from "App/Components"
 import { GetProduct_products_variants } from "App/generated/GetProduct"
-import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { find } from "lodash"
-import React, { useEffect, useState } from "react"
-import { TouchableOpacity } from "react-native"
-import styled from "styled-components/native"
+import React, { useEffect, useRef, useState } from "react"
+import { ScrollView } from "react-native"
 
-export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelected, product, variantPickerHeight }) => {
+export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelected, product }) => {
   const variants: GetProduct_products_variants[] = product?.variants
   const [sizeData, setSizeData] = useState([])
   const tracking = useTracking()
-
-  useEffect(() => {
-    updateSizeData()
-  }, [product])
+  const scrollRef = useRef(null)
 
   const updateSizeData = () => {
     setSizeData(variants)
@@ -25,35 +19,32 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
       const firstAvailableSize =
         find(variants, (size) => size.isInBag) || find(variants, (size) => size.reservable > 0) || variants?.[0]
       setSelectedVariant(firstAvailableSize)
+      const itemIndex = variants.findIndex((v) => v.id === firstAvailableSize.id)
+      scrollRef?.current?.scrollTo({ x: (itemIndex + 1) * 97, y: 0, animated: true })
     } else if (variants?.length) {
       const variant = find(variants, (size) => size.id === selectedVariant.id)
       // Refresh variant data
       setSelectedVariant(variant)
+      const itemIndex = variants.findIndex((v) => v.id === variant.id)
+      scrollRef?.current?.scrollTo({ x: (itemIndex + 1) * 97, y: 0, animated: true })
     }
   }
 
+  useEffect(() => {
+    if (variants?.length > 0) {
+      updateSizeData()
+    }
+  }, [variants, updateSizeData])
+
   const rows = sizeData.map((size, i) => {
     const displaySize = size?.displayLong
-    const displayShort = size?.displayShort
 
-    const manufacturerSizeDisplayType = size?.manufacturerSizes?.[0]?.type
-    const manufacturerSizeDisplay = size?.manufacturerSizes?.[0]?.display
-
-    const manufacturerSizeFullDisplay =
-      manufacturerSizeDisplayType !== "Letter" &&
-      manufacturerSizeDisplay !== displaySize &&
-      manufacturerSizeDisplay !== displayShort &&
-      !!manufacturerSizeDisplayType &&
-      `${manufacturerSizeDisplayType ? manufacturerSizeDisplayType + " " : ""}${manufacturerSizeDisplay}`
-
-    const buttonColors =
-      size?.reservable > 0
-        ? { sizeColor: "black100", backgroundColor: "white100" }
-        : { sizeColor: "black50", backgroundColor: "black25" }
     return (
-      <Flex key={size.id || i} pb={1} pr={.5}>
+      <Flex key={size.id || i} pb={1} pr={i === sizeData.length - 1 ? 2 : 1} pl={i === 0 ? 2 : 0}>
         {displaySize && (
-          <TouchableOpacity
+          <Button
+            variant="primaryWhite"
+            disabled={size?.reservable <= 0}
             onPress={() => {
               tracking.trackEvent({
                 actionName: Schema.ActionNames.ProductVariantSelected,
@@ -65,37 +56,18 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
               onSizeSelected(size)
             }}
           >
-            <StyledBox style={{ backgroundColor: color(buttonColors.backgroundColor) }}>
-              <Flex alignItems="center" pt={1.5}>
-                <Sans color={color(buttonColors.sizeColor)} size="5">
-                  {displaySize}
-                </Sans>
-                <Sans color={color("black50")} size="3">
-                  {manufacturerSizeFullDisplay}
-                </Sans>
-              </Flex>
-            </StyledBox>
-          </TouchableOpacity>
+            {displaySize}
+          </Button>
         )}
       </Flex>
     )
   })
 
   return (
-    <Flex alignItems="center" pb={1}>
-      <Box style={{ minHeight: variantPickerHeight - 60, width: "100%", padding: space(1) }}>
-        <Flex flexDirection="row" flexWrap="wrap" justifyContent="flex-start" pt={3} >
-          {rows}
-        </Flex>
-        <Box pb="180px" />
-      </Box>
+    <Flex style={{ flex: 1 }} pt={2}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} ref={scrollRef}>
+        {rows}
+      </ScrollView>
     </Flex>
   )
 }
-
-const StyledBox = styled(Box)`
-  border: 1px ${color("black25")};
-  border-radius: 7;
-  width: 115;
-  height: 75;
-`
