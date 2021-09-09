@@ -4,11 +4,11 @@ import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { color } from "App/utils"
-import { BagPlus, DarkInstagram, Stylist } from "Assets/svgs"
+import { color, space } from "App/utils"
+import { DarkInstagram, Stylist } from "Assets/svgs"
 import { DateTime } from "luxon"
 import React, { useState } from "react"
-import { Linking, ScrollView, TouchableOpacity } from "react-native"
+import { Dimensions, Linking, ScrollView } from "react-native"
 import { useMutation } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { Box, ProductBuyAlertTab, ProductBuyAlertTabType, Spacer } from "@seasons/eclipse"
@@ -20,6 +20,9 @@ import { BagTabHeader } from "./BagTabHeader"
 import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
 import { EmptyBagItem } from "./EmptyBagItem"
 import { assign, fill } from "lodash"
+
+const dimensions = Dimensions.get("window")
+const windowWidth = dimensions.width
 
 export const BagTab: React.FC<{
   bagItems
@@ -218,6 +221,7 @@ export const BagTab: React.FC<{
             {!isPaused && (
               <Box ml={showShareIGCard ? 0 : 2} mr={1}>
                 <BagCardButton
+                  width={showShareIGCard ? "auto" : windowWidth - space(4)}
                   Icon={Stylist}
                   title="Chat with our stylist"
                   caption="Get a personalized consultation"

@@ -10,11 +10,20 @@ export const BagCardButton: React.FC<{
   title: string
   caption: string
   onPress: () => void
-}> = ({ Icon, title, caption, onPress }) => {
+  width?: any
+}> = ({ Icon, title, caption, onPress, width }) => {
   return (
-    <Wrapper mb={2}>
+    <Wrapper mb={2} width={width}>
       <TouchableOpacity onPress={onPress}>
-        <Flex px={3} py={3} flexDirection="row" justifyContent="flex-start" alignItems="center" flexWrap="nowrap">
+        <Flex
+          width={width}
+          px={3}
+          py={3}
+          flexDirection="row"
+          justifyContent="flex-start"
+          alignItems="center"
+          flexWrap="nowrap"
+        >
           <Icon />
           <Spacer mr={2} />
           <Box>
