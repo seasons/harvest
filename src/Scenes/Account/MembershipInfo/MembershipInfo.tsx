@@ -1,15 +1,15 @@
 import gql from "graphql-tag"
 import React from "react"
 import { useQuery } from "@apollo/client"
-import { Linking, ScrollView } from "react-native"
+import { ScrollView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Box, Button, Container, FixedBackArrow, Sans, SectionHeader, Separator, Spacer } from "App/Components"
+import { Box, Container, FixedBackArrow, Flex, Sans, SectionHeader, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { MembershipCard } from "./Components"
 import { PauseButtons } from "App/Components/Pause"
-import { Schema } from "App/Navigation"
+import { ListCheck } from "Assets/svgs/ListCheck"
 
 export const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
@@ -41,6 +41,9 @@ export const GET_MEMBERSHIP_INFO = gql`
             planID
             price
             description
+            features {
+              included
+            }
             itemCount
             pauseWithItemsPrice
           }
@@ -63,7 +66,6 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
   const lastName = data?.me?.user?.lastName
   const plan = customer?.membership?.plan
   const payPeriod = plan?.planID === "access-yearly" ? "year" : "month"
-  const isPaused = customer?.status === "Paused"
 
   if (!plan) {
     return (
@@ -74,11 +76,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
     )
   }
 
-  const whatsIncluded = plan?.description?.split("\n")
-
-  // For now since we don't support downgrading on Access plans
-  // only show change plan if they can upgrade only or change to Access
-  const canChangePlan = plan.planID !== "access-yearly"
+  const whatsIncluded = plan?.description?.split("\n") || plan?.features?.included
 
   return (
     <Container insetsBottom={false}>
@@ -92,7 +90,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={4} />
           {!!plan?.price && (
             <>
-              <SectionHeader title="What you pay" />
+              <SectionHeader title="What you're pay" />
               <Spacer mb={1} />
               <Sans size="4" color={color("black50")}>
                 {`$${plan.price / 100} / per ${payPeriod}`}
@@ -102,20 +100,22 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           {!!whatsIncluded && (
             <>
               <Spacer mb={4} />
-              <SectionHeader title="Whats included" />
-              <Spacer mb={1} />
-              {whatsIncluded.map((text) => (
-                <Box key={text}>
-                  <Spacer mb={1} />
-                  <Sans size="4" color={color("black50")}>
+              <SectionHeader title="Membership includes" />
+              <Spacer mb={2} />
+              {whatsIncluded.map((text, index) => (
+                <Flex flexDirection="row" key={text} pb={1.5} alignItems="center" width="100%">
+                  <Box mr={1.5}>
+                    <ListCheck />
+                  </Box>
+                  <Sans size="3" color={color("black50")}>
                     {text.trim()}
                   </Sans>
-                </Box>
+                </Flex>
               ))}
             </>
           )}
-          <Spacer mb={4} />
-          <SectionHeader title={canChangePlan || isPaused ? "Update your plan" : "Cancel membership"} />
+          <Spacer mb={3} />
+          <SectionHeader title="Cancel membership" />
           <Spacer mb={2} />
           <PauseButtons customer={customer} />
         </Box>
