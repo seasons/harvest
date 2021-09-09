@@ -60,7 +60,7 @@ const categories = [
       "https://seasons-s3.imgix.net/categories/Category-Accessories.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
   },
   {
-    name: "Hoodies & Sweatshirts",
+    name: "Hoodies &\nSweatshirts",
     slug: "hoodies-and-sweatshirts",
     image: "https://seasons-s3.imgix.net/categories/Category-Hoodies.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
   },
