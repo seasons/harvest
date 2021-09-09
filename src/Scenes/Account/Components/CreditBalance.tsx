@@ -1,6 +1,6 @@
-import { Flex, Box, Sans, Spacer } from "App/Components"
-import React from "react"
+import { Box, Flex, Sans, Spacer } from "App/Components"
 import gql from "graphql-tag"
+import React from "react"
 
 export const CreditBalanceFragment_Customer = gql`
   fragment CreditBalanceFragment_Customer on Customer {
@@ -12,11 +12,7 @@ export const CreditBalanceFragment_Customer = gql`
 `
 
 export const CreditBalance = ({ membership }) => {
-  const credits = membership?.adjustedCreditBalance
-
-  if (typeof credits !== "number") {
-    return null
-  }
+  const credits = membership?.adjustedCreditBalance || 0
 
   return (
     <>
