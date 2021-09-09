@@ -1,7 +1,6 @@
 import { Loader } from "App/Components/Loader"
 import { PauseStatus } from "App/Components/Pause/PauseButtons"
 import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
-import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
@@ -34,6 +33,7 @@ import {
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { BagBottomBar } from "./Components/BagBottomBar"
 import { useBag } from "./useBag"
+import { MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
 
 export enum BagView {
   Bag = 0,
@@ -51,7 +51,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
-  const [planItemCount, setPlanItemCount] = useState(DEFAULT_ITEM_COUNT)
   const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const flatListRef = useRef(null)
@@ -104,10 +103,6 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   useEffect(() => {
     if (data) {
-      const _planItemCount = data?.me?.customer?.membership?.plan?.itemCount
-      if (!!_planItemCount && _planItemCount !== planItemCount && isSignedIn) {
-        setPlanItemCount(_planItemCount)
-      }
       setIsLoading(false)
       const userId = me?.customer?.user?.id
       if (!!userId) {
@@ -116,7 +111,7 @@ export const Bag = screenTrack()((props: BagProps) => {
         analytics.identify(userId, { bagItems: savedItems + baggedItems })
       }
     }
-  }, [data, setIsLoading, setPlanItemCount])
+  }, [data, setIsLoading])
 
   const [deleteBagItem] = useMutation(DELETE_BAG_ITEM)
 
@@ -174,7 +169,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const isSavedView = BagView.Saved == currentView
 
   const bagCount = bagItems.length
-  const bagIsFull = planItemCount && bagCount >= planItemCount
+  const bagIsFull = bagCount >= MAXIMUM_ITEM_COUNT
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
 
@@ -224,12 +219,10 @@ export const Bag = screenTrack()((props: BagProps) => {
           })
         },
       })
-    } else if (bagCount > planItemCount) {
+    } else if (bagCount > MAXIMUM_ITEM_COUNT) {
       showPopUp({
         title: "You must remove some items first",
-        note: `Your plan has ${planItemCount} ${
-          planItemCount === 1 ? "slot" : "slots"
-        } but your bag has ${bagCount} items.`,
+        note: `The maximum items you can reserve is ${MAXIMUM_ITEM_COUNT}.`,
         buttonText: "Got it",
         onClose: () => hidePopUp(),
       })

@@ -1,6 +1,6 @@
 import { Button, Sans } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
-import { BORDER_RADIUS, DEFAULT_ITEM_COUNT } from "App/helpers/constants"
+import { BORDER_RADIUS, MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_LOCAL_BAG } from "App/queries/clientQueries"
@@ -14,7 +14,6 @@ import { useNavigation } from "@react-navigation/native"
 import { GET_PRODUCT } from "../Queries"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { GetProductMe } from "App/generated/GetProductMe"
-import { color } from "styled-system"
 
 interface Props {
   setShowSizeWarning: (show: boolean) => void
@@ -64,9 +63,8 @@ export const AddToBagButton: React.FC<Props> = ({
     onCompleted: (res) => {
       setIsMutating(false)
       setAdded(true)
-      const itemCount = me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
       const bagItemCount = authState?.isSignedIn ? me?.bag?.length : res.addOrRemoveFromLocalBag.length
-      if (itemCount && bagItemCount && bagItemCount >= itemCount && isUserSignedIn) {
+      if (bagItemCount && bagItemCount >= MAXIMUM_ITEM_COUNT) {
         showPopUp({
           icon: <CheckCircled />,
           title: "Added to bag",
