@@ -11,7 +11,6 @@ import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
 import { assign, fill } from "lodash"
-import { DateTime } from "luxon"
 import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, RefreshControl, StatusBar, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
@@ -34,7 +33,6 @@ import {
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { BagBottomBar } from "./Components/BagBottomBar"
-import { BagCostWarning } from "./Components/BagCostWarning"
 import { useBag } from "./useBag"
 
 export enum BagView {

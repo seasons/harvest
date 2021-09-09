@@ -445,11 +445,11 @@ export const Product = screenTrack({
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
-          <Spacer pb={2} />
+          <Spacer pb={1} />
           <Flex p={2} flexDirection="row" flexWrap="nowrap" justifyContent="center">
             <Sans size="4">{notifyButtonText}</Sans>
           </Flex>
-          <Spacer pb={1} />
+          <Spacer pb={2} />
         </FadeBottom2>
       )}
       <AnimatedOverlay pointerEvents={showVariantPicker ? "auto" : "none"} opacity={pickerTransition.overlayOpacity} />

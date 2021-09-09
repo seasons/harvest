@@ -164,7 +164,6 @@ export const AddToBagButton: React.FC<Props> = ({
       variant="primaryBlack"
       disabled={_disabled}
       borderRadius={BORDER_RADIUS}
-      height={55}
       onPress={() => {
         tracking.trackEvent({
           actionName: Schema.ActionNames.ProductAddedToBag,
@@ -173,7 +172,7 @@ export const AddToBagButton: React.FC<Props> = ({
         handleReserve()
       }}
     >
-      <Sans size="4" color={color("white100")}>
+      <Sans size="4" color="white100">
         {text}
       </Sans>
     </Button>
