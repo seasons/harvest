@@ -171,7 +171,6 @@ export const Reservation = screenTrack()((props) => {
   const me = data?.me
   const customer = me?.customer
   const address = me?.customer?.detail?.shippingAddress
-
   const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
 
   useEffect(() => {
