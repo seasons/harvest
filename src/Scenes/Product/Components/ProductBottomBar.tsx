@@ -180,6 +180,7 @@ export const ProductBottomBar: React.FC<Props> = ({
                   selectedVariant={selectedVariant}
                   data={data}
                   dataMe={dataMe}
+                  width={130}
                 />
               ) : (
                 <StyledButton
