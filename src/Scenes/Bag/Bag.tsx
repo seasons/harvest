@@ -373,9 +373,7 @@ export const Bag = screenTrack()((props: BagProps) => {
     return (
       button && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-          <Spacer mb={2} />
-          <Box>{button}</Box>
-          <Spacer mb={2} />
+          {button}
         </FadeBottom2>
       )
     )
@@ -416,12 +414,12 @@ export const Bag = screenTrack()((props: BagProps) => {
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           data={sections}
+          contentContainerStyle={{ flexGrow: 1 }}
           keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
           renderItem={(item) => {
             return renderItem(item)
           }}
           ref={flatListRef}
-          ListFooterComponent={() => <Spacer pb={80} />}
         />
         <PrimaryCTA />
       </View>
