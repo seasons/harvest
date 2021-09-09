@@ -1,8 +1,9 @@
 import gql from "graphql-tag"
 
 import {
-  ProductBuyCTAFragment_Product, ProductBuyCTAFragment_ProductVariant,
-  ProductConditionSectionFragment_PhysicalProductQualityReport
+  ProductBuyCTAFragment_Product,
+  ProductBuyCTAFragment_ProductVariant,
+  ProductConditionSectionFragment_PhysicalProductQualityReport,
 } from "@seasons/eclipse"
 
 import { ProductMeasurementsFragment_ProductVariant } from "./Components/ProductMeasurements"
@@ -75,13 +76,6 @@ export const Product_NoCache_Query = gql`
         status
         user {
           id
-        }
-        membership {
-          id
-          plan {
-            id
-            itemCount
-          }
         }
       }
       bag {

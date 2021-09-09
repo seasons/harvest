@@ -34,11 +34,6 @@ const LOG_IN = gql`
             state
           }
         }
-        membership {
-          plan {
-            itemCount
-          }
-        }
       }
       user {
         id
