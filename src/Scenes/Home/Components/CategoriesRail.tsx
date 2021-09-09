@@ -26,7 +26,7 @@ const categories = [
   {
     name: "Shirts",
     slug: "shirts",
-    image: "https://seasons-s3.imgix.net/categories/Category-Shirts.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
+    image: "https://seasons-s3.imgix.net/categories/Category-Shirts-1.jpg?w=576&fit=clip&retina=true&fm=webp&cs=srgb",
   },
   {
     name: "Shorts",
