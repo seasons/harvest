@@ -119,7 +119,7 @@ export const BagTab: React.FC<{
           <Box px={2}>
             <Separator color={color("black10")} />
           </Box>
-          <Box px={2} py={3}>
+          <Box px={2} py={2}>
             <Sans size="4" color="black50">
               {`Your membership is paused ${withOrWithoutDisplay} until ${DateTime.fromISO(
                 pauseRequest.resumeDate
@@ -147,7 +147,6 @@ export const BagTab: React.FC<{
           </Box>
         </>
       )}
-      <Separator />
       {bagItems?.map((bagItem, index) => {
         if (pausedWithoutItems) {
           return null
