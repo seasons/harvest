@@ -133,9 +133,9 @@ export const ProductBottomBar: React.FC<Props> = ({
       <Flex flexDirection="column">
         <Animated.View style={{ zIndex: 30 }}>
           <SelectionBox>
-            <RateSection>
+            <Flex px={2}>
               <Flex flexDirection="row" alignItems="flex-end">
-                <Sans size="5">${monthlyRental}</Sans>
+                <Sans size="7">${monthlyRental}</Sans>
                 <Sans size="3" color="black50">
                   {" "}
                   / month
@@ -144,7 +144,7 @@ export const ProductBottomBar: React.FC<Props> = ({
               <Sans size="3" color={color("black50")}>
                 Retail ${retailPrice}
               </Sans>
-            </RateSection>
+            </Flex>
 
             <Flex flexDirection="row" justifyContent="flex-end">
               <TouchableWithoutFeedback
@@ -180,6 +180,7 @@ export const ProductBottomBar: React.FC<Props> = ({
                   selectedVariant={selectedVariant}
                   data={data}
                   dataMe={dataMe}
+                  width={130}
                 />
               ) : (
                 <StyledButton
@@ -187,10 +188,10 @@ export const ProductBottomBar: React.FC<Props> = ({
                   onPress={onNotifyMe}
                   loading={isMutatingNotify}
                   borderRadius={BORDER_RADIUS}
-                  height={55}
+                  height={48}
                   width={129}
                 >
-                  <Sans size="5" color={color("white100")}>
+                  <Sans size="4" color={color("white100")}>
                     Notify me
                   </Sans>
                 </StyledButton>
@@ -205,7 +206,7 @@ export const ProductBottomBar: React.FC<Props> = ({
 }
 
 const VariantSelectionButton = styled.View`
-  height: 55;
+  height: 48;
   border: 1px solid ${color("black25")};
   background-color: ${color("white100")};
   width: ${oneButtonWidth - 20};
@@ -245,9 +246,4 @@ const SelectionBox = styled(Flex)`
   padding: ${space(2)}px;
   border-top-width: 1px;
   border-color: ${color("black10")};
-`
-
-const RateSection = styled(Flex)`
-  padding: ${space(1)}px;
-  height: 75%;
 `

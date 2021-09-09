@@ -35,7 +35,7 @@ export const TagsRail: React.FC<TagsRailProps> = ({ items, title, tagData, large
   let slideWidth = 104
 
   useEffect(() => {
-    const rows = chunk(items, 6)
+    const rows = chunk(items, 5)
     createRowGroups(rows)
   }, [])
 

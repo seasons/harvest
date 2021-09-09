@@ -3,40 +3,44 @@ import { color } from "App/utils"
 import { Sans } from "Components/Typography"
 import React, { ComponentType } from "react"
 import { TouchableOpacity } from "react-native"
-import { ChevronIcon } from "Assets/icons"
+import styled from "styled-components/native"
 
 export const BagCardButton: React.FC<{
   Icon: ComponentType
   title: string
   caption: string
   onPress: () => void
-}> = ({ Icon, title, caption, onPress }) => {
+  width?: any
+}> = ({ Icon, title, caption, onPress, width }) => {
   return (
-    <Box>
+    <Wrapper mb={2} width={width}>
       <TouchableOpacity onPress={onPress}>
         <Flex
+          width={width}
+          px={3}
+          py={3}
           flexDirection="row"
-          justifyContent="space-between"
+          justifyContent="flex-start"
           alignItems="center"
           flexWrap="nowrap"
-          p={2}
-          style={{ flex: 1 }}
         >
-          <Flex flexDirection="row" justifyContent="flex-start" alignItems="center" flexWrap="nowrap">
-            <Icon />
-            <Spacer mr={2} />
-            <Box>
-              <Sans size="4" color="black100">
-                {title}
-              </Sans>
-              <Sans size="4" color="black50">
-                {caption}
-              </Sans>
-            </Box>
-          </Flex>
-          <ChevronIcon color={color("black10")} />
+          <Icon />
+          <Spacer mr={2} />
+          <Box>
+            <Sans size="4" color="black100">
+              {title}
+            </Sans>
+            <Sans size="4" color="black50">
+              {caption}
+            </Sans>
+          </Box>
         </Flex>
       </TouchableOpacity>
-    </Box>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled(Box)`
+  background-color: ${color("black04")};
+  border-radius: 8;
+`

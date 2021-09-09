@@ -1,52 +1,37 @@
-import { Sans, Separator } from "App/Components"
+import { Flex, Separator, Sans } from "App/Components"
 import { PauseStatus, RESUME_MEMBERSHIP } from "App/Components/Pause/PauseButtons"
-import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
-import {
-  GetBag_NoCache_Query as GetBag_NoCache_Query_Type
-} from "App/generated/GetBag_NoCache_Query"
+import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { color } from "App/utils"
+import { color, space } from "App/utils"
 import { DarkInstagram, Stylist } from "Assets/svgs"
-import gql from "graphql-tag"
-import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
 import React, { useState } from "react"
-import { Linking } from "react-native"
-
+import { Dimensions, Linking, ScrollView } from "react-native"
 import { useMutation } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { Box, ProductBuyAlertTab, ProductBuyAlertTabType, Spacer } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
-
 import { GetBag_NoCache_Query } from "../BagQueries"
 import { BagCardButton } from "./BagCardButton"
 import { BagItem } from "./BagItem"
 import { BagTabHeader } from "./BagTabHeader"
 import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
 import { EmptyBagItem } from "./EmptyBagItem"
+import { assign, fill } from "lodash"
 
-export const BagTabCachedFragment_Query = gql`
-  fragment BagTabCachedFragment_Query on Query {
-    paymentPlans(where: { status: "active" }, orderBy: itemCount_DESC) {
-      id
-      itemCount
-    }
-  }
-`
+const dimensions = Dimensions.get("window")
+const windowWidth = dimensions.width
 
 export const BagTab: React.FC<{
   bagItems
   pauseStatus: PauseStatus
   data: GetBag_NoCache_Query_Type
-  itemCount: number
-  cachedData: GetBag_Cached_Query_Type
   items
-  setItemCount: (count: number) => void
   deleteBagItem
   removeFromBagAndSaveItem
-}> = ({ bagItems, pauseStatus, data, itemCount, deleteBagItem, removeFromBagAndSaveItem }) => {
+}> = ({ bagItems, pauseStatus, data, deleteBagItem, removeFromBagAndSaveItem }) => {
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const { bottomSheetSetProps, bottomSheetSnapToIndex } = useBottomSheetContext()
@@ -55,9 +40,6 @@ export const BagTab: React.FC<{
   const me = data?.me
   const activeReservation = me?.activeReservation
   const hasActiveReservation = !!activeReservation
-
-  const paddedItems =
-    assign(fill(new Array(Math.min(itemCount, bagItems.length + 1)), { variantID: "", productID: "" }), bagItems) || []
 
   const [resumeSubscription] = useMutation(RESUME_MEMBERSHIP, {
     refetchQueries: [
@@ -124,7 +106,6 @@ export const BagTab: React.FC<{
   }
 
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
-  const showPendingMessage = pauseStatus === "pending" && !!pauseRequest?.pauseDate
   const isPaused = pauseStatus === "paused"
   const pauseType = pauseRequest?.pauseType
   const withOrWithoutDisplay = pauseType === "WithoutItems" ? "without items" : "with items"
@@ -133,16 +114,22 @@ export const BagTab: React.FC<{
   const updatedMoreThan24HoursAgo =
     activeReservation?.updatedAt && DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
   const atHome = status && status === "Delivered" && updatedMoreThan24HoursAgo
+  const paddedItems = assign(fill(new Array(bagItems.length + 1), { variantID: "", productID: "" }), bagItems) || []
+
+  const showShareIGCard = hasActiveReservation && !isPaused
+  const showBottomCards = !isPaused
+
+  const showBagItems = bagItems?.length > 0
 
   return (
-    <Box>
+    <Flex height="100%">
       <BagTabHeader atHome={atHome} me={me} />
       {isPaused && (
         <>
           <Box px={2}>
             <Separator color={color("black10")} />
           </Box>
-          <Box px={2} py={3}>
+          <Box px={2} py={2}>
             <Sans size="4" color="black50">
               {`Your membership is paused ${withOrWithoutDisplay} until ${DateTime.fromISO(
                 pauseRequest.resumeDate
@@ -170,79 +157,86 @@ export const BagTab: React.FC<{
           </Box>
         </>
       )}
-      <Separator />
-      {paddedItems?.map((bagItem, index) => {
-        if (pausedWithoutItems) {
-          return null
-        }
-        const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
-        const spacing = isReserved ? "7px" : 2
-        return bagItem?.productID?.length > 0 ? (
-          <Box key={bagItem.id} px={2}>
-            {index !== 0 && (
-              <>
-                <Spacer mb={spacing} />
-                {!isReserved && <Separator color={color("black10")} />}
-              </>
-            )}
-            <Spacer mb={index === 0 ? 3 : spacing} />
-            <BagItem
-              deleteBagItem={deleteBagItem}
-              removeFromBagAndSaveItem={removeFromBagAndSaveItem}
-              index={index}
-              bagItem={bagItem}
-              navigation={navigation}
-              onShowBuyBottomSheet={() => onShowBuyBottomSheet(bagItem)}
-            />
-          </Box>
-        ) : (
-          <Box key={index} px={2}>
-            <Spacer mb={3} />
-            {index !== 0 && (
-              <>
-                <Separator color={color("black10")} />
-                <Spacer mb={3} />
-              </>
-            )}
-            <EmptyBagItem index={index} navigation={navigation} />
-          </Box>
-        )
-      })}
-      <Spacer mb={3} />
-      {!pausedWithoutItems && <Separator />}
-      <Spacer mb={3} />
 
-      {hasActiveReservation && !isPaused && (
-        <>
-          <BagCardButton
-            Icon={DarkInstagram}
-            title="Share to IG Stories"
-            caption="Post your new styles to Instagram"
-            onPress={() =>
-              navigation.navigate("Modal", {
-                screen: "ShareReservationToIGModal",
-                params: { reservationID: activeReservation?.id },
-              })
-            }
-          />
-          <Spacer mb={3} />
-          <Separator />
-          <Spacer mb={3} />
-        </>
+      {!showBagItems && (
+        <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
+          <EmptyBagItem text="Add an item" navigation={navigation} />
+        </Flex>
       )}
-      {!isPaused && (
-        <BagCardButton
-          Icon={Stylist}
-          title="Chat with our stylist"
-          caption="Get a personalized consultation"
-          onPress={() =>
-            Linking.openURL(
-              "mailto:membership@seasons.nyc?subject=Chat%20with%20a%20stylist&body=I%20would%20like%20to%20chat%20with%20a%20seasons%20stylist%20to%20help%20find%20items%20that%20suit%20me.%20Thanks!"
-            )
+
+      {showBagItems &&
+        paddedItems?.map((bagItem, index) => {
+          if (pausedWithoutItems) {
+            return null
           }
-        />
+          const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
+          const spacing = isReserved ? "7px" : 2
+          return bagItem?.productID?.length > 0 ? (
+            <Box key={bagItem.id}>
+              {index !== 0 && (
+                <>
+                  <Spacer mb={spacing} />
+                  {!isReserved && <Separator color={color("black10")} />}
+                </>
+              )}
+              <Spacer mb={index === 0 ? 3 : spacing} />
+              <Box px={2}>
+                <BagItem
+                  deleteBagItem={deleteBagItem}
+                  removeFromBagAndSaveItem={removeFromBagAndSaveItem}
+                  index={index}
+                  bagItem={bagItem}
+                  navigation={navigation}
+                  onShowBuyBottomSheet={() => onShowBuyBottomSheet(bagItem)}
+                />
+              </Box>
+            </Box>
+          ) : (
+            <Box>
+              <Spacer mb={2} />
+              <Separator />
+              <EmptyBagItem text="Add another item" navigation={navigation} />
+            </Box>
+          )
+        })}
+
+      {showBottomCards && (
+        <Box>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+            {showShareIGCard && (
+              <Box ml={2} mr={1}>
+                <BagCardButton
+                  Icon={DarkInstagram}
+                  title="Share to IG Stories"
+                  caption="Post your new styles to Instagram"
+                  onPress={() =>
+                    navigation.navigate("Modal", {
+                      screen: "ShareReservationToIGModal",
+                      params: { reservationID: activeReservation?.id },
+                    })
+                  }
+                />
+              </Box>
+            )}
+            {!isPaused && (
+              <Box ml={showShareIGCard ? 0 : 2} mr={1}>
+                <BagCardButton
+                  width={showShareIGCard ? "auto" : windowWidth - space(4)}
+                  Icon={Stylist}
+                  title="Chat with our stylist"
+                  caption="Get a personalized consultation"
+                  onPress={() =>
+                    Linking.openURL(
+                      "mailto:membership@seasons.nyc?subject=Chat%20with%20a%20stylist&body=I%20would%20like%20to%20chat%20with%20a%20seasons%20stylist%20to%20help%20find%20items%20that%20suit%20me.%20Thanks!"
+                    )
+                  }
+                />
+              </Box>
+            )}
+          </ScrollView>
+          {showBagItems && <Spacer mb={90} />}
+        </Box>
       )}
-      <Spacer mb={10} />
-    </Box>
+    </Flex>
   )
 }

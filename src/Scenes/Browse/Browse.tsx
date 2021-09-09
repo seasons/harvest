@@ -15,6 +15,7 @@ import { color, Sans, Spacer, ProductGridItem } from "@seasons/eclipse"
 import { BrowseFilters, EMPTY_BROWSE_FILTERS } from "./Filters"
 import { GET_BROWSE_PRODUCTS } from "./queries/browseQueries"
 import { useScrollToTop } from "@react-navigation/native"
+import { useAuthContext } from "App/Navigation/AuthContext"
 
 const PAGE_LENGTH = 16
 
@@ -29,6 +30,7 @@ export const Browse = screenTrack()((props: any) => {
   const routeCategoryIdx = categoryItems.findIndex(({ slug }) => slug === routeCategorySlug)
   const tracking = useTracking()
   const scrollViewEl = useRef(null)
+  const { authState } = useAuthContext()
 
   useScrollToTop(scrollViewEl)
 
@@ -177,7 +179,12 @@ export const Browse = screenTrack()((props: any) => {
                 return (
                   <Box key={node?.id + index}>
                     {node?.id ? (
-                      <ProductGridItem showBrandName product={node} addLeftSpacing={index % numColumns !== 0} />
+                      <ProductGridItem
+                        showBrandName
+                        product={node}
+                        addLeftSpacing={index % numColumns !== 0}
+                        authState={authState}
+                      />
                     ) : (
                       <ProductGridItemSkeleton addLeftSpacing={index % numColumns !== 0} />
                     )}

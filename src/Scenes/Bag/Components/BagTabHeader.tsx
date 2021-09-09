@@ -172,7 +172,6 @@ export const BagTabHeader: React.FC<{
           </Sans>
         </Box>
       )}
-      <Spacer mb={3} />
     </Box>
   )
 }

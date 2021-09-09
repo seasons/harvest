@@ -82,7 +82,6 @@ export const CreateAccount_NoCache_Query = gql`
             id
             description
             tier
-            itemCount
           }
         }
         admissions {
@@ -114,7 +113,6 @@ export const CreateAccount_Cached_Query = gql`
       price
       planID
       tier
-      itemCount
     }
     howDidYouFindOutAboutUs: view(viewID: "HowDidYouFindOutAboutUs") {
       id

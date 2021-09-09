@@ -27,8 +27,7 @@ export const SavedItemsTab: React.FC<{
   hasActiveReservation
   bagIsFull
   loading: boolean
-  itemCount: number
-}> = ({ items, deleteBagItem, hasActiveReservation, bagIsFull, loading, itemCount }) => {
+}> = ({ items, deleteBagItem, hasActiveReservation, bagIsFull, loading }) => {
   const insets = useSafeAreaInsets()
   const wrapperHeight = height - insets.top - 140
 
@@ -46,7 +45,6 @@ export const SavedItemsTab: React.FC<{
         items.map((bagItem, index) => {
           return (
             <SavedItemRow
-              planItemCount={itemCount}
               key={index}
               bagItem={bagItem}
               deleteBagItem={deleteBagItem}
