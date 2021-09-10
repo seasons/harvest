@@ -1,21 +1,24 @@
-import { Box, Container, FixedBackArrow, Sans, Spacer, Separator, Flex } from "App/Components"
+import { Box, Container, FixedBackArrow, Sans, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import gql from "graphql-tag"
 import React, { useEffect, useState } from "react"
 import { useMutation, useQuery } from "@apollo/client"
 import { FlatList, Keyboard } from "react-native"
 import { Schema as TrackSchema, useTracking, screenTrack } from "App/utils/track"
-import { color } from "App/utils"
 import { Schema as NavigationSchema } from "App/Navigation"
-import { TouchableOpacity } from "react-native"
-import { useNavigation } from "@react-navigation/native"
-import { getAdjustedInvoiceTotal, formatInvoiceDate } from "./utils"
 import { PopUp } from "App/Components/PopUp"
 import stripe from "tipsi-stripe"
 import * as Sentry from "@sentry/react-native"
 import { PaymentMethods } from "./PaymentMethods"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GET_PAYMENT_DATA } from "./queries"
+import { PaymentHistorySection } from "./PaymentHistorySection"
+import { AccountSection } from "./AccountSection"
+
+enum SectionType {
+  PaymentHistory = "PaymentHistory",
+  AccountSection = "AccountSection",
+}
 
 export const createShippingAddress = (shippingAddress) => {
   const addressArray = []
@@ -45,67 +48,6 @@ export const createBillingAddress = (billingInfo) => {
   return addressArray
 }
 
-const AccountSection: React.FC<{ title: string; value: string | [string]; onEdit: () => void }> = ({
-  title,
-  value,
-  onEdit,
-}) => {
-  return (
-    <Box key={title} px={2}>
-      <Flex flexDirection="row" justifyContent={!!onEdit ? "space-between" : "flex-start"} alignItems="center">
-        <Sans size="4">{title}</Sans>
-        {!!onEdit && (
-          <TouchableOpacity onPress={onEdit}>
-            <Sans size="4" style={{ textDecorationLine: "underline" }}>
-              Edit
-            </Sans>
-          </TouchableOpacity>
-        )}
-      </Flex>
-      <Box mb={1} />
-      <Separator color={color("black10")} />
-      <Box mb={1} />
-      {Array.isArray(value) ? (
-        value.map((text) => (
-          <Sans key={text} size="4" color="black50">
-            {text}
-          </Sans>
-        ))
-      ) : (
-        <Sans size="4" color="black50">
-          {value}
-        </Sans>
-      )}
-      <Spacer mb={4} />
-    </Box>
-  )
-}
-
-const PaymentHistorySection: React.FC<{ title: string; value: any }> = ({ title, value }) => {
-  const navigation = useNavigation()
-  return (
-    <Box key={title} px={2}>
-      <Sans size="4">{title}</Sans>
-      <Box mb={1} />
-      <Separator color={color("black10")} />
-      {value?.map((a, i) => (
-        <Box key={i}>
-          <Spacer mb={3} />
-          <TouchableOpacity key={title} onPress={() => navigation.navigate("InvoiceDetail", { invoice: a })}>
-            <Flex flexDirection="row" style={{ flex: 1 }} justifyContent="space-between">
-              <Sans size="4">{formatInvoiceDate(a.dueDate)}</Sans>
-              <Sans size="4">{getAdjustedInvoiceTotal(a)}</Sans>
-            </Flex>
-          </TouchableOpacity>
-          <Spacer mb={3} />
-          <Separator color={color("black10")} />
-        </Box>
-      ))}
-      <Spacer mb={100} />
-    </Box>
-  )
-}
-
 export const PAYMENT_UPDATE = gql`
   mutation applePayUpdatePaymentMethod($planID: String!, $token: StripeToken!, $tokenType: String) {
     applePayUpdatePaymentMethod(planID: $planID, token: $token, tokenType: $tokenType)
@@ -125,6 +67,7 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
     // therefore we must check and refetch data if the user leaves this view
     const unsubscribe = navigation?.addListener("focus", () => {
       if (data) {
+        console.log("start pulling")
         startPolling(1500)
         setTimeout(stopPolling, 20000)
       }
@@ -191,6 +134,7 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
             shippingAddress,
           })
         },
+        type: SectionType.AccountSection,
       })
     }
 
@@ -202,6 +146,7 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
         onEdit: () => {
           setOpenPopUp(true)
         },
+        type: SectionType.AccountSection,
       })
 
       sections.push({
@@ -210,6 +155,7 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
         onEdit: () => {
           setOpenPopUp(true)
         },
+        type: SectionType.AccountSection,
       })
     }
 
@@ -224,13 +170,15 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
             shippingAddress,
           })
         },
+        type: SectionType.AccountSection,
       })
     }
 
-    if (customer?.invoices) {
+    if (customer?.invoices?.length > 0) {
       sections.push({
         title: "Payment history",
-        value: customer.invoices,
+        value: customer?.invoices,
+        type: SectionType.PaymentHistory,
       })
     }
   }
@@ -297,10 +245,12 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
   }
 
   const renderItem = (item) => {
-    if (item.title === "Payment history") {
-      return <PaymentHistorySection title={item.title} value={item.value} />
+    switch (item.type) {
+      case SectionType.AccountSection:
+        return <AccountSection title={item.title} value={item.value} onEdit={item.onEdit} />
+      case SectionType.PaymentHistory:
+        return <PaymentHistorySection title={item.title} value={item.value} />
     }
-    return <AccountSection title={item.title} value={item.value} onEdit={item.onEdit} />
   }
 
   return (

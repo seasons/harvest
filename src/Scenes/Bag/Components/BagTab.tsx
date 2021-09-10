@@ -142,7 +142,7 @@ export const BagTab: React.FC<{
                     return
                   }
                   setIsMutating(true)
-                  const subscriptionId = me?.customer?.invoices?.[0]?.subscriptionId || ""
+                  const subscriptionId = me?.customer?.membership?.subscription?.id
                   await resumeSubscription({
                     variables: {
                       subscriptionID: subscriptionId,
@@ -172,7 +172,7 @@ export const BagTab: React.FC<{
           const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
           const spacing = isReserved ? "7px" : 2
           return bagItem?.productID?.length > 0 ? (
-            <Box key={bagItem.id}>
+            <Box key={index}>
               {index !== 0 && (
                 <>
                   <Spacer mb={spacing} />
@@ -192,7 +192,7 @@ export const BagTab: React.FC<{
               </Box>
             </Box>
           ) : (
-            <Box>
+            <Box key={index}>
               <Spacer mb={2} />
               <Separator />
               <EmptyBagItem text="Add another item" navigation={navigation} />

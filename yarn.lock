@@ -3445,10 +3445,10 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@seasons/eclipse@1.4.3":
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.4.3.tgz#f0e78f17c01afe09b1c43cbfa83e22d9665e0468"
-  integrity sha512-hTPxSbsuIzyGT3EJ+EuY6+fPUADfQKqSOMWtfs0RniVCp1tHFDFLawJyeqrFeROExgutGxJ5u1AM4F33tiahRw==
+"@seasons/eclipse@1.4.5":
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.4.5.tgz#20440b9925611bf08d48a38bb69841ba60893f5f"
+  integrity sha512-OlrOhebQvqVfT/FUYaA2jQjtn0AXAEztrwHGHjlpx120y7+s4V86/7677kiRpjDJcUdfFZiT1stdE2YymrB4Eg==
   dependencies:
     dripsy "^1.4.6"
 

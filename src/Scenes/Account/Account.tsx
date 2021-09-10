@@ -317,13 +317,7 @@ export const Account = screenTrack()(() => {
                 actionName: Schema.ActionNames.LearnMoreTapped,
                 actionType: Schema.ActionTypes.Tap,
               })
-              navigation.navigate("Modal", {
-                screen: NavigationSchema.PageNames.CreateAccountModal,
-                params: {
-                  initialState: State.ChoosePlan,
-                  initialUserState: UserState.Admitted,
-                },
-              })
+              navigation.navigate("Faq")
             }}
             onPressChoosePlan={() => {
               tracking.trackEvent({

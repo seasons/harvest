@@ -146,7 +146,7 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
             length: 24,
             separator: " ",
           }),
-          amount: centsToDollars(a.amount),
+          amount: centsToDollars(a.price),
           date: formattedInvoiceDueDate,
         })),
         ...(totalTaxes
@@ -160,7 +160,7 @@ export const InvoiceDetail = screenTrack()(({ navigation, route }) => {
           : []),
         ...(invoice.discounts?.map((a) => ({
           name: a.description,
-          amount: "-" + centsToDollars(a.amount),
+          amount: "-" + centsToDollars(a.price),
           date: formattedInvoiceDueDate,
         })) || []),
         ...(invoice.creditNotes?.map((a) => ({
