@@ -40,8 +40,6 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
   const [selectedVariantID, setSelectedVariantID] = useState(null)
   const navigation = useNavigation()
   const product = route?.params?.product
-  const showPopUp = route?.params?.showPopUp
-  const hidePopUp = route?.params?.hidePopUp
   const [saveItem] = useMutation(SAVE_ITEM, {
     refetchQueries: [
       {
@@ -60,7 +58,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
     ],
   })
 
-  if (!product || !showPopUp || !hidePopUp) {
+  if (!product) {
     return (
       <>
         <FixedBackArrow navigation={navigation} />
