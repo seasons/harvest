@@ -10,7 +10,7 @@ import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { Check } from "Assets/svgs"
 import gql from "graphql-tag"
-import { get, head } from "lodash"
+import { get, head, truncate } from "lodash"
 import React, { useState } from "react"
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
@@ -189,6 +189,12 @@ export const BagItem: React.FC<BagItemProps> = ({
           <Sans size="3">{`${index + 1}.`}</Sans>
           <Spacer mb={1} />
           <Sans size="3">{product?.brand?.name}</Sans>
+          <Sans size="3" color="black50">
+            {truncate(product?.name, {
+              length: 22,
+              separator: "...",
+            })}
+          </Sans>
           <ProductPriceText size="3" product={product} />
           <Sans size="3" color="black50">
             Size {variantSize}
@@ -220,6 +226,12 @@ export const BagItem: React.FC<BagItemProps> = ({
         <Box>
           <Box style={{ width: "100%" }}>
             <Sans size="3">{`${index + 1}. ${product?.brand?.name}`}</Sans>
+            <Sans size="3" color="black50">
+              {truncate(product?.name, {
+                length: 22,
+                separator: "...",
+              })}
+            </Sans>
             <ProductPriceText size="3" product={product} />
             <Sans size="3" color="black50">
               Size {variantSize}
