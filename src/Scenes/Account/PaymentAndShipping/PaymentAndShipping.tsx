@@ -67,7 +67,6 @@ export const PaymentAndShipping = screenTrack()(({ navigation }) => {
     // therefore we must check and refetch data if the user leaves this view
     const unsubscribe = navigation?.addListener("focus", () => {
       if (data) {
-        console.log("start pulling")
         startPolling(1500)
         setTimeout(stopPolling, 20000)
       }
