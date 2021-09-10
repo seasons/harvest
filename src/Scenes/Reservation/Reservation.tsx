@@ -1,14 +1,18 @@
 import {
-  Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer,
-  SuggestedAddressPopupComponent
+  Box,
+  Container,
+  FixedBackArrow,
+  Flex,
+  Sans,
+  Separator,
+  Spacer,
+  SuggestedAddressPopupComponent,
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { SectionHeader } from "App/Components/SectionHeader"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import {
-  UPDATE_PHONE_AND_SHIPPING
-} from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
+import { UPDATE_PHONE_AND_SHIPPING } from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
 import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
@@ -127,6 +131,7 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
     onError: (error) => {
+      console.log("error", error)
       let popUpData = {
         title: "Sorry!",
         note: "We couldn't process your order because of an unexpected error, please try again later",
