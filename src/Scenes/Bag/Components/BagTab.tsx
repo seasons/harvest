@@ -20,6 +20,7 @@ import { BagTabHeader } from "./BagTabHeader"
 import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
 import { EmptyBagItem } from "./EmptyBagItem"
 import { assign, fill } from "lodash"
+import { MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
 
 const dimensions = Dimensions.get("window")
 const windowWidth = dimensions.width
@@ -114,7 +115,11 @@ export const BagTab: React.FC<{
   const updatedMoreThan24HoursAgo =
     activeReservation?.updatedAt && DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
   const atHome = status && status === "Delivered" && updatedMoreThan24HoursAgo
-  const paddedItems = assign(fill(new Array(bagItems.length + 1), { variantID: "", productID: "" }), bagItems) || []
+  const paddedItems =
+    assign(
+      fill(new Array(Math.min(MAXIMUM_ITEM_COUNT, bagItems.length + 1)), { variantID: "", productID: "" }),
+      bagItems
+    ) || []
 
   const showShareIGCard = hasActiveReservation && !isPaused
   const showBottomCards = !isPaused
@@ -172,7 +177,7 @@ export const BagTab: React.FC<{
           const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
           const spacing = isReserved ? "7px" : 2
           return bagItem?.productID?.length > 0 ? (
-            <Box key={index}>
+            <Box key={index} pb={3}>
               {index !== 0 && (
                 <>
                   <Spacer mb={spacing} />
