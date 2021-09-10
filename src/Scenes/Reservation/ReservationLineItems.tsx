@@ -1,21 +1,16 @@
-import { Box, Flex, Sans, Spacer } from "App/Components"
+import { Box, Flex, Sans, Separator, Spacer } from "App/Components"
 import { SectionHeader } from "App/Components/SectionHeader"
+import { formatPrice } from "App/utils/formatPrice"
 import React from "react"
 
-export const formatPrice = (price) =>
-  (price / 100 || 0).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  })
-
 export const ReservationLineItems = ({ lineItems }) => {
-  const items = lineItems.filter((l) => l.recordType !== "Total" && l.price > 0)
-  const totalLineItem = lineItems.filter((l) => l.recordType === "Total")?.[0]
-  const total = totalLineItem.price
+  const check = (l) => ["Credit", "Total"].includes(l.recordType)
+  const items = lineItems.filter((l) => !check(l))
+  const totalLineItems = lineItems.filter(check)
 
   return (
     <Box>
-      <SectionHeader title="30-day order summary" />
+      <SectionHeader title="Order summary" />
       <Spacer mb={1} />
 
       <Box mb={4}>
@@ -31,15 +26,24 @@ export const ReservationLineItems = ({ lineItems }) => {
             </Flex>
           )
         })}
+        <Spacer mt={1} />
+        <Separator />
+        <Spacer mt={1} />
+        {totalLineItems.map((lineItem, index) => {
+          const isLast = totalLineItems.length - 1 === index
+          const color = isLast ? "black100" : "black50"
 
-        <Flex flexDirection="row" width="100%" justifyContent="space-between" mb={1}>
-          <Sans size="4" color="black100">
-            Total
-          </Sans>
-          <Sans size="4" color="black100">
-            {formatPrice(total)}
-          </Sans>
-        </Flex>
+          return (
+            <Flex flexDirection="row" width="100%" justifyContent="space-between" key={index} mb={1}>
+              <Sans size="4" color={color}>
+                {lineItem.name}
+              </Sans>
+              <Sans size="4" color={color}>
+                {`${formatPrice(lineItem.price)}`}
+              </Sans>
+            </Flex>
+          )
+        })}
       </Box>
     </Box>
   )

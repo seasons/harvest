@@ -1,25 +1,30 @@
-import { Flex, Separator, Sans } from "App/Components"
+import { Flex, Sans, Separator } from "App/Components"
 import { PauseStatus, RESUME_MEMBERSHIP } from "App/Components/Pause/PauseButtons"
-import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
+import {
+  GetBag_NoCache_Query as GetBag_NoCache_Query_Type
+} from "App/generated/GetBag_NoCache_Query"
+import { MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { color, space } from "App/utils"
 import { DarkInstagram, Stylist } from "Assets/svgs"
+import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
 import React, { useState } from "react"
 import { Dimensions, Linking, ScrollView } from "react-native"
+
 import { useMutation } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { Box, ProductBuyAlertTab, ProductBuyAlertTabType, Spacer } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
+
 import { GetBag_NoCache_Query } from "../BagQueries"
 import { BagCardButton } from "./BagCardButton"
 import { BagItem } from "./BagItem"
 import { BagTabHeader } from "./BagTabHeader"
 import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
 import { EmptyBagItem } from "./EmptyBagItem"
-import { assign, fill } from "lodash"
 
 const dimensions = Dimensions.get("window")
 const windowWidth = dimensions.width
@@ -114,7 +119,10 @@ export const BagTab: React.FC<{
   const updatedMoreThan24HoursAgo =
     activeReservation?.updatedAt && DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
   const atHome = status && status === "Delivered" && updatedMoreThan24HoursAgo
-  const paddedItems = assign(fill(new Array(bagItems.length + 1), { variantID: "", productID: "" }), bagItems) || []
+
+  const itemCount = me?.customer?.membership?.plan?.itemCount || MAXIMUM_ITEM_COUNT
+  const paddedItems =
+    assign(fill(new Array(Math.min(bagItems.length + 1, itemCount)), { variantID: "", productID: "" }), bagItems) || []
 
   const showShareIGCard = hasActiveReservation && !isPaused
   const showBottomCards = !isPaused
@@ -201,7 +209,7 @@ export const BagTab: React.FC<{
         })}
 
       {showBottomCards && (
-        <Box>
+        <Box mt={3}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
             {showShareIGCard && (
               <Box ml={2} mr={1}>
