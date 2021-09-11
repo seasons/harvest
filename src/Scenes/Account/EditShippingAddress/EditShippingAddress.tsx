@@ -191,7 +191,7 @@ export const EditShippingAddress: React.FC<{
           <Spacer mb={2} />
           <Flex p={2} flexDirection="row">
             <Box style={{ flex: 1 }}>
-              <Button block variant="primaryWhite" size="large" onPress={navigation.goBack}>
+              <Button block variant="primaryWhite" onPress={navigation.goBack}>
                 Cancel
               </Button>
             </Box>
@@ -210,7 +210,6 @@ export const EditShippingAddress: React.FC<{
                 }
                 loading={isMutating}
                 onPress={handleUpdateAddress}
-                size="large"
                 variant="primaryBlack"
               >
                 Save

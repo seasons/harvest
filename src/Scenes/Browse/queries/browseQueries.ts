@@ -13,7 +13,7 @@ export const GET_BROWSE_PRODUCTS = gql`
     $available: Boolean
     $forSaleOnly: Boolean
   ) {
-    categories(where: { visible: true }, orderBy: updatedAt_ASC) {
+    categories(where: { visible: true }, orderBy: position_ASC) {
       id
       slug
       name
@@ -21,6 +21,7 @@ export const GET_BROWSE_PRODUCTS = gql`
         id
         slug
       }
+      position
     }
     brands(orderBy: name_ASC, where: { products_some: { id_not: null }, name_not: null, published: true }) {
       id

@@ -1,10 +1,12 @@
 import { Button } from "App/Components"
-import React from "react"
-import { Box, Flex, Sans, Separator } from "@seasons/eclipse"
+import { GetBag_NoCache_Query_me_bag } from "App/generated/GetBag_NoCache_Query"
 import { color } from "App/utils"
+import React from "react"
+
+import { Box, Flex, Sans, Separator } from "@seasons/eclipse"
 
 interface BagBottomBarProps {
-  bagItems: { productVariant: any }[]
+  bagItems: GetBag_NoCache_Query_me_bag[]
   onReserve: () => void
 }
 
@@ -13,31 +15,31 @@ export const BagBottomBar: React.FC<BagBottomBarProps> = ({ bagItems, onReserve 
     return null
   }
 
-  const rentalPrices = bagItems.map((b) => b.productVariant?.product?.rentalPrice) || []
+  const rentalPrices =
+    bagItems.filter((a) => a.status === "Added").map((b) => b.productVariant?.product?.rentalPrice) || []
   const totalRentalPrice = rentalPrices.reduce((acc, curr) => acc + curr, 0)
 
   return (
     <>
       <Separator />
-      <Box height={80} pt={2} px={2} style={{ backgroundColor: color("white100") }}>
+      <Box py={2} px={2} style={{ backgroundColor: color("white100") }}>
         <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
           <Box>
-            <Sans size="4" color="black50">
+            <Sans size="3" color="black50">
               Estimated total
             </Sans>
-            <Flex flexDirection="row" alignItems="center">
+            <Flex flexDirection="row" alignItems="flex-end">
               <Sans size="7">${totalRentalPrice}</Sans>
-              <Sans size="4" color="black50" mx={1}>
-                + Tax
-              </Sans>
+              <Box style={{ paddingBottom: 3 }}>
+                <Sans size="3" color="black50" mx={1}>
+                  + Tax
+                </Sans>
+              </Box>
             </Flex>
           </Box>
-
-          <Box>
-            <Button variant="primaryBlack" onPress={onReserve}>
-              Reserve
-            </Button>
-          </Box>
+          <Button variant="primaryBlack" onPress={onReserve}>
+            Reserve
+          </Button>
         </Flex>
       </Box>
     </>

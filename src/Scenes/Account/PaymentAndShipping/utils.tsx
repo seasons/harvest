@@ -7,6 +7,6 @@ export const formatInvoiceDate = (isoString, withYear = true) => {
 
 export const getAdjustedInvoiceTotal = (invoice) =>
   centsToDollars(
-    invoice.amount -
+    invoice.price -
       (invoice.creditNotes?.reduce((totalRefunded, curCreditNote) => totalRefunded + curCreditNote.total, 0) || 0)
   )

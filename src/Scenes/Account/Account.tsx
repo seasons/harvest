@@ -90,7 +90,7 @@ export const GET_USER = gql`
 
 export const Account = screenTrack()(() => {
   const { authState, signOut } = useAuthContext()
-  const { previousData, data = previousData, refetch } = useQuery(GET_USER)
+  const { previousData, data = previousData, refetch, error } = useQuery(GET_USER)
   const scrollViewRef = React.useRef(null)
   const tracking = useTracking()
   const navigation = useNavigation()
@@ -317,13 +317,7 @@ export const Account = screenTrack()(() => {
                 actionName: Schema.ActionNames.LearnMoreTapped,
                 actionType: Schema.ActionTypes.Tap,
               })
-              navigation.navigate("Modal", {
-                screen: NavigationSchema.PageNames.CreateAccountModal,
-                params: {
-                  initialState: State.ChoosePlan,
-                  initialUserState: UserState.Admitted,
-                },
-              })
+              navigation.navigate("Faq")
             }}
             onPressChoosePlan={() => {
               tracking.trackEvent({

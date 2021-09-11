@@ -31,7 +31,7 @@ export const GET_PAYMENT_DATA = gql`
           status
           closingDate
           dueDate
-          amount
+          price
           lineItems {
             id
             dateFrom
@@ -40,10 +40,7 @@ export const GET_PAYMENT_DATA = gql`
             taxRate
             discountAmount
             description
-            entityDescription
-            entityType
-            entityId
-            amount
+            price
           }
           billingAddress {
             firstName

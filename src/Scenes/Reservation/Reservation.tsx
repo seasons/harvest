@@ -1,14 +1,18 @@
 import {
-  Box, Container, FixedBackArrow, FixedButton, Flex, Sans, Separator, Spacer,
-  SuggestedAddressPopupComponent
+  Box,
+  Container,
+  FixedBackArrow,
+  Flex,
+  Sans,
+  Separator,
+  Spacer,
+  SuggestedAddressPopupComponent,
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { SectionHeader } from "App/Components/SectionHeader"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import {
-  UPDATE_PHONE_AND_SHIPPING
-} from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
+import { UPDATE_PHONE_AND_SHIPPING } from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
 import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
@@ -44,14 +48,21 @@ const GET_CUSTOMER = gql`
         lastName
         email
       }
-      bag(status: Added) {
+      bag {
         id
         productVariant {
           id
           ...BagItemProductVariant
         }
       }
-      reservationLineItems {
+      newBagItems: bag(status: Added) {
+        id
+        productVariant {
+          id
+          ...BagItemProductVariant
+        }
+      }
+      reservationLineItems(filterBy: NewItems) {
         id
         name
         price
@@ -127,6 +138,7 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
     onError: (error) => {
+      console.log("error", error)
       let popUpData = {
         title: "Sorry!",
         note: "We couldn't process your order because of an unexpected error, please try again later",
@@ -171,7 +183,6 @@ export const Reservation = screenTrack()((props) => {
   const me = data?.me
   const customer = me?.customer
   const address = me?.customer?.detail?.shippingAddress
-
   const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
 
   useEffect(() => {
@@ -195,6 +206,7 @@ export const Reservation = screenTrack()((props) => {
   const phoneNumber = customer?.detail?.phoneNumber
   const billingInfo = customer?.billingInfo
   const items = me?.bag
+  const newBagItems = me?.newBagItems
 
   if (!customer || !items || !address) {
     return (
@@ -288,8 +300,8 @@ export const Reservation = screenTrack()((props) => {
             <Box mb={5}>
               <SectionHeader title="Bag items" />
               <Box mt={1} mb={4}>
-                {!!items &&
-                  items.map((item, i) => {
+                {!!newBagItems &&
+                  newBagItems.map((item, i) => {
                     return (
                       <Box key={item.id}>
                         <ReservationItem index={i} bagItem={item} navigation={props.navigation} />

@@ -9,7 +9,7 @@ import { useMutation } from "@apollo/client"
 import { ADD_TO_BAG, GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { GET_PRODUCT } from "../Queries"
-import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
+import { MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useNavigation } from "@react-navigation/native"
 import { CheckCircled } from "Assets/svgs"
@@ -85,9 +85,8 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
 
   const sharedOnComplete = (res) => {
     setShowSizeWarning(false)
-    const itemCount = me?.customer?.membership?.plan?.itemCount || DEFAULT_ITEM_COUNT
     const bagItemCount = authState?.isSignedIn ? me?.bag?.length : res.addOrRemoveFromLocalBag.length
-    if (itemCount && bagItemCount && bagItemCount >= itemCount && isUserSignedIn) {
+    if (bagItemCount >= MAXIMUM_ITEM_COUNT && isUserSignedIn) {
       showPopUp({
         icon: <CheckCircled />,
         title: "Added to bag",
