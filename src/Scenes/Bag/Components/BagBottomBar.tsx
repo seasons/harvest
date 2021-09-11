@@ -1,10 +1,12 @@
 import { Button } from "App/Components"
-import React from "react"
-import { Box, Flex, Sans, Separator } from "@seasons/eclipse"
+import { GetBag_NoCache_Query_me_bag } from "App/generated/GetBag_NoCache_Query"
 import { color } from "App/utils"
+import React from "react"
+
+import { Box, Flex, Sans, Separator } from "@seasons/eclipse"
 
 interface BagBottomBarProps {
-  bagItems: { productVariant: any }[]
+  bagItems: GetBag_NoCache_Query_me_bag[]
   onReserve: () => void
 }
 
@@ -13,7 +15,8 @@ export const BagBottomBar: React.FC<BagBottomBarProps> = ({ bagItems, onReserve 
     return null
   }
 
-  const rentalPrices = bagItems.map((b) => b.productVariant?.product?.rentalPrice) || []
+  const rentalPrices =
+    bagItems.filter((a) => a.status === "Added").map((b) => b.productVariant?.product?.rentalPrice) || []
   const totalRentalPrice = rentalPrices.reduce((acc, curr) => acc + curr, 0)
 
   return (

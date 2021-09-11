@@ -48,14 +48,21 @@ const GET_CUSTOMER = gql`
         lastName
         email
       }
-      bag(status: Added) {
+      bag {
         id
         productVariant {
           id
           ...BagItemProductVariant
         }
       }
-      reservationLineItems {
+      newBagItems: bag(status: Added) {
+        id
+        productVariant {
+          id
+          ...BagItemProductVariant
+        }
+      }
+      reservationLineItems(filterBy: NewItems) {
         id
         name
         price
@@ -199,6 +206,7 @@ export const Reservation = screenTrack()((props) => {
   const phoneNumber = customer?.detail?.phoneNumber
   const billingInfo = customer?.billingInfo
   const items = me?.bag
+  const newBagItems = me?.newBagItems
 
   if (!customer || !items || !address) {
     return (
@@ -292,8 +300,8 @@ export const Reservation = screenTrack()((props) => {
             <Box mb={5}>
               <SectionHeader title="Bag items" />
               <Box mt={1} mb={4}>
-                {!!items &&
-                  items.map((item, i) => {
+                {!!newBagItems &&
+                  newBagItems.map((item, i) => {
                     return (
                       <Box key={item.id}>
                         <ReservationItem index={i} bagItem={item} navigation={props.navigation} />
