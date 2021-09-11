@@ -3,7 +3,7 @@ import React from "react"
 import { useQuery } from "@apollo/client"
 import { ScrollView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Box, Container, FixedBackArrow, Flex, Sans, SectionHeader, Separator, Spacer } from "App/Components"
+import { Box, Container, FixedBackArrow, Flex, Sans, SectionHeader, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
@@ -20,7 +20,6 @@ export const GET_MEMBERSHIP_INFO = gql`
         status
         invoices {
           id
-          subscriptionId
           dueDate
         }
         membership {
@@ -90,7 +89,7 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
           <Spacer mb={4} />
           {!!plan?.price && (
             <>
-              <SectionHeader title="What you're pay" />
+              <SectionHeader title="What you're paying" />
               <Spacer mb={1} />
               <Sans size="4" color={color("black50")}>
                 {`$${plan.price / 100} / per ${payPeriod}`}

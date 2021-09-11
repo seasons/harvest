@@ -100,7 +100,7 @@ export const PauseButtons: React.FC<{
     },
   })
 
-  const subscriptionID = customer?.invoices?.[0]?.subscriptionId || ""
+  const subscriptionID = customer?.membership?.subscription?.id
 
   const toggleSubscriptionStatus = async () => {
     if (isMutating) {
