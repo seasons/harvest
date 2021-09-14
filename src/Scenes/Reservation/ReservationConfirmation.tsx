@@ -122,8 +122,6 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const shippingOption = reservation?.shippingOption
   const shippingDisplayText = shippingOption?.shippingMethod?.displayText
   const lineItems = reservation?.lineItems
-  const totalPrice = last(lineItems)?.price || 0
-  console.log(lineItems)
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
@@ -178,7 +176,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
                   )}
                 </>
               }
-              bottomSpacing={3}
+              bottomSpacing={2}
             />
           </Box>
           <Box pt={1}>
@@ -193,26 +191,11 @@ export const ReservationConfirmation = screenTrack()((props) => {
                   )}
                 </>
               }
+              bottomSpacing={5}
               hideSeparator
-              bottomSpacing={4}
             />
           </Box>
-          <Box pt={1}>
-            <ReservationSectionHeader
-              title="Total"
-              content={
-                <>
-                  {!!totalPrice && (
-                    <Sans size="4" color="black100" ml="auto" textAlign="right">
-                      {formatPrice(totalPrice)}
-                    </Sans>
-                  )}
-                </>
-              }
-              hideSeparator
-              bottomSpacing={4}
-            />
-          </Box>
+
           <Box mb={5}>
             <ReservationSectionHeader title="Items" />
             <Box mt={1} mb={4}>
