@@ -4,17 +4,8 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
 import {
-  DocumentWithText,
-  Envelope,
-  Instagram,
-  LogOutSVG,
-  ManageMembership,
-  MapPin,
-  MonocromeSeasonsLogo,
-  PersonalPreferences,
-  PrivacyPolicy,
-  SpeechBubble,
-  Star,
+  DocumentWithText, Envelope, Instagram, LogOutSVG, ManageMembership, MapPin, MonocromeSeasonsLogo,
+  PersonalPreferences, PrivacyPolicy, SpeechBubble, Star
 } from "Assets/svgs"
 import gql from "graphql-tag"
 import { DateTime } from "luxon"
@@ -22,15 +13,16 @@ import { default as React, useEffect } from "react"
 import { Linking, Platform, ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
 import Share from "react-native-share"
+
 import { useQuery } from "@apollo/client"
 import { useNavigation, useScrollToTop } from "@react-navigation/native"
-import { AuthorizedCTA, WaitlistedCTA } from "@seasons/eclipse"
-import { useNotificationBarContext } from "@seasons/eclipse"
+import { AuthorizedCTA, useNotificationBarContext, WaitlistedCTA } from "@seasons/eclipse"
+
 import { State, UserState } from "../CreateAccount/CreateAccount"
+import { CreditBalance, CreditBalanceFragment_Customer } from "./Components/CreditBalance"
 import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
-import { CreditBalance, CreditBalanceFragment_Customer } from "./Components/CreditBalance"
 
 export const GET_USER = gql`
   query GetUser {
