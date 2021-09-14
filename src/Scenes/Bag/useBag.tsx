@@ -15,7 +15,7 @@ export const useLocalBag = () => {
 
   const [getLocalBag, { data, refetch }] = useLazyQuery(GET_LOCAL_BAG_ITEMS, {
     variables: {
-      ids: ids?.map((i) => i.productID),
+      ids: ids?.map((i) => i.variantID),
     },
   })
 
@@ -25,10 +25,10 @@ export const useLocalBag = () => {
 
   return {
     bagItems:
-      data?.products.map((item, i) => ({
+      data?.productVariants?.map((item, i) => ({
         ...ids?.[i],
-        ...data?.products?.[i],
-        productVariant: item.variants[0],
+        ...data?.productVariants?.[i],
+        productVariant: item,
         status: "Added",
       })) || [],
     refetch,
