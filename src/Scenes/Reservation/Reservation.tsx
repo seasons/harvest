@@ -38,7 +38,7 @@ const RESERVE_ITEMS = gql`
 `
 
 const GET_CUSTOMER = gql`
-  query GetCustomer {
+  query GetCustomer($shippingCode: String) {
     me {
       id
       nextFreeSwapDate
@@ -62,7 +62,7 @@ const GET_CUSTOMER = gql`
           ...BagItemProductVariant
         }
       }
-      reservationLineItems(filterBy: NewItems) {
+      reservationLineItems(filterBy: NewItems, shippingCode: $shippingCode) {
         id
         name
         price
@@ -109,11 +109,17 @@ const GET_CUSTOMER = gql`
 
 export const Reservation = screenTrack()((props) => {
   const [isMutating, setIsMutating] = useState(false)
-  const [lineItems, setLineItems] = useState([])
   const tracking = useTracking()
   const navigation = useNavigation()
-  const { previousData, data = previousData } = useQuery(GET_CUSTOMER)
+
   const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
+  const [shippingCode, setShippingCode] = useState("UPSGround")
+
+  const { previousData, data = previousData } = useQuery(GET_CUSTOMER, {
+    variables: {
+      shippingCode: shippingCode || "UPSGround",
+    },
+  })
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [updatePhoneAndShippingAddress] = useMutation(UPDATE_PHONE_AND_SHIPPING, {
     onError: (error) => {
@@ -188,20 +194,9 @@ export const Reservation = screenTrack()((props) => {
   useEffect(() => {
     if (shippingOptions?.length > 0) {
       const selectedShippingOption = shippingOptions[shippingOptionIndex]
-      if (selectedShippingOption?.externalCost > 0) {
-        setLineItems([
-          ...lineItems,
-          {
-            name: "Shipping",
-            price: selectedShippingOption?.externalCost,
-            taxPrice: 0,
-          },
-        ])
-      } else {
-        setLineItems(lineItems.filter((item) => item.name !== "Shipping"))
-      }
+      setShippingCode(selectedShippingOption?.shippingMethod?.code)
     }
-  }, [shippingOptionIndex, setLineItems, shippingOptions])
+  }, [shippingOptionIndex, shippingOptions])
 
   const phoneNumber = customer?.detail?.phoneNumber
   const billingInfo = customer?.billingInfo

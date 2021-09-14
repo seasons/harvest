@@ -7,12 +7,6 @@ import styled from "styled-components"
 
 export const ShippingOption = ({ option, index, shippingOptionIndex, setShippingOptionIndex }) => {
   const method = option?.shippingMethod
-  let price
-  if (option?.externalCost === 0) {
-    price = "Free"
-  } else {
-    price = "$" + option?.externalCost / 100
-  }
   const selected = index === shippingOptionIndex
 
   return (
@@ -22,9 +16,6 @@ export const ShippingOption = ({ option, index, shippingOptionIndex, setShipping
           {method?.displayText}
         </Sans>
         <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
-          <Sans size="4" color="black100">
-            {price}
-          </Sans>
           <Spacer mr={1} />
           {selected ? <SmallCheckCircled /> : <EmptyCircle />}
         </Flex>

@@ -17,7 +17,7 @@ export const ReservationBottomBar: React.FC<ReservationBottomBarProps> = ({ line
   const total = totalLineItem?.price || 0
 
   return (
-    <Wrapper pb={2}>
+    <Wrapper>
       <Separator />
       <Box height={80} pt={2} px={2}>
         <Flex flexDirection="row" justifyContent="space-between" alignItems="center">

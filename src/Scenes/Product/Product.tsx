@@ -1,8 +1,12 @@
-import { Box, Container, FixedBackArrow, Flex, ProductCarousel, Sans, Spacer, VariantSizes } from "App/Components"
+import {
+  Box, Container, FixedBackArrow, Flex, ProductCarousel, Sans, Spacer, VariantSizes
+} from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
-import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generated/Product_NoCache_Query"
+import {
+  Product_NoCache_Query as Product_NoCache_Query_Type
+} from "App/generated/Product_NoCache_Query"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
@@ -20,11 +24,8 @@ import styled from "styled-components/native"
 
 import { useMutation, useQuery } from "@apollo/client"
 import {
-  ProductBuyCTA,
-  ProductBuyCTAFragment_Product,
-  ProductBuyCTAFragment_ProductVariant,
-  ProductConditionSection,
-  ProductConditionSectionFragment_PhysicalProductQualityReport,
+  ProductBuyCTA, ProductBuyCTAFragment_Product, ProductBuyCTAFragment_ProductVariant,
+  ProductConditionSection, ProductConditionSectionFragment_PhysicalProductQualityReport
 } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 
@@ -242,6 +243,10 @@ export const Product = screenTrack({
         },
       })
     }
+
+    if (data && product && productType === "Accessory") {
+      setSelectedVariant(product?.variants?.[0])
+    }
   }, [data, product])
 
   useEffect(() => {
@@ -444,12 +449,11 @@ export const Product = screenTrack({
         productType={productType}
       />
       {showNotifyMeMessage && (
-        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0 }}>
-          <Spacer pb={1} />
-          <Flex p={2} flexDirection="row" flexWrap="nowrap" justifyContent="center">
+        <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0, backgroundColor: "white" }}>
+          <Flex px={2} flexDirection="row" flexWrap="nowrap" justifyContent="center">
             <Sans size="4">{notifyButtonText}</Sans>
           </Flex>
-          <Spacer pb={2} />
+          <Spacer pb={4} />
         </FadeBottom2>
       )}
       <AnimatedOverlay pointerEvents={showVariantPicker ? "auto" : "none"} opacity={pickerTransition.overlayOpacity} />

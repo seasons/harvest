@@ -2,7 +2,9 @@ import React, { Component, ComponentType, ReactNode } from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import { animated, Spring } from "react-spring/renderprops-native.cjs"
 import styled from "styled-components/native"
+
 import { BlurView } from "@react-native-community/blur"
+
 import { TextCheckSVG } from "../../assets/svgs"
 import { Box, BoxProps } from "./Box"
 import { Flex } from "./Flex"
@@ -44,8 +46,9 @@ export interface ButtonProps extends BoxProps {
 
 export type ButtonVariant =
   | "primaryBlack"
-  | "secondaryWhite"
+  | "secondaryBlack"
   | "primaryWhite"
+  | "secondaryWhite"
   | "secondaryBlack"
   | "tertiaryBlack"
   | "tertiaryWhite"
@@ -72,6 +75,24 @@ export function getColorsForVariant(variant: ButtonVariant) {
         default: {
           backgroundColor: black100,
           borderColor: black100,
+          color: white100,
+        },
+        pressed: {
+          backgroundColor: black50,
+          borderColor: black50,
+          color: white100,
+        },
+        disabled: {
+          backgroundColor: black04,
+          borderColor: black04,
+          color: black50,
+        },
+      }
+    case "secondaryBlack":
+      return {
+        default: {
+          backgroundColor: black100,
+          borderColor: black50,
           color: white100,
         },
         pressed: {
