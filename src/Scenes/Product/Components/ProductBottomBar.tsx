@@ -133,7 +133,7 @@ export const ProductBottomBar: React.FC<Props> = ({
       <Flex flexDirection="column">
         <Animated.View style={{ zIndex: 30 }}>
           <SelectionBox>
-            <Flex px={2}>
+            <Flex>
               <Flex flexDirection="row" alignItems="flex-end">
                 <Sans size="7">${monthlyRental}</Sans>
                 <Sans size="3" color="black50">
