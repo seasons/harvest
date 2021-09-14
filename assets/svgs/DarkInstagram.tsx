@@ -1,5 +1,5 @@
 import * as React from "react"
-import Svg, { Circle, G, Path, Rect } from "react-native-svg"
+import Svg, { Circle, G, Rect } from "react-native-svg"
 
 /* SVGR has dropped some elements not supported by react-native-svg: title */
 

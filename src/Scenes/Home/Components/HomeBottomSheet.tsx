@@ -195,7 +195,15 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({
       case SectionType.ArchivalProducts:
         return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
       case SectionType.UpcomingProducts:
-        return <ProductsRail title="Upcoming releases" rightText={seasonAndYearText} items={item.results} />
+        return (
+          <ProductsRail
+            disableClickThrough
+            large
+            title="Upcoming releases"
+            rightText={seasonAndYearText}
+            items={item.results}
+          />
+        )
       case SectionType.Collection:
         return (
           <ProductsRail
