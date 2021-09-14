@@ -1,6 +1,7 @@
-import { ApolloCache, Resolvers } from "@apollo/client"
 import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 import gql from "graphql-tag"
+
+import { ApolloCache, Resolvers } from "@apollo/client"
 
 export const typeDefs = gql`
   type LocalProduct {
@@ -51,7 +52,9 @@ export const resolvers: any = {
       })
       if (queryResult) {
         const { localBagItems } = queryResult
-        const hasItem = !!localBagItems.find((item) => item.productID === product.productID)
+        const hasItem = !!localBagItems.find(
+          (item) => item.productID === product.productID && item.variantID === product.variantID
+        )
 
         const data = {
           localBagItems: hasItem

@@ -1,6 +1,8 @@
 import { Button, Sans } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
+import { GetProductMe } from "App/generated/GetProductMe"
 import { BORDER_RADIUS, MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_LOCAL_BAG } from "App/queries/clientQueries"
@@ -9,11 +11,11 @@ import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import { head } from "lodash"
 import React, { useState } from "react"
+
 import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
+
 import { GET_PRODUCT } from "../Queries"
-import { Schema as NavigationSchema } from "App/Navigation"
-import { GetProductMe } from "App/generated/GetProductMe"
 
 interface Props {
   setShowSizeWarning: (show: boolean) => void
@@ -170,9 +172,7 @@ export const AddToBagButton: React.FC<Props> = ({
         handleReserve()
       }}
     >
-      <Sans size="4" color="white100">
-        {text}
-      </Sans>
+      {text}
     </Button>
   )
 }

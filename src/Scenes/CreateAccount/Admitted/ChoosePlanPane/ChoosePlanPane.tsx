@@ -1,9 +1,15 @@
-import { Box, Button, CloseButton, Container, FadeInImage, Flex, Sans, Spacer } from "App/Components"
+import {
+  Box, Button, CloseButton, Container, FadeInImage, Flex, Sans, Spacer
+} from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { OverlaySpinner } from "App/Components/OverlaySpinner"
 import { PopUp } from "App/Components/PopUp"
-import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
-import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from "App/generated/CreateAccount_NoCache_Query"
+import {
+  CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type
+} from "App/generated/CreateAccount_Cached_Query"
+import {
+  CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type
+} from "App/generated/CreateAccount_NoCache_Query"
 import { GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GET_USER } from "App/Scenes/Account/Account"
@@ -17,7 +23,9 @@ import { TabBar } from "Components/TabBar"
 import gql from "graphql-tag"
 import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
-import { Dimensions, ScrollView, TouchableOpacity, Linking, Text, ImageBackground } from "react-native"
+import {
+  Dimensions, ImageBackground, Linking, ScrollView, Text, TouchableOpacity
+} from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
 import stripe from "tipsi-stripe"
@@ -319,16 +327,16 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                   <Sans color={color("black100")} size="7">
                     Let's choose your plan
                   </Sans>
-                  <Spacer mb={2} />
+                  <Spacer mb={1} />
                 </Box>
-                <Flex flexDirection="column" pt={3} pb={2}>
+                <Flex flexDirection="column" pt={3} pb={1}>
                   {features?.included?.map((feature, index) => {
                     return (
                       <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
                         <Box mx={1} mr={1.5}>
                           <ListCheck feature={true} />
                         </Box>
-                        <Sans size="3" color={color("black100")}>
+                        <Sans size="4" color={color("black100")}>
                           {feature}
                         </Sans>
                       </Flex>
@@ -340,7 +348,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                         <Box mx={1} mr={1.5}>
                           <ListCheck feature={false} />
                         </Box>
-                        <Sans size="3" color={color("black50")} style={{ textDecorationLine: "line-through" }}>
+                        <Sans size="4" color={color("black50")} style={{ textDecorationLine: "line-through" }}>
                           {feature}
                         </Sans>
                       </Flex>

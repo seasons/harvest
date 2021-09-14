@@ -14,13 +14,9 @@ export const CHECK_ITEMS = gql`
 
 export const GET_LOCAL_BAG_ITEMS = gql`
   query GetLocalBagItems($ids: [ID!]) {
-    products(where: { id_in: $ids }) {
+    productVariants(where: { id_in: $ids }) {
       id
-
-      variants {
-        id
-        ...BagItemProductVariant
-      }
+      ...BagItemProductVariant
     }
   }
   ${BagItemFragment}
