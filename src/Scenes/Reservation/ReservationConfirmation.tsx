@@ -56,7 +56,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
               displayText
             }
           }
-          lineItems {
+          lineItems(filterBy: NewItems) {
             id
             name
             price
