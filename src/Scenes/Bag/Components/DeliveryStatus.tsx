@@ -43,7 +43,7 @@ export const DeliveryStatus: React.FC<{
   const sentPackageTrackingURL = activeReservation?.sentPackage?.shippingLabel?.trackingURL
   const returnedPackageTrackingURL = activeReservation?.returnedPackage?.shippingLabel?.trackingURL
 
-  if (atHome) {
+  if (!atHome) {
     return null
   }
 

@@ -109,8 +109,9 @@ export const BagTabHeader: React.FC<{
   const status = activeReservation?.status
   const subHeaderText = getSubHeaderText(me, activeReservation, atHome)
   const markedAsReturned = !!activeReservation?.returnedAt
-  const showDeliveryStatus = !!activeReservation && !atHome
-  const showMarkedAsReturnedInfo = markedAsReturned && !showDeliveryStatus
+  const showDeliveryStatus = !!activeReservation && atHome
+  const isB2C = activeReservation?.phase === "BusinessToCustomer"
+  const showMarkedAsReturnedInfo = markedAsReturned && !showDeliveryStatus && isB2C
 
   const showSubHeaderText = !markedAsReturned && !showDeliveryStatus && !!subHeaderText
 
@@ -138,6 +139,12 @@ export const BagTabHeader: React.FC<{
           <DeliveryStatus me={me} atHome={atHome} />
         </Box>
       )}
+      {!isB2C && (
+        <Box px={1.5}>
+          <DeliveryStatus me={me} atHome={!atHome} />
+        </Box>
+        )
+      }
       {showSubHeaderText && (
         <Box px={2}>
           <Sans size="4" color="black50">

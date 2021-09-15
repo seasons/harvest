@@ -333,7 +333,7 @@ export const Bag = screenTrack()((props: BagProps) => {
         if (markedAsReturned) {
           const returnLabelUrl = me?.activeReservation?.returnedPackage?.shippingLabel?.trackingURL
           button = (
-            <Flex flexDirection="row" justifyContent="space-between" mx={2}>
+            <Flex flexDirection="row" justifyContent="space-between" mx={3} my={2}>
               {returnLabelUrl && (
                 <Button
                   width={windowWidth / 2 - 20}
@@ -358,7 +358,7 @@ export const Bag = screenTrack()((props: BagProps) => {
           )
         } else {
           button = (
-            <Box mx={2}>
+            <Box mx={2} my={1}>
               <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
                 Return bag
               </Button>
