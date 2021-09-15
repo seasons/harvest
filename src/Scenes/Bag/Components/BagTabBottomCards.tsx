@@ -16,8 +16,10 @@ export const BagTabBottomCards = ({ reservation }) => {
   const hasActiveReservation = !!reservation
 
   const stylistEmail = {
-    subject: encodeURI("Chat with our stylist"),
-    body: encodeURI("Hey Seasons. I’d like to chat with a stylist and get recommendations for my next order."),
+    subject: encodeURIComponent("Chat with our stylist"),
+    body: encodeURIComponent(
+      "Hey Seasons.\n\n I’d like to chat with a stylist and get recommendations for my next order."
+    ),
   }
 
   return (
@@ -45,7 +47,7 @@ export const BagTabBottomCards = ({ reservation }) => {
           title="Chat with our stylist"
           caption="Get a personalized consultation"
           onPress={() =>
-            Linking.openURL(`mailto:membership@seasons.nyc?${new URLSearchParams(stylistEmail).toString()}`)
+            Linking.openURL(`mailto:membership@seasons.nyc?subject=${stylistEmail.subject}&body=${stylistEmail.body}`)
           }
         />
       </Box>
