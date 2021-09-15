@@ -1,20 +1,22 @@
-import { Box, Container, Display, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
+import { Box, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { color, space } from "App/utils"
+import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
-import { CheckCircled, Instagram } from "Assets/svgs"
+import { CheckCircled } from "Assets/svgs"
 import gql from "graphql-tag"
 import React from "react"
-import { useQuery } from "@apollo/client"
-import { ScrollView, TouchableWithoutFeedback } from "react-native"
+import { ScrollView } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
-import { ReservationItem } from "./Components/ReservationItem"
-import { ReservationLineItems } from "./ReservationLineItems"
 
-enum Option {
-  ShareToIG = "Share to IG",
-  ReferAndEarn = "Refer and Earn",
-}
+import { useQuery } from "@apollo/client"
+import { ProductPriceText_Product } from "@seasons/eclipse"
+
+import {
+  ReservationConfirmationOptionsSection
+} from "./Components/ReservationConfirmationOptionsSection"
+import { ReservationItem } from "./Components/ReservationItem"
+import { ReservationSectionHeader } from "./Components/ReservationSectionHeader"
+import { ReservationLineItems } from "./ReservationLineItems"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -53,13 +55,13 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
               displayText
             }
           }
-          lineItems {
+          lineItems(filterBy: NewItems) {
             id
             name
             price
-            taxPrice
+            recordType
           }
-          products {
+          products: newProducts {
             id
             productVariant {
               id
@@ -83,6 +85,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
                   displayShort
                   displayLong
                 }
+                ...ProductPriceText_Product
               }
             }
           }
@@ -90,6 +93,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
       }
     }
   }
+  ${ProductPriceText_Product}
 `
 
 export const ReservationConfirmation = screenTrack()((props) => {
@@ -113,112 +117,12 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const reservation = customer?.reservations?.[0]
   const items = reservation?.products
 
-  const SectionHeader = ({ title, content = null, bottomSpacing = 1, hideSeparator = false }) => {
-    return (
-      <>
-        <Flex flexDirection="row" style={{ flex: 1 }} width="100%">
-          <Sans size="4" color="black100">
-            {title}
-          </Sans>
-          {content && <Box ml="auto">{content}</Box>}
-        </Flex>
-        <Spacer mb={bottomSpacing} />
-        {!hideSeparator && <Separator />}
-      </>
-    )
-  }
-
   const formatedAddress1 =
     !!address?.address1 && `${address?.address1}${address?.address2 ? " " + address?.address2 : ""},`
   const formatedAddress2 = !!address?.city && `${address?.city}, ${address?.state} ${address?.zipCode}`
   const shippingOption = reservation?.shippingOption
   const shippingDisplayText = shippingOption?.shippingMethod?.displayText
-  const externalCost = shippingOption?.externalCost
   const lineItems = reservation?.lineItems
-
-  const shareToIG = async () => {
-    props.navigation.navigate("Modal", { screen: "ShareReservationToIGModal", params: { reservationID } })
-  }
-
-  const SectionWrapper = ({ isFirst = false, isLast = false, onPress, children }) => {
-    const defaultBorderWidth = 1
-    const cornerRadius = 4
-    return (
-      <TouchableWithoutFeedback onPress={onPress}>
-        <Box
-          style={{
-            borderWidth: defaultBorderWidth,
-            flex: 2,
-            display: "flex",
-            borderColor: color("black10"),
-            borderRightWidth: isFirst ? defaultBorderWidth / 2.0 : defaultBorderWidth,
-            borderLeftWidth: isLast ? defaultBorderWidth / 2.0 : defaultBorderWidth,
-            borderTopLeftRadius: isFirst ? cornerRadius : 0,
-            borderBottomLeftRadius: isFirst ? cornerRadius : 0,
-            borderTopRightRadius: isLast ? cornerRadius : 0,
-            borderBottomRightRadius: isLast ? cornerRadius : 0,
-          }}
-        >
-          {children}
-        </Box>
-      </TouchableWithoutFeedback>
-    )
-  }
-
-  const OptionSections = ({ options }) => {
-    return (
-      <Flex flexDirection={"row"} flexGrow={1}>
-        {options.map((option, index) => {
-          const isFirst = index === 0
-          const isLast = index === options.length
-
-          switch (option) {
-            case Option.ShareToIG:
-              return (
-                <SectionWrapper isFirst={isFirst} isLast={isLast} onPress={() => shareToIG()} key={index}>
-                  <Flex py={2} alignItems="center">
-                    <Instagram />
-                    <Sans pt={0.5} size="4" color="black50">
-                      Share to IG Stories
-                    </Sans>
-                  </Flex>
-                </SectionWrapper>
-              )
-            case Option.ReferAndEarn:
-              return (
-                <SectionWrapper
-                  isFirst={isFirst}
-                  isLast={isLast}
-                  onPress={() => props.navigation.navigate("ReferralView")}
-                  key={index}
-                >
-                  <Flex py={2} alignItems="center">
-                    <Box
-                      style={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: 12,
-                        height: 24,
-                        width: 24,
-                        borderColor: color("black100"),
-                        borderWidth: 1.5,
-                      }}
-                    >
-                      <Display size="4" color="black100">
-                        $
-                      </Display>
-                    </Box>
-                    <Sans pt={0.5} size="4" color="black50">
-                      Refer & earn
-                    </Sans>
-                  </Flex>
-                </SectionWrapper>
-              )
-          }
-        })}
-      </Flex>
-    )
-  }
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
@@ -234,7 +138,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
               We've emailed you a confirmation and we'll notify you when its out for delivery.
             </Sans>
           </Box>
-          <OptionSections options={[Option.ShareToIG, Option.ReferAndEarn]} />
+          <ReservationConfirmationOptionsSection reservationID={reservation.id} />
           <Spacer pb={4} />
           {lineItems?.length > 0 && (
             <>
@@ -243,7 +147,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
             </>
           )}
           <Box>
-            <SectionHeader
+            <ReservationSectionHeader
               title="Order number"
               content={
                 <>
@@ -257,7 +161,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
             />
           </Box>
           <Box pt={1}>
-            <SectionHeader
+            <ReservationSectionHeader
               title="Shipping"
               content={
                 <>
@@ -273,11 +177,11 @@ export const ReservationConfirmation = screenTrack()((props) => {
                   )}
                 </>
               }
-              bottomSpacing={3}
+              bottomSpacing={2}
             />
           </Box>
           <Box pt={1}>
-            <SectionHeader
+            <ReservationSectionHeader
               title="Delivery"
               content={
                 <>
@@ -288,12 +192,13 @@ export const ReservationConfirmation = screenTrack()((props) => {
                   )}
                 </>
               }
+              bottomSpacing={5}
               hideSeparator
-              bottomSpacing={4}
             />
           </Box>
+
           <Box mb={5}>
-            <SectionHeader title="Items" />
+            <ReservationSectionHeader title="Items" />
             <Box mt={1} mb={4}>
               {items?.map((item, i) => {
                 return (

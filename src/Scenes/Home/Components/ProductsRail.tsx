@@ -16,7 +16,8 @@ export const ProductsRail: React.FC<{
   title?: string
   onViewAll?: () => void
   large?: boolean
-}> = ({ items, title, large, onViewAll }) => {
+  disableClickThrough?: boolean
+}> = ({ items, title, large, onViewAll, disableClickThrough = false }) => {
   const navigation = useNavigation()
   const [currentPage, setCurrentPage] = useState(1)
   const tracking = useTracking()
@@ -53,7 +54,7 @@ export const ProductsRail: React.FC<{
           <TouchableOpacity onPress={onViewAll}>
             <Box px={2}>
               <Sans size="4" style={{ textDecorationLine: "underline" }}>
-                View all
+                See all
               </Sans>
             </Box>
           </TouchableOpacity>
@@ -68,7 +69,11 @@ export const ProductsRail: React.FC<{
           return (
             <Animatable.View animation="fadeIn" duration={300}>
               <TouchableWithoutFeedback
-                onPress={() => navigation.navigate("Product", { id: item.id, slug: item.slug, name: item.name })}
+                onPress={
+                  disableClickThrough
+                    ? null
+                    : () => navigation.navigate("Product", { id: item.id, slug: item.slug, name: item.name })
+                }
               >
                 <Box mr={0.5} style={{ width: slideWidth }}>
                   <FadeInImage

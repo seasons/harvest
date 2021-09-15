@@ -2,7 +2,6 @@ import {
   Box,
   Container,
   FixedBackArrow,
-  FixedButton,
   Flex,
   Sans,
   Separator,
@@ -10,24 +9,25 @@ import {
   SuggestedAddressPopupComponent,
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { SectionHeader } from "App/Components/SectionHeader"
+import { Schema as NavigationSchema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { UPDATE_PHONE_AND_SHIPPING } from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
 import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
-import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
-import { Schema as NavigationSchema } from "App/Navigation"
 import React, { useEffect, useState } from "react"
-import { useMutation, useQuery } from "@apollo/client"
-import * as Sentry from "@sentry/react-native"
 import { ScrollView } from "react-native"
-import { BagItemFragment } from "../Bag/Components/BagItem"
-import { ReservationItem } from "./Components/ReservationItem"
+
+import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
+import * as Sentry from "@sentry/react-native"
+
+import { BagItemFragment } from "../Bag/Components/BagItem"
 import { ShippingOption } from "../Order/Components"
-import { SectionHeader } from "App/Components/SectionHeader"
-import { DateTime } from "luxon"
+import { ReservationBottomBar } from "./Components/ReservationBottomBar"
+import { ReservationItem } from "./Components/ReservationItem"
 import { ReservationLineItems } from "./ReservationLineItems"
-import { UPDATE_PHONE_AND_SHIPPING } from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions, $shippingCode: ShippingCode) {
@@ -37,19 +37,8 @@ const RESERVE_ITEMS = gql`
   }
 `
 
-const DrafReservationLineItems = gql`
-  mutation DraftReservationLineItems($hasFreeSwap: Boolean) {
-    draftReservationLineItems(hasFreeSwap: $hasFreeSwap) {
-      id
-      name
-      price
-      taxPrice
-    }
-  }
-`
-
 const GET_CUSTOMER = gql`
-  query GetCustomer {
+  query GetCustomer($shippingCode: String) {
     me {
       id
       nextFreeSwapDate
@@ -59,13 +48,25 @@ const GET_CUSTOMER = gql`
         lastName
         email
       }
-
       bag {
         id
         productVariant {
           id
           ...BagItemProductVariant
         }
+      }
+      newBagItems: bag(status: Added) {
+        id
+        productVariant {
+          id
+          ...BagItemProductVariant
+        }
+      }
+      reservationLineItems(filterBy: NewItems, shippingCode: $shippingCode) {
+        id
+        name
+        price
+        recordType
       }
       customer {
         id
@@ -97,6 +98,7 @@ const GET_CUSTOMER = gql`
         }
         billingInfo {
           id
+          brand
           last_digits
         }
       }
@@ -107,11 +109,17 @@ const GET_CUSTOMER = gql`
 
 export const Reservation = screenTrack()((props) => {
   const [isMutating, setIsMutating] = useState(false)
-  const [lineItems, setLineItems] = useState([])
   const tracking = useTracking()
   const navigation = useNavigation()
-  const { previousData, data = previousData } = useQuery(GET_CUSTOMER)
+
   const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
+  const [shippingCode, setShippingCode] = useState("UPSGround")
+
+  const { previousData, data = previousData } = useQuery(GET_CUSTOMER, {
+    variables: {
+      shippingCode: shippingCode || "UPSGround",
+    },
+  })
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [updatePhoneAndShippingAddress] = useMutation(UPDATE_PHONE_AND_SHIPPING, {
     onError: (error) => {
@@ -136,6 +144,7 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
     onError: (error) => {
+      console.log("error", error)
       let popUpData = {
         title: "Sorry!",
         note: "We couldn't process your order because of an unexpected error, please try again later",
@@ -176,51 +185,23 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
   })
-  const [getReservationLineItems] = useMutation(DrafReservationLineItems)
 
   const me = data?.me
   const customer = me?.customer
   const address = me?.customer?.detail?.shippingAddress
-
-  const nextFreeSwapDate = me?.nextFreeSwapDate
-  const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()
-
-  useEffect(() => {
-    const getLineItems = async () => {
-      const { data: resData } = await getReservationLineItems({
-        variables: {
-          hasFreeSwap: false,
-        },
-      })
-      setLineItems(resData?.draftReservationLineItems || [])
-    }
-    if (swapNotAvailable === true && lineItems?.length === 0) {
-      getLineItems()
-    }
-  }, [swapNotAvailable])
-
   const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
 
   useEffect(() => {
     if (shippingOptions?.length > 0) {
       const selectedShippingOption = shippingOptions[shippingOptionIndex]
-      if (selectedShippingOption?.externalCost > 0) {
-        setLineItems([
-          ...lineItems,
-          {
-            name: "Shipping",
-            price: selectedShippingOption?.externalCost,
-            taxPrice: 0,
-          },
-        ])
-      } else {
-        setLineItems(lineItems.filter((item) => item.name !== "Shipping"))
-      }
+      setShippingCode(selectedShippingOption?.shippingMethod?.code)
     }
-  }, [shippingOptionIndex, setLineItems, shippingOptions])
+  }, [shippingOptionIndex, shippingOptions])
 
   const phoneNumber = customer?.detail?.phoneNumber
+  const billingInfo = customer?.billingInfo
   const items = me?.bag
+  const newBagItems = me?.newBagItems
 
   if (!customer || !items || !address) {
     return (
@@ -252,6 +233,22 @@ export const Reservation = screenTrack()((props) => {
                 will be processed the following business day.
               </Sans>
             </Box>
+            <ReservationLineItems lineItems={me.reservationLineItems} />
+            <Box mb={4}>
+              <SectionHeader
+                title="Payment method"
+                rightText="Edit"
+                onPressRightText={() => {
+                  navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+                    screen: NavigationSchema.PageNames.EditPaymentAndShipping,
+                    params: { phoneNumber, shippingAddress: address },
+                  })
+                }}
+              />
+              <Sans size="4" color="black50" mt={1}>
+                {`${billingInfo.brand} ending in ${billingInfo.last_digits}`}
+              </Sans>
+            </Box>
             {address && (
               <Box mb={4}>
                 <SectionHeader
@@ -272,7 +269,6 @@ export const Reservation = screenTrack()((props) => {
                 </Sans>
               </Box>
             )}
-            {lineItems?.length > 0 && <ReservationLineItems lineItems={lineItems} />}
             {shippingOptions?.length > 0 && (
               <Box mb={4}>
                 <SectionHeader title="Select shipping" />
@@ -296,19 +292,11 @@ export const Reservation = screenTrack()((props) => {
                 </Sans>
               </Box>
             )}
-            {!!phoneNumber && (
-              <Box mb={4}>
-                <SectionHeader title="Phone number" />
-                <Sans size="4" color="black50" mt={1}>
-                  {phoneNumber}
-                </Sans>
-              </Box>
-            )}
             <Box mb={5}>
-              <SectionHeader title="Items" />
+              <SectionHeader title="Bag items" />
               <Box mt={1} mb={4}>
-                {!!items &&
-                  items.map((item, i) => {
+                {!!newBagItems &&
+                  newBagItems.map((item, i) => {
                     return (
                       <Box key={item.id}>
                         <ReservationItem index={i} bagItem={item} navigation={props.navigation} />
@@ -322,11 +310,9 @@ export const Reservation = screenTrack()((props) => {
             </Box>
           </ScrollView>
         </Flex>
-        <FixedButton
-          positionBottom={space(2)}
-          loading={isMutating}
-          disabled={isMutating}
-          onPress={async () => {
+        <ReservationBottomBar
+          lineItems={me.reservationLineItems}
+          onReserve={async () => {
             if (isMutating) {
               return
             }
@@ -349,10 +335,8 @@ export const Reservation = screenTrack()((props) => {
               })
             }
           }}
-          block
-        >
-          Place order
-        </FixedButton>
+          buttonProps={{ loading: isMutating }}
+        />
       </Container>
     </>
   )

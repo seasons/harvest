@@ -247,7 +247,7 @@ export const EditPaymentAndShipping: React.FC<{
       </Box>
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={space(2)} style={{ bottom: space(2) }}>
         <Flex flexDirection="row" flexWrap="nowrap" justifyContent="center">
-          <Button variant="primaryWhite" size="large" width={buttonWidth} onPress={handleCancelBtnPressed}>
+          <Button variant="primaryWhite" width={buttonWidth} onPress={handleCancelBtnPressed}>
             Cancel
           </Button>
           <Spacer ml={1} />
@@ -255,7 +255,6 @@ export const EditPaymentAndShipping: React.FC<{
             loading={isMutating}
             disabled={isMutating}
             variant="secondaryBlack"
-            size="large"
             width={buttonWidth}
             onPress={handleSaveBtnPressed}
           >

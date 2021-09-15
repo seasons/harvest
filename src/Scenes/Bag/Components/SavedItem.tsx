@@ -14,14 +14,12 @@ import * as Sentry from "@sentry/react-native"
 import { ADD_TO_BAG, GetBag_NoCache_Query, SavedTab_Query } from "../BagQueries"
 import { ListCheck } from "Assets/svgs/ListCheck"
 import { UPSERT_RESTOCK_NOTIF } from "App/Scenes/Product/Product"
-import { Schema as NavigationSchema } from "App/Navigation"
 
 interface BagItemProps {
   bagIsFull: boolean
   hasActiveReservation: boolean
   navigation?: any
   bagItem: any
-  planItemCount: number
 }
 
 export const SavedItemFragment_BagItem = gql`
@@ -50,13 +48,7 @@ export const SavedItemFragment_BagItem = gql`
   }
 `
 
-export const SavedItem: React.FC<BagItemProps> = ({
-  bagIsFull,
-  bagItem,
-  navigation,
-  hasActiveReservation,
-  planItemCount,
-}) => {
+export const SavedItem: React.FC<BagItemProps> = ({ bagIsFull, bagItem, navigation, hasActiveReservation }) => {
   const [isMutating, setIsMutating] = useState(false)
   const [upsertingRestockNotif, setIsUpsertingRestockNotif] = useState(false)
   const [addingToBag, setAddingToBag] = useState(false)
@@ -125,30 +117,12 @@ export const SavedItem: React.FC<BagItemProps> = ({
       setAddingToBag(false)
       if (err && err.graphQLErrors) {
         if (err.graphQLErrors?.[0]?.message?.includes("Bag is full")) {
-          if (planItemCount < 6) {
-            showPopUp({
-              title: "Want another item?",
-              note: "Upgrade your plan to add more slots",
-              buttonText: "Upgrade plan",
-              onClose: () => {
-                navigation.navigate(NavigationSchema.StackNames.Modal, {
-                  screen: NavigationSchema.PageNames.UpdatePaymentPlanModal,
-                })
-                hidePopUp()
-              },
-              secondaryButtonText: "Got It",
-              secondaryButtonOnPress: () => {
-                hidePopUp()
-              },
-            })
-          } else {
-            showPopUp({
-              title: "Your bag is full",
-              note: "Remove one or more items from your bag to continue adding this item.",
-              buttonText: "Got It",
-              onClose: () => hidePopUp(),
-            })
-          }
+          showPopUp({
+            title: "Your bag is full",
+            note: "Remove one or more items from your bag to continue adding this item.",
+            buttonText: "Got It",
+            onClose: () => hidePopUp(),
+          })
         } else {
           Sentry.captureException(err)
           console.log("err SavedItem.tsx", err)

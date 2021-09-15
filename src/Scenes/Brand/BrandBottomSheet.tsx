@@ -1,4 +1,5 @@
-import { Box, Flex, Handle, ProductGridItem, Sans, Spacer } from "App/Components"
+import { Box, Flex, Handle, Sans, Spacer } from "App/Components"
+import { ProductGridItem } from "@seasons/eclipse"
 import { CarouselPageDots } from "App/Components/CarouselPageDots"
 import { ReadMore } from "App/Components/ReadMore"
 import { Spinner } from "App/Components/Spinner"

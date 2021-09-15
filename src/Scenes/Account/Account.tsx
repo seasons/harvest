@@ -22,11 +22,13 @@ import { default as React, useEffect } from "react"
 import { Linking, Platform, ScrollView, StatusBar } from "react-native"
 import * as Animatable from "react-native-animatable"
 import Share from "react-native-share"
+
 import { useQuery } from "@apollo/client"
 import { useNavigation, useScrollToTop } from "@react-navigation/native"
-import { AuthorizedCTA, WaitlistedCTA } from "@seasons/eclipse"
-import { useNotificationBarContext } from "@seasons/eclipse"
+import { AuthorizedCTA, useNotificationBarContext, WaitlistedCTA } from "@seasons/eclipse"
+
 import { State, UserState } from "../CreateAccount/CreateAccount"
+import { CreditBalance, CreditBalanceFragment_Customer } from "./Components/CreditBalance"
 import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
@@ -80,19 +82,16 @@ export const GET_USER = gql`
           authorizationWindowClosesAt
           authorizationsCount
         }
-        membership {
-          plan {
-            itemCount
-          }
-        }
+        ...CreditBalanceFragment_Customer
       }
     }
   }
+  ${CreditBalanceFragment_Customer}
 `
 
 export const Account = screenTrack()(() => {
   const { authState, signOut } = useAuthContext()
-  const { previousData, data = previousData, refetch } = useQuery(GET_USER)
+  const { previousData, data = previousData, refetch, error } = useQuery(GET_USER)
   const scrollViewRef = React.useRef(null)
   const tracking = useTracking()
   const navigation = useNavigation()
@@ -274,7 +273,10 @@ export const Account = screenTrack()(() => {
     },
   ]
 
-  const renderBody = () => {
+  const BodyContent: React.FC = () => {
+    if (!status) {
+      return <ListSkeleton />
+    }
     switch (status) {
       case CustomerStatus.Created:
         return (
@@ -319,14 +321,7 @@ export const Account = screenTrack()(() => {
                 actionName: Schema.ActionNames.LearnMoreTapped,
                 actionType: Schema.ActionTypes.Tap,
               })
-              navigation.navigate("Modal", {
-                screen: NavigationSchema.PageNames.CreateAccountModal,
-                params: {
-                  initialState: State.ChoosePlan,
-                  initialUserState: UserState.Admitted,
-                  onMountScrollToFaqSection: true,
-                },
-              })
+              navigation.navigate("Faq")
             }}
             onPressChoosePlan={() => {
               tracking.trackEvent({
@@ -356,6 +351,8 @@ export const Account = screenTrack()(() => {
             detail="If you'd like to reactivate your account, please request access and we'll get back to you shortly."
           />
         )
+      default:
+        return <ListSkeleton />
     }
   }
 
@@ -383,9 +380,10 @@ export const Account = screenTrack()(() => {
               </Box>
             )}
           </Box>
+          <CreditBalance membership={customer?.membership} />
           <InsetSeparator />
           <Box px={2} py={4}>
-            {!customer ? <ListSkeleton /> : renderBody()}
+            <BodyContent />
           </Box>
           <InsetSeparator />
           {!!referralLink && (

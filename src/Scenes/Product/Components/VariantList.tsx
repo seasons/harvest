@@ -1,19 +1,15 @@
-import { Box, Flex, Radio, Sans, Separator, Spacer } from "App/Components"
+import { Button, Flex } from "App/Components"
 import { GetProduct_products_variants } from "App/generated/GetProduct"
-import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { find } from "lodash"
-import React, { useEffect, useState } from "react"
-import { TouchableOpacity } from "react-native"
+import React, { useEffect, useRef, useState } from "react"
+import { ScrollView } from "react-native"
 
-export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelected, product, variantPickerHeight }) => {
+export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelected, product }) => {
   const variants: GetProduct_products_variants[] = product?.variants
   const [sizeData, setSizeData] = useState([])
   const tracking = useTracking()
-
-  useEffect(() => {
-    updateSizeData()
-  }, [product])
+  const scrollRef = useRef(null)
 
   const updateSizeData = () => {
     setSizeData(variants)
@@ -23,70 +19,56 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
       const firstAvailableSize =
         find(variants, (size) => size.isInBag) || find(variants, (size) => size.reservable > 0) || variants?.[0]
       setSelectedVariant(firstAvailableSize)
+
+      const itemIndex = variants.findIndex((v) => v.id === firstAvailableSize.id)
+      scrollRef?.current?.scrollTo({ x: (itemIndex + 1) * 97, y: 0, animated: true })
     } else if (variants?.length) {
-      const variant = find(variants, (size) => size.id === selectedVariant.id)
+      const variant = find(variants, (variant) => variant.id === selectedVariant.id)
       // Refresh variant data
       setSelectedVariant(variant)
+      const itemIndex = variants.findIndex((v) => v.id === variant.id)
+      scrollRef?.current?.scrollTo({ x: (itemIndex + 1) * 97, y: 0, animated: true })
     }
   }
 
+  useEffect(() => {
+    if (variants?.length > 0) {
+      updateSizeData()
+    }
+  }, [variants, updateSizeData])
+
   const rows = sizeData.map((size, i) => {
     const displaySize = size?.displayLong
-    const displayShort = size?.displayShort
-
-    const manufacturerSizeDisplayType = size?.manufacturerSizes?.[0]?.type
-    const manufacturerSizeDisplay = size?.manufacturerSizes?.[0]?.display
-
-    const manufacturerSizeFullDisplay =
-      manufacturerSizeDisplayType !== "Letter" &&
-      manufacturerSizeDisplay !== displaySize &&
-      manufacturerSizeDisplay !== displayShort &&
-      !!manufacturerSizeDisplayType &&
-      `${manufacturerSizeDisplayType ? manufacturerSizeDisplayType + " " : ""}${manufacturerSizeDisplay}`
 
     return (
-      <Box key={size.id || i}>
-        <TouchableOpacity
-          onPress={() => {
-            tracking.trackEvent({
-              actionName: Schema.ActionNames.ProductVariantSelected,
-              actionType: Schema.ActionTypes.Tap,
-              size: displaySize,
-              variantID: size?.id,
-            })
-            setSelectedVariant(size)
-            onSizeSelected(size)
-          }}
-        >
-          <Flex flexDirection="row" alignItems="center" justifyContent="space-between" flexWrap="nowrap" my={2}>
-            <Flex flexDirection="row" alignItems="center">
-              <Radio
-                selected={!!selectedVariant?.id && selectedVariant.id === size.id}
-                pointerEventsNone
-                activeColor={color("white100")}
-              />
-              <Spacer mr={1} />
-              {displaySize && (
-                <Sans color={size?.reservable > 0 ? color("white100") : color("black50")} size="4">
-                  {displaySize}
-                </Sans>
-              )}
-            </Flex>
-            <Sans color="black50" size="4">
-              {size?.reservable > 0 ? manufacturerSizeFullDisplay : "Unavailable"}
-            </Sans>
-          </Flex>
-        </TouchableOpacity>
-        <Separator color={color("black85")} />
-      </Box>
+      <Flex key={size.id || i} pb={1} pr={i === sizeData.length - 1 ? 2 : 1} pl={i === 0 ? 2 : 0}>
+        {displaySize && (
+          <Button
+            variant="primaryWhite"
+            disabled={size?.reservable <= 0}
+            onPress={() => {
+              tracking.trackEvent({
+                actionName: Schema.ActionNames.ProductVariantSelected,
+                actionType: Schema.ActionTypes.Tap,
+                size: displaySize,
+                variantID: size?.id,
+              })
+              setSelectedVariant(size)
+              onSizeSelected(size)
+            }}
+          >
+            {displaySize}
+          </Button>
+        )}
+      </Flex>
     )
   })
 
   return (
-    <Box style={{ minHeight: variantPickerHeight - 60 }}>
-      <Separator color={color("black85")} />
-      {rows}
-      <Box pb="180px" />
-    </Box>
+    <Flex style={{ flex: 1 }} pt={2}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} ref={scrollRef}>
+        {rows}
+      </ScrollView>
+    </Flex>
   )
 }

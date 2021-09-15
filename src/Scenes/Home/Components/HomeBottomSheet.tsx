@@ -2,7 +2,7 @@ import { Box, Flex, Handle } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
 import { Schema } from "App/Navigation"
 import { BagView } from "App/Scenes/Bag/Bag"
-import { space } from "App/utils"
+import { space, seasonAndYear } from "App/utils"
 import React, { useEffect, useMemo, useRef, useState } from "react"
 import { Dimensions } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
@@ -13,7 +13,6 @@ import { ProductsRail, CollectionsRail } from "@seasons/eclipse"
 import { BrandsRail, CategoriesRail, FitPicCollection, HomeFooter, TagsRail } from "./"
 import { FitPicCollectionRef } from "./FitPicCollection"
 import { HomepageBanner } from "App/Components/HomepageBanner"
-import { LaunchCalendar, LaunchCalendarFragment_Query } from "./LaunchCalendar"
 import gql from "graphql-tag"
 import { Homepage_Query as Homepage_Query_Type } from "App/generated/Homepage_Query"
 import { HomepageNoCache_Query as HomepageNoCache_Query_Type } from "App/generated/HomepageNoCache_Query"
@@ -26,6 +25,7 @@ enum SectionType {
   Products = "Products",
   Brands = "Brands",
   ArchivalProducts = "ArchivalProducts",
+  UpcomingProducts = "UpcomingProducts",
   SavedProducts = "SavedProducts",
   FitPics = "FitPics",
   Categories = "Categories",
@@ -33,8 +33,6 @@ enum SectionType {
   Collection = "Collection",
   Banner = "Banner",
   FeaturedCollections = "FeaturedCollections",
-  LaunchCalendar = "LaunchCalendar",
-
 }
 
 export const HomeBottomSheetFragment_Query = gql`
@@ -47,9 +45,7 @@ export const HomeBottomSheetFragment_Query = gql`
       name
       slug
     }
-    ...LaunchCalendarFragment_Query
   }
-  ${LaunchCalendarFragment_Query}
 `
 
 const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Query_Type, navigation) => {
@@ -57,7 +53,7 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
   if (data?.blogPosts) {
     sections.push({ type: SectionType.BlogPosts, results: data?.blogPosts })
   }
- 
+
   const customerStatus = dataNoCache?.me?.customer?.status
   const customerApprovedForBanner =
     (data?.banner?.properties?.requiredCustomerStatus?.length > 0 &&
@@ -69,7 +65,7 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
       banner: data.banner,
     })
   }
-  
+
   if (data?.justAddedTops?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedTops, title: "Just added tops" })
   }
@@ -85,24 +81,7 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
   if (data?.justAddedAccessories?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedAccessories, title: "Just added accessories" })
   }
-  if (data?.homepage?.sections?.length) {
-    sections.push(
-      ...data?.homepage?.sections
-        .map((section) => {
-          switch (section.type) {
-            case SectionType.Categories:
-              return {
-                ...section,
-                results: section.results.map((item) => ({
-                  ...item,
-                  slug: item.slug === "hoodies" || item.slug === "sweatshirts" ? "hoodies-and-sweatshirts" : item.slug,
-                })),
-              }
-          }
-        })
-        .filter(Boolean)
-    )
-  }
+  sections.push({ type: SectionType.Categories })
   if (data?.justAddedBottoms?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
   }
@@ -143,6 +122,14 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
     )
   }
 
+  if (data?.upcomingProducts?.length > 0) {
+    sections.push({
+      type: SectionType.UpcomingProducts,
+      title: "Upcoming releases",
+      results: data?.upcomingProducts,
+    })
+  }
+
   if (data?.archivalProducts?.length) {
     sections.push({
       type: SectionType.ArchivalProducts,
@@ -157,13 +144,6 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
     })
   }
 
-  if (data?.launches?.length > 0) {
-    sections.push({
-      type: SectionType.LaunchCalendar,
-      results: data?.launches,
-    })
-  }
-
   if (dataNoCache?.me?.savedItems?.length) {
     const results = dataNoCache?.me?.savedItems?.map((item) => item?.productVariant?.product)
     sections.push({ type: SectionType.SavedProducts, title: "Saved for later", results })
@@ -174,6 +154,8 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
   }
   return sections
 }
+
+const seasonAndYearText = seasonAndYear()
 
 interface HomeBottomSheetProps {
   data: Homepage_Query_Type
@@ -212,8 +194,16 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({
         return <BrandsRail items={item.results} title="Designers" />
       case SectionType.ArchivalProducts:
         return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
-      case SectionType.LaunchCalendar:
-        return <LaunchCalendar launches={item.results} />
+      case SectionType.UpcomingProducts:
+        return (
+          <ProductsRail
+            disableClickThrough
+            large
+            title="Upcoming releases"
+            rightText={seasonAndYearText}
+            items={item.results}
+          />
+        )
       case SectionType.Collection:
         return (
           <ProductsRail
@@ -246,9 +236,9 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({
         )
       case SectionType.Products:
         const accessories = item.title === "Just added accessories" ? item.title : null
-        switch(accessories){
+        switch (accessories) {
           case "Just added accessories":
-            return <AccessoriesRail title ={item.title} items={item.results}/>
+            return <AccessoriesRail title={item.title} items={item.results} />
           default:
             return <ProductsRail title={item.title} items={item.results} />
         }

@@ -1,32 +1,24 @@
-import { useMutation } from "@apollo/client"
+import {
+  Box, Button, Container, FadeInImage, FixedBackArrow, Flex, Handle, Radio, Sans, Separator, Spacer
+} from "App/Components"
+import { Loader } from "App/Components/Loader"
+import { GetBrowseProducts_products_images } from "App/generated/GetBrowseProducts"
+import { GetProduct_products_largeImages } from "App/generated/GetProduct"
+import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
+import { SavedTab_Query } from "App/Scenes/Bag/BagQueries"
+import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
+import { color, space } from "App/utils"
+import { Schema, screenTrack, useTracking } from "App/utils/track"
 import React, { useState } from "react"
 import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components/native"
-import { GET_PRODUCT } from "./Queries"
-import {
-  Box,
-  Button,
-  Container,
-  FadeInImage,
-  Flex,
-  Handle,
-  Radio,
-  Sans,
-  Separator,
-  Spacer,
-  FixedBackArrow,
-} from "App/Components"
-import { Loader } from "App/Components/Loader"
-import { GetProduct_products_largeImages } from "App/generated/GetProduct"
-import { SavedTab_Query } from "App/Scenes/Bag/BagQueries"
-import { color, space } from "App/utils"
-import { Schema, screenTrack, useTracking } from "App/utils/track"
+
+import { useMutation } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
-import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
-import { GetBrowseProducts_products_images } from "App/generated/GetBrowseProducts"
-import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
 import { SAVE_ITEM } from "@seasons/eclipse/src/components/SaveProductButton/queries"
+
+import { GET_PRODUCT } from "./Queries"
 
 const screenWidth = Dimensions.get("window").width
 
@@ -40,8 +32,6 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
   const [selectedVariantID, setSelectedVariantID] = useState(null)
   const navigation = useNavigation()
   const product = route?.params?.product
-  const showPopUp = route?.params?.showPopUp
-  const hidePopUp = route?.params?.hidePopUp
   const [saveItem] = useMutation(SAVE_ITEM, {
     refetchQueries: [
       {
@@ -60,7 +50,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
     ],
   })
 
-  if (!product || !showPopUp || !hidePopUp) {
+  if (!product) {
     return (
       <>
         <FixedBackArrow navigation={navigation} />

@@ -1,7 +1,8 @@
 import React from "react"
-import { Sans, Skeleton, Spacer, Box } from "App/Components"
+import { Sans, Skeleton, Spacer, Box, Flex } from "App/Components"
 import { TouchableOpacity, ScrollView } from "react-native"
 import styled from "styled-components/native"
+import { color } from "App/utils"
 
 type Props = {
   items: { slug: string; name: string }[]
@@ -43,25 +44,15 @@ export const CategoryPicker: React.FC<Props> = ({ items, onCategoryPress, curren
   }
 
   return (
-    <Root
-      ref={scrollViewRef}
-      contentContainerStyle={{
-        padding: 0,
-        paddingLeft: 20,
-        paddingRight: 20,
-        paddingTop: 15,
-      }}
-      showsHorizontalScrollIndicator={false}
-      horizontal
-    >
-      {items.map((item, index) => {
+    <Root ref={scrollViewRef} showsHorizontalScrollIndicator={false} horizontal>
+      {items?.map((item, index) => {
         const selected = currentCategory == item.slug
         return (
           <Box key={index} onLayout={handleItemLayout(index)}>
             {!!item.name ? (
               <TouchableOpacity onPress={() => onCategoryPress(item)}>
-                <Category mr={4} selected={selected}>
-                  <Sans size="4" style={{ opacity: selected ? 1.0 : 0.5 }}>
+                <Category ml={index === 0 ? 2 : 0} mr={index === items.length - 1 ? 2 : 1} selected={selected}>
+                  <Sans size="4" style={{ color: selected ? color("white100") : color("black100") }}>
                     {item.name}
                   </Sans>
                 </Category>
@@ -85,17 +76,21 @@ const Root = styled(ScrollView)`
   width: 100%;
   bottom: 0;
   left: 0;
-  border-bottom-color: black;
   border-style: solid;
-  border-bottom-width: 1px;
 `
 
 const Category = styled(Box)<{ selected: boolean }>`
+  border: 1px ${color("black25")};
   ${(p) =>
     p.selected &&
     `
-    padding-bottom: 15px
-    border-bottom-color: black;
-    border-bottom-width: 3px;
+    background-color: ${color("black100")}
+    border: 1px ${color("black100")}
+    
   `};
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 8px;
 `

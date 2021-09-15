@@ -3,21 +3,22 @@ import { FadeInImage } from "App/Components/FadeInImage"
 import { Spinner } from "App/Components/Spinner"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { ADD_OR_REMOVE_FROM_LOCAL_BAG } from "App/queries/clientQueries"
 import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
+import { Check } from "Assets/svgs"
 import gql from "graphql-tag"
-import { get, head } from "lodash"
+import { get, head, truncate } from "lodash"
 import React, { useState } from "react"
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 
 import { useMutation } from "@apollo/client"
+import { ProductPriceText, ProductPriceText_Product } from "@seasons/eclipse"
 
-import { GetBag_NoCache_Query } from "../BagQueries"
-import { Check } from "Assets/svgs"
-import { ADD_OR_REMOVE_FROM_LOCAL_BAG } from "App/queries/clientQueries"
+import { GetBag_NoCache_Query, SavedTab_Query } from "../BagQueries"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -54,6 +55,7 @@ export const BagItemFragment = gql`
           retailPrice
         }
       }
+      ...ProductPriceText_Product
     }
     price {
       id
@@ -65,6 +67,7 @@ export const BagItemFragment = gql`
       buyUsedEnabled
     }
   }
+  ${ProductPriceText_Product}
 `
 
 interface BagItemProps {
@@ -148,6 +151,9 @@ export const BagItem: React.FC<BagItemProps> = ({
             query: GetBag_NoCache_Query,
           },
           {
+            query: SavedTab_Query,
+          },
+          {
             query: GET_PRODUCT,
             variables: {
               where: {
@@ -187,8 +193,12 @@ export const BagItem: React.FC<BagItemProps> = ({
           <Spacer mb={1} />
           <Sans size="3">{product?.brand?.name}</Sans>
           <Sans size="3" color="black50">
-            {product.name}
+            {truncate(product?.name, {
+              length: 22,
+              separator: "...",
+            })}
           </Sans>
+          <ProductPriceText size="3" product={product} />
           <Sans size="3" color="black50">
             Size {variantSize}
           </Sans>
@@ -220,8 +230,12 @@ export const BagItem: React.FC<BagItemProps> = ({
           <Box style={{ width: "100%" }}>
             <Sans size="3">{`${index + 1}. ${product?.brand?.name}`}</Sans>
             <Sans size="3" color="black50">
-              {product.name}
+              {truncate(product?.name, {
+                length: 22,
+                separator: "...",
+              })}
             </Sans>
+            <ProductPriceText size="3" product={product} />
             <Sans size="3" color="black50">
               Size {variantSize}
             </Sans>

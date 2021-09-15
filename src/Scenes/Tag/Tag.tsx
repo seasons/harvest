@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client"
-import { Box, Container, FixedBackArrow, ProductGridItem, Sans, Spacer } from "App/Components"
+import { Box, Container, FixedBackArrow, Sans, Spacer } from "App/Components"
+import { ProductGridItem } from "@seasons/eclipse"
 import { ReadMore } from "App/Components/ReadMore"
 import { space } from "App/utils"
 import { Schema, screenTrack } from "App/utils/track"

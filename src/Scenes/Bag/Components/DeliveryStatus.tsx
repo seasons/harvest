@@ -1,12 +1,17 @@
-import React from "react"
-import { Box, Sans, Flex, Spacer } from "App/Components"
-import styled from "styled-components/native"
-import { color } from "App/utils"
-import { TouchableWithoutFeedback } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+import { Box, Flex, Sans, Spacer } from "App/Components"
+import {
+  GetBag_NoCache_Query_me, GetBag_NoCache_Query_me_activeReservation
+} from "App/generated/GetBag_NoCache_Query"
 import { Schema } from "App/Navigation"
+import { color } from "App/utils"
 import gql from "graphql-tag"
-import { GetBag_NoCache_Query_me } from "App/generated/GetBag_NoCache_Query"
+import React from "react"
+import { TouchableWithoutFeedback } from "react-native"
+import styled from "styled-components/native"
+
+import { useNavigation } from "@react-navigation/native"
+
+import { BagReturnFlowSubtitle } from "./BagReturnFlowSubtitle"
 
 export const DeliveryStatusFragment_Me = gql`
   fragment DeliveryStatusFragment_Me on Me {
@@ -32,19 +37,18 @@ export const DeliveryStatusFragment_Me = gql`
 `
 
 export const DeliveryStatus: React.FC<{
-  me: GetBag_NoCache_Query_me
+  activeReservation: GetBag_NoCache_Query_me_activeReservation
   atHome: boolean
-}> = ({ me, atHome }) => {
-  const activeReservation = me?.activeReservation
-
+}> = ({ activeReservation,atHome }) => {
   const navigation = useNavigation()
   const status = activeReservation?.status
 
   const sentPackageTrackingURL = activeReservation?.sentPackage?.shippingLabel?.trackingURL
   const returnedPackageTrackingURL = activeReservation?.returnedPackage?.shippingLabel?.trackingURL
 
-  if (atHome) {
-    return null
+  const showReturnCopy = !!activeReservation?.returnedAt && activeReservation?.phase !== "CustomerToBusiness"
+  if (showReturnCopy) {
+    return <BagReturnFlowSubtitle />
   }
 
   let step
@@ -52,7 +56,7 @@ export const DeliveryStatus: React.FC<{
   let statusColor = color("lightGreen")
   let trackingURL
 
-  if (activeReservation.phase === "CustomerToBusiness") {
+  if (activeReservation?.phase === "CustomerToBusiness") {
     // Package is heading back to the warehouse
     statusColor = color("blue100")
     trackingURL = returnedPackageTrackingURL
@@ -89,7 +93,7 @@ export const DeliveryStatus: React.FC<{
   }
 
   return (
-    <Box>
+    <Box px={1.5}>
       <Box pt={3} px={0.5}>
         <Sans size="4">Status</Sans>
       </Box>

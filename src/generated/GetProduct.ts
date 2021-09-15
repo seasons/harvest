@@ -13,6 +13,7 @@ export interface GetProduct_products_category {
   __typename: "Category";
   id: string;
   name: string;
+  products: GetProduct_relatedProducts[] | null
 }
 
 export interface GetProduct_products_modelSize {
@@ -138,6 +139,25 @@ export interface GetProduct_products_brand {
   since: any | null;
   websiteUrl: string | null;
   products: GetProduct_products_brand_products[] | null;
+}
+
+export interface GetProduct_relatedProducts{
+  __typename: "Product";
+  id: string;
+  slug: string;
+  name: string;
+  logo: any | null;
+  since: any | null;
+  websiteUrl: string | null;
+  products: GetProducts_products_relatedProducts
+}
+
+export interface GetProducts_products_relatedProducts {
+  id: string;
+  type: ProductType | null;
+  images: GetProduct_products_brand_products_images[];
+  brand: GetProduct_products_brand_products_brand;
+  variants: GetProduct_products_brand_products_variants[] | null;
 }
 
 export interface GetProduct_products_largeImages {
@@ -271,6 +291,7 @@ export interface GetProduct_products {
   color: GetProduct_products_color;
   secondaryColor: GetProduct_products_secondaryColor | null;
   brand: GetProduct_products_brand;
+  relatedProducts: GetProduct_relatedProducts
   outerMaterials: string[];
   innerMaterials: string[];
   largeImages: GetProduct_products_largeImages[];

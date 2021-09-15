@@ -1,41 +1,36 @@
 import { Loader } from "App/Components/Loader"
 import { PauseStatus } from "App/Components/Pause/PauseButtons"
-import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
-import { GetBag_Cached_Query as GetBag_Cached_Query_Type } from "App/generated/GetBag_Cached_Query"
-import { DEFAULT_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 import { Schema as TrackSchema, screenTrack, useTracking } from "App/utils/track"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
 import { TabBar } from "Components/TabBar"
-import { assign, fill } from "lodash"
 import React, { useEffect, useRef, useState } from "react"
-import { FlatList, RefreshControl, StatusBar, View } from "react-native"
+import { Dimensions, FlatList, RefreshControl, StatusBar, View } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { NavigationRoute, NavigationScreenProp } from "react-navigation"
 
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
+import { useLazyQuery, useMutation } from "@apollo/client"
 import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
-import { Box, Button, Spacer } from "@seasons/eclipse"
+import { Box, Button, Flex, Spacer } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import {
   CHECK_ITEMS,
+  DELETE_BAG_ITEM,
   GetBag_NoCache_Query,
   REMOVE_FROM_BAG_AND_SAVE_ITEM,
   ReservationHistoryTab_Query,
   SavedTab_Query,
-  GetBag_Cached_Query,
-  DELETE_BAG_ITEM,
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
-import { BagCostWarning } from "./Components/BagCostWarning"
-import { DateTime } from "luxon"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { BagBottomBar } from "./Components/BagBottomBar"
+import { useBag } from "./useBag"
+import { MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
 
 export enum BagView {
   Bag = 0,
@@ -53,7 +48,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [isMutating, setMutating] = useState(false)
-  const [planItemCount, setPlanItemCount] = useState(DEFAULT_ITEM_COUNT)
   const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const flatListRef = useRef(null)
@@ -64,6 +58,9 @@ export const Bag = screenTrack()((props: BagProps) => {
   const routeTab = route?.params?.tab
   const isSignedIn = authState.isSignedIn
   const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+
+  const windowDimensions = Dimensions.get("window")
+  const windowWidth = windowDimensions.width
 
   useScrollToTop(flatListRef)
 
@@ -90,12 +87,7 @@ export const Bag = screenTrack()((props: BagProps) => {
     }, [])
   )
 
-  const { previousData, data = previousData, refetch } = useQuery<GetBag_NoCache_Query_Type>(GetBag_NoCache_Query)
-  const { previousData: cachedPreviousData, data: cachedData = cachedPreviousData } = useQuery<
-    GetBag_Cached_Query_Type
-  >(GetBag_Cached_Query)
-  const { data: localItems } = useQuery(GET_LOCAL_BAG)
-  const [showBagCostWarning, setShowBagCostWarning] = useState(false)
+  const { data, bagItems, refetch } = useBag()
 
   const me = data?.me
   const customerStatus = me?.customer?.status
@@ -103,10 +95,6 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   useEffect(() => {
     if (data) {
-      const _planItemCount = data?.me?.customer?.membership?.plan?.itemCount
-      if (!!_planItemCount && _planItemCount !== planItemCount && isSignedIn) {
-        setPlanItemCount(_planItemCount)
-      }
       setIsLoading(false)
       const userId = me?.customer?.user?.id
       if (!!userId) {
@@ -115,7 +103,7 @@ export const Bag = screenTrack()((props: BagProps) => {
         analytics.identify(userId, { bagItems: savedItems + baggedItems })
       }
     }
-  }, [data, setIsLoading, setPlanItemCount])
+  }, [data, setIsLoading])
 
   const [deleteBagItem] = useMutation(DELETE_BAG_ITEM)
 
@@ -124,7 +112,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS, {
     onCompleted: (res) => {
       setMutating(false)
-      setShowBagCostWarning(false)
       if (res.checkItemsAvailability) {
         navigation.navigate(NavigationSchema.StackNames.BagStack, { screen: NavigationSchema.PageNames.Reservation })
       }
@@ -154,14 +141,9 @@ export const Bag = screenTrack()((props: BagProps) => {
           })
         }
       }
-      setShowBagCostWarning(false)
       setMutating(false)
     },
   })
-
-  if (isLoading) {
-    return <Loader />
-  }
 
   const onRefresh = () => {
     setRefreshing(true)
@@ -169,33 +151,22 @@ export const Bag = screenTrack()((props: BagProps) => {
     setRefreshing(false)
   }
 
-  const addedProducts = !isSignedIn
-    ? localItems?.localBagItems || []
-    : me?.bag?.map((item) => ({
-        ...item,
-        variantID: item.productVariant.id,
-        productID: item.productVariant.product.id,
-      })) || []
-
   const savedItems = savedTabData?.me?.savedItems
-
   const hasActiveReservation = !!me?.activeReservation
-
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
 
   const isBagView = BagView.Bag == currentView
   const isSavedView = BagView.Saved == currentView
-  const bagCount = addedProducts.length
-  const bagIsFull = planItemCount && bagCount >= planItemCount
+
+  const bagCount = bagItems.length
+  const bagIsFull = bagCount >= MAXIMUM_ITEM_COUNT
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
-  const nextFreeSwapDate = me?.nextFreeSwapDate
-  const swapNotAvailable = nextFreeSwapDate?.length > 0 && DateTime.fromISO(nextFreeSwapDate) > DateTime.local()
 
   const handleCheckItems = async () => {
     await checkItemsAvailability({
       variables: {
-        items: addedProducts.map((item) => item.variantID),
+        items: bagItems.map((item) => item.variantID),
       },
       refetchQueries: [
         {
@@ -238,12 +209,10 @@ export const Bag = screenTrack()((props: BagProps) => {
           })
         },
       })
-    } else if (bagCount > planItemCount) {
+    } else if (bagCount > MAXIMUM_ITEM_COUNT) {
       showPopUp({
         title: "You must remove some items first",
-        note: `Your plan has ${planItemCount} ${
-          planItemCount === 1 ? "slot" : "slots"
-        } but your bag has ${bagCount} items.`,
+        note: `The maximum items you can reserve is ${MAXIMUM_ITEM_COUNT}.`,
         buttonText: "Got it",
         onClose: () => hidePopUp(),
       })
@@ -268,13 +237,13 @@ export const Bag = screenTrack()((props: BagProps) => {
         setMutating(false)
         return
       }
-      if (swapNotAvailable) {
-        setShowBagCostWarning(true)
-        return
-      }
       await handleCheckItems()
     }
     setMutating(false)
+  }
+
+  if (isLoading) {
+    return <Loader />
   }
 
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
@@ -283,7 +252,8 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const hasActiveReservationAndBagRoom =
     hasActiveReservation &&
-    planItemCount > me?.activeReservation?.products?.length &&
+    MAXIMUM_ITEM_COUNT > me?.activeReservation?.products?.length &&
+    bagItems.some((a) => a.status === "Added") &&
     ["Queued", "Picked", "Packed", "Delivered", "Received", "Shipped"].includes(me?.activeReservation?.status)
 
   if (customerStatus === "Paused") {
@@ -296,20 +266,17 @@ export const Bag = screenTrack()((props: BagProps) => {
     if (isBagView) {
       return (
         <BagTab
-          itemCount={planItemCount}
+          bagItems={bagItems}
           data={data}
           pauseStatus={pauseStatus}
           items={item.data}
           removeFromBagAndSaveItem={removeFromBagAndSaveItem}
           deleteBagItem={deleteBagItem}
-          setItemCount={setPlanItemCount}
-          cachedData={cachedData}
         />
       )
     } else if (isSavedView) {
       return (
         <SavedItemsTab
-          itemCount={planItemCount}
           items={item.data}
           bagIsFull={bagIsFull}
           hasActiveReservation={hasActiveReservation}
@@ -322,17 +289,11 @@ export const Bag = screenTrack()((props: BagProps) => {
     }
   }
 
-  const bagItemsWithEmptyItems = assign(fill(new Array(planItemCount), { variantID: "", productID: "" }), addedProducts)
-
   let sections
   if (isBagView) {
     sections = [
       {
-        data: bagItemsWithEmptyItems?.sort((a, b) => {
-          const aWeight = a.status === "Reserved" ? 1 : 0
-          const bWeight = b.status === "Reserved" ? 1 : 0
-          return aWeight - bWeight
-        }),
+        data: [{ variantID: "", productID: "" }],
       },
     ]
   } else if (isSavedView) {
@@ -366,45 +327,53 @@ export const Bag = screenTrack()((props: BagProps) => {
     }
 
     if (hasActiveReservationAndBagRoom) {
-      button = (
-        <Button
-          block
-          onPress={handlePress}
-          disabled={!bagIsFull || isMutating}
-          loading={isMutating}
-          variant="primaryBlack"
-        >
-          Reserve
-        </Button>
-      )
+      button = <BagBottomBar bagItems={bagItems} onReserve={handlePress} />
     } else if (hasActiveReservation) {
       if (me?.activeReservation?.status === "Delivered") {
-        button = (
-          <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
-            {markedAsReturned ? "Return Instructions" : "Return Bag"}
-          </Button>
-        )
+        if (markedAsReturned) {
+          const returnLabelUrl = me?.activeReservation?.returnedPackage?.shippingLabel?.trackingURL
+          button = (
+            <Flex flexDirection="row" justifyContent="space-between" mx={3} my={3}>
+              {returnLabelUrl && (
+                <Button
+                  width={windowWidth / 2 - 20}
+                  onPress={() => navigation.navigate("Webview", { uri: returnLabelUrl })}
+                  disabled={isMutating}
+                  loading={isMutating}
+                  variant="primaryWhite"
+                >
+                  Return label
+                </Button>
+              )}
+              <Button
+                width={returnLabelUrl ? windowWidth / 2 - 20 : windowWidth - 20}
+                onPress={handlePress}
+                disabled={isMutating}
+                loading={isMutating}
+                variant="primaryBlack"
+              >
+                How to return
+              </Button>
+            </Flex>
+          )
+        } else {
+          button = (
+            <Box mx={2} my={2}>
+              <Button block onPress={handlePress} disabled={isMutating} loading={isMutating} variant="primaryWhite">
+                Return bag
+              </Button>
+            </Box>
+          )
+        }
       }
     } else {
-      button = (
-        <Button
-          block
-          onPress={handlePress}
-          disabled={!bagIsFull || isMutating}
-          loading={isMutating}
-          variant="primaryBlack"
-        >
-          Reserve
-        </Button>
-      )
+      button = <BagBottomBar bagItems={bagItems} onReserve={handlePress} />
     }
 
     return (
       button && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
-          <Spacer mb={2} />
-          <Box px={2}>{button}</Box>
-          <Spacer mb={2} />
+          {button}
         </FadeBottom2>
       )
     )
@@ -445,23 +414,14 @@ export const Bag = screenTrack()((props: BagProps) => {
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           data={sections}
+          contentContainerStyle={{ flexGrow: 1 }}
           keyExtractor={(item, index) => String(index) + item.id + String(currentView)}
           renderItem={(item) => {
             return renderItem(item)
           }}
           ref={flatListRef}
-          ListFooterComponent={() => <Spacer pb={80} />}
         />
         <PrimaryCTA />
-        <BagCostWarning
-          onCancel={() => {
-            setShowBagCostWarning(false)
-            setMutating(false)
-          }}
-          nextFreeSwapDate={nextFreeSwapDate}
-          show={showBagCostWarning}
-          onCTAPress={async () => await handleCheckItems()}
-        />
       </View>
     </Container>
   )

@@ -1,54 +1,47 @@
-import { Flex, Sans } from "App/Components"
+import { Box, Flex, Radio, Spacer } from "App/Components"
 import { color } from "App/utils/color"
+import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import React from "react"
-import { Text, TouchableOpacity } from "react-native"
+import { TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
+
+import { Sans } from "@seasons/eclipse"
+
 import { Coupon } from "../../CreateAccount"
 import { calcFinalPrice } from "./utils"
-import { Schema as TrackSchema, useTracking } from "App/utils/track"
 
 interface PlanButtonProps {
   shouldSelect: (plan: any) => void
   selected: boolean
   plan: any
-  selectedColor?: string
   coupon?: Coupon
+  lowestPlanPrice: number
 }
 
-export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, plan, selectedColor, coupon }) => {
+export const PlanButton: React.FC<PlanButtonProps> = ({ lowestPlanPrice, shouldSelect, selected, plan, coupon }) => {
   const tracking = useTracking()
-  const { price, itemCount } = plan
+  const { price, name, caption } = plan
   const finalPrice = calcFinalPrice(price, coupon)
+
   const PriceText = ({ originalPrice, finalPrice }) => {
     originalPrice /= 100
     finalPrice /= 100
     const isDiscounted = originalPrice !== finalPrice && !!finalPrice
     return isDiscounted ? (
-      <Text>
-        <Sans color="black100" size="3">
-          This month
-        </Sans>
-        <Sans color="black100" size="4">
-          {" "}
+      <>
+        <Sans color="black100" size="5">
           ${finalPrice}
         </Sans>
-        <Sans color="black100" size="4">
-          {" "}
-        </Sans>
-        <Sans color="black50" size="4" style={{ textDecorationLine: "line-through", textDecorationStyle: "solid" }}>
+        <Sans color="black50" size="5" style={{ textDecorationLine: "line-through", textDecorationStyle: "solid" }}>
           ${originalPrice}
         </Sans>
-      </Text>
+      </>
     ) : (
-      <Text>
-        <Sans color="black50" size="3">
-          Per month
-        </Sans>
-        <Sans color="black100" size="4">
-          {" "}
+      <>
+        <Sans color="black100" size="5">
           ${originalPrice}
         </Sans>
-      </Text>
+      </>
     )
   }
 
@@ -62,38 +55,64 @@ export const PlanButton: React.FC<PlanButtonProps> = ({ shouldSelect, selected, 
     })
   }
 
+  const monthlyPrice = plan.price / 12
+  const planDiscount = Math.floor(100 - (monthlyPrice / lowestPlanPrice) * 100)
+  const showYearlyDiscount = plan.planID === "access-yearly" && selected
+
   return (
-    <PlanSelectionBorder width="100%" p={0.5} selected={selected} selectedColor={selectedColor}>
-      <TouchableOpacity onPress={() => onPress(plan)}>
-        <StyledFlex
-          alignItems="center"
-          flexDirection="row"
-          width="100%"
-          height={48}
-          px={2}
-          justifyContent="space-between"
-        >
-          <Sans color="black100" size="4">
-            {itemCount} items
-          </Sans>
-          <PriceText originalPrice={price} finalPrice={finalPrice} />
-        </StyledFlex>
-      </TouchableOpacity>
-    </PlanSelectionBorder>
+    <TouchableOpacity onPress={() => onPress(plan)}>
+      <StyledFlex
+        alignItems="center"
+        flexDirection="row"
+        width="100%"
+        height={82}
+        mb={1}
+        px={2}
+        justifyContent="space-between"
+        selected={selected}
+      >
+        {!!showYearlyDiscount && (
+          <PlanDiscount px={1} py={0.5}>
+            <Sans size="3" color="black100">
+              {`${planDiscount}% Off`}
+            </Sans>
+          </PlanDiscount>
+        )}
+        <Flex flexDirection="row">
+          <Radio selected={selected} />
+          <Spacer mr={1} />
+          <Flex flexDirection="column">
+            <Sans color="black100" size="5">
+              {name}
+            </Sans>
+            <Sans size="2" color="black50">
+              {caption}
+            </Sans>
+          </Flex>
+        </Flex>
+        <PriceText originalPrice={price} finalPrice={finalPrice} />
+      </StyledFlex>
+    </TouchableOpacity>
   )
 }
 
-const StyledFlex = styled(Flex)`
-  border-radius: 28;
-  background-color: ${color("black04")};
+const StyledFlex = styled(Flex)<{ selected: boolean }>`
+  border-radius: 8;
+  background-color: ${color("white100")};
+  box-shadow: 0px 0px 10px ${color("black10")};
   z-index: 10;
   elevation: 6;
+  border-color: ${(p) => (p.selected ? color("black100") : color("white100"))};
+  border-width: 1px;
+  position: relative;
 `
 
-const PlanSelectionBorder = styled(Flex)<{ selected: boolean; selectedColor: string }>`
-  border-radius: 28;
-  border-color: ${(p) => (p.selected ? p.selectedColor : color("white100"))};
-  border-width: 1px;
-  background: ${color("white100")};
-  z-index: 0;
+const PlanDiscount = styled(Box)`
+  position: absolute;
+  top: -15;
+  right: 20;
+  border-radius: 4;
+  width: 65px;
+  height: 27px;
+  background-color: ${color("peach")};
 `
