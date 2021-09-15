@@ -4,8 +4,17 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
 import {
-  DocumentWithText, Envelope, Instagram, LogOutSVG, ManageMembership, MapPin, MonocromeSeasonsLogo,
-  PersonalPreferences, PrivacyPolicy, SpeechBubble, Star
+  DocumentWithText,
+  Envelope,
+  Instagram,
+  LogOutSVG,
+  ManageMembership,
+  MapPin,
+  MonocromeSeasonsLogo,
+  PersonalPreferences,
+  PrivacyPolicy,
+  SpeechBubble,
+  Star,
 } from "Assets/svgs"
 import gql from "graphql-tag"
 import { DateTime } from "luxon"
@@ -264,7 +273,10 @@ export const Account = screenTrack()(() => {
     },
   ]
 
-  const renderBody = () => {
+  const BodyContent: React.FC = () => {
+    if (!status) {
+      return <ListSkeleton />
+    }
     switch (status) {
       case CustomerStatus.Created:
         return (
@@ -339,6 +351,8 @@ export const Account = screenTrack()(() => {
             detail="If you'd like to reactivate your account, please request access and we'll get back to you shortly."
           />
         )
+      default:
+        return <ListSkeleton />
     }
   }
 
@@ -369,7 +383,7 @@ export const Account = screenTrack()(() => {
           <CreditBalance membership={customer?.membership} />
           <InsetSeparator />
           <Box px={2} py={4}>
-            {!customer ? <ListSkeleton /> : renderBody()}
+            <BodyContent />
           </Box>
           <InsetSeparator />
           {!!referralLink && (
