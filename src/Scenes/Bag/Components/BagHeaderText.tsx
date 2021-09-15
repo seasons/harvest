@@ -1,3 +1,4 @@
+import React from "react"
 import { Flex, Sans, Spacer } from "App/Components"
 import { ReservationPhase } from "App/generated/globalTypes"
 import { Schema, useTracking } from "App/utils/track"
@@ -36,7 +37,7 @@ export const BagHeaderText = ({ activeReservation, atHome }) => {
 
   return (
     <Flex flexDirection="row" justifyContent="space-between" flexWrap="nowrap" px={2}>
-      <Sans size="5">{getHeaderText(status, activeReservation?.phase, atHome)}</Sans>
+      <Sans size="5">{getHeaderText(activeReservation?.status, activeReservation?.phase, atHome)}</Sans>
       <Spacer mb={0.5} />
       <Sans
         size="5"

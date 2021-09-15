@@ -116,7 +116,7 @@ export const BagTab: React.FC<{
   const withOrWithoutDisplay = pauseType === "WithoutItems" ? "without items" : "with items"
   const pausedWithoutItems = isPaused && pauseType === "WithoutItems"
   const status = activeReservation?.status
-  const atHome = status && status === "Delivered" && !activeReservation.returnedAt
+  const atHome = status && status === "Delivered" && !activeReservation?.returnedAt
 
   const itemCount = me?.customer?.membership?.plan?.itemCount || MAXIMUM_ITEM_COUNT
   const paddedItems =

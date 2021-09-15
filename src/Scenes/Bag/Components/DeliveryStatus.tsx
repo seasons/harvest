@@ -39,7 +39,7 @@ export const DeliveryStatusFragment_Me = gql`
 export const DeliveryStatus: React.FC<{
   activeReservation: GetBag_NoCache_Query_me_activeReservation
   atHome: boolean
-}> = ({ activeReservation, atHome }) => {
+}> = ({ activeReservation,atHome }) => {
   const navigation = useNavigation()
   const status = activeReservation?.status
 
@@ -47,11 +47,6 @@ export const DeliveryStatus: React.FC<{
   const returnedPackageTrackingURL = activeReservation?.returnedPackage?.shippingLabel?.trackingURL
 
   const showReturnCopy = !!activeReservation?.returnedAt && activeReservation?.phase !== "CustomerToBusiness"
-
-  if (!atHome) {
-    return null
-  }
-
   if (showReturnCopy) {
     return <BagReturnFlowSubtitle />
   }
