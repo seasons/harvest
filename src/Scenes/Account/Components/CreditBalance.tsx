@@ -33,5 +33,18 @@ export const CreditBalance = ({ membership }) => {
       </Flex>
       <Spacer mb={4} />
     </>
-  ) : null
+  ) : (
+    <>
+      <Spacer mb={1} />
+      <Flex flexDirection="row" justifyContent="space-between" alignItems="flex-end" px={2} style={{ width: "100%" }}>
+        <Box>
+          <Skeleton width={88} height={20} />
+          <Spacer mt={2} />
+          <Skeleton width={133} height={20} />
+        </Box>
+        <Skeleton width={100} height={36} />
+      </Flex>
+      <Spacer mb={4} />
+    </>
+  )
 }
