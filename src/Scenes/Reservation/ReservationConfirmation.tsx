@@ -1,16 +1,15 @@
 import { Box, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { space } from "App/utils"
-import { formatPrice } from "App/utils/formatPrice"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import gql from "graphql-tag"
-import { last } from "lodash"
 import React from "react"
 import { ScrollView } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
 
 import { useQuery } from "@apollo/client"
+import { ProductPriceText_Product } from "@seasons/eclipse"
 
 import {
   ReservationConfirmationOptionsSection
@@ -86,6 +85,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
                   displayShort
                   displayLong
                 }
+                ...ProductPriceText_Product
               }
             }
           }
@@ -93,6 +93,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
       }
     }
   }
+  ${ProductPriceText_Product}
 `
 
 export const ReservationConfirmation = screenTrack()((props) => {
