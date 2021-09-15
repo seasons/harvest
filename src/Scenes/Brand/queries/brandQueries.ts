@@ -1,5 +1,7 @@
 import gql from "graphql-tag"
 
+import { ProductPriceText_Product } from "@seasons/eclipse"
+
 export const GET_BRAND = gql`
   query GetBrandAndProducts($brandID: ID!, $first: Int!, $skip: Int!, $orderBy: ProductOrderByInput!) {
     brand(where: { id: $brandID }) {
@@ -43,9 +45,11 @@ export const GET_BRAND = gql`
               reserved
               isSaved
             }
+            ...ProductPriceText_Product
           }
         }
       }
     }
   }
+  ${ProductPriceText_Product}
 `
