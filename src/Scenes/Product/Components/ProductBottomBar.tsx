@@ -7,9 +7,9 @@ import { color, space } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { DownChevronIcon } from "Assets/icons"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
-import { WhiteListCheck } from "Assets/svgs/WhiteListCheck"
+import { BlackListCheck } from "Assets/svgs/BlackListCheck"
 import React, { useEffect, useState } from "react"
-import { Animated, Dimensions, StyleSheet, Text, TouchableWithoutFeedback } from "react-native"
+import { Animated, Dimensions, StyleSheet, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 
 import { VARIANT_WANT_HEIGHT } from "../Product"
@@ -185,16 +185,15 @@ export const ProductBottomBar: React.FC<Props> = ({
                 />
               ) : (
                 <StyledButton
-                  Icon={hasNotification ? WhiteListCheck : null}
+                  variant={hasNotification ? "primaryGray" : "primaryBlack"}
+                  Icon={hasNotification && BlackListCheck}
                   onPress={onNotifyMe}
                   loading={isMutatingNotify}
                   borderRadius={BORDER_RADIUS}
                   height={48}
                   width={129}
                 >
-                  <Sans size="4" color={color("white100")}>
-                    Notify me
-                  </Sans>
+                  Notify me
                 </StyledButton>
               )}
             </Flex>
