@@ -215,7 +215,7 @@ export const ShareFitPicToIG = screenTrack()(({ route, navigation }) => {
           top: 40,
           left: 16,
         }}
-        variant="blackBackground"
+        variant="whiteTransparent"
         rotationDegree="270deg"
         navigation={navigation}
         onPress={onDownload}
