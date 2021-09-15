@@ -122,6 +122,14 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
     )
   }
 
+  if (data?.upcomingProducts?.length > 0) {
+    sections.push({
+      type: SectionType.UpcomingProducts,
+      title: "Upcoming releases",
+      results: data?.upcomingProducts,
+    })
+  }
+
   if (data?.archivalProducts?.length) {
     sections.push({
       type: SectionType.ArchivalProducts,
@@ -133,14 +141,6 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
       },
       title: "Just added vintage",
       results: data?.archivalProducts,
-    })
-  }
-
-  if (data?.upcomingProducts?.length > 0) {
-    sections.push({
-      type: SectionType.UpcomingProducts,
-      title: "Upcoming releases",
-      results: data?.upcomingProducts,
     })
   }
 
