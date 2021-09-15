@@ -309,7 +309,7 @@ export const Filters = screenTrack()((props: any) => {
         <Flex p={2}>
           <MultiSelectionTable
             items={item.data}
-            itemWidth={120}
+            itemWidth={187}
             onTap={(item) => {
               tracking.trackEvent({
                 actionName: Schema.ActionNames.FilterTapped,
