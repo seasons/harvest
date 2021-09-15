@@ -1,8 +1,6 @@
 import { Flex, Sans, Separator } from "App/Components"
 import { PauseStatus, RESUME_MEMBERSHIP } from "App/Components/Pause/PauseButtons"
-import {
-  GetBag_NoCache_Query as GetBag_NoCache_Query_Type
-} from "App/generated/GetBag_NoCache_Query"
+import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
 import { MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
@@ -178,16 +176,14 @@ export const BagTab: React.FC<{
             return null
           }
           const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
-          const spacing = isReserved ? "7px" : 2
           return bagItem?.productID?.length > 0 ? (
-            <Box key={index} pb={3}>
-              {index !== 0 && (
+            <Box key={index} pt={isReserved && index !== 0 ? 1 : 2}>
+              {index !== 0 && !isReserved && (
                 <>
-                  <Spacer mb={spacing} />
-                  {!isReserved && <Separator color={color("black10")} />}
+                  <Separator color={color("black10")} />
+                  <Spacer mb={2} />
                 </>
               )}
-              <Spacer mb={index === 0 ? 3 : spacing} />
               <Box px={2}>
                 <BagItem
                   deleteBagItem={deleteBagItem}

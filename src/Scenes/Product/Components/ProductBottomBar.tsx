@@ -109,6 +109,7 @@ export const ProductBottomBar: React.FC<Props> = ({
   const tracking = useTracking()
   const [loaded, setLoaded] = useState(false)
   const inStock = selectedVariant && selectedVariant.reservable > 0
+  const isInBag = selectedVariant?.isInBag
 
   useEffect(() => {
     // Wait to load the buttons until we know their state so user doesn't see the state change on load
@@ -173,7 +174,7 @@ export const ProductBottomBar: React.FC<Props> = ({
                 )}
               </TouchableWithoutFeedback>
               <Spacer mr={1} />
-              {inStock ? (
+              {inStock || isInBag ? (
                 <AddToBagButton
                   setShowSizeWarning={setShowSizeWarning}
                   variantInStock={inStock}

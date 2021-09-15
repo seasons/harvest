@@ -19,10 +19,11 @@ export const VariantList = ({ setSelectedVariant, selectedVariant, onSizeSelecte
       const firstAvailableSize =
         find(variants, (size) => size.isInBag) || find(variants, (size) => size.reservable > 0) || variants?.[0]
       setSelectedVariant(firstAvailableSize)
+
       const itemIndex = variants.findIndex((v) => v.id === firstAvailableSize.id)
       scrollRef?.current?.scrollTo({ x: (itemIndex + 1) * 97, y: 0, animated: true })
     } else if (variants?.length) {
-      const variant = find(variants, (size) => size.id === selectedVariant.id)
+      const variant = find(variants, (variant) => variant.id === selectedVariant.id)
       // Refresh variant data
       setSelectedVariant(variant)
       const itemIndex = variants.findIndex((v) => v.id === variant.id)
