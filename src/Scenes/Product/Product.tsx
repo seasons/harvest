@@ -1,12 +1,8 @@
-import {
-  Box, Container, FixedBackArrow, Flex, ProductCarousel, Sans, Spacer, VariantSizes
-} from "App/Components"
+import { Box, Container, FixedBackArrow, Flex, ProductCarousel, Sans, Spacer, VariantSizes } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
-import {
-  Product_NoCache_Query as Product_NoCache_Query_Type
-} from "App/generated/Product_NoCache_Query"
+import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generated/Product_NoCache_Query"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
@@ -24,8 +20,11 @@ import styled from "styled-components/native"
 
 import { useMutation, useQuery } from "@apollo/client"
 import {
-  ProductBuyCTA, ProductBuyCTAFragment_Product, ProductBuyCTAFragment_ProductVariant,
-  ProductConditionSection, ProductConditionSectionFragment_PhysicalProductQualityReport
+  ProductBuyCTA,
+  ProductBuyCTAFragment_Product,
+  ProductBuyCTAFragment_ProductVariant,
+  ProductConditionSection,
+  ProductConditionSectionFragment_PhysicalProductQualityReport,
 } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 

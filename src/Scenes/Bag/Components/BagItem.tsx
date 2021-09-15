@@ -18,7 +18,7 @@ import styled from "styled-components/native"
 import { useMutation } from "@apollo/client"
 import { ProductPriceText, ProductPriceText_Product } from "@seasons/eclipse"
 
-import { GetBag_NoCache_Query } from "../BagQueries"
+import { GetBag_NoCache_Query, SavedTab_Query } from "../BagQueries"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -149,6 +149,9 @@ export const BagItem: React.FC<BagItemProps> = ({
         refetchQueries: [
           {
             query: GetBag_NoCache_Query,
+          },
+          {
+            query: SavedTab_Query,
           },
           {
             query: GET_PRODUCT,
