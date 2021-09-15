@@ -208,14 +208,14 @@ export const ShareFitPicToIG = screenTrack()(({ route, navigation }) => {
 
   return (
     <Flex pt={insets.top} style={{ flex: 1, backgroundColor: "#1B1B1B" }}>
-      <CloseButton overrides={{ borderColor: "#333333", backgroundColor: "#1B1B1B", borderWidth: 1 }} />
+      <CloseButton variant="light" overrides={{ borderColor: "#333333", backgroundColor: "#1B1B1B", borderWidth: 1 }} />
       <FixedBackArrow
         overrides={{
           borderColor: "#333333",
           top: 40,
           left: 16,
         }}
-        variant="whiteTransparent"
+        variant="blackBackground"
         rotationDegree="270deg"
         navigation={navigation}
         onPress={onDownload}
