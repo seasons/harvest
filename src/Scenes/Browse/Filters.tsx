@@ -35,6 +35,8 @@ export const EMPTY_BROWSE_FILTERS = {
   forSaleOnly: false,
 }
 
+const screenWidth = Dimensions.get("window").width
+
 export const Filters = screenTrack()((props: any) => {
   const currentFilters = get(props, "route.params.filters", EMPTY_BROWSE_FILTERS)
   const designers = props?.route?.params?.designers
@@ -82,7 +84,6 @@ export const Filters = screenTrack()((props: any) => {
     { label: "Blue", value: "blue" },
     { label: "Yellow", value: "yellow" },
   ]
-  const screenWidth = Dimensions.get("window").width
   const buttonWidth = (screenWidth - 39) / 2
   const buttonHeight = 48
 
@@ -309,7 +310,7 @@ export const Filters = screenTrack()((props: any) => {
         <Flex p={2}>
           <MultiSelectionTable
             items={item.data}
-            itemWidth={187}
+            itemWidth={screenWidth / 2 - space(2) - 4}
             onTap={(item) => {
               tracking.trackEvent({
                 actionName: Schema.ActionNames.FilterTapped,

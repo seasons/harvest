@@ -56,7 +56,7 @@ export const DeliveryStatus: React.FC<{
   let statusColor = color("lightGreen")
   let trackingURL
 
-  if (activeReservation.phase === "CustomerToBusiness") {
+  if (activeReservation?.phase === "CustomerToBusiness") {
     // Package is heading back to the warehouse
     statusColor = color("blue100")
     trackingURL = returnedPackageTrackingURL

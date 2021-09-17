@@ -188,7 +188,7 @@ export const BagItem: React.FC<BagItemProps> = ({
         flexDirection="column"
         justifyContent="space-between"
       >
-        <Box style={{ width: "100%" }} p={2}>
+        <Box style={{ width: "100%" }} mt={2} px={2}>
           <Sans size="3">{`${index + 1}.`}</Sans>
           <Spacer mb={1} />
           <Sans size="3">{product?.brand?.name}</Sans>
@@ -203,7 +203,7 @@ export const BagItem: React.FC<BagItemProps> = ({
             Size {variantSize}
           </Sans>
         </Box>
-        <Box p={2}>
+        <Box mb={2} px={2}>
           {isBuyable && !purchased && (
             <Button size="small" variant="secondaryWhite" onPress={onShowBuyBottomSheet}>
               Buy
