@@ -5,7 +5,6 @@ const HomePageProductFragment_Product = gql`
   fragment HomePageProductFragment_Product on Product {
     id
     slug
-    name
     modelSize {
       id
       display
@@ -144,7 +143,6 @@ export const Homepage_Query = gql`
           ... on Product {
             id
             slug
-            name
             images(size: Thumb) {
               id
               url
@@ -205,6 +203,10 @@ export const Homepage_Query = gql`
       id
       slug
       name
+      brand {
+        id
+        name
+      }
       images(size: Thumb) {
         id
         url

@@ -1,7 +1,5 @@
 import { Flex, Separator } from "App/Components"
-import {
-  GetBag_NoCache_Query as GetBag_NoCache_Query_Type
-} from "App/generated/GetBag_NoCache_Query"
+import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
 import { MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { color } from "App/utils"
@@ -90,11 +88,13 @@ export const BagTab: React.FC<{
         </Flex>
       )}
 
+      <Spacer mb={2} />
+
       {showBagItems &&
         paddedItems?.map((bagItem, index) => {
           const isReserved = !!bagItem?.status && bagItem?.status === "Reserved"
           return bagItem?.productID?.length > 0 ? (
-            <Box key={index} pt={isReserved && index !== 0 ? 1 : 2}>
+            <Box key={index} pt={2}>
               {index !== 0 && !isReserved && (
                 <>
                   <Separator color={color("black10")} />

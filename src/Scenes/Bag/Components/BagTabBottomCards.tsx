@@ -17,9 +17,7 @@ export const BagTabBottomCards = ({ reservation }) => {
 
   const stylistEmail = {
     subject: encodeURIComponent("Chat with our stylist"),
-    body: encodeURIComponent(
-      "Hey Seasons.\n\n I’d like to chat with a stylist and get recommendations for my next order."
-    ),
+    body: encodeURIComponent("Hey Seasons. I’d like to chat with a stylist and get recommendations for my next order."),
   }
 
   return (
