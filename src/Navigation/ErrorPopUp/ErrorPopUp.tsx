@@ -33,6 +33,9 @@ export const ErrorPopUp: React.FC = () => {
         const packageVersion = packageJson.version
         fetch(`https://harvest-public.s3.amazonaws.com/harvest-minimum-version.json`, {
           method: "GET",
+          headers: {
+            "Cache-Control": "no-cache",
+          },
         })
           .then((response) => response.json())
           .then((data: MinimumPackageVersionPayload) => {
