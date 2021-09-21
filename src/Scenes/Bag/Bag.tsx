@@ -1,5 +1,6 @@
 import { Loader } from "App/Components/Loader"
 import { PauseStatus } from "App/Components/Pause/PauseButtons"
+import { MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
@@ -15,22 +16,19 @@ import { NavigationRoute, NavigationScreenProp } from "react-navigation"
 
 import { useLazyQuery, useMutation } from "@apollo/client"
 import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
-import { Box, Button, Flex, Spacer } from "@seasons/eclipse"
+import { Box, Button, Flex } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 
-import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import {
-  CHECK_ITEMS,
-  DELETE_BAG_ITEM,
-  GetBag_NoCache_Query,
-  REMOVE_FROM_BAG_AND_SAVE_ITEM,
-  ReservationHistoryTab_Query,
-  SavedTab_Query,
+  State as CreateAccountState, UserState as CreateAccountUserState
+} from "../CreateAccount/CreateAccount"
+import {
+  CHECK_ITEMS, DELETE_BAG_ITEM, GetBag_NoCache_Query, REMOVE_FROM_BAG_AND_SAVE_ITEM,
+  ReservationHistoryTab_Query, SavedTab_Query
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { BagBottomBar } from "./Components/BagBottomBar"
 import { useBag } from "./useBag"
-import { MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
 
 export enum BagView {
   Bag = 0,
@@ -250,11 +248,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const pausePending = pauseRequest?.pausePending
   let pauseStatus: PauseStatus = "active"
 
-  const hasActiveReservationAndBagRoom =
-    hasActiveReservation &&
-    MAXIMUM_ITEM_COUNT > me?.activeReservation?.products?.length &&
-    bagItems.some((a) => a.status === "Added") &&
-    ["Queued", "Picked", "Packed", "Delivered", "Received", "Shipped"].includes(me?.activeReservation?.status)
+  const hasAddedItems = bagItems.some((a) => a.status === "Added")
 
   if (customerStatus === "Paused") {
     pauseStatus = "paused"
@@ -315,7 +309,7 @@ export const Bag = screenTrack()((props: BagProps) => {
         actionType: TrackSchema.ActionTypes.Tap,
         bagIsFull,
       })
-      if (!hasActiveReservation || hasActiveReservationAndBagRoom) {
+      if (!hasActiveReservation || hasAddedItems) {
         handleReserve()
       } else {
         navigation.navigate(
@@ -326,7 +320,7 @@ export const Bag = screenTrack()((props: BagProps) => {
       }
     }
 
-    if (hasActiveReservationAndBagRoom) {
+    if (hasAddedItems) {
       button = <BagBottomBar bagItems={bagItems} onReserve={handlePress} />
     } else if (hasActiveReservation) {
       if (me?.activeReservation?.status === "Delivered") {
@@ -366,8 +360,6 @@ export const Bag = screenTrack()((props: BagProps) => {
           )
         }
       }
-    } else {
-      button = <BagBottomBar bagItems={bagItems} onReserve={handlePress} />
     }
 
     return (
