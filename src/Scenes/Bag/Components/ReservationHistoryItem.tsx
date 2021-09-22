@@ -52,7 +52,7 @@ export const ReservationHistoryItem = ({ item }) => {
         )}
       </Box>
       <Spacer mb={3} />
-      <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start" px="14px">
+      <Flex flexDirection="row" flexWrap="nowrap" justifyContent="flex-start" pl="14px">
         {item?.products?.length > 3 ? (
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {item?.products?.map((physicalProduct, index) => {
