@@ -207,7 +207,7 @@ export const Homepage_Query = gql`
         id
         name
       }
-      images(size: Thumb) {
+      images(size: Medium) {
         id
         url
       }
