@@ -11,7 +11,6 @@ export const BagTabHeaderFragment_Query = gql`
   fragment BagTabHeaderFragment_Query on Query {
     me {
       id
-      nextFreeSwapDate
       activeReservation {
         id
         createdAt
