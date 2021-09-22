@@ -41,7 +41,6 @@ const GET_CUSTOMER = gql`
   query GetCustomer($shippingCode: String) {
     me {
       id
-      nextFreeSwapDate
       user {
         id
         firstName

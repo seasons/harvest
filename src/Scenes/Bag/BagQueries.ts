@@ -48,7 +48,6 @@ export const GetBag_NoCache_Query = gql`
   query GetBag_NoCache_Query {
     me {
       id
-      nextFreeSwapDate
       customer {
         id
         status

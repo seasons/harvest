@@ -11,7 +11,6 @@ export const BagTabHeaderFragment_Query = gql`
   fragment BagTabHeaderFragment_Query on Query {
     me {
       id
-      nextFreeSwapDate
       activeReservation {
         id
         createdAt
@@ -34,9 +33,8 @@ export const BagTabHeaderFragment_Query = gql`
 export const BagTabHeader: React.FC<{
   me: GetBag_NoCache_Query_me
   atHome: boolean
-}> = ({ me }) => {
+}> = ({ me, atHome }) => {
   const activeReservation = me?.activeReservation
-  const atHome = activeReservation?.status === "Delivered" && !activeReservation.returnedAt
 
   return (
     <Box pt={4}>

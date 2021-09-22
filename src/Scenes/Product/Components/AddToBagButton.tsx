@@ -93,30 +93,12 @@ export const AddToBagButton: React.FC<Props> = ({
             onClose: () => hidePopUp(),
           })
         } else if (err.toString().includes("Bag is full")) {
-          if (dataMe?.me?.bag?.length < 6) {
-            showPopUp({
-              title: "Want another item?",
-              note: "Upgrade your plan to add more slots",
-              buttonText: "Upgrade plan",
-              onClose: () => {
-                navigation.navigate(NavigationSchema.StackNames.Modal, {
-                  screen: NavigationSchema.PageNames.UpdatePaymentPlanModal,
-                })
-                hidePopUp()
-              },
-              secondaryButtonText: "Got It",
-              secondaryButtonOnPress: () => {
-                hidePopUp()
-              },
-            })
-          } else {
-            showPopUp({
-              title: "Your bag is full",
-              note: "Remove one or more items from your bag to continue adding this item.",
-              buttonText: "Got It",
-              onClose: () => hidePopUp(),
-            })
-          }
+          showPopUp({
+            title: "Your bag is full",
+            note: "Remove one or more items from your bag to continue adding this item.",
+            buttonText: "Got It",
+            onClose: () => hidePopUp(),
+          })
         } else {
           showPopUp({
             title: "Oops, sorry!",
