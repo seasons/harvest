@@ -72,6 +72,10 @@ export const BagTab: React.FC<{
   const status = activeReservation?.status
   const updatedMoreThan24HoursAgo =
     activeReservation?.updatedAt && DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
+
+  // atHome represents that the package is currently not in a state of transition and the user has it at home.
+  // We wait 24 hours before showing its at home so the user can see the delivery status as delivered
+  // With this variable we can show and hide the delivery status, for example
   const atHome = status && status === "Delivered" && !activeReservation?.returnedAt && updatedMoreThan24HoursAgo
 
   const itemCount = me?.customer?.membership?.plan?.itemCount || MAXIMUM_ITEM_COUNT
