@@ -70,7 +70,9 @@ export const BagTab: React.FC<{
   }
 
   const status = activeReservation?.status
-  const atHome = status && status === "Delivered" && !activeReservation?.returnedAt
+  const updatedMoreThan24HoursAgo =
+    activeReservation?.updatedAt && DateTime.fromISO(activeReservation?.updatedAt).diffNow("days")?.values?.days <= -1
+  const atHome = status && status === "Delivered" && !activeReservation?.returnedAt && updatedMoreThan24HoursAgo
 
   const itemCount = me?.customer?.membership?.plan?.itemCount || MAXIMUM_ITEM_COUNT
   const paddedItems =
