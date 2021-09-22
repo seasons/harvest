@@ -1,7 +1,5 @@
 import { Box, Flex, Sans, Spacer } from "App/Components"
-import {
-  GetBag_NoCache_Query_me, GetBag_NoCache_Query_me_activeReservation
-} from "App/generated/GetBag_NoCache_Query"
+import { GetBag_NoCache_Query_me_activeReservation } from "App/generated/GetBag_NoCache_Query"
 import { Schema } from "App/Navigation"
 import { color } from "App/utils"
 import gql from "graphql-tag"
@@ -39,7 +37,7 @@ export const DeliveryStatusFragment_Me = gql`
 export const DeliveryStatus: React.FC<{
   activeReservation: GetBag_NoCache_Query_me_activeReservation
   atHome: boolean
-}> = ({ activeReservation,atHome }) => {
+}> = ({ activeReservation, atHome }) => {
   const navigation = useNavigation()
   const status = activeReservation?.status
 
@@ -49,6 +47,12 @@ export const DeliveryStatus: React.FC<{
   const showReturnCopy = !!activeReservation?.returnedAt && activeReservation?.phase !== "CustomerToBusiness"
   if (showReturnCopy) {
     return <BagReturnFlowSubtitle />
+  }
+
+  if (atHome) {
+    // We only want to show the delivery bar and status if the package
+    // is in the process of being delivered. If its "At home" then we hide it
+    return null
   }
 
   let step

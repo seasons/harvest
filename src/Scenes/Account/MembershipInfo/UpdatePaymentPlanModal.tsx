@@ -44,7 +44,6 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
         data={data}
         dataNoCache={dataNoCache}
         onComplete={() => navigation.goBack()}
-        headerText="Let's choose your plan"
         source="UpdatePaymentPlanModal"
       />
     </Container>
