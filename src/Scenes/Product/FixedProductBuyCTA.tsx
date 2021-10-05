@@ -14,8 +14,8 @@ export const FixedProductBuyCTA: React.FC<{
   handleCreateDraftOrder: (x) => void
   animatedScrollY: any
   showNotifyMeMessage: boolean
-  buyButtonMutating: boolean
-}> = ({ price, handleCreateDraftOrder, animatedScrollY, showNotifyMeMessage, buyButtonMutating }) => {
+  isMutatingBuyButton: boolean
+}> = ({ price, handleCreateDraftOrder, animatedScrollY, showNotifyMeMessage, isMutatingBuyButton }) => {
   const opacity = animatedScrollY.interpolate({
     inputRange: [0, 50],
     outputRange: [1, 0],
@@ -25,7 +25,7 @@ export const FixedProductBuyCTA: React.FC<{
   const availableForBuyUsed = price && price.buyUsedEnabled && price.buyUsedPrice
 
   const CTA = () => {
-    if (buyButtonMutating) {
+    if (isMutatingBuyButton) {
       return (
         <Flex flexDirection="row" alignItems="center" justifyContent="center" height={20}>
           <Spinner />

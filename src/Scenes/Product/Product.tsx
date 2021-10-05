@@ -63,7 +63,7 @@ export const Product = screenTrack({
 })(({ route, navigation }) => {
   const productBuyRef = useRef(null)
   const { authState } = useAuthContext()
-  const [buyButtonMutating, setBuyButtonMutating] = useState(false)
+  const [isMutatingBuyButton, setIsMutatingBuyButton] = useState(false)
   const [viewed, setViewed] = useState(false)
   const [showNotifyMeMessage, setShowNotifyMeMessage] = useState(false)
   const [isMutatingNotify, setIsMutatingNotify] = useState(false)
@@ -151,7 +151,7 @@ export const Product = screenTrack({
 
   const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
     onCompleted: (res) => {
-      setBuyButtonMutating(false)
+      setIsMutatingBuyButton(false)
       if (res?.createDraftedOrder) {
         navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
       }
@@ -167,15 +167,15 @@ export const Product = screenTrack({
       })
       console.log("error createDraftOrder ", error)
       Sentry.captureException(JSON.stringify(error))
-      setBuyButtonMutating(false)
+      setIsMutatingBuyButton(false)
     },
   })
 
   const handleCreateDraftOrder = (orderType: "Used" | "New") => {
-    if (buyButtonMutating) {
+    if (isMutatingBuyButton) {
       return
     }
-    setBuyButtonMutating(true)
+    setIsMutatingBuyButton(true)
     console.log("orderType", orderType)
     if (userHasSession) {
       return createDraftOrder({
@@ -192,13 +192,13 @@ export const Product = screenTrack({
         note: "You need to sign in or create an account before you can order items",
         secondaryButtonText: "Got it",
         secondaryButtonOnPress: () => {
-          setBuyButtonMutating(false)
+          setIsMutatingBuyButton(false)
           hidePopUp()
         },
         buttonText: "Sign up",
         onClose: () => {
           hidePopUp()
-          setBuyButtonMutating(false)
+          setIsMutatingBuyButton(false)
           navigation.navigate("Modal", {
             screen: "CreateAccountModal",
           })
@@ -328,7 +328,7 @@ export const Product = screenTrack({
             ref={productBuyRef}
             product={filter(ProductBuyCTAFragment_Product, product)}
             selectedVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
-            buyButtonMutating={buyButtonMutating}
+            isMutatingBuyButton={isMutatingBuyButton}
             onBuyNew={() => {
               handleCreateDraftOrder(OrderType.BUY_NEW)
             }}
@@ -427,7 +427,7 @@ export const Product = screenTrack({
         })}
       />
       <ProductBottomBar
-        buyButtonMutating={buyButtonMutating}
+        isMutatingBuyButton={isMutatingBuyButton}
         showNotifyMeMessage={showNotifyMeMessage}
         toggleShowVariantPicker={toggleShowVariantPicker}
         showVariantPicker={showVariantPicker}

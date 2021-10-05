@@ -30,7 +30,7 @@ interface Props {
   retailPrice: number
   monthlyRental: number
   productType: string
-  buyButtonMutating: boolean
+  isMutatingBuyButton: boolean
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
@@ -52,7 +52,7 @@ export const ProductBottomBar: React.FC<Props> = ({
   retailPrice,
   monthlyRental,
   productType,
-  buyButtonMutating,
+  isMutatingBuyButton,
 }) => {
   const tracking = useTracking()
   const [loaded, setLoaded] = useState(false)
@@ -78,7 +78,7 @@ export const ProductBottomBar: React.FC<Props> = ({
           handleCreateDraftOrder={handleCreateDraftOrder}
           showNotifyMeMessage={showNotifyMeMessage}
           animatedScrollY={animatedScrollY}
-          buyButtonMutating={buyButtonMutating}
+          isMutatingBuyButton={isMutatingBuyButton}
         />
         <Animated.View style={{ zIndex: 30 }}>
           <SelectionBox>
