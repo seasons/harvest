@@ -176,7 +176,7 @@ export const Product = screenTrack({
       return
     }
     setIsMutatingBuyButton(true)
-    console.log("orderType", orderType)
+
     if (userHasSession) {
       return createDraftOrder({
         variables: {
