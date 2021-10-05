@@ -23,7 +23,7 @@ export const ReturnItemsPopUp = ({ show, windowWidth, setShowReturnItemPopup, st
     <PopUp show={show} paddingBottom={80}>
       <Box pt={4} pb={2}>
         <Sans size="4" textAlign="center">
-          Are you returning anything
+          Are you returning anything?
         </Sans>
       </Box>
       <Separator />
