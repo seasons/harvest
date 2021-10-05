@@ -6,13 +6,13 @@ import { AddToBagButton } from "App/Scenes/Product/Components"
 import { color, space } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
 import { DownChevronIcon } from "Assets/icons"
-import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { BlackListCheck } from "Assets/svgs/BlackListCheck"
 import React, { useEffect, useState } from "react"
-import { Animated, Dimensions, StyleSheet, TouchableWithoutFeedback } from "react-native"
+import { Animated, Dimensions, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 
 import { VARIANT_WANT_HEIGHT } from "../Product"
+import { FixedProductBuyCTA } from "../FixedProductBuyCTA"
 
 interface Props {
   toggleShowVariantPicker: (show: boolean) => void
@@ -22,7 +22,7 @@ interface Props {
   showNotifyMeMessage: boolean
   data: GetProduct
   onNotifyMe: () => void
-  scrollToBuyCTA: () => void
+  handleCreateDraftOrder: (x) => void
   hasNotification: boolean
   isMutatingNotify: boolean
   animatedScrollY: Animated.Value
@@ -30,64 +30,11 @@ interface Props {
   retailPrice: number
   monthlyRental: number
   productType: string
+  buyButtonMutating: boolean
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
 const oneButtonWidth = twoButtonWidth / 2
-const buyCtaHeight = space(2) + space(3) + 20
-
-const renderBuyCTA = ({ price, scrollToBuyCTA, animatedScrollY, showNotifyMeMessage }) => {
-  const opacity = animatedScrollY.interpolate({
-    inputRange: [0, 50],
-    outputRange: [1, 0],
-  })
-
-  let cta
-  if (price && price.buyUsedEnabled && price.buyUsedPrice) {
-    cta = (
-      <UnderlinedSans size="5" onPress={scrollToBuyCTA}>
-        {" "}
-        Buy for{" "}
-        {(price.buyUsedPrice / 100).toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        })}
-      </UnderlinedSans>
-    )
-  } else if (price && price.buyNewEnabled && price.buyNewPrice && price.buyNewAvailableForSale) {
-    cta = (
-      <UnderlinedSans size="5" onPress={scrollToBuyCTA}>
-        Buy new for{" "}
-        {(price.buyNewPrice / 100).toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        })}
-      </UnderlinedSans>
-    )
-  }
-
-  return cta && !showNotifyMeMessage ? (
-    <Animated.View
-      style={{
-        opacity,
-        zIndex: 29,
-      }}
-    >
-      <FadeBottom2
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          ...StyleSheet.absoluteFillObject,
-          top: -20,
-          height: buyCtaHeight + 20,
-        }}
-      />
-      <Flex paddingBottom="3" justifyContent="center" flexDirection="row">
-        {cta}
-      </Flex>
-    </Animated.View>
-  ) : null
-}
 
 export const ProductBottomBar: React.FC<Props> = ({
   dataMe,
@@ -100,11 +47,12 @@ export const ProductBottomBar: React.FC<Props> = ({
   isMutatingNotify,
   onNotifyMe,
   setShowSizeWarning,
-  scrollToBuyCTA,
+  handleCreateDraftOrder,
   animatedScrollY,
   retailPrice,
   monthlyRental,
   productType,
+  buyButtonMutating,
 }) => {
   const tracking = useTracking()
   const [loaded, setLoaded] = useState(false)
@@ -122,16 +70,16 @@ export const ProductBottomBar: React.FC<Props> = ({
     return null
   }
 
-  const BuyCTA = renderBuyCTA({
-    price: selectedVariant?.price,
-    scrollToBuyCTA,
-    animatedScrollY,
-    showNotifyMeMessage,
-  })
-
   return (
     <Wrapper style={{ bottom: showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0 }}>
       <Flex flexDirection="column">
+        <FixedProductBuyCTA
+          price={selectedVariant?.price}
+          handleCreateDraftOrder={handleCreateDraftOrder}
+          showNotifyMeMessage={showNotifyMeMessage}
+          animatedScrollY={animatedScrollY}
+          buyButtonMutating={buyButtonMutating}
+        />
         <Animated.View style={{ zIndex: 30 }}>
           <SelectionBox>
             <Flex>
@@ -199,7 +147,6 @@ export const ProductBottomBar: React.FC<Props> = ({
             </Flex>
           </SelectionBox>
         </Animated.View>
-        {BuyCTA}
       </Flex>
     </Wrapper>
   )
@@ -220,7 +167,7 @@ const VariantSelectionButton = styled.View`
 const Wrapper = styled.View`
   position: absolute;
   left: 0;
-  height: ${40 + buyCtaHeight};
+  height: 100;
   width: 100%;
   z-index: 1;
 `
@@ -231,10 +178,6 @@ const StyledButton = styled(Button)`
       stroke: ${color("white100")};
     }
   }
-`
-
-const UnderlinedSans = styled(Sans)`
-  text-decoration: underline;
 `
 
 const SelectionBox = styled(Flex)`
