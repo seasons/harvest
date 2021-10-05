@@ -19,16 +19,19 @@ import { useFocusEffect, useScrollToTop } from "@react-navigation/native"
 import { Box, Button, Flex } from "@seasons/eclipse"
 import analytics from "@segment/analytics-react-native"
 
+import { State as CreateAccountState, UserState as CreateAccountUserState } from "../CreateAccount/CreateAccount"
 import {
-  State as CreateAccountState, UserState as CreateAccountUserState
-} from "../CreateAccount/CreateAccount"
-import {
-  CHECK_ITEMS, DELETE_BAG_ITEM, GetBag_NoCache_Query, REMOVE_FROM_BAG_AND_SAVE_ITEM,
-  ReservationHistoryTab_Query, SavedTab_Query
+  CHECK_ITEMS,
+  DELETE_BAG_ITEM,
+  GetBag_NoCache_Query,
+  REMOVE_FROM_BAG_AND_SAVE_ITEM,
+  ReservationHistoryTab_Query,
+  SavedTab_Query,
 } from "./BagQueries"
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { BagBottomBar } from "./Components/BagBottomBar"
 import { useBag } from "./useBag"
+import { ReturnItemsPopUp } from "./Components/ReturnItemsPopUp"
 
 export enum BagView {
   Bag = 0,
@@ -45,6 +48,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const { authState } = useAuthContext()
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
+  const [showReturnItemPopup, setShowReturnItemPopup] = useState(true)
   const [isMutating, setMutating] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -59,6 +63,11 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const windowDimensions = Dimensions.get("window")
   const windowWidth = windowDimensions.width
+
+  const { data, bagItems, refetch } = useBag()
+
+  const hasAddedItems = bagItems.some((a) => a.status === "Added")
+  const hasReservedItems = bagItems.some((a) => a.status === "Reserved")
 
   useScrollToTop(flatListRef)
 
@@ -84,8 +93,6 @@ export const Bag = screenTrack()((props: BagProps) => {
       }
     }, [])
   )
-
-  const { data, bagItems, refetch } = useBag()
 
   const me = data?.me
   const customerStatus = me?.customer?.status
@@ -160,8 +167,10 @@ export const Bag = screenTrack()((props: BagProps) => {
   const bagIsFull = bagCount >= MAXIMUM_ITEM_COUNT
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
+  const hasShippingAddress =
+    !!shippingAddress.address1 && !!shippingAddress.city && !!shippingAddress.state && !!shippingAddress.zipCode
 
-  const handleCheckItems = async () => {
+  const startReservation = async () => {
     await checkItemsAvailability({
       variables: {
         items: bagItems.map((item) => item.variantID),
@@ -214,28 +223,25 @@ export const Bag = screenTrack()((props: BagProps) => {
         buttonText: "Got it",
         onClose: () => hidePopUp(),
       })
+    } else if (!hasShippingAddress) {
+      showPopUp({
+        title: "Your shipping address is incomplete",
+        note:
+          "Please update your shipping address under Payment & Shipping in your account settings to complete your reservation.",
+        buttonText: "Got it",
+        onClose: () => hidePopUp(),
+        secondaryButtonText: "Go to settings",
+        secondaryButtonOnPress: () => {
+          navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+            screen: NavigationSchema.PageNames.PaymentAndShipping,
+          })
+          hidePopUp()
+        },
+      })
+    } else if (hasReservedItems && !markedAsReturned) {
+      setShowReturnItemPopup(true)
     } else {
-      const hasShippingAddress =
-        !!shippingAddress.address1 && !!shippingAddress.city && !!shippingAddress.state && !!shippingAddress.zipCode
-      if (!hasShippingAddress) {
-        showPopUp({
-          title: "Your shipping address is incomplete",
-          note:
-            "Please update your shipping address under Payment & Shipping in your account settings to complete your reservation.",
-          buttonText: "Got it",
-          onClose: () => hidePopUp(),
-          secondaryButtonText: "Go to settings",
-          secondaryButtonOnPress: () => {
-            navigation.navigate(NavigationSchema.StackNames.AccountStack, {
-              screen: NavigationSchema.PageNames.PaymentAndShipping,
-            })
-            hidePopUp()
-          },
-        })
-        setMutating(false)
-        return
-      }
-      await handleCheckItems()
+      await startReservation()
     }
     setMutating(false)
   }
@@ -247,8 +253,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   const pauseRequest = me?.customer?.membership?.pauseRequests?.[0]
   const pausePending = pauseRequest?.pausePending
   let pauseStatus: PauseStatus = "active"
-
-  const hasAddedItems = bagItems.some((a) => a.status === "Added")
 
   if (customerStatus === "Paused") {
     pauseStatus = "paused"
@@ -262,7 +266,6 @@ export const Bag = screenTrack()((props: BagProps) => {
         <BagTab
           bagItems={bagItems}
           data={data}
-          pauseStatus={pauseStatus}
           items={item.data}
           removeFromBagAndSaveItem={removeFromBagAndSaveItem}
           deleteBagItem={deleteBagItem}
@@ -415,6 +418,12 @@ export const Bag = screenTrack()((props: BagProps) => {
         />
         <PrimaryCTA />
       </View>
+      <ReturnItemsPopUp
+        setShowReturnItemPopup={setShowReturnItemPopup}
+        show={showReturnItemPopup}
+        windowWidth={windowWidth}
+        startReservation={startReservation}
+      />
     </Container>
   )
 })
