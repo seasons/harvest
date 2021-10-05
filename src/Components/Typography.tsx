@@ -105,6 +105,7 @@ export interface TextProps
   fontFamily?: string
   style?: CSSProperties
   numberOfLines?: number
+  underline?: boolean
 }
 
 /** Base Text component for typography */
@@ -178,12 +179,19 @@ export interface SansProps extends Partial<TextProps> {
  * The Sans typeface is the main Seasons typeface
  */
 
-export const Sans: React.SFC<SansProps> = (props) => {
-  const { size, weight, numberOfLines } = props
+export const Sans: React.FC<SansProps> = (props) => {
+  const { size, weight, numberOfLines, underline } = props
   const color = props.color ? colorHelper(props.color) : colorHelper("black")
+
+  const styles = {
+    ...(underline ? { textDecorationLine: "underline" } : {}),
+    ...props.style,
+  }
+
   return (
     <Text
       {...props}
+      style={styles}
       fontFamily={fontFamily.sans[weight || "medium"]}
       {...determineFontSizes(size)}
       color={color}
@@ -206,11 +214,18 @@ export interface DisplayProps extends Partial<TextProps> {
 }
 
 export const Display: React.FC<DisplayProps> = (props) => {
-  const { size, numberOfLines } = props
+  const { size, numberOfLines, underline } = props
   const color = props.color ? colorHelper(props.color) : colorHelper("black")
+
+  const styles = {
+    ...(underline ? { textDecorationLine: "underline" } : {}),
+    ...props.style,
+  }
+
   return (
     <Text
       {...props}
+      style={styles}
       fontFamily={fontFamily.display.regular}
       {...determineFontSizes(size)}
       color={color}

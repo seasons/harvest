@@ -10,7 +10,12 @@ import styled from "styled-components/native"
 const windowDimensions = Dimensions.get("window")
 const windowHeight = windowDimensions.height
 
-export const PopUp: React.FC<{ show: boolean; theme?: "dark" | "light" }> = ({ children, show, theme }) => {
+export const PopUp: React.FC<{ show: boolean; theme?: "dark" | "light"; paddingBottom?: number }> = ({
+  children,
+  show,
+  theme,
+  paddingBottom = 0,
+}) => {
   const [mounted, setMounted] = useState(false)
   const insets = useSafeAreaInsets()
   useEffect(() => {
@@ -55,7 +60,7 @@ export const PopUp: React.FC<{ show: boolean; theme?: "dark" | "light" }> = ({ c
         style={{ transform: [{ translateY: animation.translateY }] }}
         color={colors?.backgroundColor || color("white100")}
       >
-        <Box pb={insets.bottom} onLayout={onLayout}>
+        <Box pb={insets.bottom + paddingBottom} onLayout={onLayout}>
           {children}
         </Box>
       </AnimatedPopUp>
