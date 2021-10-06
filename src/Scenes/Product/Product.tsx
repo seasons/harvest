@@ -17,7 +17,6 @@ import { Animated, Dimensions, StatusBar } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
-
 import { useMutation, useQuery } from "@apollo/client"
 import {
   ProductBuyCTA,
@@ -27,13 +26,13 @@ import {
   ProductConditionSectionFragment_PhysicalProductQualityReport,
 } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
-
 import { ImageRail, ProductDetails, ProductMeasurements } from "./Components"
 import { ProductBottomBar } from "./Components/ProductBottomBar"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT, Product_NoCache_Query } from "./Queries"
+import { ReturnYourBagConfirmationItem } from "../Bag/Components/ReturnYourBagConfirmationItem"
 
 const windowHeight = Dimensions.get("window").height
 
@@ -64,7 +63,7 @@ export const Product = screenTrack({
 })(({ route, navigation }) => {
   const productBuyRef = useRef(null)
   const { authState } = useAuthContext()
-  const [buyButtonMutating, setBuyButtonMutating] = useState(false)
+  const [isMutatingBuyButton, setIsMutatingBuyButton] = useState(false)
   const [viewed, setViewed] = useState(false)
   const [showNotifyMeMessage, setShowNotifyMeMessage] = useState(false)
   const [isMutatingNotify, setIsMutatingNotify] = useState(false)
@@ -152,7 +151,7 @@ export const Product = screenTrack({
 
   const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
     onCompleted: (res) => {
-      setBuyButtonMutating(false)
+      setIsMutatingBuyButton(false)
       if (res?.createDraftedOrder) {
         navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
       }
@@ -168,11 +167,16 @@ export const Product = screenTrack({
       })
       console.log("error createDraftOrder ", error)
       Sentry.captureException(JSON.stringify(error))
-      setBuyButtonMutating(false)
+      setIsMutatingBuyButton(false)
     },
   })
 
   const handleCreateDraftOrder = (orderType: "Used" | "New") => {
+    if (isMutatingBuyButton) {
+      return
+    }
+    setIsMutatingBuyButton(true)
+
     if (userHasSession) {
       return createDraftOrder({
         variables: {
@@ -188,13 +192,13 @@ export const Product = screenTrack({
         note: "You need to sign in or create an account before you can order items",
         secondaryButtonText: "Got it",
         secondaryButtonOnPress: () => {
-          setBuyButtonMutating(false)
+          setIsMutatingBuyButton(false)
           hidePopUp()
         },
         buttonText: "Sign up",
         onClose: () => {
           hidePopUp()
-          setBuyButtonMutating(false)
+          setIsMutatingBuyButton(false)
           navigation.navigate("Modal", {
             screen: "CreateAccountModal",
           })
@@ -324,13 +328,11 @@ export const Product = screenTrack({
             ref={productBuyRef}
             product={filter(ProductBuyCTAFragment_Product, product)}
             selectedVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
-            buyButtonMutating={buyButtonMutating}
+            isMutatingBuyButton={isMutatingBuyButton}
             onBuyNew={() => {
-              setBuyButtonMutating(true)
               handleCreateDraftOrder(OrderType.BUY_NEW)
             }}
             onBuyUsed={() => {
-              setBuyButtonMutating(true)
               handleCreateDraftOrder(OrderType.BUY_USED)
             }}
           />
@@ -399,12 +401,6 @@ export const Product = screenTrack({
     }
   }
 
-  const scrollToBuyCTA = () => {
-    productBuyRef.current.measure((fx, fy, width, height, px, py) => {
-      flatListRef.current?.scrollToOffset({ offset: py - (windowHeight / 2 - 80), animated: true })
-    })
-  }
-
   return (
     <Container insetsTop={false} insetsBottom={false}>
       <FixedBackArrow navigation={navigation} variant={showVariantPicker ? "blackBackground" : "productBackground"} />
@@ -431,6 +427,7 @@ export const Product = screenTrack({
         })}
       />
       <ProductBottomBar
+        isMutatingBuyButton={isMutatingBuyButton}
         showNotifyMeMessage={showNotifyMeMessage}
         toggleShowVariantPicker={toggleShowVariantPicker}
         showVariantPicker={showVariantPicker}
@@ -441,11 +438,11 @@ export const Product = screenTrack({
         data={data}
         dataMe={dataMe}
         setShowSizeWarning={setShowSizeWarning}
-        scrollToBuyCTA={scrollToBuyCTA}
         animatedScrollY={animatedScrollYRef.current}
         retailPrice={product.retailPrice}
         monthlyRental={product?.rentalPrice}
         productType={productType}
+        handleCreateDraftOrder={handleCreateDraftOrder}
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0, backgroundColor: "white" }}>

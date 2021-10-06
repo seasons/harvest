@@ -114,7 +114,7 @@ export const Reservation = screenTrack()((props) => {
   const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
   const [shippingCode, setShippingCode] = useState("UPSGround")
 
-  const { previousData, data = previousData } = useQuery(GET_CUSTOMER, {
+  const { previousData, data = previousData, refetch } = useQuery(GET_CUSTOMER, {
     variables: {
       shippingCode: shippingCode || "UPSGround",
     },
@@ -184,6 +184,10 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
   })
+
+  useEffect(() => {
+    refetch()
+  }, [shippingOptionIndex, refetch])
 
   const me = data?.me
   const customer = me?.customer

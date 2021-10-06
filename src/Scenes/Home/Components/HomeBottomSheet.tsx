@@ -109,17 +109,12 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
     )
   }
 
-  if (data?.homepage?.sections?.length) {
-    sections.push(
-      ...data?.homepage?.sections
-        .map((section) => {
-          switch (section.type) {
-            case SectionType.Products:
-              return section
-          }
-        })
-        .filter(Boolean)
-    )
+  if (dataNoCache?.me?.recentlyViewedProducts?.length) {
+    sections.push({
+      type: SectionType.Products,
+      results: dataNoCache?.me?.recentlyViewedProducts,
+      title: "Recently viewed",
+    })
   }
 
   if (data?.upcomingProducts?.length > 0) {
