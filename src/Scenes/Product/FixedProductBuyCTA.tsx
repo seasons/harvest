@@ -2,7 +2,7 @@ import { Box, Flex, Sans } from "App/Components"
 import React from "react"
 import { Animated, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
-import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
+import { FadeBottom3 } from "Assets/svgs/FadeBottom3"
 import { space } from "App/utils"
 import { OrderType } from "./Product"
 import { Spinner } from "App/Components/Spinner"
@@ -57,7 +57,7 @@ export const FixedProductBuyCTA: React.FC<{
           width: "100%",
         }}
       >
-        <FadeBottom2
+        <FadeBottom3
           style={{
             position: "absolute",
             width: 800,
