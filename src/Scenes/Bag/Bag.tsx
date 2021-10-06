@@ -48,7 +48,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   const { authState } = useAuthContext()
   const insets = useSafeAreaInsets()
   const { showPopUp, hidePopUp } = usePopUpContext()
-  const [showReturnItemPopup, setShowReturnItemPopup] = useState(true)
+  const [showReturnItemPopup, setShowReturnItemPopup] = useState(false)
   const [isMutating, setMutating] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
