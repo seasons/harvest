@@ -4,17 +4,8 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
 import {
-  DocumentWithText,
-  Envelope,
-  Instagram,
-  LogOutSVG,
-  ManageMembership,
-  MapPin,
-  MonocromeSeasonsLogo,
-  PersonalPreferences,
-  PrivacyPolicy,
-  SpeechBubble,
-  Star,
+  DocumentWithText, Envelope, Instagram, LogOutSVG, ManageMembership, MapPin, MonocromeSeasonsLogo,
+  PersonalPreferences, PrivacyPolicy, SpeechBubble, Star
 } from "Assets/svgs"
 import gql from "graphql-tag"
 import { DateTime } from "luxon"
@@ -29,6 +20,7 @@ import { AuthorizedCTA, useNotificationBarContext, WaitlistedCTA } from "@season
 
 import { State, UserState } from "../CreateAccount/CreateAccount"
 import { CreditBalance, CreditBalanceFragment_Customer } from "./Components/CreditBalance"
+import { CreditsAvailableBar } from "./Components/CreditsAvailableBar"
 import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
@@ -404,8 +396,9 @@ export const Account = screenTrack()(() => {
           <Box px={2}>
             <AccountList list={bottomList} roles={roles} />
           </Box>
-          <Spacer mb={2} />
+          <Spacer mb="100px" />
         </ScrollView>
+        <CreditsAvailableBar membership={customer?.membership} />
       </Animatable.View>
     </Container>
   )
