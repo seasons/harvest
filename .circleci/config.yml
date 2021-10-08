@@ -18,7 +18,7 @@ jobs:
       - add_ssh_keys
       - checkout
       - node/install:
-          node-version: 12.16.3
+          node-version: 14.17.4
           install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.staging.conf"
@@ -80,7 +80,7 @@ jobs:
       - add_ssh_keys
       - checkout
       - node/install:
-          node-version: 12.16.3
+          node-version: 14.17.4
           install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.production.conf"
