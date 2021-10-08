@@ -27,14 +27,14 @@ jobs:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
       - restore_cache:
-          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install dependencies
           command: yarn install
       - save_cache:
-          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - ~/.cache/yarn
       - save_cache:
@@ -89,14 +89,14 @@ jobs:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
       - restore_cache:
-          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install dependencies
           command: yarn install
       - save_cache:
-          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - ~/.cache/yarn
       - save_cache:
