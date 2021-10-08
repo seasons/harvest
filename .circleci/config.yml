@@ -31,7 +31,7 @@ jobs:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install yarn
-          command: npm install yarn --force
+          command: npm install yarn
       - run:
           name: Install dependencies
           command: yarn install
@@ -95,7 +95,7 @@ jobs:
           key: node-v5-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install yarn
-          command: npm install yarn --force
+          command: npm install yarn
       - run:
           name: Install dependencies
           command: yarn install
