@@ -18,7 +18,8 @@ jobs:
       - add_ssh_keys
       - checkout
       - node/install:
-          node-version: 14.17.4
+          node-version: 12.16.3
+          install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.staging.conf"
           to: .env
@@ -26,17 +27,14 @@ jobs:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
       - restore_cache:
-          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
-      - run:
-          name: Install yarn
-          command: npm install yarn
       - run:
           name: Install dependencies
           command: yarn install
       - save_cache:
-          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - ~/.cache/yarn
       - save_cache:
@@ -82,7 +80,8 @@ jobs:
       - add_ssh_keys
       - checkout
       - node/install:
-          node-version: 14.17.4
+          node-version: 12.16.3
+          install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.production.conf"
           to: .env
@@ -90,17 +89,14 @@ jobs:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
       - restore_cache:
-          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
-          key: node-v5-{{ checksum "package.json" }}-{{ arch }}
-      - run:
-          name: Install yarn
-          command: npm install yarn
+          key: node-v6-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install dependencies
           command: yarn install
       - save_cache:
-          key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - ~/.cache/yarn
       - save_cache:
