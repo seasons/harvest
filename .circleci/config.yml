@@ -26,9 +26,9 @@ jobs:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
       - restore_cache:
-          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v7-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
-          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v7-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install yarn
           command: npm install yarn
@@ -36,30 +36,30 @@ jobs:
           name: Install dependencies
           command: yarn install
       - save_cache:
-          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v7-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v7-{{ checksum "package.json" }}-{{ arch }}
           paths:
             - node_modules
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
       - restore_cache:
-          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v7-{{ checksum "Gemfile.lock" }}-{{ arch }}
       - run: bundle install
       - save_cache:
-          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v7-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
       - restore_cache:
-          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+          key: pods-v7-{{ checksum "ios/Podfile.lock" }}
       - run:
           name: Install CocoaPods
           command: cd ios ; pod install ;
       - save_cache:
-          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+          key: pods-v7-{{ checksum "ios/Podfile.lock" }}
           paths:
             - ./Pods
       - run:
@@ -90,9 +90,9 @@ jobs:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
       - restore_cache:
-          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v7-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
-          key: node-v6-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v7-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install yarn
           command: npm install yarn
@@ -100,30 +100,30 @@ jobs:
           name: Install dependencies
           command: yarn install
       - save_cache:
-          key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v7-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v7-{{ checksum "package.json" }}-{{ arch }}
           paths:
             - node_modules
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
       - restore_cache:
-          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v7-{{ checksum "Gemfile.lock" }}-{{ arch }}
       - run: bundle install
       - save_cache:
-          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v7-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
       - restore_cache:
-          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+          key: pods-v7-{{ checksum "ios/Podfile.lock" }}
       - run:
           name: Install CocoaPods
           command: cd ios ; pod install ;
       - save_cache:
-          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+          key: pods-v7-{{ checksum "ios/Podfile.lock" }}
           paths:
             - ./Pods
       - run:
