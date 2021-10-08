@@ -1,18 +1,7 @@
 import gql from "graphql-tag"
 
-export const GET_BROWSE_PRODUCTS = gql`
-  query GetBrowseProducts(
-    $categoryName: String!
-    $brandNames: [String]
-    $colors: [String]
-    $first: Int!
-    $skip: Int!
-    $orderBy: ProductOrderByInput!
-    $tops: [String]
-    $bottoms: [String]
-    $available: Boolean
-    $forSaleOnly: Boolean
-  ) {
+export const GET_BROWSE_CATEGORIES_AND_BRANDS = gql`
+  query GetBrowseProducts {
     categories(where: { visible: true }, orderBy: position_ASC) {
       id
       slug
@@ -28,6 +17,22 @@ export const GET_BROWSE_PRODUCTS = gql`
       slug
       name
     }
+  }
+`
+
+export const GET_BROWSE_PRODUCTS = gql`
+  query GetBrowseProducts(
+    $categoryName: String!
+    $brandNames: [String]
+    $colors: [String]
+    $first: Int!
+    $skip: Int!
+    $orderBy: ProductOrderByInput!
+    $tops: [String]
+    $bottoms: [String]
+    $available: Boolean
+    $forSaleOnly: Boolean
+  ) {
     productsConnection(
       category: $categoryName
       tops: $tops

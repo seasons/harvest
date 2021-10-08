@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client"
 import { useFocusEffect } from "@react-navigation/native"
-import { Box, Flex } from "App/Components"
+import { Box, Button, Flex } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { Container } from "Components/Container"
@@ -13,11 +13,18 @@ import { ProductGridItemSkeleton } from "../Product/Components"
 import { GetBrowseProducts } from "App/generated/GetBrowseProducts"
 import { color, Sans, Spacer, ProductGridItem } from "@seasons/eclipse"
 import { BrowseFilters, EMPTY_BROWSE_FILTERS } from "./Filters"
-import { GET_BROWSE_PRODUCTS } from "./queries/browseQueries"
+import { GET_BROWSE_CATEGORIES_AND_BRANDS, GET_BROWSE_PRODUCTS } from "./queries/browseQueries"
 import { useScrollToTop } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { OrderByPopUp } from "./OrderByPopUp"
 
 const PAGE_LENGTH = 16
+
+export enum OrderBy {
+  computedRentalPrice_ASC = "computedRentalPrice_ASC",
+  computedRentalPrice_DESC = "computedRentalPrice_DESC",
+  publishedAt_DESC = "publishedAt_DESC",
+}
 
 export const Browse = screenTrack()((props: any) => {
   const currentFilters = props?.route?.params?.filters || EMPTY_BROWSE_FILTERS
@@ -26,6 +33,8 @@ export const Browse = screenTrack()((props: any) => {
   const [edges, setEdges] = useState(new Array(PAGE_LENGTH).fill({ node: { id: "" } }))
   const [categoryItems, setCategoryItems] = useState(new Array(PAGE_LENGTH).fill({ slug: "" }))
   const [filters, setFilters] = useState<BrowseFilters>(currentFilters)
+  const [showOrderPopUp, setShowOrderPopUp] = useState(false)
+  const [orderBy, setOrderBy] = useState<OrderBy>(OrderBy.publishedAt_DESC)
   const [currentCategory, setCurrentCategory] = useState(routeCategorySlug)
   const routeCategoryIdx = categoryItems.findIndex(({ slug }) => slug === routeCategorySlug)
   const tracking = useTracking()
@@ -53,7 +62,12 @@ export const Browse = screenTrack()((props: any) => {
     }
   }, [routeCategorySlug])
 
-  const { previousData, data = previousData, loading, fetchMore } = useQuery<GetBrowseProducts>(GET_BROWSE_PRODUCTS, {
+  const {
+    previousData: previousBrandAndCategoryData,
+    data: brandAndCategoryData = previousBrandAndCategoryData,
+  } = useQuery(GET_BROWSE_CATEGORIES_AND_BRANDS)
+
+  const { previousData, data = previousData, loading } = useQuery<GetBrowseProducts>(GET_BROWSE_PRODUCTS, {
     variables: {
       colors: filters.colorFilters,
       tops: filters.topSizeFilters,
@@ -64,13 +78,13 @@ export const Browse = screenTrack()((props: any) => {
       categoryName: currentCategory,
       first: productCount,
       skip: 0,
-      orderBy: "publishedAt_DESC",
+      orderBy,
     },
   })
 
   const products = data?.productsConnection?.edges
-  const designers = data?.brands
-  const categories = data?.categories
+  const designers = brandAndCategoryData?.brands
+  const categories = brandAndCategoryData?.categories
 
   useEffect(() => {
     if (products) {
@@ -219,12 +233,29 @@ export const Browse = screenTrack()((props: any) => {
                 }
               }}
             />
+            <SortByButtonWrapper justifyContent="center" flexDirection="row" py={3}>
+              <Button variant="primaryWhite" size="small" onPress={setShowOrderPopUp}>
+                Sort by
+              </Button>
+            </SortByButtonWrapper>
           </Box>
         </Flex>
+        <OrderByPopUp
+          setShowOrderPopUp={setShowOrderPopUp}
+          show={showOrderPopUp}
+          setOrderBy={setOrderBy}
+          orderBy={orderBy}
+        />
       </Container>
     </>
   )
 })
+
+const SortByButtonWrapper = styled(Flex)`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+`
 
 const CategoryBox = styled(Flex)`
   height: 55;
