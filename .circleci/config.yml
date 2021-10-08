@@ -30,8 +30,11 @@ jobs:
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
       - run:
+          name: Install yarn
+          command: npm install yarn
+      - run:
           name: Install dependencies
-          command: npm install yarn && yarn install
+          command: yarn install
       - save_cache:
           key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
@@ -91,8 +94,11 @@ jobs:
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
       - run:
+          name: Install yarn
+          command: npm install yarn
+      - run:
           name: Install dependencies
-          command: npm install yarn && yarn install
+          command: yarn install
       - save_cache:
           key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
