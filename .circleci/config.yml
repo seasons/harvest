@@ -19,7 +19,6 @@ jobs:
       - checkout
       - node/install:
           node-version: 12.16.3
-          install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.staging.conf"
           to: .env
@@ -30,6 +29,9 @@ jobs:
           key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
+      - run:
+          name: Install yarn
+          command: npm install yarn
       - run:
           name: Install dependencies
           command: yarn install
@@ -81,7 +83,6 @@ jobs:
       - checkout
       - node/install:
           node-version: 12.16.3
-          install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.production.conf"
           to: .env
@@ -92,6 +93,9 @@ jobs:
           key: yarn-v6-{{ checksum "yarn.lock" }}-{{ arch }}
       - restore_cache:
           key: node-v6-{{ checksum "package.json" }}-{{ arch }}
+      - run:
+          name: Install yarn
+          command: npm install yarn
       - run:
           name: Install dependencies
           command: yarn install
