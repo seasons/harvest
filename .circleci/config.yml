@@ -32,7 +32,7 @@ jobs:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install dependencies
-          command: npm install yarn && yarn install
+          command: sudo npm install yarn && yarn install
       - save_cache:
           key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
@@ -94,7 +94,7 @@ jobs:
           key: node-v4-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Install dependencies
-          command: npm install yarn && yarn install
+          command: sudo npm install yarn && yarn install
       - save_cache:
           key: yarn-v5-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
