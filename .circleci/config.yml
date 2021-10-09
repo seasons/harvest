@@ -27,7 +27,7 @@ jobs:
           to: "./fastlane/5ZM3SSYZ29.json"
       - run:
           name: Install yarn
-          command: curl -o- -L https://yarnpkg.com/install.sh | bash
+          command: npm install --global yarn --legacy-peer-deps
       - run:
           name: Install dependencies
           command: sudo yarn install
@@ -79,7 +79,7 @@ jobs:
           to: "./fastlane/5ZM3SSYZ29.json"
       - run:
           name: Install yarn
-          command: curl -o- -L https://yarnpkg.com/install.sh | bash
+          command: npm install --global yarn --legacy-peer-deps
       - run:
           name: Install dependencies
           command: sudo yarn install
