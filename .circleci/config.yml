@@ -30,7 +30,7 @@ jobs:
           command: npm install yarn --legacy-peer-deps
       - run:
           name: Install dependencies
-          command: yarn install
+          command: sudo yarn install
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
@@ -82,7 +82,7 @@ jobs:
           command: npm install yarn --legacy-peer-deps
       - run:
           name: Install dependencies
-          command: yarn install
+          command: sudo yarn install
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
