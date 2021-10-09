@@ -30,7 +30,7 @@ jobs:
           command: npm install --global yarn
       - run:
           name: Install dependencies
-          command: yarn install --legacy-peer-deps
+          command: yarn config set "strict-ssl" false -g && yarn install --legacy-peer-deps
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
@@ -82,7 +82,7 @@ jobs:
           command: npm install --global yarn
       - run:
           name: Install dependencies
-          command: yarn install --legacy-peer-deps
+          command: yarn config set "strict-ssl" false -g && yarn install --legacy-peer-deps
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
