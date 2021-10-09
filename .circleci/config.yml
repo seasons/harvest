@@ -27,10 +27,10 @@ jobs:
           to: "./fastlane/5ZM3SSYZ29.json"
       - run:
           name: Install yarn
-          command: npm install --global yarn --legacy-peer-deps
+          command: npm install --global yarn
       - run:
           name: Install dependencies
-          command: sudo yarn install
+          command: yarn install --legacy-peer-deps
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
@@ -79,10 +79,10 @@ jobs:
           to: "./fastlane/5ZM3SSYZ29.json"
       - run:
           name: Install yarn
-          command: npm install --global yarn --legacy-peer-deps
+          command: npm install --global yarn
       - run:
           name: Install dependencies
-          command: sudo yarn install
+          command: yarn install --legacy-peer-deps
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
