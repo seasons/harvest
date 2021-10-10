@@ -19,6 +19,7 @@ jobs:
       - checkout
       - node/install:
           node-version: 12.16.3
+          install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.staging.conf"
           to: .env
@@ -68,6 +69,7 @@ jobs:
       - checkout
       - node/install:
           node-version: 12.16.3
+          install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.production.conf"
           to: .env
