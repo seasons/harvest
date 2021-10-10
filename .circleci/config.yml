@@ -26,12 +26,6 @@ jobs:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
       - run:
-          name: Install yarn
-          command: npm install -g yarn
-      - run:
-          name: Set strict ssl to false
-          command: yarn config set "strict-ssl" false -g
-      - run:
           name: Install dependencies
           command: yarn install
       - run:
@@ -80,12 +74,6 @@ jobs:
       - aws-s3/copy:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
-      - run:
-          name: Install yarn
-          command: npm install -g yarn
-      - run:
-          name: Set strict ssl to false
-          command: yarn config set "strict-ssl" false -g
       - run:
           name: Install dependencies
           command: yarn install
