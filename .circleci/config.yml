@@ -29,8 +29,6 @@ jobs:
       - aws-s3/copy:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
-      - node/run:
-          yarn-run: install
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
@@ -81,8 +79,6 @@ jobs:
       - aws-s3/copy:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
-      - node/run:
-          yarn-run: install
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
