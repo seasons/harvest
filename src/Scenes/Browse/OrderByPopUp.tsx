@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import { OrderBy } from "./Browse"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-export const OrderByPopUp = ({ show, setOrderBy, orderBy, setShowOrderPopUp }) => {
+export const OrderByPopUp = ({ show, orderBy, hideSortPopUp, onPressSortOption }) => {
   const insets = useSafeAreaInsets()
 
   const orders = [
@@ -27,8 +27,7 @@ export const OrderByPopUp = ({ show, setOrderBy, orderBy, setShowOrderPopUp }) =
           <Box key={index} px={2}>
             <TouchableOpacity
               onPress={() => {
-                setOrderBy(order.value)
-                setShowOrderPopUp(false)
+                onPressSortOption(order.value)
               }}
             >
               <Flex py={2} flexDirection="row" justifyContent="space-between" flexWrap="nowrap">
@@ -41,7 +40,7 @@ export const OrderByPopUp = ({ show, setOrderBy, orderBy, setShowOrderPopUp }) =
         )
       })}
       <Spacer mb={3} />
-      <TouchableOpacity onPress={() => setShowOrderPopUp(false)}>
+      <TouchableOpacity onPress={hideSortPopUp}>
         <Sans underline size="4" textAlign="center">
           Cancel
         </Sans>
