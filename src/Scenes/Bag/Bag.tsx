@@ -64,7 +64,9 @@ export const Bag = screenTrack()((props: BagProps) => {
   const windowDimensions = Dimensions.get("window")
   const windowWidth = windowDimensions.width
 
-  const { data, bagItems, refetch } = useBag()
+  const { data, bagItems, groupedBagItems, refetch } = useBag()
+
+  console.log("??", groupedBagItems)
 
   const hasAddedItems = bagItems.some((a) => a.status === "Added")
   const hasReservedItems = bagItems.some((a) => a.status === "Reserved")
@@ -168,7 +170,7 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
   const hasShippingAddress =
-    !!shippingAddress.address1 && !!shippingAddress.city && !!shippingAddress.state && !!shippingAddress.zipCode
+    !!shippingAddress?.address1 && !!shippingAddress?.city && !!shippingAddress?.state && !!shippingAddress?.zipCode
 
   const startReservation = async () => {
     await checkItemsAvailability({

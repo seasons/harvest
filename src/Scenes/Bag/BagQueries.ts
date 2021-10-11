@@ -105,6 +105,20 @@ export const GetBag_NoCache_Query = gql`
           id
         }
       }
+      groupedBagItems {
+        type
+        bagItems {
+          id
+          position
+          saved
+          status
+          productVariant {
+            id
+            purchased
+            ...BagItemProductVariant
+          }
+        }
+      }
       bag {
         id
         position

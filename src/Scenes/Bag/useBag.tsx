@@ -1,6 +1,4 @@
-import {
-  GetBag_NoCache_Query as GetBag_NoCache_Query_Type
-} from "App/generated/GetBag_NoCache_Query"
+import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 import { useEffect } from "react"
@@ -42,6 +40,7 @@ export const useRemoteBag = () => {
     return {
       data: null,
       bagItems: [],
+      groupedBagItems: [],
     }
   }
 
@@ -57,6 +56,7 @@ export const useRemoteBag = () => {
     data,
     bagItems,
     refetch,
+    groupedBagItems: data?.groupedBagItems,
   }
 }
 
@@ -65,7 +65,7 @@ export const useBag = () => {
 
   const isSignedIn = authState.isSignedIn
   const { bagItems: localItems } = useLocalBag()
-  const { bagItems: remoteItems, data, refetch } = useRemoteBag()
+  const { groupedBagItems, bagItems: remoteItems, data, refetch } = useRemoteBag()
 
   const bagItems = !isSignedIn ? localItems : remoteItems
 
@@ -73,5 +73,6 @@ export const useBag = () => {
     data,
     refetch,
     bagItems,
+    groupedBagItems,
   }
 }
