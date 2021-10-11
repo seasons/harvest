@@ -67,7 +67,7 @@ export const Browse = screenTrack()((props: any) => {
     data: brandAndCategoryData = previousBrandAndCategoryData,
   } = useQuery(GET_BROWSE_CATEGORIES_AND_BRANDS)
 
-  const { previousData, data = previousData, loading } = useQuery<GetBrowseProducts>(GET_BROWSE_PRODUCTS, {
+  const { previousData, data = previousData, loading, fetchMore } = useQuery<GetBrowseProducts>(GET_BROWSE_PRODUCTS, {
     variables: {
       colors: filters.colorFilters,
       tops: filters.topSizeFilters,
@@ -128,6 +128,19 @@ export const Browse = screenTrack()((props: any) => {
   }
 
   const reachedEnd = products?.length >= data?.productsConnection?.aggregate?.count
+
+  const onPressSortByButton = () => {
+    setShowOrderPopUp(true)
+  }
+
+  const onPressSortOption = (value: OrderBy) => {
+    setOrderBy(value)
+    setShowOrderPopUp(false)
+  }
+
+  const hideSortPopUp = () => {
+    setShowOrderPopUp(false)
+  }
 
   return (
     <>
@@ -234,16 +247,16 @@ export const Browse = screenTrack()((props: any) => {
               }}
             />
             <SortByButtonWrapper justifyContent="center" flexDirection="row" py={3}>
-              <Button variant="primaryWhite" size="small" onPress={setShowOrderPopUp}>
+              <Button variant="primaryWhite" size="small" onPress={onPressSortByButton}>
                 Sort by
               </Button>
             </SortByButtonWrapper>
           </Box>
         </Flex>
         <OrderByPopUp
-          setShowOrderPopUp={setShowOrderPopUp}
+          onPressSortOption={onPressSortOption}
+          hideSortPopUp={hideSortPopUp}
           show={showOrderPopUp}
-          setOrderBy={setOrderBy}
           orderBy={orderBy}
         />
       </Container>
