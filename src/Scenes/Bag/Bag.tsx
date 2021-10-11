@@ -168,7 +168,7 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const reservationItems = reservationTabData?.me?.customer?.reservations
   const hasShippingAddress =
-    !!shippingAddress.address1 && !!shippingAddress.city && !!shippingAddress.state && !!shippingAddress.zipCode
+    !!shippingAddress?.address1 && !!shippingAddress?.city && !!shippingAddress?.state && !!shippingAddress?.zipCode
 
   const startReservation = async () => {
     await checkItemsAvailability({
