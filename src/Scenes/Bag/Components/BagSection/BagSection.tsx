@@ -57,8 +57,6 @@ export const BagSection = ({ section, sectionIndex }) => {
             )
           }
         })}
-        <Spacer mb={2} />
-        <Separator />
       </Box>
     </>
   )

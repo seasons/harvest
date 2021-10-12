@@ -88,10 +88,27 @@ export const BagTab: React.FC<{
 
   const showBagItems = bagItems?.length > 0
 
+  let lastVisibleSection
+  bagSections.forEach((section) => {
+    if (section.bagItems.length > 0) {
+      lastVisibleSection = section.status
+    }
+  })
+
   return (
     <Flex height="100%">
       {bagSections.map((section, index) => {
-        return <BagSection key={index} section={section} sectionIndex={index} />
+        return (
+          <Box key={index}>
+            <BagSection section={section} sectionIndex={index} />
+            {lastVisibleSection != section.status && (
+              <Box px={2}>
+                <Spacer mb={2} />
+                <Separator />
+              </Box>
+            )}
+          </Box>
+        )
       })}
 
       {!showBagItems && (
