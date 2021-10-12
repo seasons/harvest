@@ -35,28 +35,18 @@ export const useLocalBag = () => {
 
 export const useRemoteBag = () => {
   const { previousData, data = previousData, refetch } = useQuery<GetBag_NoCache_Query_Type>(GetBag_NoCache_Query)
-
   if (!data) {
     return {
       data: null,
       bagItems: [],
-      groupedBagItems: [],
+      bagSections: [],
     }
   }
 
-  const me = data.me
-  const bagItems =
-    me?.bag?.map((item) => ({
-      ...item,
-      variantID: item.productVariant.id,
-      productID: item.productVariant.product.id,
-    })) || []
-
   return {
     data,
-    bagItems,
     refetch,
-    groupedBagItems: data?.groupedBagItems,
+    bagSections: data?.me?.bagSections,
   }
 }
 
@@ -65,14 +55,12 @@ export const useBag = () => {
 
   const isSignedIn = authState.isSignedIn
   const { bagItems: localItems } = useLocalBag()
-  const { groupedBagItems, bagItems: remoteItems, data, refetch } = useRemoteBag()
-
-  const bagItems = !isSignedIn ? localItems : remoteItems
+  const { bagSections: remoteSections, data, refetch } = useRemoteBag()
+  const bagSections = !isSignedIn ? [{ status: "Added", bagItems: localItems }] : remoteSections
 
   return {
     data,
     refetch,
-    bagItems,
-    groupedBagItems,
+    bagSections,
   }
 }

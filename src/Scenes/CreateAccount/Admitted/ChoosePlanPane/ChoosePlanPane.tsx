@@ -1,15 +1,9 @@
-import {
-  Box, Button, CloseButton, Container, FadeInImage, Flex, Sans, Spacer
-} from "App/Components"
+import { Box, Button, CloseButton, Container, FadeInImage, Flex, Sans, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { OverlaySpinner } from "App/Components/OverlaySpinner"
 import { PopUp } from "App/Components/PopUp"
-import {
-  CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type
-} from "App/generated/CreateAccount_Cached_Query"
-import {
-  CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type
-} from "App/generated/CreateAccount_NoCache_Query"
+import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
+import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from "App/generated/CreateAccount_NoCache_Query"
 import { GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GET_USER } from "App/Scenes/Account/Account"
@@ -19,15 +13,10 @@ import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { color } from "App/utils"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import { ListCheck } from "Assets/svgs/ListCheck"
-import { TabBar } from "Components/TabBar"
 import gql from "graphql-tag"
-import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
-import {
-  Dimensions, ImageBackground, Linking, ScrollView, Text, TouchableOpacity
-} from "react-native"
+import { Dimensions, ImageBackground, Linking, ScrollView, Text, TouchableOpacity } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import styled from "styled-components"
 import stripe from "tipsi-stripe"
 
 import { useMutation } from "@apollo/client"

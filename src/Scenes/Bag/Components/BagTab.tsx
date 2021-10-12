@@ -6,6 +6,7 @@ import { color } from "App/utils"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
 import React from "react"
+import { useBag } from "../useBag"
 
 import { useNavigation } from "@react-navigation/native"
 import { Box, ProductBuyAlertTab, ProductBuyAlertTabType, Spacer } from "@seasons/eclipse"
@@ -15,6 +16,7 @@ import { BagTabBottomCards } from "./BagTabBottomCards"
 import { BagTabHeader } from "./BagTabHeader"
 import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
 import { EmptyBagItem } from "./EmptyBagItem"
+import { BagSection } from "./BagSection"
 
 export const BagTab: React.FC<{
   bagItems
@@ -22,7 +24,9 @@ export const BagTab: React.FC<{
   items
   deleteBagItem
   removeFromBagAndSaveItem
-}> = ({ bagItems, data, deleteBagItem, removeFromBagAndSaveItem }) => {
+}> = ({ bagItems, deleteBagItem, removeFromBagAndSaveItem }) => {
+  const { data, bagSections, refetch } = useBag()
+
   const { bottomSheetSetProps, bottomSheetSnapToIndex } = useBottomSheetContext()
   const navigation = useNavigation()
 
@@ -86,7 +90,9 @@ export const BagTab: React.FC<{
 
   return (
     <Flex height="100%">
-      <BagTabHeader atHome={atHome} me={me} />
+      {bagSections.map((section, index) => {
+        return <BagSection key={index} section={section} sectionIndex={index} />
+      })}
 
       {!showBagItems && (
         <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">

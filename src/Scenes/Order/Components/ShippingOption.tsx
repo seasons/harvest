@@ -3,7 +3,7 @@ import { color } from "App/utils/color"
 import { SmallCheckCircled } from "Assets/svgs"
 import React from "react"
 import { TouchableWithoutFeedback } from "react-native"
-import styled from "styled-components"
+import styled from "styled-components/native"
 
 export const ShippingOption = ({ option, index, shippingOptionIndex, setShippingOptionIndex }) => {
   const method = option?.shippingMethod

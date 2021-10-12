@@ -64,9 +64,9 @@ export const Bag = screenTrack()((props: BagProps) => {
   const windowDimensions = Dimensions.get("window")
   const windowWidth = windowDimensions.width
 
-  const { data, bagItems, groupedBagItems, refetch } = useBag()
+  const { data, bagSections, refetch } = useBag()
 
-  console.log("??", groupedBagItems)
+  const bagItems = []
 
   const hasAddedItems = bagItems.some((a) => a.status === "Added")
   const hasReservedItems = bagItems.some((a) => a.status === "Reserved")

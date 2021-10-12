@@ -1,6 +1,7 @@
 import gql from "graphql-tag"
 
 import { BagItemFragment } from "./Components/BagItem"
+import { BagSectionFragment_BagSection } from "./Components/BagSection/BagSection"
 import { BagTabHeaderFragment_Query } from "./Components/BagTabHeader"
 import { DeliveryStatusFragment_Me } from "./Components/DeliveryStatus"
 import { ReservationHistoryTabFragment_Customer } from "./Components/ReservationHistoryTab"
@@ -105,19 +106,8 @@ export const GetBag_NoCache_Query = gql`
           id
         }
       }
-      groupedBagItems {
-        type
-        bagItems {
-          id
-          position
-          saved
-          status
-          productVariant {
-            id
-            purchased
-            ...BagItemProductVariant
-          }
-        }
+      bagSections {
+        ...BagSectionFragment_BagSection
       }
       bag {
         id
@@ -137,6 +127,7 @@ export const GetBag_NoCache_Query = gql`
   ${BagTabHeaderFragment_Query}
   ${DeliveryStatusFragment_Me}
   ${BagItemFragment}
+  ${BagSectionFragment_BagSection}
 `
 
 export const ADD_TO_BAG = gql`
