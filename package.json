@@ -2,7 +2,7 @@
   "name": "harvest",
   "version": "1.49.0",
   "engines": {
-    "node": "12"
+    "node": "12 || 14"
   },
   "resolutions": {
     "graphql": "14.7.0"
