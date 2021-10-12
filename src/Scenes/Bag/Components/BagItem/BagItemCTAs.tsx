@@ -50,7 +50,8 @@ export const BagItemCTAsFragment_BagItem = gql`
   ${BagItemRemoveButtonFragment_BagItem}
 `
 
-export const BagItemCTAs = ({ bagItem, sectionStatus }) => {
+export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
+  const isLarge = size === "large"
   const [isMutating, setIsMutating] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
@@ -199,13 +200,23 @@ export const BagItemCTAs = ({ bagItem, sectionStatus }) => {
       default:
         if (showBuyButton) {
           return (
-            <Button
-              size="small"
-              variant="secondaryWhite"
-              onPress={() => handleCreateDraftOrder(isBuyUsedEnabled ? OrderType.BUY_USED : OrderType.BUY_NEW)}
+            <Flex
+              flexDirection={isLarge ? "column" : "row"}
+              flexWrap="nowrap"
+              justifyContent="space-between"
+              alignItems={isLarge ? "flex-start" : "center"}
+              width="100%"
+              height="100%"
             >
-              Buy
-            </Button>
+              <Sans size="3">${price / 100} to buy</Sans>
+              <Button
+                size="small"
+                variant="secondaryWhite"
+                onPress={() => handleCreateDraftOrder(isBuyUsedEnabled ? OrderType.BUY_USED : OrderType.BUY_NEW)}
+              >
+                Buy
+              </Button>
+            </Flex>
           )
         } else {
           return null
@@ -214,7 +225,7 @@ export const BagItemCTAs = ({ bagItem, sectionStatus }) => {
   }
 
   return (
-    <Flex height={35} width="100%">
+    <Flex height={isLarge ? 80 : 35} width="100%">
       <CTAs />
     </Flex>
   )

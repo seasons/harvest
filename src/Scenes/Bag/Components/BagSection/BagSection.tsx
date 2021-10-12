@@ -1,7 +1,8 @@
 import { Box, Separator, Spacer } from "App/Components"
 import gql from "graphql-tag"
 import React from "react"
-import { SmallBagItem, SmallBagItemFragment_BagItem } from "../BagItem/SmallBagItem"
+import { LargeBagItem } from "../BagItem/LargeBagItem"
+import { SmallBagItem, BagItemFragment_BagItem } from "../BagItem/SmallBagItem"
 import { BagSectionDeliveryStatus, BagSectionDeliveryStatusFragment_BagSection } from "./BagSectionDeliveryStatus"
 import { BagSectionHeader, BagSectionHeaderFragment_BagSection } from "./BagSectionHeader"
 
@@ -11,12 +12,12 @@ export const BagSectionFragment_BagSection = gql`
     ...BagSectionHeaderFragment_BagSection
     ...BagSectionDeliveryStatusFragment_BagSection
     bagItems {
-      ...SmallBagItemFragment_BagItem
+      ...BagItemFragment_BagItem
     }
   }
   ${BagSectionHeaderFragment_BagSection}
   ${BagSectionDeliveryStatusFragment_BagSection}
-  ${SmallBagItemFragment_BagItem}
+  ${BagItemFragment_BagItem}
 `
 
 export const BagSection = ({ section, sectionIndex }) => {
@@ -42,11 +43,19 @@ export const BagSection = ({ section, sectionIndex }) => {
       )}
       <Box px={2}>
         {section.bagItems.map((bagItem, index) => {
-          return (
-            <Box pt={index !== 0 && 2}>
-              <SmallBagItem bagItem={bagItem} sectionStatus={status} key={index} />
-            </Box>
-          )
+          if (status === "AtHome") {
+            return (
+              <Box pt={index !== 0 && 2}>
+                <LargeBagItem bagItem={bagItem} sectionStatus={status} key={index} />
+              </Box>
+            )
+          } else {
+            return (
+              <Box pt={index !== 0 && 2}>
+                <SmallBagItem bagItem={bagItem} sectionStatus={status} key={index} />
+              </Box>
+            )
+          }
         })}
         <Spacer mb={2} />
         <Separator />

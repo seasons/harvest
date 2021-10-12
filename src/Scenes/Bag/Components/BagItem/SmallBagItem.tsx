@@ -11,8 +11,8 @@ import { BagItemProductMetaData, BagItemProductMetaDataFragment_BagItem } from "
 
 const SMALL_BAG_ITEM_HEIGHT = 148
 
-export const SmallBagItemFragment_BagItem = gql`
-  fragment SmallBagItemFragment_BagItem on BagItem {
+export const BagItemFragment_BagItem = gql`
+  fragment BagItemFragment_BagItem on BagItem {
     id
     productVariant {
       id
@@ -37,7 +37,6 @@ export const SmallBagItem = ({ bagItem, sectionStatus }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
-  console.log("bagItem", bagItem)
   const variant = bagItem?.productVariant
   const product = variant?.product
   const imageUrl = product?.images?.[0]?.url || ""
@@ -66,7 +65,7 @@ export const SmallBagItem = ({ bagItem, sectionStatus }) => {
         )}
         <Flex alignItems="flex-end" flexDirection="column" justifyContent="space-between" px={2} flex={1}>
           <BagItemProductMetaData variant={variant} />
-          <BagItemCTAs bagItem={bagItem} sectionStatus={sectionStatus} />
+          <BagItemCTAs bagItem={bagItem} sectionStatus={sectionStatus} size="small" />
         </Flex>
       </Wrapper>
     </TouchableWithoutFeedback>
