@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export const GET_BROWSE_CATEGORIES_AND_BRANDS = gql`
-  query GetBrowseProducts {
+  query GetBrowseCategoriesAndBrands {
     categories(where: { visible: true }, orderBy: position_ASC) {
       id
       slug

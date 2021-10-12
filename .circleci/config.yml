@@ -17,6 +17,9 @@ jobs:
     steps:
       - add_ssh_keys
       - checkout
+      - run:
+          name: "Turn on insecure mode for curl"
+          command: echo insecure >> $HOME/.curlrc
       - node/install:
           node-version: 14.18.0
           install-yarn: true
@@ -67,6 +70,9 @@ jobs:
     steps:
       - add_ssh_keys
       - checkout
+      - run:
+          name: "Turn on insecure mode for curl"
+          command: echo insecure >> $HOME/.curlrc
       - node/install:
           node-version: 14.18.0
           install-yarn: true
