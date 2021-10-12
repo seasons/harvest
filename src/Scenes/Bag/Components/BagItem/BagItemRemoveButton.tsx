@@ -7,8 +7,8 @@ import { useTracking, Schema } from "App/utils/track"
 import React, { useEffect, useState } from "react"
 import { DELETE_BAG_ITEM, GetBag_NoCache_Query } from "../../BagQueries"
 
-export const RemoveCTAFragment_BagItem = gql`
-  fragment RemoveCTAFragment_BagItem on BagItem {
+export const BagItemRemoveButtonFragment_BagItem = gql`
+  fragment BagItemRemoveButtonFragment_BagItem on BagItem {
     id
     productVariant {
       id
@@ -20,7 +20,7 @@ export const RemoveCTAFragment_BagItem = gql`
   }
 `
 
-export const RemoveCTA = ({ bagItem }) => {
+export const BagItemRemoveButton = ({ bagItem }) => {
   const [isMutating, setIsMutating] = useState(false)
   const tracking = useTracking()
   const { authState } = useAuthContext()

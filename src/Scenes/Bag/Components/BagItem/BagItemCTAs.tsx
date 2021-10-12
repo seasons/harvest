@@ -8,7 +8,7 @@ import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
 import { GetBag_NoCache_Query, REMOVE_FROM_BAG_AND_SAVE_ITEM, SavedTab_Query } from "../../BagQueries"
 import { useMutation } from "@apollo/client"
-import { RemoveCTA, RemoveCTAFragment_BagItem } from "./RemoveCTA"
+import { BagItemRemoveButton, BagItemRemoveButtonFragment_BagItem } from "./BagItemRemoveButton"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "App/Scenes/Product/Mutations"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useNavigation } from "@react-navigation/native"
@@ -45,9 +45,9 @@ export const BagItemCTAsFragment_BagItem = gql`
         slug
       }
     }
-    ...RemoveCTAFragment_BagItem
+    ...BagItemRemoveButtonFragment_BagItem
   }
-  ${RemoveCTAFragment_BagItem}
+  ${BagItemRemoveButtonFragment_BagItem}
 `
 
 export const BagItemCTAs = ({ bagItem, sectionStatus }) => {
@@ -174,7 +174,7 @@ export const BagItemCTAs = ({ bagItem, sectionStatus }) => {
                 Save for later
               </Sans>
             </TouchableOpacity>
-            <RemoveCTA bagItem={bagItem} />
+            <BagItemRemoveButton bagItem={bagItem} />
           </Flex>
         )
       case "ReturnPending":
