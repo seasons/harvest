@@ -13,7 +13,6 @@
 #import "React/CoreModulesPlugins.h"
 #import "React/RCTAccessibilityManager.h"
 #import "React/RCTActionSheetManager.h"
-#import "React/RCTAlertController.h"
 #import "React/RCTAlertManager.h"
 #import "React/RCTAppearance.h"
 #import "React/RCTAppState.h"

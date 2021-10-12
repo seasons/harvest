@@ -21,7 +21,7 @@ jobs:
           name: "Turn on insecure mode for curl"
           command: echo insecure >> $HOME/.curlrc
       - node/install:
-          node-version: 12.16.3
+          node-version: 14.18.0
           install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.staging.conf"
@@ -29,6 +29,9 @@ jobs:
       - aws-s3/copy:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
+      - run:
+          name: Install dependencies
+          command: yarn install
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
@@ -71,7 +74,7 @@ jobs:
           name: "Turn on insecure mode for curl"
           command: echo insecure >> $HOME/.curlrc
       - node/install:
-          node-version: 12.16.3
+          node-version: 14.18.0
           install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.production.conf"
@@ -79,6 +82,9 @@ jobs:
       - aws-s3/copy:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
+      - run:
+          name: Install dependencies
+          command: yarn install
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
