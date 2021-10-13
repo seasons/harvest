@@ -3,7 +3,6 @@ import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
-import { FadeBottom3 } from "Assets/svgs/FadeBottom3"
 import React from "react"
 import { Dimensions } from "react-native"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../../../CreateAccount/CreateAccount"
@@ -156,11 +155,5 @@ export const BagTabPrimaryCTA = ({
     )
   }
 
-  return (
-    button && (
-      <FadeBottom3 width="100%" style={{ position: "absolute", bottom: 0 }}>
-        {button}
-      </FadeBottom3>
-    )
-  )
+  return button && <>{button}</>
 }

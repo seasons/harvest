@@ -6,18 +6,10 @@ import { Box, Spacer } from "@seasons/eclipse"
 import { BagTabBottomCards } from "./BagTabBottomCards"
 import { EmptyBagItem } from "./EmptyBagItem"
 import { BagSection } from "./BagSection"
-import { BagTabPrimaryCTA } from "./BagTabPrimaryCTA/BagTabPrimaryCTA"
 
-export const BagTab: React.FC<{
-  setShowReturnItemPopup
-  setIsPrimaryCTAMutating
-  isPrimaryCTAMutating: boolean
-  startReservation
-}> = ({ setShowReturnItemPopup, isPrimaryCTAMutating, setIsPrimaryCTAMutating, startReservation }) => {
+export const BagTab: React.FC = () => {
   const { data, bagSections } = useBag()
   const navigation = useNavigation()
-
-  console.log("data", data)
 
   const me = data?.me
   const activeReservation = me?.activeReservation
@@ -58,15 +50,6 @@ export const BagTab: React.FC<{
         <BagTabBottomCards reservation={activeReservation} />
         {!showAddAnItemCard && <Spacer mb={90} />}
       </Box>
-
-      <BagTabPrimaryCTA
-        data={data}
-        sections={bagSections}
-        setShowReturnItemPopup={setShowReturnItemPopup}
-        isMutating={isPrimaryCTAMutating}
-        setIsMutating={setIsPrimaryCTAMutating}
-        startReservation={startReservation}
-      />
     </Flex>
   )
 }

@@ -23,6 +23,7 @@ import {
 import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
 import { useBag } from "./useBag"
 import { ReturnItemsPopUp } from "./Components/ReturnItemsPopUp"
+import { BagTabPrimaryCTA } from "./Components/BagTabPrimaryCTA"
 
 export enum BagView {
   Bag = 0,
@@ -172,14 +173,7 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const renderItem = ({ item }) => {
     if (isBagView) {
-      return (
-        <BagTab
-          startReservation={startReservation}
-          setShowReturnItemPopup={setShowReturnItemPopup}
-          isPrimaryCTAMutating={isPrimaryCTAMutating}
-          setIsPrimaryCTAMutating={setIsPrimaryCTAMutating}
-        />
-      )
+      return <BagTab />
     } else if (isSavedView) {
       return (
         <SavedItemsTab
@@ -196,11 +190,7 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   let sections
   if (isBagView) {
-    sections = [
-      {
-        data: [{ variantID: "", productID: "" }],
-      },
-    ]
+    sections = [{ data: null }]
   } else if (isSavedView) {
     sections = [{ data: savedItems }]
   } else {
@@ -249,6 +239,16 @@ export const Bag = screenTrack()((props: BagProps) => {
           }}
           ref={flatListRef}
         />
+        {isBagView && (
+          <BagTabPrimaryCTA
+            data={data}
+            sections={bagSections}
+            setShowReturnItemPopup={setShowReturnItemPopup}
+            isMutating={isPrimaryCTAMutating}
+            setIsMutating={setIsPrimaryCTAMutating}
+            startReservation={startReservation}
+          />
+        )}
       </View>
       <ReturnItemsPopUp
         setShowReturnItemPopup={setShowReturnItemPopup}
