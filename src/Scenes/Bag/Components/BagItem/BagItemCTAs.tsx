@@ -163,8 +163,6 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
 
   const showBuyButton = isBuyable && !purchased && price && userHasSession
 
-  console.log("showBuyButton", showBuyButton)
-
   const CTAs = () => {
     switch (sectionStatus) {
       case "Added":

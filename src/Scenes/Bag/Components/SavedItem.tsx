@@ -17,7 +17,6 @@ import { UPSERT_RESTOCK_NOTIF } from "App/Scenes/Product/Product"
 
 interface BagItemProps {
   bagIsFull: boolean
-  hasActiveReservation: boolean
   navigation?: any
   bagItem: any
 }
@@ -48,7 +47,7 @@ export const SavedItemFragment_BagItem = gql`
   }
 `
 
-export const SavedItem: React.FC<BagItemProps> = ({ bagIsFull, bagItem, navigation, hasActiveReservation }) => {
+export const SavedItem: React.FC<BagItemProps> = ({ bagIsFull, bagItem, navigation }) => {
   const [isMutating, setIsMutating] = useState(false)
   const [upsertingRestockNotif, setIsUpsertingRestockNotif] = useState(false)
   const [addingToBag, setAddingToBag] = useState(false)
@@ -167,6 +166,37 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagIsFull, bagItem, navigati
     }
   }
 
+  const CTA = () => {
+    if (!bagIsFull && reservable) {
+      return (
+        <Button
+          onPress={onAddToBag}
+          variant="secondaryWhite"
+          size="small"
+          disabled={isMutating || addingToBag || upsertingRestockNotif}
+          loading={addingToBag || upsertingRestockNotif}
+        >
+          Add to bag
+        </Button>
+      )
+    } else if (!reservable) {
+      return (
+        <Button
+          onPress={onNotifyMe}
+          variant="secondaryWhite"
+          size="small"
+          Icon={hasRestockNotification ? ListCheck : null}
+          disabled={isMutating || addingToBag || upsertingRestockNotif}
+          loading={addingToBag || upsertingRestockNotif}
+        >
+          Notify me
+        </Button>
+      )
+    } else {
+      return null
+    }
+  }
+
   return (
     <Box key={product.id} width="100%">
       <TouchableWithoutFeedback
@@ -194,20 +224,7 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagIsFull, bagItem, navigati
                 </Sans>
               </Flex>
             </Box>
-            {(!hasActiveReservation || !reservable) && (
-              <Button
-                onPress={() => {
-                  reservable ? onAddToBag() : onNotifyMe()
-                }}
-                variant="secondaryWhite"
-                size="small"
-                Icon={!reservable && hasRestockNotification ? ListCheck : null}
-                disabled={isMutating || addingToBag || upsertingRestockNotif}
-                loading={addingToBag || upsertingRestockNotif}
-              >
-                {reservable ? "Add to bag" : "Notify me"}
-              </Button>
-            )}
+            <CTA />
           </Flex>
           <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
             {!!imageURL && (

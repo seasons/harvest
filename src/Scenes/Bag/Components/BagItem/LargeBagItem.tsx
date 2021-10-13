@@ -6,8 +6,8 @@ import { Schema, useTracking } from "App/utils/track"
 import React from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
-import { BagItemCTAs, BagItemCTAsFragment_BagItem } from "./BagItemCTAs"
-import { BagItemProductMetaData, BagItemProductMetaDataFragment_BagItem } from "./BagItemProductMetaData"
+import { BagItemCTAs } from "./BagItemCTAs"
+import { BagItemProductMetaData } from "./BagItemProductMetaData"
 
 const LARGE_BAG_ITEM_HEIGHT = 214
 
@@ -15,7 +15,6 @@ export const LargeBagItem = ({ bagItem, sectionStatus }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
-  console.log("bagItem", bagItem)
   const variant = bagItem?.productVariant
   const product = variant?.product
   const imageUrl = product?.images?.[0]?.url || ""

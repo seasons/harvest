@@ -1,4 +1,4 @@
-import { Box, Separator, Spacer } from "App/Components"
+import { Box } from "App/Components"
 import gql from "graphql-tag"
 import React from "react"
 import { LargeBagItem } from "../BagItem/LargeBagItem"
@@ -21,7 +21,6 @@ export const BagSectionFragment_BagSection = gql`
 `
 
 export const BagSection = ({ section, sectionIndex }) => {
-  console.log("section.bagItems", section.bagItems)
   const hasItems = section?.bagItems?.length > 0
   const status = section.status
 
@@ -45,13 +44,13 @@ export const BagSection = ({ section, sectionIndex }) => {
         {section.bagItems.map((bagItem, index) => {
           if (status === "AtHome") {
             return (
-              <Box pt={index !== 0 && 2}>
+              <Box pt={index !== 0 && 2} key={index}>
                 <LargeBagItem bagItem={bagItem} sectionStatus={status} key={index} />
               </Box>
             )
           } else {
             return (
-              <Box pt={index !== 0 && 2}>
+              <Box pt={index !== 0 && 2} key={index}>
                 <SmallBagItem bagItem={bagItem} sectionStatus={status} key={index} />
               </Box>
             )
