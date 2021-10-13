@@ -17,8 +17,11 @@ jobs:
     steps:
       - add_ssh_keys
       - checkout
+      - run:
+          name: "Turn on insecure mode for curl"
+          command: echo insecure >> $HOME/.curlrc
       - node/install:
-          node-version: 12.16.3
+          node-version: 14.18.0
           install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.staging.conf"
@@ -26,38 +29,26 @@ jobs:
       - aws-s3/copy:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
-      - restore_cache:
-          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
-      - restore_cache:
-          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
       - run:
-          name: Install dependencies
+          name: "Install node packages"
           command: yarn install
-      - save_cache:
-          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
-          paths:
-            - ~/.cache/yarn
-      - save_cache:
-          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
-          paths:
-            - node_modules
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
       - restore_cache:
-          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v8-{{ checksum "Gemfile.lock" }}-{{ arch }}
       - run: bundle install
       - save_cache:
-          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v8-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
       - restore_cache:
-          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+          key: pods-v8-{{ checksum "ios/Podfile.lock" }}
       - run:
           name: Install CocoaPods
           command: cd ios ; pod install ;
       - save_cache:
-          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+          key: pods-v8-{{ checksum "ios/Podfile.lock" }}
           paths:
             - ./Pods
       - run:
@@ -79,8 +70,11 @@ jobs:
     steps:
       - add_ssh_keys
       - checkout
+      - run:
+          name: "Turn on insecure mode for curl"
+          command: echo insecure >> $HOME/.curlrc
       - node/install:
-          node-version: 12.16.3
+          node-version: 14.18.0
           install-yarn: true
       - aws-s3/copy:
           from: "s3://harvest-scripts/env.production.conf"
@@ -88,38 +82,26 @@ jobs:
       - aws-s3/copy:
           from: "s3://harvest-scripts/5ZM3SSYZ29.json"
           to: "./fastlane/5ZM3SSYZ29.json"
-      - restore_cache:
-          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
-      - restore_cache:
-          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
       - run:
-          name: Install dependencies
+          name: "Install Node packages"
           command: yarn install
-      - save_cache:
-          key: yarn-v4-{{ checksum "yarn.lock" }}-{{ arch }}
-          paths:
-            - ~/.cache/yarn
-      - save_cache:
-          key: node-v4-{{ checksum "package.json" }}-{{ arch }}
-          paths:
-            - node_modules
       - run:
           name: "Install React Native dependencies"
           command: HOMEBREW_NO_AUTO_UPDATE=1 brew install watchman
       - restore_cache:
-          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v8-{{ checksum "Gemfile.lock" }}-{{ arch }}
       - run: bundle install
       - save_cache:
-          key: bundle-v4-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          key: bundle-v8-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
       - restore_cache:
-          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+          key: pods-v8-{{ checksum "ios/Podfile.lock" }}
       - run:
           name: Install CocoaPods
           command: cd ios ; pod install ;
       - save_cache:
-          key: pods-v4-{{ checksum "ios/Podfile.lock" }}
+          key: pods-v8-{{ checksum "ios/Podfile.lock" }}
           paths:
             - ./Pods
       - run:

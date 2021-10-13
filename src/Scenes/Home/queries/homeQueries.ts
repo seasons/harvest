@@ -87,6 +87,23 @@ export const HomepageNoCache_Query = gql`
         shouldRequestFeedback
         ...CustomerTraitsFragment_Customer
       }
+      recentlyViewedProducts {
+        id
+        slug
+        images(size: Thumb) {
+          id
+          url
+        }
+        brand {
+          id
+          name
+        }
+        variants {
+          id
+          reservable
+          displayShort
+        }
+      }
       savedItems {
         id
         productVariant {
@@ -127,38 +144,6 @@ export const Homepage_Query = gql`
       caption
       type
       properties
-    }
-    # FIXME: Homepage query is only returning recently viewed, lets move it to a field resolver of its own
-    homepage {
-      sections {
-        id
-        title
-        type
-        tagData {
-          id
-          tagName
-          description
-        }
-        results {
-          ... on Product {
-            id
-            slug
-            images(size: Thumb) {
-              id
-              url
-            }
-            brand {
-              id
-              name
-            }
-            variants {
-              id
-              reservable
-              displayShort
-            }
-          }
-        }
-      }
     }
     featuredCollections: collections(orderBy: updatedAt_DESC, where: { published: true }, first: 5) {
       id
@@ -207,7 +192,7 @@ export const Homepage_Query = gql`
         id
         name
       }
-      images(size: Thumb) {
+      images(size: Medium) {
         id
         url
       }

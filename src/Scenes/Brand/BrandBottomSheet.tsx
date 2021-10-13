@@ -9,6 +9,7 @@ import React, { useMemo, useRef, useState } from "react"
 import { Dimensions, FlatList, Linking, TouchableOpacity } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
+import { useAuthContext } from "App/Navigation/AuthContext"
 
 const dimensions = Dimensions.get("window")
 
@@ -71,6 +72,7 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
   const [readMoreExpanded, setReadMoreExpanded] = useState(false)
   const [flatListHeight, setFlatListHeight] = useState(0)
   const insets = useSafeAreaInsets()
+  const { authState } = useAuthContext()
   const bottomSheetRef: React.MutableRefObject<ScrollBottomSheet<string>> = useRef(null)
 
   const brand = data?.brand
@@ -190,7 +192,9 @@ export const BrandBottomSheet: React.FC<BrandBottomSheetProps> = ({
             })
           }
         }}
-        renderItem={({ item }, i) => <ProductGridItem product={item?.node} addLeftSpacing={i % numColumns !== 0} />}
+        renderItem={({ item }, i) => (
+          <ProductGridItem authState={authState} product={item?.node} addLeftSpacing={i % numColumns !== 0} />
+        )}
         onLayout={(e) => {
           if (!flatListHeight) {
             setFlatListHeight(e.nativeEvent.layout.height)

@@ -2,11 +2,12 @@
 
 ![Build Status](https://app.bitrise.io/app/2798096bb06e322f/status.svg?token=GHiO2KcqAY_UDS8g8M-f5g)
 [![codecov](https://codecov.io/gh/pusher/push-notifications-swift/branch/master/graph/badge.svg)](https://codecov.io/gh/pusher/push-notifications-swift)
-[![Documentation](https://pusher.github.io/push-notifications-swift/badge.svg)](https://pusher.github.io/push-notifications-swift/Classes/PushNotifications.html)
-[![CocoaPods](https://img.shields.io/cocoapods/v/PushNotifications.svg)](https://cocoapods.org/pods/PushNotifications)
-[![Carthage](https://img.shields.io/badge/carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Swift Package Manager compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://github.com/apple/swift-package-manager)
+[![Latest Release](https://img.shields.io/github/v/release/pusher/push-notifications-swift)](https://github.com/pusher/push-notifications-swift/releases)
+[![API Docs](https://img.shields.io/badge/Docs-here!-lightgrey)](https://pusher.github.io/push-notifications-server-swift/)
+[![Supported Platforms](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fpusher%2Fpush-notifications-swift%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/pusher/push-notifications-swift)
+[![Swift Versions](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fpusher%2Fpush-notifications-swift%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/pusher/push-notifications-swift)
 [![Twitter](https://img.shields.io/badge/twitter-@Pusher-blue.svg?style=flat)](http://twitter.com/Pusher)
+[![LICENSE](https://img.shields.io/github/license/pusher/push-notifications-swift)](https://github.com/pusher/push-notifications-swift/blob/main/LICENSE)
 
 ## Example Code
 
@@ -19,7 +20,7 @@
 
 ### Minimum Requirements
 
-- [Swift 4.0+](https://github.com/pusher/push-notifications-swift/commit/d6dfa2186195135d8d7d1e3d3efdd7f8661ea404)
+- Swift 5.0+
 - [Xcode](https://itunes.apple.com/us/app/xcode/id497799835) - The easiest way to get Xcode is from the [App Store](https://itunes.apple.com/us/app/xcode/id497799835?mt=12), but you can also download it from [developer.apple.com](https://developer.apple.com/) if you have an AppleID registered with an Apple Developer account.
 
 ## Installation
@@ -43,7 +44,7 @@ use_frameworks!
 
 # Replace `<Your Target Name>` with your app's target name.
 target '<Your Target Name>' do
-    pod 'PushNotifications', '~> 3.0.4'
+    pod 'PushNotifications', '~> 4.0.0'
 end
 ```
 
@@ -96,11 +97,11 @@ To add Pusher Beams as a dependency of your own package use the follwing code:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/pusher/push-notifications-swift.git", from: "3.0.4")
+    .package(url: "https://github.com/pusher/push-notifications-swift.git", from: "4.0.0")
 ]
 ```
 
-## Migrating from 2.x.x to 3.x.x
+## Migrating from 2.x.x
 
 We now require you to start beams before you can use the library, for example to register any interests. This means the following code would no longer work and log an error to the console:
 
