@@ -32,7 +32,7 @@ const CurrentChargeBar = ({ membership }) => {
   const startDate = DateTime.fromISO(invoice.billingStartAt).toFormat("LLL dd")
   const endDate = DateTime.fromISO(invoice.billingEndAt).toFormat("LLL dd")
 
-  const percent = membership?.currentBalance / invoice?.estimatedTotal
+  const percent = (membership?.currentBalance / invoice?.estimatedTotal) * 100
 
   return (
     <>
