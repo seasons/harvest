@@ -110,13 +110,11 @@ export const Reservation = screenTrack()((props) => {
   const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
   const [shippingCode, setShippingCode] = useState("UPSGround")
 
-  const { previousData, data = previousData, refetch, error } = useQuery(GET_CUSTOMER, {
+  const { previousData, data = previousData, refetch } = useQuery(GET_CUSTOMER, {
     variables: {
       shippingCode: shippingCode || "UPSGround",
     },
   })
-  console.log("error", error)
-  console.log("data", data)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [updatePhoneAndShippingAddress] = useMutation(UPDATE_PHONE_AND_SHIPPING, {
     onError: (error) => {
