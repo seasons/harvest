@@ -8,6 +8,29 @@ import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 
 import { ProductPriceText } from "@seasons/eclipse"
+import { gql } from "@apollo/client"
+
+export const ReservationProductVariantFragment_ProductVariant = gql`
+  fragment ReservationProductVariantFragment_ProductVariant on ProductVariant {
+    id
+    displayShort
+    product {
+      id
+      slug
+      name
+      rentalPrice
+      retailPrice
+      brand {
+        id
+        name
+      }
+      images(size: Thumb) {
+        id
+        url
+      }
+    }
+  }
+`
 
 interface ReservationItemProps {
   bagItem: any
@@ -17,16 +40,14 @@ interface ReservationItemProps {
 
 export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index, navigation }) => {
   const tracking = useTracking()
-  const product = bagItem?.productVariant?.product
-  const variantToUse = head(
-    (bagItem?.productVariant?.product?.variants || []).filter((a) => a.id === bagItem?.productVariant?.id)
-  )
-  if (!product || !variantToUse) {
+  const variant = bagItem?.productVariant
+  const product = variant?.product
+  if (!product || !variant) {
     return null
   }
 
   const imageURL = product?.images?.[0]?.url
-  const variantSize = variantToUse?.displayShort
+  const variantSize = variant?.displayShort
 
   return (
     <Box key={product.id}>

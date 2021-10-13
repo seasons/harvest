@@ -25,7 +25,7 @@ import * as Sentry from "@sentry/react-native"
 
 import { ShippingOption } from "../Order/Components"
 import { ReservationBottomBar } from "./Components/ReservationBottomBar"
-import { ReservationItem } from "./Components/ReservationItem"
+import { ReservationItem, ReservationProductVariantFragment_ProductVariant } from "./Components/ReservationItem"
 import { ReservationLineItems } from "./ReservationLineItems"
 
 const RESERVE_ITEMS = gql`
@@ -46,18 +46,15 @@ const GET_CUSTOMER = gql`
         lastName
         email
       }
-      bag {
+      bagSections {
         id
-        productVariant {
+        status
+        bagItems {
           id
-          ...BagItemProductVariant
-        }
-      }
-      newBagItems: bag(status: Added) {
-        id
-        productVariant {
-          id
-          ...BagItemProductVariant
+          productVariant {
+            id
+            ...ReservationProductVariantFragment_ProductVariant
+          }
         }
       }
       reservationLineItems(filterBy: NewItems, shippingCode: $shippingCode) {
@@ -102,6 +99,7 @@ const GET_CUSTOMER = gql`
       }
     }
   }
+  ${ReservationProductVariantFragment_ProductVariant}
 `
 
 export const Reservation = screenTrack()((props) => {
@@ -112,11 +110,13 @@ export const Reservation = screenTrack()((props) => {
   const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
   const [shippingCode, setShippingCode] = useState("UPSGround")
 
-  const { previousData, data = previousData, refetch } = useQuery(GET_CUSTOMER, {
+  const { previousData, data = previousData, refetch, error } = useQuery(GET_CUSTOMER, {
     variables: {
       shippingCode: shippingCode || "UPSGround",
     },
   })
+  console.log("error", error)
+  console.log("data", data)
   const { showPopUp, hidePopUp } = usePopUpContext()
   const [updatePhoneAndShippingAddress] = useMutation(UPDATE_PHONE_AND_SHIPPING, {
     onError: (error) => {
@@ -201,10 +201,9 @@ export const Reservation = screenTrack()((props) => {
 
   const phoneNumber = customer?.detail?.phoneNumber
   const billingInfo = customer?.billingInfo
-  const items = me?.bag
-  const newBagItems = me?.newBagItems
+  const addedItems = me?.bagSections?.find((section) => section.status === "Added")?.bagItems
 
-  if (!customer || !items || !address) {
+  if (!customer || !addedItems || !address) {
     return (
       <>
         <FixedBackArrow navigation={navigation} variant="whiteBackground" />
@@ -296,17 +295,16 @@ export const Reservation = screenTrack()((props) => {
             <Box mb={5}>
               <SectionHeader title="Bag items" />
               <Box mt={1} mb={4}>
-                {!!newBagItems &&
-                  newBagItems.map((item, i) => {
-                    return (
-                      <Box key={item.id}>
-                        <ReservationItem index={i} bagItem={item} navigation={props.navigation} />
-                        <Spacer mb={1} />
-                        {i !== items.length - 1 && <Separator />}
-                        <Spacer mb={1} />
-                      </Box>
-                    )
-                  })}
+                {addedItems?.map((item, i) => {
+                  return (
+                    <Box key={item.id}>
+                      <ReservationItem index={i} bagItem={item} navigation={props.navigation} />
+                      <Spacer mb={1} />
+                      {i !== addedItems.length - 1 && <Separator />}
+                      <Spacer mb={1} />
+                    </Box>
+                  )
+                })}
               </Box>
             </Box>
           </ScrollView>
@@ -322,7 +320,7 @@ export const Reservation = screenTrack()((props) => {
               actionType: Schema.ActionTypes.Tap,
             })
             setIsMutating(true)
-            const itemIDs = items?.map((item) => item?.productVariant?.id)
+            const itemIDs = addedItems?.map((item) => item?.productVariant?.id)
             const { data } = await reserveItems({
               variables: {
                 items: itemIDs,
