@@ -23,7 +23,6 @@ import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import * as Sentry from "@sentry/react-native"
 
-import { BagItemFragment } from "../Bag/Components/BagItem"
 import { ShippingOption } from "../Order/Components"
 import { ReservationBottomBar } from "./Components/ReservationBottomBar"
 import { ReservationItem } from "./Components/ReservationItem"
@@ -103,7 +102,6 @@ const GET_CUSTOMER = gql`
       }
     }
   }
-  ${BagItemFragment}
 `
 
 export const Reservation = screenTrack()((props) => {

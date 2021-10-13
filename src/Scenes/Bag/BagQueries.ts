@@ -1,9 +1,6 @@
 import gql from "graphql-tag"
 
-import { BagItemFragment } from "./Components/BagItem"
 import { BagSectionFragment_BagSection } from "./Components/BagSection/BagSection"
-import { BagTabHeaderFragment_Query } from "./Components/BagTabHeader"
-import { DeliveryStatusFragment_Me } from "./Components/DeliveryStatus"
 import { ReservationHistoryTabFragment_Customer } from "./Components/ReservationHistoryTab"
 import { SavedItemsTabFragment_Me } from "./Components/SavedItemsTab"
 
@@ -17,10 +14,8 @@ export const GET_LOCAL_BAG_ITEMS = gql`
   query GetLocalBagItems($ids: [ID!]) {
     productVariants(where: { id_in: $ids }) {
       id
-      ...BagItemProductVariant
     }
   }
-  ${BagItemFragment}
 `
 
 export const SavedTab_Query = gql`
@@ -93,19 +88,6 @@ export const GetBag_NoCache_Query = gql`
           }
         }
       }
-      activeReservation {
-        id
-        returnAt
-        shipped
-        returnedAt
-        createdAt
-        status
-        phase
-        updatedAt
-        products {
-          id
-        }
-      }
       bagSections {
         ...BagSectionFragment_BagSection
       }
@@ -117,16 +99,10 @@ export const GetBag_NoCache_Query = gql`
         productVariant {
           id
           purchased
-          ...BagItemProductVariant
         }
       }
-      ...DeliveryStatusFragment_Me
     }
-    ...BagTabHeaderFragment_Query
   }
-  ${BagTabHeaderFragment_Query}
-  ${DeliveryStatusFragment_Me}
-  ${BagItemFragment}
   ${BagSectionFragment_BagSection}
 `
 
