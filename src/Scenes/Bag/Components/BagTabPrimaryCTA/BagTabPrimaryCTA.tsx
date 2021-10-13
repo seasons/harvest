@@ -7,7 +7,8 @@ import React from "react"
 import { Dimensions } from "react-native"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../../../CreateAccount/CreateAccount"
 import { useNavigation } from "@react-navigation/native"
-import { BagBottomBar, Box, Button, Flex } from "@seasons/eclipse"
+import { Box, Button, Flex } from "@seasons/eclipse"
+import { BagBottomBar } from "../BagBottomBar"
 
 const windowDimensions = Dimensions.get("window")
 const windowWidth = windowDimensions.width
@@ -27,11 +28,11 @@ export const BagTabPrimaryCTA = ({
   const tracking = useTracking()
   const isSignedIn = authState.isSignedIn
 
-  const addedItems = sections.find((section) => section.status === "Added")?.bagItems
+  const addedItems = sections?.find((section) => section.status === "Added")?.bagItems
   const hasAddedItems = addedItems?.length > 0
-  const atHomeItems = sections.find((section) => section.status === "AtHome")?.bagItems
+  const atHomeItems = sections?.find((section) => section.status === "AtHome")?.bagItems
   const hasAtHomeItems = atHomeItems?.length > 0
-  const returnPendingItems = sections.find((section) => section.status === "ReturnPending")?.bagItems
+  const returnPendingItems = sections?.find((section) => section.status === "ReturnPending")?.bagItems
   const hasReturnPendingsItems = returnPendingItems?.length > 0
 
   const me = data?.me
@@ -102,7 +103,7 @@ export const BagTabPrimaryCTA = ({
 
   let button = null
 
-  let handlePress = () => {
+  const handlePress = () => {
     tracking.trackEvent({
       actionName: TrackSchema.ActionNames.ReserveButtonTapped,
       actionType: TrackSchema.ActionTypes.Tap,
@@ -118,7 +119,7 @@ export const BagTabPrimaryCTA = ({
   }
 
   if (hasAddedItems) {
-    button = <BagBottomBar bagItems={addedItems} onReserve={handlePress} />
+    button = <BagBottomBar bagItems={addedItems} onReserve={handlePress} isMutating={isMutating} />
   } else if (hasAtHomeItems) {
     button = (
       <Box mx={2} my={2}>

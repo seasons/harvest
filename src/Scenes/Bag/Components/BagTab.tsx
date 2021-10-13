@@ -14,8 +14,8 @@ export const BagTab: React.FC = () => {
   const me = data?.me
   const activeReservation = me?.activeReservation
 
-  const addedItems = bagSections.find((section) => section.status === "Added")?.bagItems
-  const showAddAnItemCard = addedItems?.length < data.me.customer.membership.plan.itemCount
+  const addedItems = bagSections?.find((section) => section.status === "Added")?.bagItems
+  const showAddAnItemCard = addedItems?.length < data?.me?.customer?.membership?.plan?.itemCount
 
   let lastVisibleSection
   bagSections?.forEach((section) => {
@@ -30,7 +30,7 @@ export const BagTab: React.FC = () => {
         return (
           <Box key={index}>
             <BagSection section={section} sectionIndex={index} />
-            {lastVisibleSection != section.status && (
+            {lastVisibleSection != section.status && section.bagItems.length > 0 && (
               <Box px={2}>
                 <Spacer mb={2} />
                 <Separator />

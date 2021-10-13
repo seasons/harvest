@@ -83,7 +83,7 @@ export const Bag = screenTrack()((props: BagProps) => {
   )
 
   const me = data?.me
-  const addedItems = bagSections.find((section) => section.status === "Added")?.bagItems
+  const addedItems = bagSections?.find((section) => section.status === "Added")?.bagItems
 
   const [checkItemsAvailability] = useMutation(CHECK_ITEMS, {
     onCompleted: (res) => {
@@ -122,9 +122,10 @@ export const Bag = screenTrack()((props: BagProps) => {
   })
 
   const startReservation = async () => {
+    console.log("addedItems", addedItems)
     await checkItemsAvailability({
       variables: {
-        items: addedItems.map((item) => item.variantID),
+        items: addedItems.map((item) => item.productVariant.id),
       },
       refetchQueries: [
         {
