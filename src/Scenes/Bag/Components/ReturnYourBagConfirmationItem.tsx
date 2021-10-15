@@ -31,6 +31,8 @@ export const ReturnYourBagConfirmationItemFragment_PhysicalProduct = gql`
   }
 `
 
+const itemHeight = 136
+
 export const ReturnYourBagConfirmationItem = ({ physicalProduct }) => {
   const product = physicalProduct?.productVariant?.product
   const variantToUse = physicalProduct.productVariant
@@ -45,27 +47,27 @@ export const ReturnYourBagConfirmationItem = ({ physicalProduct }) => {
   return (
     <Box key={product.id}>
       <ReservationItemContainer flexDirection="row">
-        <Flex style={{ flex: 2 }} flexWrap="nowrap" flexDirection="column" justifyContent="space-between">
-          <Box>
-            <Sans size="4">{product.brand.name}</Sans>
-            <Sans size="4" color="black50">
-              {product.name}
-            </Sans>
-            {!!variantSize && (
-              <Sans size="4" color="black50">
-                Size {variantSize}
-              </Sans>
-            )}
-          </Box>
-        </Flex>
-        <Flex style={{ flex: 2 }} flexDirection="row" justifyContent="flex-end" alignItems="center">
+        <Flex flexDirection="row" justifyContent="flex-start" alignItems="flex-start">
           {!!imageURL && (
             <FadeInImage
-              style={{ height: 170 * PRODUCT_ASPECT_RATIO, width: 170 }}
+              style={{ height: itemHeight, width: itemHeight / PRODUCT_ASPECT_RATIO }}
               resizeMode="contain"
               source={{ uri: imageURL }}
             />
           )}
+        </Flex>
+        <Flex ml={2} flex={1} flexWrap="nowrap" flexDirection="row" justifyContent="flex-start" alignItems="flex-start">
+          <Box>
+            <Sans size="3">{product.brand.name}</Sans>
+            <Sans size="3" color="black50">
+              {product.name}
+            </Sans>
+            {!!variantSize && (
+              <Sans size="3" color="black50">
+                Size {variantSize}
+              </Sans>
+            )}
+          </Box>
         </Flex>
       </ReservationItemContainer>
     </Box>
@@ -75,5 +77,5 @@ export const ReturnYourBagConfirmationItem = ({ physicalProduct }) => {
 const ReservationItemContainer = styled(Flex)`
   background: white;
   overflow: hidden;
-  height: 210px;
+  height: ${itemHeight}px;
 `

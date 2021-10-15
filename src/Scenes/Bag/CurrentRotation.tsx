@@ -16,6 +16,7 @@ import { CurrentRotationItem } from "./Components/CurrentRotationItem"
 
 export const ACTIVE_RESERVATION = gql`
   query ActiveReservation {
+    returnReasons
     me {
       id
       customer {
@@ -38,7 +39,7 @@ export const ACTIVE_RESERVATION = gql`
           productStatus
           productVariant {
             id
-            size
+            displayShort
             product {
               id
               name

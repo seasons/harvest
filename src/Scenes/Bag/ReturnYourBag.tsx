@@ -17,8 +17,8 @@ import { ACTIVE_RESERVATION } from "./CurrentRotation"
 import { GetBag_NoCache_Query } from "./BagQueries"
 
 const RETURN_ITEMS = gql`
-  mutation ReturnItems($items: [ID!]!) {
-    returnItems(items: $items) {
+  mutation ReturnItems($items: [ID!]!, $returnReasons: [ReturnReasonInput!]) {
+    returnItems(items: $items, returnReasons: $returnReasons) {
       id
     }
   }
@@ -28,6 +28,7 @@ export const ReturnYourBag = () => {
   const { previousData, data = previousData } = useQuery(ACTIVE_RESERVATION)
   const navigation = useNavigation()
   const [selectedItems, setSelectedItems] = useState({})
+  const [selectedReturnReasons, setSelectedReturnReasons] = useState({})
   const [returnItems] = useMutation(RETURN_ITEMS, {
     onCompleted: () => {
       navigation.navigate(NavigationSchema.StackNames.BagStack, {
@@ -42,23 +43,29 @@ export const ReturnYourBag = () => {
 
   const renderItem = ({ item, index }) => {
     return (
-      <Box mx={2} key={index}>
-        <ReturnYourBagItem
-          physicalProduct={item}
-          onSelect={(selected) => {
-            if (selected) {
-              setSelectedItems({
-                ...selectedItems,
-                [item.id]: selected,
-              })
-            } else {
-              const updatedSelectedItems = { ...selectedItems }
-              delete updatedSelectedItems[item.id]
-              setSelectedItems(updatedSelectedItems)
-            }
-          }}
-        />
-      </Box>
+      <ReturnYourBagItem
+        key={index}
+        returnReasons={data?.returnReasons}
+        physicalProduct={item}
+        onSelectReason={(reason) => {
+          setSelectedReturnReasons({
+            ...selectedReturnReasons,
+            [item.id]: reason,
+          })
+        }}
+        onSelect={(selected) => {
+          if (selected) {
+            setSelectedItems({
+              ...selectedItems,
+              [item.id]: selected,
+            })
+          } else {
+            const updatedSelectedItems = { ...selectedItems }
+            delete updatedSelectedItems[item.id]
+            setSelectedItems(updatedSelectedItems)
+          }
+        }}
+      />
     )
   }
 
@@ -85,9 +92,16 @@ export const ReturnYourBag = () => {
       </Sans>
     ) : (
       <Sans size="4" color="black50">
-        Select which items you're returning below
+        Before placing another order, we need to know what you're turning and why.
       </Sans>
     )
+
+  console.log(
+    "selectedReturnReasons",
+    Object.keys(selectedReturnReasons).map((id) => {
+      return { id, reason: selectedReturnReasons[id] }
+    })
+  )
 
   return (
     <Container insetsTop={true}>
@@ -96,7 +110,7 @@ export const ReturnYourBag = () => {
         <FlatList
           data={activeReservation ? activeReservation.products : []}
           ListHeaderComponent={() => (
-            <Box pb={1} px={2}>
+            <Box px={2}>
               <Spacer mb={80} />
               <Sans size="7" color="black">
                 Return your items
@@ -104,7 +118,7 @@ export const ReturnYourBag = () => {
               <Spacer mt="1" />
               {subtitle}
               <Box mt={4} mb={1}>
-                <Sans size="4">Which items are you returning?</Sans>
+                <Sans size="4">What are you returning?</Sans>
               </Box>
               <Separator />
             </Box>
@@ -140,6 +154,9 @@ export const ReturnYourBag = () => {
                 returnItems({
                   variables: {
                     items: Object.keys(selectedItems),
+                    returnReasons: Object.keys(selectedReturnReasons).map((id) => {
+                      return { physicalProductId: id, reason: selectedReturnReasons[id] }
+                    }),
                   },
                   awaitRefetchQueries: true,
                   refetchQueries: [{ query: GetBag_NoCache_Query }],
