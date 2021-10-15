@@ -96,13 +96,6 @@ export const ReturnYourBag = () => {
       </Sans>
     )
 
-  console.log(
-    "selectedReturnReasons",
-    Object.keys(selectedReturnReasons).map((id) => {
-      return { id, reason: selectedReturnReasons[id] }
-    })
-  )
-
   return (
     <Container insetsTop={true}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
