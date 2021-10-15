@@ -80,7 +80,7 @@ export const ReturnYourBagItem: React.FC<ReturnYourBagItemProps> = ({
                   }}
                   selected={selected}
                   key={index}
-                  variant="primaryWhite"
+                  variant={selected ? "primaryWhite" : "primaryGray"}
                   size="small"
                   mr={index !== returnReasons.length - 1 ? 1 : 0}
                 >
