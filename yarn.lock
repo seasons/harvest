@@ -15084,6 +15084,11 @@ react-native-contacts@^6.0.3:
   resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-6.0.5.tgz#26503c862a197eef790aee243053c0ceb23d7a0f"
   integrity sha512-2BPW1bODJPnKbi/Wr2+m43hlrxcYrzMkWVAre3nMwqekSrsapMu/iSpQbxcB3Ia8cvBNH6Cu2tSqGpqY4Lc/lg==
 
+react-native-date-picker@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-4.1.0.tgz#60a27dba8ed10a09f127343425fd787c6a7689e6"
+  integrity sha512-XUaOUYoYpLRrq3OIUdbx4sntajbYk86MA0sBAQ+MSK1Ft0CdCgfQdyRaJ7D8o0S39uQlgyIMFFFtjC72WIecCQ==
+
 react-native-device-info@^5.6.1:
   version "5.6.5"
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-5.6.5.tgz#3f18d7c38b21cfc475163351a9aae6e9037a43a0"

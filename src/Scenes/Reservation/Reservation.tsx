@@ -11,7 +11,7 @@ import {
 import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { ScrollView } from "react-native"
 
 import { useMutation, useQuery } from "@apollo/client"
@@ -121,12 +121,13 @@ export const Reservation = screenTrack()((props) => {
   const navigation = useNavigation()
 
   const [shippingCode, setShippingCode] = useState("UPSGround")
-  const [timeWindow, setTimeWindow] = useState(null)
+  const [dateAndtimeWindow, setDateAndTimeWindow] = useState(null)
 
   const { previousData, data = previousData, refetch } = useQuery(GET_CUSTOMER, {
     variables: {
       shippingCode,
-      timeWindowID: timeWindow?.id,
+      timeWindowID: dateAndtimeWindow?.timeWindow?.id,
+      pickupDate: dateAndtimeWindow?.date,
     },
   })
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -275,8 +276,8 @@ export const Reservation = screenTrack()((props) => {
               onShippingMethodSelected={(method) => {
                 setShippingCode(method.code)
               }}
-              onTimeWindowSelected={(timeWindow) => {
-                setTimeWindow(timeWindow)
+              onTimeWindowSelected={(data) => {
+                setDateAndTimeWindow(data)
               }}
             />
             <Box mb={5}>
