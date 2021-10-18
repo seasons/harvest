@@ -1,4 +1,4 @@
-import { Box, Button, Sans, Separator, Spacer } from "App/Components"
+import { Box, Sans, Separator, Spacer } from "App/Components"
 import { SectionHeader } from "App/Components/SectionHeader"
 import { ShippingOption } from "App/Scenes/Order/Components"
 import React, { useState } from "react"

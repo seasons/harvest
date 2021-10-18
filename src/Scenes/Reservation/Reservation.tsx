@@ -25,13 +25,8 @@ import { ReservationShippingOptionsSection } from "./Components/ReservationShipp
 import { ReservationLineItems } from "./ReservationLineItems"
 
 const RESERVE_ITEMS = gql`
-  mutation ReserveItems(
-    $items: [ID!]!
-    $options: ReserveItemsOptions
-    $shippingCode: ShippingCode
-    $timeWindowID: ID!
-  ) {
-    reserveItems(items: $items, options: $options, shippingCode: $shippingCode) {
+  mutation ReserveItems($options: ReserveItemsOptions, $shippingCode: ShippingCode) {
+    reserveItems(options: $options, shippingCode: $shippingCode) {
       id
     }
   }
@@ -40,9 +35,12 @@ const RESERVE_ITEMS = gql`
 const GET_CUSTOMER = gql`
   query GetCustomer($shippingCode: String) {
     shippingMethods {
+      id
       displayText
       code
+      position
       timeWindows {
+        id
         startTime
         endTime
         display
@@ -121,13 +119,11 @@ export const Reservation = screenTrack()((props) => {
   const navigation = useNavigation()
 
   const [shippingCode, setShippingCode] = useState("UPSGround")
-  const [dateAndtimeWindow, setDateAndTimeWindow] = useState(null)
+  const [dateAndTimeWindow, setDateAndTimeWindow] = useState(null)
 
   const { previousData, data = previousData, refetch } = useQuery(GET_CUSTOMER, {
     variables: {
       shippingCode,
-      timeWindowID: dateAndtimeWindow?.timeWindow?.id,
-      pickupDate: dateAndtimeWindow?.date,
     },
   })
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -314,7 +310,8 @@ export const Reservation = screenTrack()((props) => {
               variables: {
                 shippingCode,
                 options: {
-                  timeWindowID: timeWindow.id,
+                  timeWindowID: dateAndTimeWindow?.timeWindow?.id,
+                  pickupDate: dateAndTimeWindow?.date,
                 },
               },
             })
