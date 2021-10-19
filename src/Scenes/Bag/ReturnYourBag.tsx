@@ -74,21 +74,6 @@ export const ReturnYourBag = () => {
   const currentTermEndDateTime = DateTime.fromISO(subscription?.currentTermEnd)
   const nextSwapDate = currentTermEndDateTime.plus({ day: 1 })
 
-  const subtitle =
-    reservationCreationDate < currentTermStart ? (
-      <Sans size="4" color="black50">
-        Heads up, it looks like you don’t have a free swap until{" "}
-        <Sans size="4" style={{ textDecorationLine: "underline" }}>
-          {`${nextSwapDate.weekdayLong}, ${nextSwapDate.monthLong} ${nextSwapDate.day}`}
-        </Sans>
-        . Return your items early & place a new order for only $30
-      </Sans>
-    ) : (
-      <Sans size="4" color="black50">
-        Select which items you're returning below
-      </Sans>
-    )
-
   return (
     <Container insetsTop={true}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
@@ -102,9 +87,11 @@ export const ReturnYourBag = () => {
                 Return your items
               </Sans>
               <Spacer mt="1" />
-              {subtitle}
+              <Sans size="4" color="black50">
+                Before placing another order, we need to know what you’re returning and why.
+              </Sans>
               <Box mt={4} mb={1}>
-                <Sans size="4">Which items are you returning?</Sans>
+                <Sans size="4">What are you returning?</Sans>
               </Box>
               <Separator />
             </Box>
