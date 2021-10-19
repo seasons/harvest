@@ -305,7 +305,6 @@ export const EditCreditCard: React.FC<{
             <Button
               disabled={isMutating}
               variant="primaryWhite"
-              size="large"
               width={buttonWidth}
               onPress={() => {
                 navigation.goBack()
