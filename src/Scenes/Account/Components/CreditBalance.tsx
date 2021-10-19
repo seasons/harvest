@@ -22,7 +22,7 @@ export const CreditBalanceFragment_Customer = gql`
   }
 `
 
-const CurrentChargeBar = ({ membership }) => {
+const CurrentChargeBar = ({ membership, endDate }) => {
   const invoice = membership?.currentRentalInvoice
 
   if (!invoice) {
@@ -30,9 +30,8 @@ const CurrentChargeBar = ({ membership }) => {
   }
 
   const startDate = DateTime.fromISO(invoice.billingStartAt).toFormat("LLL dd")
-  const endDate = DateTime.fromISO(invoice.billingEndAt).toFormat("LLL dd")
 
-  const percent = membership?.currentBalance / invoice?.estimatedTotal
+  const percent = (membership?.currentBalance / invoice?.estimatedTotal) * 100
 
   return (
     <>
@@ -65,6 +64,8 @@ export const CreditBalance = ({ membership }) => {
   const credits = membership?.adjustedCreditBalance
   const invoice = membership?.currentRentalInvoice
 
+  const endDate = DateTime.fromISO(invoice?.billingEndAt).toFormat("LLL dd")
+
   return typeof credits === "number" ? (
     <>
       <Spacer mb={1} />
@@ -75,9 +76,9 @@ export const CreditBalance = ({ membership }) => {
         <Sans size="8">{formatPrice(membership?.currentBalance)}</Sans>
       </Flex>
       <Box m={2}>
-        <CurrentChargeBar membership={membership} />
+        <CurrentChargeBar membership={membership} endDate={endDate} />
         <Sans mt={1} size="4" color="black50">
-          Your estimated balance by Oct 1st is{" "}
+          Your estimated balance by {endDate} is{" "}
           <Text style={{ color: colors.black100, textDecorationLine: "underline" }}>
             {formatPrice(invoice?.estimatedTotal)}
           </Text>
@@ -85,7 +86,7 @@ export const CreditBalance = ({ membership }) => {
           deducted.
         </Sans>
       </Box>
-      <Spacer mb={4} />
+      <Spacer mb={2} />
     </>
   ) : (
     <>

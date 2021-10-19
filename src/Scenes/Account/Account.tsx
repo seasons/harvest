@@ -1,12 +1,14 @@
 import { Box, Container, Flex, GuestView, Sans, Separator, Skeleton, Spacer } from "App/Components"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
 import {
   DocumentWithText, Envelope, Instagram, LogOutSVG, ManageMembership, MapPin, MonocromeSeasonsLogo,
   PersonalPreferences, PrivacyPolicy, SpeechBubble, Star
 } from "Assets/svgs"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
 import { DateTime } from "luxon"
 import { default as React, useEffect } from "react"
@@ -398,8 +400,10 @@ export const Account = screenTrack()(() => {
           </Box>
           <Spacer mb="100px" />
         </ScrollView>
-        <CreditsAvailableBar membership={customer?.membership} />
       </Animatable.View>
+      <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
+        <CreditsAvailableBar membership={customer?.membership} />
+      </FadeBottom2>
     </Container>
   )
 })
