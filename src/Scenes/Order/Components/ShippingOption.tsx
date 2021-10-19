@@ -5,12 +5,9 @@ import React from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components"
 
-export const ShippingOption = ({ option, index, shippingOptionIndex, setShippingOptionIndex }) => {
-  const method = option?.shippingMethod
-  const selected = index === shippingOptionIndex
-
+export const ShippingOption = ({ method, index, selected, onSelect }) => {
   return (
-    <TouchableWithoutFeedback onPress={() => setShippingOptionIndex(index)}>
+    <TouchableWithoutFeedback onPress={() => onSelect(index)}>
       <Flex flexDirection="row" justifyContent="space-between" alignItems="center" py={2}>
         <Sans size="4" color="black100">
           {method?.displayText}
