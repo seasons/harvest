@@ -4,7 +4,6 @@ import { space } from "App/utils/space"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
-import { DateTime } from "luxon"
 import React, { useState } from "react"
 import { Dimensions, FlatList } from "react-native"
 
@@ -66,14 +65,6 @@ export const ReturnYourBag = () => {
     return <Loader />
   }
 
-  const subscription = data?.me?.customer?.membership?.subscription
-
-  const reservationCreationDate = activeReservation?.createdAt
-  const currentTermStart = subscription?.currentTermStart
-
-  const currentTermEndDateTime = DateTime.fromISO(subscription?.currentTermEnd)
-  const nextSwapDate = currentTermEndDateTime.plus({ day: 1 })
-
   return (
     <Container insetsTop={true}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
@@ -88,7 +79,7 @@ export const ReturnYourBag = () => {
               </Sans>
               <Spacer mt="1" />
               <Sans size="4" color="black50">
-                Before placing another order, we need to know what you’re returning and why.
+                Before placing another order, we need to know what you’re returning.
               </Sans>
               <Box mt={4} mb={1}>
                 <Sans size="4">What are you returning?</Sans>
