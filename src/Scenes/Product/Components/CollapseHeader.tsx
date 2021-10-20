@@ -14,7 +14,7 @@ export const CollapseHeader: React.FC<{ handleOnPress: () => void; isCollapsed: 
       <Box>
         <Flex alignItems="center" flexDirection="row" justifyContent="space-between" flexWrap="nowrap" pb={2}>
           <Sans size="4">{title}</Sans>
-          <ChevronIcon color={color("black100")} rotateDeg={isCollapsed ? "-90deg" : "90deg"} />
+          <ChevronIcon color={color("black100")} rotateDeg={isCollapsed ? "90deg" : "-90deg"} />
         </Flex>
         <Separator color={color("black10")} />
       </Box>
