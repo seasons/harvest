@@ -6,7 +6,7 @@ import Slider from "@react-native-community/slider"
 import { color } from "App/utils/color"
 import { Dimensions } from "react-native"
 
-const thumbImage = require(`../../../../assets/images/sliderThumb.png`)
+const thumbImage = require(`../../../../assets/images/PricingSlider.png`)
 const windowWidth = Dimensions.get("window").width
 
 export const PricingCalculator = ({ product }) => {
