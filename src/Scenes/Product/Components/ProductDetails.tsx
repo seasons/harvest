@@ -98,10 +98,7 @@ export const ProductDetails: React.FC<{
       <CollapseHeader
         title="Product details"
         isCollapsed={isCollapsed}
-        handleOnPress={() => {
-          console.log("test", isCollapsed)
-          setIsCollapsed(!isCollapsed)
-        }}
+        handleOnPress={() => setIsCollapsed(!isCollapsed)}
       />
       <Collapsible collapsed={isCollapsed}>
         {!!product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
