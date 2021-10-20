@@ -18,13 +18,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
 import { useMutation, useQuery } from "@apollo/client"
-import {
-  ProductBuyCTA,
-  ProductBuyCTAFragment_Product,
-  ProductBuyCTAFragment_ProductVariant,
-  ProductConditionSection,
-  ProductConditionSectionFragment_PhysicalProductQualityReport,
-} from "@seasons/eclipse"
+import { ProductBuyCTA, ProductBuyCTAFragment_Product, ProductBuyCTAFragment_ProductVariant } from "@seasons/eclipse"
 import * as Sentry from "@sentry/react-native"
 import { ImageRail, ProductDetails, ProductMeasurements } from "./Components"
 import { ProductBottomBar } from "./Components/ProductBottomBar"
@@ -32,7 +26,11 @@ import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT, Product_NoCache_Query } from "./Queries"
-import { ReturnYourBagConfirmationItem } from "../Bag/Components/ReturnYourBagConfirmationItem"
+import { PricingCalculator } from "./Components/PricingCalculator"
+import {
+  ProductConditionSection,
+  ProductConditionSectionFragment_PhysicalProductQualityReport,
+} from "./Components/ProductConditionSection"
 
 const windowHeight = Dimensions.get("window").height
 
@@ -302,12 +300,19 @@ export const Product = screenTrack({
         )
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
+      case "pricingCalculator":
+        return <PricingCalculator product={product} />
       case "productMeasurements":
         return <ProductMeasurements selectedVariant={selectedVariant} />
       case "relatedProducts":
         return (
           <Box pb={2} pt={1}>
-            <ProductCarousel title="Related Products" flatListRef={flatListRef} products={relatedProducts} />
+            <ProductCarousel
+              titleSize="4"
+              title="More like this"
+              flatListRef={flatListRef}
+              products={relatedProducts}
+            />
           </Box>
         )
       case "moreLikeThis":
@@ -315,6 +320,7 @@ export const Product = screenTrack({
           <Box pb={2} pt={1}>
             <ProductCarousel
               title={`More from ${product?.brand?.name}`}
+              titleSize="4"
               flatListRef={flatListRef}
               products={brandProducts}
             />
@@ -324,7 +330,7 @@ export const Product = screenTrack({
         return (
           <ProductBuyCTA
             px={3}
-            pb={3}
+            pb={4}
             ref={productBuyRef}
             product={filter(ProductBuyCTAFragment_Product, product)}
             selectedVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
@@ -341,7 +347,7 @@ export const Product = screenTrack({
         return (
           <ProductConditionSection
             px={2}
-            pb={3}
+            pb={4}
             physicalProductQualityReport={
               physicalProductQualityReport
                 ? filter(ProductConditionSectionFragment_PhysicalProductQualityReport, physicalProductQualityReport)
@@ -359,6 +365,7 @@ export const Product = screenTrack({
   const sections = [
     "imageRail",
     "productDetails",
+    "pricingCalculator",
     "buy",
     "productMeasurements",
     "condition",
