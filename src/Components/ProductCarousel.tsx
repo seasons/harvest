@@ -4,12 +4,14 @@ import { ProductGridItem } from "@seasons/eclipse"
 import { Box } from "./Box"
 import { Sans } from "./Typography"
 import { useAuthContext } from "../Navigation/AuthContext"
+import { SansSize } from "./Theme"
 
 export const ProductCarousel: React.FC<{
   flatListRef: React.RefObject<any>
   products: any
   title?: string
-}> = ({ products, flatListRef, title }) => {
+  titleSize?: SansSize
+}> = ({ products, flatListRef, title, titleSize }) => {
   const { authState } = useAuthContext()
 
   return (
@@ -18,7 +20,7 @@ export const ProductCarousel: React.FC<{
         <>
           {!!title && (
             <Box px={2}>
-              <Sans color="black100" size="5">
+              <Sans color="black100" size={titleSize ? titleSize : "5"}>
                 {title}
               </Sans>
             </Box>

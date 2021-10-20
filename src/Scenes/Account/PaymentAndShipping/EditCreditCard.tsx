@@ -289,7 +289,6 @@ export const EditCreditCard: React.FC<{
             <Button
               disabled={isMutating}
               variant="primaryBlack"
-              size="large"
               width={singleButtonWidth}
               onPress={() => {
                 navigation.navigate(NavigationSchema.StackNames.AccountStack, {
