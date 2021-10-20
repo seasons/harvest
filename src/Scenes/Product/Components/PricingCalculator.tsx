@@ -1,10 +1,12 @@
-import React, { useState } from "react"
 import { Box, Flex, Sans, Separator } from "App/Components"
-import { CollapseHeader } from "./CollapseHeader"
-import Collapsible from "react-native-collapsible"
-import Slider from "@react-native-community/slider"
 import { color } from "App/utils/color"
+import React, { useState } from "react"
 import { Dimensions } from "react-native"
+import Collapsible from "react-native-collapsible"
+
+import Slider from "@react-native-community/slider"
+
+import { CollapseHeader } from "./CollapseHeader"
 
 const thumbImage = require(`../../../../assets/images/PricingSlider.png`)
 const windowWidth = Dimensions.get("window").width
@@ -66,7 +68,8 @@ export const PricingCalculator = ({ product }) => {
         <Separator />
         <Box pt={2}>
           <Sans size="3" color="black50">
-            Drag the slider to see how much you'd pay. Want it longer than a month? We'll pro-rate the extra days.
+            There’s a 40% floor price for all rentals. Drag the slider to see how much you’d pay. Want it longer than a
+            month? We’ll pro-rate the extra days.
           </Sans>
         </Box>
       </Collapsible>
