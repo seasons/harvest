@@ -172,7 +172,7 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
   if (source === "UpdatePaymentPlanModal" && customerPlanId === "access-monthly") {
     sortedPlans = sortedPlans?.filter((plan) => plan.planID === "access-yearly")
   }
-  const lowestPlanPrice = sortedPlans?.map((plan) => plan.price)?.reduce((a, b) => Math.min(a, b))
+  const lowestPlanPrice = plans?.map((plan) => plan.price)?.reduce((a, b) => Math.min(a, b))
 
   useEffect(() => {
     if (sortedPlans && sortedPlans.length > 0 && !selectedPlan) {
