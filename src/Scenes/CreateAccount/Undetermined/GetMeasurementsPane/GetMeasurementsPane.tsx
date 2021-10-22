@@ -15,13 +15,13 @@ import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
 
 const ADD_MEASUREMENTS = gql`
   mutation addMeasurements(
-    $height: Int
-    $weight: CustomerDetailCreateweightInput
+    $shoeSize: Int
+    $pantLength: Int
     $topSizes: CustomerDetailCreatetopSizesInput
     $waistSizes: CustomerDetailCreatewaistSizesInput
   ) {
     addCustomerDetails(
-      details: { height: $height, weight: $weight, topSizes: $topSizes, waistSizes: $waistSizes }
+      details: { pantLength: $pantLength, shoeSize: $shoeSize, topSizes: $topSizes, waistSizes: $waistSizes }
       event: CompletedWaitlistForm
     ) {
       id
