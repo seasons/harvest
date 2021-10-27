@@ -118,7 +118,7 @@ export const Reservation = screenTrack()((props) => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
-  const [shippingCode, setShippingCode] = useState("UPSGround")
+  const [shippingCode, setShippingCode] = useState("Pickup")
   const [dateAndTimeWindow, setDateAndTimeWindow] = useState(null)
 
   const { previousData, data = previousData, refetch } = useQuery(GET_CUSTOMER, {
