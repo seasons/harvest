@@ -60,11 +60,15 @@ const CurrentChargeBar = ({ membership, endDate }) => {
   )
 }
 
-export const CreditBalance = ({ membership }) => {
+export const CreditBalance = ({ membership, loading }) => {
   const credits = membership?.adjustedCreditBalance
   const invoice = membership?.currentRentalInvoice
 
   const endDate = DateTime.fromISO(invoice?.billingEndAt).toFormat("LLL dd")
+
+  if (!membership && !loading) {
+    return null
+  }
 
   return typeof credits === "number" ? (
     <>
