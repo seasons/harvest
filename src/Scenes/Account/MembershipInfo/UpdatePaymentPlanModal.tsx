@@ -15,16 +15,17 @@ export const UpdatePaymentPlanModal = screenTrack()(({ navigation }) => {
       where: { status: "active" },
     },
   })
-  const { previousData: previousDataNoCache, data: dataNoCache = previousDataNoCache } = useQuery<
-    CreateAccount_NoCache_Query_Type
-  >(CreateAccount_NoCache_Query)
+  const {
+    previousData: previousDataNoCache,
+    data: dataNoCache = previousDataNoCache,
+  } = useQuery<CreateAccount_NoCache_Query_Type>(CreateAccount_NoCache_Query)
 
   useEffect(() => {
-    const customersPlan = dataNoCache?.me?.customer?.membership?.plan
-    if (customersPlan) {
-      setSelectedPlan(customersPlan)
+    const yearlyPlan = data?.paymentPlans?.find((plan) => plan.planID === "access-yearly")
+    if (yearlyPlan) {
+      setSelectedPlan(yearlyPlan)
     }
-  }, [dataNoCache, setSelectedPlan])
+  }, [data, setSelectedPlan])
 
   if (!data?.paymentPlans) {
     return (

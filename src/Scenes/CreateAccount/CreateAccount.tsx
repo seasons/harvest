@@ -81,6 +81,11 @@ export const CreateAccount_NoCache_Query = gql`
           plan {
             id
             description
+            planID
+            features {
+              included
+              excluded
+            }
             tier
           }
         }
@@ -153,9 +158,10 @@ export const CreateAccount: React.FC<CreateAccountProps> = screenTrack()(({ navi
       where: { status: "active" },
     },
   })
-  const { previousData: previousDataNoCache, data: dataNoCache = previousDataNoCache } = useQuery<
-    CreateAccount_NoCache_Query_Type
-  >(CreateAccount_NoCache_Query)
+  const {
+    previousData: previousDataNoCache,
+    data: dataNoCache = previousDataNoCache,
+  } = useQuery<CreateAccount_NoCache_Query_Type>(CreateAccount_NoCache_Query)
   const plans = data?.paymentPlans
   const howDidYouFindOutAboutUsView = data?.howDidYouFindOutAboutUs
   const customer = dataNoCache?.me?.customer

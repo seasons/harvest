@@ -45,6 +45,10 @@ export const ProductDetails: React.FC<{
     `Model is ${modelHeightDisplay(product.modelHeight)} in a ${product.modelSize.type === "WxL" ? "WxL " : ""}${
       product.modelSize.display
     }`
+
+  const manufacturerSize = selectedVariant?.manufacturerSizes?.[0]?.display
+  const manufacturerSizeDiff = manufacturerSize !== selectedVariant?.displayShort
+
   return (
     <Box pt={2} px={2} mb={4}>
       <Flex flexDirection="row" justifyContent="space-between" alignItems="flex-start">
@@ -101,6 +105,9 @@ export const ProductDetails: React.FC<{
         handleOnPress={() => setIsCollapsed(!isCollapsed)}
       />
       <Collapsible collapsed={isCollapsed}>
+        {manufacturerSizeDiff && !!manufacturerSize && (
+          <ProductInfoItem detailType="Manufacturer size" detailValue={manufacturerSize} />
+        )}
         {!!product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
         {!!product.modelSize && !!product.modelHeight && (
           <ProductInfoItem detailType="Fit" detailValue={modelDetailValue} />
