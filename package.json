@@ -1,6 +1,6 @@
 {
   "name": "harvest",
-  "version": "1.53.1",
+  "version": "1.53.2",
   "engines": {
     "node": "12 || 14"
   },
