@@ -15,18 +15,16 @@ enum Section {
 }
 
 const parseMeasurements = (rawMeasurements: InitialMeasurements) => {
-  const height = rawMeasurements?.height
-  const weightRange = rawMeasurements?.weight
-  const measurements = { height: null, weight: null, topSizeIndices: null, waistSizeIndices: null }
+  const shoeSize = rawMeasurements?.shoeSize
+  const pantLength = rawMeasurements?.pantLength
+  const measurements = { shoeSize: null, pantLength: null, topSizeIndices: null, waistSizeIndices: null }
 
-  if (height) {
-    measurements.height = Measurements.heights.find((item) => item.value == height)
+  if (shoeSize) {
+    measurements.shoeSize = Measurements.shoeSizes.find((item) => item.value == shoeSize)
   }
 
-  if (weightRange && weightRange?.length == 2) {
-    measurements.weight = Measurements.weights.find(
-      (item) => item.value[0] == weightRange[0] && item.value[1] == weightRange[1]
-    )
+  if (pantLength) {
+    measurements.pantLength = Measurements.pantLengths.find((item) => item.value === pantLength)
   }
 
   return measurements
@@ -46,17 +44,17 @@ export const SizingTab: React.FC<{ navigation: any; rawMeasurements: InitialMeas
           <Flex flexDirection="row">
             <Box style={{ flex: 0.5, marginRight: 6 }}>
               <Sans color="black100" size="4">
-                Height
+                Shoe size
               </Sans>
               <Spacer mb={1} />
-              <UninteractableBoxPicker text={measurements.height?.label} />
+              <UninteractableBoxPicker text={measurements.shoeSize?.label} />
             </Box>
             <Box style={{ flex: 0.5, marginLeft: 6 }}>
               <Sans color="black100" size="4">
-                Weight
+                Pant length
               </Sans>
               <Spacer mb={1} />
-              <UninteractableBoxPicker text={measurements.weight?.label} />
+              <UninteractableBoxPicker text={measurements.pantLength?.label} />
             </Box>
           </Flex>
         )

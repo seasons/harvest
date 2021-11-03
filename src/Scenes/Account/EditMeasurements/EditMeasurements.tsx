@@ -4,8 +4,8 @@ import { screenTrack } from "App/utils/track"
 import { GetMeasurementsPane, Measurements } from "App/Scenes/CreateAccount/Undetermined"
 
 export interface InitialMeasurements {
-  height?: any
-  weight?: any
+  shoeSize?: any
+  pantLength?: any
   topSizes?: any
   waistSizes?: any
 }
@@ -15,21 +15,19 @@ const measurementsFrom = (params: any) => {
     return params?.measurements
   } else {
     const rawMeasurements = params?.rawMeasurements
-    const height = rawMeasurements?.height
-    const weightRange = rawMeasurements?.weight
+    const shoeSize = rawMeasurements?.shoeSize
+    const pantLength = rawMeasurements?.pantLength
     const topSizes = rawMeasurements?.topSizes
     const waistSizes = rawMeasurements?.waistSizes
 
-    const measurements = { height: null, weight: null, topSizeIndices: null, waistSizeIndices: null }
+    const measurements = { shoeSize: null, pantLength: null, topSizeIndices: null, waistSizeIndices: null }
 
-    if (height) {
-      measurements.height = Measurements.heights.find((item) => item.value == height)
+    if (shoeSize) {
+      measurements.shoeSize = Measurements.shoeSizes.find((item) => item.value == shoeSize)
     }
 
-    if (weightRange && weightRange?.length == 2) {
-      measurements.weight = Measurements.weights.find(
-        (item) => item.value[0] == weightRange[0] && item.value[1] == weightRange[1]
-      )
+    if (pantLength) {
+      measurements.pantLength = Measurements.pantLengths.find((item) => item.value == pantLength)
     }
 
     if (topSizes) {

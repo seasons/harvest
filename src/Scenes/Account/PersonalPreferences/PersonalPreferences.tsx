@@ -25,8 +25,8 @@ const GET_PREFERENCES = gql`
         }
         detail {
           id
-          height
-          weight
+          shoeSize
+          pantLength
           topSizes
           waistSizes
           phoneNumber
@@ -60,7 +60,7 @@ enum Tab {
 
 export const PersonalPreferences = screenTrack()(({ navigation }) => {
   const [activeTab, setActiveTab] = useState(Tab.Personal)
-  const { loading, error, data, refetch } = useQuery(GET_PREFERENCES)
+  const { error, data, refetch } = useQuery(GET_PREFERENCES)
 
   useEffect(() => {
     const unsubscribe = navigation?.addListener("focus", () => {
@@ -92,8 +92,8 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
   const stylePreferences = customer?.detail?.stylePreferences
   const phoneNumber = customer?.detail?.phoneNumber
   const measurements = {
-    height: customer?.detail?.height,
-    weight: customer?.detail?.weight,
+    shoeSize: customer?.detail?.shoeSize,
+    pantLength: customer?.detail?.pantLength,
     topSizes: customer?.detail?.topSizes,
     waistSizes: customer?.detail?.waistSizes,
   }
