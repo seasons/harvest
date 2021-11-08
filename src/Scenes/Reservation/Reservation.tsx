@@ -1,22 +1,17 @@
 import {
-  Box,
-  Container,
-  FixedBackArrow,
-  Flex,
-  Sans,
-  Separator,
-  Spacer,
-  SuggestedAddressPopupComponent,
+  Box, Container, FixedBackArrow, Flex, Sans, Separator, Spacer, SuggestedAddressPopupComponent
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { SectionHeader } from "App/Components/SectionHeader"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { UPDATE_PHONE_AND_SHIPPING } from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
+import {
+  UPDATE_PHONE_AND_SHIPPING
+} from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
 import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { ScrollView } from "react-native"
 
 import { useMutation, useQuery } from "@apollo/client"
@@ -196,6 +191,12 @@ export const Reservation = screenTrack()((props) => {
       setIsMutating(false)
     },
   })
+
+  useEffect(() => {
+    if (data?.shippingMethods.length > 0) {
+      setShippingCode(data.shippingMethods[0].code)
+    }
+  }, [data?.shippingMethods])
 
   const me = data?.me
   const customer = me?.customer
