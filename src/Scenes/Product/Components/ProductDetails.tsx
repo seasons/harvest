@@ -46,7 +46,10 @@ export const ProductDetails: React.FC<{
       product.modelSize.display
     }`
 
-  const manufacturerSize = selectedVariant?.manufacturerSizes?.[0]?.display
+  const manufacturerSize = selectedVariant?.manufacturerSizes?.[0]
+  const manufacturerSizeDisplay = manufacturerSize?.display
+  const manufacturerSizeType = manufacturerSize?.type
+  const sizeConversionDisplay = `US ${selectedVariant?.displayShort} = ${manufacturerSizeType} ${manufacturerSizeDisplay}`
   const manufacturerSizeDiff = manufacturerSize !== selectedVariant?.displayShort
 
   return (
@@ -105,8 +108,8 @@ export const ProductDetails: React.FC<{
         handleOnPress={() => setIsCollapsed(!isCollapsed)}
       />
       <Collapsible collapsed={isCollapsed}>
-        {manufacturerSizeDiff && !!manufacturerSize && (
-          <ProductInfoItem detailType="Manufacturer size" detailValue={manufacturerSize} />
+        {manufacturerSizeDiff && !!manufacturerSizeDisplay && (
+          <ProductInfoItem detailType="Manufacturer size" detailValue={sizeConversionDisplay} />
         )}
         {!!product.color && <ProductInfoItem detailType="Color" detailValue={product.color.name} />}
         {!!product.modelSize && !!product.modelHeight && (
