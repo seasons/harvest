@@ -14,11 +14,15 @@ import { get, head, truncate } from "lodash"
 import React, { useState } from "react"
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
+import { Schema as NavigationSchema } from "App/Navigation"
 
 import { useMutation } from "@apollo/client"
 import { ProductPriceText, ProductPriceText_Product } from "@seasons/eclipse"
 
 import { GetBag_NoCache_Query, SavedTab_Query } from "../BagQueries"
+import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "App/Scenes/Product/Mutations"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { OrderType } from "App/Scenes/Product/Product"
 
 export const BagItemFragment = gql`
   fragment BagItemProductVariant on ProductVariant {
@@ -76,7 +80,6 @@ interface BagItemProps {
   navigation?: any
   deleteBagItem?: Function
   removeFromBagAndSaveItem?: Function
-  onShowBuyBottomSheet: () => void
 }
 
 export const BagItem: React.FC<BagItemProps> = ({
@@ -85,19 +88,45 @@ export const BagItem: React.FC<BagItemProps> = ({
   navigation,
   deleteBagItem,
   removeFromBagAndSaveItem,
-  onShowBuyBottomSheet,
 }) => {
   const { authState } = useAuthContext()
   const [isMutating, setIsMutating] = useState(false)
+  const [isMutatingBuyButton, setIsMutatingBuyButton] = useState(false)
+
+  const { showPopUp, hidePopUp } = usePopUpContext()
+
   const tracking = useTracking()
   if (!bagItem) {
     return null
   }
+  const userHasSession = !!authState?.userSession
 
   const variantToUse = head(
     (get(bagItem, "productVariant.product.variants") || []).filter((a) => a.id === bagItem.productVariant.id)
   )
   const product = get(bagItem, "productVariant.product")
+
+  const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
+    onCompleted: (res) => {
+      setIsMutatingBuyButton(false)
+      if (res?.createDraftedOrder) {
+        navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
+      }
+    },
+    onError: (error) => {
+      showPopUp({
+        title: "Sorry!",
+        note: "There was an issue creating the order, please try again.",
+        buttonText: "Okay",
+        onClose: () => {
+          hidePopUp()
+        },
+      })
+      console.log("error createDraftOrder ", error)
+      setIsMutatingBuyButton(false)
+    },
+  })
+
   if (!product) {
     return null
   }
@@ -106,12 +135,49 @@ export const BagItem: React.FC<BagItemProps> = ({
   const imageURL = product?.images?.[0]?.url || ""
 
   // Show buy alert whenever a sellable status is enabled, regardless of underlying availability
-  const isBuyable = bagItem?.productVariant?.price?.buyNewEnabled || bagItem?.productVariant?.price?.buyUsedEnabled
+  const buyNewEnabled = bagItem?.productVariant?.price?.buyNewEnabled
+  const isBuyable = buyNewEnabled || bagItem?.productVariant?.price?.buyUsedEnabled
   const purchased = bagItem?.productVariant?.purchased
 
   const variantSize = variantToUse?.displayShort
   const variantId = bagItem?.variantID
   const bagItemID = bagItem?.id
+
+  const handleCreateDraftOrder = (orderType: "Used" | "New") => {
+    if (isMutatingBuyButton || isMutating) {
+      return
+    }
+    setIsMutatingBuyButton(true)
+
+    if (userHasSession) {
+      return createDraftOrder({
+        variables: {
+          input: {
+            productVariantID: variantId,
+            orderType,
+          },
+        },
+      })
+    } else {
+      showPopUp({
+        title: "Sign up to buy this item",
+        note: "You need to sign in or create an account before you can order items",
+        secondaryButtonText: "Got it",
+        secondaryButtonOnPress: () => {
+          setIsMutatingBuyButton(false)
+          hidePopUp()
+        },
+        buttonText: "Sign up",
+        onClose: () => {
+          hidePopUp()
+          setIsMutatingBuyButton(false)
+          navigation.navigate("Modal", {
+            screen: "CreateAccountModal",
+          })
+        },
+      })
+    }
+  }
 
   const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
@@ -205,7 +271,12 @@ export const BagItem: React.FC<BagItemProps> = ({
         </Box>
         <Box mb={2} px={2}>
           {isBuyable && !purchased && (
-            <Button size="small" variant="secondaryWhite" onPress={onShowBuyBottomSheet}>
+            <Button
+              size="small"
+              variant="secondaryWhite"
+              loading={isMutatingBuyButton}
+              onPress={() => handleCreateDraftOrder(buyNewEnabled ? OrderType.BUY_NEW : OrderType.BUY_USED)}
+            >
               Buy
             </Button>
           )}
