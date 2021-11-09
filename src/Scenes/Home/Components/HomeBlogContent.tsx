@@ -1,16 +1,17 @@
-import React, { useState } from "react"
-import { Box, Flex, FadeInImage } from "App/Components"
+import { Box, FadeInImage, Flex } from "App/Components"
 import { LogoText, Sans } from "App/Components/Typography"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { space } from "App/utils"
-import styled from "styled-components/native"
-import { FlatList, TouchableWithoutFeedback, Dimensions } from "react-native"
-import { useNavigation } from "@react-navigation/native"
-import { Schema } from "App/Navigation"
-import { useTracking, Schema as TrackingSchema } from "App/utils/track"
-import { FadeTop, FadeBottom } from "Assets/svgs"
-import { imageResize } from "@seasons/eclipse/src/helpers/imageResize"
 import { Homepage_Query_blogPosts } from "App/generated/Homepage_Query"
+import { Schema } from "App/Navigation/schema"
+import { space } from "App/utils"
+import { Schema as TrackingSchema, useTracking } from "App/utils/track"
+import { FadeBottom, FadeTop } from "Assets/svgs"
+import React, { useState } from "react"
+import { Dimensions, FlatList, TouchableWithoutFeedback } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import styled from "styled-components/native"
+
+import { useNavigation } from "@react-navigation/native"
+import { imageResize } from "@seasons/eclipse/src/helpers/imageResize"
 
 const windowWidth = Dimensions.get("window").width
 const slideHeight = windowWidth

@@ -1,13 +1,12 @@
-import { ExtendPauseConfirmation, PauseConfirmation, ResumeConfirmation } from "App/Components/Pause"
-import { PauseModal } from "App/Components/Pause/PauseModal"
-import { navigateTo, Schema } from "App/Navigation"
 import {
-  Account,
-  EditMeasurements,
-  EditPaymentAndShipping,
-  EditShippingAddress,
-  EditStylePreferences,
-  PaymentAndShipping,
+  ExtendPauseConfirmation, PauseConfirmation, ResumeConfirmation
+} from "App/Components/Pause"
+import { PauseModal } from "App/Components/Pause/PauseModal"
+import { navigateTo } from "App/Navigation"
+import { Schema } from "App/Navigation/schema"
+import {
+  Account, EditMeasurements, EditPaymentAndShipping, EditShippingAddress, EditStylePreferences,
+  PaymentAndShipping
 } from "App/Scenes/Account"
 import { InviteFromContacts } from "App/Scenes/Account/InviteFriends"
 import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/UpdatePaymentPlanModal"
@@ -28,12 +27,16 @@ import { FitPicConfirmation, FitPicDetail, ShareFitPicToIG } from "App/Scenes/Fi
 import { Home } from "App/Scenes/Home"
 import { Order, OrderConfirmation } from "App/Scenes/Order"
 import { Product, SaveProduct } from "App/Scenes/Product"
-import { FinishProductRequest, ProductRequest, ProductRequestConfirmation } from "App/Scenes/ProductRequest"
+import {
+  FinishProductRequest, ProductRequest, ProductRequestConfirmation
+} from "App/Scenes/ProductRequest"
 import { ProductRequestGallery } from "App/Scenes/ProductRequest/Components"
 import { ReferralView } from "App/Scenes/ReferralView"
 import { Reservation, ReservationConfirmation, ShareReservationToIG } from "App/Scenes/Reservation"
 import { ReservationFeedbackModal } from "App/Scenes/ReservationFeedback/ReservationFeedbackModal"
-import { AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn } from "App/Scenes/SignIn"
+import {
+  AllowNotifications, ResetPassword, ResetPasswordConfirmation, SignIn
+} from "App/Scenes/SignIn"
 import { Tag } from "App/Scenes/Tag"
 import { Webview } from "App/Scenes/Webview"
 import { color } from "App/utils"

@@ -80,3 +80,8 @@ export enum StackNames {
   Modal = "Modal",
   Root = "Root",
 }
+
+export const Schema = {
+  PageNames,
+  StackNames,
+}

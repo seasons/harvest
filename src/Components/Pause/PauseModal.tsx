@@ -1,17 +1,21 @@
-import { Box, Button, CloseButton, Container, Flex, Sans, SectionHeader, Spacer } from "App/Components"
-import React, { useState } from "react"
-import { useMutation, useQuery } from "@apollo/client"
-import gql from "graphql-tag"
-import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { screenTrack } from "App/utils/track"
-import { Dimensions, ScrollView, Text } from "react-native"
-import { ListCheck } from "Assets/svgs/ListCheck"
-import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
-import { Schema } from "App/Navigation"
-import * as Sentry from "@sentry/react-native"
-import { DateTime } from "luxon"
-import { PauseReasonPupUp, PauseReasonPupUpFragment_Query } from "./PauseReasonPopUp"
+import {
+  Box, Button, CloseButton, Container, Flex, Sans, SectionHeader, Spacer
+} from "App/Components"
 import { PauseModal_Query as PauseModal_Query_Type } from "App/generated/PauseModal_Query"
+import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
+import { Schema } from "App/Navigation/schema"
+import { GET_MEMBERSHIP_INFO } from "App/Scenes/Account/MembershipInfo/MembershipInfo"
+import { screenTrack } from "App/utils/track"
+import { ListCheck } from "Assets/svgs/ListCheck"
+import gql from "graphql-tag"
+import { DateTime } from "luxon"
+import React, { useState } from "react"
+import { Dimensions, ScrollView, Text } from "react-native"
+
+import { useMutation, useQuery } from "@apollo/client"
+import * as Sentry from "@sentry/react-native"
+
+import { PauseReasonPupUp, PauseReasonPupUpFragment_Query } from "./PauseReasonPopUp"
 
 const viewWidth = Dimensions.get("window").width
 

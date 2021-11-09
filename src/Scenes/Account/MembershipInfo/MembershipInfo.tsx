@@ -1,17 +1,21 @@
-import gql from "graphql-tag"
-import React from "react"
-import { useQuery } from "@apollo/client"
-import { ScrollView } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Box, Button, Container, FixedBackArrow, Flex, Sans, SectionHeader, Spacer } from "App/Components"
+import {
+  Box, Button, Container, FixedBackArrow, Flex, Sans, SectionHeader, Spacer
+} from "App/Components"
 import { Loader } from "App/Components/Loader"
+import { PauseButtons } from "App/Components/Pause"
+import { GRANDFATHERED_PLAN_IDS } from "App/helpers/constants"
+import { Schema } from "App/Navigation/schema"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
-import { MembershipCard } from "./Components"
-import { PauseButtons } from "App/Components/Pause"
 import { ListCheck } from "Assets/svgs/ListCheck"
-import { Schema } from "App/Navigation"
-import { GRANDFATHERED_PLAN_IDS } from "App/helpers/constants"
+import gql from "graphql-tag"
+import React from "react"
+import { ScrollView } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+
+import { useQuery } from "@apollo/client"
+
+import { MembershipCard } from "./Components"
 
 export const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {

@@ -1,22 +1,26 @@
 import { ErrorScreen } from "App/Components/ErrorScreen"
 import { Loader } from "App/Components/Loader"
-import { Schema } from "App/Navigation"
+import { Homepage_Query as Homepage_Query_Type } from "App/generated/Homepage_Query"
+import {
+  HomepageNoCache_Query as HomepageNoCache_Query_Type
+} from "App/generated/HomepageNoCache_Query"
+import { Schema } from "App/Navigation/schema"
 import { NetworkContext } from "App/NetworkProvider"
+import { Homepage_Query, HomepageNoCache_Query } from "App/Scenes/Home/queries/homeQueries"
 import { userSessionToIdentifyPayload } from "App/utils/auth"
 import { screenTrack } from "App/utils/track"
 import { Container } from "Components/Container"
+import { DateTime } from "luxon"
 import React, { useContext, useEffect, useState } from "react"
 import { StatusBar } from "react-native"
 import SplashScreen from "react-native-splash-screen"
-import { useNotificationBarContext } from "@seasons/eclipse"
+
 import { useQuery } from "@apollo/client"
-import analytics from "@segment/analytics-react-native"
-import { HomeBlogContent, HomeBottomSheet } from "./Components"
-import { HomepageNoCache_Query, Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
-import { Homepage_Query as Homepage_Query_Type } from "App/generated/Homepage_Query"
-import { HomepageNoCache_Query as HomepageNoCache_Query_Type } from "App/generated/HomepageNoCache_Query"
 import AsyncStorage from "@react-native-community/async-storage"
-import { DateTime } from "luxon"
+import { useNotificationBarContext } from "@seasons/eclipse"
+import analytics from "@segment/analytics-react-native"
+
+import { HomeBlogContent, HomeBottomSheet } from "./Components"
 
 export const Home = screenTrack()(({ navigation, route }) => {
   const PAGE_LENGTH = 8

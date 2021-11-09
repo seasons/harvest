@@ -1,8 +1,12 @@
 import React, { useState } from "react"
-import { NavigationContainer, NavigationContainerRef, getStateFromPath } from "@react-navigation/native"
+
+import {
+  getStateFromPath, NavigationContainer, NavigationContainerRef
+} from "@react-navigation/native"
+
 import { AuthProvider, AuthProviderRef } from "./AuthProvider"
-import * as Schema from "./schema"
-export { Schema }
+import { Schema } from "./schema"
+
 export * from "./utils"
 
 const getActiveRouteName = (state) => {

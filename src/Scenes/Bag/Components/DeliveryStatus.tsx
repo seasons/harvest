@@ -1,6 +1,6 @@
 import { Box, Flex, Sans, Spacer } from "App/Components"
 import { GetBag_NoCache_Query_me_activeReservation } from "App/generated/GetBag_NoCache_Query"
-import { Schema } from "App/Navigation"
+import { Schema } from "App/Navigation/schema"
 import { color } from "App/utils"
 import gql from "graphql-tag"
 import React from "react"

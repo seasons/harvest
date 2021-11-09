@@ -1,13 +1,13 @@
-import React from "react"
-
-import { Schema } from "App/Navigation"
-import { chunk } from "lodash"
 import { Box, FadeInImage, Flex, Sans, Spacer } from "App/Components"
-import { TouchableOpacity, TouchableWithoutFeedback, ScrollView } from "react-native"
+import { Schema } from "App/Navigation/schema"
+import { Schema as EventSchema } from "App/utils/track"
+import { chunk } from "lodash"
+import React from "react"
+import { ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
 import * as Animatable from "react-native-animatable"
 import { useTracking } from "react-tracking"
+
 import { useNavigation } from "@react-navigation/native"
-import { Schema as EventSchema } from "App/utils/track"
 
 interface CategoriesRailProps {
   title: string

@@ -65,3 +65,5 @@ fastlane/screenshots
 ios/report.*.json
 
 env.json
+
+ios/Pods/hermes-engine

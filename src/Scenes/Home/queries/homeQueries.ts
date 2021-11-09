@@ -1,4 +1,5 @@
 import gql from "graphql-tag"
+
 import { HomeBottomSheetFragment_Query } from "../Components/HomeBottomSheet"
 
 const HomePageProductFragment_Product = gql`
@@ -145,11 +146,7 @@ export const Homepage_Query = gql`
       type
       properties
     }
-    featuredCollections: collections(
-      orderBy: updatedAt_DESC
-      where: { AND: [{ published: true }, { featured: true }] }
-      first: 5
-    ) {
+    featuredCollections: collections(orderBy: updatedAt_DESC, where: { AND: [{ published: true }] }, first: 5) {
       id
       slug
       title

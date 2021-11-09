@@ -1,22 +1,26 @@
 import { Box, Flex, Handle } from "App/Components"
+import { HomepageBanner } from "App/Components/HomepageBanner"
 import { Spinner } from "App/Components/Spinner"
-import { Schema } from "App/Navigation"
+import { Homepage_Query as Homepage_Query_Type } from "App/generated/Homepage_Query"
+import {
+  HomepageNoCache_Query as HomepageNoCache_Query_Type
+} from "App/generated/HomepageNoCache_Query"
+import { Schema } from "App/Navigation/schema"
 import { BagView } from "App/Scenes/Bag/Bag"
-import { space, seasonAndYear } from "App/utils"
+import { seasonAndYear, space } from "App/utils"
+import gql from "graphql-tag"
 import React, { useEffect, useMemo, useRef, useState } from "react"
 import { Dimensions } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import ScrollBottomSheet from "react-native-scroll-bottom-sheet"
+
 import { useNavigation, useScrollToTop } from "@react-navigation/native"
-import { AddPhotoButton } from "./AddPhotoButton"
-import { ProductsRail, CollectionsRail } from "@seasons/eclipse"
+import { CollectionsRail, ProductsRail } from "@seasons/eclipse"
+
 import { BrandsRail, CategoriesRail, FitPicCollection, HomeFooter, TagsRail } from "./"
-import { FitPicCollectionRef } from "./FitPicCollection"
-import { HomepageBanner } from "App/Components/HomepageBanner"
-import gql from "graphql-tag"
-import { Homepage_Query as Homepage_Query_Type } from "App/generated/Homepage_Query"
-import { HomepageNoCache_Query as HomepageNoCache_Query_Type } from "App/generated/HomepageNoCache_Query"
 import { AccessoriesRail } from "./AccessoriesRail"
+import { AddPhotoButton } from "./AddPhotoButton"
+import { FitPicCollectionRef } from "./FitPicCollection"
 
 const dimensions = Dimensions.get("window")
 
