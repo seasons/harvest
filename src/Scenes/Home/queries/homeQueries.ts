@@ -145,7 +145,11 @@ export const Homepage_Query = gql`
       type
       properties
     }
-    featuredCollections: collections(orderBy: updatedAt_DESC, where: { published: true }, first: 5) {
+    featuredCollections: collections(
+      orderBy: updatedAt_DESC
+      where: { AND: [{ published: true }, { featured: true }] }
+      first: 5
+    ) {
       id
       slug
       title
