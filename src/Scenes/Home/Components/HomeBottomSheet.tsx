@@ -179,13 +179,7 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({
         return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
       case SectionType.UpcomingProducts:
         return (
-          <ProductsRail
-            disableClickThrough
-            large
-            title="Upcoming releases"
-            rightText={seasonAndYearText}
-            items={item.results}
-          />
+          <ProductsRail disableTap large title="Upcoming releases" rightText={seasonAndYearText} items={item.results} />
         )
       case SectionType.Collection:
         return (
