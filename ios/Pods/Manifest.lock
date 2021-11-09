@@ -212,8 +212,8 @@ PODS:
     - React-Core
   - react-native-date-picker (4.1.0):
     - React-Core
-  - react-native-image-picker (2.4.0):
-    - React
+  - react-native-image-picker (4.1.2):
+    - React-Core
   - react-native-netinfo (6.0.0):
     - React-Core
   - react-native-pusher-push-notifications (2.5.1):
@@ -590,7 +590,7 @@ SPEC CHECKSUMS:
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
   react-native-contacts: 931baebf460125c5a7bbce1c4521a96c69795123
   react-native-date-picker: 52937fb39322ee5f6c44a10117456b3fa4225d4c
-  react-native-image-picker: 4e63090db19a528e36c0cc07d1423c8c0cb4c4ef
+  react-native-image-picker: 9c8a2687b69300ad9e95cec5d38f35ab9d32467d
   react-native-netinfo: e849fc21ca2f4128a5726c801a82fc6f4a6db50d
   react-native-pusher-push-notifications: 498ef2fb05a19e74c77886ab7bbac419a8f36eda
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
