@@ -4,6 +4,7 @@ import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import gql from "graphql-tag"
+import { DateTime } from "luxon"
 import React from "react"
 import { ScrollView } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
@@ -47,13 +48,13 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
         reservations(where: { id: $reservationID }) {
           id
           reservationNumber
-          shippingOption {
+          shippingMethod {
             id
-            externalCost
-            shippingMethod {
-              id
-              displayText
-            }
+            displayText
+          }
+          pickupDate
+          pickupWindow {
+            display
           }
           lineItems(filterBy: NewItems) {
             id
@@ -120,9 +121,13 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const formatedAddress1 =
     !!address?.address1 && `${address?.address1}${address?.address2 ? " " + address?.address2 : ""},`
   const formatedAddress2 = !!address?.city && `${address?.city}, ${address?.state} ${address?.zipCode}`
-  const shippingOption = reservation?.shippingOption
-  const shippingDisplayText = shippingOption?.shippingMethod?.displayText
+
+  const shippingDisplayText = reservation?.shippingMethod?.displayText
+  const timeWindowText = reservation?.pickupWindow?.display
+  const pickupDateText = reservation?.pickupDate && DateTime.fromISO(reservation?.pickupDate).toFormat("cccc, MMMM dd")
   const lineItems = reservation?.lineItems
+
+  const isPickup = reservation?.shippingMethod === "Pickup"
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
@@ -182,12 +187,22 @@ export const ReservationConfirmation = screenTrack()((props) => {
           </Box>
           <Box pt={1}>
             <ReservationSectionHeader
-              title="Delivery"
+              title={isPickup ? "In-Office Pickup" : "Delivery"}
               content={
                 <>
-                  {!!shippingDisplayText && (
+                  {!!shippingDisplayText && !isPickup && (
                     <Sans size="4" color="black100" ml="auto" textAlign="right">
                       {shippingDisplayText}
+                    </Sans>
+                  )}
+                  {!!pickupDateText && (
+                    <Sans size="4" color="black100" ml="auto" mt={1} textAlign="right">
+                      {pickupDateText}
+                    </Sans>
+                  )}
+                  {!!timeWindowText && (
+                    <Sans size="4" color="black100" textAlign="right">
+                      {timeWindowText}
                     </Sans>
                   )}
                 </>

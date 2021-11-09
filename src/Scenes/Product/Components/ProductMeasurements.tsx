@@ -1,8 +1,10 @@
 import { Box } from "App/Components"
-import React from "react"
+import React, { useState } from "react"
 import { ProductInfoItem } from "./ProductInfoItem"
 import { GetProduct_products_variants } from "App/generated/GetProduct"
 import gql from "graphql-tag"
+import { CollapseHeader } from "./CollapseHeader"
+import Collapsible from "react-native-collapsible"
 
 export const ProductMeasurementsFragment_ProductVariant = gql`
   fragment ProductMeasurementsFragment_ProductVariant on ProductVariant {
@@ -39,6 +41,8 @@ export const ProductMeasurementsFragment_ProductVariant = gql`
 export const ProductMeasurements: React.FC<{
   selectedVariant: GetProduct_products_variants
 }> = ({ selectedVariant }) => {
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
   const internalSize = selectedVariant?.internalSize
   const displayShort = selectedVariant?.displayShort
   const topSizes = internalSize?.top
@@ -49,27 +53,32 @@ export const ProductMeasurements: React.FC<{
     displayShort !== internalSize?.display && internalSize?.type === "WxL" && internalSize?.display
 
   return (
-    <Box px={2} mb={3}>
-      <ProductInfoItem detailType="Measurements" detailValue="" />
+    <Box px={2} mb={4}>
+      <CollapseHeader
+        title="Measurements"
+        isCollapsed={isCollapsed}
+        handleOnPress={() => setIsCollapsed(!isCollapsed)}
+      />
+      <Collapsible collapsed={isCollapsed}>
+        {!!selectedVariant?.displayLong && (
+          <ProductInfoItem detailType="Size" detailValue={selectedVariant?.displayLong} />
+        )}
 
-      {!!selectedVariant?.displayLong && (
-        <ProductInfoItem detailType="Size" detailValue={selectedVariant?.displayLong} />
-      )}
+        {!!topSizes?.length && <ProductInfoItem detailType="Length" detailValue={`${topSizes?.length}"`} />}
+        {!!topSizes?.sleeve && <ProductInfoItem detailType="Sleeve" detailValue={`${topSizes?.sleeve}"`} />}
+        {!!topSizes?.shoulder && <ProductInfoItem detailType="Shoulders" detailValue={`${topSizes?.shoulder}"`} />}
+        {!!topSizes?.chest && <ProductInfoItem detailType="Chest" detailValue={`${topSizes?.chest}"`} />}
 
-      {!!topSizes?.length && <ProductInfoItem detailType="Length" detailValue={`${topSizes?.length}"`} />}
-      {!!topSizes?.sleeve && <ProductInfoItem detailType="Sleeve" detailValue={`${topSizes?.sleeve}"`} />}
-      {!!topSizes?.shoulder && <ProductInfoItem detailType="Shoulders" detailValue={`${topSizes?.shoulder}"`} />}
-      {!!topSizes?.chest && <ProductInfoItem detailType="Chest" detailValue={`${topSizes?.chest}"`} />}
+        {!!waistByLengthDisplay && <ProductInfoItem detailType="Waist by length" detailValue={waistByLengthDisplay} />}
+        {!!bottomSizes?.waist && <ProductInfoItem detailType="Waist" detailValue={`${bottomSizes?.waist}"`} />}
+        {!!bottomSizes?.rise && <ProductInfoItem detailType="Rise" detailValue={`${bottomSizes?.rise}"`} />}
+        {!!bottomSizes?.hem && <ProductInfoItem detailType="Hem" detailValue={`${bottomSizes?.hem}"`} />}
+        {!!bottomSizes?.inseam && <ProductInfoItem detailType="Inseam" detailValue={`${bottomSizes?.inseam}"`} />}
 
-      {!!waistByLengthDisplay && <ProductInfoItem detailType="Waist by length" detailValue={waistByLengthDisplay} />}
-      {!!bottomSizes?.waist && <ProductInfoItem detailType="Waist" detailValue={`${bottomSizes?.waist}"`} />}
-      {!!bottomSizes?.rise && <ProductInfoItem detailType="Rise" detailValue={`${bottomSizes?.rise}"`} />}
-      {!!bottomSizes?.hem && <ProductInfoItem detailType="Hem" detailValue={`${bottomSizes?.hem}"`} />}
-      {!!bottomSizes?.inseam && <ProductInfoItem detailType="Inseam" detailValue={`${bottomSizes?.inseam}"`} />}
-
-      {!!accessorySizes?.length && <ProductInfoItem detailType="Length" detailValue={`${accessorySizes?.length}`} />}
-      {!!accessorySizes?.bridge && <ProductInfoItem detailType="Bridge" detailValue={`${accessorySizes?.bridge}`} />}
-      {!!accessorySizes?.width && <ProductInfoItem detailType="Width" detailValue={`${accessorySizes?.width}`} />}
+        {!!accessorySizes?.length && <ProductInfoItem detailType="Length" detailValue={`${accessorySizes?.length}`} />}
+        {!!accessorySizes?.bridge && <ProductInfoItem detailType="Bridge" detailValue={`${accessorySizes?.bridge}`} />}
+        {!!accessorySizes?.width && <ProductInfoItem detailType="Width" detailValue={`${accessorySizes?.width}`} />}
+      </Collapsible>
     </Box>
   )
 }

@@ -1,19 +1,17 @@
 import { Flex, Separator } from "App/Components"
 import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
 import { MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
-import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { color } from "App/utils"
 import { assign, fill } from "lodash"
 import { DateTime } from "luxon"
 import React from "react"
 
 import { useNavigation } from "@react-navigation/native"
-import { Box, ProductBuyAlertTab, ProductBuyAlertTabType, Spacer } from "@seasons/eclipse"
+import { Box, Spacer } from "@seasons/eclipse"
 
 import { BagItem } from "./BagItem"
 import { BagTabBottomCards } from "./BagTabBottomCards"
 import { BagTabHeader } from "./BagTabHeader"
-import { BuyBottomSheet, height as bottomSheetHeight } from "./BuyBottomSheet"
 import { EmptyBagItem } from "./EmptyBagItem"
 
 export const BagTab: React.FC<{
@@ -23,51 +21,10 @@ export const BagTab: React.FC<{
   deleteBagItem
   removeFromBagAndSaveItem
 }> = ({ bagItems, data, deleteBagItem, removeFromBagAndSaveItem }) => {
-  const { bottomSheetSetProps, bottomSheetSnapToIndex } = useBottomSheetContext()
   const navigation = useNavigation()
 
   const me = data?.me
   const activeReservation = me?.activeReservation
-
-  const onShowBuyBottomSheet = (bagItem) => {
-    const price = bagItem?.productVariant?.price || {
-      buyNewEnabled: false,
-      buNewAvailableForSale: false,
-      buyUsedEnabled: false,
-      buyUsedAvailableForSale: false,
-    }
-    const { name: brandName, websiteUrl: brandHref, logoImage } = bagItem?.productVariant?.product?.brand
-
-    const newTab: ProductBuyAlertTab = price.buyNewAvailableForSale
-      ? {
-          type: ProductBuyAlertTabType.NEW,
-          price: price.buyNewPrice,
-          brandHref,
-          brandName,
-          brandLogoUri: logoImage?.url,
-        }
-      : { type: ProductBuyAlertTabType.NEW_UNAVAILABLE, brandHref, brandName, brandLogoUri: logoImage?.url }
-
-    const usedTab: ProductBuyAlertTab = price.buyUsedAvailableForSale
-      ? { type: ProductBuyAlertTabType.USED, price: price.buyUsedPrice, brandHref, brandName }
-      : { type: ProductBuyAlertTabType.USED_UNAVAILABLE }
-
-    bottomSheetSetProps({
-      renderContent: () => (
-        <BuyBottomSheet
-          productVariantId={bagItem?.productVariant?.id}
-          onDismiss={() => bottomSheetSnapToIndex(1)}
-          tabs={[newTab, usedTab]}
-          initialTab={price.buyNewEnabled ? 0 : 1}
-          navigation={navigation}
-        />
-      ),
-      snapPoints: [bottomSheetHeight, 0],
-      initialSnap: 1,
-      enabledInnerScrolling: false,
-    })
-    bottomSheetSnapToIndex(0)
-  }
 
   const status = activeReservation?.status
   const updatedMoreThan24HoursAgo =
@@ -114,7 +71,6 @@ export const BagTab: React.FC<{
                   index={index}
                   bagItem={bagItem}
                   navigation={navigation}
-                  onShowBuyBottomSheet={() => onShowBuyBottomSheet(bagItem)}
                 />
               </Box>
             </Box>
