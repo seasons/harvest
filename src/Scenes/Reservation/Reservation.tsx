@@ -118,7 +118,7 @@ export const Reservation = screenTrack()((props) => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
-  const [shippingCode, setShippingCode] = useState("Pickup")
+  const [shippingCode, setShippingCode] = useState("")
   const [dateAndTimeWindow, setDateAndTimeWindow] = useState(null)
 
   const { previousData, data = previousData, refetch } = useQuery(GET_CUSTOMER, {
@@ -193,7 +193,7 @@ export const Reservation = screenTrack()((props) => {
   })
 
   useEffect(() => {
-    if (data?.shippingMethods.length > 0) {
+    if (data?.shippingMethods.length > 0 && shippingCode === "") {
       setShippingCode(data.shippingMethods[0].code)
     }
   }, [data?.shippingMethods])
@@ -277,6 +277,7 @@ export const Reservation = screenTrack()((props) => {
               shippingMethods={data.shippingMethods}
               onShippingMethodSelected={(method) => {
                 setShippingCode(method.code)
+                refetch({ shippingCode: method.code })
               }}
               onTimeWindowSelected={(data) => {
                 setDateAndTimeWindow(data)
