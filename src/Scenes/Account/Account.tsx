@@ -1,12 +1,22 @@
-import { Box, Container, Flex, GuestView, Sans, Separator, Skeleton, Spacer } from "App/Components"
+import { Box, Button, Container, Flex, GuestView, Sans, Separator, Skeleton, Spacer } from "App/Components"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { ChevronIcon } from "Assets/icons"
 import {
-  DocumentWithText, Envelope, Instagram, LogOutSVG, ManageMembership, MapPin, MonocromeSeasonsLogo,
-  PersonalPreferences, PrivacyPolicy, SpeechBubble, Star
+  DocumentWithText,
+  Envelope,
+  Instagram,
+  LogOutSVG,
+  ManageMembership,
+  MapPin,
+  MonocromeSeasonsLogo,
+  PersonalPreferences,
+  PrivacyPolicy,
+  SpeechBubble,
+  Star,
 } from "Assets/svgs"
+import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import gql from "graphql-tag"
 import { DateTime } from "luxon"
 import { default as React, useEffect } from "react"
@@ -16,7 +26,7 @@ import Share from "react-native-share"
 
 import { useQuery } from "@apollo/client"
 import { useNavigation, useScrollToTop } from "@react-navigation/native"
-import { AuthorizedCTA, useNotificationBarContext, WaitlistedCTA } from "@seasons/eclipse"
+import { useNotificationBarContext, WaitlistedCTA } from "@seasons/eclipse"
 
 import { State, UserState } from "../CreateAccount/CreateAccount"
 import { CreditBalance, CreditBalanceFragment_Customer } from "./Components/CreditBalance"
@@ -83,7 +93,7 @@ export const GET_USER = gql`
 
 export const Account = screenTrack()(() => {
   const { authState, signOut } = useAuthContext()
-  const { previousData, data = previousData, refetch, error } = useQuery(GET_USER)
+  const { previousData, data = previousData, refetch, loading } = useQuery(GET_USER)
   const scrollViewRef = React.useRef(null)
   const tracking = useTracking()
   const navigation = useNavigation()
@@ -305,27 +315,39 @@ export const Account = screenTrack()(() => {
         )
       case CustomerStatus.Authorized:
         return (
-          <AuthorizedCTA
-            authorizedAt={DateTime.fromISO(customer?.authorizedAt)}
-            authorizationWindowClosesAt={DateTime.fromISO(customer?.admissions?.authorizationWindowClosesAt)}
-            onPressLearnMore={() => {
-              tracking.trackEvent({
-                actionName: Schema.ActionNames.LearnMoreTapped,
-                actionType: Schema.ActionTypes.Tap,
-              })
-              navigation.navigate("Faq")
-            }}
-            onPressChoosePlan={() => {
-              tracking.trackEvent({
-                actionName: Schema.ActionNames.ChoosePlanTapped,
-                actionType: Schema.ActionTypes.Tap,
-              })
-              navigation.navigate("Modal", {
-                screen: NavigationSchema.PageNames.CreateAccountModal,
-                params: { initialState: State.ChoosePlan, initialUserState: UserState.Admitted },
-              })
-            }}
-          />
+          <Box pb={1}>
+            <Sans size="4">You're in.</Sans>
+            <Spacer mb={3} />
+            <Button
+              block
+              onPress={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.ChoosePlanTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                })
+                navigation.navigate("Modal", {
+                  screen: NavigationSchema.PageNames.CreateAccountModal,
+                  params: { initialState: State.ChoosePlan, initialUserState: UserState.Admitted },
+                })
+              }}
+            >
+              Choose plan
+            </Button>
+            <Spacer mb={1} />
+            <Button
+              block
+              variant="primaryWhite"
+              onPress={() => {
+                tracking.trackEvent({
+                  actionName: Schema.ActionNames.LearnMoreTapped,
+                  actionType: Schema.ActionTypes.Tap,
+                })
+                navigation.navigate("Faq")
+              }}
+            >
+              FAQ
+            </Button>
+          </Box>
         )
       case CustomerStatus.Invited:
       case CustomerStatus.Active:
@@ -372,7 +394,7 @@ export const Account = screenTrack()(() => {
               </Box>
             )}
           </Box>
-          <CreditBalance membership={customer?.membership} />
+          <CreditBalance membership={customer?.membership} loading={loading} />
           <InsetSeparator />
           <Box px={2} py={4}>
             <BodyContent />
@@ -398,8 +420,10 @@ export const Account = screenTrack()(() => {
           </Box>
           <Spacer mb="100px" />
         </ScrollView>
-        <CreditsAvailableBar membership={customer?.membership} />
       </Animatable.View>
+      <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0 }}>
+        <CreditsAvailableBar membership={customer?.membership} />
+      </FadeBottom2>
     </Container>
   )
 })

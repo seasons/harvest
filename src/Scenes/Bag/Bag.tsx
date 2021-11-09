@@ -121,6 +121,22 @@ export const Bag = screenTrack()((props: BagProps) => {
     },
   })
 
+  const onRefresh = () => {
+    setRefreshing(true)
+    refetch()
+    setRefreshing(false)
+  }
+
+  const savedItems = savedTabData?.me?.savedItems
+
+  const isBagView = BagView.Bag == currentView
+  const isSavedView = BagView.Saved == currentView
+
+  const bagCount = 0
+  const bagIsFull = bagCount >= MAXIMUM_ITEM_COUNT
+
+  const reservationItems = reservationTabData?.me?.customer?.reservations
+
   const startReservation = async () => {
     console.log("addedItems", addedItems)
     await checkItemsAvailability({
@@ -151,22 +167,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   }, [data, setIsLoading])
 
   const [deleteBagItem] = useMutation(DELETE_BAG_ITEM)
-
-  const onRefresh = () => {
-    setRefreshing(true)
-    refetch()
-    setRefreshing(false)
-  }
-
-  const savedItems = savedTabData?.me?.savedItems
-
-  const isBagView = BagView.Bag == currentView
-  const isSavedView = BagView.Saved == currentView
-
-  const bagCount = 0
-  const bagIsFull = bagCount >= MAXIMUM_ITEM_COUNT
-
-  const reservationItems = reservationTabData?.me?.customer?.reservations
 
   if (isLoading) {
     return <Loader />

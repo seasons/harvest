@@ -1,7 +1,7 @@
 import React from "react"
-import BottomSheet from "reanimated-bottom-sheet"
-import Animated, { Extrapolate, interpolate, Value } from "react-native-reanimated"
 import { StyleSheet } from "react-native"
+import Animated, { Extrapolate, interpolateNode, Value } from "react-native-reanimated"
+import BottomSheet from "reanimated-bottom-sheet"
 
 type BottomSheetProps = JSX.LibraryManagedAttributes<typeof BottomSheet, React.ComponentProps<typeof BottomSheet>>
 
@@ -21,7 +21,7 @@ export const BottomSheetProvider = ({ children }) => {
   const deferredSnapToIndex = React.useRef<number | null>(null)
 
   const animatedPosition = React.useRef(new Value(0))
-  const opacity = interpolate(animatedPosition.current, {
+  const opacity = interpolateNode(animatedPosition.current, {
     inputRange: [0, 1],
     outputRange: [0.75, 0],
     extrapolate: Extrapolate.CLAMP,

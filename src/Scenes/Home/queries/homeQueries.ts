@@ -145,7 +145,11 @@ export const Homepage_Query = gql`
       type
       properties
     }
-    featuredCollections: collections(orderBy: updatedAt_DESC, where: { published: true }, first: 5) {
+    featuredCollections: collections(
+      orderBy: updatedAt_DESC
+      where: { AND: [{ published: true }, { featured: true }] }
+      first: 5
+    ) {
       id
       slug
       title
@@ -197,19 +201,6 @@ export const Homepage_Query = gql`
         url
       }
     }
-    archivalProducts: products(
-      where: { AND: [{ tags_some: { name: "Vintage" } }, { status: Available }] }
-      first: 10
-      orderBy: publishedAt_DESC
-    ) {
-      id
-      slug
-      name
-      images(size: Thumb) {
-        id
-        url
-      }
-    }
     justAddedOuterwear: products(
       first: 8
       category: "outerwear"
@@ -219,6 +210,7 @@ export const Homepage_Query = gql`
       id
       ...HomePageProductFragment_Product
     }
+
     justAddedAccessories: products(
       first: 16
       category: "accessories"

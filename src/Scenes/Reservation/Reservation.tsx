@@ -23,14 +23,14 @@ import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import * as Sentry from "@sentry/react-native"
 
-import { ShippingOption } from "../Order/Components"
-import { ReservationBottomBar } from "./Components/ReservationBottomBar"
 import { ReservationItem, ReservationProductVariantFragment_ProductVariant } from "./Components/ReservationItem"
+import { ReservationBottomBar } from "./Components/ReservationBottomBar"
+import { ReservationShippingOptionsSection } from "./Components/ReservationShippingOptionsSection"
 import { ReservationLineItems } from "./ReservationLineItems"
 
 const RESERVE_ITEMS = gql`
-  mutation ReserveItems($items: [ID!]!, $options: ReserveItemsOptions, $shippingCode: ShippingCode) {
-    reserveItems(items: $items, options: $options, shippingCode: $shippingCode) {
+  mutation ReserveItems($options: ReserveItemsOptions, $shippingCode: ShippingCode) {
+    reserveItems(options: $options, shippingCode: $shippingCode) {
       id
     }
   }
@@ -38,6 +38,18 @@ const RESERVE_ITEMS = gql`
 
 const GET_CUSTOMER = gql`
   query GetCustomer($shippingCode: String) {
+    shippingMethods {
+      id
+      displayText
+      code
+      position
+      timeWindows {
+        id
+        startTime
+        endTime
+        display
+      }
+    }
     me {
       id
       user {
@@ -107,12 +119,12 @@ export const Reservation = screenTrack()((props) => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
-  const [shippingOptionIndex, setShippingOptionIndex] = useState(0)
-  const [shippingCode, setShippingCode] = useState("UPSGround")
+  const [shippingCode, setShippingCode] = useState("")
+  const [dateAndTimeWindow, setDateAndTimeWindow] = useState(null)
 
   const { previousData, data = previousData, refetch } = useQuery(GET_CUSTOMER, {
     variables: {
-      shippingCode: shippingCode || "UPSGround",
+      shippingCode,
     },
   })
   const { showPopUp, hidePopUp } = usePopUpContext()
@@ -182,20 +194,14 @@ export const Reservation = screenTrack()((props) => {
   })
 
   useEffect(() => {
-    refetch()
-  }, [shippingOptionIndex, refetch])
+    if (data?.shippingMethods.length > 0 && shippingCode === "") {
+      setShippingCode(data.shippingMethods[0].code)
+    }
+  }, [data?.shippingMethods])
 
   const me = data?.me
   const customer = me?.customer
   const address = me?.customer?.detail?.shippingAddress
-  const shippingOptions = customer?.detail?.shippingAddress?.shippingOptions
-
-  useEffect(() => {
-    if (shippingOptions?.length > 0) {
-      const selectedShippingOption = shippingOptions[shippingOptionIndex]
-      setShippingCode(selectedShippingOption?.shippingMethod?.code)
-    }
-  }, [shippingOptionIndex, shippingOptions])
 
   const phoneNumber = customer?.detail?.phoneNumber
   const billingInfo = customer?.billingInfo
@@ -244,7 +250,7 @@ export const Reservation = screenTrack()((props) => {
                 }}
               />
               <Sans size="4" color="black50" mt={1}>
-                {`${billingInfo.brand} ending in ${billingInfo.last_digits}`}
+                {!!billingInfo && `${billingInfo.brand} ending in ${billingInfo.last_digits}`}
               </Sans>
             </Box>
             {address && (
@@ -267,29 +273,16 @@ export const Reservation = screenTrack()((props) => {
                 </Sans>
               </Box>
             )}
-            {shippingOptions?.length > 0 && (
-              <Box mb={4}>
-                <SectionHeader title="Select shipping" />
-                {shippingOptions.map((option, index) => {
-                  return (
-                    <Box key={option?.id || index}>
-                      <ShippingOption
-                        option={option}
-                        index={index}
-                        setShippingOptionIndex={setShippingOptionIndex}
-                        shippingOptionIndex={shippingOptionIndex}
-                      />
-                      <Separator />
-                    </Box>
-                  )
-                })}
-                <Spacer mb={2} />
-                <Sans size="3" color="black50">
-                  UPS Ground shipping averages 1-2 days in the NY metro area, 3-4 days for the Midwest + Southeast, and
-                  5-7 days on the West coast.
-                </Sans>
-              </Box>
-            )}
+            <ReservationShippingOptionsSection
+              shippingMethods={data.shippingMethods}
+              onShippingMethodSelected={(method) => {
+                setShippingCode(method.code)
+                refetch({ shippingCode: method.code })
+              }}
+              onTimeWindowSelected={(data) => {
+                setDateAndTimeWindow(data)
+              }}
+            />
             <Box mb={5}>
               <SectionHeader title="Bag items" />
               <Box mt={1} mb={4}>
@@ -318,11 +311,13 @@ export const Reservation = screenTrack()((props) => {
               actionType: Schema.ActionTypes.Tap,
             })
             setIsMutating(true)
-            const itemIDs = addedItems?.map((item) => item?.productVariant?.id)
             const { data } = await reserveItems({
               variables: {
-                items: itemIDs,
-                shippingCode: shippingOptions?.[shippingOptionIndex]?.shippingMethod?.code,
+                shippingCode,
+                options: {
+                  timeWindowID: dateAndTimeWindow?.timeWindow?.id,
+                  pickupDate: dateAndTimeWindow?.date,
+                },
               },
             })
             if (data?.reserveItems) {
