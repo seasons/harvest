@@ -23,12 +23,14 @@ export const useLocalBag = () => {
 
   return {
     bagItems:
-      data?.productVariants?.map((item, i) => ({
-        ...ids?.[i],
-        ...data?.productVariants?.[i],
-        productVariant: item,
-        status: "Added",
-      })) || [],
+      data?.productVariants?.map((item, i) => {
+        return {
+          ...ids?.[i],
+          ...data?.productVariants?.[i],
+          productVariant: item,
+          status: "Added",
+        }
+      }) || [],
     refetch,
   }
 }
@@ -56,7 +58,7 @@ export const useBag = () => {
   const isSignedIn = authState.isSignedIn
   const { bagItems: localItems } = useLocalBag()
   const { bagSections: remoteSections, data, refetch } = useRemoteBag()
-  const bagSections = !isSignedIn ? [{ status: "Added", bagItems: localItems }] : remoteSections
+  const bagSections = !isSignedIn ? [{ status: "Added", title: "Reserving", bagItems: localItems }] : remoteSections
 
   return {
     data,

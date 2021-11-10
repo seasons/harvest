@@ -45,10 +45,14 @@ export const BagItemRemoveButton = ({ bagItem }) => {
       },
       {
         query: GET_PRODUCT,
-        variables: { where: { id: product.id } },
+        variables: { where: { id: product?.id } },
       },
     ],
   })
+
+  if (!product) {
+    return null
+  }
 
   return (
     <Button
@@ -70,7 +74,7 @@ export const BagItemRemoveButton = ({ bagItem }) => {
         } else {
           deleteBagItem({
             variables: {
-              itemID: bagItem.id,
+              itemID: bagItem?.id,
             },
             refetchQueries: [
               {
@@ -80,7 +84,7 @@ export const BagItemRemoveButton = ({ bagItem }) => {
                 query: GET_PRODUCT,
                 variables: {
                   where: {
-                    id: product.id,
+                    id: product?.id,
                   },
                 },
               },

@@ -14,8 +14,9 @@ export const BagTab: React.FC = () => {
   const me = data?.me
   const activeReservation = me?.activeReservation
 
-  const addedItems = bagSections?.find((section) => section.status === "Added")?.bagItems
-  const showAddAnItemCard = addedItems?.length < data?.me?.customer?.membership?.plan?.itemCount
+  const addedItems = bagSections?.find((section) => section.status === "Added")?.bagItems ?? []
+  const itemCount = data?.me?.customer?.membership?.plan?.itemCount ?? 6
+  const showAddAnItemCard = addedItems?.length < itemCount
 
   let lastVisibleSection
   bagSections?.forEach((section) => {
@@ -27,10 +28,13 @@ export const BagTab: React.FC = () => {
   return (
     <Flex height="100%">
       {bagSections?.map((section, index) => {
+        const showSeperator =
+          (lastVisibleSection != section.status && section.bagItems.length > 0) ||
+          (section.status === "Added" && showAddAnItemCard)
         return (
           <Box key={index}>
             <BagSection section={section} sectionIndex={index} />
-            {lastVisibleSection != section.status && section.bagItems.length > 0 && (
+            {showSeperator && (
               <Box px={2}>
                 <Spacer mb={2} />
                 <Separator />

@@ -138,7 +138,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   const reservationItems = reservationTabData?.me?.customer?.reservations
 
   const startReservation = async () => {
-    console.log("addedItems", addedItems)
     await checkItemsAvailability({
       variables: {
         items: addedItems.map((item) => item.productVariant.id),

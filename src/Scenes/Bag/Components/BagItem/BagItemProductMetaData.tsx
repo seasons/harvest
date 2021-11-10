@@ -26,6 +26,10 @@ export const BagItemProductMetaDataFragment_BagItem = gql`
 export const BagItemProductMetaData = ({ variant }) => {
   const product = variant?.product
 
+  if (!product) {
+    return null
+  }
+
   return (
     <Box width="100%">
       <Sans size="3">{product?.brand?.name}</Sans>
