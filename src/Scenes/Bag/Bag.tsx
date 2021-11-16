@@ -313,14 +313,14 @@ export const Bag = screenTrack()((props: BagProps) => {
         actionType: TrackSchema.ActionTypes.Tap,
         bagIsFull,
       })
-      if (!hasActiveReservationProducts || hasAddedItems) {
-        handleReserve()
-      } else {
+      if (hasActiveReservationProducts) {
         navigation.navigate(
           markedAsReturned
             ? NavigationSchema.PageNames.ReturnYourBagConfirmation
             : NavigationSchema.PageNames.ReturnYourBag
         )
+      } else {
+        handleReserve()
       }
     }
 
