@@ -1,6 +1,6 @@
 import { Box, Container, FixedButton, Flex, Sans, Separator, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { color, space } from "App/utils"
+import { space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import React from "react"
@@ -8,37 +8,52 @@ import { ScrollView } from "react-native"
 
 import { gql, useQuery } from "@apollo/client"
 
-import {
-  ReturnYourBagConfirmationItem,
-  ReturnYourBagConfirmationItemFragment_PhysicalProduct,
-} from "./Components/ReturnYourBagConfirmationItem"
+import { ReturnYourBagConfirmationItem } from "./Components/ReturnYourBagConfirmationItem"
 
-export const RETURNED_ITEMS = gql`
-  query ReturnedItems {
+const getReturnPendingBagSection = gql`
+  query getAtHomeBagSection {
     me {
       id
-      activeReservation {
+      returnPendingSection: bagSection(status: ReturnPending) {
         id
-        shipped
-        createdAt
-        returnedProducts {
-          ...ReturnYourBagConfirmationItem
+        status
+        bagItems {
+          id
+          physicalProduct {
+            id
+            productVariant {
+              id
+              displayLong
+              product {
+                id
+                slug
+                name
+                brand {
+                  id
+                  name
+                }
+                images {
+                  id
+                  url
+                }
+              }
+            }
+          }
         }
       }
     }
   }
-  ${ReturnYourBagConfirmationItemFragment_PhysicalProduct}
 `
 
 export const ReturnYourBagConfirmation = screenTrack()((props) => {
   const tracking = useTracking()
-  const { previousData, data = previousData } = useQuery(RETURNED_ITEMS)
+  const { previousData, data = previousData } = useQuery(getReturnPendingBagSection)
 
   if (!data) {
     return <Loader />
   }
 
-  const items = data?.me?.activeReservation.returnedProducts
+  const items = data?.me?.returnPendingSection?.bagItems?.map((item) => item.physicalProduct)
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">

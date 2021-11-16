@@ -20,8 +20,8 @@ enum OrderType {
 }
 
 const CANCEL_RETURN = gql`
-  mutation CancelReturn {
-    cancelReturn {
+  mutation CancelReturn($bagItemId: ID!) {
+    cancelReturn(bagItemId: $bagItemId) {
       id
     }
   }
@@ -185,6 +185,9 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
                 return
               }
               await cancelReturn({
+                variables: {
+                  bagItemId: bagItem.id,
+                },
                 awaitRefetchQueries: true,
                 refetchQueries: [{ query: GetBag_NoCache_Query }],
               })

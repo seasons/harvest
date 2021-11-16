@@ -12,7 +12,6 @@ import { useNavigation } from "@react-navigation/native"
 import { Button, Flex, Loader } from "@seasons/eclipse"
 
 import { ReturnYourBagItem } from "./Components/ReturnYourBagItem"
-import { ACTIVE_RESERVATION } from "./CurrentRotation"
 import { GetBag_NoCache_Query } from "./BagQueries"
 
 const RETURN_ITEMS = gql`
@@ -23,19 +22,62 @@ const RETURN_ITEMS = gql`
   }
 `
 
+const getAtHomeBagSection = gql`
+  query getAtHomeBagSection {
+    me {
+      id
+      atHomeSection: bagSection(status: AtHome) {
+        id
+        status
+        bagItems {
+          id
+          physicalProduct {
+            id
+            productVariant {
+              id
+              displayLong
+              product {
+                id
+                slug
+                name
+                brand {
+                  id
+                  name
+                }
+                images {
+                  id
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export const ReturnYourBag = () => {
-  const { previousData, data = previousData } = useQuery(ACTIVE_RESERVATION)
+  const { previousData, data = previousData } = useQuery(getAtHomeBagSection)
   const navigation = useNavigation()
+  const [isMutating, setIsMutating] = useState(false)
   const [selectedItems, setSelectedItems] = useState({})
   const [returnItems] = useMutation(RETURN_ITEMS, {
+    onError: () => {
+      setIsMutating(false)
+    },
     onCompleted: () => {
+      setIsMutating(false)
       navigation.navigate(NavigationSchema.StackNames.BagStack, {
         screen: NavigationSchema.PageNames.ReturnYourBagConfirmation,
       })
     },
   })
 
-  const activeReservation = data?.me?.activeReservation
+  const atHomeItems = data?.me?.atHomeSection?.bagItems
+
+  const physicalProducts = atHomeItems?.map((item) => item.physicalProduct)
+
   const windowDimensions = Dimensions.get("window")
   const twoButtonWidth = windowDimensions.width / 2 - (space(2) + space(0.5))
 
@@ -70,7 +112,7 @@ export const ReturnYourBag = () => {
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Box style={{ flex: 1 }}>
         <FlatList
-          data={activeReservation ? activeReservation.products : []}
+          data={physicalProducts.length > 0 ? physicalProducts : []}
           ListHeaderComponent={() => (
             <Box pb={1} px={2}>
               <Spacer mb={80} />
@@ -114,7 +156,12 @@ export const ReturnYourBag = () => {
             <Button
               width={twoButtonWidth}
               variant="primaryBlack"
+              loading={isMutating}
               onPress={() => {
+                if (isMutating) {
+                  return
+                }
+                setIsMutating(true)
                 returnItems({
                   variables: {
                     items: Object.keys(selectedItems),

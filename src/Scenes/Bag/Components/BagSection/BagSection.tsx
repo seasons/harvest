@@ -22,9 +22,9 @@ export const BagSectionFragment_BagSection = gql`
 
 export const BagSection = ({ section, sectionIndex }) => {
   const hasItems = section?.bagItems?.length > 0
-  const status = section.status
+  const status = section?.status
 
-  const showDeliveryStatus = status === "CustomerToBusiness" || status === "BusinessToCustomer"
+  const showDeliveryStatus = section?.deliveryStep > 0
 
   if (!hasItems) {
     return null
