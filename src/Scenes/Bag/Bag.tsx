@@ -158,6 +158,7 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const savedItems = savedTabData?.me?.savedItems
   const hasActiveReservation = !!me?.activeReservation
+  const hasActiveReservationProducts = me?.activeReservaton?.products?.length > 0
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
 
   const isBagView = BagView.Bag == currentView
@@ -312,14 +313,14 @@ export const Bag = screenTrack()((props: BagProps) => {
         actionType: TrackSchema.ActionTypes.Tap,
         bagIsFull,
       })
-      if (!hasActiveReservation || hasAddedItems) {
-        handleReserve()
-      } else {
+      if (hasActiveReservationProducts) {
         navigation.navigate(
           markedAsReturned
             ? NavigationSchema.PageNames.ReturnYourBagConfirmation
             : NavigationSchema.PageNames.ReturnYourBag
         )
+      } else {
+        handleReserve()
       }
     }
 
