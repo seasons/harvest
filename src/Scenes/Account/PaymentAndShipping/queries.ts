@@ -78,21 +78,6 @@ export const GET_PAYMENT_DATA = gql`
           street2
         }
       }
-      activeReservation {
-        id
-        customer {
-          id
-          billingInfo {
-            id
-            last_digits
-            street1
-            street2
-            city
-            state
-            postal_code
-          }
-        }
-      }
     }
   }
 `
