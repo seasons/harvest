@@ -34,6 +34,13 @@ export const BagTabPrimaryCTA = ({
   const hasAtHomeItems = atHomeItems?.length > 0
   const returnPendingItems = sections?.find((section) => section.status === "ReturnPending")?.bagItems
   const hasReturnPendingsItems = returnPendingItems?.length > 0
+  const inboundTrackingUrl = sections?.find(
+    (section) =>
+      (section.status === "ScannedOnInbound" ||
+        section.status === "InTransitInbound" ||
+        section.status === "DeliveredToBusiness") &&
+      !!section.deliverTrackingUrl
+  )?.deliveryTrackingUrl
 
   const me = data?.me
   const customerStatus = me?.customer?.status
@@ -128,28 +135,22 @@ export const BagTabPrimaryCTA = ({
         </Button>
       </Box>
     )
-  } else if (hasReturnPendingsItems) {
-    const returnLabelUrl = me?.activeReservation?.returnedPackage?.shippingLabel?.trackingURL
+  } else if (!!inboundTrackingUrl) {
     button = (
-      <Flex flexDirection="row" justifyContent="space-between" mx={3} my={3}>
-        {returnLabelUrl && (
-          <Button
-            width={windowWidth / 2 - 20}
-            onPress={() => navigation.navigate("Webview", { uri: returnLabelUrl })}
-            disabled={isMutating}
-            loading={isMutating}
-            variant="primaryWhite"
-          >
-            Return label
-          </Button>
-        )}
-        <Button
-          width={returnLabelUrl ? windowWidth / 2 - 20 : windowWidth - 20}
-          onPress={handlePress}
-          disabled={isMutating}
-          loading={isMutating}
-          variant="primaryBlack"
-        >
+      <Button
+        onPress={() => navigation.navigate("Webview", { uri: inboundTrackingUrl })}
+        disabled={isMutating}
+        loading={isMutating}
+        block
+        variant="primaryWhite"
+      >
+        Return label
+      </Button>
+    )
+  } else if (hasReturnPendingsItems) {
+    button = (
+      <Flex flexDirection="row" justifyContent="space-between" mx={2} my={2}>
+        <Button onPress={handlePress} disabled={isMutating} loading={isMutating} block variant="primaryBlack">
           How to return
         </Button>
       </Flex>

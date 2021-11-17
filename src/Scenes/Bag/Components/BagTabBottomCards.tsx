@@ -11,9 +11,8 @@ import { BagCardButton } from "./BagCardButton"
 const dimensions = Dimensions.get("window")
 const WindowWidth = dimensions.width
 
-export const BagTabBottomCards = ({ reservation }) => {
+export const BagTabBottomCards = ({ hasAtHomeItems }) => {
   const navigation = useNavigation()
-  const hasActiveReservation = !!reservation
 
   const stylistEmail = {
     subject: encodeURIComponent("Chat with our stylist"),
@@ -22,7 +21,7 @@ export const BagTabBottomCards = ({ reservation }) => {
 
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-      {hasActiveReservation && (
+      {hasAtHomeItems && (
         <Box ml={2} mr={1}>
           <BagCardButton
             Icon={DarkInstagram}
@@ -31,16 +30,15 @@ export const BagTabBottomCards = ({ reservation }) => {
             onPress={() =>
               navigation.navigate("Modal", {
                 screen: "ShareReservationToIGModal",
-                params: { reservationID: reservation?.id },
               })
             }
           />
         </Box>
       )}
 
-      <Box ml={hasActiveReservation ? 0 : 2} mr={1}>
+      <Box ml={hasAtHomeItems ? 0 : 2} mr={1}>
         <BagCardButton
-          width={hasActiveReservation ? "auto" : WindowWidth - space(4)}
+          width={hasAtHomeItems ? "auto" : WindowWidth - space(4)}
           Icon={Stylist}
           title="Chat with our stylist"
           caption="Get a personalized consultation"
