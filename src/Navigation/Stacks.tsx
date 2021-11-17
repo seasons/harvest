@@ -14,7 +14,7 @@ import { UpdatePaymentPlanModal } from "App/Scenes/Account/MembershipInfo/Update
 import { EditCreditCard } from "App/Scenes/Account/PaymentAndShipping/EditCreditCard"
 import { InvoiceDetail } from "App/Scenes/Account/PaymentAndShipping/InvoiceDetail"
 import { PersonalPreferences } from "App/Scenes/Account/PersonalPreferences"
-import { Bag, CurrentRotation, ReturnYourBag, ReturnYourBagConfirmation } from "App/Scenes/Bag"
+import { Bag, ReturnYourBag, ReturnYourBagConfirmation } from "App/Scenes/Bag"
 import { SurpriseMe } from "App/Scenes/Bag/SurpriseMe"
 import { Brand } from "App/Scenes/Brand"
 import { Brands } from "App/Scenes/Brands"
@@ -216,7 +216,6 @@ const BagStackScreen = () => {
       <BagStack.Screen name={Schema.PageNames.Webview} component={Webview} />
       <BagStack.Screen name={Schema.PageNames.Product} component={Product} initialParams={{ id: "" }} />
       <BagStack.Screen name={Schema.PageNames.Brand} component={Brand} initialParams={{ id: "" }} />
-      <BagStack.Screen name={Schema.PageNames.CurrentRotation} component={CurrentRotation} />
       <BagStack.Screen name={Schema.PageNames.Faq} component={Faq} />
       <BagStack.Screen name={Schema.PageNames.ReferralView} component={ReferralView} />
       <BagStack.Screen name={Schema.PageNames.Reservation} component={Reservation} />

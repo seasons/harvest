@@ -1,5 +1,4 @@
 export { Bag } from "./Bag"
-export { CurrentRotation } from "./CurrentRotation"
 export { SurpriseMe } from "./SurpriseMe"
 export { ReturnYourBag } from "./ReturnYourBag"
 export { ReturnYourBagConfirmation } from "./ReturnYourBagConfirmation"

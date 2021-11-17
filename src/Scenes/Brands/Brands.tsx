@@ -27,7 +27,7 @@ export const Brands = screenTrack()((props: any) => {
   const [groupedBrands, setGroupedBrands] = useState([])
   const [alphabet, setAlphabet] = useState([])
   const { navigation } = props
-  const { data } = useQuery<GetBrands>(GET_BRANDS, {
+  const { previousData, data = previousData } = useQuery<GetBrands>(GET_BRANDS, {
     variables: {
       orderBy: "name_ASC",
     },

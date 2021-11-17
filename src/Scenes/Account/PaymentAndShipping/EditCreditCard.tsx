@@ -108,7 +108,7 @@ export const EditCreditCard: React.FC<{
 }> = screenTrack()(({ route, navigation }) => {
   let paymentPlan = route?.params?.paymentPlan
   let routeBillingAddress: BillingAddress = route?.params?.billingAddress
-  const { data } = useQuery(GET_PAYMENT_DATA, { skip: !!paymentPlan })
+  const { previousData, data = previousData } = useQuery(GET_PAYMENT_DATA, { skip: !!paymentPlan })
   if (!paymentPlan) {
     paymentPlan = data?.me?.customer?.paymentPlan
     routeBillingAddress = data?.me?.customer?.billingInfo
