@@ -11,9 +11,7 @@ export const BagTab: React.FC = () => {
   const { data, bagSections } = useBag()
   const navigation = useNavigation()
 
-  const me = data?.me
-  const activeReservation = me?.activeReservation
-
+  const hasAtHomeItems = bagSections?.find((section) => section.status === "AtHome")?.bagItems?.length > 0
   const addedItems = bagSections?.find((section) => section.status === "Added")?.bagItems ?? []
   const itemCount = data?.me?.customer?.membership?.plan?.itemCount ?? 6
   const showAddAnItemCard = addedItems?.length < itemCount
@@ -51,7 +49,7 @@ export const BagTab: React.FC = () => {
       )}
 
       <Box mt={3}>
-        <BagTabBottomCards reservation={activeReservation} />
+        <BagTabBottomCards hasAtHomeItems={hasAtHomeItems} />
         {!showAddAnItemCard && <Spacer mb={90} />}
       </Box>
     </Flex>

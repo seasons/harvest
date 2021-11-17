@@ -1,71 +1,33 @@
 import CameraRoll from "@react-native-community/cameraroll"
-import gql from "graphql-tag"
 import { Box, Button, CloseButton, Display, FadeInImage, FixedBackArrow, Flex, Spacer } from "App/Components"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import { SeasonsCircleSVG } from "Assets/svgs"
 import React, { createRef, MutableRefObject, useEffect, useRef, useState } from "react"
-import { useQuery } from "@apollo/client"
 import { Dimensions, FlatList } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import Share from "react-native-share"
 import ViewShot, { captureRef } from "react-native-view-shot"
-
-const GET_CUSTOMER_RESERVATION_ITEMS = gql`
-  query GetCustomerReservationItems($reservationID: ID!) {
-    me {
-      id
-      customer {
-        id
-        reservations(where: { id: $reservationID }) {
-          id
-          products {
-            id
-            productVariant {
-              id
-              product {
-                id
-                name
-                brand {
-                  id
-                  name
-                }
-                images(size: Large) {
-                  id
-                  url
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
+import { useBag } from "../Bag/useBag"
 
 const windowWidth = Dimensions.get("window").width
 
-export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
+export const ShareReservationToIG = screenTrack()(({ navigation }) => {
   const tracking = useTracking()
-  const reservationID = route?.params?.reservationID
+  const { bagSections } = useBag()
   const flatListRef: MutableRefObject<FlatList<any>> = useRef(null)
   const [currentPageNumber, setCurrentPageNumber] = useState(0)
   const insets = useSafeAreaInsets()
   const [viewRefs, setViewRefs] = React.useState([])
 
-  const { previousData, data = previousData } = useQuery(GET_CUSTOMER_RESERVATION_ITEMS, {
-    variables: {
-      reservationID,
-    },
-  })
+  const atHomeItems = bagSections?.find((section) => section.status === "AtHome")?.bagItems
+
+  const products = atHomeItems.map((item) => item.productVariant.product)
 
   useEffect(() => {
     // Need to snap to content inset on load
     flatListRef?.current?.scrollToOffset({ animated: false, offset: -32 })
   }, [flatListRef])
-
-  const reservation = data?.me?.customer?.reservations?.[0]
-  let products = reservation?.products?.map((product) => product?.productVariant?.product) ?? []
 
   useEffect(() => {
     if (products?.length > 0 && viewRefs.length !== products?.length) {
@@ -136,7 +98,7 @@ export const ShareReservationToIG = screenTrack()(({ route, navigation }) => {
     const brandName = product?.brand?.name
     const productName = product?.name
     const maxCharacters = 50
-    const truncateProductName = productName.length > maxCharacters
+    const truncateProductName = productName?.length > maxCharacters
     const displayProductName = truncateProductName ? productName.substring(0, maxCharacters) + " ..." : productName
 
     // Based on recommended dimensions (1920 x 1080)
