@@ -2,7 +2,6 @@ import { Box, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { Schema, useTracking } from "App/utils/track"
-import { head } from "lodash"
 import React from "react"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
@@ -33,21 +32,21 @@ export const ReservationProductVariantFragment_ProductVariant = gql`
 `
 
 interface ReservationItemProps {
-  bagItem: any
+  productVariant: any
   index?: number
   navigation?: any
 }
 
-export const ReservationItem: React.FC<ReservationItemProps> = ({ bagItem, index, navigation }) => {
+export const ReservationItem: React.FC<ReservationItemProps> = ({ productVariant, index, navigation }) => {
   const tracking = useTracking()
-  const variant = bagItem?.productVariant
-  const product = variant?.product
-  if (!product || !variant) {
+
+  const product = productVariant?.product
+  if (!product || !productVariant) {
     return null
   }
 
   const imageURL = product?.images?.[0]?.url
-  const variantSize = variant?.displayShort
+  const variantSize = productVariant?.displayShort
 
   return (
     <Box key={product.id}>
