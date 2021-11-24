@@ -206,6 +206,7 @@ export const Reservation = screenTrack()((props) => {
   const phoneNumber = customer?.detail?.phoneNumber
   const billingInfo = customer?.billingInfo
   const addedItems = me?.bagSections?.find((section) => section.status === "Added")?.bagItems
+  const productVariants = addedItems?.map((item) => item.productVariant)
 
   if (!customer || !addedItems || !address) {
     return (
@@ -286,10 +287,10 @@ export const Reservation = screenTrack()((props) => {
             <Box mb={5}>
               <SectionHeader title="Bag items" />
               <Box mt={1} mb={4}>
-                {addedItems?.map((item, i) => {
+                {productVariants?.map((productVariant, i) => {
                   return (
-                    <Box key={item.id}>
-                      <ReservationItem index={i} bagItem={item} navigation={props.navigation} />
+                    <Box key={productVariant.id}>
+                      <ReservationItem index={i} productVariant={productVariant} navigation={props.navigation} />
                       <Spacer mb={1} />
                       {i !== addedItems.length - 1 && <Separator />}
                       <Spacer mb={1} />

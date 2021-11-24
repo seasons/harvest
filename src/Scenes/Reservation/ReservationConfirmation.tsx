@@ -12,9 +12,7 @@ import Rate, { AndroidMarket } from "react-native-rate"
 import { useQuery } from "@apollo/client"
 import { ProductPriceText_Product } from "@seasons/eclipse"
 
-import {
-  ReservationConfirmationOptionsSection
-} from "./Components/ReservationConfirmationOptionsSection"
+import { ReservationConfirmationOptionsSection } from "./Components/ReservationConfirmationOptionsSection"
 import { ReservationItem } from "./Components/ReservationItem"
 import { ReservationSectionHeader } from "./Components/ReservationSectionHeader"
 import { ReservationLineItems } from "./ReservationLineItems"
@@ -62,31 +60,34 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
             price
             recordType
           }
-          products: newProducts {
+          reservationPhysicalProducts {
             id
-            productVariant {
+            physicalProduct {
               id
-              product {
+              productVariant {
                 id
-                name
-                modelSize {
-                  id
-                  display
-                }
-                brand {
+                product {
                   id
                   name
+                  modelSize {
+                    id
+                    display
+                  }
+                  brand {
+                    id
+                    name
+                  }
+                  images {
+                    id
+                    url
+                  }
+                  variants {
+                    id
+                    displayShort
+                    displayLong
+                  }
+                  ...ProductPriceText_Product
                 }
-                images {
-                  id
-                  url
-                }
-                variants {
-                  id
-                  displayShort
-                  displayLong
-                }
-                ...ProductPriceText_Product
               }
             }
           }
@@ -116,7 +117,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const customer = data?.me?.customer
   const address = customer?.detail?.shippingAddress
   const reservation = customer?.reservations?.[0]
-  const items = reservation?.products
+  const productVariants = reservation?.reservationPhysicalProducts.map((rpp) => rpp.physicalProduct.productVariant)
 
   const formatedAddress1 =
     !!address?.address1 && `${address?.address1}${address?.address2 ? " " + address?.address2 : ""},`
@@ -215,12 +216,12 @@ export const ReservationConfirmation = screenTrack()((props) => {
           <Box mb={5}>
             <ReservationSectionHeader title="Items" />
             <Box mt={1} mb={4}>
-              {items?.map((item, i) => {
+              {productVariants?.map((productVariant, i) => {
                 return (
-                  <Box key={item.id}>
-                    <ReservationItem index={i} bagItem={item} navigation={props.navigation} />
+                  <Box key={productVariant.id}>
+                    <ReservationItem index={i} productVariant={productVariant} navigation={props.navigation} />
                     <Spacer mb={1} />
-                    {i !== items.length - 1 && <Separator />}
+                    {i !== productVariant.length - 1 && <Separator />}
                     <Spacer mb={1} />
                   </Box>
                 )
