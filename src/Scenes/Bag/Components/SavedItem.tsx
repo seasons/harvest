@@ -56,7 +56,6 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagIsFull, bagItem, navigati
 
   const variant = bagItem?.productVariant
   const product = variant?.product
-
   const imageURL = product?.images?.[0]?.url || ""
   const variantSize = variant?.displayLong?.toLowerCase()
   const reservable = variant?.reservable > 0
