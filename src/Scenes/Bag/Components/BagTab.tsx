@@ -11,10 +11,10 @@ export const BagTab: React.FC = () => {
   const { data, bagSections } = useBag()
   const navigation = useNavigation()
 
+  const totalBagItems = bagSections?.map((section) => section.bagItems.length).reduce((acc, curr) => acc + curr)
   const hasAtHomeItems = bagSections?.find((section) => section.status === "AtHome")?.bagItems?.length > 0
-  const addedItems = bagSections?.find((section) => section.status === "Added")?.bagItems ?? []
   const itemCount = data?.me?.customer?.membership?.plan?.itemCount ?? 6
-  const showAddAnItemCard = addedItems?.length < itemCount
+  const showAddAnItemCard = totalBagItems < itemCount
 
   let lastVisibleSection
   bagSections?.forEach((section) => {
