@@ -102,7 +102,7 @@ export const Bag = screenTrack()((props: BagProps) => {
           refetch()
 
           showPopUp({
-            title: "One or more items have beåen reserved already",
+            title: "One or more items have been reserved already",
             note:
               "Sorry, some of the items you had selected were confirmed before you, we've moved these to your saved items.",
             buttonText: "Got it",

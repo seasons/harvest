@@ -157,6 +157,7 @@ export const ReturnYourBag = () => {
               width={twoButtonWidth}
               variant="primaryBlack"
               loading={isMutating}
+              disabled={!Object.keys(selectedItems).length}
               onPress={() => {
                 if (isMutating) {
                   return
