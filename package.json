@@ -1,6 +1,6 @@
 {
   "name": "harvest",
-  "version": "1.53.3",
+  "version": "1.54.0",
   "engines": {
     "node": "12 || 14"
   },
@@ -151,7 +151,6 @@
     "jest-styled-components": "7.0.0-2",
     "jetifier": "^1.6.4",
     "react-is": "^16.13.1",
-    "react-native-unimodules": "~0.14.5",
     "react-test-renderer": "^16.9.0",
     "redux-devtools-extension": "^2.13.8",
     "remote-redux-devtools": "^0.5.16",
