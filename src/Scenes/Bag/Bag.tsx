@@ -128,7 +128,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   }
 
   const savedItems = savedTabData?.me?.savedItems
-
   const isBagView = BagView.Bag == currentView
   const isSavedView = BagView.Saved == currentView
 

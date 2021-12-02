@@ -8,14 +8,11 @@ import { DateTime } from "luxon"
 import React from "react"
 import { ScrollView } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
-
 import { useQuery } from "@apollo/client"
-import { ProductPriceText_Product } from "@seasons/eclipse"
-
 import { ReservationConfirmationOptionsSection } from "./Components/ReservationConfirmationOptionsSection"
-import { ReservationItem } from "./Components/ReservationItem"
 import { ReservationSectionHeader } from "./Components/ReservationSectionHeader"
 import { ReservationLineItems } from "./ReservationLineItems"
+import { BagItemFragment_BagItem, SmallBagItem } from "../Bag/Components/BagItem/SmallBagItem"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -62,40 +59,15 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
           }
           reservationPhysicalProducts {
             id
-            physicalProduct {
-              id
-              productVariant {
-                id
-                product {
-                  id
-                  name
-                  modelSize {
-                    id
-                    display
-                  }
-                  brand {
-                    id
-                    name
-                  }
-                  images {
-                    id
-                    url
-                  }
-                  variants {
-                    id
-                    displayShort
-                    displayLong
-                  }
-                  ...ProductPriceText_Product
-                }
-              }
+            bagItem {
+              ...BagItemFragment_BagItem
             }
           }
         }
       }
     }
   }
-  ${ProductPriceText_Product}
+  ${BagItemFragment_BagItem}
 `
 
 export const ReservationConfirmation = screenTrack()((props) => {
@@ -117,7 +89,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const customer = data?.me?.customer
   const address = customer?.detail?.shippingAddress
   const reservation = customer?.reservations?.[0]
-  const productVariants = reservation?.reservationPhysicalProducts.map((rpp) => rpp.physicalProduct.productVariant)
+  const bagItems = reservation?.reservationPhysicalProducts.map((rpp) => rpp.bagItem)
 
   const formatedAddress1 =
     !!address?.address1 && `${address?.address1}${address?.address2 ? " " + address?.address2 : ""},`
@@ -216,13 +188,10 @@ export const ReservationConfirmation = screenTrack()((props) => {
           <Box mb={5}>
             <ReservationSectionHeader title="Items" />
             <Box mt={1} mb={4}>
-              {productVariants?.map((productVariant, i) => {
+              {bagItems?.map((bagItem, index) => {
                 return (
-                  <Box key={productVariant.id}>
-                    <ReservationItem index={i} productVariant={productVariant} navigation={props.navigation} />
-                    <Spacer mb={1} />
-                    {i !== productVariant.length - 1 && <Separator />}
-                    <Spacer mb={1} />
+                  <Box key={index}>
+                    <SmallBagItem bagItem={bagItem} />
                   </Box>
                 )
               })}

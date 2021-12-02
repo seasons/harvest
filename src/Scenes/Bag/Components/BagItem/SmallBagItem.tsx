@@ -33,7 +33,7 @@ export const BagItemFragment_BagItem = gql`
   ${BagItemCTAsFragment_BagItem}
 `
 
-export const SmallBagItem = ({ bagItem, sectionStatus }) => {
+export const SmallBagItem: React.FC<{ bagItem: any; sectionStatus?: string }> = ({ bagItem, sectionStatus }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
@@ -63,9 +63,9 @@ export const SmallBagItem = ({ bagItem, sectionStatus }) => {
             source={{ uri: imageUrl }}
           />
         )}
-        <Flex alignItems="flex-end" flexDirection="column" justifyContent="space-between" px={2} flex={1}>
+        <Flex alignItems="flex-end" flexDirection="column" justifyContent="space-between" pl={2} flex={1}>
           <BagItemProductMetaData variant={variant} />
-          <BagItemCTAs bagItem={bagItem} sectionStatus={sectionStatus} size="small" />
+          {sectionStatus && <BagItemCTAs bagItem={bagItem} sectionStatus={sectionStatus} size="small" />}
         </Flex>
       </Wrapper>
     </TouchableWithoutFeedback>

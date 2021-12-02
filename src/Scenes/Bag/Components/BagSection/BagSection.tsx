@@ -1,4 +1,4 @@
-import { Box } from "App/Components"
+import { Box, Separator, Spacer } from "App/Components"
 import gql from "graphql-tag"
 import React from "react"
 import { LargeBagItem } from "../BagItem/LargeBagItem"
@@ -42,19 +42,21 @@ export const BagSection = ({ section, sectionIndex }) => {
       )}
       <Box px={2}>
         {section.bagItems.map((bagItem, index) => {
-          if (status === "AtHome") {
-            return (
-              <Box pt={index !== 0 && 2} key={index}>
-                <LargeBagItem bagItem={bagItem} sectionStatus={status} key={index} />
-              </Box>
-            )
-          } else {
-            return (
-              <Box pt={index !== 0 && 2} key={index}>
-                <SmallBagItem bagItem={bagItem} sectionStatus={status} key={index} />
-              </Box>
-            )
-          }
+          return (
+            <Box key={index}>
+              {status === "AtHome" ? (
+                <Box pt={index !== 0 && 2}>
+                  <LargeBagItem bagItem={bagItem} sectionStatus={status} />
+                </Box>
+              ) : (
+                <Box pt={index !== 0 && 2}>
+                  <SmallBagItem bagItem={bagItem} sectionStatus={status} />
+                </Box>
+              )}
+              <Spacer mb={2} />
+              <Separator />
+            </Box>
+          )
         })}
       </Box>
     </>
