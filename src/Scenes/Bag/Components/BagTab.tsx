@@ -1,4 +1,4 @@
-import { Flex, Separator } from "App/Components"
+import { Flex } from "App/Components"
 import React from "react"
 import { useBag } from "../useBag"
 import { useNavigation } from "@react-navigation/native"
@@ -15,13 +15,6 @@ export const BagTab: React.FC = () => {
   const hasAtHomeItems = bagSections?.find((section) => section.status === "AtHome")?.bagItems?.length > 0
   const itemCount = data?.me?.customer?.membership?.plan?.itemCount ?? 6
   const showAddAnItemCard = totalBagItems < itemCount
-
-  let lastVisibleSection
-  bagSections?.forEach((section) => {
-    if (section.bagItems.length > 0) {
-      lastVisibleSection = section.status
-    }
-  })
 
   return (
     <Flex height="100%">
