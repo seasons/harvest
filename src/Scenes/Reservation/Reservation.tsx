@@ -23,10 +23,10 @@ import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import * as Sentry from "@sentry/react-native"
 
-import { ReservationItem, ReservationProductVariantFragment_ProductVariant } from "./Components/ReservationItem"
 import { ReservationBottomBar } from "./Components/ReservationBottomBar"
 import { ReservationShippingOptionsSection } from "./Components/ReservationShippingOptionsSection"
 import { ReservationLineItems } from "./ReservationLineItems"
+import { BagItemFragment_BagItem, SmallBagItem } from "../Bag/Components/BagItem/SmallBagItem"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($options: ReserveItemsOptions, $shippingCode: ShippingCode) {
@@ -62,11 +62,7 @@ const GET_CUSTOMER = gql`
         id
         status
         bagItems {
-          id
-          productVariant {
-            id
-            ...ReservationProductVariantFragment_ProductVariant
-          }
+          ...BagItemFragment_BagItem
         }
       }
       reservationLineItems(filterBy: NewItems, shippingCode: $shippingCode) {
@@ -111,7 +107,7 @@ const GET_CUSTOMER = gql`
       }
     }
   }
-  ${ReservationProductVariantFragment_ProductVariant}
+  ${BagItemFragment_BagItem}
 `
 
 export const Reservation = screenTrack()((props) => {
@@ -122,7 +118,7 @@ export const Reservation = screenTrack()((props) => {
   const [shippingCode, setShippingCode] = useState("")
   const [dateAndTimeWindow, setDateAndTimeWindow] = useState(null)
 
-  const { previousData, data = previousData, refetch } = useQuery(GET_CUSTOMER, {
+  const { previousData, data = previousData, loading } = useQuery(GET_CUSTOMER, {
     variables: {
       shippingCode,
     },
@@ -205,10 +201,9 @@ export const Reservation = screenTrack()((props) => {
 
   const phoneNumber = customer?.detail?.phoneNumber
   const billingInfo = customer?.billingInfo
-  const addedItems = me?.bagSections?.find((section) => section.status === "Added")?.bagItems
-  const productVariants = addedItems?.map((item) => item.productVariant)
+  const bagItems = me?.bagSections?.find((section) => section.status === "Added")?.bagItems
 
-  if (!customer || !addedItems || !address) {
+  if (!customer || !bagItems || !address) {
     return (
       <>
         <FixedBackArrow navigation={navigation} variant="whiteBackground" />
@@ -238,7 +233,7 @@ export const Reservation = screenTrack()((props) => {
                 will be processed the following business day.
               </Sans>
             </Box>
-            <ReservationLineItems lineItems={me.reservationLineItems} />
+            <ReservationLineItems lineItems={me?.reservationLineItems} loading={loading} />
             <Box mb={4}>
               <SectionHeader
                 title="Payment method"
@@ -278,7 +273,7 @@ export const Reservation = screenTrack()((props) => {
               shippingMethods={data.shippingMethods}
               onShippingMethodSelected={(method) => {
                 setShippingCode(method.code)
-                refetch({ shippingCode: method.code })
+                // refetch({ shippingCode: method.code })
               }}
               onTimeWindowSelected={(data) => {
                 setDateAndTimeWindow(data)
@@ -286,14 +281,14 @@ export const Reservation = screenTrack()((props) => {
             />
             <Box mb={5}>
               <SectionHeader title="Bag items" />
-              <Box mt={1} mb={4}>
-                {productVariants?.map((productVariant, i) => {
+              <Box mt={2} mb={4}>
+                {bagItems?.map((bagItem, index) => {
                   return (
-                    <Box key={productVariant.id}>
-                      <ReservationItem index={i} productVariant={productVariant} navigation={props.navigation} />
-                      <Spacer mb={1} />
-                      {i !== addedItems.length - 1 && <Separator />}
-                      <Spacer mb={1} />
+                    <Box key={index}>
+                      <SmallBagItem bagItem={bagItem} />
+                      <Spacer mb={2} />
+                      {index !== bagItems.length - 1 && <Separator />}
+                      <Spacer mb={2} />
                     </Box>
                   )
                 })}
@@ -302,7 +297,8 @@ export const Reservation = screenTrack()((props) => {
           </ScrollView>
         </Flex>
         <ReservationBottomBar
-          lineItems={me.reservationLineItems}
+          loading={loading}
+          lineItems={me?.reservationLineItems}
           onReserve={async () => {
             if (isMutating) {
               return

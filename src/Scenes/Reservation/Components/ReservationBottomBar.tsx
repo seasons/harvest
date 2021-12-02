@@ -3,15 +3,21 @@ import { formatPrice } from "App/utils/formatPrice"
 import React from "react"
 import styled from "styled-components/native"
 
-import { Box, Flex, Sans, Separator } from "@seasons/eclipse"
+import { Box, Flex, Sans, Separator, Spinner } from "@seasons/eclipse"
 
 interface ReservationBottomBarProps {
   lineItems: any[]
+  loading: boolean
   onReserve: () => void
   buttonProps?: Omit<ButtonProps, "children">
 }
 
-export const ReservationBottomBar: React.FC<ReservationBottomBarProps> = ({ lineItems, onReserve, buttonProps }) => {
+export const ReservationBottomBar: React.FC<ReservationBottomBarProps> = ({
+  lineItems,
+  onReserve,
+  buttonProps,
+  loading,
+}) => {
   const totalLineItems = lineItems.filter((l) => l.recordType === "Total")
   const totalLineItem = totalLineItems[totalLineItems.length - 1]
   const total = totalLineItem?.price || 0
@@ -26,7 +32,13 @@ export const ReservationBottomBar: React.FC<ReservationBottomBarProps> = ({ line
               Estimated 30-day total
             </Sans>
             <Flex flexDirection="row" alignItems="center">
-              <Sans size="6">{formatPrice(total)}</Sans>
+              {loading ? (
+                <Flex height={25} width={100} alignItems="center" flexDirection="row">
+                  <Spinner size="small" />
+                </Flex>
+              ) : (
+                <Sans size="6">{formatPrice(total)}</Sans>
+              )}
             </Flex>
           </Box>
 

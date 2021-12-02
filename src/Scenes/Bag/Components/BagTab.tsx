@@ -26,18 +26,9 @@ export const BagTab: React.FC = () => {
   return (
     <Flex height="100%">
       {bagSections?.map((section, index) => {
-        const showSeperator =
-          (lastVisibleSection != section.status || (section.status === "Added" && showAddAnItemCard)) &&
-          section.bagItems.length > 0
         return (
           <Box key={index}>
             <BagSection section={section} sectionIndex={index} />
-            {showSeperator && (
-              <Box px={2}>
-                <Spacer mb={2} />
-                <Separator />
-              </Box>
-            )}
           </Box>
         )
       })}
