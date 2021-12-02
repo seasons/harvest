@@ -273,7 +273,6 @@ export const Reservation = screenTrack()((props) => {
               shippingMethods={data.shippingMethods}
               onShippingMethodSelected={(method) => {
                 setShippingCode(method.code)
-                // refetch({ shippingCode: method.code })
               }}
               onTimeWindowSelected={(data) => {
                 setDateAndTimeWindow(data)
