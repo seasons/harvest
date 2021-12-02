@@ -21,7 +21,7 @@ export const ReservationLineItems = ({ lineItems }) => {
                 {lineItem.name}
               </Sans>
               <Sans size="4" color="black50">
-                {`${formatPrice(lineItem.price)}`}
+                {lineItem.recordType === "Fee" && lineItem.price === 0 ? "Free" : `${formatPrice(lineItem.price)}`}
               </Sans>
             </Flex>
           )
