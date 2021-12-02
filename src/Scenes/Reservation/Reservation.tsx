@@ -216,43 +216,28 @@ export const Reservation = screenTrack()((props) => {
     <>
       <Container insetsTop insetsBottom={false} backgroundColor="white100">
         <FixedBackArrow navigation={props.navigation} variant="whiteBackground" />
-        <Flex style={{ flex: 1 }} px={2}>
+        <Flex style={{ flex: 1 }}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <Spacer mb={80} />
-            <Box pb={1}>
-              <Sans size="7" color="black100">
-                Review your order
-              </Sans>
-            </Box>
-            <Box mb={4}>
-              <Sans size="4" color="black50">
-                As a reminder, orders placed{" "}
-                <Sans size="4" color="black100" style={{ textDecorationLine: "underline" }}>
-                  after 4:00pm EST
-                </Sans>{" "}
-                will be processed the following business day.
-              </Sans>
-            </Box>
-            <ReservationLineItems lineItems={me?.reservationLineItems} loading={loading} />
-            <Box mb={4}>
-              <SectionHeader
-                title="Payment method"
-                rightText="Edit"
-                onPressRightText={() => {
-                  navigation.navigate(NavigationSchema.StackNames.AccountStack, {
-                    screen: NavigationSchema.PageNames.EditPaymentAndShipping,
-                    params: { phoneNumber, shippingAddress: address },
-                  })
-                }}
-              />
-              <Sans size="4" color="black50" mt={1}>
-                {!!billingInfo && `${billingInfo.brand} ending in ${billingInfo.last_digits}`}
-              </Sans>
-            </Box>
-            {address && (
+            <Box px={2}>
+              <Box pb={1}>
+                <Sans size="7" color="black100">
+                  Review your order
+                </Sans>
+              </Box>
+              <Box mb={4}>
+                <Sans size="4" color="black50">
+                  As a reminder, orders placed{" "}
+                  <Sans size="4" color="black100" style={{ textDecorationLine: "underline" }}>
+                    after 4:00pm EST
+                  </Sans>{" "}
+                  will be processed the following business day.
+                </Sans>
+              </Box>
+              <ReservationLineItems lineItems={me?.reservationLineItems} loading={loading} />
               <Box mb={4}>
                 <SectionHeader
-                  title="Shipping address"
+                  title="Payment method"
                   rightText="Edit"
                   onPressRightText={() => {
                     navigation.navigate(NavigationSchema.StackNames.AccountStack, {
@@ -262,13 +247,30 @@ export const Reservation = screenTrack()((props) => {
                   }}
                 />
                 <Sans size="4" color="black50" mt={1}>
-                  {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
-                </Sans>
-                <Sans size="4" color="black50">
-                  {`${address.city}, ${address.state} ${address.zipCode}`}
+                  {!!billingInfo && `${billingInfo.brand} ending in ${billingInfo.last_digits}`}
                 </Sans>
               </Box>
-            )}
+              {address && (
+                <Box mb={4}>
+                  <SectionHeader
+                    title="Shipping address"
+                    rightText="Edit"
+                    onPressRightText={() => {
+                      navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+                        screen: NavigationSchema.PageNames.EditPaymentAndShipping,
+                        params: { phoneNumber, shippingAddress: address },
+                      })
+                    }}
+                  />
+                  <Sans size="4" color="black50" mt={1}>
+                    {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
+                  </Sans>
+                  <Sans size="4" color="black50">
+                    {`${address.city}, ${address.state} ${address.zipCode}`}
+                  </Sans>
+                </Box>
+              )}
+            </Box>
             <ReservationShippingOptionsSection
               shippingMethods={data.shippingMethods}
               onShippingMethodSelected={(method) => {
@@ -278,7 +280,7 @@ export const Reservation = screenTrack()((props) => {
                 setDateAndTimeWindow(data)
               }}
             />
-            <Box mb={5}>
+            <Box mb={5} px={2}>
               <SectionHeader title="Bag items" />
               <Box mt={2} mb={4}>
                 {bagItems?.map((bagItem, index) => {

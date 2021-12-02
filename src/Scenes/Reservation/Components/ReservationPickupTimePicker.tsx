@@ -19,36 +19,40 @@ export const ReservationPickupTimePicker = ({ timeWindows, onTimeWindowSelected 
 
   return (
     <Box mt={3}>
-      <SectionHeader
-        title="Select pick-up window"
-        rightText={isToday ? "Today" : luxonDate.toFormat("EEE MMM, d")}
-        onPressRightText={() => {
-          setOpenDatePicker(true)
-        }}
-      />
+      <Box px={2}>
+        <SectionHeader
+          title="Select pick-up window"
+          rightText={isToday ? "Today" : luxonDate.toFormat("EEE MMM, d")}
+          onPressRightText={() => {
+            setOpenDatePicker(true)
+          }}
+        />
+      </Box>
       <Spacer mt={2} />
-      <Root showsHorizontalScrollIndicator={false} horizontal>
-        {timeWindows?.map((timeWindow, index) => {
-          return (
-            <Box key={index} mr={1}>
-              <Button
-                variant="tertiaryWhite"
-                onPress={() => {
-                  setSelectedTime(index)
-                  onTimeWindowSelected?.({
-                    date,
-                    timeWindow,
-                  })
-                }}
-                selected={index === selectedTime}
-                disabled={isToday ? timeWindow.startTime < currentHour : false}
-              >
-                {timeWindow.display}
-              </Button>
-            </Box>
-          )
-        })}
-      </Root>
+      <Box pl={2}>
+        <Root showsHorizontalScrollIndicator={false} horizontal>
+          {timeWindows?.map((timeWindow, index) => {
+            return (
+              <Box key={index} mr={1}>
+                <Button
+                  variant="tertiaryWhite"
+                  onPress={() => {
+                    setSelectedTime(index)
+                    onTimeWindowSelected?.({
+                      date,
+                      timeWindow,
+                    })
+                  }}
+                  selected={index === selectedTime}
+                  disabled={isToday ? timeWindow.startTime < currentHour : false}
+                >
+                  {timeWindow.display}
+                </Button>
+              </Box>
+            )
+          })}
+        </Root>
+      </Box>
       <DatePicker
         modal
         mode="date"
