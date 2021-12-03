@@ -7,6 +7,7 @@ import { Box, Flex, Sans, Separator, Spinner } from "@seasons/eclipse"
 
 interface ReservationBottomBarProps {
   lineItems: any[]
+  disabled: boolean
   loading: boolean
   onReserve: () => void
   buttonProps?: Omit<ButtonProps, "children">
@@ -17,6 +18,7 @@ export const ReservationBottomBar: React.FC<ReservationBottomBarProps> = ({
   onReserve,
   buttonProps,
   loading,
+  disabled,
 }) => {
   const totalLineItems = lineItems.filter((l) => l.recordType === "Total")
   const totalLineItem = totalLineItems[totalLineItems.length - 1]
@@ -43,7 +45,7 @@ export const ReservationBottomBar: React.FC<ReservationBottomBarProps> = ({
           </Box>
 
           <Box>
-            <Button {...buttonProps} variant="primaryBlack" onPress={onReserve}>
+            <Button {...buttonProps} variant="primaryBlack" onPress={onReserve} disabled={disabled}>
               Confirm Order
             </Button>
           </Box>

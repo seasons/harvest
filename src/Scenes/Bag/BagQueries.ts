@@ -21,6 +21,10 @@ export const GET_LOCAL_BAG_ITEMS = gql`
         name
         rentalPrice
         retailPrice
+        brand {
+          id
+          name
+        }
         images {
           id
           url
