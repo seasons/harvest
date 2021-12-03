@@ -46,6 +46,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
           shippingMethod {
             id
             displayText
+            code
           }
           pickupDate
           pickupWindow {
@@ -100,7 +101,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const pickupDateText = reservation?.pickupDate && DateTime.fromISO(reservation?.pickupDate).toFormat("cccc, MMMM dd")
   const lineItems = reservation?.lineItems
 
-  const isPickup = reservation?.shippingMethod === "Pickup"
+  const isPickup = reservation?.shippingMethod?.code === "Pickup"
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
