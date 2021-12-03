@@ -8,7 +8,7 @@ import DatePicker from "react-native-date-picker"
 import styled from "styled-components/native"
 
 export const ReservationPickupTimePicker = ({ timeWindows, onTimeWindowSelected }) => {
-  const [selectedTime, setSelectedTime] = useState(0)
+  const [selectedTime, setSelectedTime] = useState(null)
   const [date, setDate] = useState(new Date())
   const [openDatePicker, setOpenDatePicker] = useState(false)
   const { showPopUp, hidePopUp } = usePopUpContext()

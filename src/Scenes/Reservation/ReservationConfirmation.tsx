@@ -100,7 +100,6 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const timeWindowText = reservation?.pickupWindow?.display
   const pickupDateText = reservation?.pickupDate && DateTime.fromISO(reservation?.pickupDate).toFormat("cccc, MMMM dd")
   const lineItems = reservation?.lineItems
-
   const isPickup = reservation?.shippingMethod?.code === "Pickup"
 
   return (

@@ -202,6 +202,7 @@ export const Reservation = screenTrack()((props) => {
   const phoneNumber = customer?.detail?.phoneNumber
   const billingInfo = customer?.billingInfo
   const bagItems = me?.bagSections?.find((section) => section.status === "Added")?.bagItems
+  const bottomBarDisabled = shippingCode === "Pickup" && !dateAndTimeWindow
 
   if (!customer || !bagItems || !address) {
     return (
@@ -299,6 +300,7 @@ export const Reservation = screenTrack()((props) => {
         </Flex>
         <ReservationBottomBar
           loading={loading}
+          disabled={bottomBarDisabled}
           lineItems={me?.reservationLineItems}
           onReserve={async () => {
             if (isMutating) {
