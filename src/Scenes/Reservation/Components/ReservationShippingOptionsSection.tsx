@@ -5,8 +5,11 @@ import React, { useState } from "react"
 
 import { ReservationPickupTimePicker } from "./ReservationPickupTimePicker"
 
-export const ReservationShippingOptionsSection = (props) => {
-  const { shippingMethods, onShippingMethodSelected, onTimeWindowSelected } = props
+export const ReservationShippingOptionsSection = ({
+  shippingMethods,
+  onShippingMethodSelected,
+  onTimeWindowSelected,
+}) => {
   const [selectedMethodIndex, setSelectedMethodIndex] = useState(0)
 
   const selectedMethod = shippingMethods?.[selectedMethodIndex]

@@ -3,7 +3,7 @@ import { SectionHeader } from "App/Components/SectionHeader"
 import { formatPrice } from "App/utils/formatPrice"
 import React from "react"
 
-export const ReservationLineItems = ({ lineItems, loading }) => {
+export const ReservationLineItems: React.FC<{ lineItems: any; loading?: boolean }> = ({ lineItems, loading }) => {
   const check = (l) => ["Credit", "Total"].includes(l.recordType)
   const items = lineItems?.filter((l) => !check(l))
   const totalLineItems = lineItems?.filter(check)
