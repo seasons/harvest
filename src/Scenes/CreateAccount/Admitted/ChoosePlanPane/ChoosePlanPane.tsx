@@ -27,7 +27,6 @@ import * as Sentry from "@sentry/react-native"
 import { Coupon, PaymentMethod } from "../../CreateAccount"
 import { PlanButton } from "./PlanButton"
 import { calcFinalPrice } from "./utils"
-import { GRANDFATHERED_PLAN_IDS } from "App/helpers/constants"
 
 export const PAYMENT_CHECKOUT = gql`
   mutation ApplePayCheckout(

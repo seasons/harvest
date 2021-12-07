@@ -4,7 +4,6 @@ import { Animated, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 import { FadeBottom3 } from "Assets/svgs/FadeBottom3"
 import { space } from "App/utils"
-import { OrderType } from "./Product"
 import { Spinner } from "App/Components/Spinner"
 
 const FIXED_PRODUCT_BUY_CTA_HEIGHT = space(2) + space(3) + 30

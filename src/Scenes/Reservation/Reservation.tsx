@@ -1,13 +1,18 @@
 import {
-  Box, Container, FixedBackArrow, Flex, Sans, Separator, Spacer, SuggestedAddressPopupComponent
+  Box,
+  Container,
+  FixedBackArrow,
+  Flex,
+  Sans,
+  Separator,
+  Spacer,
+  SuggestedAddressPopupComponent,
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { SectionHeader } from "App/Components/SectionHeader"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import {
-  UPDATE_PHONE_AND_SHIPPING
-} from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
+import { UPDATE_PHONE_AND_SHIPPING } from "App/Scenes/Account/PaymentAndShipping/EditPaymentAndShipping"
 import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
 import gql from "graphql-tag"
@@ -18,11 +23,10 @@ import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import * as Sentry from "@sentry/react-native"
 
-import { BagItemFragment } from "../Bag/Components/BagItem"
 import { ReservationBottomBar } from "./Components/ReservationBottomBar"
-import { ReservationItem } from "./Components/ReservationItem"
 import { ReservationShippingOptionsSection } from "./Components/ReservationShippingOptionsSection"
 import { ReservationLineItems } from "./ReservationLineItems"
+import { BagItemFragment_BagItem, SmallBagItem } from "../Bag/Components/BagItem/SmallBagItem"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($options: ReserveItemsOptions, $shippingCode: ShippingCode) {
@@ -54,18 +58,11 @@ const GET_CUSTOMER = gql`
         lastName
         email
       }
-      bag {
+      bagSections {
         id
-        productVariant {
-          id
-          ...BagItemProductVariant
-        }
-      }
-      newBagItems: bag(status: Added) {
-        id
-        productVariant {
-          id
-          ...BagItemProductVariant
+        status
+        bagItems {
+          ...BagItemFragment_BagItem
         }
       }
       reservationLineItems(filterBy: NewItems, shippingCode: $shippingCode) {
@@ -110,7 +107,7 @@ const GET_CUSTOMER = gql`
       }
     }
   }
-  ${BagItemFragment}
+  ${BagItemFragment_BagItem}
 `
 
 export const Reservation = screenTrack()((props) => {
@@ -121,7 +118,7 @@ export const Reservation = screenTrack()((props) => {
   const [shippingCode, setShippingCode] = useState("")
   const [dateAndTimeWindow, setDateAndTimeWindow] = useState(null)
 
-  const { previousData, data = previousData, refetch } = useQuery(GET_CUSTOMER, {
+  const { previousData, data = previousData, loading } = useQuery(GET_CUSTOMER, {
     variables: {
       shippingCode,
     },
@@ -204,10 +201,10 @@ export const Reservation = screenTrack()((props) => {
 
   const phoneNumber = customer?.detail?.phoneNumber
   const billingInfo = customer?.billingInfo
-  const items = me?.bag
-  const newBagItems = me?.newBagItems
+  const bagItems = me?.bagSections?.find((section) => section.status === "Added")?.bagItems
+  const bottomBarDisabled = shippingCode === "Pickup" && !dateAndTimeWindow
 
-  if (!customer || !items || !address) {
+  if (!customer || !bagItems || !address) {
     return (
       <>
         <FixedBackArrow navigation={navigation} variant="whiteBackground" />
@@ -220,43 +217,28 @@ export const Reservation = screenTrack()((props) => {
     <>
       <Container insetsTop insetsBottom={false} backgroundColor="white100">
         <FixedBackArrow navigation={props.navigation} variant="whiteBackground" />
-        <Flex style={{ flex: 1 }} px={2}>
+        <Flex style={{ flex: 1 }}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <Spacer mb={80} />
-            <Box pb={1}>
-              <Sans size="7" color="black100">
-                Review your order
-              </Sans>
-            </Box>
-            <Box mb={4}>
-              <Sans size="4" color="black50">
-                As a reminder, orders placed{" "}
-                <Sans size="4" color="black100" style={{ textDecorationLine: "underline" }}>
-                  after 4:00pm EST
-                </Sans>{" "}
-                will be processed the following business day.
-              </Sans>
-            </Box>
-            <ReservationLineItems lineItems={me.reservationLineItems} />
-            <Box mb={4}>
-              <SectionHeader
-                title="Payment method"
-                rightText="Edit"
-                onPressRightText={() => {
-                  navigation.navigate(NavigationSchema.StackNames.AccountStack, {
-                    screen: NavigationSchema.PageNames.EditPaymentAndShipping,
-                    params: { phoneNumber, shippingAddress: address },
-                  })
-                }}
-              />
-              <Sans size="4" color="black50" mt={1}>
-                {!!billingInfo && `${billingInfo.brand} ending in ${billingInfo.last_digits}`}
-              </Sans>
-            </Box>
-            {address && (
+            <Box px={2}>
+              <Box pb={1}>
+                <Sans size="7" color="black100">
+                  Review your order
+                </Sans>
+              </Box>
+              <Box mb={4}>
+                <Sans size="4" color="black50">
+                  As a reminder, orders placed{" "}
+                  <Sans size="4" color="black100" style={{ textDecorationLine: "underline" }}>
+                    after 4:00pm EST
+                  </Sans>{" "}
+                  will be processed the following business day.
+                </Sans>
+              </Box>
+              <ReservationLineItems lineItems={me?.reservationLineItems} loading={loading} />
               <Box mb={4}>
                 <SectionHeader
-                  title="Shipping address"
+                  title="Payment method"
                   rightText="Edit"
                   onPressRightText={() => {
                     navigation.navigate(NavigationSchema.StackNames.AccountStack, {
@@ -266,43 +248,60 @@ export const Reservation = screenTrack()((props) => {
                   }}
                 />
                 <Sans size="4" color="black50" mt={1}>
-                  {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
-                </Sans>
-                <Sans size="4" color="black50">
-                  {`${address.city}, ${address.state} ${address.zipCode}`}
+                  {!!billingInfo && `${billingInfo.brand} ending in ${billingInfo.last_digits}`}
                 </Sans>
               </Box>
-            )}
+              {address && (
+                <Box mb={4}>
+                  <SectionHeader
+                    title="Shipping address"
+                    rightText="Edit"
+                    onPressRightText={() => {
+                      navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+                        screen: NavigationSchema.PageNames.EditPaymentAndShipping,
+                        params: { phoneNumber, shippingAddress: address },
+                      })
+                    }}
+                  />
+                  <Sans size="4" color="black50" mt={1}>
+                    {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
+                  </Sans>
+                  <Sans size="4" color="black50">
+                    {`${address.city}, ${address.state} ${address.zipCode}`}
+                  </Sans>
+                </Box>
+              )}
+            </Box>
             <ReservationShippingOptionsSection
               shippingMethods={data.shippingMethods}
               onShippingMethodSelected={(method) => {
                 setShippingCode(method.code)
-                refetch({ shippingCode: method.code })
               }}
               onTimeWindowSelected={(data) => {
                 setDateAndTimeWindow(data)
               }}
             />
-            <Box mb={5}>
+            <Box mb={5} px={2}>
               <SectionHeader title="Bag items" />
-              <Box mt={1} mb={4}>
-                {!!newBagItems &&
-                  newBagItems.map((item, i) => {
-                    return (
-                      <Box key={item.id}>
-                        <ReservationItem index={i} bagItem={item} navigation={props.navigation} />
-                        <Spacer mb={1} />
-                        {i !== items.length - 1 && <Separator />}
-                        <Spacer mb={1} />
-                      </Box>
-                    )
-                  })}
+              <Box mt={2} mb={4}>
+                {bagItems?.map((bagItem, index) => {
+                  return (
+                    <Box key={index}>
+                      <SmallBagItem bagItem={bagItem} />
+                      <Spacer mb={2} />
+                      {index !== bagItems.length - 1 && <Separator />}
+                      <Spacer mb={2} />
+                    </Box>
+                  )
+                })}
               </Box>
             </Box>
           </ScrollView>
         </Flex>
         <ReservationBottomBar
-          lineItems={me.reservationLineItems}
+          loading={loading}
+          disabled={bottomBarDisabled}
+          lineItems={me?.reservationLineItems}
           onReserve={async () => {
             if (isMutating) {
               return
@@ -312,7 +311,6 @@ export const Reservation = screenTrack()((props) => {
               actionType: Schema.ActionTypes.Tap,
             })
             setIsMutating(true)
-
             const { data } = await reserveItems({
               variables: {
                 shippingCode,

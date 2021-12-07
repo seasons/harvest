@@ -151,7 +151,6 @@ export const BagFixture = {
       ],
       __typename: "Customer",
     },
-    activeReservation: null,
     bag: [
       {
         id: "ckbb5shgt01t20722mrktpjr8",

@@ -22,13 +22,13 @@ enum SectionType {
 
 export const createShippingAddress = (shippingAddress) => {
   const addressArray = []
-  if (shippingAddress.address1) {
+  if (shippingAddress?.address1) {
     addressArray.push(shippingAddress.address1)
   }
-  if (shippingAddress.address2) {
+  if (shippingAddress?.address2) {
     addressArray.push(shippingAddress.address2)
   }
-  if (shippingAddress.city && shippingAddress.state && shippingAddress.zipCode) {
+  if (shippingAddress?.city && shippingAddress?.state && shippingAddress?.zipCode) {
     addressArray.push(`${shippingAddress.city}, ${shippingAddress.state}, ${shippingAddress.zipCode}`)
   }
   return addressArray

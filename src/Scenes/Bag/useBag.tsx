@@ -1,6 +1,4 @@
-import {
-  GetBag_NoCache_Query as GetBag_NoCache_Query_Type
-} from "App/generated/GetBag_NoCache_Query"
+import { GetBag_NoCache_Query as GetBag_NoCache_Query_Type } from "App/generated/GetBag_NoCache_Query"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { GET_LOCAL_BAG } from "App/queries/clientQueries"
 import { useEffect } from "react"
@@ -25,38 +23,32 @@ export const useLocalBag = () => {
 
   return {
     bagItems:
-      data?.productVariants?.map((item, i) => ({
-        ...ids?.[i],
-        ...data?.productVariants?.[i],
-        productVariant: item,
-        status: "Added",
-      })) || [],
+      data?.productVariants?.map((item, i) => {
+        return {
+          ...ids?.[i],
+          ...data?.productVariants?.[i],
+          productVariant: item,
+          status: "Added",
+        }
+      }) || [],
     refetch,
   }
 }
 
 export const useRemoteBag = () => {
   const { previousData, data = previousData, refetch } = useQuery<GetBag_NoCache_Query_Type>(GetBag_NoCache_Query)
-
   if (!data) {
     return {
       data: null,
       bagItems: [],
+      bagSections: [],
     }
   }
 
-  const me = data.me
-  const bagItems =
-    me?.bag?.map((item) => ({
-      ...item,
-      variantID: item.productVariant.id,
-      productID: item.productVariant.product.id,
-    })) || []
-
   return {
     data,
-    bagItems,
     refetch,
+    bagSections: data?.me?.bagSections,
   }
 }
 
@@ -65,13 +57,12 @@ export const useBag = () => {
 
   const isSignedIn = authState.isSignedIn
   const { bagItems: localItems } = useLocalBag()
-  const { bagItems: remoteItems, data, refetch } = useRemoteBag()
-
-  const bagItems = !isSignedIn ? localItems : remoteItems
+  const { bagSections: remoteSections, data, refetch } = useRemoteBag()
+  const bagSections = !isSignedIn ? [{ status: "Added", title: "Reserving", bagItems: localItems }] : remoteSections
 
   return {
     data,
     refetch,
-    bagItems,
+    bagSections,
   }
 }

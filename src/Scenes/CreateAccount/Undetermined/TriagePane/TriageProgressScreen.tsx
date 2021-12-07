@@ -2,7 +2,7 @@ import { Box, Flex, Sans } from "App/Components"
 import { Spinner } from "App/Components/Spinner"
 import { color } from "App/utils/color"
 import React, { useEffect, useState } from "react"
-import styled from "styled-components"
+import styled from "styled-components/native"
 
 interface TriageProgressScreenProps {
   done?: () => void

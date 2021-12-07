@@ -8,16 +8,11 @@ import { DateTime } from "luxon"
 import React from "react"
 import { ScrollView } from "react-native"
 import Rate, { AndroidMarket } from "react-native-rate"
-
 import { useQuery } from "@apollo/client"
-import { ProductPriceText_Product } from "@seasons/eclipse"
-
-import {
-  ReservationConfirmationOptionsSection
-} from "./Components/ReservationConfirmationOptionsSection"
-import { ReservationItem } from "./Components/ReservationItem"
+import { ReservationConfirmationOptionsSection } from "./Components/ReservationConfirmationOptionsSection"
 import { ReservationSectionHeader } from "./Components/ReservationSectionHeader"
 import { ReservationLineItems } from "./ReservationLineItems"
+import { BagItemFragment_BagItem, SmallBagItem } from "../Bag/Components/BagItem/SmallBagItem"
 
 const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
   query GetCustomerReservationConfirmation($reservationID: ID!) {
@@ -51,6 +46,7 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
           shippingMethod {
             id
             displayText
+            code
           }
           pickupDate
           pickupWindow {
@@ -62,39 +58,17 @@ const GET_CUSTOMER_RESERVATION_CONFIRMATION = gql`
             price
             recordType
           }
-          products: newProducts {
+          reservationPhysicalProducts {
             id
-            productVariant {
-              id
-              product {
-                id
-                name
-                modelSize {
-                  id
-                  display
-                }
-                brand {
-                  id
-                  name
-                }
-                images {
-                  id
-                  url
-                }
-                variants {
-                  id
-                  displayShort
-                  displayLong
-                }
-                ...ProductPriceText_Product
-              }
+            bagItem {
+              ...BagItemFragment_BagItem
             }
           }
         }
       }
     }
   }
-  ${ProductPriceText_Product}
+  ${BagItemFragment_BagItem}
 `
 
 export const ReservationConfirmation = screenTrack()((props) => {
@@ -116,7 +90,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const customer = data?.me?.customer
   const address = customer?.detail?.shippingAddress
   const reservation = customer?.reservations?.[0]
-  const items = reservation?.products
+  const bagItems = reservation?.reservationPhysicalProducts.map((rpp) => rpp.bagItem)
 
   const formatedAddress1 =
     !!address?.address1 && `${address?.address1}${address?.address2 ? " " + address?.address2 : ""},`
@@ -126,8 +100,7 @@ export const ReservationConfirmation = screenTrack()((props) => {
   const timeWindowText = reservation?.pickupWindow?.display
   const pickupDateText = reservation?.pickupDate && DateTime.fromISO(reservation?.pickupDate).toFormat("cccc, MMMM dd")
   const lineItems = reservation?.lineItems
-
-  const isPickup = reservation?.shippingMethod === "Pickup"
+  const isPickup = reservation?.shippingMethod?.code === "Pickup"
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
@@ -215,13 +188,10 @@ export const ReservationConfirmation = screenTrack()((props) => {
           <Box mb={5}>
             <ReservationSectionHeader title="Items" />
             <Box mt={1} mb={4}>
-              {items?.map((item, i) => {
+              {bagItems?.map((bagItem, index) => {
                 return (
-                  <Box key={item.id}>
-                    <ReservationItem index={i} bagItem={item} navigation={props.navigation} />
-                    <Spacer mb={1} />
-                    {i !== items.length - 1 && <Separator />}
-                    <Spacer mb={1} />
+                  <Box key={index}>
+                    <SmallBagItem bagItem={bagItem} />
                   </Box>
                 )
               })}
