@@ -359,7 +359,7 @@ export const Filters = screenTrack()((props: any) => {
       </Flex>
       <TabBar
         spaceEvenly
-        tabs={["Sizes", "Designers", "Colors"]}
+        tabs={[{ name: "Sizes" }, { name: "Designers" }, { name: "Colors" }]}
         activeTab={currentView}
         goToPage={(page: FilterView) => {
           tracking.trackEvent({

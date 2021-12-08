@@ -6,13 +6,14 @@ import { Schema as NavigationSchema } from "App/Navigation"
 import { TouchableOpacity } from "react-native"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
-import { GetBag_NoCache_Query, REMOVE_FROM_BAG_AND_SAVE_ITEM, SavedTab_Query } from "../../BagQueries"
+import { GetBag_NoCache_Query, SavedTab_Query } from "../../BagQueries"
 import { useMutation } from "@apollo/client"
 import { BagItemRemoveButton, BagItemRemoveButtonFragment_BagItem } from "./BagItemRemoveButton"
 import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "App/Scenes/Product/Mutations"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
+import { SAVE_ITEM } from "@seasons/eclipse/src/components/SaveProductButton/queries"
 
 enum OrderType {
   BUY_USED = "Used",
@@ -57,7 +58,7 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
   const navigation = useNavigation()
   const { authState } = useAuthContext()
   const tracking = useTracking()
-  const [removeFromBagAndSaveItem] = useMutation(REMOVE_FROM_BAG_AND_SAVE_ITEM)
+  const [saveItem] = useMutation(SAVE_ITEM)
   const [cancelReturn] = useMutation(CANCEL_RETURN, {
     onCompleted: () => {
       setIsMutating(false)
@@ -101,18 +102,15 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
         productId: product.id,
         variantId: variant.id,
       })
-      removeFromBagAndSaveItem({
+      saveItem({
         variables: {
-          id: variant.id,
-          saved: false,
+          item: bagItem.id,
+          save: true,
         },
         awaitRefetchQueries: true,
         refetchQueries: [
           {
             query: GetBag_NoCache_Query,
-          },
-          {
-            query: SavedTab_Query,
           },
           {
             query: GET_PRODUCT,
@@ -165,6 +163,7 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
 
   const CTAs = () => {
     switch (sectionStatus) {
+      case "Cart":
       case "Added":
         return (
           <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" alignItems="center" width="100%">

@@ -1,5 +1,15 @@
 import {
-  Box, Button, Container, FadeInImage, FixedBackArrow, Flex, Handle, Radio, Sans, Separator, Spacer
+  Box,
+  Button,
+  Container,
+  FadeInImage,
+  FixedBackArrow,
+  Flex,
+  Handle,
+  Radio,
+  Sans,
+  Separator,
+  Spacer,
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { GetBrowseProducts_products_images } from "App/generated/GetBrowseProducts"

@@ -9,6 +9,10 @@ export const BagItemProductMetaDataFragment_BagItem = gql`
     productVariant {
       id
       displayShort
+      price {
+        id
+        buyUsedAdjustedPrice
+      }
       product {
         id
         name
@@ -23,11 +27,21 @@ export const BagItemProductMetaDataFragment_BagItem = gql`
   }
 `
 
-export const BagItemProductMetaData = ({ variant }) => {
+export const BagItemProductMetaData: React.FC<{ variant: any; showBuyPrice?: boolean }> = ({
+  variant,
+  showBuyPrice,
+}) => {
   const product = variant?.product
 
   if (!product) {
     return null
+  }
+
+  let leftPriceText
+  if (showBuyPrice) {
+    leftPriceText = `${variant?.price?.buyUsedAdjustedPrice / 100}`
+  } else {
+    leftPriceText = `${product?.rentalPrice} / mo`
   }
 
   return (
@@ -39,7 +53,9 @@ export const BagItemProductMetaData = ({ variant }) => {
           separator: "...",
         })}
       </Sans>
-      <ProductPriceText size="3" product={product} />
+      <Sans size="3" color="black50">
+        ${leftPriceText} | ${product?.retailPrice} retail
+      </Sans>
       <Sans size="3" color="black50">
         Size {variant?.displayShort}
       </Sans>

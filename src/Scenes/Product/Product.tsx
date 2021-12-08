@@ -31,6 +31,7 @@ import {
   ProductConditionSection,
   ProductConditionSectionFragment_PhysicalProductQualityReport,
 } from "./Components/ProductConditionSection"
+import { GetBag_NoCache_Query } from "../Bag/BagQueries"
 
 const windowHeight = Dimensions.get("window").height
 
@@ -49,6 +50,14 @@ const ADD_VIEWED_PRODUCT = gql`
   }
 `
 
+export const UPSERT_CART_ITEM = gql`
+  mutation upsertCartItem($productVariantId: ID!, $addToCart: Boolean!) {
+    upsertCartItem(productVariantId: $productVariantId, addToCart: $addToCart) {
+      id
+    }
+  }
+`
+
 export const UPSERT_RESTOCK_NOTIF = gql`
   mutation UpsertRestockNotification($variantID: ID!, $shouldNotify: Boolean!) {
     upsertRestockNotification(variantID: $variantID, shouldNotify: $shouldNotify) {
@@ -59,7 +68,7 @@ export const UPSERT_RESTOCK_NOTIF = gql`
 export const Product = screenTrack({
   entityType: Schema.EntityTypes.Product,
 })(({ route, navigation }) => {
-  const productBuyRef = useRef(null)
+  const [addToCartButtonIsMutating, setAddToCartButtonIsMutating] = useState(false)
   const { authState } = useAuthContext()
   const [isMutatingBuyButton, setIsMutatingBuyButton] = useState(false)
   const [viewed, setViewed] = useState(false)
@@ -121,10 +130,41 @@ export const Product = screenTrack({
     ],
   })
 
+  const [upsertCartItem] = useMutation(UPSERT_CART_ITEM, {
+    variables: {
+      productVariantId: selectedVariant?.id,
+      addToCart: !selectedVariant?.isInBag,
+    },
+    refetchQueries: [
+      {
+        query: GET_PRODUCT,
+        variables: {
+          where: {
+            id,
+            slug,
+          },
+        },
+      },
+      {
+        query: GetBag_NoCache_Query,
+      },
+    ],
+    onCompleted: () => {
+      setAddToCartButtonIsMutating(false)
+    },
+    onError: (error) => {
+      Sentry.captureException(JSON.stringify(error))
+      console.log("error upsertRestockNotification Product.tsx", error)
+      setAddToCartButtonIsMutating(false)
+    },
+  })
+
+  console.log("selectedVariant", selectedVariant)
+
   const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
     variables: {
       variantID: selectedVariant?.id,
-      shouldNotify: !selectedVariant?.hasRestockNotification,
+      addToCart: !selectedVariant?.hasRestockNotification,
     },
     refetchQueries: [
       {
@@ -262,6 +302,7 @@ export const Product = screenTrack({
   const images = product?.largeImages
   const imageWidth = viewWidth
   const relatedProducts = product?.relatedProducts
+  const brand = product?.brand
   const productType = product?.category?.productType
   const physicalProductQualityReport = (selectedVariant?.nextReservablePhysicalProduct?.reports || []).reduce(
     (agg, report) => {
@@ -328,20 +369,21 @@ export const Product = screenTrack({
         )
       case "buy":
         return (
-          <ProductBuyCTA
-            px={3}
-            pb={4}
-            ref={productBuyRef}
-            product={filter(ProductBuyCTAFragment_Product, product)}
-            selectedVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
-            isMutatingBuyButton={isMutatingBuyButton}
-            onBuyNew={() => {
-              handleCreateDraftOrder(OrderType.BUY_NEW)
-            }}
-            onBuyUsed={() => {
-              handleCreateDraftOrder(OrderType.BUY_USED)
-            }}
-          />
+          <Box px={2} pb={4}>
+            <ProductBuyCTA
+              buttonVariant={selectedVariant?.isInBag ? "primaryWhite" : "primaryBlack"}
+              product={filter(ProductBuyCTAFragment_Product, product)}
+              productVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
+              onNavigateToBrand={() =>
+                navigation.navigate("Brand", { id: brand.id, slug: brand.slug, name: brand.name })
+              }
+              isMutating={addToCartButtonIsMutating}
+              onAddToCart={() => {
+                setAddToCartButtonIsMutating(true)
+                upsertCartItem()
+              }}
+            />
+          </Box>
         )
       case "condition":
         return (
@@ -365,8 +407,8 @@ export const Product = screenTrack({
   const sections = [
     "imageRail",
     "productDetails",
-    "pricingCalculator",
     "buy",
+    "pricingCalculator",
     "productMeasurements",
     "condition",
     "aboutTheBrand",

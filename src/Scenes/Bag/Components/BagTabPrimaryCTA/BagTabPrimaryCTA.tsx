@@ -4,14 +4,11 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import React from "react"
-import { Dimensions } from "react-native"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../../../CreateAccount/CreateAccount"
 import { useNavigation } from "@react-navigation/native"
 import { Box, Button, Flex } from "@seasons/eclipse"
 import { BagBottomBar } from "../BagBottomBar"
-
-const windowDimensions = Dimensions.get("window")
-const windowWidth = windowDimensions.width
+import { BagView } from "../../Bag"
 
 export const BagTabPrimaryCTA = ({
   data,
@@ -20,6 +17,7 @@ export const BagTabPrimaryCTA = ({
   startReservation,
   isMutating,
   setIsMutating,
+  activeTab,
 }) => {
   const { authState } = useAuthContext()
 
@@ -47,6 +45,8 @@ export const BagTabPrimaryCTA = ({
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
   const hasShippingAddress =
     !!shippingAddress?.address1 && !!shippingAddress?.city && !!shippingAddress?.state && !!shippingAddress?.zipCode
+
+  const isBuyView = activeTab === BagView.Buy
 
   const handleReserve = async () => {
     setIsMutating(true)
@@ -125,8 +125,15 @@ export const BagTabPrimaryCTA = ({
     }
   }
 
-  if (hasAddedItems) {
-    button = <BagBottomBar bagItems={addedItems} onReserve={handlePress} isMutating={isMutating} />
+  if (hasAddedItems || isBuyView) {
+    button = (
+      <BagBottomBar
+        bagItems={isBuyView ? me?.cartItems : addedItems}
+        onReserve={handlePress}
+        isMutating={isMutating}
+        activeTab={activeTab}
+      />
+    )
   } else if (hasAtHomeItems) {
     button = (
       <Box mx={2} my={2}>

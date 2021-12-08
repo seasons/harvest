@@ -19,6 +19,7 @@ const commonProductVariantFragment = gql`
     reserved
     isInBag
     isSaved
+    isInCart
     hasRestockNotification
     price {
       id
