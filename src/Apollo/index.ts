@@ -157,7 +157,7 @@ export const setupApolloClient = async (
     resolvers,
     cache,
     // Provide some optional constructor fields
-    name: "react-web-client",
+    name: "harvest",
     version: "1.3",
     queryDeduplication: false,
     defaultOptions: {

@@ -120,6 +120,7 @@ export const AddToBagButton: React.FC<Props> = ({
       const runsSmall = !!productFit && productFit === "RunsSmall"
 
       if (!runsBig && !runsSmall) {
+        console.log("1")
         addToBag()
       } else {
         setShowSizeWarning(true)

@@ -28,7 +28,7 @@ export const SavedItemRowFragment_BagItem = gql`
   ${SavedItemFragment_BagItem}
 `
 
-export const SavedItemRow = ({ bagItem, deleteBagItem, bagIsFull, hasActiveReservation }) => {
+export const SavedItemRow = ({ bagItem, deleteBagItem, bagIsFull }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
@@ -92,12 +92,7 @@ export const SavedItemRow = ({ bagItem, deleteBagItem, bagIsFull, hasActiveReser
         showsVerticalScrollIndicator={false}
       >
         <Box width={windowWidth} style={{ backgroundColor: color("white100") }} py={2}>
-          <SavedItem
-            hasActiveReservation={hasActiveReservation}
-            bagIsFull={bagIsFull}
-            navigation={navigation}
-            bagItem={bagItem}
-          />
+          <SavedItem bagIsFull={bagIsFull} navigation={navigation} bagItem={bagItem} />
         </Box>
         <RemoveWrapper alignItems="center" justifyContent="center">
           <TouchableOpacity onPress={onRemove}>

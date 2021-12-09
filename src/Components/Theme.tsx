@@ -80,6 +80,10 @@ export const themeProps = {
       fontSize: 18,
       lineHeight: 26,
     },
+    "6": {
+      fontSize: 20,
+      lineHeight: 24,
+    },
     "7": {
       fontSize: 24,
       lineHeight: 32,

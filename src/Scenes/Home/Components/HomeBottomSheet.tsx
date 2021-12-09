@@ -78,9 +78,7 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
   if (data?.justAddedOuterwear?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedOuterwear, title: "Just added outerwear" })
   }
-  if (data?.justAddedAccessories?.length) {
-    sections.push({ type: SectionType.Products, results: data?.justAddedAccessories, title: "Just added accessories" })
-  }
+
   sections.push({ type: SectionType.Categories })
   if (data?.justAddedBottoms?.length) {
     sections.push({ type: SectionType.Products, results: data?.justAddedBottoms, title: "Just added bottoms" })
@@ -125,18 +123,8 @@ const sectionsFrom = (data: Homepage_Query_Type, dataNoCache: HomepageNoCache_Qu
     })
   }
 
-  if (data?.archivalProducts?.length) {
-    sections.push({
-      type: SectionType.ArchivalProducts,
-      tagData: {
-        tag: "Vintage",
-        title: "Archives",
-        description:
-          "Great clothes are great clothes and we believe the past still lends itself to dressing for the now. What archive items lack in newness, they make up for by way of history. Through the Seasons archival section, we hope to add unique history and vibrance to our catalog, made possible by yesterday’s clothes.\n\nHere you’ll find garments celebrating historic eras of fashion, music, film, media and beyond. From 80s concert merchandise to early 2000s runway pieces, the archive section encompasses a unique field of textile designs, production styles and comfortable wear that can bring style and biography to any outfit or wardrobe.",
-      },
-      title: "Just added vintage",
-      results: data?.archivalProducts,
-    })
+  if (data?.justAddedAccessories?.length) {
+    sections.push({ type: SectionType.Products, results: data?.justAddedAccessories, title: "Just added accessories" })
   }
 
   if (dataNoCache?.me?.savedItems?.length) {
@@ -191,13 +179,7 @@ export const HomeBottomSheet: React.FC<HomeBottomSheetProps> = ({
         return <TagsRail title={item.title} items={item.results} tagData={item.tagData} />
       case SectionType.UpcomingProducts:
         return (
-          <ProductsRail
-            disableClickThrough
-            large
-            title="Upcoming releases"
-            rightText={seasonAndYearText}
-            items={item.results}
-          />
+          <ProductsRail disableTap large title="Upcoming releases" rightText={seasonAndYearText} items={item.results} />
         )
       case SectionType.Collection:
         return (

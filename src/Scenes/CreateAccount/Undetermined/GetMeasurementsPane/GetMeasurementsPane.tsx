@@ -15,13 +15,13 @@ import { MultiSelectionTable } from "App/Components/MultiSelectionTable"
 
 const ADD_MEASUREMENTS = gql`
   mutation addMeasurements(
-    $height: Int
-    $weight: CustomerDetailCreateweightInput
+    $shoeSize: Int
+    $pantLength: Int
     $topSizes: CustomerDetailCreatetopSizesInput
     $waistSizes: CustomerDetailCreatewaistSizesInput
   ) {
     addCustomerDetails(
-      details: { height: $height, weight: $weight, topSizes: $topSizes, waistSizes: $waistSizes }
+      details: { pantLength: $pantLength, shoeSize: $shoeSize, topSizes: $topSizes, waistSizes: $waistSizes }
       event: CompletedWaitlistForm
     ) {
       id
@@ -31,8 +31,8 @@ const ADD_MEASUREMENTS = gql`
 
 interface GetMeasurementsPaneProps {
   initialMeasurements?: {
-    height?: Item
-    weight?: Item
+    shoeSize?: Item
+    pantLength?: Item
     topSizes?: string[]
     waistSizes?: string[]
   }
@@ -50,8 +50,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
 }) => {
   const tracking = useTracking()
 
-  const [height, setHeight] = useState(initialMeasurements?.height)
-  const [weight, setWeight] = useState(initialMeasurements?.weight)
+  const [shoeSize, setShoeSizes] = useState(initialMeasurements?.shoeSize)
+  const [pantLength, setPantLength] = useState(initialMeasurements?.pantLength)
   const [topSizes, setTopSizes] = useState(initialMeasurements?.topSizes || [])
   const [waistSizes, setWaistSizes] = useState(initialMeasurements?.waistSizes || [])
 
@@ -94,8 +94,8 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
     setIsMutating(true)
     await addMeasurements({
       variables: {
-        height: height.value,
-        weight: { set: weight.value },
+        shoeSize: shoeSize.value,
+        pantLength: pantLength.value,
         topSizes: { set: topSizes },
         waistSizes: { set: waistSizes },
       },
@@ -124,26 +124,26 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
           <Flex flexDirection="row">
             <Box style={{ flex: 0.5, marginRight: 6 }}>
               <Sans color="black100" size="4">
-                Height
+                Shoe size
               </Sans>
               <Spacer mb={1} />
               <BoxPicker
-                onChange={(value) => setHeight(value)}
-                title="Height"
-                currentItem={height}
-                items={Measurements.heights}
+                onChange={(value) => setShoeSizes(value)}
+                title="Shoe size"
+                currentItem={shoeSize}
+                items={Measurements.shoeSizes}
               />
             </Box>
             <Box style={{ flex: 0.5, marginLeft: 6 }}>
               <Sans color="black100" size="4">
-                Weight
+                Average pant length
               </Sans>
               <Spacer mb={1} />
               <BoxPicker
-                onChange={(value) => setWeight(value)}
-                title="Weight"
-                currentItem={weight}
-                items={Measurements.weights}
+                onChange={(value) => setPantLength(value)}
+                title="Pant length"
+                currentItem={pantLength}
+                items={Measurements.pantLengths}
               />
             </Box>
           </Flex>
@@ -208,7 +208,7 @@ export const GetMeasurementsPane: React.FC<GetMeasurementsPaneProps> = ({
           <Box style={{ flex: 1 }}>
             <Button
               block
-              disabled={!(height && weight && topSizes.length && waistSizes.length)}
+              disabled={!(shoeSize && pantLength && topSizes.length && waistSizes.length)}
               loading={isMutating}
               onPress={submitMeasurements}
               variant="primaryBlack"

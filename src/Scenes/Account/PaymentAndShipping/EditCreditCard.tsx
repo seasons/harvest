@@ -8,7 +8,7 @@ import { CheckCircled } from "Assets/svgs/CheckCircled"
 import { String } from "aws-sdk/clients/augmentedairuntime"
 import React, { useEffect, useState } from "react"
 import { Dimensions, KeyboardAvoidingView, ScrollView } from "react-native"
-import styled from "styled-components"
+import styled from "styled-components/native"
 import stripe, { PaymentCardTextField } from "tipsi-stripe"
 import { useMutation, useQuery } from "@apollo/client"
 import { useNotificationBarContext } from "@seasons/eclipse"
@@ -108,7 +108,7 @@ export const EditCreditCard: React.FC<{
 }> = screenTrack()(({ route, navigation }) => {
   let paymentPlan = route?.params?.paymentPlan
   let routeBillingAddress: BillingAddress = route?.params?.billingAddress
-  const { data } = useQuery(GET_PAYMENT_DATA, { skip: !!paymentPlan })
+  const { previousData, data = previousData } = useQuery(GET_PAYMENT_DATA, { skip: !!paymentPlan })
   if (!paymentPlan) {
     paymentPlan = data?.me?.customer?.paymentPlan
     routeBillingAddress = data?.me?.customer?.billingInfo
@@ -289,7 +289,6 @@ export const EditCreditCard: React.FC<{
             <Button
               disabled={isMutating}
               variant="primaryBlack"
-              size="large"
               width={singleButtonWidth}
               onPress={() => {
                 navigation.navigate(NavigationSchema.StackNames.AccountStack, {
@@ -305,7 +304,6 @@ export const EditCreditCard: React.FC<{
             <Button
               disabled={isMutating}
               variant="primaryWhite"
-              size="large"
               width={buttonWidth}
               onPress={() => {
                 navigation.goBack()

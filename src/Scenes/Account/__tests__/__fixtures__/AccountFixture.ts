@@ -45,20 +45,6 @@ export const GetPaymentDataFixture = {
         street2: "Brooklyn",
       },
     },
-    activeReservation: {
-      id: 1234,
-      customer: {
-        id: 1234,
-        billingInfo: {
-          last_digits: "4242",
-          street1: "1 Bedford Avenue",
-          street2: "Brooklyn",
-          city: "Brooklyn",
-          state: "New York",
-          postal_code: "11211",
-        },
-      },
-    },
   },
 }
 

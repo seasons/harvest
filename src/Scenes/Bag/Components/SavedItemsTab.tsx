@@ -24,10 +24,9 @@ export const SavedItemsTabFragment_Me = gql`
 export const SavedItemsTab: React.FC<{
   items
   deleteBagItem
-  hasActiveReservation
   bagIsFull
   loading: boolean
-}> = ({ items, deleteBagItem, hasActiveReservation, bagIsFull, loading }) => {
+}> = ({ items, deleteBagItem, bagIsFull, loading }) => {
   const insets = useSafeAreaInsets()
   const wrapperHeight = height - insets.top - 140
 
@@ -43,15 +42,7 @@ export const SavedItemsTab: React.FC<{
     <Box>
       {items?.length ? (
         items.map((bagItem, index) => {
-          return (
-            <SavedItemRow
-              key={index}
-              bagItem={bagItem}
-              deleteBagItem={deleteBagItem}
-              bagIsFull={bagIsFull}
-              hasActiveReservation={hasActiveReservation}
-            />
-          )
+          return <SavedItemRow key={index} bagItem={bagItem} deleteBagItem={deleteBagItem} bagIsFull={bagIsFull} />
         })
       ) : (
         <BagEmptyState currentView={BagView.Saved} wrapperHeight={wrapperHeight} />

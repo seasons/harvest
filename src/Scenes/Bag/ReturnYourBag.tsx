@@ -4,7 +4,6 @@ import { space } from "App/utils/space"
 import { FadeBottom2 } from "Assets/svgs/FadeBottom2"
 import { Container } from "Components/Container"
 import { Sans } from "Components/Typography"
-import { DateTime } from "luxon"
 import React, { useState } from "react"
 import { Dimensions, FlatList } from "react-native"
 
@@ -13,7 +12,6 @@ import { useNavigation } from "@react-navigation/native"
 import { Button, Flex, Loader } from "@seasons/eclipse"
 
 import { ReturnYourBagItem } from "./Components/ReturnYourBagItem"
-import { ACTIVE_RESERVATION } from "./CurrentRotation"
 import { GetBag_NoCache_Query } from "./BagQueries"
 
 const RETURN_ITEMS = gql`
@@ -24,20 +22,63 @@ const RETURN_ITEMS = gql`
   }
 `
 
+const getAtHomeBagSection = gql`
+  query getAtHomeBagSection {
+    me {
+      id
+      atHomeSection: bagSection(status: AtHome) {
+        id
+        status
+        bagItems {
+          id
+          physicalProduct {
+            id
+            productVariant {
+              id
+              displayLong
+              product {
+                id
+                slug
+                name
+                brand {
+                  id
+                  name
+                }
+                images {
+                  id
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export const ReturnYourBag = () => {
-  const { previousData, data = previousData } = useQuery(ACTIVE_RESERVATION)
+  const { previousData, data = previousData } = useQuery(getAtHomeBagSection)
   const navigation = useNavigation()
+  const [isMutating, setIsMutating] = useState(false)
   const [selectedItems, setSelectedItems] = useState({})
   const [selectedReturnReasons, setSelectedReturnReasons] = useState({})
   const [returnItems] = useMutation(RETURN_ITEMS, {
+    onError: () => {
+      setIsMutating(false)
+    },
     onCompleted: () => {
+      setIsMutating(false)
       navigation.navigate(NavigationSchema.StackNames.BagStack, {
         screen: NavigationSchema.PageNames.ReturnYourBagConfirmation,
       })
     },
   })
 
-  const activeReservation = data?.me?.activeReservation
+  const atHomeItems = data?.me?.atHomeSection?.bagItems
+
+  const physicalProducts = atHomeItems?.map((item) => item.physicalProduct)
+
   const windowDimensions = Dimensions.get("window")
   const twoButtonWidth = windowDimensions.width / 2 - (space(2) + space(0.5))
 
@@ -73,35 +114,12 @@ export const ReturnYourBag = () => {
     return <Loader />
   }
 
-  const subscription = data?.me?.customer?.membership?.subscription
-
-  const reservationCreationDate = activeReservation?.createdAt
-  const currentTermStart = subscription?.currentTermStart
-
-  const currentTermEndDateTime = DateTime.fromISO(subscription?.currentTermEnd)
-  const nextSwapDate = currentTermEndDateTime.plus({ day: 1 })
-
-  const subtitle =
-    reservationCreationDate < currentTermStart ? (
-      <Sans size="4" color="black50">
-        Heads up, it looks like you don’t have a free swap until{" "}
-        <Sans size="4" style={{ textDecorationLine: "underline" }}>
-          {`${nextSwapDate.weekdayLong}, ${nextSwapDate.monthLong} ${nextSwapDate.day}`}
-        </Sans>
-        . Return your items early & place a new order for only $30
-      </Sans>
-    ) : (
-      <Sans size="4" color="black50">
-        Before placing another order, we need to know what you're turning and why.
-      </Sans>
-    )
-
   return (
     <Container insetsTop={true}>
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Box style={{ flex: 1 }}>
         <FlatList
-          data={activeReservation ? activeReservation.products : []}
+          data={physicalProducts.length > 0 ? physicalProducts : []}
           ListHeaderComponent={() => (
             <Box px={2}>
               <Spacer mb={80} />
@@ -109,7 +127,9 @@ export const ReturnYourBag = () => {
                 Return your items
               </Sans>
               <Spacer mt="1" />
-              {subtitle}
+              <Sans size="4" color="black50">
+                Before placing another order, we need to know what you’re returning.
+              </Sans>
               <Box mt={4} mb={1}>
                 <Sans size="4">What are you returning?</Sans>
               </Box>
@@ -143,7 +163,13 @@ export const ReturnYourBag = () => {
             <Button
               width={twoButtonWidth}
               variant="primaryBlack"
+              loading={isMutating}
+              disabled={!Object.keys(selectedItems).length}
               onPress={() => {
+                if (isMutating) {
+                  return
+                }
+                setIsMutating(true)
                 returnItems({
                   variables: {
                     items: Object.keys(selectedItems),

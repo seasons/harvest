@@ -1,24 +1,19 @@
 import Item from "./Item"
 
-const heights: Item[] = (() => {
-  const totalInches = (feet: number, inches: number) => 12 * feet + inches
-  let items: Item[] = [{ label: "4'11\"", value: totalInches(4, 11) }]
-  new Array(5, 6).forEach((feet) => {
-    items.push({ label: `${feet}\'`, value: totalInches(feet, 0) })
-    for (let inches = 1; inches < 12; inches++) {
-      items.push({ label: `${feet}\'${inches}\"`, value: totalInches(feet, inches) })
-    }
-  })
-  return items
-})()
-
-const weights: Item[] = (() => {
+const shoeSizes: Item[] = (() => {
   const items: Item[] = []
-  for (let weight = 90; weight <= 240; weight += 10) {
-    items.push({ label: `${weight} - ${weight + 10}lbs`, value: [weight, weight + 10] })
+  for (let shoeSize = 7; shoeSize <= 14; shoeSize++) {
+    items.push({ label: `Size ${shoeSize}`, value: shoeSize })
   }
   return items
 })()
+
+const pantLengths: Item[] = [
+  { label: `Short 30"`, value: 30 },
+  { label: `Regular 32"`, value: 32 },
+  { label: `Long 34"`, value: 34 },
+  { label: `Tall 36"`, value: 36 },
+]
 
 const topSizes: Item[] = [
   { label: "XS", value: "XS" },
@@ -45,8 +40,8 @@ const fits: Item[] = [
 ]
 
 const Measurements = {
-  heights,
-  weights,
+  shoeSizes,
+  pantLengths,
   topSizes,
   waistSizes,
   fits,

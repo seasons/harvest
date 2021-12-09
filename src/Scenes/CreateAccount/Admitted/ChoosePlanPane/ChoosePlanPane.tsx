@@ -1,15 +1,9 @@
-import {
-  Box, Button, CloseButton, Container, FadeInImage, Flex, Sans, Spacer
-} from "App/Components"
+import { Box, Button, CloseButton, Container, Flex, Sans, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { OverlaySpinner } from "App/Components/OverlaySpinner"
 import { PopUp } from "App/Components/PopUp"
-import {
-  CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type
-} from "App/generated/CreateAccount_Cached_Query"
-import {
-  CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type
-} from "App/generated/CreateAccount_NoCache_Query"
+import { CreateAccount_Cached_Query as CreateAccount_Cached_Query_Type } from "App/generated/CreateAccount_Cached_Query"
+import { CreateAccount_NoCache_Query as CreateAccount_NoCache_Query_Type } from "App/generated/CreateAccount_NoCache_Query"
 import { GetPlans_paymentPlans } from "App/generated/GetPlans"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { GET_USER } from "App/Scenes/Account/Account"
@@ -19,15 +13,10 @@ import { GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { color } from "App/utils"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import { ListCheck } from "Assets/svgs/ListCheck"
-import { TabBar } from "Components/TabBar"
 import gql from "graphql-tag"
-import { uniq } from "lodash"
 import React, { useEffect, useState } from "react"
-import {
-  Dimensions, ImageBackground, Linking, ScrollView, Text, TouchableOpacity
-} from "react-native"
+import { Dimensions, ImageBackground, Linking, ScrollView, Text, TouchableOpacity } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import styled from "styled-components"
 import stripe from "tipsi-stripe"
 
 import { useMutation } from "@apollo/client"
@@ -176,8 +165,13 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
     ],
   })
 
-  const sortedPlans = plans?.slice()?.sort((a, b) => b.price - a.price)
-  const lowestPlanPrice = sortedPlans?.map((plan) => plan.price)?.reduce((a, b) => Math.min(a, b))
+  const customerPlanId = dataNoCache?.me?.customer?.membership?.plan?.planID
+
+  let sortedPlans = plans?.slice()?.sort((a, b) => b.price - a.price)
+  if (source === "UpdatePaymentPlanModal" && customerPlanId === "access-monthly") {
+    sortedPlans = sortedPlans?.filter((plan) => plan.planID === "access-yearly")
+  }
+  const lowestPlanPrice = plans?.map((plan) => plan.price)?.reduce((a, b) => Math.min(a, b))
 
   useEffect(() => {
     if (sortedPlans && sortedPlans.length > 0 && !selectedPlan) {
@@ -319,17 +313,25 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
           >
             <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
               <Box style={{ position: "absolute", width: "100%" }} pt={5}>
-                <Spacer mb={4} />
+                <Spacer pb={80} />
                 <Box px={2}>
-                  <Sans color={color("black100")} size="7">
-                    You're in.
-                  </Sans>
-                  <Sans color={color("black100")} size="7">
-                    Let's choose your plan
-                  </Sans>
-                  <Spacer mb={1} />
+                  {source === "CreateAccountModal" && (
+                    <>
+                      <Sans color={color("black100")} size="7">
+                        You're in.
+                      </Sans>
+                      <Sans color={color("black100")} size="7">
+                        Let's choose your plan
+                      </Sans>
+                    </>
+                  )}
+                  {source === "UpdatePaymentPlanModal" && (
+                    <Sans color={color("black100")} size="7">
+                      Upgrade your plan
+                    </Sans>
+                  )}
                 </Box>
-                <Flex flexDirection="column" pt={3} pb={1}>
+                <Flex flexDirection="column" pt={2} pb={1}>
                   {features?.included?.map((feature, index) => {
                     return (
                       <Flex flexDirection="row" pb={1.5} px={1} alignItems="center" key={index} width="100%">
@@ -371,18 +373,33 @@ export const ChoosePlanPane: React.FC<ChoosePlanPaneProps> = ({
                   )
                 })}
                 <Spacer mb={3} />
-                <Box px={2}>
-                  <Sans size="3" color="black50">
-                    Cancel for any reason within 24 hours for a full refund. Free shipping & dry cleaning are only
-                    included on one order per month. Have a question?{" "}
-                    <Text
-                      style={{ textDecorationLine: "underline" }}
-                      onPress={() => Linking.openURL(`mailto:membership@seasons.nyc`)}
-                    >
-                      Contact us
-                    </Text>
-                  </Sans>
-                </Box>
+                {source === "CreateAccountModal" && (
+                  <Box px={2}>
+                    <Sans size="3" color="black50">
+                      Cancel for any reason within 24 hours for a full refund. Free shipping & dry cleaning are only
+                      included on one order per month. Have a question?{" "}
+                      <Text
+                        style={{ textDecorationLine: "underline" }}
+                        onPress={() => Linking.openURL(`mailto:membership@seasons.nyc`)}
+                      >
+                        Contact us
+                      </Text>
+                    </Sans>
+                  </Box>
+                )}
+                {source === "UpdatePaymentPlanModal" && (
+                  <Box px={2}>
+                    <Sans size="3" color="black50">
+                      Free shipping & dry cleaning are only included on one order per month. Have a question?{" "}
+                      <Text
+                        style={{ textDecorationLine: "underline" }}
+                        onPress={() => Linking.openURL(`mailto:membership@seasons.nyc`)}
+                      >
+                        Contact us
+                      </Text>
+                    </Sans>
+                  </Box>
+                )}
                 <Spacer pb={150} />
               </Box>
             </ScrollView>

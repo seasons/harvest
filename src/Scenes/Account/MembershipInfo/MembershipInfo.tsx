@@ -3,13 +3,15 @@ import React from "react"
 import { useQuery } from "@apollo/client"
 import { ScrollView } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Box, Container, FixedBackArrow, Flex, Sans, SectionHeader, Spacer } from "App/Components"
+import { Box, Button, Container, FixedBackArrow, Flex, Sans, SectionHeader, Spacer } from "App/Components"
 import { Loader } from "App/Components/Loader"
 import { color } from "App/utils"
 import { screenTrack } from "App/utils/track"
 import { MembershipCard } from "./Components"
 import { PauseButtons } from "App/Components/Pause"
 import { ListCheck } from "Assets/svgs/ListCheck"
+import { Schema } from "App/Navigation"
+import { GRANDFATHERED_PLAN_IDS } from "App/helpers/constants"
 
 export const GET_MEMBERSHIP_INFO = gql`
   query GetMembershipInfo {
@@ -75,7 +77,10 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
     )
   }
 
+  const updateablePlans = [...GRANDFATHERED_PLAN_IDS, "access-monthly"]
+
   const whatsIncluded = plan?.description?.split("\n") || plan?.features?.included
+  const showUpdateButton = updateablePlans.includes(plan.planID) || plan.plan
 
   return (
     <Container insetsBottom={false}>
@@ -111,6 +116,19 @@ export const MembershipInfo = screenTrack()(({ navigation }) => {
                   </Sans>
                 </Flex>
               ))}
+            </>
+          )}
+          {showUpdateButton && (
+            <>
+              <Spacer mb={2} />
+              <Button
+                variant="secondaryWhite"
+                onPress={() => navigation.navigate("Modal", { screen: Schema.PageNames.UpdatePaymentPlanModal })}
+                block
+              >
+                Update your plan
+              </Button>
+              <Spacer mb={2} />
             </>
           )}
           <Spacer mb={3} />

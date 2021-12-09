@@ -4,7 +4,7 @@ import { Box, Button } from "App/Components"
 import { Schema as NavSchema } from "App/Navigation"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import React, { useState } from "react"
-import ImagePicker from "react-native-image-picker"
+import * as ImagePicker from "react-native-image-picker/src"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { animated, useSpring } from "react-spring"
 import styled from "styled-components/native"
@@ -49,17 +49,18 @@ export const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ visible }) => {
       return
     }
 
-    ImagePicker.showImagePicker(
+    ImagePicker.launchImageLibrary(
       {
-        takePhotoButtonTitle: "Take Photo",
-        chooseFromLibraryButtonTitle: "Choose from Library",
+        mediaType: "photo",
+        selectionLimit: 1,
       },
       (response) => {
-        if (response.uri) {
+        if (response?.assets.length > 0) {
+          const asset = response?.assets?.[0]
           setIsMutating(false)
-          selectedImage(response.uri, response.type)
-        } else if (response.error) {
-          Sentry.captureException(response.error)
+          selectedImage(asset.uri, asset.type)
+        } else if (response.errorMessage) {
+          Sentry.captureException(response.errorMessage)
           showPopUp({
             title: "Oops!",
             note:

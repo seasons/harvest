@@ -5,6 +5,7 @@ import { View } from "react-native"
 interface Props extends SvgProps {
   rotateDeg?: string
   scale?: number
+  color?: string
 }
 
 export const ChevronIcon = (props: Props) => {
