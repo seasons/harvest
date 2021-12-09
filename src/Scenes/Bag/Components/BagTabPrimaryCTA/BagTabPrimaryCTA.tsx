@@ -4,14 +4,46 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import React from "react"
-import { Dimensions } from "react-native"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../../../CreateAccount/CreateAccount"
 import { useNavigation } from "@react-navigation/native"
 import { Box, Button, Flex } from "@seasons/eclipse"
 import { BagBottomBar } from "../BagBottomBar"
+import gql from "graphql-tag"
 
-const windowDimensions = Dimensions.get("window")
-const windowWidth = windowDimensions.width
+export const BagTabPrimaryCTAFragment_Me = gql`
+  fragment BagTabPrimaryCTAFragment_Me on Me {
+    customer {
+      id
+      status
+      detail {
+        id
+        shippingAddress {
+          id
+          address1
+          city
+          state
+          zipCode
+        }
+      }
+    }
+    bagSections {
+      status
+      bagItems {
+        id
+        reservationPhysicalProduct {
+          id
+          inboundPackage {
+            id
+            shippingLabel {
+              id
+              image
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export const BagTabPrimaryCTA = ({
   data,
@@ -34,19 +66,16 @@ export const BagTabPrimaryCTA = ({
   const hasAtHomeItems = atHomeItems?.length > 0
   const returnPendingItems = sections?.find((section) => section.status === "ReturnPending")?.bagItems
   const hasReturnPendingsItems = returnPendingItems?.length > 0
-  const inboundTrackingUrl = sections?.find(
-    (section) =>
-      (section.status === "ScannedOnInbound" ||
-        section.status === "InTransitInbound" ||
-        section.status === "DeliveredToBusiness") &&
-      !!section.deliverTrackingUrl
-  )?.deliveryTrackingUrl
 
   const me = data?.me
   const customerStatus = me?.customer?.status
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
   const hasShippingAddress =
     !!shippingAddress?.address1 && !!shippingAddress?.city && !!shippingAddress?.state && !!shippingAddress?.zipCode
+
+  const labelImage = returnPendingItems?.find((bagItem) => {
+    return bagItem?.reservationPhysicalProduct?.inboundPackage?.shippingLabel?.image
+  })
 
   const handleReserve = async () => {
     setIsMutating(true)
@@ -135,10 +164,10 @@ export const BagTabPrimaryCTA = ({
         </Button>
       </Box>
     )
-  } else if (!!inboundTrackingUrl) {
+  } else if (!!labelImage) {
     button = (
       <Button
-        onPress={() => navigation.navigate("Webview", { uri: inboundTrackingUrl })}
+        onPress={() => navigation.navigate("Webview", { uri: labelImage })}
         disabled={isMutating}
         loading={isMutating}
         block

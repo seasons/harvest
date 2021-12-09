@@ -1,6 +1,7 @@
 import gql from "graphql-tag"
 
 import { BagSectionFragment_BagSection } from "./Components/BagSection/BagSection"
+import { BagTabPrimaryCTAFragment_Me } from "./Components/BagTabPrimaryCTA/BagTabPrimaryCTA"
 import { ReservationHistoryTabFragment_Customer } from "./Components/ReservationHistoryTab"
 import { SavedItemsTabFragment_Me } from "./Components/SavedItemsTab"
 
@@ -71,16 +72,6 @@ export const GetBag_NoCache_Query = gql`
         user {
           id
         }
-        detail {
-          id
-          shippingAddress {
-            id
-            city
-            state
-            address1
-            zipCode
-          }
-        }
         membership {
           id
           subscription {
@@ -118,7 +109,9 @@ export const GetBag_NoCache_Query = gql`
         }
       }
     }
+    ...BagTabPrimaryCTAFragment_Me
   }
+  ${BagTabPrimaryCTAFragment_Me}
   ${BagSectionFragment_BagSection}
 `
 
