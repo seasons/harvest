@@ -4,14 +4,10 @@ import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import React from "react"
-import { Dimensions } from "react-native"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../../../CreateAccount/CreateAccount"
 import { useNavigation } from "@react-navigation/native"
-import { Box, Button, Flex } from "@seasons/eclipse"
 import { BagBottomBar } from "../BagBottomBar"
-
-const windowDimensions = Dimensions.get("window")
-const windowWidth = windowDimensions.width
+import { Box, Button, Flex } from "App/Components"
 
 export const BagTabPrimaryCTA = ({
   data,

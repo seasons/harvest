@@ -1,17 +1,22 @@
 import { Box, Button, Flex, Sans } from "App/Components"
 import { FadeInImage } from "App/Components/FadeInImage"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
-import { color } from "App/utils"
+import { color, space } from "App/utils"
 import { WhiteListCheck } from "Assets/svgs/WhiteListCheck"
 import React, { useState } from "react"
 import { ScrollView } from "react-native"
 import styled from "styled-components/native"
 
+interface ReturnReason {
+  value: string
+  display: string
+}
+
 interface ReturnYourBagItemProps {
   physicalProduct: any
   onSelect: (selected: boolean) => void
-  onSelectReason: (reason: string) => void
-  returnReasons: string[]
+  onSelectReason: (value: string) => void
+  returnReasons: ReturnReason[]
 }
 
 export const ReturnYourBagItem: React.FC<ReturnYourBagItemProps> = ({
@@ -68,15 +73,15 @@ export const ReturnYourBagItem: React.FC<ReturnYourBagItemProps> = ({
         </Flex>
       </BagItemContainer>
       {selected && (
-        <Box pl={2} mt={2}>
-          <ScrollView horizontal>
+        <Box mt={2}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ paddingLeft: space(2) }}>
             {returnReasons?.map((reason, index) => {
-              const selected = selectedReason === reason
+              const selected = selectedReason.value === reason.value
               return (
                 <Button
                   onPress={() => {
                     setSelectedReason(reason)
-                    onSelectReason(reason)
+                    onSelectReason(reason.value)
                   }}
                   selected={selected}
                   key={index}
@@ -84,7 +89,7 @@ export const ReturnYourBagItem: React.FC<ReturnYourBagItemProps> = ({
                   size="small"
                   mr={index !== returnReasons.length - 1 ? 1 : 0}
                 >
-                  {reason}
+                  {reason.display}
                 </Button>
               )
             })}

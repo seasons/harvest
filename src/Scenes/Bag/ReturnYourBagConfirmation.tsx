@@ -20,22 +20,25 @@ const getReturnPendingBagSection = gql`
         status
         bagItems {
           id
-          physicalProduct {
+          reservationPhysicalProduct {
             id
-            productVariant {
+            physicalProduct {
               id
-              displayLong
-              product {
+              productVariant {
                 id
-                slug
-                name
-                brand {
+                displayLong
+                product {
                   id
+                  slug
                   name
-                }
-                images {
-                  id
-                  url
+                  brand {
+                    id
+                    name
+                  }
+                  images {
+                    id
+                    url
+                  }
                 }
               }
             }
@@ -69,7 +72,8 @@ export const ReturnYourBagConfirmation = screenTrack()((props) => {
     return <Loader />
   }
 
-  const items = data?.me?.returnPendingSection?.bagItems?.map((item) => item.physicalProduct)
+  const rpps = data?.me?.returnPendingSection?.bagItems?.map((item) => item.reservationPhysicalProduct)
+  console.log("data", data)
 
   return (
     <Container insetsTop insetsBottom={false} backgroundColor="white100">
@@ -91,10 +95,10 @@ export const ReturnYourBagConfirmation = screenTrack()((props) => {
             <Spacer mb={0.5} />
             <Separator />
             <Box mt={1}>
-              {items?.map((item, i) => {
+              {rpps?.map((rpp, i) => {
                 return (
-                  <Box key={item.id}>
-                    <ReturnYourBagConfirmationItem physicalProduct={item} />
+                  <Box key={rpp.id}>
+                    <ReturnYourBagConfirmationItem physicalProduct={rpp.physicalProduct} />
                     <Spacer mb={1} />
                   </Box>
                 )
@@ -112,7 +116,7 @@ export const ReturnYourBagConfirmation = screenTrack()((props) => {
             <Box my={3}>
               {returnSteps.map((step, index) => {
                 return (
-                  <Flex flexDirection="row" mb={3}>
+                  <Flex flexDirection="row" mb={3} key={index}>
                     <Box width={36}>
                       <Sans underline size="4">
                         0{index + 1}

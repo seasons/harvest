@@ -24,6 +24,10 @@ const RETURN_ITEMS = gql`
 
 const getAtHomeBagSection = gql`
   query getAtHomeBagSection {
+    returnReasons {
+      value
+      display
+    }
     me {
       id
       atHomeSection: bagSection(status: AtHome) {
@@ -31,22 +35,25 @@ const getAtHomeBagSection = gql`
         status
         bagItems {
           id
-          physicalProduct {
+          reservationPhysicalProduct {
             id
-            productVariant {
+            physicalProduct {
               id
-              displayLong
-              product {
+              productVariant {
                 id
-                slug
-                name
-                brand {
+                displayLong
+                product {
                   id
+                  slug
                   name
-                }
-                images {
-                  id
-                  url
+                  brand {
+                    id
+                    name
+                  }
+                  images {
+                    id
+                    url
+                  }
                 }
               }
             }
@@ -77,21 +84,22 @@ export const ReturnYourBag = () => {
 
   const atHomeItems = data?.me?.atHomeSection?.bagItems
 
-  const physicalProducts = atHomeItems?.map((item) => item.physicalProduct)
+  const reservationPhysicalProducts = atHomeItems?.map((item) => item.reservationPhysicalProduct)
 
   const windowDimensions = Dimensions.get("window")
   const twoButtonWidth = windowDimensions.width / 2 - (space(2) + space(0.5))
 
   const renderItem = ({ item, index }) => {
+    const physicalProduct = item.physicalProduct
     return (
       <ReturnYourBagItem
         key={index}
         returnReasons={data?.returnReasons}
-        physicalProduct={item}
-        onSelectReason={(reason) => {
+        physicalProduct={physicalProduct}
+        onSelectReason={(value) => {
           setSelectedReturnReasons({
             ...selectedReturnReasons,
-            [item.id]: reason,
+            [item.id]: value,
           })
         }}
         onSelect={(selected) => {
@@ -119,7 +127,7 @@ export const ReturnYourBag = () => {
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Box style={{ flex: 1 }}>
         <FlatList
-          data={physicalProducts.length > 0 ? physicalProducts : []}
+          data={reservationPhysicalProducts.length > 0 ? reservationPhysicalProducts : []}
           ListHeaderComponent={() => (
             <Box px={2}>
               <Spacer mb={80} />
@@ -174,7 +182,7 @@ export const ReturnYourBag = () => {
                   variables: {
                     items: Object.keys(selectedItems),
                     returnReasons: Object.keys(selectedReturnReasons).map((id) => {
-                      return { physicalProductId: id, reason: selectedReturnReasons[id] }
+                      return { reservationPhysicalProductId: id, reason: selectedReturnReasons[id] }
                     }),
                   },
                   awaitRefetchQueries: true,
