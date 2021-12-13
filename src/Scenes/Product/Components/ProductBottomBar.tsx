@@ -22,7 +22,7 @@ interface Props {
   showNotifyMeMessage: boolean
   data: GetProduct
   onNotifyMe: () => void
-  handleCreateDraftOrder: (x) => void
+  onAddToCart: () => void
   hasNotification: boolean
   isMutatingNotify: boolean
   animatedScrollY: Animated.Value
@@ -47,7 +47,7 @@ export const ProductBottomBar: React.FC<Props> = ({
   isMutatingNotify,
   onNotifyMe,
   setShowSizeWarning,
-  handleCreateDraftOrder,
+  onAddToCart,
   animatedScrollY,
   retailPrice,
   monthlyRental,
@@ -75,7 +75,7 @@ export const ProductBottomBar: React.FC<Props> = ({
       <Flex flexDirection="column">
         <FixedProductBuyCTA
           price={selectedVariant?.price}
-          handleCreateDraftOrder={handleCreateDraftOrder}
+          onAddToCart={onAddToCart}
           showNotifyMeMessage={showNotifyMeMessage}
           animatedScrollY={animatedScrollY}
           isMutatingBuyButton={isMutatingBuyButton}

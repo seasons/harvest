@@ -14,6 +14,7 @@ import { useFocusEffect, useNavigation, useScrollToTop } from "@react-navigation
 import analytics from "@segment/analytics-react-native"
 import {
   CHECK_ITEMS,
+  CREATE_DRAFT_ORDER,
   DELETE_BAG_ITEM,
   GetBag_NoCache_Query,
   ReservationHistoryTab_Query,
@@ -68,7 +69,26 @@ export const Bag = screenTrack()((props: BagProps) => {
   const windowDimensions = Dimensions.get("window")
   const windowWidth = windowDimensions.width
 
-  console.log("data", data)
+  const [createDraftOrder] = useMutation(CREATE_DRAFT_ORDER, {
+    onCompleted: (res) => {
+      setIsPrimaryCTAMutating(false)
+      if (res?.createDraftedOrder) {
+        navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
+      }
+    },
+    onError: (error) => {
+      showPopUp({
+        title: "Sorry!",
+        note: "There was an issue creating the order, please try again.",
+        buttonText: "Okay",
+        onClose: () => {
+          hidePopUp()
+        },
+      })
+      console.log("error createDraftOrder ", error)
+      setIsPrimaryCTAMutating(false)
+    },
+  })
 
   useScrollToTop(flatListRef)
 
@@ -144,6 +164,21 @@ export const Bag = screenTrack()((props: BagProps) => {
     })
   }
 
+  const onCartCheckout = () => {
+    if (isPrimaryCTAMutating) {
+      return
+    }
+    setIsPrimaryCTAMutating(true)
+    createDraftOrder({
+      variables: {
+        input: {
+          productVariantIds: me?.cartItems?.map((item) => item.productVariant.id),
+          orderType: "Used",
+        },
+      },
+    })
+  }
+
   useEffect(() => {
     if (addedItems) {
       const userId = me?.customer?.user?.id
@@ -215,6 +250,7 @@ export const Bag = screenTrack()((props: BagProps) => {
           isMutating={isPrimaryCTAMutating}
           setIsMutating={setIsPrimaryCTAMutating}
           startReservation={startReservation}
+          onCartCheckout={onCartCheckout}
         />
       </View>
       <ReturnItemsPopUp

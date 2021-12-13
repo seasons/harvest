@@ -3,7 +3,6 @@ import { Loader } from "App/Components/Loader"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
 import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generated/Product_NoCache_Query"
-import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
@@ -24,7 +23,6 @@ import { ImageRail, ProductDetails, ProductMeasurements } from "./Components"
 import { ProductBottomBar } from "./Components/ProductBottomBar"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
-import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT, Product_NoCache_Query } from "./Queries"
 import { PricingCalculator } from "./Components/PricingCalculator"
 import {
@@ -187,64 +185,6 @@ export const Product = screenTrack({
     },
   })
 
-  const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
-    onCompleted: (res) => {
-      setIsMutatingBuyButton(false)
-      if (res?.createDraftedOrder) {
-        navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
-      }
-    },
-    onError: (error) => {
-      showPopUp({
-        title: "Sorry!",
-        note: "There was an issue creating the order, please try again.",
-        buttonText: "Okay",
-        onClose: () => {
-          hidePopUp()
-        },
-      })
-      console.log("error createDraftOrder ", error)
-      Sentry.captureException(JSON.stringify(error))
-      setIsMutatingBuyButton(false)
-    },
-  })
-
-  const handleCreateDraftOrder = (orderType: "Used" | "New") => {
-    if (isMutatingBuyButton) {
-      return
-    }
-    setIsMutatingBuyButton(true)
-
-    if (userHasSession) {
-      return createDraftOrder({
-        variables: {
-          input: {
-            productVariantID: selectedVariant?.id,
-            orderType,
-          },
-        },
-      })
-    } else {
-      showPopUp({
-        title: "Sign up to buy this item",
-        note: "You need to sign in or create an account before you can order items",
-        secondaryButtonText: "Got it",
-        secondaryButtonOnPress: () => {
-          setIsMutatingBuyButton(false)
-          hidePopUp()
-        },
-        buttonText: "Sign up",
-        onClose: () => {
-          hidePopUp()
-          setIsMutatingBuyButton(false)
-          navigation.navigate("Modal", {
-            screen: "CreateAccountModal",
-          })
-        },
-      })
-    }
-  }
-
   useEffect(() => {
     const hasRestockNotif = selectedVariant?.hasRestockNotification
     if (typeof hasRestockNotif === "boolean") {
@@ -328,6 +268,29 @@ export const Product = screenTrack({
     )
   }
 
+  const onAddToCart = () => {
+    if (userHasSession) {
+      setAddToCartButtonIsMutating(true)
+      upsertCartItem()
+    } else {
+      showPopUp({
+        title: "Sign up to add to cart",
+        note: "You must be a member to use this feature.",
+        secondaryButtonText: "Got it",
+        secondaryButtonOnPress: () => {
+          hidePopUp()
+        },
+        buttonText: "Sign up",
+        onClose: () => {
+          hidePopUp()
+          navigation.navigate("Modal", {
+            screen: "CreateAccountModal",
+          })
+        },
+      })
+    }
+  }
+
   const renderItem = ({ item: section }) => {
     switch (section) {
       case "imageRail":
@@ -378,10 +341,7 @@ export const Product = screenTrack({
                 navigation.navigate("Brand", { id: brand.id, slug: brand.slug, name: brand.name })
               }
               isMutating={addToCartButtonIsMutating}
-              onAddToCart={() => {
-                setAddToCartButtonIsMutating(true)
-                upsertCartItem()
-              }}
+              onAddToCart={onAddToCart}
             />
           </Box>
         )
@@ -491,7 +451,7 @@ export const Product = screenTrack({
         retailPrice={product.retailPrice}
         monthlyRental={product?.rentalPrice}
         productType={productType}
-        handleCreateDraftOrder={handleCreateDraftOrder}
+        onAddToCart={onAddToCart}
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0, backgroundColor: "white" }}>

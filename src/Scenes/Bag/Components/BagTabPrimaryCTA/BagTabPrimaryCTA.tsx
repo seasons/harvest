@@ -18,6 +18,7 @@ export const BagTabPrimaryCTA = ({
   isMutating,
   setIsMutating,
   activeTab,
+  onCartCheckout,
 }) => {
   const { authState } = useAuthContext()
 
@@ -132,6 +133,7 @@ export const BagTabPrimaryCTA = ({
         onReserve={handlePress}
         isMutating={isMutating}
         activeTab={activeTab}
+        onCartCheckout={onCartCheckout}
       />
     )
   } else if (hasAtHomeItems) {
@@ -161,6 +163,15 @@ export const BagTabPrimaryCTA = ({
           How to return
         </Button>
       </Flex>
+    )
+  } else {
+    button = (
+      <BagBottomBar
+        bagItems={isBuyView ? me?.cartItems : addedItems}
+        onReserve={handlePress}
+        isMutating={isMutating}
+        activeTab={activeTab}
+      />
     )
   }
 

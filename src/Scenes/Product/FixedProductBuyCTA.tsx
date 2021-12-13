@@ -10,11 +10,11 @@ const FIXED_PRODUCT_BUY_CTA_HEIGHT = space(2) + space(3) + 30
 
 export const FixedProductBuyCTA: React.FC<{
   price: any
-  handleCreateDraftOrder: (x) => void
+  onAddToCart: () => void
   animatedScrollY: any
   showNotifyMeMessage: boolean
   isMutatingBuyButton: boolean
-}> = ({ price, handleCreateDraftOrder, animatedScrollY, showNotifyMeMessage, isMutatingBuyButton }) => {
+}> = ({ price, onAddToCart, animatedScrollY, showNotifyMeMessage, isMutatingBuyButton }) => {
   const opacity = animatedScrollY.interpolate({
     inputRange: [0, 50],
     outputRange: [1, 0],
@@ -32,9 +32,7 @@ export const FixedProductBuyCTA: React.FC<{
       )
     } else {
       return (
-        <TouchableOpacity
-          onPress={() => handleCreateDraftOrder(availableForBuyNew ? OrderType.BUY_NEW : OrderType.BUY_USED)}
-        >
+        <TouchableOpacity onPress={onAddToCart}>
           <Sans size="4" underline>
             Buy for ${price.buyUsedPrice / 100}
           </Sans>

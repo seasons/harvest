@@ -95,7 +95,7 @@ export class TabBar extends React.Component<TabBarProps, null> {
             >
               {name}
             </Sans>
-            {badgeCount && badgeCount > 0 && (
+            {!!badgeCount && badgeCount > 0 && (
               <BadgeCount badgeCount={badgeCount}>
                 <Sans size="2" color="white100" style={{ top: badgeCount > 9 ? 1 : -1 }}>
                   {badgeCount}
