@@ -12,6 +12,7 @@ export const BagSectionFragment_BagSection = gql`
     ...BagSectionHeaderFragment_BagSection
     ...BagSectionDeliveryStatusFragment_BagSection
     bagItems {
+      id
       ...BagItemFragment_BagItem
     }
   }

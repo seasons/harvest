@@ -18,11 +18,11 @@ interface Props {
   toggleShowVariantPicker: (show: boolean) => void
   setShowSizeWarning: (show: boolean) => void
   showVariantPicker: boolean
-  selectedVariant: GetProduct_products_brand_products_variants
+  selectedVariant
   showNotifyMeMessage: boolean
   data: GetProduct
   onNotifyMe: () => void
-  onAddToCart: () => void
+  scrollToBuyCTA: () => void
   hasNotification: boolean
   isMutatingNotify: boolean
   animatedScrollY: Animated.Value
@@ -47,7 +47,7 @@ export const ProductBottomBar: React.FC<Props> = ({
   isMutatingNotify,
   onNotifyMe,
   setShowSizeWarning,
-  onAddToCart,
+  scrollToBuyCTA,
   animatedScrollY,
   retailPrice,
   monthlyRental,
@@ -75,7 +75,7 @@ export const ProductBottomBar: React.FC<Props> = ({
       <Flex flexDirection="column">
         <FixedProductBuyCTA
           price={selectedVariant?.price}
-          onAddToCart={onAddToCart}
+          scrollToBuyCTA={scrollToBuyCTA}
           showNotifyMeMessage={showNotifyMeMessage}
           animatedScrollY={animatedScrollY}
           isMutatingBuyButton={isMutatingBuyButton}

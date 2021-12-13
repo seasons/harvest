@@ -68,6 +68,7 @@ export const Product = screenTrack({
 })(({ route, navigation }) => {
   const [addToCartButtonIsMutating, setAddToCartButtonIsMutating] = useState(false)
   const { authState } = useAuthContext()
+  const productBuyRef = useRef(null)
   const [isMutatingBuyButton, setIsMutatingBuyButton] = useState(false)
   const [viewed, setViewed] = useState(false)
   const [showNotifyMeMessage, setShowNotifyMeMessage] = useState(false)
@@ -291,6 +292,14 @@ export const Product = screenTrack({
     }
   }
 
+  console.log("productBuyRef", productBuyRef)
+
+  const scrollToBuyCTA = () => {
+    productBuyRef?.current?.measure((fx, fy, width, height, px, py) => {
+      flatListRef.current?.scrollToOffset({ offset: py - (windowHeight / 2 - 80), animated: true })
+    })
+  }
+
   const renderItem = ({ item: section }) => {
     switch (section) {
       case "imageRail":
@@ -334,6 +343,7 @@ export const Product = screenTrack({
         return (
           <Box px={2} pb={4}>
             <ProductBuyCTA
+              ref={productBuyRef}
               buttonVariant={selectedVariant?.isInBag ? "primaryWhite" : "primaryBlack"}
               product={filter(ProductBuyCTAFragment_Product, product)}
               productVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
@@ -446,12 +456,12 @@ export const Product = screenTrack({
         hasNotification={hasNotification}
         data={data}
         dataMe={dataMe}
+        scrollToBuyCTA={scrollToBuyCTA}
         setShowSizeWarning={setShowSizeWarning}
         animatedScrollY={animatedScrollYRef.current}
         retailPrice={product.retailPrice}
         monthlyRental={product?.rentalPrice}
         productType={productType}
-        onAddToCart={onAddToCart}
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0, backgroundColor: "white" }}>

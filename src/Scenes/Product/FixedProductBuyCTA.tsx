@@ -3,18 +3,19 @@ import React from "react"
 import { Animated, TouchableOpacity } from "react-native"
 import styled from "styled-components/native"
 import { FadeBottom3 } from "Assets/svgs/FadeBottom3"
-import { space } from "App/utils"
+import { color, space } from "App/utils"
 import { Spinner } from "App/Components/Spinner"
+import { ChevronIcon } from "Assets/icons"
 
 const FIXED_PRODUCT_BUY_CTA_HEIGHT = space(2) + space(3) + 30
 
 export const FixedProductBuyCTA: React.FC<{
   price: any
-  onAddToCart: () => void
+  scrollToBuyCTA: () => void
   animatedScrollY: any
   showNotifyMeMessage: boolean
   isMutatingBuyButton: boolean
-}> = ({ price, onAddToCart, animatedScrollY, showNotifyMeMessage, isMutatingBuyButton }) => {
+}> = ({ price, scrollToBuyCTA, animatedScrollY, showNotifyMeMessage, isMutatingBuyButton }) => {
   const opacity = animatedScrollY.interpolate({
     inputRange: [0, 50],
     outputRange: [1, 0],
@@ -32,10 +33,20 @@ export const FixedProductBuyCTA: React.FC<{
       )
     } else {
       return (
-        <TouchableOpacity onPress={onAddToCart}>
-          <Sans size="4" underline>
-            Buy for ${price.buyUsedPrice / 100}
-          </Sans>
+        <TouchableOpacity onPress={scrollToBuyCTA}>
+          <Flex flexDirection="row" alignItems="center">
+            <Sans size="4" underline>
+              Buy for ${price.buyUsedPrice / 100}
+            </Sans>
+            <ChevronCircle>
+              <ChevronIcon
+                color={color("white100")}
+                backgroundColor={color("black100")}
+                rotateDeg="90deg"
+                scale={0.5}
+              />
+            </ChevronCircle>
+          </Flex>
         </TouchableOpacity>
       )
     }
@@ -76,4 +87,15 @@ const FixedWrapper = styled(Box)`
   left: 0;
   width: 100%;
   height: ${FIXED_PRODUCT_BUY_CTA_HEIGHT};
+`
+
+const ChevronCircle = styled(Box)`
+  margin-left: 8;
+  display: flex;
+  border-radius: 100;
+  background-color: ${color("black100")};
+  height: 15;
+  width: 15;
+  justify-content: center;
+  align-items: center;
 `
