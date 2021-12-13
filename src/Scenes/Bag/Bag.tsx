@@ -54,8 +54,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   const { bottomSheetBackdropIsVisible } = useBottomSheetContext()
   const tracking = useTracking()
 
-  console.log("data", data)
-
   const { route } = props
   const routeTab = route?.params?.tab
   const [currentView, setCurrentView] = useState<BagView>(BagView.Rent)
