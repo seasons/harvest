@@ -132,7 +132,7 @@ export const Product = screenTrack({
   const [upsertCartItem] = useMutation(UPSERT_CART_ITEM, {
     variables: {
       productVariantId: selectedVariant?.id,
-      addToCart: !selectedVariant?.isInBag,
+      addToCart: !selectedVariant?.isInCart,
     },
     refetchQueries: [
       {
@@ -157,8 +157,6 @@ export const Product = screenTrack({
       setAddToCartButtonIsMutating(false)
     },
   })
-
-  console.log("selectedVariant", selectedVariant)
 
   const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
     variables: {
@@ -270,7 +268,23 @@ export const Product = screenTrack({
   }
 
   const onAddToCart = () => {
-    if (userHasSession) {
+    const isInBag = selectedVariant?.isInBag && !selectedVariant?.isInCart
+
+    if (isInBag && userHasSession) {
+      showPopUp({
+        title: "You aleady have this in your bag",
+        note:
+          "You've already added this item to your bag to rent. If you'd like to buy it instead, add it to your cart.",
+        buttonText: "Cancel",
+        secondaryButtonText: "Add to cart",
+        secondaryButtonOnPress: () => {
+          setAddToCartButtonIsMutating(true)
+          upsertCartItem()
+          hidePopUp()
+        },
+        onClose: () => hidePopUp(),
+      })
+    } else if (userHasSession) {
       setAddToCartButtonIsMutating(true)
       upsertCartItem()
     } else {
@@ -291,8 +305,6 @@ export const Product = screenTrack({
       })
     }
   }
-
-  console.log("productBuyRef", productBuyRef)
 
   const scrollToBuyCTA = () => {
     productBuyRef?.current?.measure((fx, fy, width, height, px, py) => {
@@ -344,7 +356,7 @@ export const Product = screenTrack({
           <Box px={2} pb={4}>
             <ProductBuyCTA
               ref={productBuyRef}
-              buttonVariant={selectedVariant?.isInBag ? "primaryWhite" : "primaryBlack"}
+              buttonVariant={selectedVariant?.isInCart ? "primaryWhite" : "primaryBlack"}
               product={filter(ProductBuyCTAFragment_Product, product)}
               productVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
               onNavigateToBrand={() =>

@@ -115,6 +115,7 @@ export const GET_PRODUCT = gql`
         rentalPrice
         variants {
           ...CommonProductVariant
+          isInCart
         }
       }
       category {

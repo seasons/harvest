@@ -146,7 +146,6 @@ export const AddToBagButton: React.FC<Props> = ({
       const runsSmall = !!productFit && productFit === "RunsSmall"
 
       if (!runsBig && !runsSmall) {
-        console.log("1")
         addToBag()
       } else {
         setShowSizeWarning(true)
@@ -155,14 +154,14 @@ export const AddToBagButton: React.FC<Props> = ({
     }
   }
 
+  const inCart = selectedVariant?.isInCart
   const isInBag = isUserSignedIn
-    ? selectedVariant?.isInBag || added
+    ? (selectedVariant?.isInBag || added) && !inCart
     : !!localItems?.localBagItems?.find((item) => item.variantID === selectedVariant.id) || false
   const _disabled = !!disabled || (!variantInStock && !isInBag) || isMutating
-  const inCart = selectedVariant?.isInCart
 
-  let text = "Add to bag"
-  if (isInBag && !inCart) {
+  let text = "Rent"
+  if (isInBag) {
     text = "Remove"
   }
 
@@ -179,7 +178,20 @@ export const AddToBagButton: React.FC<Props> = ({
           actionName: Schema.ActionNames.ProductAddedToBag,
           actionType: Schema.ActionTypes.Tap,
         })
-        if (!isInBag) {
+        if (inCart) {
+          showPopUp({
+            title: "You aleady have this in your cart",
+            note:
+              "You've already added this item to your cart to buy. If you'd like to rent it instead, add it to your bag.",
+            buttonText: "Cancel",
+            secondaryButtonText: "Add to bag",
+            secondaryButtonOnPress: () => {
+              handleReserve()
+              hidePopUp()
+            },
+            onClose: () => hidePopUp(),
+          })
+        } else if (!isInBag) {
           handleReserve()
         } else {
           if (isMutating) {

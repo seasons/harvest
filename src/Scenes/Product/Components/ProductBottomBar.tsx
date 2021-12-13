@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Sans, Spacer } from "App/Components"
-import { GetProduct, GetProduct_products_brand_products_variants } from "App/generated/GetProduct"
+import { GetProduct } from "App/generated/GetProduct"
 import { GetProductMe } from "App/generated/GetProductMe"
 import { BORDER_RADIUS } from "App/helpers/constants"
 import { AddToBagButton } from "App/Scenes/Product/Components"
