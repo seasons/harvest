@@ -1,13 +1,13 @@
-import { Box, Separator, Flex, Spacer } from "App/Components"
+import { Box, Separator, Flex } from "App/Components"
 import React from "react"
 import { ReservationHistoryItem, ReservationHistoryItemFragment_Reservation } from "./ReservationHistoryItem"
-import { BagEmptyState } from "./BagEmptyState"
-import { BagView } from "../Bag"
 import { color } from "App/utils"
 import { gql } from "@apollo/client"
 import { Loader } from "App/Components/Loader"
 import { Dimensions } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { BagEmptyState } from "App/Scenes/Bag/Components/BagEmptyState"
+import { SavedAndHistoyView } from "../SavedAndHistory"
 
 export const ReservationHistoryTabFragment_Customer = gql`
   fragment ReservationHistoryTabFragment_Customer on Customer {
@@ -45,7 +45,7 @@ export const ReservationHistoryTab: React.FC<{ items; loading: boolean }> = ({ i
           )
         })
       ) : (
-        <BagEmptyState currentView={BagView.History} wrapperHeight={wrapperHeight} />
+        <BagEmptyState currentView={SavedAndHistoyView.History} wrapperHeight={wrapperHeight} />
       )}
     </Flex>
   )

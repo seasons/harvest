@@ -5,12 +5,12 @@ import { ScrollView, TouchableOpacity } from "react-native"
 import { Dimensions } from "react-native"
 import styled from "styled-components/native"
 import { color } from "App/utils"
-import { SavedTab_Query } from "../BagQueries"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 import { useTracking, Schema } from "App/utils/track"
 import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
 import { useNavigation } from "@react-navigation/native"
 import { gql } from "@apollo/client"
+import { SavedTab_Query } from "../queries"
 
 const dimensions = Dimensions.get("window")
 const windowWidth = dimensions.width
@@ -28,7 +28,7 @@ export const SavedItemRowFragment_BagItem = gql`
   ${SavedItemFragment_BagItem}
 `
 
-export const SavedItemRow = ({ bagItem, deleteBagItem, bagIsFull }) => {
+export const SavedItemRow = ({ bagItem, deleteBagItem }) => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
@@ -92,7 +92,7 @@ export const SavedItemRow = ({ bagItem, deleteBagItem, bagIsFull }) => {
         showsVerticalScrollIndicator={false}
       >
         <Box width={windowWidth} style={{ backgroundColor: color("white100") }} py={2}>
-          <SavedItem bagIsFull={bagIsFull} navigation={navigation} bagItem={bagItem} />
+          <SavedItem navigation={navigation} bagItem={bagItem} />
         </Box>
         <RemoveWrapper alignItems="center" justifyContent="center">
           <TouchableOpacity onPress={onRemove}>

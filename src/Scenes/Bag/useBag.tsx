@@ -36,7 +36,10 @@ export const useLocalBag = () => {
 }
 
 export const useRemoteBag = () => {
-  const { previousData, data = previousData, refetch } = useQuery<GetBag_NoCache_Query_Type>(GetBag_NoCache_Query)
+  const { previousData, data = previousData, refetch, error } = useQuery<GetBag_NoCache_Query_Type>(
+    GetBag_NoCache_Query
+  )
+  console.log("error", error)
   if (!data) {
     return {
       data: null,

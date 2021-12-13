@@ -1,11 +1,7 @@
 import { OrderFragment_Order } from "@seasons/eclipse"
 import gql from "graphql-tag"
 import { BagFragment_Me } from "./Bag"
-import { BagBottomBarFragment_BagItem } from "./Components/BagBottomBar"
-
 import { BagSectionFragment_BagSection } from "./Components/BagSection/BagSection"
-import { ReservationHistoryTabFragment_Customer } from "./Components/ReservationHistoryTab"
-import { SavedItemsTabFragment_Me } from "./Components/SavedItemsTab"
 import { BuyTabFragment_Me } from "./Components/Tabs/BuyTab"
 
 export const CHECK_ITEMS = gql`
@@ -56,28 +52,6 @@ export const GET_LOCAL_BAG_ITEMS = gql`
       }
     }
   }
-`
-
-export const SavedTab_Query = gql`
-  query SavedTab_Query {
-    me {
-      id
-      ...SavedItemsTabFragment_Me
-    }
-  }
-  ${SavedItemsTabFragment_Me}
-`
-
-export const ReservationHistoryTab_Query = gql`
-  query ReservationHistoryTab_Query {
-    me {
-      id
-      customer {
-        ...ReservationHistoryTabFragment_Customer
-      }
-    }
-  }
-  ${ReservationHistoryTabFragment_Customer}
 `
 
 export const GetBag_NoCache_Query = gql`

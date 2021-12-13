@@ -9,18 +9,10 @@ import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, RefreshControl, StatusBar, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { NavigationRoute, NavigationScreenProp } from "react-navigation"
-import { gql, useLazyQuery, useMutation } from "@apollo/client"
+import { gql, useMutation } from "@apollo/client"
 import { useFocusEffect, useNavigation, useScrollToTop } from "@react-navigation/native"
 import analytics from "@segment/analytics-react-native"
-import {
-  CHECK_ITEMS,
-  CREATE_DRAFT_ORDER,
-  DELETE_BAG_ITEM,
-  GetBag_NoCache_Query,
-  ReservationHistoryTab_Query,
-  SavedTab_Query,
-} from "./BagQueries"
-import { ReservationHistoryTab, SavedItemsTab } from "./Components"
+import { CHECK_ITEMS, CREATE_DRAFT_ORDER, GetBag_NoCache_Query } from "./BagQueries"
 import { useBag } from "./useBag"
 import { ReturnItemsPopUp } from "./Components/ReturnItemsPopUp"
 import { BagTabPrimaryCTA } from "./Components/BagTabPrimaryCTA"
@@ -61,6 +53,8 @@ export const Bag = screenTrack()((props: BagProps) => {
   const flatListRef = useRef(null)
   const { bottomSheetBackdropIsVisible } = useBottomSheetContext()
   const tracking = useTracking()
+
+  console.log("data", data)
 
   const { route } = props
   const routeTab = route?.params?.tab
