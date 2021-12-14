@@ -19,6 +19,7 @@ const commonProductVariantFragment = gql`
     reserved
     isInBag
     isSaved
+    isInCart
     hasRestockNotification
     price {
       id
@@ -114,6 +115,7 @@ export const GET_PRODUCT = gql`
         rentalPrice
         variants {
           ...CommonProductVariant
+          isInCart
         }
       }
       category {

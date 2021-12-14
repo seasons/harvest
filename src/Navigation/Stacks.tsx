@@ -48,6 +48,7 @@ import { createStackNavigator, TransitionPresets } from "@react-navigation/stack
 import { NotificationBar } from "@seasons/eclipse"
 
 import { NavBar } from "./NavBar"
+import { SavedAndHistory } from "App/Scenes/Account/SavedAndHistory/SavedAndHistory"
 
 const HomeStack = createSharedElementStackNavigator()
 const BagStack = createStackNavigator()
@@ -245,6 +246,7 @@ const AccountStackScreen = () => {
       <AccountStack.Screen name={Schema.PageNames.Faq} component={Faq} />
       <AccountStack.Screen name={Schema.PageNames.ReferralView} component={ReferralView} />
       <AccountStack.Screen name={Schema.PageNames.EditCreditCard} component={EditCreditCard} />
+      <AccountStack.Screen name={Schema.PageNames.SavedAndHistory} component={SavedAndHistory} />
     </AccountStack.Navigator>
   )
 }

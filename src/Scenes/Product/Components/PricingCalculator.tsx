@@ -29,7 +29,7 @@ export const PricingCalculator = ({ product }) => {
   return (
     <Box px={2} mb={4}>
       <CollapseHeader
-        title="Pricing calculator"
+        title="Rental calculator"
         isCollapsed={isCollapsed}
         handleOnPress={() => setIsCollapsed(!isCollapsed)}
       />

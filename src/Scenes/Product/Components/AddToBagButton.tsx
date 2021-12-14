@@ -1,12 +1,11 @@
-import { Button, Sans } from "App/Components"
+import { Button } from "App/Components"
 import { GetProduct } from "App/generated/GetProduct"
 import { GetProductMe } from "App/generated/GetProductMe"
 import { BORDER_RADIUS, MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
-import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { ADD_OR_REMOVE_FROM_LOCAL_BAG, GET_LOCAL_BAG } from "App/queries/clientQueries"
-import { ADD_TO_BAG, GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
+import { ADD_TO_BAG, DELETE_BAG_ITEM, GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 import { Schema, useTracking } from "App/utils/track"
 import { CheckCircled } from "Assets/svgs"
 import { head } from "lodash"
@@ -16,6 +15,7 @@ import { useMutation, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 
 import { GET_PRODUCT } from "../Queries"
+import { useBag } from "App/Scenes/Bag/useBag"
 
 interface Props {
   setShowSizeWarning: (show: boolean) => void
@@ -38,6 +38,7 @@ export const AddToBagButton: React.FC<Props> = ({
 }) => {
   const [isMutating, setIsMutating] = useState(false)
   const [added, setAdded] = useState(false)
+  const { bagSections } = useBag()
   const tracking = useTracking()
   const { showPopUp, hidePopUp } = usePopUpContext()
   const navigation = useNavigation()
@@ -46,6 +47,31 @@ export const AddToBagButton: React.FC<Props> = ({
   const me = dataMe?.me
 
   const { data: localItems } = useQuery(GET_LOCAL_BAG)
+  const [removeFromLocalBag] = useMutation(ADD_OR_REMOVE_FROM_LOCAL_BAG, {
+    variables: {
+      id: selectedVariant.id,
+      productID: data.products?.[0].id,
+      variantID: selectedVariant.id,
+    },
+    awaitRefetchQueries: true,
+    refetchQueries: [
+      {
+        query: GetBag_NoCache_Query,
+      },
+      {
+        query: GET_PRODUCT,
+        variables: { where: { id: head(data?.products)?.id } },
+      },
+    ],
+  })
+  const [deleteBagItem] = useMutation(DELETE_BAG_ITEM, {
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: () => {
+      setIsMutating(false)
+    },
+  })
   const [addToBag] = useMutation(isUserSignedIn ? ADD_TO_BAG : ADD_OR_REMOVE_FROM_LOCAL_BAG, {
     variables: {
       id: selectedVariant.id,
@@ -65,7 +91,7 @@ export const AddToBagButton: React.FC<Props> = ({
     onCompleted: (res) => {
       setIsMutating(false)
       setAdded(true)
-      const bagItemCount = authState?.isSignedIn ? me?.bag?.length : res.addOrRemoveFromLocalBag.length
+      const bagItemCount = isUserSignedIn ? me?.bag?.length : res.addOrRemoveFromLocalBag.length
       if (bagItemCount && bagItemCount >= MAXIMUM_ITEM_COUNT) {
         showPopUp({
           icon: <CheckCircled />,
@@ -120,7 +146,6 @@ export const AddToBagButton: React.FC<Props> = ({
       const runsSmall = !!productFit && productFit === "RunsSmall"
 
       if (!runsBig && !runsSmall) {
-        console.log("1")
         addToBag()
       } else {
         setShowSizeWarning(true)
@@ -129,14 +154,15 @@ export const AddToBagButton: React.FC<Props> = ({
     }
   }
 
+  const inCart = selectedVariant?.isInCart
   const isInBag = isUserSignedIn
-    ? selectedVariant?.isInBag || added
+    ? (selectedVariant?.isInBag || added) && !inCart
     : !!localItems?.localBagItems?.find((item) => item.variantID === selectedVariant.id) || false
-  const _disabled = !!disabled || isInBag || !variantInStock || isMutating
+  const _disabled = !!disabled || (!variantInStock && !isInBag) || isMutating
 
-  let text = "Add to bag"
+  let text = "Rent"
   if (isInBag) {
-    text = "Added"
+    text = "Remove"
   }
 
   return (
@@ -144,7 +170,7 @@ export const AddToBagButton: React.FC<Props> = ({
       width={width}
       loading={isMutating}
       showCheckMark={isInBag}
-      variant="primaryBlack"
+      variant={isInBag ? "primaryGray" : "primaryBlack"}
       disabled={_disabled}
       borderRadius={BORDER_RADIUS}
       onPress={() => {
@@ -152,7 +178,53 @@ export const AddToBagButton: React.FC<Props> = ({
           actionName: Schema.ActionNames.ProductAddedToBag,
           actionType: Schema.ActionTypes.Tap,
         })
-        handleReserve()
+        if (inCart) {
+          showPopUp({
+            title: "You aleady have this in your cart",
+            note:
+              "You've already added this item to your cart to buy. If you'd like to rent it instead, add it to your bag.",
+            buttonText: "Cancel",
+            secondaryButtonText: "Add to bag",
+            secondaryButtonOnPress: () => {
+              handleReserve()
+              hidePopUp()
+            },
+            onClose: () => hidePopUp(),
+          })
+        } else if (!isInBag) {
+          handleReserve()
+        } else {
+          if (isMutating) {
+            return
+          }
+          setIsMutating(true)
+
+          if (isUserSignedIn) {
+            const addedItems = bagSections?.find((section) => section.status === "Added")?.bagItems
+            const bagItem = addedItems.find((item) => item.productVariant.id === selectedVariant.id)
+
+            deleteBagItem({
+              variables: {
+                itemID: bagItem?.id,
+              },
+              refetchQueries: [
+                {
+                  query: GetBag_NoCache_Query,
+                },
+                {
+                  query: GET_PRODUCT,
+                  variables: {
+                    where: {
+                      id: bagItem.productVariant?.product?.id,
+                    },
+                  },
+                },
+              ],
+            })
+          } else {
+            removeFromLocalBag()
+          }
+        }
       }}
     >
       {text}

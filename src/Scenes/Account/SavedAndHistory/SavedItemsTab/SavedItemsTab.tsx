@@ -1,11 +1,12 @@
-import { Box, Flex } from "App/Components"
-import { Loader } from "App/Components/Loader"
+import { useMutation } from "@apollo/client"
+import { Box } from "App/Components"
+import { DELETE_BAG_ITEM } from "App/Scenes/Bag/BagQueries"
+import { BagEmptyState } from "App/Scenes/Bag/Components/BagEmptyState"
 import gql from "graphql-tag"
 import React from "react"
 import { Dimensions } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { BagView } from "../Bag"
-import { BagEmptyState } from "./BagEmptyState"
+import { SavedAndHistoryView } from "../SavedAndHistory"
 import { SavedItemRow, SavedItemRowFragment_BagItem } from "./SavedItemRow"
 
 const { height } = Dimensions.get("window")
@@ -23,29 +24,19 @@ export const SavedItemsTabFragment_Me = gql`
 
 export const SavedItemsTab: React.FC<{
   items
-  deleteBagItem
-  bagIsFull
-  loading: boolean
-}> = ({ items, deleteBagItem, bagIsFull, loading }) => {
+}> = ({ items }) => {
+  const [deleteBagItem] = useMutation(DELETE_BAG_ITEM)
   const insets = useSafeAreaInsets()
   const wrapperHeight = height - insets.top - 140
-
-  if (loading) {
-    return (
-      <Flex height={wrapperHeight} width="100%" justifyContent="center" alignItems="center" flexDirection="column">
-        <Loader />
-      </Flex>
-    )
-  }
 
   return (
     <Box>
       {items?.length ? (
         items.map((bagItem, index) => {
-          return <SavedItemRow key={index} bagItem={bagItem} deleteBagItem={deleteBagItem} bagIsFull={bagIsFull} />
+          return <SavedItemRow key={index} bagItem={bagItem} deleteBagItem={deleteBagItem} />
         })
       ) : (
-        <BagEmptyState currentView={BagView.Saved} wrapperHeight={wrapperHeight} />
+        <BagEmptyState currentView={SavedAndHistoryView.Saved} wrapperHeight={wrapperHeight} />
       )}
     </Box>
   )

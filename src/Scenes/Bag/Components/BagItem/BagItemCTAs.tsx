@@ -2,22 +2,17 @@ import { Button, Flex, Sans } from "App/Components"
 import gql from "graphql-tag"
 import React, { useState } from "react"
 import { Schema, useTracking } from "App/utils/track"
-import { Schema as NavigationSchema } from "App/Navigation"
 import { TouchableOpacity } from "react-native"
 import { GET_PRODUCT } from "App/Scenes/Product/Queries"
 import { GET_BROWSE_PRODUCTS } from "App/Scenes/Browse/queries/browseQueries"
-import { GetBag_NoCache_Query, REMOVE_FROM_BAG_AND_SAVE_ITEM, SavedTab_Query } from "../../BagQueries"
+import { GetBag_NoCache_Query } from "../../BagQueries"
 import { useMutation } from "@apollo/client"
 import { BagItemRemoveButton, BagItemRemoveButtonFragment_BagItem } from "./BagItemRemoveButton"
-import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "App/Scenes/Product/Mutations"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
-import { useNavigation } from "@react-navigation/native"
 import { useAuthContext } from "App/Navigation/AuthContext"
-
-enum OrderType {
-  BUY_USED = "Used",
-  BUY_NEW = "New",
-}
+import { SAVE_ITEM } from "@seasons/eclipse/src/components/SaveProductButton/queries"
+import { UPSERT_CART_ITEM } from "App/Scenes/Product/Product"
+import { useNavigation } from "@react-navigation/native"
 
 const CANCEL_RETURN = gql`
   mutation CancelReturn($bagItemId: ID!) {
@@ -32,6 +27,7 @@ export const BagItemCTAsFragment_BagItem = gql`
     id
     productVariant {
       id
+      isInCart
       purchased
       price {
         id
@@ -53,36 +49,17 @@ export const BagItemCTAsFragment_BagItem = gql`
 export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
   const isLarge = size === "large"
   const [isMutating, setIsMutating] = useState(false)
-  const { showPopUp, hidePopUp } = usePopUpContext()
-  const navigation = useNavigation()
   const { authState } = useAuthContext()
   const tracking = useTracking()
-  const [removeFromBagAndSaveItem] = useMutation(REMOVE_FROM_BAG_AND_SAVE_ITEM)
+  const navigation = useNavigation()
+  const { showPopUp, hidePopUp } = usePopUpContext()
+
+  const [saveItem] = useMutation(SAVE_ITEM)
   const [cancelReturn] = useMutation(CANCEL_RETURN, {
     onCompleted: () => {
       setIsMutating(false)
     },
     onError: (e) => {
-      setIsMutating(false)
-    },
-  })
-  const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
-    onCompleted: (res) => {
-      setIsMutating(false)
-      if (res?.createDraftedOrder) {
-        navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
-      }
-    },
-    onError: (error) => {
-      showPopUp({
-        title: "Sorry!",
-        note: "There was an issue creating the order, please try again.",
-        buttonText: "Okay",
-        onClose: () => {
-          hidePopUp()
-        },
-      })
-      console.log("error createDraftOrder ", error)
       setIsMutating(false)
     },
   })
@@ -101,18 +78,15 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
         productId: product.id,
         variantId: variant.id,
       })
-      removeFromBagAndSaveItem({
+      saveItem({
         variables: {
-          id: variant.id,
-          saved: false,
+          item: bagItem.id,
+          save: true,
         },
         awaitRefetchQueries: true,
         refetchQueries: [
           {
             query: GetBag_NoCache_Query,
-          },
-          {
-            query: SavedTab_Query,
           },
           {
             query: GET_PRODUCT,
@@ -138,20 +112,23 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
     }
   }
 
-  const handleCreateDraftOrder = (orderType: "Used" | "New") => {
-    if (isMutating) {
-      return
-    }
-    setIsMutating(true)
-    return createDraftOrder({
-      variables: {
-        input: {
-          productVariantID: variant?.id,
-          orderType,
-        },
+  const [upsertCartItem] = useMutation(UPSERT_CART_ITEM, {
+    variables: {
+      productVariantId: variant?.id,
+      addToCart: !variant?.isInCart,
+    },
+    refetchQueries: [
+      {
+        query: GetBag_NoCache_Query,
       },
-    })
-  }
+    ],
+    onCompleted: () => {
+      setIsMutating(false)
+    },
+    onError: (error) => {
+      setIsMutating(false)
+    },
+  })
 
   const isBuyNewEnabled = bagItem?.productVariant?.price?.buyNewEnabled
   const isBuyUsedEnabled = bagItem?.productVariant?.price?.buyUsedEnabled
@@ -165,6 +142,7 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
 
   const CTAs = () => {
     switch (sectionStatus) {
+      case "Cart":
       case "Added":
         return (
           <Flex flexDirection="row" flexWrap="nowrap" justifyContent="space-between" alignItems="center" width="100%">
@@ -180,10 +158,10 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
         return (
           <TouchableOpacity
             onPress={async () => {
-              setIsMutating(true)
               if (isMutating) {
                 return
               }
+              setIsMutating(true)
               await cancelReturn({
                 variables: {
                   bagItemId: bagItem.id,
@@ -213,7 +191,32 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
               <Button
                 size="small"
                 variant="secondaryWhite"
-                onPress={() => handleCreateDraftOrder(isBuyUsedEnabled ? OrderType.BUY_USED : OrderType.BUY_NEW)}
+                loading={isMutating}
+                onPress={() => {
+                  if (isMutating) {
+                    return
+                  }
+                  if (userHasSession) {
+                    setIsMutating(true)
+                    upsertCartItem()
+                  } else {
+                    showPopUp({
+                      title: "Sign up to add to cart",
+                      note: "You must be a member to use this feature.",
+                      secondaryButtonText: "Got it",
+                      secondaryButtonOnPress: () => {
+                        hidePopUp()
+                      },
+                      buttonText: "Sign up",
+                      onClose: () => {
+                        hidePopUp()
+                        navigation.navigate("Modal", {
+                          screen: "CreateAccountModal",
+                        })
+                      },
+                    })
+                  }
+                }}
               >
                 Buy
               </Button>

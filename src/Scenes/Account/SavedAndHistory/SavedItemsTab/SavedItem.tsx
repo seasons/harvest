@@ -5,18 +5,17 @@ import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { color } from "App/utils"
 import { Schema, useTracking } from "App/utils/track"
-import { CheckCircled } from "Assets/svgs"
 import React, { useState } from "react"
 import { gql, useMutation } from "@apollo/client"
 import { TouchableWithoutFeedback } from "react-native"
 import styled from "styled-components/native"
 import * as Sentry from "@sentry/react-native"
-import { ADD_TO_BAG, GetBag_NoCache_Query, SavedTab_Query } from "../BagQueries"
 import { ListCheck } from "Assets/svgs/ListCheck"
 import { UPSERT_RESTOCK_NOTIF } from "App/Scenes/Product/Product"
+import { SavedTab_Query } from "../queries"
+import { ADD_TO_BAG, GetBag_NoCache_Query } from "App/Scenes/Bag/BagQueries"
 
 interface BagItemProps {
-  bagIsFull: boolean
   navigation?: any
   bagItem: any
 }
@@ -47,7 +46,7 @@ export const SavedItemFragment_BagItem = gql`
   }
 `
 
-export const SavedItem: React.FC<BagItemProps> = ({ bagIsFull, bagItem, navigation }) => {
+export const SavedItem: React.FC<BagItemProps> = ({ bagItem, navigation }) => {
   const [isMutating, setIsMutating] = useState(false)
   const [upsertingRestockNotif, setIsUpsertingRestockNotif] = useState(false)
   const [addingToBag, setAddingToBag] = useState(false)
@@ -100,15 +99,6 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagIsFull, bagItem, navigati
     onCompleted: () => {
       setIsMutating(false)
       setAddingToBag(false)
-      if (bagIsFull) {
-        showPopUp({
-          icon: <CheckCircled />,
-          title: "Added to bag",
-          note: "Your bag is full. Place your reservation from the bag tab.",
-          buttonText: "Got It",
-          onClose: () => hidePopUp(),
-        })
-      }
     },
     onError: (err) => {
       setIsMutating(false)
@@ -166,7 +156,7 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagIsFull, bagItem, navigati
   }
 
   const CTA = () => {
-    if (!bagIsFull && reservable) {
+    if (reservable) {
       return (
         <Button
           onPress={onAddToBag}

@@ -3,7 +3,6 @@ import { Loader } from "App/Components/Loader"
 import { ShareButton } from "App/Components/ShareButton"
 import { GetProduct, GetProduct_products } from "App/generated/GetProduct"
 import { Product_NoCache_Query as Product_NoCache_Query_Type } from "App/generated/Product_NoCache_Query"
-import { Schema as NavigationSchema } from "App/Navigation"
 import { useAuthContext } from "App/Navigation/AuthContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
@@ -24,13 +23,13 @@ import { ImageRail, ProductDetails, ProductMeasurements } from "./Components"
 import { ProductBottomBar } from "./Components/ProductBottomBar"
 import { SizeWarning } from "./Components/SizeWarning"
 import { VariantPicker } from "./Components/VariantPicker"
-import { PRODUCT_VARIANT_CREATE_DRAFT_ORDER } from "./Mutations"
 import { GET_PRODUCT, Product_NoCache_Query } from "./Queries"
 import { PricingCalculator } from "./Components/PricingCalculator"
 import {
   ProductConditionSection,
   ProductConditionSectionFragment_PhysicalProductQualityReport,
 } from "./Components/ProductConditionSection"
+import { GetBag_NoCache_Query } from "../Bag/BagQueries"
 
 const windowHeight = Dimensions.get("window").height
 
@@ -49,6 +48,14 @@ const ADD_VIEWED_PRODUCT = gql`
   }
 `
 
+export const UPSERT_CART_ITEM = gql`
+  mutation upsertCartItem($productVariantId: ID!, $addToCart: Boolean!) {
+    upsertCartItem(productVariantId: $productVariantId, addToCart: $addToCart) {
+      id
+    }
+  }
+`
+
 export const UPSERT_RESTOCK_NOTIF = gql`
   mutation UpsertRestockNotification($variantID: ID!, $shouldNotify: Boolean!) {
     upsertRestockNotification(variantID: $variantID, shouldNotify: $shouldNotify) {
@@ -59,8 +66,9 @@ export const UPSERT_RESTOCK_NOTIF = gql`
 export const Product = screenTrack({
   entityType: Schema.EntityTypes.Product,
 })(({ route, navigation }) => {
-  const productBuyRef = useRef(null)
+  const [addToCartButtonIsMutating, setAddToCartButtonIsMutating] = useState(false)
   const { authState } = useAuthContext()
+  const productBuyRef = useRef(null)
   const [isMutatingBuyButton, setIsMutatingBuyButton] = useState(false)
   const [viewed, setViewed] = useState(false)
   const [showNotifyMeMessage, setShowNotifyMeMessage] = useState(false)
@@ -121,10 +129,41 @@ export const Product = screenTrack({
     ],
   })
 
+  const hasRestockNotification = selectedVariant?.hasRestockNotification
+
+  const [upsertCartItem] = useMutation(UPSERT_CART_ITEM, {
+    variables: {
+      productVariantId: selectedVariant?.id,
+      shouldNotify: !hasRestockNotification,
+    },
+    refetchQueries: [
+      {
+        query: GET_PRODUCT,
+        variables: {
+          where: {
+            id,
+            slug,
+          },
+        },
+      },
+      {
+        query: GetBag_NoCache_Query,
+      },
+    ],
+    onCompleted: () => {
+      setAddToCartButtonIsMutating(false)
+    },
+    onError: (error) => {
+      Sentry.captureException(JSON.stringify(error))
+      console.log("error upsertRestockNotification Product.tsx", error)
+      setAddToCartButtonIsMutating(false)
+    },
+  })
+
   const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
     variables: {
       variantID: selectedVariant?.id,
-      shouldNotify: !selectedVariant?.hasRestockNotification,
+      shouldNotify: !hasRestockNotification,
     },
     refetchQueries: [
       {
@@ -146,64 +185,6 @@ export const Product = screenTrack({
       setIsMutatingNotify(false)
     },
   })
-
-  const [createDraftOrder] = useMutation(PRODUCT_VARIANT_CREATE_DRAFT_ORDER, {
-    onCompleted: (res) => {
-      setIsMutatingBuyButton(false)
-      if (res?.createDraftedOrder) {
-        navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
-      }
-    },
-    onError: (error) => {
-      showPopUp({
-        title: "Sorry!",
-        note: "There was an issue creating the order, please try again.",
-        buttonText: "Okay",
-        onClose: () => {
-          hidePopUp()
-        },
-      })
-      console.log("error createDraftOrder ", error)
-      Sentry.captureException(JSON.stringify(error))
-      setIsMutatingBuyButton(false)
-    },
-  })
-
-  const handleCreateDraftOrder = (orderType: "Used" | "New") => {
-    if (isMutatingBuyButton) {
-      return
-    }
-    setIsMutatingBuyButton(true)
-
-    if (userHasSession) {
-      return createDraftOrder({
-        variables: {
-          input: {
-            productVariantID: selectedVariant?.id,
-            orderType,
-          },
-        },
-      })
-    } else {
-      showPopUp({
-        title: "Sign up to buy this item",
-        note: "You need to sign in or create an account before you can order items",
-        secondaryButtonText: "Got it",
-        secondaryButtonOnPress: () => {
-          setIsMutatingBuyButton(false)
-          hidePopUp()
-        },
-        buttonText: "Sign up",
-        onClose: () => {
-          hidePopUp()
-          setIsMutatingBuyButton(false)
-          navigation.navigate("Modal", {
-            screen: "CreateAccountModal",
-          })
-        },
-      })
-    }
-  }
 
   useEffect(() => {
     const hasRestockNotif = selectedVariant?.hasRestockNotification
@@ -262,6 +243,7 @@ export const Product = screenTrack({
   const images = product?.largeImages
   const imageWidth = viewWidth
   const relatedProducts = product?.relatedProducts
+  const brand = product?.brand
   const productType = product?.category?.productType
   const physicalProductQualityReport = (selectedVariant?.nextReservablePhysicalProduct?.reports || []).reduce(
     (agg, report) => {
@@ -285,6 +267,51 @@ export const Product = screenTrack({
         <Loader />
       </>
     )
+  }
+
+  const onAddToCart = () => {
+    const isInBag = selectedVariant?.isInBag && !selectedVariant?.isInCart
+
+    if (isInBag && userHasSession) {
+      showPopUp({
+        title: "You aleady have this in your bag",
+        note:
+          "You've already added this item to your bag to rent. If you'd like to buy it instead, add it to your cart.",
+        buttonText: "Cancel",
+        secondaryButtonText: "Add to cart",
+        secondaryButtonOnPress: () => {
+          setAddToCartButtonIsMutating(true)
+          upsertCartItem()
+          hidePopUp()
+        },
+        onClose: () => hidePopUp(),
+      })
+    } else if (userHasSession) {
+      setAddToCartButtonIsMutating(true)
+      upsertCartItem()
+    } else {
+      showPopUp({
+        title: "Sign up to add to cart",
+        note: "You must be a member to use this feature.",
+        secondaryButtonText: "Got it",
+        secondaryButtonOnPress: () => {
+          hidePopUp()
+        },
+        buttonText: "Sign up",
+        onClose: () => {
+          hidePopUp()
+          navigation.navigate("Modal", {
+            screen: "CreateAccountModal",
+          })
+        },
+      })
+    }
+  }
+
+  const scrollToBuyCTA = () => {
+    productBuyRef?.current?.measure((fx, fy, width, height, px, py) => {
+      flatListRef.current?.scrollToOffset({ offset: py - (windowHeight / 2 - 80), animated: true })
+    })
   }
 
   const renderItem = ({ item: section }) => {
@@ -328,20 +355,19 @@ export const Product = screenTrack({
         )
       case "buy":
         return (
-          <ProductBuyCTA
-            px={3}
-            pb={4}
-            ref={productBuyRef}
-            product={filter(ProductBuyCTAFragment_Product, product)}
-            selectedVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
-            isMutatingBuyButton={isMutatingBuyButton}
-            onBuyNew={() => {
-              handleCreateDraftOrder(OrderType.BUY_NEW)
-            }}
-            onBuyUsed={() => {
-              handleCreateDraftOrder(OrderType.BUY_USED)
-            }}
-          />
+          <Box px={2} pb={4}>
+            <ProductBuyCTA
+              ref={productBuyRef}
+              buttonVariant={selectedVariant?.isInCart ? "primaryWhite" : "primaryBlack"}
+              product={filter(ProductBuyCTAFragment_Product, product)}
+              productVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
+              onNavigateToBrand={() =>
+                navigation.navigate("Brand", { id: brand.id, slug: brand.slug, name: brand.name })
+              }
+              isMutating={addToCartButtonIsMutating}
+              onAddToCart={onAddToCart}
+            />
+          </Box>
         )
       case "condition":
         return (
@@ -365,8 +391,8 @@ export const Product = screenTrack({
   const sections = [
     "imageRail",
     "productDetails",
-    "pricingCalculator",
     "buy",
+    "pricingCalculator",
     "productMeasurements",
     "condition",
     "aboutTheBrand",
@@ -444,12 +470,12 @@ export const Product = screenTrack({
         hasNotification={hasNotification}
         data={data}
         dataMe={dataMe}
+        scrollToBuyCTA={scrollToBuyCTA}
         setShowSizeWarning={setShowSizeWarning}
         animatedScrollY={animatedScrollYRef.current}
         retailPrice={product.retailPrice}
         monthlyRental={product?.rentalPrice}
         productType={productType}
-        handleCreateDraftOrder={handleCreateDraftOrder}
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0, backgroundColor: "white" }}>

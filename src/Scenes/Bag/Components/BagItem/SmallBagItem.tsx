@@ -16,6 +16,10 @@ export const BagItemFragment_BagItem = gql`
     id
     productVariant {
       id
+      price {
+        id
+        buyUsedAdjustedPrice
+      }
       product {
         id
         slug
@@ -33,7 +37,11 @@ export const BagItemFragment_BagItem = gql`
   ${BagItemCTAsFragment_BagItem}
 `
 
-export const SmallBagItem: React.FC<{ bagItem: any; sectionStatus?: string }> = ({ bagItem, sectionStatus }) => {
+export const SmallBagItem: React.FC<{ bagItem: any; sectionStatus?: string; showBuyPrice?: boolean }> = ({
+  bagItem,
+  sectionStatus,
+  showBuyPrice,
+}) => {
   const tracking = useTracking()
   const navigation = useNavigation()
 
@@ -64,7 +72,7 @@ export const SmallBagItem: React.FC<{ bagItem: any; sectionStatus?: string }> = 
           />
         )}
         <Flex alignItems="flex-end" flexDirection="column" justifyContent="space-between" pl={2} flex={1}>
-          <BagItemProductMetaData variant={variant} />
+          <BagItemProductMetaData variant={variant} showBuyPrice={showBuyPrice} />
           {sectionStatus && <BagItemCTAs bagItem={bagItem} sectionStatus={sectionStatus} size="small" />}
         </Flex>
       </Wrapper>

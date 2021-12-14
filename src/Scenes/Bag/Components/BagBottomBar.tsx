@@ -1,23 +1,54 @@
 import { Button, Flex } from "App/Components"
-import { GetBag_NoCache_Query_me_bag } from "App/generated/GetBag_NoCache_Query"
 import { color } from "App/utils"
 import React from "react"
-
 import { Box, Sans, Separator } from "@seasons/eclipse"
+import { BagView } from "../Bag"
+import { gql } from "@apollo/client"
 
 interface BagBottomBarProps {
-  bagItems: GetBag_NoCache_Query_me_bag[]
+  bagItems
   onReserve: () => void
+  onCartCheckout: () => void
   isMutating: boolean
+  activeTab: BagView
 }
 
-export const BagBottomBar: React.FC<BagBottomBarProps> = ({ bagItems, onReserve, isMutating }) => {
-  if (!bagItems || bagItems.length === 0) {
-    return null
+export const BagBottomBarFragment_BagItem = gql`
+  fragment BagBottomBarFragment_BagItem on BagItem {
+    id
+  }
+`
+
+export const BagBottomBar: React.FC<BagBottomBarProps> = ({
+  bagItems,
+  onReserve,
+  isMutating,
+  activeTab,
+  onCartCheckout,
+}) => {
+  const isRentView = activeTab === BagView.Rent
+  const hasBagItems = bagItems?.length > 0
+
+  let price
+  if (isRentView) {
+    const rentalPrices = bagItems?.map((b) => b.productVariant?.product?.rentalPrice) || []
+    price = rentalPrices?.reduce((acc, curr) => acc + curr, 0) ?? 0
+  } else {
+    const buyUsedPrices = bagItems?.map((b) => b.productVariant?.price?.buyUsedAdjustedPrice / 100) || []
+    price = buyUsedPrices?.reduce((acc, curr) => acc + curr, 0) ?? 0
   }
 
-  const rentalPrices = bagItems.map((b) => b.productVariant?.product?.rentalPrice) || []
-  const totalRentalPrice = rentalPrices.reduce((acc, curr) => acc + curr, 0)
+  const onPress = () => {
+    if (isMutating) {
+      return
+    }
+
+    if (isRentView) {
+      onReserve()
+    } else {
+      onCartCheckout()
+    }
+  }
 
   return (
     <>
@@ -33,10 +64,10 @@ export const BagBottomBar: React.FC<BagBottomBarProps> = ({ bagItems, onReserve,
         >
           <Box>
             <Sans size="3" color="black50">
-              Estimated total
+              {isRentView ? "Estimated total" : "Est. Sales total"}
             </Sans>
             <Flex flexDirection="row" alignItems="flex-end">
-              <Sans size="7">${totalRentalPrice}</Sans>
+              <Sans size="7">${price}</Sans>
               <Box style={{ paddingBottom: 3 }}>
                 <Sans size="3" color="black50" mx={1}>
                   + Tax
@@ -44,8 +75,8 @@ export const BagBottomBar: React.FC<BagBottomBarProps> = ({ bagItems, onReserve,
               </Box>
             </Flex>
           </Box>
-          <Button variant="primaryBlack" onPress={onReserve} loading={isMutating} disabled={isMutating}>
-            Reserve
+          <Button variant="primaryBlack" onPress={onPress} loading={isMutating} disabled={isMutating || !hasBagItems}>
+            {isRentView ? "Reserve" : "Checkout"}
           </Button>
         </Flex>
       </Box>
