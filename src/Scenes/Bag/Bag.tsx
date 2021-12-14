@@ -1,5 +1,4 @@
 import { Loader } from "App/Components/Loader"
-import { MAXIMUM_ITEM_COUNT } from "App/helpers/constants"
 import { Schema as NavigationSchema } from "App/Navigation"
 import { useBottomSheetContext } from "App/Navigation/BottomSheetContext"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
@@ -10,31 +9,37 @@ import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, RefreshControl, StatusBar, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { NavigationRoute, NavigationScreenProp } from "react-navigation"
-import { useLazyQuery, useMutation } from "@apollo/client"
+import { gql, useMutation } from "@apollo/client"
 import { useFocusEffect, useNavigation, useScrollToTop } from "@react-navigation/native"
 import analytics from "@segment/analytics-react-native"
-import {
-  CHECK_ITEMS,
-  DELETE_BAG_ITEM,
-  GetBag_NoCache_Query,
-  ReservationHistoryTab_Query,
-  SavedTab_Query,
-} from "./BagQueries"
-import { BagTab, ReservationHistoryTab, SavedItemsTab } from "./Components"
+import { CHECK_ITEMS, CREATE_DRAFT_ORDER, GetBag_NoCache_Query } from "./BagQueries"
 import { useBag } from "./useBag"
 import { ReturnItemsPopUp } from "./Components/ReturnItemsPopUp"
 import { BagTabPrimaryCTA } from "./Components/BagTabPrimaryCTA"
+import { BuyTab } from "./Components/Tabs/BuyTab"
+import { RentTab } from "./Components/Tabs/RentTab"
 
 export enum BagView {
-  Bag = 0,
-  Saved = 1,
-  History = 2,
+  Rent = 0,
+  Buy = 1,
 }
 
 interface BagProps {
   navigation: NavigationScreenProp<any>
   route: NavigationRoute
 }
+
+export const BagFragment_Me = gql`
+  fragment BagFragment_Me on Me {
+    id
+    customer {
+      id
+      user {
+        id
+      }
+    }
+  }
+`
 
 export const Bag = screenTrack()((props: BagProps) => {
   const insets = useSafeAreaInsets()
@@ -44,7 +49,6 @@ export const Bag = screenTrack()((props: BagProps) => {
   const [isPrimaryCTAMutating, setIsPrimaryCTAMutating] = useState(false)
 
   const [showReturnItemPopup, setShowReturnItemPopup] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const flatListRef = useRef(null)
   const { bottomSheetBackdropIsVisible } = useBottomSheetContext()
@@ -52,26 +56,33 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const { route } = props
   const routeTab = route?.params?.tab
-  const [currentView, setCurrentView] = useState<BagView>(BagView.Bag)
+  const [currentView, setCurrentView] = useState<BagView>(BagView.Rent)
 
   const windowDimensions = Dimensions.get("window")
   const windowWidth = windowDimensions.width
 
-  useScrollToTop(flatListRef)
-
-  const [
-    getReservationTab,
-    {
-      previousData: previousReservationTabData,
-      data: reservationTabData = previousReservationTabData,
-      loading: loadingReservationTab,
+  const [createDraftOrder] = useMutation(CREATE_DRAFT_ORDER, {
+    onCompleted: (res) => {
+      setIsPrimaryCTAMutating(false)
+      if (res?.createDraftedOrder) {
+        navigation.navigate(NavigationSchema.PageNames.Order, { order: res.createDraftedOrder })
+      }
     },
-  ] = useLazyQuery(ReservationHistoryTab_Query)
+    onError: (error) => {
+      showPopUp({
+        title: "Sorry!",
+        note: "There was an issue creating the order, please try again.",
+        buttonText: "Okay",
+        onClose: () => {
+          hidePopUp()
+        },
+      })
+      console.log("error createDraftOrder ", error)
+      setIsPrimaryCTAMutating(false)
+    },
+  })
 
-  const [
-    getSavedTab,
-    { previousData: previousSavedTabData, data: savedTabData = previousSavedTabData, loading: loadingSavedTab },
-  ] = useLazyQuery(SavedTab_Query)
+  useScrollToTop(flatListRef)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -127,14 +138,7 @@ export const Bag = screenTrack()((props: BagProps) => {
     setRefreshing(false)
   }
 
-  const savedItems = savedTabData?.me?.savedItems
-  const isBagView = BagView.Bag == currentView
-  const isSavedView = BagView.Saved == currentView
-
-  const bagCount = 0
-  const bagIsFull = bagCount >= MAXIMUM_ITEM_COUNT
-
-  const reservationItems = reservationTabData?.me?.customer?.reservations
+  const isBuyView = BagView.Buy == currentView
 
   const startReservation = async () => {
     await checkItemsAvailability({
@@ -152,48 +156,47 @@ export const Bag = screenTrack()((props: BagProps) => {
     })
   }
 
+  const onCartCheckout = () => {
+    if (isPrimaryCTAMutating) {
+      return
+    }
+    setIsPrimaryCTAMutating(true)
+    createDraftOrder({
+      variables: {
+        input: {
+          productVariantIds: me?.cartItems?.map((item) => item.productVariant.id),
+          orderType: "Used",
+        },
+      },
+    })
+  }
+
   useEffect(() => {
-    if (data) {
-      setIsLoading(false)
+    if (addedItems) {
       const userId = me?.customer?.user?.id
       if (!!userId) {
-        const savedItems = savedTabData?.me?.savedItems?.length || 0
-        const baggedItems = me?.bag?.length || 0
-        analytics.identify(userId, { bagItems: savedItems + baggedItems })
+        analytics.identify(userId, { bagItems: addedItems })
       }
     }
-  }, [data, setIsLoading])
+  }, [addedItems])
 
-  const [deleteBagItem] = useMutation(DELETE_BAG_ITEM)
-
-  if (isLoading) {
+  if (!data) {
     return <Loader />
   }
 
   const renderItem = ({ item }) => {
-    if (isBagView) {
-      return <BagTab />
-    } else if (isSavedView) {
-      return (
-        <SavedItemsTab
-          items={item.data}
-          bagIsFull={bagIsFull}
-          deleteBagItem={deleteBagItem}
-          loading={loadingSavedTab && !savedTabData}
-        />
-      )
+    if (isBuyView) {
+      return <BuyTab items={item.data} />
     } else {
-      return <ReservationHistoryTab items={item.data} loading={loadingReservationTab && !reservationTabData} />
+      return <RentTab />
     }
   }
 
   let sections
-  if (isBagView) {
-    sections = [{ data: null }]
-  } else if (isSavedView) {
-    sections = [{ data: savedItems }]
+  if (isBuyView) {
+    sections = [{ data: me?.cartItems }]
   } else {
-    sections = [{ data: reservationItems }]
+    sections = [{ data: null }]
   }
 
   return (
@@ -204,23 +207,15 @@ export const Bag = screenTrack()((props: BagProps) => {
       >
         <TabBar
           spaceEvenly
-          tabs={["Bag", "Saved", "History"]}
+          tabs={[{ name: "Rent" }, { name: "Buy", badgeCount: me?.cartItems?.length }]}
           activeTab={currentView}
           goToPage={(page: BagView) => {
             tracking.trackEvent({
               actionName: (() => {
                 if (page === 0) {
-                  return TrackSchema.ActionNames.BagTabTapped
-                } else if (page === 1) {
-                  if (!savedTabData) {
-                    getSavedTab()
-                  }
-                  return TrackSchema.ActionNames.SavedTabTapped
+                  return TrackSchema.ActionNames.RentTabTapped
                 } else {
-                  if (!reservationTabData) {
-                    getReservationTab()
-                  }
-                  return TrackSchema.ActionNames.ReservationHistoryTabTapped
+                  return TrackSchema.ActionNames.BuyTabTapped
                 }
               })(),
               actionType: TrackSchema.ActionTypes.Tap,
@@ -238,16 +233,16 @@ export const Bag = screenTrack()((props: BagProps) => {
           }}
           ref={flatListRef}
         />
-        {isBagView && (
-          <BagTabPrimaryCTA
-            data={data}
-            sections={bagSections}
-            setShowReturnItemPopup={setShowReturnItemPopup}
-            isMutating={isPrimaryCTAMutating}
-            setIsMutating={setIsPrimaryCTAMutating}
-            startReservation={startReservation}
-          />
-        )}
+        <BagTabPrimaryCTA
+          activeTab={currentView}
+          data={data}
+          sections={bagSections}
+          setShowReturnItemPopup={setShowReturnItemPopup}
+          isMutating={isPrimaryCTAMutating}
+          setIsMutating={setIsPrimaryCTAMutating}
+          startReservation={startReservation}
+          onCartCheckout={onCartCheckout}
+        />
       </View>
       <ReturnItemsPopUp
         setShowReturnItemPopup={setShowReturnItemPopup}

@@ -106,6 +106,7 @@ export interface TextProps
   style?: CSSProperties
   numberOfLines?: number
   underline?: boolean
+  inline?: boolean
 }
 
 /** Base Text component for typography */
@@ -180,11 +181,12 @@ export interface SansProps extends Partial<TextProps> {
  */
 
 export const Sans: React.FC<SansProps> = (props) => {
-  const { size, weight, numberOfLines, underline } = props
+  const { size, weight, numberOfLines, underline, inline } = props
   const color = props.color ? colorHelper(props.color) : colorHelper("black")
 
   const styles = {
     ...(underline ? { textDecorationLine: "underline" } : {}),
+    ...(inline ? { display: "inline" } : {}),
     ...props.style,
   }
 

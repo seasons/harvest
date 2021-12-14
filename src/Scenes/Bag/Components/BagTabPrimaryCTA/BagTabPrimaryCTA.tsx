@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native"
 import { Box, Button, Flex } from "@seasons/eclipse"
 import { BagBottomBar } from "../BagBottomBar"
 import gql from "graphql-tag"
+import { BagView } from "../../Bag"
 
 export const BagTabPrimaryCTAFragment_Me = gql`
   fragment BagTabPrimaryCTAFragment_Me on Me {
@@ -26,20 +27,11 @@ export const BagTabPrimaryCTAFragment_Me = gql`
         }
       }
     }
+    availableInboundPackage
     bagSections {
       status
       bagItems {
         id
-        reservationPhysicalProduct {
-          id
-          inboundPackage {
-            id
-            shippingLabel {
-              id
-              image
-            }
-          }
-        }
       }
     }
   }
@@ -52,6 +44,8 @@ export const BagTabPrimaryCTA = ({
   startReservation,
   isMutating,
   setIsMutating,
+  activeTab,
+  onCartCheckout,
 }) => {
   const { authState } = useAuthContext()
 
@@ -73,9 +67,8 @@ export const BagTabPrimaryCTA = ({
   const hasShippingAddress =
     !!shippingAddress?.address1 && !!shippingAddress?.city && !!shippingAddress?.state && !!shippingAddress?.zipCode
 
-  const labelImage = returnPendingItems?.find((bagItem) => {
-    return bagItem?.reservationPhysicalProduct?.inboundPackage?.shippingLabel?.image
-  })
+  const labelImage = me?.availableInboundPackage?.shippingLabel?.image
+  const isBuyView = activeTab === BagView.Buy
 
   const handleReserve = async () => {
     setIsMutating(true)
@@ -154,8 +147,16 @@ export const BagTabPrimaryCTA = ({
     }
   }
 
-  if (hasAddedItems) {
-    button = <BagBottomBar bagItems={addedItems} onReserve={handlePress} isMutating={isMutating} />
+  if (hasAddedItems || isBuyView) {
+    button = (
+      <BagBottomBar
+        bagItems={isBuyView ? me?.cartItems : addedItems}
+        onReserve={handlePress}
+        isMutating={isMutating}
+        activeTab={activeTab}
+        onCartCheckout={onCartCheckout}
+      />
+    )
   } else if (hasAtHomeItems) {
     button = (
       <Box mx={2} my={2}>
@@ -183,6 +184,16 @@ export const BagTabPrimaryCTA = ({
           How to return
         </Button>
       </Flex>
+    )
+  } else {
+    button = (
+      <BagBottomBar
+        bagItems={isBuyView ? me?.cartItems : addedItems}
+        onReserve={handlePress}
+        isMutating={isMutating}
+        activeTab={activeTab}
+        onCartCheckout={onCartCheckout}
+      />
     )
   }
 

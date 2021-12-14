@@ -61,6 +61,7 @@ export enum PageNames {
   ProductRequestGallery = "ProductRequestGallery",
   EditPaymentMethod = "EditPaymentMethod",
   EditCreditCard = "EditCreditCard",
+  SavedAndHistory = "SavedAndHistory",
 
   // Shared
   Product = "Product",

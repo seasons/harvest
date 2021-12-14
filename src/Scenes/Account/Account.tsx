@@ -27,7 +27,6 @@ import Share from "react-native-share"
 import { useQuery } from "@apollo/client"
 import { useNavigation, useScrollToTop } from "@react-navigation/native"
 import { useNotificationBarContext, WaitlistedCTA } from "@seasons/eclipse"
-
 import { State, UserState } from "../CreateAccount/CreateAccount"
 import { CreditBalance, CreditBalanceFragment_Customer } from "./Components/CreditBalance"
 import { CreditsAvailableBar } from "./Components/CreditsAvailableBar"
@@ -203,14 +202,20 @@ export const Account = screenTrack()(() => {
       tracking: Schema.ActionNames.PaymentAndShippingTapped,
     },
     {
+      title: "Saved items & order history",
+      icon: <MapPin />,
+      onPress: () => navigation.navigate("SavedAndHistory"),
+      tracking: Schema.ActionNames.PaymentAndShippingTapped,
+    },
+  ]
+
+  const middleList = [
+    {
       title: "Frequently asked questions",
       icon: <SpeechBubble />,
       onPress: () => navigation.navigate("Faq"),
       tracking: Schema.ActionNames.FAQTapped,
     },
-  ]
-
-  const middleList = [
     {
       title: "Follow us on Instagram",
       icon: <Instagram opacity={0.5} />,
@@ -275,6 +280,7 @@ export const Account = screenTrack()(() => {
     },
   ]
 
+  console.log("status", status)
   const BodyContent: React.FC = () => {
     if (!status) {
       return <ListSkeleton />

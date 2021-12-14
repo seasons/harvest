@@ -351,6 +351,12 @@ export class Button extends Component<ButtonProps, ButtonState> {
     const Children = () => {
       return (
         <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ position: "relative" }}>
+          {showCheckMark && (
+            <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ opacity: loading ? 0 : 1 }}>
+              <TextCheckSVG color={to.color} />
+              <Spacer mr={0.5} />
+            </Flex>
+          )}
           <Sans color={to.color} size={size} style={{ opacity: loading ? 0 : 1 }}>
             {children}
           </Sans>
@@ -358,12 +364,6 @@ export class Button extends Component<ButtonProps, ButtonState> {
             <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ opacity: iconOpacity }}>
               {(children as any[]).length > 0 && <Spacer ml={1} />}
               <Icon />
-            </Flex>
-          )}
-          {showCheckMark && (
-            <Flex flexDirection="row" flexWrap="nowrap" alignItems="center" style={{ opacity: loading ? 0 : 1 }}>
-              <Spacer mr={0.5} />
-              <TextCheckSVG color={to.color} />
             </Flex>
           )}
           {loading && (
