@@ -27,11 +27,20 @@ export const BagTabPrimaryCTAFragment_Me = gql`
         }
       }
     }
-    availableInboundPackage
     bagSections {
       status
       bagItems {
         id
+        reservationPhysicalProduct {
+          id
+          potentialInboundPackage {
+            id
+            shippingLabel {
+              id
+              image
+            }
+          }
+        }
       }
     }
   }
@@ -67,7 +76,12 @@ export const BagTabPrimaryCTA = ({
   const hasShippingAddress =
     !!shippingAddress?.address1 && !!shippingAddress?.city && !!shippingAddress?.state && !!shippingAddress?.zipCode
 
-  const labelImage = me?.availableInboundPackage?.shippingLabel?.image
+  const pendingReturnBagItems = me?.bagSections?.filter((section) => {
+    section?.status === "ReturnPending"
+  })?.bagItems
+  const inboundPackage = pendingReturnBagItems?.find((item) => item?.potentialInboundPackage)
+  const labelImage = inboundPackage?.shippingLabel?.image
+
   const isBuyView = activeTab === BagView.Buy
 
   const handleReserve = async () => {
