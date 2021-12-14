@@ -27,6 +27,7 @@ import { ReservationBottomBar } from "./Components/ReservationBottomBar"
 import { ReservationShippingOptionsSection } from "./Components/ReservationShippingOptionsSection"
 import { ReservationLineItems } from "./ReservationLineItems"
 import { BagItemFragment_BagItem, SmallBagItem } from "../Bag/Components/BagItem/SmallBagItem"
+import { PopUpData } from "@seasons/eclipse"
 
 const RESERVE_ITEMS = gql`
   mutation ReserveItems($options: ReserveItemsOptions, $shippingCode: ShippingCode) {
@@ -138,6 +139,13 @@ export const Reservation = screenTrack()((props) => {
       console.log("Error Reservation.tsx: ", error)
     },
   })
+
+  const navToEditPayment = () =>
+    navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+      screen: NavigationSchema.PageNames.EditPaymentAndShipping,
+      params: { phoneNumber, shippingAddress: address },
+    })
+
   const [reserveItems] = useMutation(RESERVE_ITEMS, {
     refetchQueries: [
       {
@@ -154,7 +162,9 @@ export const Reservation = screenTrack()((props) => {
         note: "We couldn't process your order because of an unexpected error, please try again later",
         buttonText: "Close",
         onClose: () => hidePopUp(),
-      }
+      } as PopUpData
+
+      const errorCodes = error.graphQLErrors.map((e) => e.extensions.code)
       if (error.message === "Need to Suggest Address") {
         const suggestedAddress = error.graphQLErrors?.[0]?.extensions?.suggestedAddress
         if (!!suggestedAddress) {
@@ -181,6 +191,25 @@ export const Reservation = screenTrack()((props) => {
               hidePopUp()
             },
           }
+        }
+      }
+      if (errorCodes.includes("PAYMENT_FAILED_RESERVE_MINIMUM") || errorCodes.includes("PAYMENT_FAILED_STATUS")) {
+        const note = errorCodes.includes("PAYMENT_FAILED_RESERVE_MINIMUM")
+          ? "We were unable to process the initial payment for this reservation. Please update your payment info and try again."
+          : "Your account has an outstanding failed payment. Please update your payment info and try again."
+        popUpData = {
+          title: "Payment Failed",
+          note,
+          buttonText: "Update Payment",
+          secondaryButtonText: "Close",
+          secondaryButtonOnPress: () => hidePopUp(),
+          onClose: () => {
+            navigation.navigate(NavigationSchema.StackNames.AccountStack, {
+              screen: NavigationSchema.PageNames.EditCreditCard,
+              params: { phoneNumber, shippingAddress: address },
+            })
+            hidePopUp()
+          },
         }
       }
       Sentry.captureException(error)
@@ -238,32 +267,14 @@ export const Reservation = screenTrack()((props) => {
               </Box>
               <ReservationLineItems lineItems={me?.reservationLineItems} loading={loading} />
               <Box mb={4}>
-                <SectionHeader
-                  title="Payment method"
-                  rightText="Edit"
-                  onPressRightText={() => {
-                    navigation.navigate(NavigationSchema.StackNames.AccountStack, {
-                      screen: NavigationSchema.PageNames.EditPaymentAndShipping,
-                      params: { phoneNumber, shippingAddress: address },
-                    })
-                  }}
-                />
+                <SectionHeader title="Payment method" rightText="Edit" onPressRightText={navToEditPayment} />
                 <Sans size="4" color="black50" mt={1}>
                   {!!billingInfo && `${billingInfo.brand} ending in ${billingInfo.last_digits}`}
                 </Sans>
               </Box>
               {address && (
                 <Box mb={4}>
-                  <SectionHeader
-                    title="Shipping address"
-                    rightText="Edit"
-                    onPressRightText={() => {
-                      navigation.navigate(NavigationSchema.StackNames.AccountStack, {
-                        screen: NavigationSchema.PageNames.EditPaymentAndShipping,
-                        params: { phoneNumber, shippingAddress: address },
-                      })
-                    }}
-                  />
+                  <SectionHeader title="Shipping address" rightText="Edit" onPressRightText={navToEditPayment} />
                   <Sans size="4" color="black50" mt={1}>
                     {`${address.address1}${address.address2 ? " " + address.address2 : ""},`}
                   </Sans>
