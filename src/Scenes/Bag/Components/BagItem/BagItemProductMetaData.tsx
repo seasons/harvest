@@ -37,11 +37,15 @@ export const BagItemProductMetaData: React.FC<{ variant: any; showBuyPrice?: boo
     return null
   }
 
+  const buyUsedPrice = variant?.price?.buyUsedAdjustedPrice / 100
+
   let priceLine
   if (showBuyPrice) {
-    priceLine = `$${variant?.price?.buyUsedAdjustedPrice / 100} to buy`
+    priceLine = `$${buyUsedPrice} to buy`
   } else {
-    priceLine = `$${product?.rentalPrice} / mo | $${variant?.price?.buyUsedAdjustedPrice / 100} to buy`
+    priceLine = !!buyUsedPrice
+      ? `$${product?.rentalPrice} / mo | $${buyUsedPrice} to buy`
+      : `$${product?.rentalPrice} / month`
   }
 
   return (

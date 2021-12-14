@@ -27,7 +27,7 @@ export const BagItemCTAsFragment_BagItem = gql`
     id
     productVariant {
       id
-      isinCart
+      isInCart
       purchased
       price {
         id
