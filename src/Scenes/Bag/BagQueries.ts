@@ -63,6 +63,7 @@ export const GetBag_NoCache_Query = gql`
       }
       ...BagFragment_Me
       ...BuyTabFragment_Me
+      ...BagTabPrimaryCTAFragment_Me
     }
     ...BagTabPrimaryCTAFragment_Me
   }
@@ -70,6 +71,7 @@ export const GetBag_NoCache_Query = gql`
   ${BagSectionFragment_BagSection}
   ${BuyTabFragment_Me}
   ${BagFragment_Me}
+  ${BagTabPrimaryCTAFragment_Me}
 `
 
 export const ADD_TO_BAG = gql`
