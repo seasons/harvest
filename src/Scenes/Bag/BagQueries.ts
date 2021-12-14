@@ -65,9 +65,7 @@ export const GetBag_NoCache_Query = gql`
       ...BuyTabFragment_Me
       ...BagTabPrimaryCTAFragment_Me
     }
-    ...BagTabPrimaryCTAFragment_Me
   }
-  ${BagTabPrimaryCTAFragment_Me}
   ${BagSectionFragment_BagSection}
   ${BuyTabFragment_Me}
   ${BagFragment_Me}
