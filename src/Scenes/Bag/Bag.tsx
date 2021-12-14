@@ -34,6 +34,14 @@ export const BagFragment_Me = gql`
     id
     customer {
       id
+      detail {
+        shippingAddress {
+          address1
+          city
+          state
+          zipCode
+        }
+      }
       user {
         id
       }
