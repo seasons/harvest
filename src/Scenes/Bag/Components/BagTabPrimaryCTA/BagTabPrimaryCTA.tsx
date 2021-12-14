@@ -171,6 +171,7 @@ export const BagTabPrimaryCTA = ({
         onReserve={handlePress}
         isMutating={isMutating}
         activeTab={activeTab}
+        onCartCheckout={onCartCheckout}
       />
     )
   }

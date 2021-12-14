@@ -186,7 +186,6 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const renderItem = ({ item }) => {
     if (isBuyView) {
-      console.log("item 2", item)
       return <BuyTab items={item.data} />
     } else {
       return <RentTab />

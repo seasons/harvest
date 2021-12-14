@@ -6,7 +6,7 @@ import gql from "graphql-tag"
 import React from "react"
 import { Dimensions } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { SavedAndHistoyView } from "../SavedAndHistory"
+import { SavedAndHistoryView } from "../SavedAndHistory"
 import { SavedItemRow, SavedItemRowFragment_BagItem } from "./SavedItemRow"
 
 const { height } = Dimensions.get("window")
@@ -36,7 +36,7 @@ export const SavedItemsTab: React.FC<{
           return <SavedItemRow key={index} bagItem={bagItem} deleteBagItem={deleteBagItem} />
         })
       ) : (
-        <BagEmptyState currentView={SavedAndHistoyView.Saved} wrapperHeight={wrapperHeight} />
+        <BagEmptyState currentView={SavedAndHistoryView.Saved} wrapperHeight={wrapperHeight} />
       )}
     </Box>
   )

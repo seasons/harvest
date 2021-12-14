@@ -37,11 +37,11 @@ export const BagItemProductMetaData: React.FC<{ variant: any; showBuyPrice?: boo
     return null
   }
 
-  let leftPriceText
+  let priceLine
   if (showBuyPrice) {
-    leftPriceText = `${variant?.price?.buyUsedAdjustedPrice / 100}`
+    priceLine = `$${variant?.price?.buyUsedAdjustedPrice / 100} to buy`
   } else {
-    leftPriceText = `${product?.rentalPrice} / mo`
+    priceLine = `$${product?.rentalPrice} / mo | $${variant?.price?.buyUsedAdjustedPrice / 100} to buy`
   }
 
   return (
@@ -54,7 +54,7 @@ export const BagItemProductMetaData: React.FC<{ variant: any; showBuyPrice?: boo
         })}
       </Sans>
       <Sans size="3" color="black50">
-        ${leftPriceText} | ${product?.retailPrice} retail
+        {priceLine}
       </Sans>
       <Sans size="3" color="black50">
         Size {variant?.displayShort}

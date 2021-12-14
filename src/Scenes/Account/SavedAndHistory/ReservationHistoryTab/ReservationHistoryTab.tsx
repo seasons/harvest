@@ -7,7 +7,7 @@ import { Loader } from "App/Components/Loader"
 import { Dimensions } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { BagEmptyState } from "App/Scenes/Bag/Components/BagEmptyState"
-import { SavedAndHistoyView } from "../SavedAndHistory"
+import { SavedAndHistoryView } from "../SavedAndHistory"
 
 export const ReservationHistoryTabFragment_Customer = gql`
   fragment ReservationHistoryTabFragment_Customer on Customer {
@@ -45,7 +45,7 @@ export const ReservationHistoryTab: React.FC<{ items; loading: boolean }> = ({ i
           )
         })
       ) : (
-        <BagEmptyState currentView={SavedAndHistoyView.History} wrapperHeight={wrapperHeight} />
+        <BagEmptyState currentView={SavedAndHistoryView.History} wrapperHeight={wrapperHeight} />
       )}
     </Flex>
   )

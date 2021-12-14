@@ -129,10 +129,12 @@ export const Product = screenTrack({
     ],
   })
 
+  const hasRestockNotification = selectedVariant?.hasRestockNotification
+
   const [upsertCartItem] = useMutation(UPSERT_CART_ITEM, {
     variables: {
       productVariantId: selectedVariant?.id,
-      addToCart: !selectedVariant?.isInCart,
+      shouldNotify: !hasRestockNotification,
     },
     refetchQueries: [
       {
@@ -161,7 +163,7 @@ export const Product = screenTrack({
   const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {
     variables: {
       variantID: selectedVariant?.id,
-      addToCart: !selectedVariant?.hasRestockNotification,
+      shouldNotify: !hasRestockNotification,
     },
     refetchQueries: [
       {

@@ -27,7 +27,7 @@ export const BagItemCTAsFragment_BagItem = gql`
     id
     productVariant {
       id
-      isInBag
+      isinCart
       purchased
       price {
         id
@@ -115,7 +115,7 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
   const [upsertCartItem] = useMutation(UPSERT_CART_ITEM, {
     variables: {
       productVariantId: variant?.id,
-      addToCart: !variant?.isInBag,
+      addToCart: !variant?.isInCart,
     },
     refetchQueries: [
       {

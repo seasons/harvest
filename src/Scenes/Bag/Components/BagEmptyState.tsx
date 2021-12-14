@@ -1,15 +1,15 @@
 import { Box, Flex, Sans, Spacer } from "App/Components"
-import { SavedAndHistoyView } from "App/Scenes/Account/SavedAndHistory/SavedAndHistory"
+import { SavedAndHistoryView } from "App/Scenes/Account/SavedAndHistory/SavedAndHistory"
 import { color } from "App/utils"
 import React from "react"
 
-export const BagEmptyState: React.FC<{ currentView: SavedAndHistoyView; wrapperHeight: number }> = ({
+export const BagEmptyState: React.FC<{ currentView: SavedAndHistoryView; wrapperHeight: number }> = ({
   currentView,
   wrapperHeight,
 }) => {
-  const title = currentView === SavedAndHistoyView.Saved ? "Nothing saved" : "No history"
+  const title = currentView === SavedAndHistoryView.Saved ? "Nothing saved" : "No history"
   const text =
-    currentView === SavedAndHistoyView.Saved
+    currentView === SavedAndHistoryView.Saved
       ? "You haven’t saved any items."
       : "You haven't placed any reservations yet."
 
