@@ -4,8 +4,7 @@ import React from "react"
 import { ReviewOrder } from "@seasons/eclipse"
 import { Dimensions, Linking } from "react-native"
 import { Schema as NavigationSchema } from "App/Navigation"
-import { SUBMIT_ORDER } from "../Product/Mutations"
-import { GetBag_NoCache_Query } from "../Bag/BagQueries"
+import { GetBag_NoCache_Query, SUBMIT_ORDER } from "../Bag/BagQueries"
 import { usePopUpContext } from "App/Navigation/ErrorPopUp/PopUpContext"
 
 const windowWidth = Dimensions.get("window").width

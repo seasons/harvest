@@ -111,6 +111,7 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
     },
     onCompleted: (res) => {
       sharedOnComplete(res)
+      setIsMutatingCTA(false)
     },
   })
   const [addRecommendVariant] = useMutation(isUserSignedIn ? ADD_TO_BAG : ADD_OR_REMOVE_FROM_LOCAL_BAG, {
@@ -123,6 +124,7 @@ export const SizeWarning = ({ data, show, selectedVariant, setShowSizeWarning, s
     onCompleted: (res) => {
       setSelectedVariant(suggestedVariant)
       sharedOnComplete(res)
+      setIsMutatingCTA(false)
     },
   })
 

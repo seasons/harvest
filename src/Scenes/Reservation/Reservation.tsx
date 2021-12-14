@@ -62,6 +62,7 @@ const GET_CUSTOMER = gql`
         id
         status
         bagItems {
+          id
           ...BagItemFragment_BagItem
         }
       }

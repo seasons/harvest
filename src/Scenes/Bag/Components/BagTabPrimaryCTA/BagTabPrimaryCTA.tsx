@@ -8,6 +8,7 @@ import { State as CreateAccountState, UserState as CreateAccountUserState } from
 import { useNavigation } from "@react-navigation/native"
 import { BagBottomBar } from "../BagBottomBar"
 import { Box, Button, Flex } from "App/Components"
+import { BagView } from "../../Bag"
 
 export const BagTabPrimaryCTA = ({
   data,
@@ -16,6 +17,8 @@ export const BagTabPrimaryCTA = ({
   startReservation,
   isMutating,
   setIsMutating,
+  activeTab,
+  onCartCheckout,
 }) => {
   const { authState } = useAuthContext()
 
@@ -43,6 +46,8 @@ export const BagTabPrimaryCTA = ({
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
   const hasShippingAddress =
     !!shippingAddress?.address1 && !!shippingAddress?.city && !!shippingAddress?.state && !!shippingAddress?.zipCode
+
+  const isBuyView = activeTab === BagView.Buy
 
   const handleReserve = async () => {
     setIsMutating(true)
@@ -121,8 +126,16 @@ export const BagTabPrimaryCTA = ({
     }
   }
 
-  if (hasAddedItems) {
-    button = <BagBottomBar bagItems={addedItems} onReserve={handlePress} isMutating={isMutating} />
+  if (hasAddedItems || isBuyView) {
+    button = (
+      <BagBottomBar
+        bagItems={isBuyView ? me?.cartItems : addedItems}
+        onReserve={handlePress}
+        isMutating={isMutating}
+        activeTab={activeTab}
+        onCartCheckout={onCartCheckout}
+      />
+    )
   } else if (hasAtHomeItems) {
     button = (
       <Box mx={2} my={2}>
@@ -150,6 +163,16 @@ export const BagTabPrimaryCTA = ({
           How to return
         </Button>
       </Flex>
+    )
+  } else {
+    button = (
+      <BagBottomBar
+        bagItems={isBuyView ? me?.cartItems : addedItems}
+        onReserve={handlePress}
+        isMutating={isMutating}
+        activeTab={activeTab}
+        onCartCheckout={onCartCheckout}
+      />
     )
   }
 

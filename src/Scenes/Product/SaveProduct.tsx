@@ -1,11 +1,19 @@
 import {
-  Box, Button, Container, FadeInImage, FixedBackArrow, Flex, Handle, Radio, Sans, Separator, Spacer
+  Box,
+  Button,
+  Container,
+  FadeInImage,
+  FixedBackArrow,
+  Flex,
+  Handle,
+  Radio,
+  Sans,
+  Separator,
+  Spacer,
 } from "App/Components"
 import { Loader } from "App/Components/Loader"
-import { GetBrowseProducts_products_images } from "App/generated/GetBrowseProducts"
 import { GetProduct_products_largeImages } from "App/generated/GetProduct"
 import { PRODUCT_ASPECT_RATIO } from "App/helpers/constants"
-import { SavedTab_Query } from "App/Scenes/Bag/BagQueries"
 import { Homepage_Query } from "App/Scenes/Home/queries/homeQueries"
 import { color, space } from "App/utils"
 import { Schema, screenTrack, useTracking } from "App/utils/track"
@@ -19,6 +27,7 @@ import { useNavigation } from "@react-navigation/native"
 import { SAVE_ITEM } from "@seasons/eclipse/src/components/SaveProductButton/queries"
 
 import { GET_PRODUCT } from "./Queries"
+import { SavedTab_Query } from "../Account/SavedAndHistory/queries"
 
 const screenWidth = Dimensions.get("window").width
 
@@ -61,8 +70,7 @@ export const SaveProduct: React.FC<SaveProductProps> = screenTrack()(({ route })
 
   // largeImages come from product query and images come from browse query
   const images =
-    (product?.largeImages as GetProduct_products_largeImages[]) ||
-    (product.images as GetBrowseProducts_products_images[])
+    (product?.largeImages as GetProduct_products_largeImages[]) || (product.images as GetProduct_products_largeImages[])
 
   const { description, name, variants } = product
 

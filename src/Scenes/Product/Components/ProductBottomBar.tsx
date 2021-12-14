@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Sans, Spacer } from "App/Components"
-import { GetProduct, GetProduct_products_brand_products_variants } from "App/generated/GetProduct"
+import { GetProduct } from "App/generated/GetProduct"
 import { GetProductMe } from "App/generated/GetProductMe"
 import { BORDER_RADIUS } from "App/helpers/constants"
 import { AddToBagButton } from "App/Scenes/Product/Components"
@@ -18,11 +18,11 @@ interface Props {
   toggleShowVariantPicker: (show: boolean) => void
   setShowSizeWarning: (show: boolean) => void
   showVariantPicker: boolean
-  selectedVariant: GetProduct_products_brand_products_variants
+  selectedVariant
   showNotifyMeMessage: boolean
   data: GetProduct
   onNotifyMe: () => void
-  handleCreateDraftOrder: (x) => void
+  scrollToBuyCTA: () => void
   hasNotification: boolean
   isMutatingNotify: boolean
   animatedScrollY: Animated.Value
@@ -47,7 +47,7 @@ export const ProductBottomBar: React.FC<Props> = ({
   isMutatingNotify,
   onNotifyMe,
   setShowSizeWarning,
-  handleCreateDraftOrder,
+  scrollToBuyCTA,
   animatedScrollY,
   retailPrice,
   monthlyRental,
@@ -75,7 +75,7 @@ export const ProductBottomBar: React.FC<Props> = ({
       <Flex flexDirection="column">
         <FixedProductBuyCTA
           price={selectedVariant?.price}
-          handleCreateDraftOrder={handleCreateDraftOrder}
+          scrollToBuyCTA={scrollToBuyCTA}
           showNotifyMeMessage={showNotifyMeMessage}
           animatedScrollY={animatedScrollY}
           isMutatingBuyButton={isMutatingBuyButton}

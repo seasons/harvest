@@ -130,7 +130,7 @@ export const PersonalPreferences = screenTrack()(({ navigation }) => {
       </Box>
       <TabBar
         spaceEvenly
-        tabs={["Personal", "Sizing", "Style"]}
+        tabs={[{ name: "Personal" }, { name: "Sizing" }, { name: "Style" }]}
         disabledTabs={[]}
         activeTab={activeTab}
         goToPage={(tab: Tab) => {
