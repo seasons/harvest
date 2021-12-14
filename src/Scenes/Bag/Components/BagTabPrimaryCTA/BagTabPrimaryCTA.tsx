@@ -79,8 +79,11 @@ export const BagTabPrimaryCTA = ({
   const pendingReturnBagItems = me?.bagSections?.filter((section) => {
     section?.status === "ReturnPending"
   })?.bagItems
-  const inboundPackage = pendingReturnBagItems?.find((item) => item?.potentialInboundPackage)
-  const labelImage = inboundPackage?.shippingLabel?.image
+  const bagItemWithInboundPackage = pendingReturnBagItems?.find(
+    (item) => item?.reservationPhysicalProduct?.potentialInboundPackage
+  )
+  const labelImage =
+    bagItemWithInboundPackage?.reservationPhysicalProduct?.potentialInboundPackage?.inboundPackage?.shippingLabel?.image
 
   const isBuyView = activeTab === BagView.Buy
 
