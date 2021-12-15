@@ -15,8 +15,8 @@ import { ReturnYourBagItem } from "./Components/ReturnYourBagItem"
 import { GetBag_NoCache_Query } from "./BagQueries"
 
 const RETURN_ITEMS = gql`
-  mutation ReturnItems($items: [ID!]!) {
-    returnItems(items: $items) {
+  mutation ReturnItems($items: [ID!]!, $returnReasons: [ReturnReasonInput!]) {
+    returnItems(items: $items, returnReasons: $returnReasons) {
       id
     }
   }
@@ -24,6 +24,10 @@ const RETURN_ITEMS = gql`
 
 const getAtHomeBagSection = gql`
   query getAtHomeBagSection {
+    returnReasons {
+      value
+      display
+    }
     me {
       id
       atHomeSection: bagSection(status: AtHome) {
@@ -31,22 +35,25 @@ const getAtHomeBagSection = gql`
         status
         bagItems {
           id
-          physicalProduct {
+          reservationPhysicalProduct {
             id
-            productVariant {
+            physicalProduct {
               id
-              displayLong
-              product {
+              productVariant {
                 id
-                slug
-                name
-                brand {
+                displayLong
+                product {
                   id
+                  slug
                   name
-                }
-                images {
-                  id
-                  url
+                  brand {
+                    id
+                    name
+                  }
+                  images {
+                    id
+                    url
+                  }
                 }
               }
             }
@@ -62,6 +69,7 @@ export const ReturnYourBag = () => {
   const navigation = useNavigation()
   const [isMutating, setIsMutating] = useState(false)
   const [selectedItems, setSelectedItems] = useState({})
+  const [selectedReturnReasons, setSelectedReturnReasons] = useState({})
   const [returnItems] = useMutation(RETURN_ITEMS, {
     onError: () => {
       setIsMutating(false)
@@ -76,30 +84,37 @@ export const ReturnYourBag = () => {
 
   const atHomeItems = data?.me?.atHomeSection?.bagItems
 
-  const physicalProducts = atHomeItems?.map((item) => item.physicalProduct)
+  const reservationPhysicalProducts = atHomeItems?.map((item) => item.reservationPhysicalProduct)
 
   const windowDimensions = Dimensions.get("window")
   const twoButtonWidth = windowDimensions.width / 2 - (space(2) + space(0.5))
 
   const renderItem = ({ item, index }) => {
+    const physicalProduct = item.physicalProduct
     return (
-      <Box mx={2} key={index}>
-        <ReturnYourBagItem
-          physicalProduct={item}
-          onSelect={(selected) => {
-            if (selected) {
-              setSelectedItems({
-                ...selectedItems,
-                [item.id]: selected,
-              })
-            } else {
-              const updatedSelectedItems = { ...selectedItems }
-              delete updatedSelectedItems[item.id]
-              setSelectedItems(updatedSelectedItems)
-            }
-          }}
-        />
-      </Box>
+      <ReturnYourBagItem
+        key={index}
+        returnReasons={data?.returnReasons}
+        physicalProduct={physicalProduct}
+        onSelectReason={(value) => {
+          setSelectedReturnReasons({
+            ...selectedReturnReasons,
+            [item.id]: value,
+          })
+        }}
+        onSelect={(selected) => {
+          if (selected) {
+            setSelectedItems({
+              ...selectedItems,
+              [item.id]: selected,
+            })
+          } else {
+            const updatedSelectedItems = { ...selectedItems }
+            delete updatedSelectedItems[item.id]
+            setSelectedItems(updatedSelectedItems)
+          }
+        }}
+      />
     )
   }
 
@@ -112,9 +127,9 @@ export const ReturnYourBag = () => {
       <FixedBackArrow navigation={navigation} variant="whiteBackground" />
       <Box style={{ flex: 1 }}>
         <FlatList
-          data={physicalProducts.length > 0 ? physicalProducts : []}
+          data={reservationPhysicalProducts.length > 0 ? reservationPhysicalProducts : []}
           ListHeaderComponent={() => (
-            <Box pb={1} px={2}>
+            <Box px={2}>
               <Spacer mb={80} />
               <Sans size="7" color="black">
                 Return your items
@@ -166,6 +181,9 @@ export const ReturnYourBag = () => {
                 returnItems({
                   variables: {
                     items: Object.keys(selectedItems),
+                    returnReasons: Object.keys(selectedReturnReasons).map((id) => {
+                      return { reservationPhysicalProductId: id, reason: selectedReturnReasons[id] }
+                    }),
                   },
                   awaitRefetchQueries: true,
                   refetchQueries: [{ query: GetBag_NoCache_Query }],
