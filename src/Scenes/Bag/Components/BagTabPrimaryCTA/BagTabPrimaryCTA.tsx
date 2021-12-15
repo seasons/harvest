@@ -6,8 +6,8 @@ import { Schema as TrackSchema, useTracking } from "App/utils/track"
 import React from "react"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../../../CreateAccount/CreateAccount"
 import { useNavigation } from "@react-navigation/native"
-import { Box, Button, Flex } from "@seasons/eclipse"
 import { BagBottomBar } from "../BagBottomBar"
+import { Box, Button, Flex } from "App/Components"
 import { BagView } from "../../Bag"
 
 export const BagTabPrimaryCTA = ({
