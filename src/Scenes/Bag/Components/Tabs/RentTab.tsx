@@ -29,15 +29,17 @@ export const RentTab: React.FC = () => {
       })}
 
       {showAddAnItemCard && (
-        <Flex style={{ flex: 1 }} pt={100}>
+        <Flex style={{ flex: 1 }} justifyContent="center" alignItems="center">
           <EmptyBagItem text="Add an item" navigation={navigation} />
         </Flex>
       )}
 
-      <Box mt={3}>
-        <BagTabBottomCards hasAtHomeItems={hasAtHomeItems} />
-        {!showAddAnItemCard && <Spacer mb={90} />}
-      </Box>
+      {hasAtHomeItems && (
+        <Box mt={3}>
+          <BagTabBottomCards />
+          {!showAddAnItemCard && <Spacer mb={90} />}
+        </Box>
+      )}
     </Flex>
   )
 }
