@@ -2,6 +2,7 @@ import { OrderFragment_Order } from "@seasons/eclipse"
 import gql from "graphql-tag"
 import { BagFragment_Me } from "./Bag"
 import { BagSectionFragment_BagSection } from "./Components/BagSection/BagSection"
+import { BagTabPrimaryCTAFragment_Me } from "./Components/BagTabPrimaryCTA/BagTabPrimaryCTA"
 import { BuyTabFragment_Me } from "./Components/Tabs/BuyTab"
 
 export const CHECK_ITEMS = gql`
@@ -62,11 +63,13 @@ export const GetBag_NoCache_Query = gql`
       }
       ...BagFragment_Me
       ...BuyTabFragment_Me
+      ...BagTabPrimaryCTAFragment_Me
     }
   }
   ${BagSectionFragment_BagSection}
   ${BuyTabFragment_Me}
   ${BagFragment_Me}
+  ${BagTabPrimaryCTAFragment_Me}
 `
 
 export const ADD_TO_BAG = gql`

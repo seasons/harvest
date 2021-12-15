@@ -7,8 +7,44 @@ import React from "react"
 import { State as CreateAccountState, UserState as CreateAccountUserState } from "../../../CreateAccount/CreateAccount"
 import { useNavigation } from "@react-navigation/native"
 import { BagBottomBar } from "../BagBottomBar"
+import gql from "graphql-tag"
 import { Box, Button, Flex } from "App/Components"
 import { BagView } from "../../Bag"
+
+export const BagTabPrimaryCTAFragment_Me = gql`
+  fragment BagTabPrimaryCTAFragment_Me on Me {
+    customer {
+      id
+      status
+      detail {
+        id
+        shippingAddress {
+          id
+          address1
+          city
+          state
+          zipCode
+        }
+      }
+    }
+    bagSections {
+      status
+      bagItems {
+        id
+        reservationPhysicalProduct {
+          id
+          potentialInboundPackage {
+            id
+            shippingLabel {
+              id
+              image
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export const BagTabPrimaryCTA = ({
   data,
@@ -33,19 +69,21 @@ export const BagTabPrimaryCTA = ({
   const hasAtHomeItems = atHomeItems?.length > 0
   const returnPendingItems = sections?.find((section) => section.status === "ReturnPending")?.bagItems
   const hasReturnPendingsItems = returnPendingItems?.length > 0
-  const inboundTrackingUrl = sections?.find(
-    (section) =>
-      (section.status === "ScannedOnInbound" ||
-        section.status === "InTransitInbound" ||
-        section.status === "DeliveredToBusiness") &&
-      !!section.deliverTrackingUrl
-  )?.deliveryTrackingUrl
 
   const me = data?.me
   const customerStatus = me?.customer?.status
   const shippingAddress = data?.me?.customer?.detail?.shippingAddress
   const hasShippingAddress =
     !!shippingAddress?.address1 && !!shippingAddress?.city && !!shippingAddress?.state && !!shippingAddress?.zipCode
+
+  const pendingReturnBagItems = me?.bagSections?.filter((section) => {
+    section?.status === "ReturnPending"
+  })?.bagItems
+  const bagItemWithInboundPackage = pendingReturnBagItems?.find(
+    (item) => item?.reservationPhysicalProduct?.potentialInboundPackage
+  )
+  const labelImage =
+    bagItemWithInboundPackage?.reservationPhysicalProduct?.potentialInboundPackage?.inboundPackage?.shippingLabel?.image
 
   const isBuyView = activeTab === BagView.Buy
 
@@ -144,10 +182,10 @@ export const BagTabPrimaryCTA = ({
         </Button>
       </Box>
     )
-  } else if (!!inboundTrackingUrl) {
+  } else if (!!labelImage) {
     button = (
       <Button
-        onPress={() => navigation.navigate("Webview", { uri: inboundTrackingUrl })}
+        onPress={() => navigation.navigate("Webview", { uri: labelImage })}
         disabled={isMutating}
         loading={isMutating}
         block
