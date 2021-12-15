@@ -134,8 +134,9 @@ export const Product = screenTrack({
   const [upsertCartItem] = useMutation(UPSERT_CART_ITEM, {
     variables: {
       productVariantId: selectedVariant?.id,
-      shouldNotify: !hasRestockNotification,
+      addToCart: !selectedVariant?.isInCart,
     },
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
         query: GET_PRODUCT,
