@@ -1,3 +1,4 @@
+import { ProductPriceText_Product } from "@seasons/eclipse"
 import gql from "graphql-tag"
 
 export const GET_BROWSE_CATEGORIES_AND_BRANDS = gql`
@@ -85,8 +86,10 @@ export const GET_BROWSE_PRODUCTS = gql`
             displayLong
             displayShort
           }
+          ...ProductPriceText_Product
         }
       }
     }
   }
+  ${ProductPriceText_Product}
 `

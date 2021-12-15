@@ -33,6 +33,7 @@ import { CreditsAvailableBar } from "./Components/CreditsAvailableBar"
 import { InvitedFriendsRow } from "./Components/InviteFriendsRow"
 import { NotificationToggle } from "./Components/NotificationToggle"
 import { AccountList, CustomerStatus, OnboardingChecklist } from "./Lists"
+import { SaveAndHistoryIcon } from "Assets/svgs/SaveAndHistoryIcon"
 
 export const GET_USER = gql`
   query GetUser {
@@ -203,7 +204,7 @@ export const Account = screenTrack()(() => {
     },
     {
       title: "Saved items & order history",
-      icon: <MapPin />,
+      icon: <SaveAndHistoryIcon />,
       onPress: () => navigation.navigate("SavedAndHistory"),
       tracking: Schema.ActionNames.PaymentAndShippingTapped,
     },

@@ -64,7 +64,7 @@ export const BagBottomBar: React.FC<BagBottomBarProps> = ({
         >
           <Box>
             <Sans size="3" color="black50">
-              {isRentView ? "Estimated total" : "Est. Sales total"}
+              {isRentView ? "Est. rental total" : "Est. Sales total"}
             </Sans>
             <Flex flexDirection="row" alignItems="flex-end">
               <Sans size="7">${price}</Sans>
