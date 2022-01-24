@@ -22,7 +22,7 @@ export const FixedProductBuyCTA: React.FC<{
   })
 
   const availableForBuyNew = price && price.buyNewEnabled && price.buyNewPrice && price.buyNewAvailableForSale
-  const availableForBuyUsed = price && price.buyUsedEnabled && price.buyUsedPrice
+  const availableForBuyUsed = price && price.buyUsedEnabled && price.buyUsedAdjustedPrice
 
   const CTA = () => {
     if (isMutatingBuyButton) {
@@ -36,7 +36,7 @@ export const FixedProductBuyCTA: React.FC<{
         <TouchableOpacity onPress={scrollToBuyCTA}>
           <Flex flexDirection="row" alignItems="center">
             <Sans size="4" underline>
-              Buy for ${price.buyUsedPrice / 100}
+              Buy for ${price.buyUsedAdjustedPrice / 100}
             </Sans>
             <ChevronCircle>
               <ChevronIcon
