@@ -130,13 +130,11 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
     },
   })
 
-  const isBuyNewEnabled = bagItem?.productVariant?.price?.buyNewEnabled
-  const isBuyUsedEnabled = bagItem?.productVariant?.price?.buyUsedEnabled
-  const buyNewPrice = bagItem?.productVariant?.price?.buyNewPrice
-  const buyUsedPrice = bagItem?.productVariant?.price?.buyUsedPrice
+  const isBuyNewEnabled = variant?.price?.buyNewEnabled
+  const isBuyUsedEnabled = variant?.price?.buyUsedEnabled
   const isBuyable = isBuyNewEnabled || isBuyUsedEnabled
-  const purchased = bagItem?.productVariant?.purchased
-  const price = isBuyNewEnabled ? buyNewPrice : buyUsedPrice
+  const purchased = variant?.purchased
+  const price = variant?.price?.buyUsedAdjustedPrice / 100
 
   const showBuyButton = isBuyable && !purchased && price && userHasSession
 
@@ -187,7 +185,7 @@ export const BagItemCTAs = ({ bagItem, sectionStatus, size }) => {
               width="100%"
               height="100%"
             >
-              <Sans size="3">${price / 100} to buy</Sans>
+              <Sans size="3">${price} to buy</Sans>
               <Button
                 size="small"
                 variant="secondaryWhite"
