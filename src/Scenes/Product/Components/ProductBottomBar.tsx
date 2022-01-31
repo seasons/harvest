@@ -66,9 +66,6 @@ export const ProductBottomBar: React.FC<Props> = ({
   const isRentable = product?.isRentable
   const isInCart = selectedVariant?.isInCart
 
-  console.log("isRentable", isRentable)
-  console.log("data", data)
-
   useEffect(() => {
     // Wait to load the buttons until we know their state so user doesn't see the state change on load
     if (typeof selectedVariant?.reservable === "number" && !loaded) {
@@ -104,18 +101,19 @@ export const ProductBottomBar: React.FC<Props> = ({
         )}
         <Animated.View style={{ zIndex: 30 }}>
           <SelectionBox>
-            <Flex flexDirection="row" alignItems="center">
+            <Flex flexDirection="column" justifyContent={isRentable ? "flex-start" : "center"}>
               <Flex flexDirection="row" alignItems="flex-end">
                 <Sans size="7">${priceText}</Sans>
                 <Sans size="3" color="black50" mb={0.5}>
                   {priceSubText}
                 </Sans>
               </Flex>
-              {retailPrice > product?.discountedPrice && (
-                <Sans size="3" color={color("black50")}>
-                  Retail ${retailPrice}
-                </Sans>
-              )}
+              {retailPrice > product?.discountedPrice ||
+                (isRentable && (
+                  <Sans size="3" color={color("black50")}>
+                    Retail ${retailPrice}
+                  </Sans>
+                ))}
             </Flex>
 
             <Flex flexDirection="row" justifyContent="flex-end">
