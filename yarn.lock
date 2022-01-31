@@ -2754,10 +2754,10 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@seasons/eclipse@1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.6.2.tgz#1fb1338d819ea94326348f3c863e1d3ffdc217fb"
-  integrity sha512-YdIQskH5BqvLgEFrPEzwBU2B5qcv6fQPpSW4QAh07ljmfZxZRuPJ1Y7vGSwfrlikitiC2GWx7mH5lYd1iCRr9g==
+"@seasons/eclipse@1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@seasons/eclipse/-/eclipse-1.6.3.tgz#bfccb6ae4b57034f3568ce151b9e7e0f8daec7bc"
+  integrity sha512-L9lDSlVKSJ83TzNzMzp6ZhpsgWqLVlr+Rats7rZ0KqutlEMnYHKdeUDIwTVPn87uQ6J7JV13Vrux8fIGlu85Xw==
   dependencies:
     dripsy "^1.4.6"
 
