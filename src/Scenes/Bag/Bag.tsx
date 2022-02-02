@@ -9,15 +9,17 @@ import React, { useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, RefreshControl, StatusBar, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { NavigationRoute, NavigationScreenProp } from "react-navigation"
+
 import { gql, useMutation } from "@apollo/client"
 import { useFocusEffect, useNavigation, useScrollToTop } from "@react-navigation/native"
 import analytics from "@segment/analytics-react-native"
+
 import { CHECK_ITEMS, CREATE_DRAFT_ORDER, GetBag_NoCache_Query } from "./BagQueries"
-import { useBag } from "./useBag"
-import { ReturnItemsPopUp } from "./Components/ReturnItemsPopUp"
 import { BagTabPrimaryCTA } from "./Components/BagTabPrimaryCTA"
+import { ReturnItemsPopUp } from "./Components/ReturnItemsPopUp"
 import { BuyTab } from "./Components/Tabs/BuyTab"
 import { RentTab } from "./Components/Tabs/RentTab"
+import { useBag } from "./useBag"
 
 export enum BagView {
   Rent = 0,
@@ -64,7 +66,7 @@ export const Bag = screenTrack()((props: BagProps) => {
 
   const { route } = props
   const routeTab = route?.params?.tab
-  const [currentView, setCurrentView] = useState<BagView>(BagView.Rent)
+  const [currentView, setCurrentView] = useState<BagView>(BagView.Buy)
 
   const windowDimensions = Dimensions.get("window")
   const windowWidth = windowDimensions.width
@@ -122,8 +124,7 @@ export const Bag = screenTrack()((props: BagProps) => {
 
           showPopUp({
             title: "One or more items have been reserved already",
-            note:
-              "Sorry, some of the items you had selected were confirmed before you, we've moved these to your saved items.",
+            note: "Sorry, some of the items you had selected were confirmed before you, we've moved these to your saved items.",
             buttonText: "Got it",
             onClose: () => hidePopUp(),
           })
@@ -207,30 +208,34 @@ export const Bag = screenTrack()((props: BagProps) => {
     sections = [{ data: null }]
   }
 
+  console.log("Me ", me)
+
   return (
     <Container insetsBottom={false} insetsTop={false}>
       <View
         pointerEvents={bottomSheetBackdropIsVisible ? "none" : "auto"}
         style={{ flexDirection: "column", flex: 1, paddingTop: insets?.top }}
       >
-        <TabBar
-          spaceEvenly
-          tabs={[{ name: "Rent" }, { name: "Buy", badgeCount: me?.cartItems?.length }]}
-          activeTab={currentView}
-          goToPage={(page: BagView) => {
-            tracking.trackEvent({
-              actionName: (() => {
-                if (page === 0) {
-                  return TrackSchema.ActionNames.RentTabTapped
-                } else {
-                  return TrackSchema.ActionNames.BuyTabTapped
-                }
-              })(),
-              actionType: TrackSchema.ActionTypes.Tap,
-            })
-            setCurrentView(page)
-          }}
-        />
+        {!!me.customer && (
+          <TabBar
+            spaceEvenly
+            tabs={[{ name: "Rent" }, { name: "Buy", badgeCount: me?.cartItems?.length }]}
+            activeTab={currentView}
+            goToPage={(page: BagView) => {
+              tracking.trackEvent({
+                actionName: (() => {
+                  if (page === 0) {
+                    return TrackSchema.ActionNames.RentTabTapped
+                  } else {
+                    return TrackSchema.ActionNames.BuyTabTapped
+                  }
+                })(),
+                actionType: TrackSchema.ActionTypes.Tap,
+              })
+              setCurrentView(page)
+            }}
+          />
+        )}
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           data={sections}
