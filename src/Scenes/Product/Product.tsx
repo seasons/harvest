@@ -329,7 +329,7 @@ export const Product = screenTrack({
       case "productDetails":
         return <ProductDetails product={product} selectedVariant={selectedVariant} />
       case "pricingCalculator":
-        return <PricingCalculator product={product} />
+        return <Box>{product?.isRentable && <PricingCalculator product={product} />}</Box>
       case "productMeasurements":
         return <ProductMeasurements selectedVariant={selectedVariant} />
       case "relatedProducts":
@@ -356,18 +356,22 @@ export const Product = screenTrack({
         )
       case "buy":
         return (
-          <Box px={2} pb={4}>
-            <ProductBuyCTA
-              ref={productBuyRef}
-              buttonVariant={selectedVariant?.isInCart ? "primaryWhite" : "primaryBlack"}
-              product={filter(ProductBuyCTAFragment_Product, product)}
-              productVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
-              onNavigateToBrand={() =>
-                navigation.navigate("Brand", { id: brand.id, slug: brand.slug, name: brand.name })
-              }
-              isMutating={addToCartButtonIsMutating}
-              onAddToCart={onAddToCart}
-            />
+          <Box>
+            {product?.isRentable && (
+              <Box px={2} pb={4}>
+                <ProductBuyCTA
+                  ref={productBuyRef}
+                  buttonVariant={selectedVariant?.isInCart ? "primaryWhite" : "primaryBlack"}
+                  product={filter(ProductBuyCTAFragment_Product, product)}
+                  productVariant={filter(ProductBuyCTAFragment_ProductVariant, selectedVariant)}
+                  onNavigateToBrand={() =>
+                    navigation.navigate("Brand", { id: brand.id, slug: brand.slug, name: brand.name })
+                  }
+                  isMutating={addToCartButtonIsMutating}
+                  onAddToCart={onAddToCart}
+                />
+              </Box>
+            )}
           </Box>
         )
       case "condition":
@@ -477,6 +481,8 @@ export const Product = screenTrack({
         retailPrice={product.retailPrice}
         monthlyRental={product?.rentalPrice}
         productType={productType}
+        onAddToCart={onAddToCart}
+        addToCartButtonIsMutating={addToCartButtonIsMutating}
       />
       {showNotifyMeMessage && (
         <FadeBottom2 width="100%" style={{ position: "absolute", bottom: 0, zIndex: 0, backgroundColor: "white" }}>

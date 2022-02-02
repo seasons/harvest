@@ -22,6 +22,7 @@ interface Props {
   showNotifyMeMessage: boolean
   data: GetProduct
   onNotifyMe: () => void
+  onAddToCart: () => void
   scrollToBuyCTA: () => void
   hasNotification: boolean
   isMutatingNotify: boolean
@@ -31,6 +32,7 @@ interface Props {
   monthlyRental: number
   productType: string
   isMutatingBuyButton: boolean
+  addToCartButtonIsMutating: boolean
 }
 
 const twoButtonWidth = Dimensions.get("window").width / 2 - space(2) - space(0.5)
@@ -53,11 +55,16 @@ export const ProductBottomBar: React.FC<Props> = ({
   monthlyRental,
   productType,
   isMutatingBuyButton,
+  onAddToCart,
+  addToCartButtonIsMutating,
 }) => {
   const tracking = useTracking()
   const [loaded, setLoaded] = useState(false)
   const inStock = selectedVariant && selectedVariant.reservable > 0
   const isInBag = selectedVariant?.isInBag
+  const product = data?.products?.[0]
+  const isRentable = product?.isRentable
+  const isInCart = selectedVariant?.isInCart
 
   useEffect(() => {
     // Wait to load the buttons until we know their state so user doesn't see the state change on load
@@ -70,29 +77,43 @@ export const ProductBottomBar: React.FC<Props> = ({
     return null
   }
 
+  let priceText
+  let priceSubText
+  if (isRentable) {
+    priceText = monthlyRental
+    priceSubText = ` / month`
+  } else {
+    priceText = product?.discountedPrice
+    priceSubText = ` to buy`
+  }
+
   return (
     <Wrapper style={{ bottom: showNotifyMeMessage ? VARIANT_WANT_HEIGHT : 0 }}>
       <Flex flexDirection="column">
-        <FixedProductBuyCTA
-          price={selectedVariant?.price}
-          scrollToBuyCTA={scrollToBuyCTA}
-          showNotifyMeMessage={showNotifyMeMessage}
-          animatedScrollY={animatedScrollY}
-          isMutatingBuyButton={isMutatingBuyButton}
-        />
+        {isRentable && (
+          <FixedProductBuyCTA
+            price={selectedVariant?.price}
+            scrollToBuyCTA={scrollToBuyCTA}
+            showNotifyMeMessage={showNotifyMeMessage}
+            animatedScrollY={animatedScrollY}
+            isMutatingBuyButton={isMutatingBuyButton}
+          />
+        )}
         <Animated.View style={{ zIndex: 30 }}>
           <SelectionBox>
-            <Flex>
+            <Flex flexDirection="column" justifyContent={isRentable ? "flex-start" : "center"}>
               <Flex flexDirection="row" alignItems="flex-end">
-                <Sans size="7">${monthlyRental}</Sans>
+                <Sans size="7">${priceText}</Sans>
                 <Sans size="3" color="black50" mb={0.5}>
-                  {" "}
-                  / month
+                  {priceSubText}
                 </Sans>
               </Flex>
-              <Sans size="3" color={color("black50")}>
-                Retail ${retailPrice}
-              </Sans>
+              {retailPrice > product?.discountedPrice ||
+                (isRentable && (
+                  <Sans size="3" color={color("black50")}>
+                    Retail ${retailPrice}
+                  </Sans>
+                ))}
             </Flex>
 
             <Flex flexDirection="row" justifyContent="flex-end">
@@ -122,28 +143,38 @@ export const ProductBottomBar: React.FC<Props> = ({
                 )}
               </TouchableWithoutFeedback>
               <Spacer mr={1} />
-              {inStock || isInBag ? (
-                <AddToBagButton
-                  setShowSizeWarning={setShowSizeWarning}
-                  variantInStock={inStock}
-                  selectedVariant={selectedVariant}
-                  data={data}
-                  dataMe={dataMe}
-                  width={130}
-                />
-              ) : (
-                <StyledButton
-                  variant={hasNotification ? "primaryGray" : "primaryBlack"}
-                  Icon={hasNotification && BlackListCheck}
-                  onPress={onNotifyMe}
-                  loading={isMutatingNotify}
-                  borderRadius={BORDER_RADIUS}
-                  height={48}
-                  width={129}
-                >
-                  Notify me
-                </StyledButton>
-              )}
+              <Box>
+                {(inStock || isInBag) && isRentable ? (
+                  <AddToBagButton
+                    setShowSizeWarning={setShowSizeWarning}
+                    variantInStock={inStock}
+                    selectedVariant={selectedVariant}
+                    data={data}
+                    dataMe={dataMe}
+                    width={130}
+                  />
+                ) : inStock && !isRentable ? (
+                  <Button
+                    variant={isInCart ? "primaryGray" : "primaryBlack"}
+                    loading={addToCartButtonIsMutating}
+                    onPress={onAddToCart}
+                  >
+                    {isInCart ? "Added to cart" : "Add to cart"}
+                  </Button>
+                ) : (
+                  <StyledButton
+                    variant={hasNotification ? "primaryGray" : "primaryBlack"}
+                    Icon={hasNotification && BlackListCheck}
+                    onPress={onNotifyMe}
+                    loading={isMutatingNotify}
+                    borderRadius={BORDER_RADIUS}
+                    height={48}
+                    width={129}
+                  >
+                    Notify me
+                  </StyledButton>
+                )}
+              </Box>
             </Flex>
           </SelectionBox>
         </Animated.View>

@@ -31,6 +31,7 @@ export const SavedItemFragment_BagItem = gql`
       hasRestockNotification
       product {
         id
+        isRentable
         slug
         name
         brand {
@@ -57,7 +58,7 @@ export const SavedItem: React.FC<BagItemProps> = ({ bagItem, navigation }) => {
   const product = variant?.product
   const imageURL = product?.images?.[0]?.url || ""
   const variantSize = variant?.displayLong?.toLowerCase()
-  const reservable = variant?.reservable > 0
+  const reservable = variant?.reservable > 0 && product?.isRentable
   const hasRestockNotification = variant?.hasRestockNotification
 
   const [upsertRestockNotification] = useMutation(UPSERT_RESTOCK_NOTIF, {

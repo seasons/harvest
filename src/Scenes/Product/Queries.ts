@@ -96,6 +96,8 @@ export const GET_PRODUCT = gql`
       slug
       name
       productFit
+      isRentable
+      discountedPrice
       modelHeight
       relatedProducts(take: 10) {
         id
