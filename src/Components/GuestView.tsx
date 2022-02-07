@@ -28,29 +28,13 @@ export const GuestView = ({ navigation }) => {
             <Spacer mb={1} />
             <Sans size="5" color="black25">
               Seasons is a private rental service exploring the shared access of fashion.{" "}
-              <Text style={{ textDecorationLine: "underline" }}>{seasonAndYear()}</Text> applications are now open.
             </Sans>
             <Spacer mb={5} />
             <Button
               block
-              onPress={() => {
-                tracking.trackEvent({
-                  actionName: Schema.ActionNames.CreateAnAccountTapped,
-                  actionType: Schema.ActionTypes.Tap,
-                })
-                navigation.navigate("Modal", { screen: "CreateAccountModal" })
-              }}
-              size="large"
-              variant="secondaryWhite"
-            >
-              Apply for membership
-            </Button>
-            <Spacer mb={1} />
-            <Button
-              block
               size="large"
               onPress={() => navigation.navigate("Modal", { screen: "SignInModal" })}
-              variant="secondaryBlack"
+              variant="secondaryWhite"
             >
               Sign in
             </Button>
